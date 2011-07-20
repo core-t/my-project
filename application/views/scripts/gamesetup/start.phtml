@@ -1,0 +1,18 @@
+
+<h1>Waiting for other players</h1>
+
+<script type="text/javascript">
+    var urlRefresh = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'allarmiesready', 'gameId' => null)); ?>';
+    var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';
+    function refresh() {
+        $.getJSON(urlRefresh, function(result) {
+            if(result.all) {
+                top.location = urlRedirect;
+            }
+        });
+    }
+    $(document).ready(function() {
+        setInterval ( 'refresh()', 5000 );
+    });
+
+</script>

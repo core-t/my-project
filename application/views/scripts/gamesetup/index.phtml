@@ -1,0 +1,30 @@
+<table id="opengames">
+    <th></th>
+<?php
+if(is_array($this->openGames)) {
+    foreach($this->openGames as $game) {
+        echo '<tr><td><a href="'.$this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>$game['gameId'])).'">Join '.$game['gameId'].' '.$game['name'].'</a></td></tr>';
+    }
+}
+?>
+</table>
+
+<a href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
+<a href="javascript:refresh()">Refresh</a>
+<a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">Back</a>
+
+<script type="text/javascript">
+    var th = '<th></th>';
+    var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup')) ?>';
+function refresh() {
+    $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
+        $('#opengames').html('');
+        $('#opengames').append(th);
+        for(i in result) {
+            $('#opengames').append('<tr><td><a href="' + url + '/gameId/' + result[i].gameId + '">Join ' + result[i].gameId + '</a></td></tr>');
+        }
+    });
+}
+setInterval ( 'refresh()', 5000 );
+</script>
+

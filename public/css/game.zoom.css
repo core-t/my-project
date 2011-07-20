@@ -1,0 +1,24 @@
+.zoomPad{
+	float:left;
+        border:1px solid #000;
+}
+
+.zoomPup{
+	overflow:hidden;
+	background-color: #FFF;
+	opacity: 0.6;
+	position:absolute;
+	border:1px solid #CCC;
+}
+
+.zoomWindow{
+	position:absolute;
+	left:0;
+	top:128px;
+	background:#FFF;
+	display:block;
+        overflow:hidden;
+        width: 758px;
+        height: 670px;
+        border:1px solid #000;
+}

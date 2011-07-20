@@ -1,0 +1,577 @@
+$(document)[0].oncontextmenu = function() {
+    return false;
+} // usuwa menu kontekstowe spod prawego przycisku
+
+// *** CASTLES ***
+
+function createCastle(id) {
+    this.position = castles[i].position;
+    this.color = '';
+    this.element = $('<div>')
+    .addClass('castle')
+    .attr({
+        id: 'castle' + id,
+        title: 'Neutral castle'
+    })
+    .css({
+        left: this.position.x + 'px',
+        top: this.position.y + 'px',
+        position:'inherit',
+        width:'80px',
+        height:'80px',
+        background: 'url(../img/game/castle_neutral.png) center center no-repeat',
+        border:'none',
+        cursor: 'crosshair'
+    });
+    board.append(this.element);
+    this.element.fadeIn(1);
+    this.element.mouseover(function() {
+        if(lock) {
+            return null;
+        }
+        if(turn.myTurn) {
+            if(selectedArmy) {
+                castles[this.id.substr(6)].element.css('cursor','url(../img/game/cursor_attack.png), crosshair');
+            } else {
+                castles[this.id.substr(6)].element.css('cursor','default');
+            }
+        }
+    });
+}
+
+function castleOwner(castleId, color) {
+    if(color == my.color) {
+        cursor = 'default';
+    } else {
+        cursor = 'crosshair';
+    }
+    castles[castleId].element
+    .removeClass()
+    .addClass('castle castle_' + color)
+    .attr({
+        title: color + ' castle'
+    })
+    .css({
+        cursor: cursor,
+        background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
+    });
+    castles[castleId].element.fadeIn(500);
+    castles[castleId].color = color;
+}
+
+function isEnemyCastle(x, y) {
+    for(castleId in castles) {
+        if(castles[castleId].color == my.color) {
+            continue;
+        }
+        var pos = castles[castleId].position;
+        if((x >= pos.x) && (x < (pos.x + 80)) && (y >= pos.y) && (y < (pos.y + 80))) {
+            return castleId;
+        }
+    }
+    return false;
+}
+
+// *** ARMIES ***
+
+function army(obj, color) {
+    if(typeof $('#'+obj.armyId) != 'undefined') {
+        $('#'+obj.armyId).fadeOut(1);
+        $('#'+obj.armyId).remove();
+    }
+    var position = changePointToPosition(obj.position);
+    this.x = position[0];
+    this.y = position[1];
+    this.moves = obj.movesLeft;
+    this.heroes = obj.heroes;
+    var numberOfUnits = 0;
+    for(hero in this.heroes) {
+        numberOfUnits++;
+        this.heroKey = hero;
+        if(this.heroes[hero].numberOfMoves < this.moves) {
+            console.log(this.heroes[hero].numberOfMoves);
+            this.moves = this.heroes[hero].numberOfMoves;
+            this.heroKey = hero;
+        }
+    }
+    this.soldiers = obj.soldiers;
+    for(soldier in this.soldiers) {
+        numberOfUnits++;
+        this.soldierKey = soldier;
+        if(this.soldiers[soldier].numberOfMoves < this.moves) {
+            this.moves = this.soldiers[soldier].numberOfMoves;
+            this.soldierKey = soldier;
+        }
+    }
+    if(typeof this.heroes[this.heroKey] != 'undefined') {
+        this.name = 'hero';
+    } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
+        this.name = this.soldiers[this.soldierKey].name;
+    } else {
+        console.log('Armia nie posiada jednostek.');
+        return null;
+    }
+    this.element = $('<div>');
+    if(color == my.color) { // moja armia
+        this.element.click(function() {
+            if(lock) {
+                return null;
+            }
+            if(turn.myTurn) {
+                if(selectedArmy) {
+                    if(selectedArmy == players[my.color].armies[this.id]) { // klikam na siebie
+                        var zindex = selectedArmy.element.css('z-index') - 1;
+                        selectedArmy.element.css({
+                            'z-index':zindex
+                        });
+                        console.log(selectedArmy);
+                    } else { // klikam na inną jednostkę
+                        sendMove(cursorPosition());
+                    }
+                } else {
+                    unselectArmy();
+                    selectArmy(players[my.color].armies[this.id]);
+                }
+            }
+        });
+        this.element.mouseover(function() {
+            if(lock) {
+                return null;
+            }
+            if(turn.myTurn) {
+                if(selectedArmy) {
+                    if(selectedArmy == players[my.color].armies[this.id]) {
+                        selectedArmy.element.css('cursor', 'default');
+                    } else {
+                        players[my.color].armies[this.id].element.css('cursor', 'url(../img/game/cursor_select.png), default');
+                    }
+                } else {
+                    players[my.color].armies[this.id].element.css('cursor', 'url(../img/game/cursor_select.png), default');
+                }
+            } else {
+                players[my.color].armies[this.id].element.css('cursor', 'default');
+            }
+        });
+    } else { // nie moja armia
+        this.element.mouseover(function() {
+            if(lock) {
+                return null;
+            }
+            if(turn.myTurn) {
+                if(selectedArmy) {
+                    selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
+                    selectedEnemyArmy.element.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+                } else {
+                    players[$(this).attr("class").split(' ')[1]].armies[this.id].element.css('cursor', 'default');
+                }
+            } else {
+                players[$(this).attr("class").split(' ')[1]].armies[this.id].element.css('cursor', 'default');
+            }
+        });
+    }
+    if(numberOfUnits > 8) {
+        numberOfUnits = 8;
+    }
+    this.element
+    .addClass('army')
+    .addClass(color)
+    .attr({
+        id: 'army' + obj.armyId,
+        title: color + ' army ' + obj.armyId
+    }).css({
+        background: 'url(../img/game/flag_' + color + '_'+numberOfUnits+'.png) top left no-repeat',
+        left:       this.x + 'px',
+        top:        this.y + 'px'
+    });
+    this.img = $('<img>')
+    .addClass('unit')
+    .attr('src', '/img/game/' + this.name + '_' + color + '.png');
+    this.element.append(this.img);
+    board.append(this.element);
+    this.element.fadeIn(500);
+    this.armyId = obj.armyId;
+    this.color = color;
+}
+
+function selectArmy(a) {
+    a.element.css({
+        border:'1px solid #ccc'
+    });
+    $('#info').html('');
+    $('#name').html(a.name);
+    $('#moves').html('Moves: '+a.moves);
+    selectedArmy = a;
+    zoomer.lensSetCenter(a.x, a.y);
+}
+
+function unselectArmy() {
+    if(selectedArmy != null) {
+        unselectedArmy = selectedArmy;
+        selectedArmy.element.css({
+            border:'none'
+        });
+        board.css('cursor', 'default');
+    }
+    selectedArmy = null;
+    selectedEnemyArmy = null;
+    $('#info').html('');
+    $('#name').html('');
+    $('#moves').html('');
+    $('.path').remove();
+}
+
+function deleteArmy(armyId, color, quiet) {
+    if(quiet) {
+        console.log(armyId);
+        console.log(color);
+        players[color].armies[armyId].element.fadeOut(1);
+        players[color].armies[armyId].element.remove();
+    } else {
+        zoomer.lensSetCenter(players[color].armies[armyId].x, players[color].armies[armyId].y);
+        players[color].armies[armyId].element.fadeOut(500, function() {
+            players[color].armies[armyId].element.remove();
+            delete players[color].armies[armyId];
+            console.log('usuni\u0119ta ' + armyId + ' - ' + color);
+        });
+    }
+}
+
+function deleteArmyByPosition(x, y, color) {
+    for(i in players[color].armies) {
+        if(players[color].armies[i].x == x && players[color].armies[i].y == y) {
+            deleteArmy(i, color, true);
+        }
+    }
+}
+
+function changeArmyPosition(x, y, armyId, color) {
+    players[color].armies['army'+armyId].element.css({
+        left: x + 'px',
+        top: y + 'px'
+    });
+    players[color].armies['army'+armyId].x = x;
+    players[color].armies['army'+armyId].y = y;
+    zoomer.lensSetCenter(x, y);
+}
+
+function changeArmyMoves(m, armyId, color) {
+    players[color].armies['army'+armyId].moves = m;
+}
+
+function getEnemyCastleGarrison(castleId) {
+    var pos = castles[castleId].position;
+    var armies = new Array();
+    for(color in players) {
+        if(color == my.color) {
+            continue;
+        }
+        for(i in players[color].armies) {
+            var a = players[color].armies[i];
+            if((a.x >= pos.x) && (a.x <= (pos.x + 40)) && (a.y >= pos.y) && (a.y <= (pos.y + 40))) {
+                console.log(a);
+                armies[i] = {
+                    armyId:a.armyId,
+                    color:a.color
+                };
+            }
+        }
+    }
+    return armies;
+}
+
+// *** POSITIONING ***
+
+function changePointToPosition(point) {
+    position = point.substr(1);
+    position = position.split(',');
+    position = new Array(parseInt(position[0]), parseInt(position[1]));
+    return position;
+}
+
+function cursorPosition() {
+    if(selectedArmy != null) {
+        var X = tempX - 20 - parseInt(board.css('left'));
+        var Y = tempY - 20 - parseInt(board.css('top')) - 130;
+
+        var vectorLenth = Math.sqrt(Math.pow(X - selectedArmy.x, 2) + Math.pow(selectedArmy.y - Y, 2));
+        var cosa = (X - selectedArmy.x)/vectorLenth;
+        var sina = (Y - selectedArmy.y)/vectorLenth;
+
+        $('.path').remove();
+
+        var fieldX = Math.round(X/40);
+        var fieldY = Math.round(Y/40);
+        newX = fieldX*40;
+        newY = fieldY*40;
+
+        var pfX = selectedArmy.x/40;
+        var pfY = selectedArmy.y/40;
+        if(cosa>=0 && sina>=0) {
+            movesSpend = downRight(pfX, pfY);
+        } else if (cosa>=0 && sina<=0) {
+            movesSpend = topRight(pfX, pfY);
+        } else if (cosa<=0 && sina<=0) {
+            movesSpend = topLeft(pfX, pfY);
+        } else if (cosa<=0 && sina>=0) {
+            movesSpend = downLeft(pfX, pfY);
+        }
+
+        $('#info').html(movesSpend);
+        $('#coord').html(newX + ' - ' + newY + ' ' + getTerrain(fields[fieldY][fieldX])[0]);
+        return movesSpend;
+    }
+    return 0;
+}
+
+function downRight(pfX, pfY) {
+    var xLenthPixels = (newX - selectedArmy.x);
+    var xLenthPoints = xLenthPixels/40;
+    var yLenthPixels = (newY - selectedArmy.y);
+    var yLenthPoints = yLenthPixels/40;
+    var movesSpend = 0;
+    if(xLenthPixels < yLenthPixels) {
+        for(i = 1; i <= xLenthPoints; i++) {
+            pfX += 1;
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'se',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'s',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    } else {
+        for(i = 1; i <= yLenthPoints; i++) {
+            pfX += 1;
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'se',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
+            pfX += 1;
+            m = addPathDiv(pfX,pfY,'e',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    }
+    return movesSpend;
+}
+
+function topRight(pfX, pfY) {
+    var xLenthPixels = (newX - selectedArmy.x);
+    var xLenthPoints = xLenthPixels/40;
+    var yLenthPixels = (selectedArmy.y - newY);
+    var yLenthPoints = yLenthPixels/40;
+    var movesSpend = 0;
+    if(xLenthPixels < yLenthPixels) {
+        for(i = 1; i <= xLenthPoints; i++) {
+            pfX += 1;
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'ne',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'n',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    } else {
+        for(i = 1; i <= yLenthPoints; i++) {
+            pfX += 1;
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'ne',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
+            pfX += 1;
+            m = addPathDiv(pfX,pfY,'e',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    }
+    return movesSpend;
+}
+
+function topLeft(pfX, pfY) {
+    var xLenthPixels = (selectedArmy.x - newX);
+    var xLenthPoints = xLenthPixels/40;
+    var yLenthPixels = (selectedArmy.y - newY);
+    var yLenthPoints = yLenthPixels/40;
+    var movesSpend = 0;
+    if(xLenthPixels < yLenthPixels) {
+        for(i = 1; i <= xLenthPoints; i++) {
+            pfX -= 1;
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'nw',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'n',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    } else {
+        for(i = 1; i <= yLenthPoints; i++) {
+            pfX -= 1;
+            pfY -= 1;
+            m = addPathDiv(pfX,pfY,'nw',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
+            pfX -= 1;
+            m = addPathDiv(pfX,pfY,'w',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    }
+    return movesSpend;
+}
+
+function downLeft(pfX, pfY) {
+    var xLenthPixels = (selectedArmy.x - newX);
+    var xLenthPoints = xLenthPixels/40;
+    var yLenthPixels = (newY - selectedArmy.y);
+    var yLenthPoints = yLenthPixels/40;
+    var movesSpend = 0;
+    if(xLenthPixels < yLenthPixels) {
+        for(i = 1; i <= xLenthPoints; i++) {
+            pfX -= 1;
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'sw',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'s',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    } else {
+        for(i = 1; i <= yLenthPoints; i++) {
+            pfX -= 1;
+            pfY += 1;
+            m = addPathDiv(pfX,pfY,'sw',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
+            pfX -= 1;
+            m = addPathDiv(pfX,pfY,'w',movesSpend);
+            if(!m || m == movesSpend) {
+                return movesSpend;
+            }
+            movesSpend = m;
+        }
+    }
+    return movesSpend;
+}
+
+function addPathDiv(pfX,pfY,direction,movesSpend) {
+    if(movesSpend >= selectedArmy.moves) {
+        return movesSpend;
+    }
+    var terrainType = fields[pfY][pfX];
+    if(terrainType == 'M' || terrainType == 'w') {
+        return 0;
+    }
+    pX = pfX*40;
+    pY = pfY*40;
+    var terrain = getTerrain(terrainType);
+    //     console.log(terrain);
+    if((movesSpend + terrain[1]) > selectedArmy.moves) {
+        return movesSpend;
+    }
+    board.append(
+        $('<div>')
+        .addClass('path')
+        .css({
+            background:'url(../img/game/footsteps_'+direction+'.png) center center no-repeat',
+            left:pX,
+            top:pY
+        })
+    );
+    newX = pX;
+    newY = pY;
+    return movesSpend + terrain[1];
+}
+
+function getTerrain(type) {
+    switch(type) {
+        case 'r':
+            return {
+                0:'Road',
+                1:1
+            };
+        case 'w':
+            return {
+                0:'Water',
+                1:100
+            };
+        case 'm':
+            return {
+                0:'Hills',
+                1:5
+            };
+        case 'M':
+            return {
+                0:'Mountains',
+                1:100
+            };
+        case 'g':
+            return {
+                0:'Grassland',
+                1:2
+            };
+        case 'f':
+            return {
+                0:'Forest',
+                1:3
+            };
+        case 's':
+            return {
+                0:'Swamp',
+                1:4
+            };
+    }
+}

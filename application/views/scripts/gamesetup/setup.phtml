@@ -1,0 +1,43 @@
+<?php
+$playersInGame = '';
+$playersOut = '';
+$urlStart = '';
+?>
+<h3>Game name: "<?php echo $this->game['name'] ?>"</h3>
+<p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
+<h4>Players in game</h4>
+<table id="playersingame"></table>
+<h4>Players out</h4>
+<table id="playersout"></table>
+
+<ul>
+    <li><a href="javascript:refresh()">Refresh</a></li>
+    <li><a id="ready" href="javascript:playerReady()"></a></li>
+    <li><a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">Back</a></li>
+    <li id="start">
+        <?php
+        if ($this->game['gameMasterId'] == $this->player['playerId']) {
+            $urlStart = $this->url(array('controller' => 'gamesetupajax', 'action' => 'gamestart', 'gameId' => null));
+        }
+        ?>
+    </li>
+</ul>
+<script type="text/javascript">
+    var th = '<th>Player Id</th><th>Player color</th><th>Ready</th>';
+    var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'setup')) ?>';
+    var urlStart = '<?php echo $urlStart; ?>';
+    var urlRedirect = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
+    var urlReady = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'ready', 'gameId' => null)) ?>';
+    var urlAjax = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'setuprefresh', 'gameId' => null)) ?>';
+    var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
+    var ready = 0;
+    var playerId = <?php echo (int) $this->player['playerId'] ?>;
+    
+<?php if ($urlStart) { ?>
+    function start() {
+        $.getJSON(urlStart, function(result) {
+            $('#start').html('');
+        });
+    }
+<?php } ?>
+</script>

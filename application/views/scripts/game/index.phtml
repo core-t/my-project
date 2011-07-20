@@ -1,0 +1,57 @@
+<div id="gameMenu">
+    <div class="gameMenu">
+        <p style="color:<?php echo $this->color ?>;font-weight:bold;">You are <?php echo $this->color ?></p>
+        <p id="nextTurn">
+            <?php
+            if ($this->turn['playerId'] == $this->playerId) {
+                echo '<a href="javascript:sendNextTurn()">Next turn</a>';
+                $myTurn = 'true';
+                $nextArmy = 'Next army';
+            } else {
+                echo $this->turn['color'] . ' turn';
+                $myTurn = 'false';
+                $nextArmy = '';
+            }
+            ?>
+        </p>
+        <p id="coord"></p>
+        <p id="info"></p>
+        <p id="name"></p>
+        <p id="moves"></p>
+    </div>
+    <div class="gameMenu">
+        <a href="javascript:wsConnect()">Connect</a>
+        <div id="status"></div>
+        <div id="log"></div>
+        <a href="#" id="nextArmy"><?php echo $nextArmy ?></a>
+    </div>
+    <div class="gameMenu">
+        <a href="<?php echo $this->url(array('controller' => 'login', 'action' => 'logout')); ?>">Logout</a>
+        <a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index')); ?>">Quit game</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var colors = <?php echo Zend_Json::encode($this->colors); ?>;
+    <?php $this->headScript()->captureStart() ?>
+    var fields = <?php echo Zend_Json::encode($this->fields); ?>;
+    <?php $this->headScript()->captureEnd() ?>
+
+    var players = <?php echo Zend_Json::encode($this->players); ?>;
+    var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
+    my.color = '<?php echo $this->color ?>';
+    my.playerId = '<?php echo $this->playerId ?>';
+    turn.color = '<?php echo $this->turn['color'] ?>';
+    turn.playerId = '<?php echo $this->turn['playerId'] ?>';
+    turn.myTurn = <?php echo $myTurn ?>;
+    var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
+    var urlRefreshGameData = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'refresh', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
+    var urlTurn = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'nextturn')) ?>';
+    var urlStartMyTurn = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'startmyturn')) ?>';
+    var urlFightCastle = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'castle')) ?>';
+    var urlFightArmy = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'army')) ?>';
+    var urlAddArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'addarmy')) ?>';
+    var board = $("#board");
+
+
+</script>

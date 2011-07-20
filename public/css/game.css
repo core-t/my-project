@@ -1,0 +1,94 @@
+#game {
+    width:760px;
+    height:800px;
+    background:#f00;
+}
+
+.castle {
+    position:inherit;
+    width:80px;
+    height:80px;
+    background: url(../img/game/castle_neutral.png) center center no-repeat;
+    border:none;
+    cursor: crosshair;
+    z-index: 100;
+    display:none;
+}
+.army {
+    position:inherit;
+    width:40px;
+    height:40px;
+    display:none;
+    border:none;
+    z-index: 5000;
+}
+
+.unit {
+    margin-top:10px;
+    margin-left:12px;
+}
+
+#board {
+    background: url('../img/game/board.png') no-repeat;
+    width: 4359px;
+    height:2760px;
+    position:absolute;
+    top:0px;
+    left:0px
+}
+
+.zoomPad{
+	float:left;
+        border:1px solid #000;
+}
+
+.zoomPup{
+	overflow:hidden;
+	background-color: #FFF;
+	opacity: 0.6;
+	position:absolute;
+	border:1px solid #CCC;
+}
+
+.zoomWindow{
+    position:absolute;
+    left:0;
+    top:128px;
+    background:#000;
+    display:block;
+    overflow:hidden;
+    width: 758px;
+    height: 670px;
+    border:1px solid #000;
+}
+
+#gameMenu {
+    position:absolute;
+    left: 205px;
+    top: 0px;
+}
+
+.gameMenu {
+    float:left;
+    min-width:180px;
+}
+
+.path {
+    position:inherit;
+    width:40px;
+    height:40px;
+    border:none;
+    z-index:6000;
+}
+
+.field {
+    width:38px;
+    height:38px;
+    position:inherit;
+    border:1px solid white;
+    color:yellow;
+    font-size:10px;
+    text-align:center;
+    line-height:38px;
+    z-index:7000;
+}
