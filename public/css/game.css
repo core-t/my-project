@@ -11,7 +11,7 @@
     background: url(../img/game/castle_neutral.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 100;
+    z-index: 600;
     display:none;
 }
 .army {
@@ -78,7 +78,7 @@
     width:40px;
     height:40px;
     border:none;
-    z-index:6000;
+    z-index:500;
 }
 
 .field {

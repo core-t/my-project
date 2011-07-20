@@ -24,25 +24,21 @@ function sendMove(movesSpend) {
         if(castleId) {
             $.getJSON(urlFightCastle + '/armyId/' + selectedArmy.armyId + '/x/' + newX + '/y/' + newY + '/m/' + movesSpend + '/cid/' + castleId, function(result) {
                 if(result.victory) {
-                    position = changePointToPosition(result.position);
-                    newX = position[0];
-                    newY = position[1];
-
-                    selectedArmy.moves = result.movesLeft;
-                    selectedArmy.heroes = result.heroes;
-                    selectedArmy.soldiers = result.soldiers;
+                    deleteArmyByPosition(players[my.color].armies['army'+selectedArmy.armyId].x, players[my.color].armies['army'+selectedArmy.armyId].y, my.color);
+                    players[my.color].armies['army'+selectedArmy.armyId] = new army(result, my.color);
+                    newX = players[my.color].armies['army'+selectedArmy.armyId].x;
+                    newY = players[my.color].armies['army'+selectedArmy.armyId].y;
+                    wsArmyAdd(selectedArmy.armyId);
 
                     // delete enemy - find enemy at position?
                     var armiesToDelete = getEnemyCastleGarrison(castleId);
                     for(i in armiesToDelete) {
                         deleteArmy('army' + armiesToDelete[i].armyId, armiesToDelete[i].color);
+                        wsArmyDelete(armiesToDelete[i].armyId, armiesToDelete[i].color);
                     }
 
-                    changeArmyPosition(newX, newY, selectedArmy.armyId, my.color);
-                    wsArmyMove(newX, newY, selectedArmy.armyId);
                     wsCastleOwner(castleId, my.color);
                     castleOwner(castleId, my.color);
-                    $('#moves').html('Moves: '+selectedArmy.moves);
                 } else {
                     var armiesToCheck = getEnemyCastleGarrison(castleId);
                     for(i in armiesToCheck) {
@@ -96,13 +92,7 @@ function walk(result, el) {
         break;
     }
     if(typeof result.path[i] == 'undefined') {
-        console.log(players[my.color].armies['army'+unselectedArmy.armyId].x);
-        console.log(players[my.color].armies['army'+unselectedArmy.armyId].y);
-        console.log(players[my.color].armies['army'+result.army.armyId].x);
-        console.log(players[my.color].armies['army'+result.army.armyId].y);
         deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-//        wsArmyDelete(result.army.armyId, my.color);
-        deleteArmyByPosition(players[my.color].armies['army'+result.army.armyId].x, players[my.color].armies['army'+result.army.armyId].y, my.color);
         players[my.color].armies['army'+result.army.armyId] = new army(result.army, my.color);
         newX = players[my.color].armies['army'+result.army.armyId].x;
         newY = players[my.color].armies['army'+result.army.armyId].y;
@@ -117,7 +107,7 @@ function walk(result, el) {
             top: result.path[i].y + 'px'
         });
         zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        el.fadeIn(500, function() {
+        el.fadeIn(1, function() {
             delete result.path[i];
             walk(result, el);
         });
@@ -127,11 +117,6 @@ function walk(result, el) {
 function startMyTurn() {
     $.getJSON(urlStartMyTurn, function(result) {
         for(i in result) {
-            if(typeof players[my.color].armies[i] != 'undefined') {
-                if(result[i] != players[my.color].armies[i]) {
-                    deleteArmy(i, my.color, true);
-                }
-            }
             players[my.color].armies[i] = new army(result[i], my.color);
             wsArmyAdd(result[i].armyId);
         }
@@ -142,11 +127,7 @@ function startMyTurn() {
 function getAddArmy(armyId) {
     $.getJSON(urlAddArmy+'/armyId/'+armyId, function(result) {
         if(typeof result.armyId != 'undefined') {
-            armyId = 'army' + result.armyId;
-            if(typeof players[result.color].armies[armyId] != 'undefined') {
-                deleteArmy(armyId, result.color, true);
-            }
-            players[result.color].armies[armyId] = new army(result, result.color);
+            players[result.color].armies['army' + result.armyId] = new army(result, result.color);
             console.log('dodana ' + armyId + ' - ' + result.color);
         }
     });
