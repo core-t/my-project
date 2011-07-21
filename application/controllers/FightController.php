@@ -19,7 +19,7 @@ class FightController extends Warlords_Controller_Action
         $armyId = $this->_request->getParam('armyId');
         $x = $this->_request->getParam('x');
         $y = $this->_request->getParam('y');
-        $movesSpend = $this->_request->getParam('m');
+        $movesSpend = 2;
         $enemyId = $this->_request->getParam('eid');
         if ($armyId !== null AND $x !== null AND $y !== null AND $movesSpend !==null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
@@ -43,7 +43,11 @@ class FightController extends Warlords_Controller_Action
                     if (isset($enemy['armyId'])) {
                         $modelArmy->updateArmyFull($enemy, $result['defender']);
                     }
-                    $this->view->response = Zend_Json::encode(array('victory' => false));
+                    $result = array(
+                        'battle' => $this->_result,
+                        'victory' => false
+                    );
+                    $this->view->response = Zend_Json::encode($result);
                     break;
                 } elseif (isset($enemy['armyId'])) {
                     $modelArmy->destroyArmy($enemy['armyId'], $enemy['playerId']);
@@ -52,17 +56,16 @@ class FightController extends Warlords_Controller_Action
             if (!empty($result['attacker'])) {
                 $modelArmy->updateArmyFull($army, $result['attacker']);
 
-                $movesLeft = $army['movesLeft'] - $movesSpend;
                 $data = array(
                     'position' => $x . ',' . $y,
-                    'movesLeft' => $movesLeft
+                    'movesSpend' => $movesSpend
                 );
                 $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
                 switch ($res) {
                     case 1:
                         $result['attacker']['victory'] = true;
                         $result['attacker']['position'] = '(' . $x . ', ' . $y . ')';
-                        $result['attacker']['movesLeft'] = $movesLeft;
+                        $result['attacker']['battle'] = $this->_result;
                         $this->view->response = Zend_Json::encode($result['attacker']);
                         break;
                     case 0:
@@ -87,7 +90,7 @@ class FightController extends Warlords_Controller_Action
         $armyId = $this->_request->getParam('armyId');
         $x = $this->_request->getParam('x');
         $y = $this->_request->getParam('y');
-        $movesSpend = $this->_request->getParam('m');
+        $movesSpend = 2;
         $castleId = $this->_request->getParam('cid');
         if ($armyId !== null AND $x !== null AND $y !== null AND !empty($movesSpend) AND $castleId !== null) {
             $modelBoard = new Application_Model_Board();
@@ -118,40 +121,36 @@ class FightController extends Warlords_Controller_Action
                     );
                 }
                 foreach ($enemies as $enemy) {
-                    $result = $this->battle($army, $enemy);
+                    $result = $this->battle($result['attacker'], $enemy);
                     if (empty($result['attacker']['heroes']) AND empty($result['attacker']['soldiers'])) {
                         $modelArmy->destroyArmy($result['attacker']['armyId'], $this->_namespace->player['playerId']);
                         unset($result['attacker']);
                         if (isset($enemy['armyId'])) {
                             $modelArmy->updateArmyFull($enemy, $result['defender']);
                         }
+                        $result['defender']['battle'] = $this->_result;
                         $result['defender']['victory'] = false;
                         $this->view->response = Zend_Json::encode($result['defender']);
                         break;
                     } elseif (isset($enemy['armyId'])) {
                         $modelArmy->destroyArmy($enemy['armyId'], $enemy['playerId']);
                     }
-
-                    $army = $result['attacker'];
                 }
-//                 Zend_Debug::dump($result);exit;
                 if (!empty($result['attacker'])) {
                     $modelCastle->deleteCastle($castleId);
                     $modelCastle->addCastle($castleId, $this->_namespace->player['playerId']);
-//        throw new Exception(Zend_Debug::dump($army['heroes'], null, false).Zend_Debug::dump($result['attacker']['heroes'], null, false));exit;
                     $modelArmy->updateArmyFull($army, $result['attacker']);
 
-                    $movesLeft = $army['movesLeft'] - $movesSpend;
                     $data = array(
                         'position' => $x . ',' . $y,
-                        'movesLeft' => $movesLeft
+                        'movesSpend' => $movesSpend
                     );
                     $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
                     switch ($res) {
                         case 1:
                             $result['attacker']['victory'] = true;
                             $result['attacker']['position'] = '(' . $x . ', ' . $y . ')';
-                            $result['attacker']['movesLeft'] = $movesLeft;
+                            $result['attacker']['battle'] = $this->_result;
                             $this->view->response = Zend_Json::encode($result['attacker']);
                             break;
                         case 0:

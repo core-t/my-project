@@ -21,20 +21,6 @@ class GameajaxController extends Warlords_Controller_Action {
         }
     }
 
-    public function refreshAction() {
-        $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-        $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        $response = $modelGame->getPlayerTurn();
-        $armies = $modelArmy->getPlayerArmies($response['turnPlayerId']);
-        $response['armies'] = array();
-        foreach ($armies as $army) {
-            $response['armies']['army'.$army['armyId']] = $army;
-        }
-        $response['castles'] = $modelCastle->getPlayerCastles($response['turnPlayerId']);
-        $this->view->response = Zend_Json::encode($response);
-    }
-
     public function startmyturnAction() {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if(!$modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
@@ -54,29 +40,13 @@ class GameajaxController extends Warlords_Controller_Action {
         foreach($castlesId as $id) {
             $castles[] = $modelBoard->getCastle($id['castleId']);
         }
+        $modelArmy->resetHeroesMovesLeft($this->_namespace->player['playerId']);
+        $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
         $modelArmy->doProduction($this->_namespace->player['playerId'], $castles);
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
         $array = array();
         foreach ($armies as $k => $army) {
             $array['army'.$army['armyId']] = $army;
-            foreach ($army['heroes'] as $hero) {
-                if (!isset($moves)) {
-                    $moves = $hero['numberOfMoves'];
-                }
-                if ($hero['numberOfMoves'] < $moves) {
-                    $moves = $hero['numberOfMoves'];
-                }
-            }
-            foreach ($army['soldiers'] as $soldier) {
-                if (!isset($moves)) {
-                    $moves = $soldier['numberOfMoves'];
-                }
-                if ($soldier['numberOfMoves'] < $moves) {
-                    $moves = $soldier['numberOfMoves'];
-                }
-            }
-            $modelArmy->updateArmyPosition($army['armyId'], $this->_namespace->player['playerId'], array('movesLeft' => $moves));
-            $array['army'.$army['armyId']]['movesLeft'] = $moves;
         }
         $this->view->response = Zend_Json::encode($array);
     }

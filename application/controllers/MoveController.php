@@ -30,23 +30,17 @@ class MoveController extends Warlords_Controller_Action
             foreach($this->path as $path) {
                 $movesSpend += $path['cost'];
             }
-            if ($army['movesLeft'] < $movesSpend) {
-                throw new Exception('Pozostało mniej ruchów niż gracz próbuje wydać!');
-                return false;
-            } elseif($movesSpend > 0) {
+            if($movesSpend > 0) {
                 $data = array(
                     'position' => $x . ',' . $y,
-                    'movesLeft' => $army['movesLeft'] - $movesSpend
+                    'movesSpend' => $movesSpend
                 );
                 $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
                 $armyId = $modelArmy->joinArmiesAtPosition($data['position'], $this->_namespace->player['playerId']);
                 switch ($res) {
                     case 1:
-                        $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                        $result['pos'] = $army['position'];
-//                         $result['m'] = $army['movesLeft'];
+                        $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                         $result['path'] = $this->path;
-                        $result['army'] = $army;
                         $this->view->response = Zend_Json::encode($result);
                         break;
                     case 0:

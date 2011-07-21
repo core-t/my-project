@@ -66,7 +66,7 @@ function wsConnect() {
     socket.bind('delete', function(data){
         deleteArmy('army'+data.armyId, data.color);
     });
-    socket.bind('castleOwner', function(data){
+    socket.bind('castle', function(data){
         console.log(data);
         castleOwner(data.castleId, data.color);
     });
@@ -76,7 +76,7 @@ function wsCastleOwner(castleId, color) {
     console.log(castleId);
     console.log(color);
     socket.send(
-        'castleOwner',
+        'castle',
         {
             castleId:castleId,
             color:color

@@ -16,6 +16,10 @@ class WarlordsServer extends WebSocketServer {
     protected $configClass = 'WarlordsConfig';
 
     function process($user, $msg){
+        if(!isset($msg->event)) {
+            echo time('H i s');
+            var_dump($msg);
+        }
         switch($msg->event) {
             case 'ping':
                 break;
@@ -31,7 +35,7 @@ class WarlordsServer extends WebSocketServer {
             case 'delete':
                 $this->sentToAllBut($user, json_encode($msg));
                 break;
-            case 'castleOwner':
+            case 'castle':
                 var_dump(json_encode($msg));
                 $this->sentToAllBut($user, json_encode($msg));
                 break;

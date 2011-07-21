@@ -92,3 +92,13 @@
     line-height:38px;
     z-index:7000;
 }
+
+#battle {
+    width: 330px;
+    min-height: 130px;
+    max-height: 250px;
+    position:inherit;
+    border:1px solid white;
+    z-index:7000;
+    background: #cecece;
+}

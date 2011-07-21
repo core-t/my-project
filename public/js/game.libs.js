@@ -43,23 +43,37 @@ function createCastle(id) {
 
 function castleOwner(castleId, color) {
     if(color == my.color) {
-        castles[castleId].element.mouseover(function() {
-        if(lock) {
-            return null;
-        }
-        if(turn.myTurn) {
-            castles[this.id.substr(6)].element.css({
-                cursor: 'crosshair'
-            });
-        } else {
-            castles[this.id.substr(6)].element.css({
-                cursor: 'default'
-            });
-        }
-    });
         zindex = 100;
+        castles[castleId].element.mouseover(function() {
+            if(lock) {
+                return null;
+            }
+            if(turn.myTurn) {
+                castles[this.id.substr(6)].element.css({
+                    cursor: 'crosshair'
+                });
+            } else {
+                castles[this.id.substr(6)].element.css({
+                    cursor: 'default'
+                });
+            }
+        });
     } else {
         zindex = 600;
+        castles[castleId].element.mouseover(function() {
+            if(lock) {
+                return null;
+            }
+            if(turn.myTurn) {
+                castles[this.id.substr(6)].element.css({
+                    cursor: 'url(../img/game/cursor_attack.png), crosshair'
+                });
+            } else {
+                castles[this.id.substr(6)].element.css({
+                    cursor: 'default'
+                });
+            }
+        });
     }
     castles[castleId].element
     .removeClass()
@@ -100,15 +114,16 @@ function army(obj, color) {
         $('#army'+obj.armyId).fadeOut(1);
         $('#army'+obj.armyId).remove();
     }
-    this.moves = obj.movesLeft;
     this.heroes = obj.heroes;
     var numberOfUnits = 0;
     for(hero in this.heroes) {
         numberOfUnits++;
         this.heroKey = hero;
-        if(this.heroes[hero].numberOfMoves < this.moves) {
-            console.log(this.heroes[hero].numberOfMoves);
-            this.moves = this.heroes[hero].numberOfMoves;
+        if(typeof this.moves == 'undefined') {
+            this.moves = this.heroes[hero].movesLeft;
+        }
+        if(this.heroes[hero].movesLeft < this.moves) {
+            this.moves = this.heroes[hero].movesLeft;
             this.heroKey = hero;
         }
     }
@@ -116,8 +131,11 @@ function army(obj, color) {
     for(soldier in this.soldiers) {
         numberOfUnits++;
         this.soldierKey = soldier;
-        if(this.soldiers[soldier].numberOfMoves < this.moves) {
-            this.moves = this.soldiers[soldier].numberOfMoves;
+        if(typeof this.moves == 'undefined') {
+            this.moves = this.soldiers[soldier].movesLeft;
+        }
+        if(this.soldiers[soldier].movesLeft < this.moves) {
+            this.moves = this.soldiers[soldier].movesLeft;
             this.soldierKey = soldier;
         }
     }
