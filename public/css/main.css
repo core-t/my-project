@@ -3,4 +3,23 @@
 body {
     color: #000;
     background: #eee;
+    font-size: 11px;
+}
+
+#page {
+    margin:0 auto;
+    width:760px;
+}
+
+#menuTop {
+    width:760px;
+    height:20px;
+    background: #000;
+}
+
+#menuTop a {
+    color:#f00;
+    float: right;
+    text-decoration: none;
+    padding:2px;
 }

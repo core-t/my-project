@@ -7,6 +7,7 @@ class IndexController extends Warlords_Controller_Action
     {
         /* Initialize action controller here */
         // przeniosłem sprawdzenie zalogowania do Warlords_Controler_Action
+        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
     }
 
     public function indexAction()

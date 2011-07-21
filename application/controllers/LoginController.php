@@ -24,11 +24,15 @@ class LoginController extends Zend_Controller_Action
                         $model = new Application_Model_Hero($playerId);
                         $model->createHero();
                     }
-                    $this->_helper->redirector('index', 'index');
                 }
                 $playerActivity = new Warlords_Player_Activity();
                 $player = $model->getPlayer();
-                $this->view->active = $playerActivity->isActive( $player['playerId']);
+                
+                if(!$playerActivity->isActive( $player['playerId'])) {
+                    $this->_helper->redirector('index', 'index');
+                } else {
+                    $this->view->active = true;
+                }
                 
             }
         }
