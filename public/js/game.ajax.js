@@ -12,6 +12,9 @@ function sendNextTurn() {
 }
 
 function sendMove(movesSpend) {
+    if(movesSpend == 0) {
+        return null;
+    }
     if(typeof socket == 'undefined') {
         alert('Socket disconnected!');
         return null;
@@ -23,64 +26,77 @@ function sendMove(movesSpend) {
     lock = true;
     var castleId = isEnemyCastle(newX, newY)
     if(castleId) {
-        if(movesSpend == 1){
-            $.getJSON(urlFightCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
-                if(result.victory) {
-                    deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-                    players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
-                    newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
-                    newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
-                    wsArmyAdd(unselectedArmy.armyId);
-
-                    // delete enemy - find enemy at position?
-                    var armiesToDelete = getEnemyCastleGarrison(castleId);
-                    for(i in armiesToDelete) {
-                        deleteArmy('army' + armiesToDelete[i].armyId, armiesToDelete[i].color);
-                        wsArmyDelete(armiesToDelete[i].armyId, armiesToDelete[i].color);
-                    }
-
-                    wsCastleOwner(castleId, my.color);
-                    castleOwner(castleId, my.color);
-                } else {
-                    var armiesToCheck = getEnemyCastleGarrison(castleId);
-                    for(i in armiesToCheck) {
-                        console.log(armiesToCheck[i]);
-                    }
-                    deleteArmy('army' + unselectedArmy.armyId, my.color);
-                    wsArmyDelete(unselectedArmy.armyId, my.color);
-                }
-                console.log(result.battle);
-                lock = false;
-            });
-        } else {
+        var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
+        if(vectorLenth >= 80) {
             lock = false;
+            return null;
         }
+        if(unselectedArmy.moves < (movesSpend + 2)) {
+            lock = false;
+            return null;
+        }
+        $.getJSON(urlFightCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
+            if(result.victory) {
+                deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+                players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
+                newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
+                newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
+                wsArmyAdd(unselectedArmy.armyId);
+
+                // delete enemy - find enemy at position?
+                var armiesToDelete = getEnemyCastleGarrison(castleId);
+                for(i in armiesToDelete) {
+                    deleteArmy('army' + armiesToDelete[i].armyId, armiesToDelete[i].color);
+                    wsArmyDelete(armiesToDelete[i].armyId, armiesToDelete[i].color);
+                }
+
+                wsCastleOwner(castleId, my.color);
+                castleOwner(castleId, my.color);
+            } else {
+                var armiesToCheck = getEnemyCastleGarrison(castleId);
+                for(i in armiesToCheck) {
+                    console.log(armiesToCheck[i]);
+                }
+                deleteArmy('army' + unselectedArmy.armyId, my.color);
+                wsArmyDelete(unselectedArmy.armyId, my.color);
+            }
+            console.log(result.battle);
+            lock = false;
+        });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
-        if(movesSpend == 1){
-            $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
-                if(result.victory == true) {
-                    deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-                    players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
-                    newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
-                    newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
-                    wsArmyAdd(unselectedArmy.armyId);
-
-                    deleteArmyByPosition(newX, newY, selectedEnemyArmy.color);
-                    wsArmyDelete(selectedEnemyArmy.armyId, selectedEnemyArmy.color);
-
-                    selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
-                } else if(result.victory == false) {
-                    deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
-                    wsArmyDelete(unselectedArmy.armyId, my.color);
-                    getAddArmy(selectedEnemyArmy.armyId);
-                    wsArmyAdd(selectedEnemyArmy.armyId);
-                }
-                console.log(result.battle);
-                lock = false;
-            });
-        } else {
+        var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
+        if(vectorLenth >= 80) {
             lock = false;
+            unselectEnemyArmy();
+            return null;
         }
+        if(unselectedArmy.moves < (movesSpend + 2)) {
+            lock = false;
+            unselectEnemyArmy();
+            return null;
+        }
+        $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
+            if(result.victory == true) {
+                deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+                players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
+                newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
+                newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
+                wsArmyAdd(unselectedArmy.armyId);
+
+                deleteArmyByPosition(newX, newY, selectedEnemyArmy.color);
+                wsArmyDelete(selectedEnemyArmy.armyId, selectedEnemyArmy.color);
+
+                selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
+            } else if(result.victory == false) {
+                deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
+                wsArmyDelete(unselectedArmy.armyId, my.color);
+                getAddArmy(selectedEnemyArmy.armyId);
+                wsArmyAdd(selectedEnemyArmy.armyId);
+            }
+            console.log(result.battle);
+            unselectEnemyArmy();
+            lock = false;
+        });
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {

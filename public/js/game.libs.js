@@ -290,11 +290,14 @@ function unselectArmy() {
         board.css('cursor', 'default');
     }
     selectedArmy = null;
-    selectedEnemyArmy = null;
     $('#info').html('');
     $('#name').html('');
     $('#moves').html('');
     $('.path').remove();
+}
+
+function unselectEnemyArmy() {
+    selectedEnemyArmy = null;
 }
 
 function deleteArmy(armyId, color, quiet) {
@@ -373,7 +376,7 @@ function cursorPosition(x, y) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        var vectorLenth = Math.sqrt(Math.pow(X - selectedArmy.x, 2) + Math.pow(selectedArmy.y - Y, 2));
+        var vectorLenth = getVectorLenth(selectedArmy.x, selectedArmy.y, X, Y);
         var cosa = (X - selectedArmy.x)/vectorLenth;
         var sina = (Y - selectedArmy.y)/vectorLenth;
 
@@ -401,6 +404,10 @@ function cursorPosition(x, y) {
         return movesSpend;
     }
     return 0;
+}
+
+function getVectorLenth(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
 }
 
 function downRight(pfX, pfY) {
