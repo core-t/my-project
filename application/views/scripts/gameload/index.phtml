@@ -3,10 +3,11 @@
 <?php
 if(is_array($this->myGames)) {
     foreach($this->myGames as $game) {
-        echo '<tr id="gid'.$game['gameId'].'">
-        <td>Load '.$game['gameId'].' '.$game['begin'].'</td>
-        <td>'.$game['numberOfPlayers'].'</td>
-        <td>'.$game['turnNumber'].'</td>
+        $url = $this->url(array('controller'=>'gameload', 'action'=>'load', 'gameId'=>$game['gameId']));
+        echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'">
+        <td><a href="'.$url.'">Load '.$game['gameId'].' '.$game['begin'].'</a></td>
+        <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
+        <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
         </tr>';
     }
 }
@@ -14,9 +15,3 @@ if(is_array($this->myGames)) {
 </table>
 
 <a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">Back</a>
-
-<script type="text/javascript">
-    $('#gid<?php echo $game['gameId']?>').click(function(){
-        top.location = '<?php echo $this->url(array('controller'=>'gameload', 'action'=>'load', 'gameId'=>$game['gameId']))?>';
-    });
-</script>

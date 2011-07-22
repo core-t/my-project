@@ -19,12 +19,19 @@ $(document).ready(function() {
     for(i in castles) {
         castles[i] = new createCastle(i);
     }
-    for(player in players) {
-        for(i in players[player].armies) {
-            players[player].armies[i] = new army(players[player].armies[i], player);
+    for(color in players) {
+        $('.'+color).css('display','block');
+        $('#'+color+'Color').css({
+            width:'50px',
+            height:'18px',
+            background:color,
+            border:'1px solid #cecece'
+        })
+        for(i in players[color].armies) {
+            players[color].armies[i] = new army(players[color].armies[i], color);
         }
-        for(i in players[player].castles) {
-            castleOwner(i, player);
+        for(i in players[color].castles) {
+            castleOwner(i, color);
         }
     }
     setInterval ( 'wsPing()', 9000 );
@@ -106,7 +113,6 @@ $(document).ready(function() {
 function turnOn() {
     turn.myTurn = true;
     $('#nextTurn').html('Next turn');
-    $('#turn').html('Your turn');
     $('#nextArmy').html('Next army');
     showFirstCastle();
 }
@@ -115,7 +121,6 @@ function turnOff() {
     turn.myTurn = false;
     unselectArmy();
     $('#nextTurn').html('');
-    $('#turn').html('Turn: player '+turn.color);
     $('#nextArmy').html('');
 }
 
@@ -128,7 +133,9 @@ function changeTurn(playerId, color) {
         console.log('Turn "playerId" not set');
         return false;
     }
+    $('#'+turn.color+'Turn').html('');
     turn.color = color;
+    $('#'+turn.color+'Turn').html('turn');
     turn.playerId = playerId;
     if(turn.playerId == my.playerId) {
         turnOn();

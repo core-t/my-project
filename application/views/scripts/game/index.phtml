@@ -31,14 +31,13 @@
     var urlAddArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'addarmy')) ?>';
     var board = $("#board");
 
-    $('#youAre').append(my.color);
-    $('#gameMenu').css('color', my.color);
+    $('#'+my.color+'Color').append('You');
+    $('#'+turn.color+'Turn').html('Turn');
+//     $('#gameMenu').css('color', my.color);
     if(turn.myTurn) {
-        $('#turn').append('Your turn');
         $('#nextArmy').html('Next army');
         $('#nextTurn').html('Next turn');
     } else {
-        $('#turn').append('Turn: '+turn.color);
         $('#nextArmy').html('');
         $('#nextTurn').html('');
     }

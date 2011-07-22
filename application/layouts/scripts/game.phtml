@@ -19,8 +19,12 @@
                 </div>
                 <div id="gameMenu">
                     <div class="gameMenu">
-                        <p id="youAre">You are </p>
-                        <p id="turn"></p>
+                        <table id="colors">
+                            <tr class="white"><td id="whiteColor"></td><td id="white"></td><td id="whiteTurn"></td></tr>
+                            <tr class="green"><td id="greenColor"></td><td id="green"></td><td id="greenTurn"></td></tr>
+                            <tr class="orange"><td id="orangeColor"></td><td id="orange"></td><td id="orangeTurn"></td></tr>
+                            <tr class="red"><td id="redColor"></td><td id="red"></td><td id="redTurn"></td></tr>
+                        </table>
                         <a id="nextTurn"></a>
                     </div>
                     <div class="gameMenu">
@@ -31,7 +35,7 @@
                         <a id="nextArmy"></a>
                     </div>
                     <div class="gameMenu">
-                        <a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index')); ?>">Quit game</a>
+                        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
                         <p id="wsStatus"></p>
                         <a id="connect">Connect</a>
                         <p id="log"></p>

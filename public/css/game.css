@@ -93,6 +93,22 @@
     min-width:180px;
 }
 
+.white {
+    display:none;
+}
+
+.green {
+    display:none;
+}
+
+.orange {
+    display:none;
+}
+
+.red {
+    display:none;
+}
+
 .path {
     position:inherit;
     width:40px;

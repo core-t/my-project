@@ -42,7 +42,9 @@ class GameajaxController extends Warlords_Controller_Action {
         }
         $modelArmy->resetHeroesMovesLeft($this->_namespace->player['playerId']);
         $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
-        $modelArmy->doProduction($this->_namespace->player['playerId'], $castles);
+        if($modelGame->getTurnNumber() > 0) {
+            $modelArmy->doProduction($this->_namespace->player['playerId'], $castles);
+        }
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
         $array = array();
         foreach ($armies as $k => $army) {

@@ -13,10 +13,10 @@ function zoom(zoomWidth, zoomHeight) {
     var lens = new Lens();
     var largeimage = new Largeimage();
     //preventing default click,allowing the onclick event [exmple: lightbox]
-    $(el).bind('click', function (e) {
+/*    $(el).bind('click', function (e) {
         e.preventDefault();
         return false;
-    });
+    });*/
     $.extend(obj, {
         init: function () {
             //drag option

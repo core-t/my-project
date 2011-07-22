@@ -10,7 +10,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     protected $_playerColors = array('white', 'green', 'orange', 'red');
 
     public function __construct($gameId = 0) {
-        $this->_id = $gameId;
+        $this->_gameId = $gameId;
         $this->_db = $this->getDefaultAdapter();
         parent::__construct();
     }
@@ -25,7 +25,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $select = $this->_db->select()
                 ->from($this->_name, $this->_primary)
                 ->where('"isActive" = true')
-                ->where('"' . $this->_primary . '" = ?', $this->_id);
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         $result = $this->_db->query($select)->fetchAll();
         if (!empty($result[0][$this->_primary]))
             return true;
@@ -58,14 +58,14 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
 
     public function startGame() {
         $data['isOpen'] = 'false';
-        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->update($this->_name, $data, $where);
     }
 
     public function getGame() {
         $select = $this->_db->select()
                 ->from($this->_name)
-                ->where('"' . $this->_primary . '" = ?', $this->_id);
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         $result = $this->_db->query($select)->fetchAll();
         if (is_array($result[0]))
             return $result[0];
@@ -79,7 +79,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         try {
             $select = $this->_db->select()
                     ->from('playersingame')
-                    ->where('"gameId" = ?', $this->_id)
+                    ->where('"gameId" = ?', $this->_gameId)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
@@ -91,7 +91,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         try {
             $select = $this->_db->select()
                     ->from('playersingame', array('color'))
-                    ->where('"gameId" = ?', $this->_id)
+                    ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $id);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0]['color'])) {
@@ -104,7 +104,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
 
     public function joinGame($id, $color) {
         $data = array(
-            'gameId' => $this->_id,
+            'gameId' => $this->_gameId,
             'playerId' => $id,
             'color' => $color
         );
@@ -122,14 +122,14 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             'timeout' => 'now()'
         );
         $where[] = $this->_db->quoteInto('"playerId" = ?', $id);
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->update('playersingame', $data, $where);
     }
 
     public function isGameMaster($id) {
         $select = $this->_db->select()
                 ->from($this->_name, array('gameMasterId'))
-                ->where('"' . $this->_primary . '" = ?', $this->_id)
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId)
                 ->where('"gameMasterId" = ?', $id);
         $result = $this->_db->query($select)->fetchAll();
         if (isset($result[0]['gameMasterId'])) {
@@ -143,7 +143,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $select = $this->_db->select()
                 ->from($this->_name, array('isOpen'))
                 ->where('"isOpen" = false')
-                ->where('"' . $this->_primary . '" = ?', $this->_id);
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         $result = $this->_db->query($select)->fetchAll();
         if (isset($result[0]['isOpen'])) {
             return true;
@@ -153,7 +153,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     }
 
     public function updateGame($data) {
-        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->update($this->_name, $data, $where);
     }
 
@@ -161,7 +161,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         try {
             $select = $this->_db->select()
                     ->from('playersingame')
-                    ->where('"gameId" = ?', $this->_id);
+                    ->where('"gameId" = ?', $this->_gameId);
             return $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             throw new Exception($select->__toString());
@@ -173,7 +173,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             $data['ready'] = 'true';
         else
             $data['ready'] = 'false';
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         return $this->_db->update('playersingame', $data, $where);
     }
@@ -182,7 +182,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $select = $this->_db->select()
                 ->from($this->_name, array('turnPlayerId'))
                 ->where('"turnPlayerId" = ?', $playerId)
-                ->where('"' . $this->_primary . '" = ?', $this->_id);
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         $result = $this->_db->query($select)->fetchAll();
         if (isset($result[0]['turnPlayerId'])) {
             return true;
@@ -223,6 +223,12 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         if (!isset($nextPlayerId)) {
             throw new Exception('Nie znalazłem gracza');
         }
+        if($this->isGameMaster($nextPlayerId)) {
+            $select = $this->_db->select()
+                    ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            $data['turnNumber'] = new Zend_Db_Expr('('.$select->__toString().')');
+        }
         $data['turnPlayerId'] = $nextPlayerId;
         if ($this->updateGame($data) == 1) {
             return array(
@@ -239,7 +245,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from(array('a' => $this->_name), array('turnPlayerId'))
                     ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
-                    ->where('a."' . $this->_primary . '" = ?', $this->_id);
+                    ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0])) {
                 return $result[0];
@@ -255,7 +261,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->from('playersingame', 'turnActive')
                     ->where('"playerId" = ?', $playerId)
                     ->where('"turnActive" = ?', true)
-                    ->where('"' . $this->_primary . '" = ?', $this->_id);
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0]['turnActive'])) {
                 return true;
@@ -267,15 +273,27 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
 
     public function turnActivate($playerId) {
         $data['turnActive'] = 'true';
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $this->_db->update('playersingame', $data, $where);
         $where = array();
         $data['turnActive'] = 'false';
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id);
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"turnActive" = ?', 'true');
         $where[] = $this->_db->quoteInto('"playerId" != ?', $playerId);
         $this->_db->update('playersingame', $data, $where);
+    }
+
+    public function getTurnNumber() {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'turnNumber')
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['turnNumber'];
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
     }
 
 }
