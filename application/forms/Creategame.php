@@ -3,21 +3,14 @@
 class Application_Form_Creategame extends Zend_Form {
 
     public function init() {
-       
+
         /* Form Elements & Other Definitions Here ... */
         $this->setMethod('post');
         $this->setAction('/gamesetup/create');
-        $this->addElement('text', 'name',
-        array(
-         'label'=>'Nazwa gry',
-         'required'=>true,
-         'filters'=>array('StringTrim'),
-         'validators'=>array(array('StringLength',false,array(3,256)))
-         )
-        );
+
         $this->addElement('text', 'numberOfPlayers',
         array(
-         'label'=>'Ilość graczy',
+         'label'=>'Number of players',
          'required'=>true,
          'filters'=>array('StringTrim'),
          'validators'=>array(

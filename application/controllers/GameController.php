@@ -20,7 +20,6 @@ class GameController extends Warlords_Controller_Action {
         $this->view->headScript()->appendFile('/js/game.websocket.js');
         $this->view->headScript()->appendFile('/js/game.ajax.js');
 
-        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/game.zoom.css');
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
 

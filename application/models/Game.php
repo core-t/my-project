@@ -33,10 +33,27 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
 
     public function getOpen() {
         $select = $this->_db->select()
-                ->from($this->_name, array($this->_primary, 'name'))
+                ->from($this->_name, array($this->_primary))
                 ->where('"isOpen" = true');
         $result = $this->_db->query($select)->fetchAll();
         return $result;
+    }
+
+    public function getMyGames($playerId) {
+        try {
+            $select1 = $this->_db->select()
+                        ->from('playersingame', $this->_primary)
+                        ->where('"playerId" = ?', $playerId);
+            $select2 = $this->_db->select()
+                    ->from($this->_name)
+                    ->where('"isOpen" = false')
+                    ->where('"isActive" = true')
+                    ->where('"gameId" IN ?', $select1);
+            $result = $this->_db->query($select2)->fetchAll();
+            return $result;
+        } catch (PDOException $e) {
+            throw new Exception($select2->__toString());
+        }
     }
 
     public function startGame() {
@@ -65,7 +82,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_id)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             return $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }

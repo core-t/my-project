@@ -32,7 +32,6 @@ class GamesetupController extends Warlords_Controller_Action {
             if ($this->view->form->isValid($this->_request->getPost())) {
                 $modelGame = new Application_Model_Game ();
                 $data = array(
-                    'name' => $this->_request->getParam('name'),
                     'numberOfPlayers' => $this->_request->getParam('numberOfPlayers'),
                     'gameMasterId' => $this->_namespace->player['playerId'],
                     'turnPlayerId' => $this->_namespace->player['playerId']

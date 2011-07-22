@@ -39,33 +39,53 @@
 
 .zoomPad{
 	float:left;
-        border:1px solid #000;
+    border:1px solid #fff;
+    width:203px;
+    height:128px;
+    position:relative;
+    left:0;
+    top:0px;
+    cursor: default;
 }
 
 .zoomPup{
-	overflow:hidden;
-	background-color: #FFF;
-	opacity: 0.6;
-	position:absolute;
-	border:1px solid #CCC;
+    overflow:hidden;
+    background-color: #FFF;
+    opacity: 0.6;
+    border:1px solid #CCC;
+    z-index:1000;
+    cursor: move;
+
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 31px;
+    position: inherit;
+/*     display: none; */
+}
+
+#map {
+    position: inherit;
+    top: -33px;
+    left: 1px;
 }
 
 .zoomWindow{
-    position:absolute;
+    position:relative;
     left:0;
-    top:128px;
+    top:0px;
     background:#000;
     display:block;
     overflow:hidden;
     width: 758px;
     height: 670px;
     border:1px solid #000;
+    clear:both;
 }
 
 #gameMenu {
-    position:absolute;
-    left: 205px;
-    top: 0px;
+    float:right;
+    height:129px;
 }
 
 .gameMenu {

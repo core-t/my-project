@@ -17,23 +17,23 @@ class LoginController extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
                 $this->_namespace->fbId = $this->_request->getParam('fbid');
-                $model = new Application_Model_Player($this->_namespace->fbId);
-                if($model->noPlayer()) {
-                    $playerId = $model->createPlayer();
+                $modelPlayer = new Application_Model_Player($this->_namespace->fbId);
+                if($modelPlayer->noPlayer()) {
+                    $playerId = $modelPlayer->createPlayer();
                     if($playerId) {
-                        $model = new Application_Model_Hero($playerId);
-                        $model->createHero();
+                        $modelHero = new Application_Model_Hero($playerId);
+                        $modelHero->createHero();
                     }
                 }
                 $playerActivity = new Warlords_Player_Activity();
-                $player = $model->getPlayer();
-                
+                $player = $modelPlayer->getPlayer();
+
                 if(!$playerActivity->isActive( $player['playerId'])) {
                     $this->_helper->redirector('index', 'index');
                 } else {
                     $this->view->active = true;
                 }
-                
+
             }
         }
         $this->view->form = $form;

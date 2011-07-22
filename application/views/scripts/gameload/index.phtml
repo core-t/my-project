@@ -1,4 +1,22 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>Gameload</b> and script/action name <b>index</b></p>
-</div>
+<table id="mygames">
+    <th></th>
+<?php
+if(is_array($this->myGames)) {
+    foreach($this->myGames as $game) {
+        echo '<tr id="gid'.$game['gameId'].'">
+        <td>Load '.$game['gameId'].' '.$game['begin'].'</td>
+        <td>'.$game['numberOfPlayers'].'</td>
+        <td>'.$game['turnNumber'].'</td>
+        </tr>';
+    }
+}
+?>
+</table>
+
+<a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">Back</a>
+
+<script type="text/javascript">
+    $('#gid<?php echo $game['gameId']?>').click(function(){
+        top.location = '<?php echo $this->url(array('controller'=>'gameload', 'action'=>'load', 'gameId'=>$game['gameId']))?>';
+    });
+</script>

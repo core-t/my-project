@@ -21,8 +21,12 @@ class FightController extends Warlords_Controller_Action
         $y = $this->_request->getParam('y');
         $movesSpend = 2;
         $enemyId = $this->_request->getParam('eid');
-        if ($armyId !== null AND $x !== null AND $y !== null AND $movesSpend !==null AND $enemyId !== null) {
+        if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+            if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
+                throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+            }
             $enemies = $modelArmy->getAllArmiesFromPosition(array('x' => $x, 'y' => $y));
             foreach($enemies as $enemy) {
                 if($enemy['armyId'] == $enemyId) {
@@ -33,7 +37,6 @@ class FightController extends Warlords_Controller_Action
             if(!isset($enemyConfirmed)) {
                 throw new Exception('Na podanej pozycji nie znaleziono wroga.');
             }
-            $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
             $result = array('attacker' => $army, 'defender' => null);
             foreach ($enemies as $enemy) {
                 $result = $this->battle($result['attacker'], $enemy);
@@ -92,7 +95,7 @@ class FightController extends Warlords_Controller_Action
         $y = $this->_request->getParam('y');
         $movesSpend = 2;
         $castleId = $this->_request->getParam('cid');
-        if ($armyId !== null AND $x !== null AND $y !== null AND !empty($movesSpend) AND $castleId !== null) {
+        if ($armyId !== null AND $x !== null AND $y !== null AND $castleId !== null) {
             $modelBoard = new Application_Model_Board();
             $castle = $modelBoard->getCastle($castleId);
             if (empty($castle)) {
@@ -102,6 +105,9 @@ class FightController extends Warlords_Controller_Action
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+                if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
+                    throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+                }
                 if ($army['movesLeft'] < $movesSpend) {
                     throw new Exception('Pozostało mniej ruchów niż gracz próbuje wydać!');
                     return false;
@@ -278,5 +284,9 @@ class FightController extends Warlords_Controller_Action
         return rand(1, 10);
     }
 
+    private function calculateArmiesDistance($x, $y, $position) {
+        $position = explode(',', substr($position, 1 , -1));
+        return sqrt(pow($x - $position[0], 2) + pow($position[1] - $y, 2));
+    }
 }
 

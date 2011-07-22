@@ -1,0 +1,24 @@
+#playersingame td {
+    height:20px;
+    min-width: 200px;
+    background: #0398CA;
+    border:1px solid #ccc;
+    padding:2px;
+    margin:2px;
+}
+
+#playersingame tr#green td {
+    background: #0f0;
+}
+
+#playersingame tr#white td {
+    background: #fff;
+}
+
+#playersingame tr#red td {
+    background: #f00;
+}
+
+#playersingame tr#orange td {
+    background: #FFAE57;
+}

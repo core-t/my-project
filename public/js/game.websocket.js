@@ -11,7 +11,7 @@ var FancyWebSocket = function(url){
 
     this.send = function(event_name, event_data){
         var payload = JSON.stringify({
-            event:event_name, 
+            event:event_name,
             data: event_data
         });
         conn.send( payload ); // <= send JSON data to socket server
@@ -29,11 +29,11 @@ var FancyWebSocket = function(url){
     };
 
     conn.onclose = function(){
-        $('#log').html('DISCONNECTED!'+this.readyState);
+        $('#wsStatus').html('DISCONNECTED!'+this.readyState);
         dispatch('close',null)
     }
     conn.onopen = function(){
-        $('#log').html('CONNECTED'+this.readyState);
+        $('#wsStatus').html('CONNECTED'+this.readyState);
         dispatch('open',null)
 
     }
@@ -95,6 +95,9 @@ function wsTurn(playerId, color) {
 }
 
 function wsPing() {
+    if(typeof socket == 'undefined') {
+        return null;
+    }
     socket.send(
         'ping',
         {

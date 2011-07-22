@@ -1,5 +1,3 @@
-var tempX = 0;
-var tempY = 0;
 var newX = 0;
 var newY = 0;
 
@@ -17,6 +15,7 @@ var zoomer;
 var socket;
 
 $(document).ready(function() {
+    zoomer = new zoom(758, 670);
     for(i in castles) {
         castles[i] = new createCastle(i);
     }
@@ -29,8 +28,6 @@ $(document).ready(function() {
         }
     }
     setInterval ( 'wsPing()', 9000 );
-    sp = $('.castle_' + turn.color);
-    zoomer = new zoom(758, 670, sp.css('left'), sp.css('top'));
 
     board.mousedown(function(event) {
         if(lock) {
@@ -40,7 +37,7 @@ $(document).ready(function() {
         switch (event.which) {
             case 1:
                 if(selectedArmy != null) {
-                    sendMove(cursorPosition());
+                    sendMove(cursorPosition(event.pageX, event.pageY));
                 }
                 break;
             case 2:
@@ -57,9 +54,9 @@ $(document).ready(function() {
         if(lock) {
             return null;
         }
-        tempX = e.pageX;
-        tempY = e.pageY;
-        cursorPosition();
+//         tempX = e.pageX - this.offsetLeft;
+//         tempY = e.pageY - this.offsetTop;
+        cursorPosition(e.pageX, e.pageY);
     });
     $('#nextArmy').click(function() {
         if(lock) {
@@ -76,8 +73,21 @@ $(document).ready(function() {
             }
         }
     });
-    $('#log').html('DISCONNECTED!');
+    $('#wsStatus').html('DISCONNECTED!');
+    $('#connect').click(function() {
+        wsConnect();
+    });
+    $('#nextTurn').click(function() {
+        if(turn.myTurn) {
+            sendNextTurn();
+            $('#nextTurn').css({
+                'text-decoration':'underline',
+                'color':'blue'
+            });
+        }
+    });
     lock = false;
+    showFirstCastle();
 //     for(y in fields) {
 //         for(x in fields[y]) {
 //             board.append(
@@ -95,16 +105,17 @@ $(document).ready(function() {
 
 function turnOn() {
     turn.myTurn = true;
-    $('#nextTurn').html('<a href="javascript:sendNextTurn()">Next turn</a>');
+    $('#nextTurn').html('Next turn');
+    $('#turn').html('Your turn');
     $('#nextArmy').html('Next army');
-    sp = $('.castle_' + turn.color);
-    zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
+    showFirstCastle();
 }
 
 function turnOff() {
     turn.myTurn = false;
     unselectArmy();
-    $('#nextTurn').html(turn.color + ' turn');
+    $('#nextTurn').html('');
+    $('#turn').html('Turn: player '+turn.color);
     $('#nextArmy').html('');
 }
 

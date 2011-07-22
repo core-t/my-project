@@ -21,5 +21,12 @@ body {
     color:#f00;
     float: right;
     text-decoration: none;
-    padding:2px;
+    line-height:20px;
+    padding-right:10px;
 }
+
+a {
+    color:blue;
+    text-decoration: none;
+}
+

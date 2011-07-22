@@ -15,6 +15,7 @@ class MoveController extends Warlords_Controller_Action
     public function goAction()
     {
         // action body
+        // sprawdzić czy na pozycji nie ma zamku lub armii wroga!
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if(!$modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
             throw new Exception('Nie Twoja tura.');
@@ -72,7 +73,7 @@ class MoveController extends Warlords_Controller_Action
             $this->fields[$y][$x] = 'r';
             $this->fields[$y + 1][$x + 1] = 'r';
         }
-        
+
         $this->path = array();
         $vectorLenth = sqrt(pow($newX - $position['x'], 2) + pow($position['y'] - $newY, 2));
         $cosAlpha = ($newX - $position['x']) / $vectorLenth;

@@ -3,7 +3,6 @@ $playersInGame = '';
 $playersOut = '';
 $urlStart = '';
 ?>
-<h3>Game name: "<?php echo $this->game['name'] ?>"</h3>
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <h4>Players in game</h4>
 <table id="playersingame"></table>
@@ -32,7 +31,7 @@ $urlStart = '';
     var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
     var ready = 0;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
-    
+
 <?php if ($urlStart) { ?>
     function start() {
         $.getJSON(urlStart, function(result) {

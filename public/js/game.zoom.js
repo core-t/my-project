@@ -1,11 +1,9 @@
-function zoom(zoomWidth, zoomHeight, zoomPupX, zoomPupY) {
+function zoom(zoomWidth, zoomHeight) {
     var el = $('#game');
     var obj = this;
     var settings = {
         zoomWidth: zoomWidth,
-        zoomHeight: zoomHeight,
-        zoomPupX: zoomPupX,
-        zoomPupY: zoomPupY
+        zoomHeight: zoomHeight
     };
     el.largeimageloaded = false; //tell us if large image is loaded
     el.scale = {};
@@ -24,7 +22,6 @@ function zoom(zoomWidth, zoomHeight, zoomPupX, zoomPupY) {
             //drag option
             $(".zoomPad", el).mousedown(function () {
                 el.mouseDown = true;
-            //console.log( 'mouseDown' );
             });
             $(".zoomPad", el).mouseup(function () {
                 el.mouseDown = false;
@@ -32,20 +29,8 @@ function zoom(zoomWidth, zoomHeight, zoomPupX, zoomPupY) {
             document.body.ondragstart = function () {
                 return false;
             };
-            $(".zoomPad", el).css({
-                cursor: 'default'
-            });
-            $(".zoomPup", el).css({
-                cursor: 'move'
-            });
             $(".zoomPad", el).bind('mouseenter mouseover', function (event) {
-                //if loaded then activate else load large image
                 smallimage.fetchdata();
-                if (el.largeimageloaded) {
-                    obj.activate(event);
-                } else {
-                    obj.load();
-                }
             });
             $(".zoomPad", el).bind('mousedown', function (e) {
                 if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
@@ -67,9 +52,9 @@ function zoom(zoomWidth, zoomHeight, zoomPupX, zoomPupY) {
                 }
                 if (el.mouseDown) {
                     lens.setposition(e);
-                //                        console.log( 'test' );
                 }
             });
+            largeimage.loadimage();
         },
         load: function () {
             largeimage.loadimage();
@@ -154,16 +139,6 @@ function zoom(zoomWidth, zoomHeight, zoomPupX, zoomPupY) {
             this.node.h = (parseInt((settings.zoomHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(settings.zoomHeight / el.scale.y));
             this.node.top = (smallimage.oh - this.node.h - 2) / 2;
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
-            //centering lens
-            this.node.css({
-                top: 0,
-                left: 0,
-                width: this.node.w + 'px',
-                height: this.node.h + 'px',
-                position: 'absolute',
-                display: 'none',
-                borderWidth: 1 + 'px'
-            });
         };
         this.setcenter = function (x, y) {
             this.node.top = (parseInt(y) - 315)/21;

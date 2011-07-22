@@ -3,7 +3,7 @@
 <?php
 if(is_array($this->openGames)) {
     foreach($this->openGames as $game) {
-        echo '<tr><td><a href="'.$this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>$game['gameId'])).'">Join '.$game['gameId'].' '.$game['name'].'</a></td></tr>';
+        echo '<tr><td><a href="'.$this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>$game['gameId'])).'">Join '.$game['gameId'].'</a></td></tr>';
     }
 }
 ?>

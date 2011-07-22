@@ -1,0 +1,25 @@
+<h1>Waiting for other players</h1>
+
+<p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
+<h4>Players in game</h4>
+<table id="playersingame">
+    <th>Player Id</th><th>Player color</th><th>Ready</th>
+<?php
+for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
+    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id">empty</td><td>'.$this->colors[$i].'</td><td id="'.$this->colors[$i].'Ready"></td></tr>';
+}
+?>
+</table>
+
+<ul>
+    <li><a href="javascript:refresh()">Refresh</a></li>
+    <li><a href="<?php echo $this->url(array('controller' => 'gameload', 'action' => 'index', 'gameId' => null)) ?>">Back</a></li>
+</ul>
+<script type="text/javascript">
+    var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';
+    var urlRefresh = '<?php echo $this->url(array('controller' => 'gameloadajax', 'action' => 'refresh', 'gameId' => null)) ?>';
+    var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
+    var ready = 0;
+    var playerId = <?php echo (int) $this->player['playerId'] ?>;
+
+</script>

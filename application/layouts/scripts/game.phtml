@@ -1,7 +1,7 @@
 <?php echo $this->doctype() ?>
 <html>
-    <head>        
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <?php
         echo $this->headTitle() . "\n";
         echo $this->headLink() . "\n";
@@ -10,16 +10,38 @@
         ?>
     </head>
     <body>
-        <div id="menuTop"><a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a></div>
-        <div id="game">
-            <div class="zoomPad">
-                <img id="map" src="/img/game/board.png" width="202px">
-                <div class="zoomPup"></div>
+        <div id="page">
+            <div id="menuTop"><a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a></div>
+            <div id="game">
+                <div class="zoomPad">
+                    <div class="zoomPup"></div>
+                    <img id="map" src="/img/game/board.png" width="202px">
+                </div>
+                <div id="gameMenu">
+                    <div class="gameMenu">
+                        <p id="youAre">You are </p>
+                        <p id="turn"></p>
+                        <a id="nextTurn"></a>
+                    </div>
+                    <div class="gameMenu">
+                        <p id="coord"></p>
+                        <p id="info"></p>
+                        <p id="name"></p>
+                        <p id="moves"></p>
+                        <a id="nextArmy"></a>
+                    </div>
+                    <div class="gameMenu">
+                        <a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index')); ?>">Quit game</a>
+                        <p id="wsStatus"></p>
+                        <a id="connect">Connect</a>
+                        <p id="log"></p>
+                    </div>
+                </div>
                 <div class="zoomWindow">
                     <div id="board"></div>
                 </div>
             </div>
         </div>
-        <?php echo $this->layout()->content; ?>
     </body>
 </html>
+<?php echo $this->layout()->content; ?>
