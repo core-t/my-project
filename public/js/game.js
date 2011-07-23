@@ -61,8 +61,6 @@ $(document).ready(function() {
         if(lock) {
             return null;
         }
-//         tempX = e.pageX - this.offsetLeft;
-//         tempY = e.pageY - this.offsetTop;
         cursorPosition(e.pageX, e.pageY);
     });
     $('#nextArmy').click(function() {

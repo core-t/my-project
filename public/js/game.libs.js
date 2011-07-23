@@ -6,12 +6,13 @@ $(document)[0].oncontextmenu = function() {
 
 function createCastle(id) {
     this.position = castles[i].position;
+    this.defense = castles[i].defensePoints;
     this.color = '';
     this.element = $('<div>')
     .addClass('castle')
     .attr({
         id: 'castle' + id,
-        title: 'Neutral castle'
+        title: castles[i].name
     })
     .css({
         left: this.position.x + 'px',
@@ -78,6 +79,19 @@ function castleOwner(castleId, color) {
                 });
             }
         });
+        castles[castleId].element.click(function(){
+            if(turn.myTurn){
+                if(!selectedArmy) {
+                    console.log(castles[castleId]);
+                    $('#game').after(
+                        $('<div>')
+                        .addClass('message')
+                        .html('Defense: '+castles[castleId].defense)
+                        .click(function(){$('.message').remove()})
+                    );
+                }
+            }
+        });
     } else {
         zindex = 600;
         castles[castleId].element.mouseover(function() {
@@ -112,15 +126,11 @@ function castleOwner(castleId, color) {
     castles[castleId].element
     .removeClass()
     .addClass('castle castle_' + color)
-    .attr({
-        title: color + ' castle'
-    })
     .css({
-        cursor: 'default',
         'z-index':zindex,
         background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
     });
-    castles[castleId].element.fadeIn(500);
+    castles[castleId].element.fadeIn(1);
     castles[castleId].color = color;
 }
 

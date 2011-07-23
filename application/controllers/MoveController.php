@@ -283,7 +283,7 @@ class MoveController extends Warlords_Controller_Action
         if($terrainType == 'M' || $terrainType == 'w') {
             return 0;
         }
-        $terrain = $this->getTerrain($terrainType);
+        $terrain = Application_Model_Board::getTerrain($terrainType);
 //         var_dump($terrain);
         $this->path[] = array(
             'terrain' => $terrain[0],
@@ -296,26 +296,6 @@ class MoveController extends Warlords_Controller_Action
         }
         return $movesSpend + $terrain[1];
     }
-
-    private function getTerrain($type) {
-        switch($type) {
-            case 'r':
-                return array('Road', 1);
-            case 'w':
-                return array('Water', 10);
-            case 'm':
-                return array('Hills', 5);
-            case 'M':
-                return array('Mountains', 10);
-            case 'g':
-                return array('Grassland', 2);
-            case 'f':
-                return array('Forest', 3);
-            case 's':
-                return array('Swamp', 4);
-        }
-    }
-
 
 }
 

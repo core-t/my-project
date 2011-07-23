@@ -19,13 +19,15 @@ class FightController extends Warlords_Controller_Action
         $armyId = $this->_request->getParam('armyId');
         $x = $this->_request->getParam('x');
         $y = $this->_request->getParam('y');
-        $movesSpend = 2;
         $enemyId = $this->_request->getParam('eid');
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
             if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+            }
+            if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
+                throw new Exception('Armia ma za mało ruchów do wykonania akcji.');
             }
             $enemies = $modelArmy->getAllArmiesFromPosition(array('x' => $x, 'y' => $y));
             foreach($enemies as $enemy) {
@@ -83,7 +85,7 @@ class FightController extends Warlords_Controller_Action
                 }
             }
         } else {
-            throw new Exception('Brak "armyId" lub "x" lub "y" lub "movesSpend" lub "$enemyId"!');
+            throw new Exception('Brak "armyId" lub "x" lub "y" lub "$enemyId"!');
         }
     }
 
@@ -93,7 +95,6 @@ class FightController extends Warlords_Controller_Action
         $armyId = $this->_request->getParam('armyId');
         $x = $this->_request->getParam('x');
         $y = $this->_request->getParam('y');
-        $movesSpend = 2;
         $castleId = $this->_request->getParam('cid');
         if ($armyId !== null AND $x !== null AND $y !== null AND $castleId !== null) {
             $modelBoard = new Application_Model_Board();
@@ -108,9 +109,8 @@ class FightController extends Warlords_Controller_Action
                 if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
-                if ($army['movesLeft'] < $movesSpend) {
-                    throw new Exception('Pozostało mniej ruchów niż gracz próbuje wydać!');
-                    return false;
+                if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
+                    throw new Exception('Armia ma za mało ruchów do wykonania akcji.');
                 }
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 $enemies = array();
@@ -174,7 +174,7 @@ class FightController extends Warlords_Controller_Action
                 throw new Exception('Na podanej pozycji nie ma zamku!');
             }
         } else {
-            throw new Exception('Brak "armyId" lub "x" lub "y" lub "movesSpend"!');
+            throw new Exception('Brak "armyId" lub "x" lub "y"!');
         }
     }
 
@@ -287,6 +287,21 @@ class FightController extends Warlords_Controller_Action
     private function calculateArmiesDistance($x, $y, $position) {
         $position = explode(',', substr($position, 1 , -1));
         return sqrt(pow($x - $position[0], 2) + pow($position[1] - $y, 2));
+    }
+
+    private function movesSpend($x, $y) {
+        $modelBoard = new Application_Model_Board();
+        $fields = Application_Model_Board::getBoardFields();
+        $castlesSchema = $modelBoard->getCastlesSchema();
+        foreach($castlesSchema as $castle) {
+            $cy = $castle['position']['y']/40;
+            $cx = $castle['position']['x']/40;
+            $fields[$cy][$cx] = 'r';
+            $fields[$cy + 1][$cx + 1] = 'r';
+        }
+        $terrainType = $fields[$x/40][$y/40];
+        $terrain = Application_Model_Board::getTerrain($terrainType);
+        return $terrain[1] + 2;
     }
 }
 

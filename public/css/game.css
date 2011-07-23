@@ -138,3 +138,16 @@
     z-index:7000;
     background: #cecece;
 }
+
+.message {
+    width: 330px;
+    min-height: 130px;
+    max-height: 250px;
+    position:inherit;
+    border:1px solid white;
+    z-index:7000;
+    background: #cecece;
+    position:relative;
+    left:214px;
+    top:-400px;
+}

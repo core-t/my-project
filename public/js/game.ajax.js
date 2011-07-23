@@ -148,7 +148,7 @@ function getAddArmy(armyId) {
     $.getJSON(urlAddArmy+'/armyId/'+armyId, function(result) {
         if(typeof result.armyId != 'undefined') {
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
-            console.log('dodana ' + armyId + ' - ' + result.color);
+            console.log('WS dodana ' + armyId + ' - ' + result.color);
         }
     });
 }
