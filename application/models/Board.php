@@ -5,7 +5,383 @@ class Application_Model_Board {
     private $_castles = array();
 
     public function __construct() {
-        $this->_castles[0] = array(
+    $this->_castles[0] = array(
+'name' => 'MARTHOS',
+'income' => 20,
+'defensePoints' => 6,
+'position' => array('x' => 2480, 'y' => 2240),
+'capital' => true,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Cavalry',
+'Pegasi',
+)
+);
+$this->_castles[1] = array(
+'name' => 'ELVALLIE',
+'income' => 33,
+'defensePoints' => 6,
+'position' => array('x' => 1640, 'y' => 1480),
+'capital' => true,
+'production' => array(
+'Hvy Inf',
+'Archers',
+'Pegasi',
+)
+);
+$this->_castles[2] = array(
+'name' => 'CHARLING',
+'income' => 16,
+'defensePoints' => 3,
+'position' => array('x' => 1920, 'y' => 1360),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+)
+);
+$this->_castles[3] = array(
+'name' => 'GILDENHOME',
+'income' => 24,
+'defensePoints' => 5,
+'position' => array('x' => 1320, 'y' => 1520),
+'capital' => false,
+'production' => array(
+'Hvy Inf',
+'Archers',
+'Pegasi',
+)
+);
+$this->_castles[4] = array(
+'name' => 'LOREMARK',
+'income' => 3,
+'defensePoints' => 4,
+'position' => array('x' => 1720, 'y' => 1800),
+'capital' => false,
+'production' => array(
+'Hvy Inf',
+'Archers',
+'Pegasi',
+)
+);
+$this->_castles[5] = array(
+'name' => 'ARGENTHORN',
+'income' => 22,
+'defensePoints' => 4,
+'position' => array('x' => 1680, 'y' => 1040),
+'capital' => false,
+'production' => array(
+'Hvy Inf',
+'Archers',
+'Pegasi',
+)
+);
+$this->_castles[6] = array(
+'name' => 'ANGBAR',
+'income' => 20,
+'defensePoints' => 4,
+'position' => array('x' => 2160, 'y' => 880),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[7] = array(
+'name' => 'SSURI',
+'income' => 19,
+'defensePoints' => 4,
+'position' => array('x' => 2360, 'y' => 960),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[8] = array(
+'name' => 'TROY',
+'income' => 13,
+'defensePoints' => 3,
+'position' => array('x' => 2240, 'y' => 1080),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[9] = array(
+'name' => 'HEREUTH',
+'income' => 26,
+'defensePoints' => 6,
+'position' => array('x' => 2600, 'y' => 1400),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[10] = array(
+'name' => 'GLUK',
+'income' => 17,
+'defensePoints' => 4,
+'position' => array('x' => 3360, 'y' => 1680),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Giants',
+'Wolves',
+)
+);
+$this->_castles[11] = array(
+'name' => 'GORK',
+'income' => 15,
+'defensePoints' => 4,
+'position' => array('x' => 3440, 'y' => 1800),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Giants',
+'Wolves',
+)
+);
+$this->_castles[12] = array(
+'name' => 'GAROM',
+'income' => 20,
+'defensePoints' => 4,
+'position' => array('x' => 3480, 'y' => 1080),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Wolves',
+)
+);
+$this->_castles[13] = array(
+'name' => 'BALAD NARAN',
+'income' => 29,
+'defensePoints' => 6,
+'position' => array('x' => 3600, 'y' => 640),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Wolves',
+'Navy',
+)
+);
+$this->_castles[14] = array(
+'name' => 'GALIN',
+'income' => 20,
+'defensePoints' => 4,
+'position' => array('x' => 1640, 'y' => 0),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+'Navy',
+)
+);
+$this->_castles[15] = array(
+'name' => 'KOR',
+'income' => 30,
+'defensePoints' => 6,
+'position' => array('x' => 4000, 'y' => 120),
+'capital' => true,
+'production' => array(
+'Hvy Inf',
+'Wolves',
+)
+);
+$this->_castles[16] = array(
+'name' => 'DETHAL',
+'income' => 20,
+'defensePoints' => 4,
+'position' => array('x' => 3560, 'y' => 0),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Wolves',
+)
+);
+$this->_castles[17] = array(
+'name' => 'THURTZ',
+'income' => 18,
+'defensePoints' => 4,
+'position' => array('x' => 3400, 'y' => 80),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Wolves',
+)
+);
+$this->_castles[18] = array(
+'name' => 'DARCLAN',
+'income' => 23,
+'defensePoints' => 4,
+'position' => array('x' => 3120, 'y' => 0),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Wolves',
+)
+);
+$this->_castles[19] = array(
+'name' => 'ILNYR',
+'income' => 21,
+'defensePoints' => 4,
+'position' => array('x' => 2840, 'y' => 240),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[20] = array(
+'name' => 'DUINOTH',
+'income' => 19,
+'defensePoints' => 4,
+'position' => array('x' => 2720, 'y' => 720),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[21] = array(
+'name' => 'KAZRACK',
+'income' => 21,
+'defensePoints' => 4,
+'position' => array('x' => 2320, 'y' => 120),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[22] = array(
+'name' => 'VERNON',
+'income' => 24,
+'defensePoints' => 5,
+'position' => array('x' => 1920, 'y' => 80),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[23] = array(
+'name' => 'HIMELTON',
+'income' => 14,
+'defensePoints' => 3,
+'position' => array('x' => 880, 'y' => 320),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[24] = array(
+'name' => 'STORMHEIM',
+'income' => 20,
+'defensePoints' => 6,
+'position' => array('x' => 760, 'y' => 800),
+'capital' => true,
+'production' => array(
+'Giants',
+)
+);
+$this->_castles[25] = array(
+'name' => 'OHMSMOUTH',
+'income' => 24,
+'defensePoints' => 5,
+'position' => array('x' => 280, 'y' => 280),
+'capital' => false,
+'production' => array(
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[26] = array(
+'name' => 'WELLMORE',
+'income' => 20,
+'defensePoints' => 4,
+'position' => array('x' => 160, 'y' => 640),
+'capital' => false,
+'production' => array(
+'Hvy Inf',
+'Navy',
+)
+);
+$this->_castles[27] = array(
+'name' => 'TASME',
+'income' => 19,
+'defensePoints' => 4,
+'position' => array('x' => 320, 'y' => 1000),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Navy',
+)
+);
+$this->_castles[28] = array(
+'name' => 'VARDE',
+'income' => 23,
+'defensePoints' => 4,
+'position' => array('x' => 320, 'y' => 1360),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+'Navy',
+)
+);
+$this->_castles[29] = array(
+'name' => 'QUIESCE',
+'income' => 3,
+'defensePoints' => 4,
+'position' => array('x' => 600, 'y' => 1280),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Navy',
+)
+);
+$this->_castles[30] = array(
+'name' => 'KHORFE',
+'income' => 26,
+'defensePoints' => 5,
+'position' => array('x' => 320, 'y' => 1680),
+'capital' => false,
+'production' => array(
+'Dwarves',
+'Griffins',
+)
+);
+$this->_castles[31] = array(
+'name' => 'ALFAR\'S GAP',
+'income' => 18,
+'defensePoints' => 4,
+'position' => array('x' => 880, 'y' => 2160),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+'Cavalry',
+)
+);
+$this->_castles[32] = array(
+'name' => 'LADOR',
+'income' => 16,
+'defensePoints' => 4,
+'position' => array('x' => 1240, 'y' => 720),
+'capital' => false,
+'production' => array(
+'Lt Inf',
+)
+);
+/*        $this->_castles[0] = array(
             'name' => 'MARTHOS',
             'income' => 20,
             'defensePoints' => 2,
@@ -202,7 +578,7 @@ class Application_Model_Board {
             'income' => 16,
             'defensePoints' => 2,
             'position' => array('x' => 1240, 'y' => 720)
-        );
+        );*/
     }
 
     public function getDefaultStartPositions() {
@@ -467,8 +843,8 @@ class Application_Model_Board {
     }
 
 
-    public function production() {
-        $strng = '
+    static public function production() {
+        return '
 #CITY(Defense Value) CAPITAL      ARMY TYPES PERSENT (Time/Cost/Strength/Movement)
 DESERTION    (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
 ZAIGONNE     (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)

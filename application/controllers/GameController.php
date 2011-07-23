@@ -64,7 +64,109 @@ class GameController extends Warlords_Controller_Action {
     }
 
     public function testAction() {
+        $castles = array();
         $this->_helper->layout->disableLayout();
+        $str = Application_Model_Board::production();
+        $model = new Application_Model_Board();
+        $Schema = $model->getCastlesSchema();
+        $arr = explode("\n", $str);
+        unset($arr[0], $arr[1]);
+        foreach($arr as $k => $line) {
+            if(trim(substr($line,0,1))) {
+                $lineExp = explode('(', $line);
+                $name = trim($lineExp[0]);
+                $castles[$name] = array();
+                $castles[$name]['defense'] = substr($lineExp[1],0,1);
+                if(!strpos($lineExp[1],'-')) {
+                    $castles[$name]['capital'] = true;
+                }
+                $units = substr($line,33);//echo $units.'<br/>';
+                if(strpos($units,'Lt Inf') !== false) {
+                    $castles[$name]['production'][] = 'Lt Inf';
+                }
+                if(strpos($units,'Hvy Inf') !== false) {
+                    $castles[$name]['production'][] = 'Hvy Inf';
+                }
+                if(strpos($units,'Dwarves') !== false) {
+                    $castles[$name]['production'][] = 'Dwarves';
+                }
+                if(strpos($units,'Giants') !== false) {
+                    $castles[$name]['production'][] = 'Giants';
+                }
+                if(strpos($units,'Archers') !== false) {
+                    $castles[$name]['production'][] = 'Archers';
+                }
+                if(strpos($units,'Navy') !== false) {
+                    $castles[$name]['production'][] = 'Navy';
+                }
+                if(strpos($units,'Wolves') !== false) {
+                    $castles[$name]['production'][] = 'Wolves';
+                }
+                if(strpos($units,'Cavalry') !== false) {
+                    $castles[$name]['production'][] = 'Cavalry';
+                }
+                if(strpos($units,'Griffins') !== false) {
+                    $castles[$name]['production'][] = 'Griffins';
+                }
+                if(!trim(substr($arr[$k+1],0,1))) {
+                    $units2 = $arr[$k+1];
+                    if(strpos($units2,'Lt Inf') !== false) {
+                        $castles[$name]['production'][] = 'Lt Inf';
+                    }
+                    if(strpos($units2,'Hvy Inf') !== false) {
+                        $castles[$name]['production'][] = 'Hvy Inf';
+                    }
+                    if(strpos($units2,'Dwarves') !== false) {
+                        $castles[$name]['production'][] = 'Dwarves';
+                    }
+                    if(strpos($units2,'Giants') !== false) {
+                        $castles[$name]['production'][] = 'Giants';
+                    }
+                    if(strpos($units2,'Archers') !== false) {
+                        $castles[$name]['production'][] = 'Archers';
+                    }
+                    if(strpos($units2,'Wolves') !== false) {
+                        $castles[$name]['production'][] = 'Wolves';
+                    }
+                    if(strpos($units2,'Cavalry') !== false) {
+                        $castles[$name]['production'][] = 'Cavalry';
+                    }
+                    if(strpos($units2,'Griffins') !== false) {
+                        $castles[$name]['production'][] = 'Griffins';
+                    }
+                    if(strpos($units2,'Navy') !== false) {
+                        $castles[$name]['production'][] = 'Navy';
+                    }
+                    if(strpos($units2,'Pegasi') !== false) {
+                        $castles[$name]['production'][] = 'Pegasi';
+                    }
+//                     echo $arr[$k+1].'<br/>';
+                }
+            }
+        }
+        foreach($Schema as $k => $castle) {
+            if($castles[$castle['name']]) {
+//                 echo $k.'<pre>';print_r($castles[$castle['name']]);echo '</pre>';
+                echo '$this->_castles['.$k.'] = array(<br/>';
+                echo '\'name\' => \''.$castle['name'].'\',<br/>';
+                echo '\'income\' => '.$castle['income'].',<br/>';
+                echo '\'defensePoints\' => '.$castles[$castle['name']]['defense'].',<br/>';
+                echo '\'position\' => array(\'x\' => '.$castle['position']['x'].', \'y\' => '.$castle['position']['y'].'),<br/>';
+                if(isset($castles[$castle['name']]['capital']))
+                    echo '\'capital\' => true,<br/>';
+                else
+                    echo '\'capital\' => false,<br/>';
+                echo '\'production\' => array(<br/>';
+
+                    foreach($castles[$castle['name']]['production'] as $p) {
+                        echo '\''.$p.'\',<br/>';
+                    }
+                    echo ')<br/>';
+                echo ');<br/>';
+            }
+        }
+//         var_dump($castles);
+//         echo '<pre>';print_r($castles);echo '</pre>';
     }
 
 }
