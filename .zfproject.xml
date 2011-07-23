@@ -35,6 +35,11 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="refresh"/>
         </controllerFile>
+        <controllerFile controllerName="Production">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="set"/>
+          <actionMethod actionName="stop"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -84,6 +89,15 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Gameloadajax">
             <viewScriptFile forActionName="refresh"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Production">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Production">
+            <viewScriptFile forActionName="set"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Production">
+            <viewScriptFile forActionName="stop"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -144,6 +158,11 @@
           <testApplicationControllerFile forControllerName="Gameloadajax">
             <testApplicationActionMethod forActionName="index"/>
             <testApplicationActionMethod forActionName="refresh"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Production">
+            <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="set"/>
+            <testApplicationActionMethod forActionName="stop"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

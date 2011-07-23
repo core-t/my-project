@@ -152,3 +152,9 @@ function getAddArmy(armyId) {
         }
     });
 }
+
+function setProduction() {
+    $.getJSON(urlSetProduction, function(result) {
+
+    });
+}

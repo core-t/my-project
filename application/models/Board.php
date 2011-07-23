@@ -12,8 +12,8 @@ class Application_Model_Board {
 'position' => array('x' => 2480, 'y' => 2240),
 'capital' => true,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Cavalry',
 'Pegasi',
 )
@@ -25,7 +25,7 @@ $this->_castles[1] = array(
 'position' => array('x' => 1640, 'y' => 1480),
 'capital' => true,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Archers',
 'Pegasi',
 )
@@ -37,7 +37,7 @@ $this->_castles[2] = array(
 'position' => array('x' => 1920, 'y' => 1360),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 )
 );
 $this->_castles[3] = array(
@@ -47,7 +47,7 @@ $this->_castles[3] = array(
 'position' => array('x' => 1320, 'y' => 1520),
 'capital' => false,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Archers',
 'Pegasi',
 )
@@ -59,7 +59,7 @@ $this->_castles[4] = array(
 'position' => array('x' => 1720, 'y' => 1800),
 'capital' => false,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Archers',
 'Pegasi',
 )
@@ -71,7 +71,7 @@ $this->_castles[5] = array(
 'position' => array('x' => 1680, 'y' => 1040),
 'capital' => false,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Archers',
 'Pegasi',
 )
@@ -83,7 +83,7 @@ $this->_castles[6] = array(
 'position' => array('x' => 2160, 'y' => 880),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -94,7 +94,7 @@ $this->_castles[7] = array(
 'position' => array('x' => 2360, 'y' => 960),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -105,7 +105,7 @@ $this->_castles[8] = array(
 'position' => array('x' => 2240, 'y' => 1080),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -116,8 +116,8 @@ $this->_castles[9] = array(
 'position' => array('x' => 2600, 'y' => 1400),
 'capital' => false,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -128,7 +128,7 @@ $this->_castles[10] = array(
 'position' => array('x' => 3360, 'y' => 1680),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Giants',
 'Wolves',
 )
@@ -140,7 +140,7 @@ $this->_castles[11] = array(
 'position' => array('x' => 3440, 'y' => 1800),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Giants',
 'Wolves',
 )
@@ -152,7 +152,7 @@ $this->_castles[12] = array(
 'position' => array('x' => 3480, 'y' => 1080),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Wolves',
 )
 );
@@ -163,8 +163,8 @@ $this->_castles[13] = array(
 'position' => array('x' => 3600, 'y' => 640),
 'capital' => false,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Wolves',
 'Navy',
 )
@@ -176,7 +176,7 @@ $this->_castles[14] = array(
 'position' => array('x' => 1640, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 'Navy',
 )
@@ -188,7 +188,7 @@ $this->_castles[15] = array(
 'position' => array('x' => 4000, 'y' => 120),
 'capital' => true,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Wolves',
 )
 );
@@ -199,7 +199,7 @@ $this->_castles[16] = array(
 'position' => array('x' => 3560, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Wolves',
 )
 );
@@ -210,7 +210,7 @@ $this->_castles[17] = array(
 'position' => array('x' => 3400, 'y' => 80),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Wolves',
 )
 );
@@ -221,7 +221,7 @@ $this->_castles[18] = array(
 'position' => array('x' => 3120, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Wolves',
 )
 );
@@ -232,8 +232,8 @@ $this->_castles[19] = array(
 'position' => array('x' => 2840, 'y' => 240),
 'capital' => false,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -244,7 +244,7 @@ $this->_castles[20] = array(
 'position' => array('x' => 2720, 'y' => 720),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -255,8 +255,8 @@ $this->_castles[21] = array(
 'position' => array('x' => 2320, 'y' => 120),
 'capital' => false,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -267,8 +267,8 @@ $this->_castles[22] = array(
 'position' => array('x' => 1920, 'y' => 80),
 'capital' => false,
 'production' => array(
-'Lt Inf',
-'Hvy Inf',
+'Light Infantry',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -279,7 +279,7 @@ $this->_castles[23] = array(
 'position' => array('x' => 880, 'y' => 320),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -300,7 +300,7 @@ $this->_castles[25] = array(
 'position' => array('x' => 280, 'y' => 280),
 'capital' => false,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -311,7 +311,7 @@ $this->_castles[26] = array(
 'position' => array('x' => 160, 'y' => 640),
 'capital' => false,
 'production' => array(
-'Hvy Inf',
+'Heavy Infantry',
 'Navy',
 )
 );
@@ -322,7 +322,7 @@ $this->_castles[27] = array(
 'position' => array('x' => 320, 'y' => 1000),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Navy',
 )
 );
@@ -333,7 +333,7 @@ $this->_castles[28] = array(
 'position' => array('x' => 320, 'y' => 1360),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 'Navy',
 )
@@ -345,7 +345,7 @@ $this->_castles[29] = array(
 'position' => array('x' => 600, 'y' => 1280),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Navy',
 )
 );
@@ -367,7 +367,7 @@ $this->_castles[31] = array(
 'position' => array('x' => 880, 'y' => 2160),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 'Cavalry',
 )
 );
@@ -378,207 +378,9 @@ $this->_castles[32] = array(
 'position' => array('x' => 1240, 'y' => 720),
 'capital' => false,
 'production' => array(
-'Lt Inf',
+'Light Infantry',
 )
 );
-/*        $this->_castles[0] = array(
-            'name' => 'MARTHOS',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 2480, 'y' => 2240)
-        );
-        $this->_castles[1] = array(
-            'name' => 'ELVALLIE',
-            'income' => 33,
-            'defensePoints' => 2,
-            'position' => array('x' => 1640, 'y' => 1480)
-        );
-        $this->_castles[2] = array(
-            'name' => 'CHARLING',
-            'income' => 16,
-            'defensePoints' => 2,
-            'position' => array('x' => 1920, 'y' => 1360)
-        );
-        $this->_castles[3] = array(
-            'name' => 'GILDENHOME',
-            'income' => 24,
-            'defensePoints' => 2,
-            'position' => array('x' => 1320, 'y' => 1520)
-        );
-        $this->_castles[4] = array(
-            'name' => 'LOREMARK',
-            'income' => 3,
-            'defensePoints' => 2,
-            'position' => array('x' => 1720, 'y' => 1800)
-        );
-        $this->_castles[5] = array(
-            'name' => 'ARGENTHORN',
-            'income' => 22,
-            'defensePoints' => 2,
-            'position' => array('x' => 1680, 'y' => 1040)
-        );
-        $this->_castles[6] = array(
-            'name' => 'ANGBAR',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 2160, 'y' => 880)
-        );
-        $this->_castles[7] = array(
-            'name' => 'SSURI',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 2360, 'y' => 960)
-        );
-        $this->_castles[8] = array(
-            'name' => 'TROY',
-            'income' => 13,
-            'defensePoints' => 2,
-            'position' => array('x' => 2240, 'y' => 1080)
-        );
-        $this->_castles[9] = array(
-            'name' => 'HEREUTH',
-            'income' => 26,
-            'defensePoints' => 2,
-            'position' => array('x' => 2600, 'y' => 1400)
-        );
-        $this->_castles[10] = array(
-            'name' => 'GLUK',
-            'income' => 17,
-            'defensePoints' => 2,
-            'position' => array('x' => 3360, 'y' => 1680)
-        );
-        $this->_castles[11] = array(
-            'name' => 'GORK',
-            'income' => 15,
-            'defensePoints' => 2,
-            'position' => array('x' => 3440, 'y' => 1800)
-        );
-        $this->_castles[12] = array(
-            'name' => 'GAROM',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 3480, 'y' => 1080)
-        );
-        $this->_castles[13] = array(
-            'name' => 'BALAD NARAN',
-            'income' => 29,
-            'defensePoints' => 2,
-            'position' => array('x' => 3600, 'y' => 640)
-        );
-        $this->_castles[14] = array(
-            'name' => 'GALIN',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 1640, 'y' => 0)
-        );
-        $this->_castles[15] = array(
-            'name' => 'KOR',
-            'income' => 30,
-            'defensePoints' => 2,
-            'position' => array('x' => 4000, 'y' => 120)
-        );
-        $this->_castles[16] = array(
-            'name' => 'DETHAL',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 3560, 'y' => 0)
-        );
-        $this->_castles[17] = array(
-            'name' => 'THURTZ',
-            'income' => 18,
-            'defensePoints' => 2,
-            'position' => array('x' => 3400, 'y' => 80)
-        );
-        $this->_castles[18] = array(
-            'name' => 'DARCLAN',
-            'income' => 23,
-            'defensePoints' => 2,
-            'position' => array('x' => 3120, 'y' => 0)
-        );
-        $this->_castles[19] = array(
-            'name' => 'ILNYR',
-            'income' => 21,
-            'defensePoints' => 2,
-            'position' => array('x' => 2840, 'y' => 240)
-        );
-        $this->_castles[20] = array(
-            'name' => 'DUINOTH',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 2720, 'y' => 720)
-        );
-        $this->_castles[21] = array(
-            'name' => 'KAZRACK',
-            'income' => 21,
-            'defensePoints' => 2,
-            'position' => array('x' => 2320, 'y' => 120)
-        );
-        $this->_castles[22] = array(
-            'name' => 'VERNON',
-            'income' => 24,
-            'defensePoints' => 2,
-            'position' => array('x' => 1920, 'y' => 80)
-        );
-        $this->_castles[23] = array(
-            'name' => 'HIMELTON',
-            'income' => 14,
-            'defensePoints' => 2,
-            'position' => array('x' => 880, 'y' => 320)
-        );
-        $this->_castles[24] = array(
-            'name' => 'STORMHEIM',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 760, 'y' => 800)
-        );
-        $this->_castles[25] = array(
-            'name' => 'OHMSMOUTH',
-            'income' => 24,
-            'defensePoints' => 2,
-            'position' => array('x' => 280, 'y' => 280)
-        );
-        $this->_castles[26] = array(
-            'name' => 'WELLMORE',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 160, 'y' => 640)
-        );
-        $this->_castles[27] = array(
-            'name' => 'TASME',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 320, 'y' => 1000)
-        );
-        $this->_castles[28] = array(
-            'name' => 'VARDE',
-            'income' => 23,
-            'defensePoints' => 2,
-            'position' => array('x' => 320, 'y' => 1360)
-        );
-        $this->_castles[29] = array(
-            'name' => 'QUIESCE',
-            'income' => 3,
-            'defensePoints' => 2,
-            'position' => array('x' => 600, 'y' => 1280)
-        );
-        $this->_castles[30] = array(
-            'name' => 'KHORFE',
-            'income' => 26,
-            'defensePoints' => 2,
-            'position' => array('x' => 320, 'y' => 1680)
-        );
-        $this->_castles[31] = array(
-            'name' => 'ALFAR\'S GAP',
-            'income' => 18,
-            'defensePoints' => 2,
-            'position' => array('x' => 880, 'y' => 2160)
-        );
-        $this->_castles[32] = array(
-            'name' => 'LADOR',
-            'income' => 16,
-            'defensePoints' => 2,
-            'position' => array('x' => 1240, 'y' => 720)
-        );*/
     }
 
     public function getDefaultStartPositions() {
@@ -846,114 +648,114 @@ $this->_castles[32] = array(
     static public function production() {
         return '
 #CITY(Defense Value) CAPITAL      ARMY TYPES PERSENT (Time/Cost/Strength/Movement)
-DESERTION    (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-ZAIGONNE     (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-BERERI       (6)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+DESERTION    (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+ZAIGONNE     (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+BERERI       (6)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (6/8/6/16)  Navy    (11/20/5/18)
-TAL          (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-MINBOURNE    (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/4/18)
-TIRFING      (4)    -            Lt Inf     (2/4/4/9)
-AMENAL       (4)    -            Lt Inf    (1/4/3/10)
-PARETH       (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+TAL          (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+MINBOURNE    (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/4/18)
+TIRFING      (4)    -            Light Infantry     (2/4/4/9)
+AMENAL       (4)    -            Light Infantry    (1/4/3/10)
+PARETH       (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (5/8/5/14)
-UNGOR        (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
-GORAG        (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
-VIVAL        (3)    -            Lt Inf    (1/4/3/10)
-BANE CTIADEL (6)    Lord Bane    Gaints    (4/4/6/10)  Lt Inf    (1/4/3/10)
+UNGOR        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
+GORAG        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
+VIVAL        (3)    -            Light Infantry    (1/4/3/10)
+BANE CTIADEL (6)    Lord Bane    Gaints    (4/4/6/10)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/16)  Wolves    (3/8/5/14)
-NEEDLETON    (4)    -            Lt Inf    (1/4/3/10)
-GUNTHANG     (5)    -            Hvy Inf    (2/4/5/8)  Archers   (3/4/4/12)
+NEEDLETON    (4)    -            Light Infantry    (1/4/3/10)
+GUNTHANG     (5)    -            Heavy Infantry    (2/4/5/8)  Archers   (3/4/4/12)
                                  Pegasi   (5/16/4/16)
-DEEPHALLOW   (4)    -            Lt Inf    (1/4/3/10)
-AK-GIRIEL    (4)    -            Hvy Inf    (2/4/5/8)  Archers   (3/4/4/12)
+DEEPHALLOW   (4)    -            Light Infantry    (1/4/3/10)
+AK-GIRIEL    (4)    -            Heavy Infantry    (2/4/5/8)  Archers   (3/4/4/12)
                                  Pegasi   (7/16/4/16)
-AK-ENLIE     (4)    -            Hvy Inf    (2/4/5/8)  Archers   (3/4/4/12)
-AK-FARZON    (4)    -            Hvy Inf    (2/4/5/8)  Archers   (3/4/4/12)
-MENELOTH     (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+AK-ENLIE     (4)    -            Heavy Infantry    (2/4/5/8)  Archers   (3/4/4/12)
+AK-FARZON    (4)    -            Heavy Infantry    (2/4/5/8)  Archers   (3/4/4/12)
+MENELOTH     (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (5/8/5/15)
-MALIKOR      (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+MALIKOR      (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (6/8/6/13)
-ENMOUTH      (6)    Selentines   Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+ENMOUTH      (6)    Selentines   Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/20)  Navy     (8/20/6/18)
-ARGROND      (4)    -            Hvy Inf    (2/4/6/7)  Lt Inf    (1/4/3/10)
-BARTHEL      (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
-MARTON       (4)    -            Hvy Inf    (2/4/4/8)  Lt Inf    (1/4/3/10)
+ARGROND      (4)    -            Heavy Infantry    (2/4/6/7)  Light Infantry    (1/4/3/10)
+BARTHEL      (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
+MARTON       (4)    -            Heavy Infantry    (2/4/4/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-WAYBOURNE    (4)    -            Hvy Inf    (2/4/5/8)  Navy    (11/20/5/18)
-DETHAL       (4)    -            Lt Inf    (1/4/3/10)  Wolves    (5/8/5/14)
-GREENWEIGH   (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+WAYBOURNE    (4)    -            Heavy Infantry    (2/4/5/8)  Navy    (11/20/5/18)
+DETHAL       (4)    -            Light Infantry    (1/4/3/10)  Wolves    (5/8/5/14)
+GREENWEIGH   (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Dwarves    (3/4/5/9)
-UPWAY        (3)    -            Lt Inf    (2/4/3/10)
-DARCLAN      (4)    -            Lt Inf    (1/4/3/10)  Wolves    (3/8/5/14)
-MARIDUN      (4)    -            Lt Inf    (2/4/3/10)  Cavalry   (3/8/6/18)
-JESSARTON    (4)    -            Lt Inf    (3/4/2/10)  Navy    (12/20/3/18)
+UPWAY        (3)    -            Light Infantry    (2/4/3/10)
+DARCLAN      (4)    -            Light Infantry    (1/4/3/10)  Wolves    (3/8/5/14)
+MARIDUN      (4)    -            Light Infantry    (2/4/3/10)  Cavalry   (3/8/6/18)
+JESSARTON    (4)    -            Light Infantry    (3/4/2/10)  Navy    (12/20/3/18)
 ZHORAN       (5)    -            Dwarves    (1/4/5/9)  Griffins (5/16/5/16)
 KHAMAR       (6)    Dwarves      Dwarves    (2/4/5/9)  Griffins (5/16/6/18)
-UPBOURNE     (4)    -            Hvy Inf    (2/4/5/8)  Navy    (11/20/5/18)
+UPBOURNE     (4)    -            Heavy Infantry    (2/4/5/8)  Navy    (11/20/5/18)
 CRAGMORTON   (4)    -            Dwarves    (2/4/5/9)  Griffins (7/16/5/16)
-PAYNOR       (3)    -            Lt Inf    (2/4/3/10)
-CARMEL       (5)    -            Lt Inf    (2/4/5/12)
-DUNETHAL     (6)    Horse Lords  Lt Inf    (1/4/3/10)  Cavalry   (3/6/6/19)
-DERRIDON     (4)    -            Lt Inf     (2/4/3/9)  Cavalry   (4/8/6/18)
-FLEYMARK     (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (3/6/6/18)
-PA-KUR       (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+PAYNOR       (3)    -            Light Infantry    (2/4/3/10)
+CARMEL       (5)    -            Light Infantry    (2/4/5/12)
+DUNETHAL     (6)    Horse Lords  Light Infantry    (1/4/3/10)  Cavalry   (3/6/6/19)
+DERRIDON     (4)    -            Light Infantry     (2/4/3/9)  Cavalry   (4/8/6/18)
+FLEYMARK     (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (3/6/6/18)
+PA-KUR       (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/16)
-AR_ARAK      (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+AR_ARAK      (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/16)
-DHAR-KHOSIS  (6)    -            Hvy Inf    (2/4/5/8)  Dwarves    (2/4/5/9)
+DHAR-KHOSIS  (6)    -            Heavy Infantry    (2/4/5/8)  Dwarves    (2/4/5/9)
                                  Griffins (6/16/5/16)
-CIT OF FIRE  (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+CIT OF FIRE  (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-CIT OF ICE   (5)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+CIT OF ICE   (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-HITHOS       (6)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+HITHOS       (6)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (5/8/6/16)  Navy    (10/20/5/20)
-UBAR         (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-GALIN        (4)    -            Lt Inf    (1/4/3/10)  Cavalry  (8/10/6/16)
+UBAR         (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+GALIN        (4)    -            Light Infantry    (1/4/3/10)  Cavalry  (8/10/6/16)
                                  Navy    (11/20/5/18)
-VERNON       (5)    -            Hvy Inf    (3/4/5/7)  Lt Inf    (1/4/3/10)
+VERNON       (5)    -            Heavy Infantry    (3/4/5/7)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/6/18)
-THURTZ       (4)    -            Lt Inf    (1/4/3/10)  Wolves    (3/8/5/14)
-KAZRACK      (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+THURTZ       (4)    -            Light Infantry    (1/4/3/10)  Wolves    (3/8/5/14)
+KAZRACK      (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-KOR          (6)    Orcs of Kor  Gaints    (5/6/6/10)  Hvy Inf    (2/4/5/8)
+KOR          (6)    Orcs of Kor  Gaints    (5/6/6/10)  Heavy Infantry    (2/4/5/8)
                                  Wolves    (3/8/5/14)
-ILNYR        (4)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+ILNYR        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-OHMSMOUTH    (5)    -            Hvy Inf    (2/4/5/8)  Navy    (10/18/5/18)
-HIMELTON     (3)    -            Lt Inf    (1/4/3/10)  Cavalry   (6/8/5/16)
-WELLMORE     (4)    -            Hvy Inf    (2/4/5/8)  Navy    (11/20/5/18)
-BALAD NARAN  (6)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+OHMSMOUTH    (5)    -            Heavy Infantry    (2/4/5/8)  Navy    (10/18/5/18)
+HIMELTON     (3)    -            Light Infantry    (1/4/3/10)  Cavalry   (6/8/5/16)
+WELLMORE     (4)    -            Heavy Infantry    (2/4/5/8)  Navy    (11/20/5/18)
+BALAD NARAN  (6)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)  Wolves    (2/8/6/15)
-LADOR        (4)    -            Lt Inf    (1/4/3/10)
-DUINOTH      (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (5/8/6/16)
+LADOR        (4)    -            Light Infantry    (1/4/3/10)
+DUINOTH      (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (5/8/6/16)
 STORMHEIM    (6)    Storm Giants Giants    (2/4/6/12)
-ANGBAR       (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (4/8/5/16)
-SSURI        (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (4/8/5/16)
-TASME        (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-ARGENTHORN   (4)    -            Hvy Inf    (2/4/5/8)  Archers   (1/4/4/12)
+ANGBAR       (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (4/8/5/16)
+SSURI        (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (4/8/5/16)
+TASME        (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+ARGENTHORN   (4)    -            Heavy Infantry    (2/4/5/8)  Archers   (1/4/4/12)
                                  Pegasi   (7/16/4/16)
-TROY         (3)    -            Lt Inf    (1/4/3/10)  Cavalry   (4/8/6/15)
-GAROM        (4)    -            Lt Inf    (1/4/3/10)  Wolves    (3/8/5/14)
-QUIESCE      (4)    -            Lt Inf    (1/4/3/10)  Navy    (11/20/5/18)
-VARDE        (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (5/8/5/16)
+TROY         (3)    -            Light Infantry    (1/4/3/10)  Cavalry   (4/8/6/15)
+GAROM        (4)    -            Light Infantry    (1/4/3/10)  Wolves    (3/8/5/14)
+QUIESCE      (4)    -            Light Infantry    (1/4/3/10)  Navy    (11/20/5/18)
+VARDE        (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (5/8/5/16)
                                  Navy    (11/20/5/18)
-CHARLING     (3)    -            Lt Inf    (1/4/3/10)
-HEREUTH      (6)    -            Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+CHARLING     (3)    -            Light Infantry    (1/4/3/10)
+HEREUTH      (6)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (13/20/5/18)
-ELVALLIE     (6)    Elvallie     Hvy Inf   (2/4/5/10)  Archers   (1/4/4/12)
+ELVALLIE     (6)    Elvallie     Heavy Infantry   (2/4/5/10)  Archers   (1/4/4/12)
                                  Pegasi   (6/16/4/16)
-GILDENHOME   (5)    -            Hvy Inf    (2/4/5/8)  Archers   (1/4/4/12)
+GILDENHOME   (5)    -            Heavy Infantry    (2/4/5/8)  Archers   (1/4/4/12)
                                  Pegasi   (7/16/4/16)
 KHORFE       (5)    -            Dwarves    (2/4/5/9)  Griffins (8/16/5/16)
-GLUK         (4)    -            Giants    (3/4/6/10)  Lt Inf    (1/4/3/10)
+GLUK         (4)    -            Giants    (3/4/6/10)  Light Infantry    (1/4/3/10)
                                  Wolves    (3/8/5/14)
-LOREMARK     (4)    -            Hvy Inf    (2/4/5/8)  Archers   (1/4/4/12)
+LOREMARK     (4)    -            Heavy Infantry    (2/4/5/8)  Archers   (1/4/4/12)
                                  Pegasi   (7/16/4/16)
-GORK         (4)    -            Giants     (5/4/5/8)  Lt Inf    (1/4/3/10)
+GORK         (4)    -            Giants     (5/4/5/8)  Light Infantry    (1/4/3/10)
                                  Wolves    (3/8/5/14)
-ALFAR\'S GAP  (4)    -            Lt Inf    (1/4/3/10)  Cavalry   (5/8/5/16)
-MARTHOS      (6)    Sirians      Hvy Inf    (2/4/5/8)  Lt Inf    (1/4/3/10)
+ALFAR\'S GAP  (4)    -            Light Infantry    (1/4/3/10)  Cavalry   (5/8/5/16)
+MARTHOS      (6)    Sirians      Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/16)  Pegasi   (7/16/5/15)
 ';
     }

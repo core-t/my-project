@@ -140,14 +140,80 @@
 }
 
 .message {
-    width: 330px;
+    width: 200px;
     min-height: 130px;
-    max-height: 250px;
     position:inherit;
     border:1px solid white;
     z-index:7000;
-    background: #cecece;
+    background: #555555;
     position:relative;
     left:214px;
     top:-400px;
 }
+
+.message h3 {
+    color:#cecece;
+    margin:4px;
+}
+
+.message h4 {
+    color:#ddd;
+    margin:3px 3px 3px 4px;
+}
+
+.message h5 {
+    margin:2px 2px 2px 4px;
+    color:#eee;
+}
+
+.message .production {
+    background: #CECECE;
+}
+
+.message .production .unit {
+    margin:2px;
+    width:162px;
+    height:60px;
+    text-align:center;
+}
+
+.message .production .unit div {
+    float:left;
+    width:30px;
+}
+
+.message .production .unit div input {
+    margin-top:7px;
+}
+
+.message .production .unit p {
+    clear:both;
+}
+
+.message .close {
+    background:url(../img/game/close.png) no-repeat;
+    width:17px;
+    height:17px;
+    position:relative;
+    top:-227px;
+    left:192px;
+}
+
+.message .cancel {
+    background:;
+    color:#ddd;
+    padding:3px;
+    border:1px solid #eee;
+    float:left;
+    margin:2px;
+}
+
+.message .submit {
+    background:;
+    color:#ddd;
+    padding:3px;
+    border:1px solid #eee;
+    float:right;
+    margin:2px;
+}
+
