@@ -237,7 +237,7 @@ function zoom(zoomWidth, zoomHeight) {
             //setting lens dimensions;
             lens.setdimensions();
             lens.show();
-            lens.setcenter(settings.zoomPupX, settings.zoomPupY);
+//             lens.setcenter(settings.zoomPupX, settings.zoomPupY);
             el.largeimageloaded = true;
         };
         this.setposition = function () {

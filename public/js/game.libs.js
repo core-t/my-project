@@ -96,6 +96,20 @@ function castleOwner(castleId, color) {
                     var j = 0;
                     for(i in castles[castleId].production){
                         var img = i.replace(' ', '_').toLowerCase();
+                        if(getUniId(i) == castles[castleId].currentProduction){
+                            var attr = {
+                                type:'radio',
+                                name:'production',
+                                value:i,
+                                checked:'checked'
+                            }
+                        } else {
+                            var attr = {
+                                type:'radio',
+                                name:'production',
+                                value:i
+                            }
+                        }
                         var td = $('<td>')
                         .addClass('unit')
                         .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
@@ -106,11 +120,7 @@ function castleOwner(castleId, color) {
                         )
                         .append(
                             $('<p>')
-                            .append($('<input>').attr({
-                                type:'radio',
-                                name:'production',
-                                value:i
-                            }))
+                            .append($('<input>').attr(attr))
                             .append(' '+i)
                         );
                         if(j%2) {
@@ -177,6 +187,8 @@ function castleOwner(castleId, color) {
     });
     castles[castleId].element.fadeIn(1);
     castles[castleId].color = color;
+    castles[castleId].currentProduction = players[color].castles[castleId].production;
+    castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
 }
 
 function isEnemyCastle(x, y) {
@@ -415,6 +427,35 @@ function getEnemyCastleGarrison(castleId) {
         }
     }
     return armies;
+}
+
+// *** UNITS ***
+
+function getUniId(name) {
+    switch(name){
+        case 'Light Infantry':
+            return 1;
+        case 'Heavy Infantry':
+            return 2;
+        case 'Cavalry':
+            return 3;
+        case 'Giants':
+            return 4;
+        case 'Wolves':
+            return 5;
+        case 'Navy':
+            return 6;
+        case 'Archers':
+            return 7;
+        case 'Pegasi':
+            return 8;
+        case 'Dwarves':
+            return 9;
+        case 'Griffins':
+            return 10;
+        default:
+            return null;
+    }
 }
 
 // *** POSITIONING ***

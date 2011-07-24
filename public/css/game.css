@@ -164,7 +164,7 @@
 
 .message h5 {
     margin:2px 2px 2px 4px;
-    color:#eee;
+    color:#d6d6d6;
 }
 
 .message .production {
@@ -206,7 +206,7 @@
 }
 
 .message .cancel {
-    background:;
+/*     background:; */
     color:#ddd;
     padding:3px;
     border:1px solid #eee;
@@ -215,7 +215,7 @@
 }
 
 .message .submit {
-    background:;
+/*     background:; */
     color:#ddd;
     padding:3px;
     border:1px solid #eee;

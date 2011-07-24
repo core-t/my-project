@@ -53,6 +53,7 @@
         <modelFile modelName="Hero"/>
         <modelFile modelName="Game"/>
         <modelFile modelName="Board"/>
+        <modelFile modelName="Unit"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>

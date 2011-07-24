@@ -154,8 +154,14 @@ function getAddArmy(armyId) {
 }
 
 function setProduction(castleId) {
-    console.log($("input:radio[name=production]:checked").val());
-    $.getJSON(urlSetProduction+'/castleId/'+castleId, function(result) {
-
+    var unitId = getUniId($("input:radio[name=production]:checked").val());
+    if(!unitId) {
+        return null;
+    }
+    $.getJSON(urlSetProduction+'/castleId/'+castleId+'/unitId/'+unitId, function(result) {
+        if(result.set) {
+            $('.message').remove();
+            castles[castleId].currentProduction = unitId;
+        }
     });
 }
