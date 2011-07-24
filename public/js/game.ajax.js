@@ -153,8 +153,9 @@ function getAddArmy(armyId) {
     });
 }
 
-function setProduction() {
-    $.getJSON(urlSetProduction, function(result) {
+function setProduction(castleId) {
+    console.log($("input:radio[name=production]:checked").val());
+    $.getJSON(urlSetProduction+'/castleId/'+castleId, function(result) {
 
     });
 }

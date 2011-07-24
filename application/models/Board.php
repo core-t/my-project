@@ -5,17 +5,17 @@ class Application_Model_Board {
     private $_castles = array();
 
     public function __construct() {
-    $this->_castles[0] = array(
+ $this->_castles[0] = array(
 'name' => 'MARTHOS',
 'income' => 20,
 'defensePoints' => 6,
 'position' => array('x' => 2480, 'y' => 2240),
 'capital' => true,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Cavalry',
-'Pegasi',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Cavalry' => array('time' => '4', 'cost' => '8'),
+'Pegasi' => array('time' => '7', 'cost' => '16'),
 )
 );
 $this->_castles[1] = array(
@@ -25,9 +25,9 @@ $this->_castles[1] = array(
 'position' => array('x' => 1640, 'y' => 1480),
 'capital' => true,
 'production' => array(
-'Heavy Infantry',
-'Archers',
-'Pegasi',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Archers' => array('time' => '1', 'cost' => '4'),
+'Pegasi' => array('time' => '6', 'cost' => '16'),
 )
 );
 $this->_castles[2] = array(
@@ -37,7 +37,7 @@ $this->_castles[2] = array(
 'position' => array('x' => 1920, 'y' => 1360),
 'capital' => false,
 'production' => array(
-'Light Infantry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
 )
 );
 $this->_castles[3] = array(
@@ -47,9 +47,9 @@ $this->_castles[3] = array(
 'position' => array('x' => 1320, 'y' => 1520),
 'capital' => false,
 'production' => array(
-'Heavy Infantry',
-'Archers',
-'Pegasi',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Archers' => array('time' => '1', 'cost' => '4'),
+'Pegasi' => array('time' => '7', 'cost' => '16'),
 )
 );
 $this->_castles[4] = array(
@@ -59,9 +59,9 @@ $this->_castles[4] = array(
 'position' => array('x' => 1720, 'y' => 1800),
 'capital' => false,
 'production' => array(
-'Heavy Infantry',
-'Archers',
-'Pegasi',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Archers' => array('time' => '1', 'cost' => '4'),
+'Pegasi' => array('time' => '7', 'cost' => '16'),
 )
 );
 $this->_castles[5] = array(
@@ -71,9 +71,9 @@ $this->_castles[5] = array(
 'position' => array('x' => 1680, 'y' => 1040),
 'capital' => false,
 'production' => array(
-'Heavy Infantry',
-'Archers',
-'Pegasi',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Archers' => array('time' => '1', 'cost' => '4'),
+'Pegasi' => array('time' => '7', 'cost' => '16'),
 )
 );
 $this->_castles[6] = array(
@@ -83,8 +83,8 @@ $this->_castles[6] = array(
 'position' => array('x' => 2160, 'y' => 880),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '4', 'cost' => '8'),
 )
 );
 $this->_castles[7] = array(
@@ -94,8 +94,8 @@ $this->_castles[7] = array(
 'position' => array('x' => 2360, 'y' => 960),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '4', 'cost' => '8'),
 )
 );
 $this->_castles[8] = array(
@@ -105,8 +105,8 @@ $this->_castles[8] = array(
 'position' => array('x' => 2240, 'y' => 1080),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '4', 'cost' => '8'),
 )
 );
 $this->_castles[9] = array(
@@ -116,9 +116,9 @@ $this->_castles[9] = array(
 'position' => array('x' => 2600, 'y' => 1400),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Navy' => array('time' => '13', 'cost' => '20'),
 )
 );
 $this->_castles[10] = array(
@@ -128,9 +128,9 @@ $this->_castles[10] = array(
 'position' => array('x' => 3360, 'y' => 1680),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Giants',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Giants' => array('time' => '3', 'cost' => '4'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[11] = array(
@@ -140,9 +140,9 @@ $this->_castles[11] = array(
 'position' => array('x' => 3440, 'y' => 1800),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Giants',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Giants' => array('time' => '5', 'cost' => '4'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[12] = array(
@@ -152,8 +152,8 @@ $this->_castles[12] = array(
 'position' => array('x' => 3480, 'y' => 1080),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[13] = array(
@@ -163,10 +163,10 @@ $this->_castles[13] = array(
 'position' => array('x' => 3600, 'y' => 640),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Wolves',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Wolves' => array('time' => '2', 'cost' => '8'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[14] = array(
@@ -176,9 +176,9 @@ $this->_castles[14] = array(
 'position' => array('x' => 1640, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '8', 'cost' => '10'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[15] = array(
@@ -188,8 +188,9 @@ $this->_castles[15] = array(
 'position' => array('x' => 4000, 'y' => 120),
 'capital' => true,
 'production' => array(
-'Heavy Infantry',
-'Wolves',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Giants' => array('time' => '5', 'cost' => '6'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[16] = array(
@@ -199,8 +200,8 @@ $this->_castles[16] = array(
 'position' => array('x' => 3560, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Wolves' => array('time' => '5', 'cost' => '8'),
 )
 );
 $this->_castles[17] = array(
@@ -210,8 +211,8 @@ $this->_castles[17] = array(
 'position' => array('x' => 3400, 'y' => 80),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[18] = array(
@@ -221,8 +222,8 @@ $this->_castles[18] = array(
 'position' => array('x' => 3120, 'y' => 0),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Wolves',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Wolves' => array('time' => '3', 'cost' => '8'),
 )
 );
 $this->_castles[19] = array(
@@ -232,9 +233,9 @@ $this->_castles[19] = array(
 'position' => array('x' => 2840, 'y' => 240),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[20] = array(
@@ -244,8 +245,8 @@ $this->_castles[20] = array(
 'position' => array('x' => 2720, 'y' => 720),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '5', 'cost' => '8'),
 )
 );
 $this->_castles[21] = array(
@@ -255,9 +256,9 @@ $this->_castles[21] = array(
 'position' => array('x' => 2320, 'y' => 120),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[22] = array(
@@ -267,9 +268,9 @@ $this->_castles[22] = array(
 'position' => array('x' => 1920, 'y' => 80),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Heavy Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Heavy Infantry' => array('time' => '3', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[23] = array(
@@ -279,8 +280,8 @@ $this->_castles[23] = array(
 'position' => array('x' => 880, 'y' => 320),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '6', 'cost' => '8'),
 )
 );
 $this->_castles[24] = array(
@@ -290,7 +291,7 @@ $this->_castles[24] = array(
 'position' => array('x' => 760, 'y' => 800),
 'capital' => true,
 'production' => array(
-'Giants',
+'Giants' => array('time' => '2', 'cost' => '4'),
 )
 );
 $this->_castles[25] = array(
@@ -300,8 +301,8 @@ $this->_castles[25] = array(
 'position' => array('x' => 280, 'y' => 280),
 'capital' => false,
 'production' => array(
-'Heavy Infantry',
-'Navy',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Navy' => array('time' => '10', 'cost' => '18'),
 )
 );
 $this->_castles[26] = array(
@@ -311,8 +312,8 @@ $this->_castles[26] = array(
 'position' => array('x' => 160, 'y' => 640),
 'capital' => false,
 'production' => array(
-'Heavy Infantry',
-'Navy',
+'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[27] = array(
@@ -322,8 +323,8 @@ $this->_castles[27] = array(
 'position' => array('x' => 320, 'y' => 1000),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[28] = array(
@@ -333,9 +334,9 @@ $this->_castles[28] = array(
 'position' => array('x' => 320, 'y' => 1360),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '5', 'cost' => '8'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[29] = array(
@@ -345,8 +346,8 @@ $this->_castles[29] = array(
 'position' => array('x' => 600, 'y' => 1280),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Navy',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Navy' => array('time' => '11', 'cost' => '20'),
 )
 );
 $this->_castles[30] = array(
@@ -356,8 +357,8 @@ $this->_castles[30] = array(
 'position' => array('x' => 320, 'y' => 1680),
 'capital' => false,
 'production' => array(
-'Dwarves',
-'Griffins',
+'Dwarves' => array('time' => '2', 'cost' => '4'),
+'Griffins' => array('time' => '2', 'cost' => '4'),
 )
 );
 $this->_castles[31] = array(
@@ -367,8 +368,8 @@ $this->_castles[31] = array(
 'position' => array('x' => 880, 'y' => 2160),
 'capital' => false,
 'production' => array(
-'Light Infantry',
-'Cavalry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
+'Cavalry' => array('time' => '5', 'cost' => '8'),
 )
 );
 $this->_castles[32] = array(
@@ -378,9 +379,10 @@ $this->_castles[32] = array(
 'position' => array('x' => 1240, 'y' => 720),
 'capital' => false,
 'production' => array(
-'Light Infantry',
+'Light Infantry' => array('time' => '1', 'cost' => '4'),
 )
 );
+
     }
 
     public function getDefaultStartPositions() {
@@ -661,7 +663,7 @@ PARETH       (5)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    
 UNGOR        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
 GORAG        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
 VIVAL        (3)    -            Light Infantry    (1/4/3/10)
-BANE CTIADEL (6)    Lord Bane    Gaints    (4/4/6/10)  Light Infantry    (1/4/3/10)
+BANE CTIADEL (6)    Lord Bane    Giants    (4/4/6/10)  Light Infantry    (1/4/3/10)
                                  Cavalry   (4/8/6/16)  Wolves    (3/8/5/14)
 NEEDLETON    (4)    -            Light Infantry    (1/4/3/10)
 GUNTHANG     (5)    -            Heavy Infantry    (2/4/5/8)  Archers   (3/4/4/12)
@@ -718,7 +720,7 @@ VERNON       (5)    -            Heavy Infantry    (3/4/5/7)  Light Infantry    
 THURTZ       (4)    -            Light Infantry    (1/4/3/10)  Wolves    (3/8/5/14)
 KAZRACK      (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)
-KOR          (6)    Orcs of Kor  Gaints    (5/6/6/10)  Heavy Infantry    (2/4/5/8)
+KOR          (6)    Orcs of Kor  Giants    (5/6/6/10)  Heavy Infantry    (2/4/5/8)
                                  Wolves    (3/8/5/14)
 ILNYR        (4)    -            Heavy Infantry    (2/4/5/8)  Light Infantry    (1/4/3/10)
                                  Navy    (11/20/5/18)

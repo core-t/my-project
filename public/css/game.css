@@ -141,14 +141,14 @@
 
 .message {
     width: 200px;
-    min-height: 130px;
+    height: 225px;
     position:inherit;
     border:1px solid white;
     z-index:7000;
     background: #555555;
     position:relative;
-    left:214px;
-    top:-400px;
+    left:280px;
+    top:-500px;
 }
 
 .message h3 {
@@ -159,6 +159,7 @@
 .message h4 {
     color:#ddd;
     margin:3px 3px 3px 4px;
+    float:right;
 }
 
 .message h5 {
@@ -173,13 +174,18 @@
 .message .production .unit {
     margin:2px;
     width:162px;
-    height:60px;
     text-align:center;
+    border:1px solid #c0c0c0;
 }
 
 .message .production .unit div {
     float:left;
-    width:30px;
+    padding:5px;
+    width:39%;
+}
+
+.message .production .unit div p {
+    text-align:right;
 }
 
 .message .production .unit div input {
@@ -214,6 +220,6 @@
     padding:3px;
     border:1px solid #eee;
     float:right;
-    margin:2px;
+    margin-top:2px;
 }
 

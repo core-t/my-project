@@ -93,37 +93,46 @@ function castleOwner(castleId, color) {
                         var capital = null;
                     }
                     var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
+                    var j = 0;
                     for(i in castles[castleId].production){
-                        var type = castles[castleId].production[i].replace(' ', '_').toLowerCase();
+                        var img = i.replace(' ', '_').toLowerCase();
                         var td = $('<td>')
                         .addClass('unit')
-                        .append($('<div>').append($('<input>').attr({
+                        .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
+                        .append(
+                            $('<div>')
+                            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[i].time+'t'))
+                            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[i].cost+'g'))
+                        )
+                        .append(
+                            $('<p>')
+                            .append($('<input>').attr({
                                 type:'radio',
                                 name:'production',
-                                value:type
+                                value:i
                             }))
-                         )
-                        .append($('<div>').append($('<img>').attr('src','/img/game/' + type + '_' + color + '.png')))
-                        .append($('<p>').html(castles[castleId].production[i]));
-                        if(i%2) {
+                            .append(' '+i)
+                        );
+                        if(j%2) {
                             table.append(tr.append(td));
                         } else {
                             var tr = $('<tr>').append(td);
                         }
+                        j++;
                     }
 
                     $('#game').after(
                         $('<div>')
                         .addClass('message')
-                        .append($('<h3>').append(castles[castleId].name))
-                        .append($('<div>').addClass('close').click(function(){$('.message').remove()}))
                         .append(capital)
-                        .append($('<h5>').append('Position: '+castles[castleId].position['x']+', '+castles[castleId].position['y']))
+                        .append($('<h3>').append(castles[castleId].name))
+//                         .append($('<div>').addClass('close').click(function(){$('.message').remove()}))
+                        .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
                         .append($('<h5>').append('Defense: '+castles[castleId].defense))
-                        .append($('<h5>').append('Income: '+castles[castleId].income))
+                        .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
                         .append(table)
                         .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
-                        .append($('<div>').addClass('submit').html('Set production').click(function(){setProduction()}))
+                        .append($('<div>').addClass('submit').html('Set production').click(function(){setProduction(castleId)}))
                     );
                 }
             }
