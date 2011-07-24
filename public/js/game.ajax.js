@@ -4,7 +4,7 @@ function sendNextTurn() {
         alert('Socket disconnected!');
         return null;
     }
-    $.getJSON(urlTurn, function(result) {
+    $.getJSON(urlNextTurn, function(result) {
         unselectArmy();
         changeTurn(result.playerId, result.color);
         wsTurn(result.playerId, result.color);
@@ -154,7 +154,7 @@ function getAddArmy(armyId) {
 }
 
 function setProduction(castleId) {
-    var unitId = getUniId($("input:radio[name=production]:checked").val());
+    var unitId = getUnitId($("input:radio[name=production]:checked").val());
     if(!unitId) {
         return null;
     }

@@ -14,7 +14,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         parent::__construct();
     }
 
-    public function createArmy($position, $numberOfMoves, $playerId) {
+    public function createArmy($position, $playerId) {
         $armyId = $this->getNewArmyId();
         $data = array(
             'armyId' => $armyId,
@@ -158,7 +158,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             throw new Exception($select->__toString());
         }
     }
-    
+
     private function calculateArmyMovesLeft($armyId) {
         $heroMovesLeft = $this->getMinHeroesMovesLeft($armyId);
         $soldierMovesLeft = $this->getMinSoldiersMovesLeft($armyId);
@@ -237,7 +237,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
-        
+
         try {
             $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $armyId);
             $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
@@ -377,19 +377,31 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
     }
 
     public function doProduction($playerId, $castles) {
-        foreach ($castles as $castle) {
+        foreach ($castles as $castleId => $castle) {
             $armyId = $this->getArmyIdFromPosition($castle['position']);
             if (!$armyId) {
-                $armyId = $this->createArmy($castle['position'], 10, $playerId);
+                $armyId = $this->createArmy($castle['position'], $playerId);
             }
             if (!empty($armyId)) {
-                $this->addSoldierToArmy($armyId);
+                try {
+                    $select = $this->_db->select()
+                            ->from('castle', 'production')
+                            ->where('"gameId" = ?', $this->_gameId)
+                            ->where('"castleId" = ?', $castleId)
+                            ->where('"playerId" = ?', $playerId);
+                    $result = $this->_db->query($select)->fetchAll();
+                    if (isset($result[0]['production'])) {
+
+                    }
+                    $this->addSoldierToArmy($armyId, $unitId);
+                } catch (PDOException $e) {
+                    throw new Exception($select->__toString());
+                }
             }
         }
     }
 
-    public function addSoldierToArmy($armyId) {
-        $unitId = 1;
+    public function addSoldierToArmy($armyId, $unitId) {
         $select1 = $this->_db->select()
                     ->from('unit', 'numberOfMoves')
                     ->where('"unitId" = ?', $unitId);
@@ -451,7 +463,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         return $this->_db->update('soldier', $data, $where);
     }
-    
+
     public function resetHeroesMovesLeft($playerId) {
         $data = array(
             'movesLeft' => new Zend_Db_Expr('"numberOfMoves"')
@@ -476,7 +488,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         return $this->_db->update('soldier', $data, $where);
     }
-    
+
     public function setHeroesMovesLeft($playerId, $movesLeft) {
         $data = array(
             'movesLeft' => new Zend_Db_Expr('"numberOfMoves"')

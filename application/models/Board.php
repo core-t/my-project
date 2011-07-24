@@ -646,6 +646,59 @@ $this->_castles[32] = array(
         }
     }
 
+    static public function getUnitId($name) {
+        switch($name){
+            case 'Light Infantry':
+                return 1;
+            case 'Heavy Infantry':
+                return 2;
+            case 'Cavalry':
+                return 3;
+            case 'Giants':
+                return 4;
+            case 'Wolves':
+                return 5;
+            case 'Navy':
+                return 6;
+            case 'Archers':
+                return 7;
+            case 'Pegasi':
+                return 8;
+            case 'Dwarves':
+                return 9;
+            case 'Griffins':
+                return 10;
+            default:
+                return null;
+        }
+    }
+
+    static public function getUnitName($unitId) {
+        switch($unitId){
+            case 1:
+                return 'Light Infantry';
+            case 2:
+                return 'Heavy Infantry';
+            case 3:
+                return 'Cavalry';
+            case 4:
+                return 'Giants';
+            case 5:
+                return 'Wolves';
+            case 6:
+                return 'Navy';
+            case 7:
+                return 'Archers';
+            case 8:
+                return 'Pegasi';
+            case 9:
+                return 'Dwarves';
+            case 10:
+                return 'Griffins';
+            default:
+                return null;
+        }
+    }
 
     static public function production() {
         return '

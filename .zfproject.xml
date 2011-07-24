@@ -40,6 +40,9 @@
           <actionMethod actionName="set"/>
           <actionMethod actionName="stop"/>
         </controllerFile>
+        <controllerFile controllerName="Turn">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -99,6 +102,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Production">
             <viewScriptFile forActionName="stop"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Turn">
+            <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -164,6 +170,9 @@
             <testApplicationActionMethod forActionName="index"/>
             <testApplicationActionMethod forActionName="set"/>
             <testApplicationActionMethod forActionName="stop"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Turn">
+            <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

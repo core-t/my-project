@@ -72,4 +72,37 @@ class Application_Model_Castle extends Warlords_Db_Table_Abstract
         return $this->_db->update($this->_name, $data, $where);
     }
 
+    public function raiseAllCastlesProductionTurn($playerId) {
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $data = array(
+            'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
+        );
+        return $this->_db->update($this->_name, $data, $where);
+    }
+
+    public function getCastleProduction($castleId, $playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, array('production', 'productionTurn'))
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"'.$this->_primary.'" = ?', $castleId)
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function resetProductionTurn($castleId, $playerId) {
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $where[] = $this->_db->quoteInto('"castleId" = ?', $castleId);
+        $data = array(
+            'productionTurn' => 0
+        );
+        return $this->_db->update($this->_name, $data, $where);
+    }
+
 }

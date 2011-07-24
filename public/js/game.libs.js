@@ -87,6 +87,9 @@ function castleOwner(castleId, color) {
         castles[castleId].element.click(function(){
             if(turn.myTurn){
                 if(!selectedArmy) {
+                    if(typeof $('.message') != 'undefined') {
+                        $('.message').remove();
+                    }
                     if(castles[castleId].capital){
                         var capital = $('<h4>').append('Capital city');
                     } else {
@@ -94,43 +97,53 @@ function castleOwner(castleId, color) {
                     }
                     var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
                     var j = 0;
-                    for(i in castles[castleId].production){
-                        var img = i.replace(' ', '_').toLowerCase();
-                        if(getUniId(i) == castles[castleId].currentProduction){
+                    var td = new Array();
+                    for(unitName in castles[castleId].production){
+                        var img = unitName.replace(' ', '_').toLowerCase();
+                        if(getUnitId(unitName) == castles[castleId].currentProduction){
                             var attr = {
                                 type:'radio',
                                 name:'production',
-                                value:i,
+                                value:unitName,
                                 checked:'checked'
                             }
                         } else {
                             var attr = {
                                 type:'radio',
                                 name:'production',
-                                value:i
+                                value:unitName
                             }
                         }
-                        var td = $('<td>')
+                        td[j] = $('<td>')
                         .addClass('unit')
                         .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
                         .append(
                             $('<div>')
-                            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[i].time+'t'))
-                            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[i].cost+'g'))
+                            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[unitName].time+'t'))
+                            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
                         )
                         .append(
                             $('<p>')
                             .append($('<input>').attr(attr))
-                            .append(' '+i)
+                            .append(' '+unitName)
                         );
-                        if(j%2) {
-                            table.append(tr.append(td));
-                        } else {
-                            var tr = $('<tr>').append(td);
-                        }
                         j++;
                     }
-
+                    console.log(td);
+                    var k = Math.ceil(j/2);
+                    console.log(k);
+                    for(l = 0; l < k; l++) {
+                        var tr = $('<tr>');
+                        var m = l*2;
+                        tr.append(td[m]);
+                        if(typeof td[m+1] == 'undefined') {
+                            tr.append($('<td>').addClass('unit').html('&nbsp;'));
+                        } else {
+                            tr.append(td[m+1]);
+                        }
+                        table.append(tr);
+                    }
+                    console.log(table);
                     $('#game').after(
                         $('<div>')
                         .addClass('message')
@@ -187,8 +200,13 @@ function castleOwner(castleId, color) {
     });
     castles[castleId].element.fadeIn(1);
     castles[castleId].color = color;
-    castles[castleId].currentProduction = players[color].castles[castleId].production;
-    castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
+    if(typeof players[color].castles[castleId].production == 'undefined'){
+        castles[castleId].currentProduction = null;
+        castles[castleId].currentProductionTurn = 0;
+    } else {
+        castles[castleId].currentProduction = players[color].castles[castleId].production;
+        castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
+    }
 }
 
 function isEnemyCastle(x, y) {
@@ -247,8 +265,10 @@ function army(obj, color) {
     }
     if(typeof this.heroes[this.heroKey] != 'undefined') {
         this.name = 'hero';
+        this.img = 'hero';
     } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
         this.name = this.soldiers[this.soldierKey].name;
+        this.img = this.name.replace(' ', '_').toLowerCase();
     } else {
         console.log('Armia nie posiada jednostek.');
         return null;
@@ -327,7 +347,7 @@ function army(obj, color) {
     });
     this.img = $('<img>')
     .addClass('unit')
-    .attr('src', '/img/game/' + this.name + '_' + color + '.png');
+    .attr('src', '/img/game/' + this.img + '_' + color + '.png');
     this.element.append(this.img);
     board.append(this.element);
     this.element.fadeIn(500, function() {
@@ -431,7 +451,7 @@ function getEnemyCastleGarrison(castleId) {
 
 // *** UNITS ***
 
-function getUniId(name) {
+function getUnitId(name) {
     switch(name){
         case 'Light Infantry':
             return 1;
