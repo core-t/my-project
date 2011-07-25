@@ -37,6 +37,7 @@ function sendMove(movesSpend) {
             return null;
         }
         $.getJSON(urlFightCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
+            var enemyArmies = getEnemyCastleGarrison(castleId);
             if(result.victory) {
                 deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
                 players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
@@ -45,23 +46,22 @@ function sendMove(movesSpend) {
                 wsArmyAdd(unselectedArmy.armyId);
 
                 // delete enemy - find enemy at position?
-                var armiesToDelete = getEnemyCastleGarrison(castleId);
-                for(i in armiesToDelete) {
-                    deleteArmy('army' + armiesToDelete[i].armyId, armiesToDelete[i].color);
-                    wsArmyDelete(armiesToDelete[i].armyId, armiesToDelete[i].color);
+//                 var armiesToDelete = getEnemyCastleGarrison(castleId);
+                for(i in enemyArmies) {
+                    deleteArmy('army' + enemyArmies[i].armyId, enemyArmies[i].color);
+                    wsArmyDelete(enemyArmies[i].armyId, enemyArmies[i].color);
                 }
 
                 wsCastleOwner(castleId, my.color);
                 castleOwner(castleId, my.color);
             } else {
-                var armiesToCheck = getEnemyCastleGarrison(castleId);
-                for(i in armiesToCheck) {
-                    console.log(armiesToCheck[i]);
+                for(i in enemyArmies) {
+                    console.log(enemyArmies[i]);
                 }
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
             }
-            battle(result.battle);
+            battle(result.battle, unselectedArmy, enemyArmies);
             lock = false;
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
@@ -95,7 +95,8 @@ function sendMove(movesSpend) {
                 getAddArmy(selectedEnemyArmy.armyId);
                 wsArmyAdd(selectedEnemyArmy.armyId);
             }
-            battle(result.battle);
+
+            battle(result.battle, unselectedArmy, {0:selectedEnemyArmy});
             unselectEnemyArmy();
             lock = false;
         });
@@ -109,21 +110,54 @@ function sendMove(movesSpend) {
     return true;
 }
 
-function battle(battle) {
-    console.log(unselectedArmy);
-    var attack = $('<div>');
-    for(i in unselectedArmy.soldiers) {
-        var img = unselectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+function battle(battle, a, def) {
+    console.log(a);
+    console.log(d);
+    var attack = $('<div>').addClass('battle attack');
+    for(i in a.soldiers) {
+        var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
         attack.append(
-            $('<img>').attr('src','/img/game/' + img + '_' + my.color + '.png')
+            $('<img>').attr({
+                'src':'/img/game/' + img + '_' + a.color + '.png',
+                'id':'unit'+a.soldiers[i].soldierId
+            })
+        );
+    }
+    for(i in a.heroes) {
+        attack.append(
+            $('<img>').attr({
+                'src':'/img/game/hero_' + a.color + '.png',
+                'id':'hero'+a.heroes[i].heroId
+            })
         );
     }
     $('#game').after(
         $('<div>')
         .addClass('message')
         .append(attack)
-        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<p>').html('VS').addClass('center'))
     );
+    var h = 0;
+    for(j in def) {
+        var d = def[j];
+        h++;
+        var defense = $('<div>').addClass('battle defense');
+        for(i in d.soldiers) {
+            var img = d.soldiers[i].name.replace(' ', '_').toLowerCase();
+            defense.append(
+                $('<img>').attr({
+                    'src':'/img/game/' + img + '_' + d.color + '.png',
+                    'id':'unit'+d.soldiers[i].soldierId
+                })
+            );
+        }
+        $('.message').append(defense);
+    }
+    var height = 62 + 31 + 14 + h * 31; //67
+    $('.message')
+    .append($('<div>').addClass('go').html('OK').click(function(){$('.message').remove()}))
+    .css('height',height+'px');
+
     console.log(battle);
 }
 

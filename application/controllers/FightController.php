@@ -121,8 +121,14 @@ class FightController extends Warlords_Controller_Action
                 } else {
                     $enemies[0] = array(
                         'soldiers' => array(
-                            array('defensePoints' => 1),
-                            array('defensePoints' => 1)
+                            array(
+                                'defensePoints' => 1,
+                                'soldierId' => 'e1'
+                                ),
+                            array(
+                                'defensePoints' => 1,
+                                'soldierId' => 'e2'
+                                )
                         ),
                         'heroes' => array()
                     );
@@ -180,10 +186,8 @@ class FightController extends Warlords_Controller_Action
     }
 
     private function battle($attacker, $defender) {
-//        throw new Exception(Zend_Debug::dump($attacker, null, false).Zend_Debug::dump($defender, null, false));
         $hits = array('attack' => 2, 'defense' => 2);
         foreach ($attacker['soldiers'] as $a => $unitAttaking) {
-//            echo 'i';
             foreach ($defender['soldiers'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
@@ -204,7 +208,6 @@ class FightController extends Warlords_Controller_Action
             }
         }
         foreach ($attacker['heroes'] as $a => $unitAttaking) {
-//            echo 'j';
             foreach ($defender['soldiers'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
@@ -213,7 +216,6 @@ class FightController extends Warlords_Controller_Action
                     unset($attacker['heroes'][$a]);
                     break;
                 }
-//                echo 'a';
             }
             foreach ($defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
@@ -225,8 +227,6 @@ class FightController extends Warlords_Controller_Action
                 }
             }
         }
-//        throw new Exception(Zend_Debug::dump($attacker['heroes'], null, false).Zend_Debug::dump($defender, null, false));
-//        exit;
         return array('attacker' => $attacker, 'defender' => $defender);
     }
 
@@ -249,35 +249,37 @@ class FightController extends Warlords_Controller_Action
             }
             if ($unitAttaking['attackPoints'] > $dieDefending AND $unitDefending['defensePoints'] <= $dieAttacking) {
                 $defenseHits--;
-//                echo '$defenseHits-- '.$attackPoints.' > '.$dieDefending.' AND '.$defensePoints.' <= '.$dieAttacking."\n";
             } elseif ($unitAttaking['attackPoints'] <= $dieDefending AND $unitDefending['defensePoints'] > $dieAttacking) {
                 $attackHits--;
-//                echo '$attackHits-- '.$attackPoints.' <= '.$dieDefending.' AND '.$defensePoints.' > '.$dieAttacking."\n";
             }
             if(isset($unitAttaking['heroId'])) {
-                $idA = array('heroId', $unitAttaking['heroId']);
+                $idA = array('heroId' => $unitAttaking['heroId']);
             } else {
-                $idA = array('soldierId', $unitAttaking['soldierId']);
+                $idA = array('soldierId' => $unitAttaking['soldierId']);
             }
             if(isset($unitDefending['heroId'])) {
-                $idD = array('heroId', $unitDefending['heroId']);
+                $idD = array('heroId' => $unitDefending['heroId']);
             } elseif(isset($unitDefending['soldierId'])) {
-                $idD = array('soldierId', $unitDefending['soldierId']);
+                $idD = array('soldierId' => $unitDefending['soldierId']);
             } else {
                 $idD = '?';
             }
-            $this->_result[] = array(
-                'unitAttaking' => $idA,
-                'attackPoints' => $unitAttaking['attackPoints'],
-                'dieAttacking' => $dieAttacking,
-                'attackHits' => $attackHits,
-                'unitDefending' => $idD,
-                'defensePoints' => $unitDefending['defensePoints'],
-                'dieDefending' => $dieDefending,
-                'defenseHits' => $defenseHits
-            );
+//             $this->_result[] = array(
+//                 'unitAttaking' => $idA,
+//                 'attackPoints' => $unitAttaking['attackPoints'],
+//                 'dieAttacking' => $dieAttacking,
+//                 'attackHits' => $attackHits,
+//                 'unitDefending' => $idD,
+//                 'defensePoints' => $unitDefending['defensePoints'],
+//                 'dieDefending' => $dieDefending,
+//                 'defenseHits' => $defenseHits
+//             );
         }
-        $this->_result[] = array('attack' => $attackHits, 'defense' => $defenseHits);
+        if($attackHits){
+            $this->_result[] = array('defense' => $defenseHits);
+        } else {
+            $this->_result[] = array('attack' => $attackHits);
+        }
         return array('attack' => $attackHits, 'defense' => $defenseHits);
     }
 

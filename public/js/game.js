@@ -109,7 +109,7 @@ $(document).ready(function() {
     $('#game').after(
         $('<div>')
         .addClass('message')
-        .append($('<p>').html('Ready?'))
+        .append($('<p>').addClass('center').html('Ready?'))
         .append($('<div>')
             .addClass('go')
             .html('Start')
@@ -119,8 +119,8 @@ $(document).ready(function() {
                 showFirstCastle();
             })
         )
+        .css('height','70px')
     );
-//     showFirstCastle();
 /*    for(y in fields) {
         for(x in fields[y]) {
             board.append(
