@@ -61,7 +61,7 @@ function sendMove(movesSpend) {
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
             }
-            battle(result.battle, unselectedArmy, enemyArmies);
+            battleM(result.battle, unselectedArmy, enemyArmies);
             lock = false;
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
@@ -96,96 +96,18 @@ function sendMove(movesSpend) {
                 wsArmyAdd(selectedEnemyArmy.armyId);
             }
 
-            battle(result.battle, unselectedArmy, {0:selectedEnemyArmy});
+            battleM(result.battle, unselectedArmy, {0:selectedEnemyArmy});
             unselectEnemyArmy();
             lock = false;
         });
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
-                walk(result, players[my.color].armies['army'+unselectedArmy.armyId].element);
+                walkM(result, players[my.color].armies['army'+unselectedArmy.armyId].element);
             }
         });
     }
     return true;
-}
-
-function battle(battle, a, def) {
-    console.log(a);
-    console.log(d);
-    var attack = $('<div>').addClass('battle attack');
-    for(i in a.soldiers) {
-        var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
-        attack.append(
-            $('<img>').attr({
-                'src':'/img/game/' + img + '_' + a.color + '.png',
-                'id':'unit'+a.soldiers[i].soldierId
-            })
-        );
-    }
-    for(i in a.heroes) {
-        attack.append(
-            $('<img>').attr({
-                'src':'/img/game/hero_' + a.color + '.png',
-                'id':'hero'+a.heroes[i].heroId
-            })
-        );
-    }
-    $('#game').after(
-        $('<div>')
-        .addClass('message')
-        .append(attack)
-        .append($('<p>').html('VS').addClass('center'))
-    );
-    var h = 0;
-    for(j in def) {
-        var d = def[j];
-        h++;
-        var defense = $('<div>').addClass('battle defense');
-        for(i in d.soldiers) {
-            var img = d.soldiers[i].name.replace(' ', '_').toLowerCase();
-            defense.append(
-                $('<img>').attr({
-                    'src':'/img/game/' + img + '_' + d.color + '.png',
-                    'id':'unit'+d.soldiers[i].soldierId
-                })
-            );
-        }
-        $('.message').append(defense);
-    }
-    var height = 62 + 31 + 14 + h * 31; //67
-    $('.message')
-    .append($('<div>').addClass('go').html('OK').click(function(){$('.message').remove()}))
-    .css('height',height+'px');
-
-    console.log(battle);
-}
-
-function walk(result, el) {
-    for(i in result.path) {
-        break;
-    }
-    if(typeof result.path[i] == 'undefined') {
-        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        newX = players[my.color].armies['army'+result.armyId].x;
-        newY = players[my.color].armies['army'+result.armyId].y;
-        wsArmyAdd(result.armyId);
-        lock = false;
-        return null;
-    } else {
-        wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
-        el.css({
-            display:'none',
-            left: result.path[i].x + 'px',
-            top: result.path[i].y + 'px'
-        });
-        zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        el.fadeIn(1, function() {
-            delete result.path[i];
-            walk(result, el);
-        });
-    }
 }
 
 function startMyTurn() {

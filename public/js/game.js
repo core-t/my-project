@@ -16,111 +16,13 @@ var zoomer;
 
 var socket;
 
+var nextArmy;
+
 $(document).ready(function() {
     zoomer = new zoom(758, 670);
-    for(i in castles) {
-        castles[i] = new createCastle(i);
-    }
-    for(color in players) {
-        $('.'+color).css('display','block');
-        $('#'+color+'Color').css({
-            width:'50px',
-            height:'18px',
-            background:color,
-            border:'1px solid #cecece'
-        })
-        for(i in players[color].armies) {
-            players[color].armies[i] = new army(players[color].armies[i], color);
-        }
-        for(i in players[color].castles) {
-            castleOwner(i, color);
-        }
-    }
-    setInterval ( 'wsPing()', 9000 );
-
-    board.mousedown(function(event) {
-        if(lock) {
-            return null;
-        }
-
-        switch (event.which) {
-            case 1:
-                if(selectedArmy != null) {
-                    sendMove(cursorPosition(event.pageX, event.pageY));
-                }
-                break;
-            case 2:
-                alert('Middle mouse button pressed');
-                break;
-            case 3:
-                unselectArmy();
-                break;
-            default:
-                alert('You have a strange mouse');
-        }
-    });
-    board.mousemove(function(e) {
-        if(lock) {
-            return null;
-        }
-        cursorPosition(e.pageX, e.pageY);
-    });
-    $('#nextArmy').click(function() {
-        if(lock) {
-            return null;
-        }
-        var reset = true;
-        for(i in players[my.color].armies) {
-            if(nextArmySelected) {
-                nextArmy = i;
-                var reset = false;
-                break;
-            }
-            if(!nextArmy) {
-                nextArmy = i;
-            }
-            if(nextArmy == i){
-                if(nextArmySelected == false){
-                    nextArmySelected = true;
-                    unselectArmy();
-                    selectArmy(players[my.color].armies[nextArmy]);
-                }
-            }
-        }
-        nextArmySelected = false;
-        if(reset) {
-            nextArmy = null;
-        }
-    });
     $('#wsStatus').html('DISCONNECTED!');
-    $('#connect').click(function() {
-        wsConnect();
-    });
-    $('#nextTurn').click(function() {
-        if(turn.myTurn) {
-            sendNextTurn();
-            $('#nextTurn').css({
-                'text-decoration':'underline',
-                'color':'blue'
-            });
-        }
-    });
     lock = false;
-    $('#game').after(
-        $('<div>')
-        .addClass('message')
-        .append($('<p>').addClass('center').html('Ready?'))
-        .append($('<div>')
-            .addClass('go')
-            .html('Start')
-            .click(function(){
-                $('.message').remove();
-                wsConnect();
-                showFirstCastle();
-            })
-        )
-        .css('height','70px')
-    );
+    startM();
 /*    for(y in fields) {
         for(x in fields[y]) {
             board.append(
@@ -172,3 +74,26 @@ function changeTurn(playerId, color) {
         return 1;
     }
 }
+
+function initGame(){
+    for(i in castles) {
+        castles[i] = new createCastle(i);
+    }
+    for(color in players) {
+        $('.'+color).css('display','block');
+        $('#'+color+'Color').css({
+            width:'50px',
+            height:'18px',
+            background:color,
+            border:'1px solid #cecece'
+        })
+        for(i in players[color].armies) {
+            players[color].armies[i] = new army(players[color].armies[i], color);
+        }
+        for(i in players[color].castles) {
+            castleOwner(i, color);
+        }
+    }
+    setInterval ( 'wsPing()', 9000 );
+}
+

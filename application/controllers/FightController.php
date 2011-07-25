@@ -276,9 +276,9 @@ class FightController extends Warlords_Controller_Action
 //             );
         }
         if($attackHits){
-            $this->_result[] = array('defense' => $defenseHits);
+            $this->_result[] = $idD;
         } else {
-            $this->_result[] = array('attack' => $attackHits);
+            $this->_result[] = $idA;
         }
         return array('attack' => $attackHits, 'defense' => $defenseHits);
     }
