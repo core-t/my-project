@@ -9,6 +9,8 @@ var lock = true;
 var selectedArmy = null;
 var unselectedArmy = null;
 var selectedEnemyArmy = null;
+var nextArmy = null;
+var nextArmySelected = false;
 
 var zoomer;
 
@@ -67,15 +69,27 @@ $(document).ready(function() {
         if(lock) {
             return null;
         }
+        var reset = true;
         for(i in players[my.color].armies) {
-            if(selectedArmy) {
-                if(selectedArmy == players[my.color].armies[i]) {
-                    unselectArmy();
-                }
-            } else {
-                selectArmy(players[my.color].armies[i]);
+            if(nextArmySelected) {
+                nextArmy = i;
+                var reset = false;
                 break;
             }
+            if(!nextArmy) {
+                nextArmy = i;
+            }
+            if(nextArmy == i){
+                if(nextArmySelected == false){
+                    nextArmySelected = true;
+                    unselectArmy();
+                    selectArmy(players[my.color].armies[nextArmy]);
+                }
+            }
+        }
+        nextArmySelected = false;
+        if(reset) {
+            nextArmy = null;
         }
     });
     $('#wsStatus').html('DISCONNECTED!');
@@ -92,20 +106,34 @@ $(document).ready(function() {
         }
     });
     lock = false;
-    showFirstCastle();
-//     for(y in fields) {
-//         for(x in fields[y]) {
-//             board.append(
-//                 $('<div>')
-//                 .html(fields[y][x])
-//                 .addClass('field')
-//                 .css({
-//                     left:(x*40)+'px',
-//                     top:(y*40)+'px'
-//                 })
-//             );
-//         }
-//     }
+    $('#game').after(
+        $('<div>')
+        .addClass('message')
+        .append($('<p>').html('Ready?'))
+        .append($('<div>')
+            .addClass('go')
+            .html('Start')
+            .click(function(){
+                $('.message').remove();
+                wsConnect();
+                showFirstCastle();
+            })
+        )
+    );
+//     showFirstCastle();
+/*    for(y in fields) {
+        for(x in fields[y]) {
+            board.append(
+                $('<div>')
+                .html(fields[y][x])
+                .addClass('field')
+                .css({
+                    left:(x*40)+'px',
+                    top:(y*40)+'px'
+                })
+            );
+        }
+    }*/
 });
 
 function turnOn() {

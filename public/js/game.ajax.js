@@ -31,7 +31,8 @@ function sendMove(movesSpend) {
             lock = false;
             return null;
         }
-        if(unselectedArmy.moves < (movesSpend + 2)) {
+        if(unselectedArmy.moves < (movesSpend + 1)) {
+            console.log(movesSpend);
             lock = false;
             return null;
         }
@@ -60,7 +61,7 @@ function sendMove(movesSpend) {
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
             }
-            console.log(result.battle);
+            battle(result.battle);
             lock = false;
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
@@ -70,7 +71,8 @@ function sendMove(movesSpend) {
             unselectEnemyArmy();
             return null;
         }
-        if(unselectedArmy.moves < (movesSpend + 2)) {
+        if(unselectedArmy.moves < (movesSpend + 1)) {
+            console.log(movesSpend);
             lock = false;
             unselectEnemyArmy();
             return null;
@@ -93,7 +95,7 @@ function sendMove(movesSpend) {
                 getAddArmy(selectedEnemyArmy.armyId);
                 wsArmyAdd(selectedEnemyArmy.armyId);
             }
-            console.log(result.battle);
+            battle(result.battle);
             unselectEnemyArmy();
             lock = false;
         });
@@ -105,6 +107,24 @@ function sendMove(movesSpend) {
         });
     }
     return true;
+}
+
+function battle(battle) {
+    console.log(unselectedArmy);
+    var attack = $('<div>');
+    for(i in unselectedArmy.soldiers) {
+        var img = unselectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+        attack.append(
+            $('<img>').attr('src','/img/game/' + img + '_' + my.color + '.png')
+        );
+    }
+    $('#game').after(
+        $('<div>')
+        .addClass('message')
+        .append(attack)
+        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
+    );
+    console.log(battle);
 }
 
 function walk(result, el) {

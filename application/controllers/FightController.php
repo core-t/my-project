@@ -3,6 +3,7 @@
 class FightController extends Warlords_Controller_Action
 {
     private $_result;
+    private $_movesRequiredToAttack = 1;
 
     public function _init()
     {
@@ -27,7 +28,7 @@ class FightController extends Warlords_Controller_Action
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
             if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
-                throw new Exception('Armia ma za mało ruchów do wykonania akcji.');
+                throw new Exception('Armia ma za mało ruchów do wykonania akcji ('.$movesSpend.'>'.$army['movesLeft'].').');
             }
             $enemies = $modelArmy->getAllArmiesFromPosition(array('x' => $x, 'y' => $y));
             foreach($enemies as $enemy) {
@@ -110,7 +111,7 @@ class FightController extends Warlords_Controller_Action
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
                 if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
-                    throw new Exception('Armia ma za mało ruchów do wykonania akcji.');
+                    throw new Exception('Armia ma za mało ruchów do wykonania akcji('.$movesSpend.'>'.$army['movesLeft'].').');
                 }
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 $enemies = array();
@@ -299,9 +300,9 @@ class FightController extends Warlords_Controller_Action
             $fields[$cy][$cx] = 'r';
             $fields[$cy + 1][$cx + 1] = 'r';
         }
-        $terrainType = $fields[$x/40][$y/40];
+        $terrainType = $fields[$y/40][$x/40];
         $terrain = Application_Model_Board::getTerrain($terrainType);
-        return $terrain[1] + 2;
+        return $terrain[1] + $this->_movesRequiredToAttack;
     }
 }
 

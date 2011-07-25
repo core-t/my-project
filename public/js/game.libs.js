@@ -129,9 +129,7 @@ function castleOwner(castleId, color) {
                         );
                         j++;
                     }
-                    console.log(td);
                     var k = Math.ceil(j/2);
-                    console.log(k);
                     for(l = 0; l < k; l++) {
                         var tr = $('<tr>');
                         var m = l*2;
@@ -143,7 +141,6 @@ function castleOwner(castleId, color) {
                         }
                         table.append(tr);
                     }
-                    console.log(table);
                     $('#game').after(
                         $('<div>')
                         .addClass('message')
@@ -200,7 +197,7 @@ function castleOwner(castleId, color) {
     });
     castles[castleId].element.fadeIn(1);
     castles[castleId].color = color;
-    if(typeof players[color].castles[castleId].production == 'undefined'){
+    if(typeof players[color].castles[castleId] == 'undefined'){
         castles[castleId].currentProduction = null;
         castles[castleId].currentProductionTurn = 0;
     } else {
@@ -351,7 +348,7 @@ function army(obj, color) {
     this.element.append(this.img);
     board.append(this.element);
     this.element.fadeIn(500, function() {
-        zoomer.lensSetCenter(this.x, this.y);
+//         zoomer.lensSetCenter(this.x, this.y);
     });
     this.armyId = obj.armyId;
     this.color = color;
