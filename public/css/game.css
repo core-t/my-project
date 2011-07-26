@@ -2,6 +2,7 @@
     width:760px;
     height:800px;
     background:#ddd;
+/*     display:none; */
 }
 
 .castle {
@@ -34,7 +35,7 @@
     height:2760px;
     position:absolute;
     top:0px;
-    left:0px
+    left:0px;
 }
 
 .zoomPad{
@@ -90,7 +91,16 @@
 
 .gameMenu {
     float:left;
-    min-width:180px;
+    width:185px;
+}
+
+.gameMenu p {
+    height:20px;
+}
+
+.colors td {
+    padding:2px;
+    text-align:center;
 }
 
 .white {
@@ -102,6 +112,10 @@
 }
 
 .orange {
+    display:none;
+}
+
+.yellow {
     display:none;
 }
 
@@ -242,3 +256,5 @@
 .center {
     text-align:center;
 }
+
+

@@ -98,7 +98,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId)
-                    ->order('attackPoints DESC');
+                    ->order('attackPoints ASC');
             $result = $this->_db->query($select)->fetchAll();
             return $result;
         } catch (Exception $e) {

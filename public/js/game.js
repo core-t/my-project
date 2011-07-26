@@ -95,5 +95,6 @@ function initGame(){
         }
     }
     setInterval ( 'wsPing()', 9000 );
+//     $('#game').fadeIn(1000);
 }
 

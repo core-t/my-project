@@ -249,14 +249,53 @@ function army(obj, color) {
         }
     }
     this.soldiers = obj.soldiers;
+//     for(j = N - 1; j > 0; j--)
+//     {
+//         p = 1;
+//         for(i = 0; i < j; i++)
+//             if(d[i] > d[i + 1])
+//             {
+//                 x = d[i]; d[i] = d[i + 1]; d[i + 1] = x;
+//                 p = 0;
+//             }
+//             if(p) break;
+//     }
+//     for(j = 0; j < N - 1; j++)
+//         for(i = 0; i < N - 1; i++)
+//             if(d[i] > d[i + 1])
+//             {
+//                 x = d[i]; d[i] = d[i + 1]; d[i + 1] = x;
+//             };
+//     for(soldier in this.soldiers) {numberOfUnits++;}
+//     for(j = 0; j < numberOfUnits - i; j++){
+//         for(soldier in this.soldiers) {
+//             var s = this.soldiers;
+//             if(typeof this.moves == 'undefined') {
+//                 this.moves = s[soldier].movesLeft;
+//             }
+//             if(s[soldier].movesLeft < this.moves) {
+//                 this.moves = s[soldier].movesLeft;
+//             }
+//             if(s[soldier].attackPoints > s[soldier+1].attackPoints) {
+//                 attack = s[soldier].attackPoints;
+//                 this.soldierKey = soldier;
+//             }
+//         }
+//     }
     for(soldier in this.soldiers) {
         numberOfUnits++;
-        this.soldierKey = soldier;
         if(typeof this.moves == 'undefined') {
             this.moves = this.soldiers[soldier].movesLeft;
         }
         if(this.soldiers[soldier].movesLeft < this.moves) {
             this.moves = this.soldiers[soldier].movesLeft;
+        }
+        if(typeof attack  == 'undefined') {
+            var attack = this.soldiers[soldier].attackPoints;
+            this.soldierKey = soldier;
+        }
+        if(this.soldiers[soldier].attackPoints > attack) {
+            attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
         }
     }

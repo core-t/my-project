@@ -2,7 +2,7 @@ function startM(){
     $('#game').after(
         $('<div>')
         .addClass('message')
-        .append($('<p>').addClass('center').html('Ready?'))
+        .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
         .append($('<div>')
             .addClass('go')
             .html('Start')
@@ -13,7 +13,10 @@ function startM(){
                 showFirstCastle();
             })
         )
-        .css('height','70px')
+        .css({
+            height:'70px',
+//             top:'20px'
+        })
     );
 }
 
@@ -39,6 +42,7 @@ function battleM(battle, a, def) {
     $('#game').after(
         $('<div>')
         .addClass('message')
+        .css('display','none')
         .append(attack)
         .append($('<p>').html('VS').addClass('center'))
     );
@@ -58,18 +62,25 @@ function battleM(battle, a, def) {
         }
         $('.message').append(defense);
     }
-    var height = 62 + 31 + 14 + h * 31; //67
+    if(h == 0) {
+        $('.message').append($('<div>').addClass('battle defense'));
+    }
+    var height = 62 + 31 + 14 + h * 31;
     $('.message')
     .append($('<div>').addClass('go').html('OK').click(function(){$('.message').remove()}))
     .css('height',height+'px');
-    killM(battle);
+    if(battle){
+        $('.message').fadeIn(100, function(){
+            killM(battle);
+        })
+    }
 }
 
 function killM(r){
     for(i in r) {
         break;
     }
-    console.log(r[i]);
+//     console.log(r[i]);
     if(typeof r[i] == 'undefined') {
         return null;
     }
