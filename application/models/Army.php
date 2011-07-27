@@ -385,7 +385,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                 $soldiers = $this->getArmySoldiers($ids, true);
                 return array('heroes' => $heroes, 'soldiers' => $soldiers);
             } else {
-                return array('heroes' => null, 'soldiers' => null);
+                return array('heroes' => array(), 'soldiers' => array());
             }
         } catch (PDOException $e) {
             throw new Exception($select->__toString());

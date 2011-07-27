@@ -14,16 +14,12 @@ function startM(){
             })
         )
         .css({
-            height:'70px',
-//             top:'20px'
+            'min-height':'70px'
         })
     );
 }
 
 function battleM(battle, a, def) {
-    console.log(battle);
-    console.log(a);
-    console.log(def);
     var attack = $('<div>').addClass('battle attack');
     for(i in a.soldiers) {
         var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
@@ -79,7 +75,7 @@ function battleM(battle, a, def) {
     var height = 62 + 31 + 14 + h * 31;
     $('.message')
     .append($('<div>').addClass('go').html('OK').click(function(){$('.message').remove()}))
-    .css('height',height+'px');
+    .css('min-height',height+'px');
     if(battle){
         $('.message').fadeIn(100, function(){
             killM(battle);

@@ -168,6 +168,7 @@ class FightController extends Warlords_Controller_Action
     }
 
     private function battle($attacker, $defender) {
+//        Zend_Debug::dump($defender);
         $hits = array('attack' => 2, 'defense' => 2);
         foreach ($attacker['soldiers'] as $a => $unitAttaking) {
             foreach ($defender['soldiers'] as $d => $unitDefending) {
