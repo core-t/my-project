@@ -69,7 +69,6 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('"' . $this->_primary . '" = ?', $armyId)
                     ->order('attackPoints DESC');
             $result = $this->_db->query($select)->fetchAll();
-            $hero = array();
             foreach ($result as $k => $row) {
                 $result[$k]['artefacts'] = $this->getArtefactsByHeroId($row['heroId']);
             }
@@ -98,7 +97,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId)
-                    ->order('attackPoints ASC');
+                    ->order(array('a.unitId', 'attackPoints ASC'));
             $result = $this->_db->query($select)->fetchAll();
             return $result;
         } catch (Exception $e) {
@@ -279,14 +278,18 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         }
     }
 
-    private function destroySoldier($soldierId) {
-        $where = $this->_db->quoteInto('"soldierId" = ?', $soldierId);
+    public function destroySoldier($soldierId) {
+        $where[] = $this->_db->quoteInto('"soldierId" = ?', $soldierId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         $this->_db->delete('soldier', $where);
     }
 
-    private function destroyHero($heroId) {
+    public function armyRemoveHero($heroId) {
+        $data = array(
+            'armyId' => 'null'
+        );
         $where = $this->_db->quoteInto('"heroId" = ?', $heroId);
-        $this->_db->delete('hero', $where);
+        $this->_db->update('hero', $data, $where);
     }
 
     public function destroyArmy($armyId, $playerId) {
@@ -319,7 +322,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function getAllArmiesFromCastlePosition($position) {
+    public function updateAllArmiesFromCastlePosition($position) {
         $points = array(
             '(' . $position['x'] . ',' . $position['y'] . ')',
             '(' . ($position['x'] + 40) . ',' . $position['y'] . ')',
@@ -333,10 +336,59 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('position::varchar IN (?)', $points);
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $k => $army) {
-                $result[$k]['heroes'] = $this->getArmyHeroes($army['armyId']);
-                $result[$k]['soldiers'] = $this->getArmySoldiers($army['armyId']);
+                $heroes = $this->getArmyHeroes($army['armyId']);
+                $soldiers = $this->getArmySoldiers($army['armyId']);
+                if (empty($result[$k]['heroes']) AND empty($result[$k]['soldiers'])) {
+                    $this->destroyArmy($army['armyId'], $army['playerId']);
+                    unset($result[$k]);
+                } else {
+                    $result[$k]['heroes'] = $heroes;
+                    $result[$k]['soldiers'] = $soldiers;
+                }
             }
             return $result;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function getAllUnitsFromCastlePosition($position) {
+        $points = array(
+            '(' . $position['x'] . ',' . $position['y'] . ')',
+            '(' . ($position['x'] + 40) . ',' . $position['y'] . ')',
+            '(' . $position['x'] . ',' . ($position['y'] + 40) . ')',
+            '(' . ($position['x'] + 40) . ',' . ($position['y'] + 40) . ')'
+        );
+        $ids = '';
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, $this->_primary)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('position::varchar IN (?)', $points);
+            $result = $this->_db->query($select)->fetchAll();
+            foreach ($result as $army) {
+                if($ids){
+                    $ids .= ',';
+                }
+                $ids .= $army['armyId'];
+            }
+            $select = $this->_db->select()
+                    ->from('hero', array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'armyId', 'experience', 'movesLeft'))
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"' . $this->_primary . '" IN (?)', $ids)
+                    ->order('attackPoints DESC');
+            $heroes = $this->_db->query($select)->fetchAll();
+            foreach ($heroes as $k => $row) {
+                $heroes[]['artefacts'] = $this->getArtefactsByHeroId($row['heroId']);
+            }
+            $select = $this->_db->select()
+                    ->from(array('a' => 'soldier'))
+                    ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"' . $this->_primary . '" IN (?)', $ids)
+                    ->order(array('a.unitId', 'attackPoints ASC'));
+            $soldiers = $this->_db->query($select)->fetchAll();
+            return array('heroes' => $heroes, 'soldiers' => $soldiers);
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }

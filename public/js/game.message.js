@@ -21,6 +21,9 @@ function startM(){
 }
 
 function battleM(battle, a, def) {
+    console.log(battle);
+    console.log(a);
+    console.log(def);
     var attack = $('<div>').addClass('battle attack');
     for(i in a.soldiers) {
         var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
@@ -57,6 +60,14 @@ function battleM(battle, a, def) {
                 $('<img>').attr({
                     'src':'/img/game/' + img + '_' + d.color + '.png',
                     'id':'unit'+d.soldiers[i].soldierId
+                })
+            );
+        }
+        for(i in d.heroes) {
+            defense.append(
+                $('<img>').attr({
+                    'src':'/img/game/hero_' + d.color + '.png',
+                    'id':'hero'+d.heroes[i].heroId
                 })
             );
         }

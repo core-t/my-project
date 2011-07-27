@@ -474,11 +474,8 @@ function getEnemyCastleGarrison(castleId) {
         for(i in players[color].armies) {
             var a = players[color].armies[i];
             if((a.x >= pos.x) && (a.x <= (pos.x + 40)) && (a.y >= pos.y) && (a.y <= (pos.y + 40))) {
-                console.log(a);
-                armies[i] = {
-                    armyId:a.armyId,
-                    color:a.color
-                };
+//                 console.log(a);
+                armies[i] = a;
             }
         }
     }
