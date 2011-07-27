@@ -2,7 +2,7 @@
 
 class FightController extends Warlords_Controller_Action
 {
-    private $_result;
+    private $_result = array();
     private $_movesRequiredToAttack = 1;
 
     public function _init()
@@ -30,7 +30,7 @@ class FightController extends Warlords_Controller_Action
             if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji ('.$movesSpend.'>'.$army['movesLeft'].').');
             }
-            $enemy = $modelArmy->getAllArmiesFromPosition(array('x' => $x, 'y' => $y));
+            $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
             $this->battle($army, $enemy);
             foreach($this->_result AS $r) {
                 if(isset($r['heroId'])) {
@@ -68,7 +68,6 @@ class FightController extends Warlords_Controller_Action
                 $enemy['battle'] = $this->_result;
                 $enemy['victory'] = false;
                 $this->view->response = Zend_Json::encode($enemy);
-                break;
             }
         } else {
             throw new Exception('Brak "armyId" lub "x" lub "y" lub "$enemyId"!');
@@ -159,7 +158,6 @@ class FightController extends Warlords_Controller_Action
                     $enemy['battle'] = $this->_result;
                     $enemy['victory'] = false;
                     $this->view->response = Zend_Json::encode($enemy);
-                    break;
                 }
             } else {
                 throw new Exception('Na podanej pozycji nie ma zamku!');
