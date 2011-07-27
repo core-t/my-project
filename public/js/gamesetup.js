@@ -1,24 +1,32 @@
 function refresh() {
     $.getJSON(urlAjax, function(result) {
-        console.log(result.start);
         if(result.start) {
             top.location = urlRedirect;
         } else {
             delete result.start;
-            $('#playersingame').html('');
-            $('#playersingame').append(th);
             $('#playersout').html('');
             $('#playersout').append(th);
             var playersReady = 0;
-            for(i in result) {
+            for(i = 0; i < numberOfPlayers; i++) {
+                $('#'+colors[i]+' #td1').html('');
+                $('#'+colors[i]+' #td2 a').html('Ready');
+            }
+            for(i in result){
                 if(result[i].ready) {
                     playersReady++;
-                    $('#playersingame').append('<tr id="' + result[i].color + '"><td>' + result[i].playerId + '</td><td>' + result[i].color + '</td><td id="ready' + result[i].playerId + '">' + result[i].ready + '</td></tr>');
+                    $('#'+result[i].color+' #td1').html(result[i].playerId);
+                    if(result[i].playerId == playerId){
+                        if(ready) {
+                            var html = 'Unready';
+                        } else {
+                            var html = 'Ready';
+                        }
+                        $('#'+result[i].color+' #td2 a').html(html);
+                    }else{
+                        $('#'+result[i].color+' #td2 a').html('');
+                    }
                 } else {
-                    $('#playersout').append('<tr id="' + result[i].color + '"><td>' + result[i].playerId + '</td><td>' + result[i].color + '</td><td id="ready' + result[i].playerId + '">' + result[i].ready + '</td></tr>');
-                }
-                if(result[i].playerId == playerId) {
-                    ready = result[i].ready;
+                    $('#playersout').append('<tr><td>' + result[i].playerId + '</td></tr>');
                 }
             }
             if(urlStart) {
@@ -29,29 +37,16 @@ function refresh() {
                 }
             }
         }
-        makeReadyStatus();
     });
 }
 $(document).ready(function() {
     setInterval ( 'refresh()', 5000 );
     refresh();
 });
-function playerReady() {
-    console.log(ready);
-    if(ready) ready = 0;
-    else ready = 1;
-    $.getJSON(urlReady + '/readystatus/' + ready, function(result) {
-        if(result) {
-            makeReadyStatus();
+function playerReady(color) {
+    $.getJSON(urlReady+'/color/'+color, function(result) {
+        if(typeof result.ready != 'undefined') {
+            ready = result.ready;
         }
     });
-}
-    
-var makeReadyStatus = function () {
-    if(ready) {
-        var html = 'Unready';
-    } else {
-        var html = 'Ready';
-    }
-    $('#ready').html(html);
 }

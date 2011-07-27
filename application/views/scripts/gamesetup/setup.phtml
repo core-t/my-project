@@ -1,18 +1,22 @@
 <?php
-$playersInGame = '';
-$playersOut = '';
 $urlStart = '';
 ?>
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <h4>Players in game</h4>
-<table id="playersingame"></table>
+<table id="playersingame">
+<th>Player Id</th><th>Ready</th>
+<?php
+for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
+    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"><a href="javascript:playerReady('.$i.')"></a></td></tr>';
+}
+?>
+</table>
 <h4>Players out</h4>
 <table id="playersout"></table>
 
 <ul>
+    <li><a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
     <li><a href="javascript:refresh()">Refresh</a></li>
-    <li><a id="ready" href="javascript:playerReady()"></a></li>
-    <li><a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">Back</a></li>
     <li id="start">
         <?php
         if ($this->game['gameMasterId'] == $this->player['playerId']) {
@@ -22,14 +26,15 @@ $urlStart = '';
     </li>
 </ul>
 <script type="text/javascript">
-    var th = '<th>Player Id</th><th>Player color</th><th>Ready</th>';
+    var th = '<th>Player Id</th><th>Player color</th>';
     var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'setup')) ?>';
     var urlStart = '<?php echo $urlStart; ?>';
     var urlRedirect = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
     var urlReady = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'ready', 'gameId' => null)) ?>';
     var urlAjax = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'setuprefresh', 'gameId' => null)) ?>';
     var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
-    var ready = 0;
+    var ready = '<?php echo $this->player['ready'] ?>';
+    var colors = <?php echo Zend_Json::encode($this->colors) ?>;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
 
 <?php if ($urlStart) { ?>

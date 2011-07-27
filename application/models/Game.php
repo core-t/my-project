@@ -7,7 +7,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     protected $_sequence = "game_gameId_seq";
     protected $_db;
     protected $_id;
-    protected $_playerColors = array('white', 'green', 'orange', 'red');
+    protected $_playerColors = array('white', 'green', 'yellow', 'red', 'orange');
 
     public function __construct($gameId = 0) {
         $this->_gameId = $gameId;
@@ -33,9 +33,18 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
 
     public function getOpen() {
         $select = $this->_db->select()
-                ->from($this->_name, array($this->_primary))
-                ->where('"isOpen" = true');
+                ->from($this->_name)
+                ->where('"isOpen" = true')
+                ->order('begin');
         $result = $this->_db->query($select)->fetchAll();
+        foreach($result as $k=>$game){
+            $select = $this->_db->select()
+                    ->from('playersingame', 'count(*)')
+                    ->where('"gameId" = ?', $game['gameId'])
+                    ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
+            $playersingame = $this->_db->query($select)->fetchAll();
+            $result[$k]['playersingame'] = $playersingame[0]['count'];
+        }
         return $result;
     }
 
@@ -90,7 +99,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getPlayerColor($id) {
         try {
             $select = $this->_db->select()
-                    ->from('playersingame', array('color'))
+                    ->from('playersingame', 'color')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $id);
             $result = $this->_db->query($select)->fetchAll();
@@ -102,11 +111,25 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function joinGame($id, $color) {
+    public function isPlayerInGame($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'gameId')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            if (isset($result[0]['gameId'])) {
+                return true;
+            }
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function joinGame($playerId) {
         $data = array(
             'gameId' => $this->_gameId,
-            'playerId' => $id,
-            'color' => $color
+            'playerId' => $playerId
         );
         $this->_db->insert('playersingame', $data);
     }
@@ -117,23 +140,23 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $this->_db->delete('playersingame', $where);
     }
 
-    public function updatePlayerInGame($id) {
+    public function updatePlayerInGame($playerId) {
         $data = array(
             'timeout' => 'now()'
         );
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $id);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->update('playersingame', $data, $where);
     }
 
-    public function isGameMaster($id) {
+    public function isGameMaster($playerId) {
         $select = $this->_db->select()
                 ->from($this->_name, array('gameMasterId'))
                 ->where('"' . $this->_primary . '" = ?', $this->_gameId)
-                ->where('"gameMasterId" = ?', $id);
+                ->where('"gameMasterId" = ?', $playerId);
         $result = $this->_db->query($select)->fetchAll();
         if (isset($result[0]['gameMasterId'])) {
-            if ($id == $result[0]['gameMasterId']) {
+            if ($playerId == $result[0]['gameMasterId']) {
                 return true;
             }
         }
@@ -168,14 +191,69 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function updatePlayerReady($playerId, $ready) {
-        if ($ready)
-            $data['ready'] = 'true';
-        else
+    public function getPlayerInGame($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0];
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function isPlayerReady($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'ready')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('ready = true');
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset($result[0]['ready'])){
+                return true;
+            }
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function isColorInGame($playerId, $color){
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'color')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" != ?', $playerId)
+                    ->where('color = ?', $this->_playerColors[$color])
+                    ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset($result[0]['color'])){
+                return true;
+            }
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function updatePlayerReady($playerId, $color) {
+        if($this->isColorInGame($playerId, $color)){
+            return false;
+        }
+        $player = $this->getPlayerInGame($playerId);
+        if ($player['ready'] && $player['color'] == $this->_playerColors[$color])
             $data['ready'] = 'false';
+        else
+            $data['ready'] = 'true';
+        $data['timeout'] = 'now()';
+        $data['color'] = $this->_playerColors[$color];
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        return $this->_db->update('playersingame', $data, $where);
+        $result = $this->_db->update('playersingame', $data, $where);
+        if($result == 1){
+            return array('ready' => $data['ready'], 'color' => $color);
+        }
     }
 
     public function isPlayerTurn($playerId) {

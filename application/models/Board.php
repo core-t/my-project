@@ -398,7 +398,7 @@ class Application_Model_Board {
                 'id' => 15,
                 'position' => $this->_castles[15]['position']
             ),
-            'orange' => array(
+            'yellow' => array(
                 'id' => 24,
                 'position' => $this->_castles[24]['position']
             )

@@ -43,11 +43,12 @@ class GamesetupajaxController extends Warlords_Controller_Action {
     }
 
     public function readyAction() {
-        $ready = $this->_request->getParam('readystatus');
-        if (!empty($this->_namespace->gameId) OR !empty($ready)) {
+        $color = $this->_request->getParam('color');
+        if (!empty($this->_namespace->gameId) OR !empty($color)) {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
-            $res = $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $ready);
-            echo $res;
+            $res = $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $color);
+            $this->view->response = Zend_Json::encode($res);
+//             echo $res;
         } else {
             throw new Exception('Brak gameId!');
         }

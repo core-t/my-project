@@ -124,7 +124,9 @@ class FightController extends Warlords_Controller_Action
                     if(isset($r['heroId'])) {
                         $modelArmy->armyRemoveHero($r['heroId']);
                     } else {
-                        $modelArmy->destroySoldier($r['soldierId']);
+                        if(strpos($r['soldierId'],'s') === null){
+                            $modelArmy->destroySoldier($r['soldierId']);
+                        }
                     }
                 }
                 $enemy = $modelArmy->updateAllArmiesFromCastlePosition($castle['position']);

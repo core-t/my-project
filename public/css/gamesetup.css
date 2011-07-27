@@ -1,3 +1,25 @@
+table {
+    border-spacing:0 1px 0 1px;
+}
+
+#opengames {
+    height:400px;
+}
+
+th {
+    height:20px;
+    text-align:center;
+    background:#ccc;
+    padding:4px;
+}
+
+#opengames td {
+    border:1px solid #ccc;
+    height:20px;
+    text-align:center;
+    padding:2px;
+}
+
 #playersingame td {
     height:20px;
     min-width: 200px;
@@ -19,8 +41,8 @@
     background: #f00;
 }
 
-#playersingame tr#orange td {
-    background: #FFAE57;
+#playersingame tr#yellow td {
+    background: yellow;
 }
 
 #playersout td {

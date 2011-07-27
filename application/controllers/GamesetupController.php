@@ -52,19 +52,13 @@ class GamesetupController extends Warlords_Controller_Action {
             }
             $modelGame = new Application_Model_Game($gameId);
             $playersInGame = $modelGame->getPlayersWaitingForGame();
-//            Zend_Debug::dump($playersInGame);
-            $playerColors = $modelGame->getAllColors();
-//            Zend_Debug::dump($playerColors);
-            $color = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
-            if (!$color) {
-                $color = $this->findPlayerColor($playersInGame, $playerColors);
-                $modelGame->joinGame($this->_namespace->player['playerId'], $color);
-                $this->_namespace->player['color'] = $color;
-            } else {
-                $this->_namespace->player['color'] = $color;
+            $this->view->colors = $modelGame->getAllColors();
+            if($modelGame->isPlayerInGame($this->_namespace->player['playerId'])){
+                $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
             }
-            $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);
+            $modelGame->joinGame($this->_namespace->player['playerId']);
             $this->view->game = $modelGame->getGame(); // pobieram informację na temat gry
+            $this->_namespace->player['ready'] = $modelGame->isPlayerReady($this->_namespace->player['playerId']);
             $this->view->player = $this->_namespace->player;
         } else {
             throw new Exception('Brak gameId!');
@@ -87,19 +81,21 @@ class GamesetupController extends Warlords_Controller_Action {
     public function startAction() {
         if (!empty($this->_namespace->gameId)) {
             if (empty($this->_namespace->armyId)) {
+                $modelGame = new Application_Model_Game($this->_namespace->gameId);
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $modelBoard = new Application_Model_Board();
                 $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 $startPositions = $modelBoard->getDefaultStartPositions();
                 $playerHeroes = $modelHero->getHeroes();
+                $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
+//                 throw new Exception($playerColor);
                 if(empty($playerHeroes)) {
                     $modelHero->createHero();
                     $playerHeroes = $modelHero->getHeroes();
                 }
                 $this->_namespace->armyId = $modelArmy->createArmy(
                         $startPositions[$this->_namespace->player['color']]['position'],
-                        $playerHeroes[0]['numberOfMoves'],
                         $this->_namespace->player['playerId']);
                 $modelArmy->addHeroToArmy($this->_namespace->armyId, $playerHeroes[0]['heroId']);
                 $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);

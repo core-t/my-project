@@ -1,30 +1,37 @@
-<table id="opengames">
-    <th></th>
-<?php
-if(is_array($this->openGames)) {
-    foreach($this->openGames as $game) {
-        echo '<tr><td><a href="'.$this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>$game['gameId'])).'">Join '.$game['gameId'].'</a></td></tr>';
-    }
-}
-?>
-</table>
+<h3>Open games:</h3>
+<div id="opengames"><table></table></div>
 
+<a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">< Back</a>
 <a href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
 <a href="javascript:refresh()">Refresh</a>
-<a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">Back</a>
 
 <script type="text/javascript">
-    var th = '<th></th>';
+    var th = '<th>Game ID</th><th>Game master ID</th><th>Max number of players</th><th>Date</th>';
     var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup')) ?>';
+    var openGames = $('#opengames table');
 function refresh() {
     $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
-        $('#opengames').html('');
-        $('#opengames').append(th);
+
+        openGames.html('');
+        openGames.append(th);
         for(i in result) {
-            $('#opengames').append('<tr><td><a href="' + url + '/gameId/' + result[i].gameId + '">Join ' + result[i].gameId + '</a></td></tr>');
+        console.log(result);
+            openGames.append($('<tr>')
+                .append($('<td>').html(result[i].gameId))
+                .append($('<td>').html(result[i].gameMasterId))
+                .append($('<td>').html(result[i].playersingame+'/'+result[i].numberOfPlayers))
+                .append($('<td>').html(result[i].begin.split('.')[0]))
+            );
+            $('#opengames td').mouseover(function(){
+                $('#opengames td').css('cursor', 'pointer')
+            });
+            $('#opengames td').click(function(){
+                top.location = url + '/gameId/' + result[i].gameId;
+            });
         }
     });
 }
+refresh();
 setInterval ( 'refresh()', 5000 );
 </script>
 
