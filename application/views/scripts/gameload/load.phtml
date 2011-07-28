@@ -3,10 +3,10 @@
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <h4>Players in game</h4>
 <table id="playersingame">
-    <th>Player Id</th><th>Player color</th><th>Ready</th>
+    <th>Player Id</th>
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id">empty</td><td>'.$this->colors[$i].'</td><td id="'.$this->colors[$i].'Ready"></td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id">empty</td></tr>';
 }
 ?>
 </table>

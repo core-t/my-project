@@ -124,7 +124,7 @@ class FightController extends Warlords_Controller_Action
                     if(isset($r['heroId'])) {
                         $modelArmy->armyRemoveHero($r['heroId']);
                     } else {
-                        if(strpos($r['soldierId'],'s') === null){
+                        if(strpos($r['soldierId'],'s') === false){
                             $modelArmy->destroySoldier($r['soldierId']);
                         }
                     }

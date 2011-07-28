@@ -35,7 +35,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $select = $this->_db->select()
                 ->from($this->_name)
                 ->where('"isOpen" = true')
-                ->order('begin');
+                ->order('begin DESC');
         $result = $this->_db->query($select)->fetchAll();
         foreach($result as $k=>$game){
             $select = $this->_db->select()
@@ -57,7 +57,8 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->from($this->_name)
                     ->where('"isOpen" = false')
                     ->where('"isActive" = true')
-                    ->where('"gameId" IN ?', $select1);
+                    ->where('"gameId" IN ?', $select1)
+                    ->order('begin DESC');
             $result = $this->_db->query($select2)->fetchAll();
             return $result;
         } catch (PDOException $e) {

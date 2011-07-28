@@ -26,7 +26,7 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
     </li>
 </ul>
 <script type="text/javascript">
-    var th = '<th>Player Id</th><th>Player color</th>';
+    var th = '<th>Player Id</th>';
     var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'setup')) ?>';
     var urlStart = '<?php echo $urlStart; ?>';
     var urlRedirect = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';

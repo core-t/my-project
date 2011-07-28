@@ -1,8 +1,8 @@
 table {
-    border-spacing:0 1px 0 1px;
+    border-spacing:1px;
 }
 
-#opengames {
+#mygames {
     height:400px;
 }
 
@@ -13,7 +13,7 @@ th {
     padding:4px;
 }
 
-#opengames td {
+#mygames td {
     border:1px solid #ccc;
     height:20px;
     text-align:center;

@@ -1,3 +1,25 @@
+table {
+    border-spacing:1px;
+}
+
+#mygames {
+    height:400px;
+}
+
+th {
+    height:20px;
+    text-align:center;
+    background:#ccc;
+    padding:4px;
+}
+
+#mygames td {
+    border:1px solid #ccc;
+    height:20px;
+    text-align:center;
+    padding:2px;
+}
+
 #playersingame td {
     height:20px;
     min-width: 200px;
@@ -19,6 +41,31 @@
     background: #f00;
 }
 
-#playersingame tr#orange td {
+#playersingame tr#yellow td {
+    background: yellow;
+}
+
+#playersout td {
+    height:20px;
+    min-width: 200px;
+    background: #0398CA;
+    border:1px solid #ccc;
+    padding:2px;
+    margin:2px;
+}
+
+#playersout tr#green td {
+    background: #0f0;
+}
+
+#playersout tr#white td {
+    background: #fff;
+}
+
+#playersout tr#red td {
+    background: #f00;
+}
+
+#playersout tr#orange td {
     background: #FFAE57;
 }

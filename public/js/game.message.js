@@ -87,7 +87,6 @@ function killM(r){
     for(i in r) {
         break;
     }
-//     console.log(r[i]);
     if(typeof r[i] == 'undefined') {
         return null;
     }

@@ -6,7 +6,6 @@ function refresh() {
                 playersReady++;
             }
             $('#'+result[i].color+'Id').html(result[i].playerId);
-            $('#'+result[i].color+'Ready').html(result[i].ready);
         }
         if(numberOfPlayers <= playersReady) {
             top.location = urlRedirect;

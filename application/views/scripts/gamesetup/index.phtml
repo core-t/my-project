@@ -1,5 +1,5 @@
 <h3>Open games:</h3>
-<div id="opengames"><table></table></div>
+<div id="mygames"><table></table></div>
 
 <a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">< Back</a>
 <a href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
@@ -8,24 +8,24 @@
 <script type="text/javascript">
     var th = '<th>Game ID</th><th>Game master ID</th><th>Max number of players</th><th>Date</th>';
     var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup')) ?>';
-    var openGames = $('#opengames table');
+    var mygames = $('#mygames table');
 function refresh() {
     $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
 
-        openGames.html('');
-        openGames.append(th);
+        mygames.html('');
+        mygames.append(th);
         for(i in result) {
         console.log(result);
-            openGames.append($('<tr>')
+            mygames.append($('<tr>')
                 .append($('<td>').html(result[i].gameId))
                 .append($('<td>').html(result[i].gameMasterId))
                 .append($('<td>').html(result[i].playersingame+'/'+result[i].numberOfPlayers))
                 .append($('<td>').html(result[i].begin.split('.')[0]))
             );
-            $('#opengames td').mouseover(function(){
-                $('#opengames td').css('cursor', 'pointer')
+            $('#mygames td').mouseover(function(){
+                $('#mygames td').css('cursor', 'pointer')
             });
-            $('#opengames td').click(function(){
+            $('#mygames td').click(function(){
                 top.location = url + '/gameId/' + result[i].gameId;
             });
         }

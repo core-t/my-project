@@ -46,7 +46,6 @@ function sendMove(movesSpend) {
                 wsArmyAdd(unselectedArmy.armyId);
 
                 // delete enemy - find enemy at position?
-//                 var armiesToDelete = getEnemyCastleGarrison(castleId);
                 for(i in enemyArmies) {
                     deleteArmy('army' + enemyArmies[i].armyId, enemyArmies[i].color);
                     wsArmyDelete(enemyArmies[i].armyId, enemyArmies[i].color);
@@ -56,6 +55,8 @@ function sendMove(movesSpend) {
                 castleOwner(castleId, my.color);
             } else {
                 for(i in enemyArmies) {
+                    wsArmyAdd(enemyArmies[i].armyId);
+                    getAddArmy(enemyArmies[i].armyId);
                     console.log(enemyArmies[i]);
                 }
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
@@ -89,7 +90,7 @@ function sendMove(movesSpend) {
                 wsArmyDelete(selectedEnemyArmy.armyId, selectedEnemyArmy.color);
 
                 selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
-            } else if(result.victory == false) {
+            } else {
                 deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
                 getAddArmy(selectedEnemyArmy.armyId);
@@ -124,7 +125,7 @@ function getAddArmy(armyId) {
     $.getJSON(urlAddArmy+'/armyId/'+armyId, function(result) {
         if(typeof result.armyId != 'undefined') {
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
-            console.log('WS dodana ' + armyId + ' - ' + result.color);
+//            console.log('WS dodana ' + armyId + ' - ' + result.color);
         }
     });
 }

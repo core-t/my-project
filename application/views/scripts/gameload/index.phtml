@@ -1,17 +1,21 @@
-<table id="mygames">
-    <th></th>
+<div id="mygames">
+<table>
+    <th>Game ID</th><th>Turn number</th><th>Max number of players</th><th>Date</th>
 <?php
 if(is_array($this->myGames)) {
     foreach($this->myGames as $game) {
         $url = $this->url(array('controller'=>'gameload', 'action'=>'load', 'gameId'=>$game['gameId']));
         echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'">
-        <td><a href="'.$url.'">Load '.$game['gameId'].' '.$game['begin'].'</a></td>
-        <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
+        <td><a href="'.$url.'">Load '.$game['gameId'].'</a></td>
         <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
+        <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
+        <td><a href="'.$url.'">'.strftime('%F', strtotime($game['begin'])).'</a></td>
         </tr>';
     }
 }
 ?>
 </table>
+    
+</div>
 
 <a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">Back</a>
