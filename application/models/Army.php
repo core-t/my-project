@@ -139,10 +139,12 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
-            $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
-            $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
-            return $result[0];
+            if(isset($result[0])){
+                $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
+                $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
+                $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
+                return $result[0];
+            }
         } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
