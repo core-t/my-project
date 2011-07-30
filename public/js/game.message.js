@@ -225,6 +225,11 @@ function walkM(result) {
         newX = players[my.color].armies['army'+result.armyId].x;
         newY = players[my.color].armies['army'+result.armyId].y;
         wsArmyAdd(result.armyId);
+        if(parentArmyId){
+            getAddArmy(parentArmyId);
+            wsArmyAdd(parentArmyId);
+            unsetParentArmyId();
+        }
         lock = false;
         return null;
     } else {

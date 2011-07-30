@@ -294,6 +294,14 @@ function army(obj, color) {
     this.color = color;
 }
 
+function setParentArmyId(armyId) {
+    parentArmyId = armyId;
+}
+
+function unsetParentArmyId() {
+    parentArmyId = null;
+}
+
 function selectArmy(a) {
     a.element.css({
         border:'1px solid #ccc'

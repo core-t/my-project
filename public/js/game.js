@@ -8,6 +8,7 @@ var lock = true;
 
 var selectedArmy = null;
 var unselectedArmy = null;
+var parentArmyId = null;
 var selectedEnemyArmy = null;
 var nextArmy = null;
 var nextArmySelected = false;

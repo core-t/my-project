@@ -163,10 +163,10 @@ function splitArmy(armyId){
         s += $(this).val();
     });
     $.getJSON(urlSplitArmy+'/aid/'+armyId+'/s/'+s, function(result) {
-        console.log(result);
+        setParentArmyId(armyId);
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         selectArmy(players[my.color].armies['army'+result.armyId]);
-
+        wsArmyAdd(selectedArmy.armyId);
         removeM();
     });
 }
