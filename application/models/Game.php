@@ -107,7 +107,22 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if (isset($result[0]['color'])) {
                 return $result[0]['color'];
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function getPlayerIdByColor($color) {
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'playerId')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('color = ?', $color);
+            $result = $this->_db->query($select)->fetchAll();
+            if (isset($result[0]['playerId'])) {
+                return $result[0]['playerId'];
+            }
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -122,7 +137,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if (isset($result[0]['gameId'])) {
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -187,7 +202,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->from('playersingame')
                     ->where('"gameId" = ?', $this->_gameId);
             return $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -200,7 +215,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"playerId" = ?', $playerId);
             $result = $this->_db->query($select)->fetchAll();
             return $result[0];
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -216,7 +231,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if(isset($result[0]['ready'])){
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -233,7 +248,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if(isset($result[0]['color'])){
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -329,7 +344,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if (isset($result[0])) {
                 return $result[0];
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -345,7 +360,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             if (isset($result[0]['turnActive'])) {
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -370,9 +385,29 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             return $result[0]['turnNumber'];
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
+    }
+
+    public function getPlayerInGameGold($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'gold')
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['gold'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function updatePlayerInGameGold($playerId, $gold){
+        $data['gold'] = $gold;
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $this->_db->update('playersingame', $data, $where);
     }
 
 }

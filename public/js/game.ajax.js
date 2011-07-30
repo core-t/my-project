@@ -113,9 +113,12 @@ function sendMove(movesSpend) {
 
 function startMyTurn() {
     $.getJSON(urlStartMyTurn, function(result) {
-        for(i in result) {
-            players[my.color].armies[i] = new army(result[i], my.color);
-            wsArmyAdd(result[i].armyId);
+        wsPlayerArmies(my.color);
+        $('#gold').html('Gold: '+result['gold']);
+        $('#costs').html('Costs: '+result['costs']);
+        $('#income').html('Income: '+result['income']);
+        for(i in result['armies']) {
+            players[my.color].armies[i] = new army(result['armies'][i], my.color);
         }
         lock = false;
     });
@@ -139,6 +142,14 @@ function setProduction(castleId) {
         if(result.set) {
             $('.message').remove();
             castles[castleId].currentProduction = unitId;
+        }
+    });
+}
+
+function getPlayerArmies(color){
+    $.getJSON(urlGetPlayerArmies+'/color/'+color, function(result) {
+        for(i in result){
+            players[color].armies[i] = new army(result[i], color);
         }
     });
 }

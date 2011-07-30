@@ -43,7 +43,8 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name)
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"playerId" = ?', $playerId);
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false');
             $result = $this->_db->query($select)->fetchAll();
             $array = array();
             foreach ($result as $k => $army) {
@@ -108,7 +109,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             }
             $result = $this->_db->query($select)->fetchAll();
             return $result;
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -119,15 +120,17 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->from($this->_name)
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false')
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $army) {
-                $result[$k]['heroes'] = $this->getArmyHeroes($army['armyId']);
-                $result[$k]['soldiers'] = $this->getArmySoldiers($army['armyId']);
-                $result[$k]['movesLeft'] = $this->calculateArmyMovesLeft($armyId);
+            if($result[0]['destroyed']){
+                return $result[0];
             }
+            $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
+            $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
+            $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
             return $result[0];
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -139,13 +142,14 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0])){
-                $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
-                $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
-                $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
+            if($result[0]['destroyed']){
                 return $result[0];
             }
-        } catch (Exception $e) {
+            $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
+            $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
+            $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
+            return $result[0];
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -159,6 +163,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->from($this->_name, $columns)
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false')
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
             $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($armyId);
@@ -303,10 +308,14 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
     }
 
     public function destroyArmy($armyId, $playerId) {
+        $data = array(
+            'destroyed' => 'true'
+        );
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $armyId);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        return $this->_db->delete($this->_name, $where);
+        $this->_db->update($this->_name, $data, $where);
+//         return $this->_db->delete($this->_name, $where);
     }
 
     public function allArmiesReady() {
@@ -327,7 +336,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -343,6 +352,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name)
                     ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
                     ->where('position::varchar IN (?)', $points);
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $k => $army) {
@@ -374,6 +384,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name, $this->_primary)
                     ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
                     ->where('position::varchar IN (?)', $points);
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $id) {
@@ -401,6 +412,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name)
                     ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
                     ->where('position::varchar = (?)', $position);
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $id) {
@@ -427,6 +439,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name)
                     ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
                     ->where('position::varchar = (?)', $position);
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $k => $army) {
@@ -452,6 +465,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name, 'armyId')
                     ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
                     ->where('position::varchar = (?)', $position);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0]['armyId'])) {
@@ -517,6 +531,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->from($this->_name, 'armyId')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false')
                     ->where('position::varchar = (?)', $position);
             $result = $this->_db->query($select)->fetchAll();
             if (count($result) == 1) {
@@ -569,6 +584,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $select2 = $this->_db->select()
                     ->from('army', 'armyId')
                     ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false')
                     ->where('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"armyId" IN (?)', $select2);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
@@ -594,6 +610,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $select2 = $this->_db->select()
                     ->from('army', 'armyId')
                     ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false')
                     ->where('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"armyId" IN (?)', $select2);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);

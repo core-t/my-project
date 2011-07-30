@@ -67,14 +67,17 @@ function wsConnect() {
         deleteArmy('army'+data.armyId, data.color);
     });
     socket.bind('castle', function(data){
-        console.log(data);
+//         console.log(data);
         castleOwner(data.castleId, data.color);
+    });
+    socket.bind('armies', function(data){
+        getPlayerArmies(data.color);
     });
 }
 
 function wsCastleOwner(castleId, color) {
-    console.log(castleId);
-    console.log(color);
+//     console.log(castleId);
+//     console.log(color);
     socket.send(
         'castle',
         {
@@ -92,6 +95,15 @@ function wsTurn(playerId, color) {
             color:color
         }
         );
+}
+
+function wsPlayerArmies(color){
+    socket.send(
+        'armies',
+        {
+            color:color
+        }
+    );
 }
 
 function wsPing() {

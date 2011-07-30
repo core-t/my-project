@@ -35,6 +35,8 @@ class TurnController extends Warlords_Controller_Action {
         $castles = array();
         $modelArmy->resetHeroesMovesLeft($this->_namespace->player['playerId']);
         $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
+        $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
+        $income = 0;
         if($modelGame->getTurnNumber() > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->_namespace->player['playerId']);
@@ -42,6 +44,7 @@ class TurnController extends Warlords_Controller_Action {
                 $castleId = $id['castleId'];
                 $castles[$castleId] = $modelBoard->getCastle($castleId);
                 $castle = $castles[$castleId];
+                $income += $castle['income'];
                 $armyId = $modelArmy->getArmyIdFromPosition($castle['position']);
                 if (!$armyId) {
                     $armyId = $modelArmy->createArmy($castle['position'], $this->_namespace->player['playerId']);
@@ -58,9 +61,20 @@ class TurnController extends Warlords_Controller_Action {
         }
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
         $array = array();
+        $resutl = array();
+        $costs = 0;
         foreach ($armies as $k => $army) {
+            foreach($army['soldiers'] as $unit){
+                $costs += $unit['cost'];
+            }
             $array['army'.$army['armyId']] = $army;
         }
-        $this->view->response = Zend_Json::encode($array);
+        $gold = $gold + $income - $costs;
+        $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
+        $resutl['gold'] = $gold;
+        $resutl['costs'] = $costs;
+        $resutl['income'] = $income;
+        $resutl['armies'] = $array;
+        $this->view->response = Zend_Json::encode($resutl);
     }
 }

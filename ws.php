@@ -36,6 +36,9 @@ class WarlordsServer extends WebSocketServer {
                 $this->sentToAllBut($user, json_encode($msg));
                 break;
             case 'castle':
+                $this->sentToAllBut($user, json_encode($msg));
+                break;
+            case 'armies':
                 var_dump(json_encode($msg));
                 $this->sentToAllBut($user, json_encode($msg));
                 break;
