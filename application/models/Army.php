@@ -156,24 +156,20 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
 
     public function getArmyPositionByArmyId($armyId, $playerId) {
         try {
-            $columns = array(
-                'position'
-            );
             $select = $this->_db->select()
-                    ->from($this->_name, $columns)
+                    ->from($this->_name, 'position')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" = ?', $playerId)
                     ->where('destroyed = false')
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($armyId);
             return $result[0];
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
 
-    private function calculateArmyMovesLeft($armyId) {
+    public function calculateArmyMovesLeft($armyId) {
         $heroMovesLeft = $this->getMinHeroesMovesLeft($armyId);
         $soldierMovesLeft = $this->getMinSoldiersMovesLeft($armyId);
         if($soldierMovesLeft AND $heroMovesLeft) {
@@ -565,6 +561,15 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         return $this->_db->update('soldier', $data, $where);
     }
 
+    private function soldierUpdateArmyId($soldierId, $newArmyId) {
+        $data = array(
+            $this->_primary => $newArmyId
+        );
+        $where[] = $this->_db->quoteInto('"soldierId" = ?', $soldierId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        return $this->_db->update('soldier', $data, $where);
+    }
+
     public function resetHeroesMovesLeft($playerId) {
         $data = array(
             'movesLeft' => new Zend_Db_Expr('"numberOfMoves"')
@@ -615,6 +620,16 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"armyId" IN (?)', $select2);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         return $this->_db->update('soldier', $data, $where);
+    }
+
+    public function splitArmy($s, $parentArmyId, $playerId){
+        $position = $this->getArmyPositionByArmyId($parentArmyId, $playerId);
+        $position = explode(',', substr($position['position'], 1 , -1));
+        $newArmyId = $this->createArmy(array('x' => $position[0], 'y' => $position[1]), $playerId);
+        foreach(explode(',', $s) as $soldierId){
+            $this->soldierUpdateArmyId($soldierId, $newArmyId);
+        }
+        return $newArmyId;
     }
 }
 

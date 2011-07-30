@@ -26,6 +26,7 @@ class MoveController extends Warlords_Controller_Action
         if (!empty($armyId) AND $x !== null AND $y !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
+            $army['movesLeft'] = $modelArmy->calculateArmyMovesLeft($armyId);
             $movesSpend = 0;
             $this->calculateNewArmyPosition($army, $x, $y);
             foreach($this->path as $path) {

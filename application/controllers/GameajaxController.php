@@ -38,4 +38,16 @@ class GameajaxController extends Warlords_Controller_Action {
             throw new Exception('Brak "color"!');
         }
     }
+
+    public function splitAction(){
+        $armyId = $this->_request->getParam('aid');
+        $s = $this->_request->getParam('s');
+        if (!empty($armyId) && !empty($s)) {
+            $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $armyId = $modelArmy->splitArmy($s, $armyId, $this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+        } else {
+            throw new Exception('Brak "armyId", "s"!');
+        }
+    }
 }

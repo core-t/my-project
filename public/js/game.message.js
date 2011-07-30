@@ -1,4 +1,5 @@
 function startM(){
+    removeM();
     $('#game').after(
         $('<div>')
         .addClass('message')
@@ -19,7 +20,116 @@ function startM(){
     );
 }
 
+function splitArmyM(a){
+    removeM();
+    var army = $('<div>').addClass('split');
+    for(i in a.soldiers) {
+        var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
+        army.append(
+            $('<p>')
+            .append($('<input>').attr({
+                type:'checkbox',
+                name:'soldierId',
+                value:a.soldiers[i].soldierId
+            }))
+            .append(
+                $('<img>').attr({
+                    'src':'/img/game/' + img + '_' + a.color + '.png',
+                    'id':'unit'+a.soldiers[i].soldierId
+                })
+            )
+            .append(a.soldiers[i].movesLeft)
+        );
+    }
+    for(i in a.heroes) {
+        army.append(
+            $('<img>').attr({
+                'src':'/img/game/hero_' + a.color + '.png',
+                'id':'hero'+a.heroes[i].heroId
+            })
+        );
+    }
+    $('#game').after(
+        $('<div>')
+        .addClass('message')
+        .append(army)
+        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<div>').addClass('submit').html('Select units').click(function(){splitArmy(a.armyId)}))
+    );
+
+}
+
+function castleM(castleId, color){
+    removeM();
+    if(castles[castleId].capital){
+        var capital = $('<h4>').append('Capital city');
+    } else {
+        var capital = null;
+    }
+    var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
+    var j = 0;
+    var td = new Array();
+    for(unitName in castles[castleId].production){
+        var img = unitName.replace(' ', '_').toLowerCase();
+        if(getUnitId(unitName) == castles[castleId].currentProduction){
+            var attr = {
+                type:'radio',
+                name:'production',
+                value:unitName,
+                checked:'checked'
+            }
+        } else {
+            var attr = {
+                type:'radio',
+                name:'production',
+                value:unitName
+            }
+        }
+        td[j] = $('<td>')
+        .addClass('unit')
+        .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
+        .append(
+            $('<div>')
+            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[unitName].time+'t'))
+            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
+        )
+        .append(
+            $('<p>')
+            .append($('<input>').attr(attr))
+            .append(' '+unitName)
+            );
+            j++;
+    }
+    var k = Math.ceil(j/2);
+    for(l = 0; l < k; l++) {
+        var tr = $('<tr>');
+        var m = l*2;
+        tr.append(td[m]);
+        if(typeof td[m+1] == 'undefined') {
+            tr.append($('<td>').addClass('unit').html('&nbsp;'));
+        } else {
+            tr.append(td[m+1]);
+        }
+        table.append(tr);
+    }
+    $('#game').after(
+        $('<div>')
+        .addClass('message')
+        .append(capital)
+        .append($('<h3>').append(castles[castleId].name))
+        //                         .append($('<div>').addClass('close').click(function(){$('.message').remove()}))
+        .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
+        .append($('<h5>').append('Defense: '+castles[castleId].defense))
+        .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
+        .append(table)
+        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<div>').addClass('submit').html('Set production').click(function(){setProduction(castleId)}))
+    );
+
+}
+
 function battleM(battle, a, def) {
+    removeM();
     var attack = $('<div>').addClass('battle attack');
     for(i in a.soldiers) {
         var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
@@ -105,7 +215,7 @@ function killM(r){
     }
 }
 
-function walkM(result, el) {
+function walkM(result) {
     for(i in result.path) {
         break;
     }
@@ -119,15 +229,21 @@ function walkM(result, el) {
         return null;
     } else {
         wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
-        el.css({
+        $('#army'+unselectedArmy.armyId).css({
             display:'none',
             left: result.path[i].x + 'px',
             top: result.path[i].y + 'px'
         });
         zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        el.fadeIn(1, function() {
+        $('#army'+unselectedArmy.armyId).fadeIn(1, function() {
             delete result.path[i];
-            walkM(result, el);
+            walkM(result);
         });
+    }
+}
+
+function removeM(){
+    if(typeof $('.message') != 'undefined') {
+        $('.message').remove();
     }
 }

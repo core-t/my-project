@@ -89,7 +89,7 @@ function sendMove(movesSpend) {
                 deleteArmyByPosition(newX, newY, selectedEnemyArmy.color);
                 wsArmyDelete(selectedEnemyArmy.armyId, selectedEnemyArmy.color);
 
-                selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
+//                 selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
             } else {
                 deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
@@ -104,7 +104,7 @@ function sendMove(movesSpend) {
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
-                walkM(result, players[my.color].armies['army'+unselectedArmy.armyId].element);
+                walkM(result);
             }
         });
     }
@@ -134,7 +134,7 @@ function getAddArmy(armyId) {
 }
 
 function setProduction(castleId) {
-    var unitId = getUnitId($("input:radio[name=production]:checked").val());
+    var unitId = getUnitId($('input:radio[name=production]:checked').val());
     if(!unitId) {
         return null;
     }
@@ -153,3 +153,21 @@ function getPlayerArmies(color){
         }
     });
 }
+
+function splitArmy(armyId){
+    var s = '';
+    $('.message input[type="checkbox"]:checked').each(function() {
+        if(s){
+            s += ',';
+        }
+        s += $(this).val();
+    });
+    $.getJSON(urlSplitArmy+'/aid/'+armyId+'/s/'+s, function(result) {
+        console.log(result);
+        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+        selectArmy(players[my.color].armies['army'+result.armyId]);
+
+        removeM();
+    });
+}
+

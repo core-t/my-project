@@ -87,73 +87,7 @@ function castleOwner(castleId, color) {
         castles[castleId].element.click(function(){
             if(turn.myTurn){
                 if(!selectedArmy) {
-                    if(typeof $('.message') != 'undefined') {
-                        $('.message').remove();
-                    }
-                    if(castles[castleId].capital){
-                        var capital = $('<h4>').append('Capital city');
-                    } else {
-                        var capital = null;
-                    }
-                    var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
-                    var j = 0;
-                    var td = new Array();
-                    for(unitName in castles[castleId].production){
-                        var img = unitName.replace(' ', '_').toLowerCase();
-                        if(getUnitId(unitName) == castles[castleId].currentProduction){
-                            var attr = {
-                                type:'radio',
-                                name:'production',
-                                value:unitName,
-                                checked:'checked'
-                            }
-                        } else {
-                            var attr = {
-                                type:'radio',
-                                name:'production',
-                                value:unitName
-                            }
-                        }
-                        td[j] = $('<td>')
-                        .addClass('unit')
-                        .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
-                        .append(
-                            $('<div>')
-                            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[unitName].time+'t'))
-                            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
-                        )
-                        .append(
-                            $('<p>')
-                            .append($('<input>').attr(attr))
-                            .append(' '+unitName)
-                        );
-                        j++;
-                    }
-                    var k = Math.ceil(j/2);
-                    for(l = 0; l < k; l++) {
-                        var tr = $('<tr>');
-                        var m = l*2;
-                        tr.append(td[m]);
-                        if(typeof td[m+1] == 'undefined') {
-                            tr.append($('<td>').addClass('unit').html('&nbsp;'));
-                        } else {
-                            tr.append(td[m+1]);
-                        }
-                        table.append(tr);
-                    }
-                    $('#game').after(
-                        $('<div>')
-                        .addClass('message')
-                        .append(capital)
-                        .append($('<h3>').append(castles[castleId].name))
-//                         .append($('<div>').addClass('close').click(function(){$('.message').remove()}))
-                        .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
-                        .append($('<h5>').append('Defense: '+castles[castleId].defense))
-                        .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
-                        .append(table)
-                        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
-                        .append($('<div>').addClass('submit').html('Set production').click(function(){setProduction(castleId)}))
-                    );
+                    castleM(castleId, color);
                 }
             }
         });
@@ -285,11 +219,12 @@ function army(obj, color) {
             if(turn.myTurn) {
                 if(selectedArmy) {
                     if(selectedArmy == players[my.color].armies[this.id]) { // klikam na siebie
-                        var zindex = selectedArmy.element.css('z-index') - 1;
-                        selectedArmy.element.css({
-                            'z-index':zindex
-                        });
-                        console.log(selectedArmy);
+                        splitArmyM(selectedArmy);
+//                         var zindex = selectedArmy.element.css('z-index') - 1;
+//                         selectedArmy.element.css({
+//                             'z-index':zindex
+//                         });
+//                         console.log(selectedArmy);
                     } else { // klikam na inną jednostkę
                         sendMove(cursorPosition(e.pageX, e.pageY));
                     }
