@@ -123,9 +123,6 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('destroyed = false')
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            if($result[0]['destroyed']){
-                return $result[0];
-            }
             $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
             $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
             $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
@@ -143,6 +140,8 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
             if($result[0]['destroyed']){
+                $result[0]['heroes'] = array();
+                $result[0]['soldiers'] = array();
                 return $result[0];
             }
             $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);

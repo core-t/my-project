@@ -33,7 +33,7 @@ var FancyWebSocket = function(url){
         dispatch('close',null)
     }
     conn.onopen = function(){
-        $('#wsStatus').html('CONNECTED'+this.readyState);
+        $('#wsStatus').html('CONNECTED');
         dispatch('open',null)
 
     }
