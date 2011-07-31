@@ -169,10 +169,13 @@ function army(obj, color) {
         $('#army'+obj.armyId).fadeOut(1);
         $('#army'+obj.armyId).remove();
     }
+    this.canFly = 0;
+    this.canSwim = 0;
     this.heroes = obj.heroes;
     var numberOfUnits = 0;
+    var numberOfHeroes = 0;
+    var numberOfSoldiers = 0;
     for(hero in this.heroes) {
-        numberOfUnits++;
         this.heroKey = hero;
         if(typeof this.moves == 'undefined') {
             this.moves = this.heroes[hero].movesLeft;
@@ -181,10 +184,11 @@ function army(obj, color) {
             this.moves = this.heroes[hero].movesLeft;
             this.heroKey = hero;
         }
+        numberOfHeroes++;
+        this.canFly--;
     }
     this.soldiers = obj.soldiers;
     for(soldier in this.soldiers) {
-        numberOfUnits++;
         if(typeof this.moves == 'undefined') {
             this.moves = this.soldiers[soldier].movesLeft;
         }
@@ -198,6 +202,15 @@ function army(obj, color) {
         if(this.soldiers[soldier].attackPoints > attack) {
             attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
+        }
+        numberOfSoldiers++;
+        if(this.soldiers[soldier].canFly){
+            this.canFly++;
+        }else{
+            this.canFly--;
+        }
+        if(this.soldiers[soldier].canSwim){
+            this.canSwim++;
         }
     }
     if(typeof this.heroes[this.heroKey] != 'undefined') {
@@ -220,6 +233,7 @@ function army(obj, color) {
                 if(selectedArmy) {
                     if(selectedArmy == players[my.color].armies[this.id]) { // klikam na siebie
                         splitArmyM(selectedArmy);
+                        unselectArmy();
 //                         var zindex = selectedArmy.element.css('z-index') - 1;
 //                         selectedArmy.element.css({
 //                             'z-index':zindex
@@ -231,6 +245,7 @@ function army(obj, color) {
                 } else {
                     unselectArmy();
                     selectArmy(players[my.color].armies[this.id]);
+//                     console.log(selectedArmy);
                 }
             }
         });
@@ -269,6 +284,7 @@ function army(obj, color) {
             }
         });
     }
+    numberOfUnits = numberOfHeroes + numberOfSoldiers;
     if(numberOfUnits > 8) {
         numberOfUnits = 8;
     }
@@ -657,9 +673,9 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
         return movesSpend;
     }
     var terrainType = fields[pfY][pfX];
-    if(terrainType == 'M' || terrainType == 'w') {
-        return 0;
-    }
+//     if(terrainType == 'M' || terrainType == 'w') {
+//         return 0;
+//     }
     pX = pfX*40;
     pY = pfY*40;
     var terrain = getTerrain(terrainType);
@@ -682,41 +698,79 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
 }
 
 function getTerrain(type) {
+    var text;
+    var moves;
     switch(type) {
         case 'r':
-            return {
-                0:'Road',
-                1:1
-            };
+            text = 'Road';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 1;
+            }
+            break;
         case 'w':
-            return {
-                0:'Water',
-                1:100
-            };
+            text = 'Water';
+            if(selectedArmy.canSwim){
+                moves = 1;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 100;
+            }
+            break;
         case 'm':
-            return {
-                0:'Hills',
-                1:5
-            };
+            text = 'Hills';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 5;
+            }
+            break;
         case 'M':
-            return {
-                0:'Mountains',
-                1:100
-            };
+            text = 'Mountains';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 100;
+            }
+            break;
         case 'g':
-            return {
-                0:'Grassland',
-                1:2
-            };
+            text = 'Grassland';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 2;
+            }
+            break;
         case 'f':
-            return {
-                0:'Forest',
-                1:3
-            };
+            text = 'Forest';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 3;
+            }
+            break;
         case 's':
-            return {
-                0:'Swamp',
-                1:4
-            };
+            text = 'Swamp';
+            if(selectedArmy.canSwim){
+                moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 4;
+            }
+            break;
     }
+    return {0:text, 1:moves};
 }

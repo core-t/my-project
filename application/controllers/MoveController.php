@@ -281,9 +281,9 @@ class MoveController extends Warlords_Controller_Action
             return $movesSpend;
         }
         $terrainType = $this->fields[$pfY][$pfX];
-        if($terrainType == 'M' || $terrainType == 'w') {
-            return 0;
-        }
+//         if($terrainType == 'M' || $terrainType == 'w') {
+//             return 0;
+//         }
         $terrain = Application_Model_Board::getTerrain($terrainType);
 //         var_dump($terrain);
         $this->path[] = array(

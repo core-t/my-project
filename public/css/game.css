@@ -210,7 +210,15 @@
     height:14px;
     font-weight:bold;
     text-shadow: black -1px -1px;
+    background:#555;
 /*     text-shadow: blue 2px 2px, red -2px -2px; */
+}
+
+.button:hover {
+    color:#000;
+    text-shadow: #ddd 1px 1px;
+    background:#eee;
+    border:1px solid #555;
 }
 
 .message .cancel {

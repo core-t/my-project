@@ -146,6 +146,7 @@ function castleM(castleId, color){
         }
         table.append(tr);
     }
+    var height = 62 + k*54 + 32;
     $('#game').after(
         $('<div>')
         .addClass('message')
@@ -158,6 +159,7 @@ function castleM(castleId, color){
         .append(table)
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){$('.message').remove()}))
         .append($('<div>').addClass('button submit').html('Set production').click(function(){setProduction(castleId)}))
+        .css('min-height',height+'px')
     );
 
 }
