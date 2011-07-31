@@ -5,7 +5,7 @@ function startM(){
         .addClass('message')
         .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
         .append($('<div>')
-        .addClass('go')
+        .addClass('button go')
         .html('Start')
         .click(function(){
             $('.message').remove();
@@ -27,7 +27,7 @@ function lostM(){
         .addClass('message')
         .append($('<h3>').addClass('center').html('You lose.'))
         .append($('<div>')
-        .addClass('go')
+        .addClass('button go')
         .html('Ok')
         .click(function(){
             $('.message').remove();
@@ -43,47 +43,52 @@ function lostM(){
 function splitArmyM(a){
     removeM();
     var army = $('<div>').addClass('split');
+    var numberOfUnits = 0;
     for(i in a.soldiers) {
         var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
         army.append(
             $('<p>')
-            .append($('<input>').attr({
-                type:'checkbox',
-                name:'soldierId',
-                value:a.soldiers[i].soldierId
-            }))
             .append(
                 $('<img>').attr({
                     'src':'/img/game/' + img + '_' + a.color + '.png',
                     'id':'unit'+a.soldiers[i].soldierId
                 })
             )
-            .append(a.soldiers[i].movesLeft)
+            .append(' Moves left: '+a.soldiers[i].movesLeft+' ')
+            .append($('<input>').attr({
+                type:'checkbox',
+                name:'soldierId',
+                value:a.soldiers[i].soldierId
+            }))
         );
+        numberOfUnits++;
     }
     for(i in a.heroes) {
         army.append(
             $('<p>')
-            .append($('<input>').attr({
-                type:'checkbox',
-                name:'heroId',
-                value:a.heroes[i].heroId
-            }))
             .append(
                 $('<img>').attr({
                     'src':'/img/game/hero_' + a.color + '.png',
                     'id':'hero'+a.heroes[i].heroId
                 })
             )
-            .append(a.heroes[i].movesLeft)
+            .append(' Moves left: '+a.heroes[i].movesLeft+' ')
+            .append($('<input>').attr({
+                type:'checkbox',
+                name:'heroId',
+                value:a.heroes[i].heroId
+            }))
         );
+        numberOfUnits++;
     }
+    var height = numberOfUnits * 31 + 32;
     $('#game').after(
         $('<div>')
         .addClass('message')
         .append(army)
-        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
-        .append($('<div>').addClass('submit').html('Select units').click(function(){splitArmy(a.armyId)}))
+        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmy(a.armyId)}))
+        .css('min-height',height+'px')
     );
 
 }
@@ -151,8 +156,8 @@ function castleM(castleId, color){
         .append($('<h5>').append('Defense: '+castles[castleId].defense))
         .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
         .append(table)
-        .append($('<div>').addClass('cancel').html('Cancel').click(function(){$('.message').remove()}))
-        .append($('<div>').addClass('submit').html('Set production').click(function(){setProduction(castleId)}))
+        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<div>').addClass('button submit').html('Set production').click(function(){setProduction(castleId)}))
     );
 
 }
@@ -213,7 +218,7 @@ function battleM(battle, a, def) {
     }
     var height = 62 + 31 + 14 + h * 31;
     $('.message')
-    .append($('<div>').addClass('go').html('OK').click(function(){$('.message').remove()}))
+    .append($('<div>').addClass('button go').html('OK').click(function(){$('.message').remove()}))
     .css('min-height',height+'px');
     if(battle){
         $('.message').fadeIn(100, function(){
@@ -259,6 +264,7 @@ function walkM(result) {
             wsArmyAdd(parentArmyId);
             unsetParentArmyId();
         }
+        selectArmy(players[my.color].armies['army'+result.armyId]);
         lock = false;
         return null;
     } else {

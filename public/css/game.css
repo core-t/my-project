@@ -200,40 +200,30 @@
     clear:both;
 }
 
-.message .close {
-    background:url(../img/game/close.png) no-repeat;
-    width:17px;
-    height:17px;
-    position:relative;
-    top:-227px;
-    left:192px;
+.button {
+    color:#ddd;
+    padding:3px;
+    border:1px solid #eee;
+    margin:2px;
+    text-align:center;
+    cursor:pointer;
+    height:14px;
+    font-weight:bold;
+    text-shadow: black -1px -1px;
+/*     text-shadow: blue 2px 2px, red -2px -2px; */
 }
 
 .message .cancel {
-/*     background:; */
-    color:#ddd;
-    padding:3px;
-    border:1px solid #eee;
     float:left;
-    margin:2px;
 }
 
 .message .submit {
-    /*     background:; */
-    color:#ddd;
-    padding:3px;
-    border:1px solid #eee;
     float:right;
-    margin-top:2px;
 }
 
 .message .go {
-    color:#ddd;
-    padding:3px;
-    border:1px solid #eee;
     margin:20px auto;
     width:50px;
-    text-align:center;
 }
 
 .message .battle {
@@ -247,4 +237,9 @@
     text-align:center;
 }
 
-
+.split p {
+    text-align:center;
+    margin:2px;
+    background: #CECECE;
+    padding:1px;
+}
