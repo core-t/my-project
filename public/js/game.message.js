@@ -63,10 +63,19 @@ function splitArmyM(a){
     }
     for(i in a.heroes) {
         army.append(
-            $('<img>').attr({
-                'src':'/img/game/hero_' + a.color + '.png',
-                'id':'hero'+a.heroes[i].heroId
-            })
+            $('<p>')
+            .append($('<input>').attr({
+                type:'checkbox',
+                name:'heroId',
+                value:a.heroes[i].heroId
+            }))
+            .append(
+                $('<img>').attr({
+                    'src':'/img/game/hero_' + a.color + '.png',
+                    'id':'hero'+a.heroes[i].heroId
+                })
+            )
+            .append(a.heroes[i].movesLeft)
         );
     }
     $('#game').after(

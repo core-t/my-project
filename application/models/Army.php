@@ -560,6 +560,15 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         return $this->_db->update('soldier', $data, $where);
     }
 
+    private function heroUpdateArmyId($heroId, $newArmyId) {
+        $data = array(
+            $this->_primary => $newArmyId
+        );
+        $where[] = $this->_db->quoteInto('"heroId" = ?', $heroId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        return $this->_db->update('hero', $data, $where);
+    }
+
     private function soldierUpdateArmyId($soldierId, $newArmyId) {
         $data = array(
             $this->_primary => $newArmyId
@@ -621,14 +630,26 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         return $this->_db->update('soldier', $data, $where);
     }
 
-    public function splitArmy($s, $parentArmyId, $playerId){
+    public function splitArmy($h, $s, $parentArmyId, $playerId){
         $position = $this->getArmyPositionByArmyId($parentArmyId, $playerId);
         $position = explode(',', substr($position['position'], 1 , -1));
-        $newArmyId = $this->createArmy(array('x' => $position[0], 'y' => $position[1]), $playerId);
-        foreach(explode(',', $s) as $soldierId){
-            $this->soldierUpdateArmyId($soldierId, $newArmyId);
+        $heroesIds = explode(',', $h);
+        $soldiersIds = explode(',', $s);
+//         throw new Exception(Zend_Debug::dump($soldiersIds,null,false));
+        if((isset($heroesIds[0]) && !empty($heroesIds[0])) || (isset($soldiersIds) && !empty($soldiersIds))){
+            $newArmyId = $this->createArmy(array('x' => $position[0], 'y' => $position[1]), $playerId);
+            foreach($heroesIds as $heroId){
+                if(!empty($heroId)){
+                    $this->heroUpdateArmyId($heroId, $newArmyId);
+                }
+            }
+            foreach($soldiersIds as $soldierId){
+                if(!empty($soldierId)){
+                    $this->soldierUpdateArmyId($soldierId, $newArmyId);
+                }
+            }
+            return $newArmyId;
         }
-        return $newArmyId;
     }
 }
 

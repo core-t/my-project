@@ -62,7 +62,7 @@ class TurnController extends Warlords_Controller_Action {
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
         if(empty($castles) && empty($armies)){
             $modelGame->setPlayerLostGame($this->_namespace->player['playerId']);
-            $this->view->response = Zend_Json::encode(array('gameover'));
+            $this->view->response = Zend_Json::encode(array('gameover'=>1));
         }else{
             $array = array();
             $resutl = array();
@@ -79,6 +79,7 @@ class TurnController extends Warlords_Controller_Action {
             $resutl['costs'] = $costs;
             $resutl['income'] = $income;
             $resutl['armies'] = $array;
+            $resutl['gameover'] = 0;
             $this->view->response = Zend_Json::encode($resutl);
         }
     }

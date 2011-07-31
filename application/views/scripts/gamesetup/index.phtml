@@ -7,31 +7,33 @@
 
 <script type="text/javascript">
     var th = '<th>Game ID</th><th>Game master ID</th><th>Max number of players</th><th>Date</th>';
-    var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup')) ?>';
+    var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>null)) ?>';
     var mygames = $('#mygames table');
-function refresh() {
-    $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
+    function refresh() {
+        $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
 
-        mygames.html('');
-        mygames.append(th);
-        for(i in result) {
-        console.log(result);
-            mygames.append($('<tr>')
-                .append($('<td>').html(result[i].gameId))
-                .append($('<td>').html(result[i].gameMasterId))
-                .append($('<td>').html(result[i].playersingame+'/'+result[i].numberOfPlayers))
-                .append($('<td>').html(result[i].begin.split('.')[0]))
-            );
-            $('#mygames td').mouseover(function(){
-                $('#mygames td').css('cursor', 'pointer')
-            });
-            $('#mygames td').click(function(){
-                top.location = url + '/gameId/' + result[i].gameId;
-            });
-        }
-    });
-}
-refresh();
-setInterval ( 'refresh()', 5000 );
+            mygames.html('');
+            mygames.append(th);
+            for(i in result) {
+                mygames.append(
+                    $('<tr>')
+                    .addClass('gid'+result[i].gameId)
+                    .append($('<td>').html(result[i].gameId))
+                    .append($('<td>').html(result[i].gameMasterId))
+                    .append($('<td>').html(result[i].playersingame+'/'+result[i].numberOfPlayers))
+                    .append($('<td>').html(result[i].begin.split('.')[0]))
+                    .bind('click', { gameId: result[i].gameId }, makeUrl)
+                );
+                $('#mygames td').mouseover(function(){
+                    $('#mygames td').css('cursor', 'pointer')
+                });
+            }
+        });
+    }
+    function makeUrl(event){
+        top.location = url + '/gameId/' + event.data.gameId;
+    }
+    refresh();
+    setInterval ( 'refresh()', 5000 );
 </script>
 

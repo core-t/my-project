@@ -113,7 +113,7 @@ function sendMove(movesSpend) {
 
 function startMyTurn() {
     $.getJSON(urlStartMyTurn, function(result) {
-        if(typeof result['gameover'] == 'undefined'){
+        if(result['gameover']){
             lostM();
         }else{
             wsPlayerArmies(my.color);
@@ -158,14 +158,22 @@ function getPlayerArmies(color){
 }
 
 function splitArmy(armyId){
+    var h = '';
     var s = '';
     $('.message input[type="checkbox"]:checked').each(function() {
-        if(s){
-            s += ',';
+        if($(this).attr('name') == 'heroId'){
+            if(h){
+                h += ',';
+            }
+            h += $(this).val();
+        }else{
+            if(s){
+                s += ',';
+            }
+            s += $(this).val();
         }
-        s += $(this).val();
     });
-    $.getJSON(urlSplitArmy+'/aid/'+armyId+'/s/'+s, function(result) {
+    $.getJSON(urlSplitArmy+'/aid/'+armyId+'/s/'+s+'/h/'+h, function(result) {
         setParentArmyId(armyId);
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         selectArmy(players[my.color].armies['army'+result.armyId]);
