@@ -43,6 +43,9 @@
         <controllerFile controllerName="Turn">
           <actionMethod actionName="index"/>
         </controllerFile>
+        <controllerFile controllerName="Gameover">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -104,6 +107,9 @@
             <viewScriptFile forActionName="stop"/>
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Turn">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Gameover">
             <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
@@ -172,6 +178,9 @@
             <testApplicationActionMethod forActionName="stop"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Turn">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Gameover">
             <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>

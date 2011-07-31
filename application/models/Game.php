@@ -410,5 +410,11 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $this->_db->update('playersingame', $data, $where);
     }
 
+    public function setPlayerLostGame($playerId){
+        $data['lost'] = 'true';
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $this->_db->update('playersingame', $data, $where);
+    }
 }
 

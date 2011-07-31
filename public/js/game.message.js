@@ -5,19 +5,39 @@ function startM(){
         .addClass('message')
         .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
         .append($('<div>')
-            .addClass('go')
-            .html('Start')
-            .click(function(){
-                $('.message').remove();
-                initGame();
-                wsConnect();
-                showFirstCastle();
-            })
+        .addClass('go')
+        .html('Start')
+        .click(function(){
+            $('.message').remove();
+            initGame();
+            wsConnect();
+            showFirstCastle();
+        })
         )
         .css({
             'min-height':'70px'
         })
-    );
+        );
+}
+
+function lostM(){
+    removeM();
+    $('#game').after(
+        $('<div>')
+        .addClass('message')
+        .append($('<h3>').addClass('center').html('You lose.'))
+        .append($('<div>')
+        .addClass('go')
+        .html('Ok')
+        .click(function(){
+            $('.message').remove();
+
+        })
+        )
+        .css({
+            'min-height':'70px'
+        })
+        );
 }
 
 function splitArmyM(a){

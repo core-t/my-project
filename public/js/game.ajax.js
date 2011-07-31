@@ -113,14 +113,18 @@ function sendMove(movesSpend) {
 
 function startMyTurn() {
     $.getJSON(urlStartMyTurn, function(result) {
-        wsPlayerArmies(my.color);
-        $('#gold').html('Gold: '+result['gold']);
-        $('#costs').html('Costs: '+result['costs']);
-        $('#income').html('Income: '+result['income']);
-        for(i in result['armies']) {
-            players[my.color].armies[i] = new army(result['armies'][i], my.color);
+        if(typeof result['gameover'] == 'undefined'){
+            lostM();
+        }else{
+            wsPlayerArmies(my.color);
+            $('#gold').html('Gold: '+result['gold']);
+            $('#costs').html('Costs: '+result['costs']);
+            $('#income').html('Income: '+result['income']);
+            for(i in result['armies']) {
+                players[my.color].armies[i] = new army(result['armies'][i], my.color);
+            }
+            lock = false;
         }
-        lock = false;
     });
 }
 

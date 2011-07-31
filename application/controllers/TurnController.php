@@ -60,21 +60,26 @@ class TurnController extends Warlords_Controller_Action {
             }
         }
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
-        $array = array();
-        $resutl = array();
-        $costs = 0;
-        foreach ($armies as $k => $army) {
-            foreach($army['soldiers'] as $unit){
-                $costs += $unit['cost'];
+        if(empty($castles) && empty($armies)){
+            $modelGame->setPlayerLostGame($this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode(array('gameover'));
+        }else{
+            $array = array();
+            $resutl = array();
+            $costs = 0;
+            foreach ($armies as $k => $army) {
+                foreach($army['soldiers'] as $unit){
+                    $costs += $unit['cost'];
+                }
+                $array['army'.$army['armyId']] = $army;
             }
-            $array['army'.$army['armyId']] = $army;
+            $gold = $gold + $income - $costs;
+            $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
+            $resutl['gold'] = $gold;
+            $resutl['costs'] = $costs;
+            $resutl['income'] = $income;
+            $resutl['armies'] = $array;
+            $this->view->response = Zend_Json::encode($resutl);
         }
-        $gold = $gold + $income - $costs;
-        $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
-        $resutl['gold'] = $gold;
-        $resutl['costs'] = $costs;
-        $resutl['income'] = $income;
-        $resutl['armies'] = $array;
-        $this->view->response = Zend_Json::encode($resutl);
     }
 }
