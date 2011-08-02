@@ -33,7 +33,7 @@ CREATE TABLE army (
     "playerId" integer NOT NULL,
     "position" point NOT NULL,
     "gameId" integer NOT NULL,
-    "movesLeft" integer DEFAULT 0 NOT NULL
+    destroyed boolean DEFAULT false NOT NULL
 );
 
 
@@ -123,7 +123,9 @@ ALTER SEQUENCE "artefact_artefactId_seq" OWNED BY artefact."artefactId";
 CREATE TABLE castle (
     "castleId" integer NOT NULL,
     "playerId" integer NOT NULL,
-    "gameId" integer NOT NULL
+    "gameId" integer NOT NULL,
+    production integer,
+    "productionTurn" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -158,10 +160,11 @@ CREATE TABLE game (
     "gameId" integer NOT NULL,
     "isActive" boolean DEFAULT true NOT NULL,
     "isOpen" boolean DEFAULT true NOT NULL,
-    name character varying(256) NOT NULL,
     "numberOfPlayers" integer NOT NULL,
     "gameMasterId" integer NOT NULL,
-    "turnPlayerId" integer
+    "turnPlayerId" integer,
+    begin timestamp without time zone DEFAULT now(),
+    "turnNumber" integer DEFAULT 0
 );
 
 
@@ -200,7 +203,8 @@ CREATE TABLE hero (
     "defensePoints" integer DEFAULT 6 NOT NULL,
     "armyId" integer,
     experience integer DEFAULT 0,
-    "gameId" integer
+    "gameId" integer,
+    "movesLeft" integer NOT NULL
 );
 
 
@@ -225,6 +229,27 @@ ALTER TABLE public."hero_heroId_seq" OWNER TO warlords;
 --
 
 ALTER SEQUENCE "hero_heroId_seq" OWNED BY hero."heroId";
+
+
+--
+-- Name: hero_movesLeft_seq; Type: SEQUENCE; Schema: public; Owner: warlords
+--
+
+CREATE SEQUENCE "hero_movesLeft_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."hero_movesLeft_seq" OWNER TO warlords;
+
+--
+-- Name: hero_movesLeft_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: warlords
+--
+
+ALTER SEQUENCE "hero_movesLeft_seq" OWNED BY hero."movesLeft";
 
 
 --
@@ -283,10 +308,12 @@ ALTER SEQUENCE "player_playerId_seq" OWNED BY player."playerId";
 CREATE TABLE playersingame (
     "gameId" integer NOT NULL,
     "playerId" integer NOT NULL,
-    color character varying NOT NULL,
+    color character varying,
     timeout timestamp without time zone DEFAULT now() NOT NULL,
     ready boolean DEFAULT false NOT NULL,
-    "turnActive" boolean DEFAULT false
+    "turnActive" boolean DEFAULT false NOT NULL,
+    gold integer DEFAULT 0 NOT NULL,
+    lost boolean DEFAULT false NOT NULL
 );
 
 
@@ -315,7 +342,8 @@ CREATE TABLE soldier (
     "armyId" integer NOT NULL,
     "unitId" integer NOT NULL,
     experience integer DEFAULT 0 NOT NULL,
-    "gameId" integer
+    "gameId" integer,
+    "movesLeft" integer DEFAULT 0
 );
 
 
@@ -348,7 +376,6 @@ ALTER SEQUENCE "soldier_soldierId_seq" OWNED BY soldier."soldierId";
 
 CREATE TABLE unit (
     "unitId" integer NOT NULL,
-    image character varying,
     name character varying,
     "numberOfMoves" integer NOT NULL,
     "attackPoints" integer NOT NULL,
@@ -369,7 +396,8 @@ CREATE TABLE unit (
     "modDefenseGrass" integer DEFAULT 0 NOT NULL,
     "modDefenseSwamp" integer DEFAULT 0 NOT NULL,
     "modDefenseMountains" integer DEFAULT 0 NOT NULL,
-    "modDefenseWater" integer DEFAULT 0 NOT NULL
+    "modDefenseWater" integer DEFAULT 0 NOT NULL,
+    cost integer DEFAULT 0 NOT NULL
 );
 
 
@@ -415,6 +443,13 @@ ALTER TABLE game ALTER COLUMN "gameId" SET DEFAULT nextval('"game_gameId_seq"'::
 --
 
 ALTER TABLE hero ALTER COLUMN "heroId" SET DEFAULT nextval('"hero_heroId_seq"'::regclass);
+
+
+--
+-- Name: movesLeft; Type: DEFAULT; Schema: public; Owner: warlords
+--
+
+ALTER TABLE hero ALTER COLUMN "movesLeft" SET DEFAULT nextval('"hero_movesLeft_seq"'::regclass);
 
 
 --
@@ -556,6 +591,14 @@ ALTER TABLE ONLY castle
 
 ALTER TABLE ONLY castle
     ADD CONSTRAINT "castle_playerId_fkey" FOREIGN KEY ("playerId") REFERENCES player("playerId") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: castle_production_fkey; Type: FK CONSTRAINT; Schema: public; Owner: warlords
+--
+
+ALTER TABLE ONLY castle
+    ADD CONSTRAINT castle_production_fkey FOREIGN KEY (production) REFERENCES unit("unitId") ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
