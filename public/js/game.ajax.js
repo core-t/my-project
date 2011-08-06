@@ -1,15 +1,17 @@
 function sendNextTurn() {
-    lock = true;
-    console.log('aaa');
-//    if(typeof socket == 'undefined') {
-//        alert('Socket disconnected!');
-//        return null;
-//    }
-    $.getJSON(urlNextTurn, function(result) {
-        unselectArmy();
-        changeTurn(result.playerId, result.color);
-        wsTurn(result.playerId, result.color);
-    });
+    if(turn.myTurn){
+        lock = true;
+//         if(typeof socket == 'undefined') {
+//             alert('Socket disconnected!');
+//             return null;
+//         }
+        $.getJSON(urlNextTurn, function(result) {
+            unselectArmy();
+            changeTurn(result.playerId, result.color);
+            wsTurn(result.playerId, result.color);
+        });
+
+    }
 }
 
 function sendMove(movesSpend) {

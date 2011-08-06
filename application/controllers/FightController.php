@@ -4,7 +4,8 @@ class FightController extends Warlords_Controller_Action
 {
     private $_result = array();
     private $_movesRequiredToAttack = 1;
-
+    private $canFly = 1;
+    private $canSwim = 0;
     public function _init()
     {
         /* Initialize action controller here */
@@ -27,7 +28,7 @@ class FightController extends Warlords_Controller_Action
             if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
-            if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
+            if(($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji ('.$movesSpend.'>'.$army['movesLeft'].').');
             }
             $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
@@ -94,7 +95,7 @@ class FightController extends Warlords_Controller_Action
                 if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
-                if(($movesSpend = $this->movesSpend($x, $y)) > $army['movesLeft']) {
+                if(($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
                     throw new Exception('Armia ma za mało ruchów do wykonania akcji('.$movesSpend.'>'.$army['movesLeft'].').');
                 }
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
@@ -265,7 +266,20 @@ class FightController extends Warlords_Controller_Action
         return sqrt(pow($x - $position[0], 2) + pow($position[1] - $y, 2));
     }
 
-    private function movesSpend($x, $y) {
+    private function movesSpend($x, $y, $army) {
+        foreach($army['heroes'] as $hero) {
+            $this->canFly--;
+        }
+        foreach($army['soldiers'] as $soldier) {
+            if($soldier['canFly']){
+                $this->canFly++;
+            }else{
+                $this->canFly -= 200;
+            }
+            if($soldier['canSwim']){
+                $this->canSwim++;
+            }
+        }
         $modelBoard = new Application_Model_Board();
         $fields = Application_Model_Board::getBoardFields();
         $castlesSchema = $modelBoard->getCastlesSchema();

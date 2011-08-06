@@ -2,7 +2,8 @@
 
 class MoveController extends Warlords_Controller_Action
 {
-
+    private $canFly = 1;
+    private $canSwim = 0;
     public function _init()
     {
         /* Initialize action controller here */
@@ -25,12 +26,16 @@ class MoveController extends Warlords_Controller_Action
         $y = $this->_request->getParam('y');
         if (!empty($armyId) AND $x !== null AND $y !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-            $army = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
-            $army['movesLeft'] = $modelArmy->calculateArmyMovesLeft($armyId);
+//             $army = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
+            $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+//             $army['movesLeft'] = $modelArmy->calculateArmyMovesLeft($armyId);
             $movesSpend = 0;
             $this->calculateNewArmyPosition($army, $x, $y);
             foreach($this->path as $path) {
                 $movesSpend += $path['cost'];
+            }
+            if($movesSpend > $army['movesLeft']){
+                throw new Exception('Próba wykonania większej ilości ruchów niż jednostka posiada');
             }
             if($movesSpend > 0) {
                 $data = array(
@@ -62,6 +67,19 @@ class MoveController extends Warlords_Controller_Action
     }
 
     private function calculateNewArmyPosition($army, $newX, $newY) {
+        foreach($army['heroes'] as $hero) {
+            $this->canFly--;
+        }
+        foreach($army['soldiers'] as $soldier) {
+            if($soldier['canFly']){
+                $this->canFly++;
+            }else{
+                $this->canFly -= 200;
+            }
+            if($soldier['canSwim']){
+                $this->canSwim++;
+            }
+        }
         $position = explode(',', substr($army['position'], 1 , -1));
         $position = array('x' => $position[0], 'y' => $position[1]);
         $this->movesLeft = $army['movesLeft'];
@@ -284,7 +302,7 @@ class MoveController extends Warlords_Controller_Action
 //         if($terrainType == 'M' || $terrainType == 'w') {
 //             return 0;
 //         }
-        $terrain = Application_Model_Board::getTerrain($terrainType);
+        $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
 //         var_dump($terrain);
         $this->path[] = array(
             'terrain' => $terrain[0],

@@ -626,23 +626,82 @@ class Application_Model_Board {
         return $this->_castles[$castleId];
     }
 
-    static public function getTerrain($type) {
-        switch ($type) {
-            case 'r':
-                return array('Road', 1);
-            case 'w':
-                return array('Water', 10);
-            case 'm':
-                return array('Hills', 5);
-            case 'M':
-                return array('Mountains', 10);
-            case 'g':
-                return array('Grassland', 2);
-            case 'f':
-                return array('Forest', 3);
-            case 's':
-                return array('Swamp', 4);
+    static public function getTerrain($type, $canFly, $canSwim) {
+        $text = '';
+        $moves = 0;
+        switch($type) {
+        case 'r':
+            $text = 'Road';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 1;
+            }
+            break;
+        case 'w':
+            $text = 'Water';
+            if($canSwim > 0){
+                $moves = 1;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 100;
+            }
+            break;
+        case 'm':
+            $text = 'Hills';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 5;
+            }
+            break;
+        case 'M':
+            $text = 'Mountains';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 100;
+            }
+            break;
+        case 'g':
+            $text = 'Grassland';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 2;
+            }
+            break;
+        case 'f':
+            $text = 'Forest';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 3;
+            }
+            break;
+        case 's':
+            $text = 'Swamp';
+            if($canSwim > 0){
+                $moves = 100;
+            }else if($canFly > 0){
+                $moves = 2;
+            }else{
+                $moves = 4;
+            }
+            break;
         }
+        return array($text, $moves);
     }
 
     static public function getUnitId($name) {

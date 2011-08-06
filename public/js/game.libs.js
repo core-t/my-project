@@ -166,10 +166,10 @@ function army(obj, color) {
     this.y = position[1];
     deleteArmyByPosition(this.x, this.y, color);
     if(typeof $('#army'+obj.armyId) != 'undefined') {
-        $('#army'+obj.armyId).fadeOut(1);
+//         $('#army'+obj.armyId).fadeOut(1);
         $('#army'+obj.armyId).remove();
     }
-    this.canFly = 0;
+    this.canFly = 1;
     this.canSwim = 0;
     this.heroes = obj.heroes;
     var numberOfUnits = 0;
@@ -207,7 +207,7 @@ function army(obj, color) {
         if(this.soldiers[soldier].canFly){
             this.canFly++;
         }else{
-            this.canFly--;
+            this.canFly -= 2;
         }
         if(this.soldiers[soldier].canSwim){
             this.canSwim++;
@@ -405,6 +405,34 @@ function getEnemyCastleGarrison(castleId) {
         }
     }
     return armies;
+}
+
+function findNextArmy() {
+    if(lock) {
+        return null;
+    }
+    var reset = true;
+    for(i in players[my.color].armies) {
+        if(nextArmySelected) {
+            nextArmy = i;
+            var reset = false;
+            break;
+        }
+        if(!nextArmy) {
+            nextArmy = i;
+        }
+        if(nextArmy == i){
+            if(nextArmySelected == false){
+                nextArmySelected = true;
+                unselectArmy();
+                selectArmy(players[my.color].armies[nextArmy]);
+            }
+        }
+    }
+    nextArmySelected = false;
+    if(reset) {
+        nextArmy = null;
+    }
 }
 
 // *** UNITS ***
@@ -724,7 +752,7 @@ function getTerrain(type) {
         case 'm':
             text = 'Hills';
             if(selectedArmy.canSwim){
-                moves = 100;
+                moves = 200;
             }else if(selectedArmy.canFly > 0){
                 moves = 2;
             }else{
@@ -734,7 +762,7 @@ function getTerrain(type) {
         case 'M':
             text = 'Mountains';
             if(selectedArmy.canSwim){
-                moves = 100;
+                moves = 1000;
             }else if(selectedArmy.canFly > 0){
                 moves = 2;
             }else{

@@ -26,7 +26,6 @@
                 // OnOpen callback
                 OnOpen: function( aEvent ) {
                     log( "jWebSocket connection established." );
-//                    console.log('connected');
                     $('#wsStatus').html('connected');
                 },
 
@@ -36,12 +35,9 @@
 
                 // OnMessage callback
                 OnMessage: function( aEvent, aToken ) {
-                    log( "jWebSocket message received: ");
                     if( lWSC.isLoggedIn() ) {
-//                        console.log('authenticated');
                         $('#wsStatus').html('authenticated');
                     } else {
-//                        console.log('connected');
                         $('#wsStatus').html('connected');
                     }
 //                    console.log(" Client-Id: " + lWSC.getId() + " "+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" ));
@@ -71,7 +67,6 @@
                                 break;
                         }
                     }
-                    console.log(aToken);
                 },
 
                 // OnClose callback

@@ -27,6 +27,11 @@ $(document).ready(function() {
     initWS()
     lock = false;
     startM();
+    if(turn.myTurn){
+        turnOn();
+    }else{
+        turnOff();
+    }
 /*    for(y in fields) {
         for(x in fields[y]) {
             board.append(
@@ -44,16 +49,48 @@ $(document).ready(function() {
 
 function turnOn() {
     turn.myTurn = true;
-    $('#nextTurn').html('Next turn');
-    $('#nextArmy').html('Next army');
+    $('#nextTurn')
+    .css({
+        'color':'#ddd',
+        'text-shadow': '#000 -1px -1px',
+        'background':'#555',
+        'border':'1px solid #fff',
+        'cursor':'pointer'
+    })
+    .click(function(){sendNextTurn()});
+    $('#nextArmy')
+    .css({
+        'color':'#ddd',
+         'text-shadow': '#000 -1px -1px',
+         'background':'#555',
+         'border':'1px solid #fff',
+         'cursor':'pointer'
+    })
+    .click(function(){findNextArmy()});
     showFirstCastle();
 }
 
 function turnOff() {
     turn.myTurn = false;
     unselectArmy();
-    $('#nextTurn').html('');
-    $('#nextArmy').html('');
+    $('#nextTurn')
+    .css({
+        'color':'#000',
+        'text-shadow': '#fff 1px 1px',
+        'background':'#eee',
+        'border':'1px solid #555',
+        'cursor':'default'
+    })
+    .click(function(){return null});
+    $('#nextArmy')
+    .css({
+        'color':'#000',
+         'text-shadow': '#fff 1px 1px',
+         'background':'#eee',
+         'border':'1px solid #555',
+         'cursor':'default'
+    })
+    .click(function(){return null});
 }
 
 function changeTurn(playerId, color) {

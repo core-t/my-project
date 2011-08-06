@@ -1,12 +1,8 @@
 <?php
             if ($this->turn['playerId'] == $this->playerId) {
-                $div = '<a href="javascript:sendNextTurn()">Next turn</a>';
                 $myTurn = 'true';
-                $nextArmy = 'Next army';
             } else {
-                $div = $this->turn['color'] . ' turn';
                 $myTurn = 'false';
-                $nextArmy = '';
             }
 ?>
 <script type="text/javascript">
@@ -32,33 +28,6 @@
     var urlGetPlayerArmies = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'armies')) ?>';
     var urlSplitArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'split')) ?>';
     var urlSetProduction = '<?php echo $this->url(array('controller' => 'production', 'action' => 'set')) ?>';
-    $('#nextArmy').click(function() {
-        if(lock) {
-            return null;
-        }
-        var reset = true;
-        for(i in players[my.color].armies) {
-            if(nextArmySelected) {
-                nextArmy = i;
-                var reset = false;
-                break;
-            }
-            if(!nextArmy) {
-                nextArmy = i;
-            }
-            if(nextArmy == i){
-                if(nextArmySelected == false){
-                    nextArmySelected = true;
-                    unselectArmy();
-                    selectArmy(players[my.color].armies[nextArmy]);
-                }
-            }
-        }
-        nextArmySelected = false;
-        if(reset) {
-            nextArmy = null;
-        }
-    });
     var board = $("#board")
     .mousedown(function(event) {
         if(lock) {
@@ -90,25 +59,8 @@
 
     $('#'+my.color+'Color').append('You');
     $('#'+turn.color+'Turn').html('Turn');
-    if(turn.myTurn) {
-        $('#nextArmy').html('Next army');
-        $('#nextTurn').html('Next turn');
-    } else {
-        $('#nextArmy').html('');
-        $('#nextTurn').html('');
-    }
     $('#connect').click(function() {
         login();
 //         wsConnect();
-    });
-
-    $('#nextTurn').click(function() {
-        if(turn.myTurn) {
-            sendNextTurn();
-            $('#nextTurn').css({
-                'text-decoration':'underline',
-                'color':'blue'
-            });
-        }
     });
 </script>
