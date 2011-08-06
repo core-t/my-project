@@ -78,32 +78,48 @@ function wsConnect() {
 function wsCastleOwner(castleId, color) {
 //     console.log(castleId);
 //     console.log(color);
-    socket.send(
-        'castle',
-        {
-            castleId:castleId,
-            color:color
-        }
-        );
+//     socket.send(
+//         'castle',
+//         {
+//             castleId:castleId,
+//             color:color
+//         }
+//         );
+    lWSC.broadcastGamingEvent({
+        'event':'castle',
+        'channel':channel,
+        'data':{castleId:castleId,color:color}
+    });
 }
 
 function wsTurn(playerId, color) {
-    socket.send(
-        'turn',
-        {
-            playerId:playerId,
-            color:color
-        }
-        );
+//    socket.send(
+//        'turn',
+//        {
+//            playerId:playerId,
+//            color:color
+//        }
+//        );
+//    publish('turn',{playerId:playerId,color:color});
+    lWSC.broadcastGamingEvent({
+        'event':'turn',
+        'channel':channel,
+        'data':{playerId:playerId,color:color}
+    });
 }
 
 function wsPlayerArmies(color){
-    socket.send(
-        'armies',
-        {
-            color:color
-        }
-    );
+//     socket.send(
+//         'armies',
+//         {
+//             color:color
+//         }
+//     );
+    lWSC.broadcastGamingEvent({
+        'event':'armies',
+        'channel':channel,
+        'data':{color:color}
+    });
 }
 
 function wsPing() {
@@ -120,31 +136,48 @@ function wsPing() {
 }
 
 function wsArmyMove(x, y, armyId) {
-    socket.send(
-        'move',
-        {
-            x:x,
-            y:y,
-            armyId:armyId
-        }
-        );
+//    socket.send(
+//        'move',
+//        {
+//            x:x,
+//            y:y,
+//            armyId:armyId
+//        }
+//        );
+//    publish('move',{x:x,y:y,armyId:armyId});
+    lWSC.broadcastGamingEvent({
+        'event':'move',
+        'channel':channel,
+        'data':{'x':x,'y':y,'armyId':armyId}
+    });
 }
 
 function wsArmyAdd(armyId) {
-    socket.send(
-        'add',
-        {
-            armyId:armyId
-        }
-        );
+//    socket.send(
+//        'add',
+//        {
+//            armyId:armyId
+//        }
+//        );
+//    publish('add',{armyId:armyId});
+    lWSC.broadcastGamingEvent({
+        'event':'add',
+        'channel':channel,
+        'data':{'armyId':armyId}
+    });
 }
 
 function wsArmyDelete(armyId, color) {
-    socket.send(
-        'delete',
-        {
-            armyId:armyId,
-            color:color
-        }
-        );
+//     socket.send(
+//         'delete',
+//         {
+//             armyId:armyId,
+//             color:color
+//         }
+//         );
+    lWSC.broadcastGamingEvent({
+        'event':'delete',
+        'channel':channel,
+        'data':{'armyId':armyId,'color':color}
+    });
 }

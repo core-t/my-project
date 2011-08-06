@@ -200,27 +200,6 @@
     clear:both;
 }
 
-.button {
-    color:#ddd;
-    padding:3px;
-    border:1px solid #eee;
-    margin:2px;
-    text-align:center;
-    cursor:pointer;
-    height:14px;
-    font-weight:bold;
-    text-shadow: black -1px -1px;
-    background:#555;
-/*     text-shadow: blue 2px 2px, red -2px -2px; */
-}
-
-.button:hover {
-    color:#000;
-    text-shadow: #ddd 1px 1px;
-    background:#eee;
-    border:1px solid #555;
-}
-
 .message .cancel {
     float:left;
 }
@@ -250,4 +229,9 @@
     margin:2px;
     background: #CECECE;
     padding:1px;
+}
+
+#log{
+    width:150px;
+    height:50px;
 }

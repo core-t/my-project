@@ -15,8 +15,8 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
 <table id="playersout"></table>
 
 <ul>
-    <li><a href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
-    <li><a href="javascript:refresh()">Refresh</a></li>
+    <li><a class="button" href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
+    <li><a class="button" href="javascript:refresh()">Refresh</a></li>
     <li id="start">
         <?php
         if ($this->game['gameMasterId'] == $this->player['playerId']) {

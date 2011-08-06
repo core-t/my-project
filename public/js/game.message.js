@@ -10,7 +10,7 @@ function startM(){
         .click(function(){
             $('.message').remove();
             initGame();
-            wsConnect();
+//             wsConnect();
             showFirstCastle();
         })
         )

@@ -1,9 +1,10 @@
 function sendNextTurn() {
     lock = true;
-    if(typeof socket == 'undefined') {
-        alert('Socket disconnected!');
-        return null;
-    }
+    console.log('aaa');
+//    if(typeof socket == 'undefined') {
+//        alert('Socket disconnected!');
+//        return null;
+//    }
     $.getJSON(urlNextTurn, function(result) {
         unselectArmy();
         changeTurn(result.playerId, result.color);
@@ -15,10 +16,10 @@ function sendMove(movesSpend) {
     if(movesSpend == 0) {
         return null;
     }
-    if(typeof socket == 'undefined') {
-        alert('Socket disconnected!');
-        return null;
-    }
+//    if(typeof socket == 'undefined') {
+//        alert('Socket disconnected!');
+//        return null;
+//    }
     unselectArmy();
     if(unselectedArmy.x == newX && unselectedArmy.y == newY) {
         return null;

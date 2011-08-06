@@ -19,9 +19,12 @@ var socket;
 
 var nextArmy;
 
+var channel = 'publicA';
+
 $(document).ready(function() {
     zoomer = new zoom(758, 670);
     $('#wsStatus').html('DISCONNECTED!');
+    initWS()
     lock = false;
     startM();
 /*    for(y in fields) {
@@ -77,6 +80,7 @@ function changeTurn(playerId, color) {
 }
 
 function initGame(){
+    subscribeChannel();
     for(i in castles) {
         castles[i] = new createCastle(i);
     }
@@ -95,7 +99,9 @@ function initGame(){
             castleOwner(i, color);
         }
     }
-    setInterval ( 'wsPing()', 9000 );
+    auth();
+
+//     setInterval ( 'wsPing()', 9000 );
 //     $('#game').fadeIn(1000);
 }
 

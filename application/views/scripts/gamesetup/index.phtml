@@ -1,9 +1,9 @@
 <h3>Open games:</h3>
 <div id="mygames"><table></table></div>
 
-<a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">< Back</a>
-<a href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
-<a href="javascript:refresh()">Refresh</a>
+<a class="button" href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">< Back</a>
+<a class="button" href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
+<a class="button" href="javascript:refresh()">Refresh</a>
 
 <script type="text/javascript">
     var th = '<th>Game ID</th><th>Game master ID</th><th>Max number of players</th><th>Date</th>';

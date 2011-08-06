@@ -31,7 +31,7 @@ function refresh() {
             }
             if(urlStart) {
                 if(numberOfPlayers <= playersReady) {
-                    $('#start').html('<a href="javascript:start()">Start game</a>');
+                    $('#start').html('<a class="button" href="javascript:start()">Start game</a>');
                 } else {
                     $('#start').html('Start game');
                 }
