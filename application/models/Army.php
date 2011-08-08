@@ -488,7 +488,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
                     if (isset($result[0]['production'])) {
 
                     }
-                    $this->addSoldierToArmy($armyId, $unitId);
+                    $this->addSoldierToArmy($armyId, $unitId, $playerId);
                 } catch (PDOException $e) {
                     throw new Exception($select->__toString());
                 }
@@ -496,7 +496,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function addSoldierToArmy($armyId, $unitId) {
+    public function addSoldierToArmy($armyId, $unitId, $playerId) {
         $select1 = $this->_db->select()
                     ->from('unit', 'numberOfMoves')
                     ->where('"unitId" = ?', $unitId);
@@ -506,7 +506,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             'unitId' => $unitId,
             'movesLeft' => new Zend_Db_Expr('('.$select1->__toString().')')
         );
-        $this->_db->insert('soldier', $data);
+        return $this->_db->insert('soldier', $data);
     }
 
     public function addHeroToArmy($armyId, $heroId) {

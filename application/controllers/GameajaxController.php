@@ -67,8 +67,9 @@ class GameajaxController extends Warlords_Controller_Action {
         $armyId = $this->_request->getParam('aid');
         if (!empty($armyId)) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-            $response = $modelArmy->destroyArmy($armyId, $this->_namespace->player['playerId']);
-            $this->view->response = Zend_Json::encode($response);
+            $unitId = rand(11,15);
+            $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
         } else {
             throw new Exception('Brak "armyId"!');
         }

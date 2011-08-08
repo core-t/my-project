@@ -53,7 +53,7 @@ class TurnController extends Warlords_Controller_Action {
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->_namespace->player['playerId']);
                     if($castleProduction['production'] AND $castle['production'][$modelBoard->getUnitName($castleProduction['production'])]['time'] <= $castleProduction['productionTurn']) {
                         if($modelCastle->resetProductionTurn($castleId, $this->_namespace->player['playerId']) == 1) {
-                            $modelArmy->addSoldierToArmy($armyId, $castleProduction['production']);
+                            $modelArmy->addSoldierToArmy($armyId, $castleProduction['production'], $this->_namespace->player['playerId']);
                         }
                     }
                 }

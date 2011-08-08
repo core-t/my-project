@@ -354,6 +354,7 @@ function unselectArmy() {
     $('#splitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
+    removeM();
 }
 
 function unselectEnemyArmy() {

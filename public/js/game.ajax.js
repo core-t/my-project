@@ -251,10 +251,8 @@ function searchRuins(){
     }
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
-        if(result == 1){
-            removeM();
-            deleteArmy('army' + unselectedArmy.armyId, my.color);
-            wsArmyDelete(unselectedArmy.armyId, my.color);
-        }
+        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+        selectArmy(players[my.color].armies['army'+result.armyId]);
+        wsArmyAdd(selectedArmy.armyId);
     });
 }
