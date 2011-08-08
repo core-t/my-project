@@ -24,7 +24,7 @@ function ruinCreate(ruinId){
 
 function castleUpdate(data) {
     if(data.razed){
-        castles[data.castleId].element.remove();
+        $('#castle' + data.castleId).remove();
         delete castles[data.castleId];
     }else{
         castles[data.castleId].defense = data.defense;
@@ -33,86 +33,73 @@ function castleUpdate(data) {
     }
 }
 
-function createCastle(id) {
-//     console.log(castles[id]);
-    this.capital = castles[id].capital;
+function castleCreate(castleId) {
+    castles[castleId].defense = castles[castleId].defensePoints;
+    /*    this.capital = castles[id].capital;
     this.position = castles[id].position;
-    this.defense = castles[id].defensePoints;
     this.income = castles[id].income;
     this.name = castles[id].name;
     this.production = castles[id].production;
-    this.color = '';
-    this.element = $('<div>')
-    .addClass('castle')
-    .attr({
-        id: 'castle' + id,
-        title: castles[id].name
-    })
-    .css({
-        left: this.position.x + 'px',
-        top: this.position.y + 'px',
-    });
-    board.append(this.element);
-    this.element.fadeIn(1);
-    this.element.mouseover(function() {
+    this.color = '';*/
+    board.append(
+        $('<div>')
+        .addClass('castle')
+        .attr({
+            id: 'castle' + castleId,
+            title: castles[castleId].name
+        })
+        .css({
+            left: castles[castleId].position.x + 'px',
+            top: castles[castleId].position.y + 'px',
+        })
+    );
+//     $('#castle' + castleId).fadeIn(1);
+    $('#castle' + castleId).mouseover(function(){
         if(lock) {
             return null;
         }
-        if(turn.myTurn) {
+        if(my.turn) {
             if(selectedArmy) {
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'url(../img/game/cursor_attack.png), crosshair'
-                });
+                $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
             } else {
-                castles[this.id.substr(6)].element.css('cursor','default');
+                $('#' + this.id).css('cursor','default');
             }
         }
     });
 }
 
 function castleOwner(castleId, color) {
+    var castle = $('#castle' + castleId);
     if(typeof players[color].castles[castleId] != 'undefined' && players[color].castles[castleId].razed){
-        castles[castleId].element.remove();
+        castle.remove();
         delete castles[castleId];
     }else{
         if(color == my.color) {
             zindex = 100;
-            castles[castleId].element.mouseover(function() {
-                if(turn.myTurn){
+            castle.mouseover(function() {
+                if(my.turn){
                     if(selectedArmy) {
-                        castles[this.id.substr(6)].element.css({
-                            cursor: 'default'
-                        });
+                        castle.css('cursor', 'default');
                     } else {
-                        castles[this.id.substr(6)].element.css({
-                            cursor: 'crosshair'
-                        });
+                        castle.css('cursor', 'crosshair');
                     }
                 } else {
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'default'
-                    });
+                    castle.css('cursor', 'default');
                 }
             });
-            castles[castleId].element.mousemove(function() {
-                if(turn.myTurn){
+            castle.mousemove(function() {
+                if(my.turn){
                     if(selectedArmy) {
-                        castles[this.id.substr(6)].element.css({
-                            cursor: 'default'
-                        });
+                        castle.css('cursor', 'default');
                     } else {
-                        castles[this.id.substr(6)].element.css({
-                            cursor: 'url(../img/game/cursor_castle.png), crosshair'
-                        });
+                        castle.css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
                     }
                 } else {
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'default'
-                    });
+                    castle.css('cursor', 'default');
                 }
             });
-            castles[castleId].element.click(function(){
-                if(turn.myTurn){
+            castle.click(function(){
+                if(my.turn){
                     if(!selectedArmy) {
                         castleM(castleId, color);
                     }
@@ -120,43 +107,35 @@ function castleOwner(castleId, color) {
             });
         } else {
             zindex = 600;
-            castles[castleId].element.mouseover(function() {
+            castle.mouseover(function() {
                 if(lock) {
                     return null;
                 }
-                if(turn.myTurn && selectedArmy){
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'url(../img/game/cursor_attack.png), crosshair'
-                    });
+                if(my.turn && selectedArmy){
+                    castle.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
                 } else {
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'default'
-                    });
+                    castle.css('cursor', 'default');
                 }
             });
-            castles[castleId].element.mousemove(function() {
+            castle.mousemove(function() {
                 if(lock) {
                     return null;
                 }
-                if(turn.myTurn && selectedArmy){
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'url(../img/game/cursor_attack.png), crosshair'
-                    });
+                if(my.turn && selectedArmy){
+                    castle.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
                 } else {
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'default'
-                    });
+                    castle.css('cursor', 'default');
                 }
             });
         }
-        castles[castleId].element
+        castle
         .removeClass()
-        .addClass('castle castle_' + color)
+        .addClass('castle ' + color)
         .css({
             'z-index':zindex,
             background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
         });
-        castles[castleId].element.fadeIn(1);
+        castle.fadeIn(1);
         castles[castleId].color = color;
         if(typeof players[color].castles[castleId] == 'undefined'){
             castles[castleId].currentProduction = null;
@@ -182,7 +161,7 @@ function isEnemyCastle(x, y) {
 }
 
 function showFirstCastle() {
-    var sp = $('.castle_' + turn.color);
+    var sp = $('.castle.' + turn.color);
     zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
 }
 
@@ -194,7 +173,6 @@ function army(obj, color) {
     this.y = position[1];
     deleteArmyByPosition(this.x, this.y, color);
     if(typeof $('#army'+obj.armyId) != 'undefined') {
-//         $('#army'+obj.armyId).fadeOut(1);
         $('#army'+obj.armyId).remove();
     }
     this.canFly = 1;
@@ -257,23 +235,17 @@ function army(obj, color) {
             if(lock) {
                 return null;
             }
-            if(turn.myTurn) {
+            if(my.turn) {
                 if(selectedArmy) {
                     if(selectedArmy == players[my.color].armies[this.id]) { // klikam na siebie
-                        splitArmyM(selectedArmy);
+                        splitArmyM();
                         unselectArmy();
-//                         var zindex = selectedArmy.element.css('z-index') - 1;
-//                         selectedArmy.element.css({
-//                             'z-index':zindex
-//                         });
-//                         console.log(selectedArmy);
                     } else { // klikam na inną jednostkę
                         sendMove(cursorPosition(e.pageX, e.pageY));
                     }
                 } else {
                     unselectArmy();
                     selectArmy(players[my.color].armies[this.id]);
-//                     console.log(selectedArmy);
                 }
             }
         });
@@ -281,7 +253,7 @@ function army(obj, color) {
             if(lock) {
                 return null;
             }
-            if(turn.myTurn) {
+            if(my.turn) {
                 if(selectedArmy) {
                     if(selectedArmy == players[my.color].armies[this.id]) {
                         selectedArmy.element.css('cursor', 'default');
@@ -300,7 +272,7 @@ function army(obj, color) {
             if(lock) {
                 return null;
             }
-            if(turn.myTurn) {
+            if(my.turn) {
                 if(selectedArmy) {
                     selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
                     selectedEnemyArmy.element.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
@@ -333,7 +305,7 @@ function army(obj, color) {
         .attr('src', '/img/game/' + this.img + '_' + color + '.png')
     );
     board.append(this.element);
-    this.element.fadeIn(1);
+    $('#army'+obj.armyId).fadeIn(1);
     this.armyId = obj.armyId;
     this.color = color;
 }
@@ -346,30 +318,42 @@ function unsetParentArmyId() {
     parentArmyId = null;
 }
 
+function inRuins(){
+    for(i in ruins){
+        if(selectedArmy.x == ruins[i].x && selectedArmy.y == ruins[i].y){
+            return true;
+        }
+    }
+}
+
 function selectArmy(a) {
-    a.element.css({
-        border:'1px solid #ccc'
-    });
-    $('#info').html('');
+    $('#army' + a.armyId).css('border','1px solid #ccc');
+    $('#info').html('0');
     $('#name').html(a.name);
-    $('#moves').html('Moves: '+a.moves);
+    $('#moves').html(a.moves);
+    $('#splitArmy').removeClass('buttonOff');
+    $('#disbandArmy').removeClass('buttonOff');
     selectedArmy = a;
+    if(typeof selectedArmy.heroKey != 'undefined' && inRuins()){
+        $('#searchRuins').removeClass('buttonOff');
+    }
     zoomer.lensSetCenter(a.x, a.y);
 }
 
 function unselectArmy() {
     if(selectedArmy != null) {
         unselectedArmy = selectedArmy;
-        selectedArmy.element.css({
-            border:'none'
-        });
+        $('#army' + selectedArmy.armyId).css('border','none');
         board.css('cursor', 'default');
     }
     selectedArmy = null;
-    $('#info').html('');
+    $('#info').html('0');
     $('#name').html('');
-    $('#moves').html('');
+    $('#moves').html('0');
     $('.path').remove();
+    $('#splitArmy').addClass('buttonOff');
+    $('#searchRuins').addClass('buttonOff');
+    $('#disbandArmy').addClass('buttonOff');
 }
 
 function unselectEnemyArmy() {
@@ -431,21 +415,11 @@ function getEnemyCastleGarrison(castleId) {
             }
         }
     }
-/*    }else{
-        var armies = new Array();
-        armies[0] = function(){
-            this.soldiers = {
-                0:function(){this.soldierId = 's1'},
-                1:function(){this.soldierId = 's2'},
-                2:function(){this.soldierId = 's3'}
-            }
-        };
-    }*/
     return armies;
 }
 
 function findNextArmy() {
-    if(!turn.myTurn){
+    if(!my.turn){
         return null;
     }
     if(lock) {

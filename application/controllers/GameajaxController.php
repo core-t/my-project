@@ -51,4 +51,26 @@ class GameajaxController extends Warlords_Controller_Action {
             throw new Exception('Brak "armyId", "s"!');
         }
     }
+
+    public function disbandAction(){
+        $armyId = $this->_request->getParam('aid');
+        if (!empty($armyId)) {
+            $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $response = $modelArmy->destroyArmy($armyId, $this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode($response);
+        } else {
+            throw new Exception('Brak "armyId"!');
+        }
+    }
+
+    public function ruinsAction(){
+        $armyId = $this->_request->getParam('aid');
+        if (!empty($armyId)) {
+            $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $response = $modelArmy->destroyArmy($armyId, $this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode($response);
+        } else {
+            throw new Exception('Brak "armyId"!');
+        }
+    }
 }

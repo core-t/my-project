@@ -1,346 +1,77 @@
 <?php
-// $img = imagecreatefrompng("img/game/board.png");
-//
-// for ($y = 0; $y <= 68; $y++) {
-//    echo '$fields[' . $y . '] = array(<br/>';
-//    $g = false;
-//    for ($x = 0; $x <= 108; $x++) {
-//        if ($g)
-//            echo ',';
-//        $g = true;
-//        $x1 = $x*40 + 8;
-//        $y1 = $y*40 + 8;
-//        $rgb1 = imagecolorat($img, $x1, $y1);
-//        $x2 = $x*40 + 8;
-//        $y2 = $y*40 + 32;
-//        $rgb2 = imagecolorat($img, $x2, $y2);
-//        $x3 = $x*40 + 32;
-//        $y3 = $y*40 + 6;
-//        $rgb3 = imagecolorat($img, $x3, $y3);
-//        $x4 = $x*40 + 32;
-//        $y4 = $y*40 + 34;
-//        $rgb4 = imagecolorat($img, $x4, $y4);
-//        $x5 = $x*40 + 20;
-//        $y5 = $y*40 + 20;
-//        $rgb5 = imagecolorat($img, $x5, $y5);
-//        $x6 = $x*40 + 20;
-//        $y6 = $y*40 + 6;
-//        $rgb6 = imagecolorat($img, $x6, $y6);
-//        $x7 = $x*40 + 20;
-//        $y7 = $y*40 + 38;
-//        $rgb7 = imagecolorat($img, $x7, $y7);
-//        $x8 = $x*40 + 25;
-//        $y8 = $y*40 + 6;
-//        $rgb8 = imagecolorat($img, $x8, $y8);
-//        $x9 = $x*40 + 21;
-//        $y9 = $y*40 + 38;
-//        $rgb9 = imagecolorat($img, $x9, $y9);
-//        echo "'".getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9)."'";
-//    }
-//    echo '<br/>);<br/>';
-// }
-//
-// function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9) {
-//    if(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4))  return 'r'; // road
-//    elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
-//    elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
-//    elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water
-//    elseif(isEqual($rgb1) OR isEqual($rgb2) OR isEqual($rgb3) OR isEqual($rgb4)) return 'M'; // big mountains
-//    elseif(getG($rgb1) OR getG($rgb2) OR getG($rgb3) OR getG($rgb4)) return 'm'; // small mountains
-//    // swamp
-//
-//    else return 'g'; // grass
-// }
-//
-// function getRGB($rgb) {
-//    $r = ($rgb >> 16) & 0xFF;
-//    $g = ($rgb >> 8) & 0xFF;
-//    $b = $rgb & 0xFF;
-//    return array($r, $g, $b);
-// }
-//
-// function getB($rgb) {
-//    return $rgb & 0xFF;
-// }
-//
-// function getG($rgb) {
-//    if((($rgb >> 8) & 0xFF) == 101) return true;
-// }
-//
-// function isEqual($rgb) {
-//    $r = ($rgb >> 16) & 0xFF;
-//    $g = ($rgb >> 8) & 0xFF;
-//    $b = $rgb & 0xFF;
-//    if(($r == $g) AND ($g == $b)) return true;
-//
-// }
+$img = imagecreatefrompng("img/game/board.png");
+
+for ($y = 0; $y <= 68; $y++) {
+   echo '$fields[' . $y . '] = array(<br/>';
+   $g = false;
+   for ($x = 0; $x <= 108; $x++) {
+       if ($g)
+           echo ',';
+       $g = true;
+       $x1 = $x*40 + 8;
+       $y1 = $y*40 + 8;
+       $rgb1 = imagecolorat($img, $x1, $y1);
+       $x2 = $x*40 + 8;
+       $y2 = $y*40 + 32;
+       $rgb2 = imagecolorat($img, $x2, $y2);
+       $x3 = $x*40 + 32;
+       $y3 = $y*40 + 6;
+       $rgb3 = imagecolorat($img, $x3, $y3);
+       $x4 = $x*40 + 32;
+       $y4 = $y*40 + 34;
+       $rgb4 = imagecolorat($img, $x4, $y4);
+       $x5 = $x*40 + 20;
+       $y5 = $y*40 + 20;
+       $rgb5 = imagecolorat($img, $x5, $y5);
+       $x6 = $x*40 + 20;
+       $y6 = $y*40 + 6;
+       $rgb6 = imagecolorat($img, $x6, $y6);
+       $x7 = $x*40 + 20;
+       $y7 = $y*40 + 38;
+       $rgb7 = imagecolorat($img, $x7, $y7);
+       $x8 = $x*40 + 25;
+       $y8 = $y*40 + 6;
+       $rgb8 = imagecolorat($img, $x8, $y8);
+       $x9 = $x*40 + 21;
+       $y9 = $y*40 + 38;
+       $rgb9 = imagecolorat($img, $x9, $y9);
+       echo "'".getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9)."'";
+   }
+   echo '<br/>);<br/>';
+}
+
+function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9) {
+   if(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4))  return 'r'; // road
+   elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
+   elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
+   elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water
+   elseif(isEqual($rgb1) OR isEqual($rgb2) OR isEqual($rgb3) OR isEqual($rgb4)) return 'M'; // big mountains
+   elseif(getG($rgb1) OR getG($rgb2) OR getG($rgb3) OR getG($rgb4)) return 'm'; // small mountains
+   // swamp
+
+   else return 'g'; // grass
+}
+
+function getRGB($rgb) {
+   $r = ($rgb >> 16) & 0xFF;
+   $g = ($rgb >> 8) & 0xFF;
+   $b = $rgb & 0xFF;
+   return array($r, $g, $b);
+}
+
+function getB($rgb) {
+   return $rgb & 0xFF;
+}
+
+function getG($rgb) {
+   if((($rgb >> 8) & 0xFF) == 101) return true;
+}
+
+function isEqual($rgb) {
+   $r = ($rgb >> 16) & 0xFF;
+   $g = ($rgb >> 8) & 0xFF;
+   $b = $rgb & 0xFF;
+   if(($r == $g) AND ($g == $b)) return true;
+
+}
 ?>
-<script type="text/javascript" language="JavaScript">
-
-    var eLog = null,
-        eKeepAlive = null,
-        eMessage = null,
-        eChannelId = null,
-        eChannelName = null,
-        eAccessKey = null,
-        eSecretKey = null,
-        eIsPrivate = null,
-        eIsSystem = null,
-        eKeepAlive = null,
-        eChannelSel = null;
-
-    function log( aString ) {
-        console.log(aString);
-//         eLog.innerHTML +=
-//             aString + "<br>";
-//         if( eLog.scrollHeight > eLog.clientHeight ) {
-//             eLog.scrollTop = eLog.scrollHeight - eLog.clientHeight;
-//         }
-    }
-
-    function clearLog() {
-        eLog.innerHTML = "";
-        eLog.scrollTop = 0;
-    }
-
-    var lWSC = null;
-
-    function login() {
-        var lURL = jws.getDefaultServerURL();
-
-        log( "Login to " + lURL + " ..." );
-        try {
-            var lRes = lWSC.logon( lURL, "guest", "guest", {
-
-                // OnOpen callback
-                OnOpen: function( aEvent ) {
-                    log( "jWebSocket connection established." );
-                    console.log('connected');
-                },
-
-                OnWelcome: function() {
-//                     getChannels();
-                },
-
-                // OnMessage callback
-                OnMessage: function( aEvent ) {
-                    log( "jWebSocket message received: '" + aEvent.data );
-                    if( lWSC.isLoggedIn() ) {
-                        console.log('authenticated');
-                    } else {
-                        console.log('connected');
-                    }
-                    console.log(" Client-Id: "
-                        + lWSC.getId() + " "
-                        + ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" ));
-                },
-
-                // OnClose callback
-                OnClose: function( aEvent ) {
-                    log( "jWebSocket connection closed." );
-                }
-
-            });
-        } catch( ex ) {
-            log( "Exception: " + ex.message );
-        }
-    }
-
-    // log out the client from the jWebSocket server
-    function logout() {
-        if( lWSC ) {
-            lWSC.stopKeepAlive();
-            log( "Disconnecting..." );
-            var lRes = lWSC.close({ timeout: 3000 });
-            log( lWSC.resultToString( lRes ) );
-        }
-    }
-
-    // try to create a new channel on the server
-    // on success the OnChannelCreated event is fired
-    function createChannel() {
-        var lChannelId = 1;
-        var lChannelName = 'game1';
-        var lIsPrivate = true;
-        var lIsSystem = false;
-        var lAccessKey = 'aaa';
-        var lSecretKey = 'bbb';
-        log( "Creating channel '" + lChannelId + "'..." );
-        var lRes = lWSC.channelCreate(
-            lChannelId,
-            lChannelName,
-            {   isPrivate: lIsPrivate,
-                isSystem: lIsSystem,
-                accessKey: lAccessKey,
-                secretKey: lSecretKey
-            }
-        );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to remove an existing channel on the server
-    // on success the OnChannelRemoved event is fired
-    function removeChannel() {
-        var lChannelId = eChannelId.value;
-        var lAccessKey = eAccessKey.value;
-        var lSecretKey = eSecretKey.value;
-        log( "Removing channel '" + lChannelId + "'..." );
-        var lRes = lWSC.channelRemove(
-            lChannelId,
-            {   accessKey: lAccessKey,
-                secretKey: lSecretKey
-            }
-        );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to subscribe at a certain channel
-    function subscribeChannel() {
-        var lChannel = eChannelSel.value;
-        var lAccessKey = eAccessKey.value;
-        log( "Subscribing at channel '" + lChannel + "'..." );
-        var lRes = lWSC.channelSubscribe( lChannel, lAccessKey );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to unsubscribe from a certain channel
-    function unsubscribeChannel() {
-        var lChannel = eChannelSel.value;
-        log( "Unsubscribing from channel '" + lChannel + "'..." );
-        var lRes = lWSC.channelUnsubscribe( lChannel );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to authenticate against a channel to publish data
-    function auth() {
-        var lChannel = eChannelSel.value;
-        var lAccessKey = eAccessKey.value;
-        var lSecretKey = eSecretKey.value;
-        log( "Authenticating against channel '" + lChannel + "'..." );
-        // use access key and secret key for this channel to authenticate
-        // required to publish data only
-        var lRes = lWSC.channelAuth( lChannel, lAccessKey, lSecretKey );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to publish data on a certain channel
-    function publish() {
-        var lChannel = eChannelSel.value;
-        log( "Publishing to channel '" + lChannel + "'..." );
-        var lRes = lWSC.channelPublish( lChannel, eMessage.value );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all available channels on the server
-    function getChannels() {
-        log( "Trying to obtain channels..." );
-        var lRes = lWSC.channelGetIds();
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all subscribers for a certain channel
-    function getSubscribers() {
-        var lChannel = eChannelSel.value;
-        var lAccessKey = eAccessKey.value;
-        log( "Trying to obtain subscribers for channel '" + lChannel + "'..." );
-        var lRes = lWSC.channelGetSubscribers(lChannel, lAccessKey);
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all channels the client has subscribed to
-    function getSubscriptions() {
-        log( "Trying to obtain subscriptions for client..." );
-        var lRes = lWSC.channelGetSubscriptions();
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    function toggleKeepAlive() {
-        if( eKeepAlive.checked ) {
-            lWSC.startKeepAlive({ interval: 3000 });
-        } else {
-            lWSC.stopKeepAlive();
-        }
-    }
-
-    // this method is called when a new channel has been created on the server
-    // add the new channel to the drop down box on the client as well
-    function onChannelCreatedObs( aEvent ) {
-//         var lOption = document.createElement("option");
-//         lOption.value = aEvent.channelId;
-//         lOption.text = aEvent.channelName;
-//         eChannelSel.appendChild(lOption);
-    }
-
-    // this method is called when a channel has been removed from the server
-    // remove the channel from the drop down box on the client as well
-    function onChannelRemovedObs( aEvent ) {
-//         for( var lIdx = 0, lCnt = eChannelSel.options.length; lIdx < lCnt; lIdx++ ) {
-//             var lOption = eChannelSel.options[ lIdx ];
-//             if( lOption.value == aEvent.channelId ) {
-//                 eChannelSel.removeChild(lOption);
-//                 break;
-//             }
-//         }
-    }
-
-    // this method is called when a channel has been removed from the server
-    // remove the channel from the drop down box on the client as well
-    function onChannelsReceivedObs( aEvent ) {
-        // remove all existing channels in drop down box
-//         while( eChannelSel.options.length > 0 ) {
-//             var lOption = eChannelSel.options[ 0 ];
-//             eChannelSel.removeChild(lOption);
-//         }
-        // add all channels from event
-//         for( var lIdx = 0, lCnt = aEvent.channels.length; lIdx < lCnt; lIdx++ ) {
-//             var lOption = document.createElement("option");
-//             lOption.value = aEvent.channels[ lIdx ].id;
-//             lOption.text = aEvent.channels[ lIdx ].name;
-//             eChannelSel.appendChild(lOption);
-//         }
-    }
-
-    function initPage() {
-        eLog = jws.$( "sdivChat" );
-        eMessage = jws.$( "stxfMsg" );
-        eChannelId = jws.$( "stxfChannelId" );
-        eChannelName = jws.$( "stxfChannelId" );
-        eAccessKey = jws.$( "stxfAccessKey" );
-        eSecretKey = jws.$( "stxfSecretKey" );
-        eIsPrivate = jws.$( "schkPrivate" );
-        eIsSystem = jws.$( "schkSystem" );
-        eKeepAlive =  jws.$( "schkKeepAlive" );
-        eChannelSel = jws.$( "sselChannel" );
-
-        if( window.WebSocket ) {
-            lWSC = new jws.jWebSocketJSONClient();
-            lWSC.setChannelCallbacks({
-                OnChannelCreated: onChannelCreatedObs,
-                OnChannelRemoved: onChannelRemovedObs,
-                OnChannelsReceived: onChannelsReceivedObs
-            });
-        } else {
-            jws.$( "sbtnConnect" ).setAttribute( "disabled", "disabled" );
-            jws.$( "sbtnDisconnect" ).setAttribute( "disabled", "disabled" );
-            jws.$( "sbtnClear" ).setAttribute( "disabled", "disabled" );
-            jws.$( "sbtnSubscribe" ).setAttribute( "disabled", "disabled" );
-            jws.$( "sbtnUnsubscribe" ).setAttribute( "disabled", "disabled" );
-            jws.$( "schkKeepAlive" ).setAttribute( "disabled", "disabled" );
-
-            var lMsg = jws.MSG_WS_NOT_SUPPORTED;
-            alert( lMsg );
-            log( lMsg );
-        }
-    }
-
-    function exitPage() {
-        lWSC.stopKeepAlive();
-        logout();
-    }
-
-    $(document).ready(function() {
-        initPage();
-        login();
-        createChannel();
-    });
-</script>

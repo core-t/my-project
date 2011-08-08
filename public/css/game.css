@@ -105,12 +105,21 @@
 }
 
 .gameMenu p {
-    height:20px;
+    height:15px;
 }
 
-.colors td {
+#gameMenu .button{
+    height:11px;
+}
+
+table#colors{
+    height:108px;
+}
+
+table#colors td {
     padding:2px;
     text-align:center;
+    min-width:80px;
 }
 
 .white {
@@ -161,8 +170,8 @@
     z-index:7000;
     background: #555555;
     position:relative;
-    left:280px;
-    top:-500px;
+    left:80px;
+    top:200px;
 }
 
 .message h3 {
@@ -200,6 +209,7 @@
 
 .message .production .unit div p {
     text-align:right;
+    height: 15px;
 }
 
 .message .production .unit div input {
@@ -208,6 +218,7 @@
 
 .message .production .unit p {
     clear:both;
+    height:18px;
 }
 
 .message .cancel {
@@ -222,6 +233,18 @@
     height:26px;
     background:#CECECE;
     border-bottom:1px solid #555;
+}
+
+.message .split p{
+    height:30px;
+}
+
+.message p{
+    height:23px;
+}
+
+#gameMenu .message .button{
+    height:13px;
 }
 
 .message .go {
@@ -260,6 +283,3 @@
     cursor:default;
 }
 
-table#colors{
-    height:104px;
-}

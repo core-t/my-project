@@ -321,14 +321,21 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
                     ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $data['turnNumber'] = new Zend_Db_Expr('('.$select->__toString().')');
+            $result = $this->_db->query($select)->fetchAll();
+            $data['turnNumber'] = $result[0]['turnNumber'];
         }
         $data['turnPlayerId'] = $nextPlayerId;
         if ($this->updateGame($data) == 1) {
-            return array(
-                'color' => $nextPlayerColor,
-                'playerId' => $nextPlayerId
-            );
+            if(isset($data['turnNumber'])){
+                return array(
+                    'color' => $nextPlayerColor,
+                    'nr' => $data['turnNumber']
+                );
+            }else{
+                return array(
+                    'color' => $nextPlayerColor
+                );
+            }
         } else {
             throw new Exception('Błąd zapytania!');
         }

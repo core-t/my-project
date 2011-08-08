@@ -55,7 +55,7 @@ function wsConnect() {
     socket = new FancyWebSocket('ws://localhost:12345/');
     //     socket = new FancyWebSocket('ws://82.160.41.159:12345/');
     socket.bind('turn', function(data){
-        changeTurn(data.playerId, data.color);
+        changeTurn(data.color, data.nr);
     });
     socket.bind('move', function(data){
         changeArmyPosition(data.x, data.y, data.armyId, turn.color);

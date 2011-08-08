@@ -309,7 +309,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $armyId);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        $this->_db->update($this->_name, $data, $where);
+        return $this->_db->update($this->_name, $data, $where);
 //         return $this->_db->delete($this->_name, $where);
     }
 

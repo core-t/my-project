@@ -1,6 +1,6 @@
 function startM(){
     removeM();
-    $('#game').after(
+    $('#nextTurn').after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
@@ -11,18 +11,15 @@ function startM(){
             removeM();
             initGame();
 //             wsConnect();
-            showFirstCastle();
         })
         )
-        .css({
-            'min-height':'70px'
-        })
-        );
+        .css('min-height','70px')
+    );
 }
 
 function lostM(){
     removeM();
-    $('#game').after(
+    $('#nextTurn').after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('You lose.'))
@@ -40,54 +37,80 @@ function lostM(){
         );
 }
 
+function disbandArmyM(){
+    if(typeof selectedArmy == 'undefined'){
+        return null;
+    }
+    if(!my.turn){
+        return null;
+    }
+    removeM();
+    $('#nextTurn').after(
+        $('<div>')
+        .addClass('message')
+        .append($('<h3>').addClass('center').html('Are you sure?'))
+        .append(
+            $('<div>')
+            .addClass('button go')
+            .html('Disband')
+            .click(function(){disbandArmy()})
+        )
+        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
+        .css('min-height','70px')
+    );
+}
+
 function splitArmyM(a){
+    if(typeof selectedArmy == 'undefined'){
+        return null;
+    }
     removeM();
     var army = $('<div>').addClass('split');
     var numberOfUnits = 0;
-    for(i in a.soldiers) {
-        var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
+    for(i in selectedArmy.soldiers) {
+        var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
         army.append(
             $('<p>')
             .append(
                 $('<img>').attr({
-                    'src':'/img/game/' + img + '_' + a.color + '.png',
-                    'id':'unit'+a.soldiers[i].soldierId
+                    'src':'/img/game/' + img + '_' + selectedArmy.color + '.png',
+                    'id':'unit'+selectedArmy.soldiers[i].soldierId
                 })
             )
-            .append(' Moves left: '+a.soldiers[i].movesLeft+' ')
+            .append(' Moves left: '+selectedArmy.soldiers[i].movesLeft+' ')
             .append($('<input>').attr({
                 type:'checkbox',
                 name:'soldierId',
-                value:a.soldiers[i].soldierId
+                value:selectedArmy.soldiers[i].soldierId
             }))
         );
         numberOfUnits++;
     }
-    for(i in a.heroes) {
+    for(i in selectedArmy.heroes) {
         army.append(
             $('<p>')
             .append(
                 $('<img>').attr({
-                    'src':'/img/game/hero_' + a.color + '.png',
-                    'id':'hero'+a.heroes[i].heroId
+                    'src':'/img/game/hero_' + selectedArmy.color + '.png',
+                    'id':'hero'+selectedArmy.heroes[i].heroId
                 })
             )
-            .append(' Moves left: '+a.heroes[i].movesLeft+' ')
+            .append(' Moves left: '+selectedArmy.heroes[i].movesLeft+' ')
             .append($('<input>').attr({
                 type:'checkbox',
                 name:'heroId',
-                value:a.heroes[i].heroId
+                value:selectedArmy.heroes[i].heroId
             }))
         );
         numberOfUnits++;
     }
     var height = numberOfUnits * 31 + 32;
-    $('#game').after(
+    $('#nextTurn').after(
         $('<div>')
         .addClass('message')
         .append(army)
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
-        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmy(a.armyId)}))
+        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmy(selectedArmy.armyId)}))
         .css('min-height',height+'px')
     );
 
@@ -164,7 +187,7 @@ function castleM(castleId, color){
         )
     )
     var height = 62 + k*54 + 96;
-    $('#game').after(
+    $('#nextTurn').after(
         $('<div>')
         .addClass('message')
         .append(capital)
@@ -232,7 +255,7 @@ function battleM(battle, a, def) {
             })
         );
     }
-    $('#game').after(
+    $('#nextTurn').after(
         $('<div>')
         .addClass('message')
         .css('display','none')

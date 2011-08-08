@@ -23,11 +23,10 @@ var channel = 'publicA';
 
 $(document).ready(function() {
     zoomer = new zoom(758, 670);
-    $('#wsStatus').html('DISCONNECTED!');
     initWS()
     lock = false;
     startM();
-    if(turn.myTurn){
+    if(my.turn){
         turnOn();
     }else{
         turnOff();
@@ -48,33 +47,31 @@ $(document).ready(function() {
 });
 
 function turnOn() {
-    turn.myTurn = true;
-    $('#nextTurn').removeClass('buttonOff')
-    $('#nextArmy').removeClass('buttonOff')
+    my.turn = true;
+    $('#nextTurn').removeClass('buttonOff');
+    $('#nextArmy').removeClass('buttonOff');
     showFirstCastle();
 }
 
 function turnOff() {
-    turn.myTurn = false;
+    my.turn = false;
     unselectArmy();
-    $('#nextTurn').addClass('buttonOff')
-    $('#nextArmy').addClass('buttonOff')
+    $('#nextTurn').addClass('buttonOff');
+    $('#nextArmy').addClass('buttonOff');
 }
 
-function changeTurn(playerId, color) {
+function changeTurn(color, nr) {
     if(!color) {
         console.log('Turn "color" not set');
         return false;
     }
-    if(!playerId) {
-        console.log('Turn "playerId" not set');
-        return false;
-    }
     $('#'+turn.color+'Turn').html('');
     turn.color = color;
-    $('#'+turn.color+'Turn').html('turn');
-    turn.playerId = playerId;
-    if(turn.playerId == my.playerId) {
+    if(typeof nr != 'undefined'){
+        turn.nr = nr;
+    }
+    $('#'+turn.color+'Turn').html('Turn ' + turn.nr);
+    if(turn.color == my.color) {
         turnOn();
         startMyTurn();
         return 0;
@@ -87,7 +84,7 @@ function changeTurn(playerId, color) {
 function initGame(){
     subscribeChannel();
     for(i in castles) {
-        castles[i] = new createCastle(i);
+        new castleCreate(i);
     }
     for(i in ruins) {
         new ruinCreate(i);
@@ -107,7 +104,9 @@ function initGame(){
             castleOwner(i, color);
         }
     }
+    $('.castle').fadeIn(1);
     auth();
+    showFirstCastle();
 }
 
 function goldUpdate(gold){

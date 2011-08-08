@@ -35,11 +35,9 @@
     var players = <?php echo Zend_Json::encode($this->players); ?>;
     var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
     my.color = '<?php echo $this->color ?>';
-    my.playerId = '<?php echo $this->playerId ?>';
+    my.turn = <?php echo $myTurn ?>;
     turn.color = '<?php echo $this->turn['color'] ?>';
-    turn.playerId = '<?php echo $this->turn['playerId'] ?>';
     turn.nr = '<?php echo $this->turn['nr'] ?>';
-    turn.myTurn = <?php echo $myTurn ?>;
     var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
     var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
     var urlStartMyTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'start')) ?>';
@@ -48,6 +46,8 @@
     var urlAddArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'addarmy')) ?>';
     var urlGetPlayerArmies = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'armies')) ?>';
     var urlSplitArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'split')) ?>';
+    var urlDisbandArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'disband')) ?>';
+    var urlSearchRuins = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'ruins')) ?>';
     var urlSetProduction = '<?php echo $this->url(array('controller' => 'production', 'action' => 'set')) ?>';
     var urlCastleRaze = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'raze')) ?>';
     var urlCastleBuild = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'build')) ?>';
@@ -87,6 +87,8 @@
     $('#connect').click(function(){login()});
     $('#nextTurn').click(function(){sendNextTurn()});
     $('#nextArmy').click(function(){findNextArmy()});
+    $('#splitArmy').click(function(){splitArmyM()});
+    $('#disbandArmy').click(function(){disbandArmyM()});
     goldUpdate(<?php echo $this->gold ?>);
 
 </script>

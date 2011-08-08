@@ -11,7 +11,10 @@
     </head>
     <body>
         <div id="page">
-            <div id="menuTop"><a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a></div>
+            <div id="menuTop">
+                <a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a>
+                <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
+            </div>
             <div id="game">
                 <div class="zoomPad">
                     <div class="zoomPup"></div>
@@ -20,25 +23,40 @@
                 <div id="gameMenu">
                     <div class="gameMenu">
                         <table id="colors">
-                            <tr class="white"><td id="whiteColor"></td><td id="whiteTurn"></td></tr>
-                            <tr class="green"><td id="greenColor"></td><td id="greenTurn"></td></tr>
-                            <tr class="yellow"><td id="yellowColor"></td><td id="yellowTurn"></td></tr>
-                            <tr class="red"><td id="redColor"></td><td id="redTurn"></td></tr>
-                            <tr class="orange"><td id="orangeColor"></td><td id="orangeTurn"></td></tr>
+                            <tr class="white">
+                                <td id="whiteTurn"></td>
+                                <td id="whiteColor"></td>
+                            </tr>
+                            <tr class="green">
+                                <td id="greenTurn"></td>
+                                <td id="greenColor"></td>
+                            </tr>
+                            <tr class="yellow">
+                                <td id="yellowTurn"></td>
+                                <td id="yellowColor"></td>
+                            </tr>
+                            <tr class="red">
+                                <td id="redTurn"></td>
+                                <td id="redColor"></td>
+                            </tr>
+                            <tr class="orange">
+                                <td id="orangeTurn"></td>
+                                <td id="orangeColor"></td>
+                            </tr>
                         </table>
                         <a id="nextTurn" class="button">Next turn</a>
                     </div>
                     <div class="gameMenu">
                         <p id="coord"></p>
-                        <p id="info"></p>
-                        <p id="name"></p>
-                        <p id="moves"></p>
+                        <p>Name: <span id="name"></span></p>
+                        <p>Moves: <span id="info">0</span>/<span id="moves">0</span></p>
+                        <a id="disbandArmy" class="button buttonOff">Disband army</a>
+                        <a id="splitArmy" class="button buttonOff">Split army</a>
+                        <a id="searchRuins" class="button buttonOff">Search ruins</a>
                         <a id="nextArmy" class="button">Next army</a>
                     </div>
                     <div class="gameMenu">
-                        <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
-                        <p id="wsStatus"></p>
-                        <a id="connect" href="#">Connect</a>
+                        <p id="wsStatus">DISCONNECTED!</p>
                         <p id="log"></p>
                         <p id="income"></p>
                         <p id="costs"></p>

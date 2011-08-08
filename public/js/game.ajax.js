@@ -1,5 +1,5 @@
 function sendNextTurn() {
-    if(turn.myTurn){
+    if(my.turn){
         lock = true;
 //         if(typeof socket == 'undefined') {
 //             alert('Socket disconnected!');
@@ -7,14 +7,17 @@ function sendNextTurn() {
 //         }
         $.getJSON(urlNextTurn, function(result) {
             unselectArmy();
-            changeTurn(result.playerId, result.color);
-            wsTurn(result.playerId, result.color);
+            changeTurn(result.color, result.nr);
+            wsTurn(result.color, result.nr);
         });
 
     }
 }
 
 function sendMove(movesSpend) {
+    if(!my.turn){
+        return null;
+    }
     if(movesSpend == 0) {
         return null;
     }
@@ -218,6 +221,40 @@ function castleGet(castleId){
         if(result.castleId == castleId){
             castleUpdate(result);
             castleOwner(result.castleId, result.color);
+        }
+    });
+}
+
+function disbandArmy(){
+    if(!my.turn){
+        return null;
+    }
+    if(selectedArmy == null){
+        return null;
+    }
+    unselectArmy();
+    $.getJSON(urlDisbandArmy+'/aid/'+unselectedArmy.armyId, function(result) {
+        if(result == 1){
+            removeM();
+            deleteArmy('army' + unselectedArmy.armyId, my.color);
+            wsArmyDelete(unselectedArmy.armyId, my.color);
+        }
+    });
+}
+
+function searchRuins(){
+    if(!my.turn){
+        return null;
+    }
+    if(selectedArmy == null){
+        return null;
+    }
+    unselectArmy();
+    $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
+        if(result == 1){
+            removeM();
+            deleteArmy('army' + unselectedArmy.armyId, my.color);
+            wsArmyDelete(unselectedArmy.armyId, my.color);
         }
     });
 }

@@ -67,6 +67,8 @@ class GameController extends Warlords_Controller_Action {
                     $y = $castle['position']['y']/40;
                     $x = $castle['position']['x']/40;
                     $this->view->fields[$y][$x] = 'r';
+                    $this->view->fields[$y + 1][$x] = 'r';
+                    $this->view->fields[$y][$x + 1] = 'r';
                     $this->view->fields[$y + 1][$x + 1] = 'r';
                 }
             }
@@ -77,9 +79,9 @@ class GameController extends Warlords_Controller_Action {
     }
 
     public function testAction() {
-        $this->view->headScript()->appendFile('/js/jWebSocket.js');
-        $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
-        $this->_helper->layout->setLayout('game');
+//         $this->view->headScript()->appendFile('/js/jWebSocket.js');
+//         $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
+//         $this->_helper->layout->setLayout('game');
 //         $castles = array();
 //         $this->_helper->layout->disableLayout();
 //         $str = Application_Model_Board::production();
