@@ -15,6 +15,16 @@
     z-index: 600;
     display:none;
 }
+.ruin {
+    position:inherit;
+    width:40px;
+    height:40px;
+    background: url(../img/game/ruin.png) center center no-repeat;
+    border:none;
+    cursor: crosshair;
+    z-index: 600;
+    display:none;
+}
 .army {
     position:inherit;
     width:40px;

@@ -6,18 +6,39 @@
             }
 ?>
 <script type="text/javascript">
-    goldUpdate(<?php echo $this->gold ?>);
-    var colors = <?php echo Zend_Json::encode($this->colors); ?>;
     <?php $this->headScript()->captureStart() ?>
+    //var colors = <?php echo Zend_Json::encode($this->colors); ?>;
     var fields = <?php echo Zend_Json::encode($this->fields); ?>;
-    <?php $this->headScript()->captureEnd() ?>
-
+    var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
+    Image1= new Image(27,32);
+    Image1.src = '../img/game/cursor_attack.png';
+    Image2= new Image(14,46);
+    Image2.src = '../img/game/cursor_castle.png';
+    Image3= new Image(25,26);
+    Image3.src = '../img/game/cursor_select.png';
+    Image4= new Image(20,20);
+    Image4.src = '../img/game/footsteps_e.png';
+    Image5= new Image(20,20);
+    Image5.src = '../img/game/footsteps_n.png';
+    Image6= new Image(20,20);
+    Image6.src = '../img/game/footsteps_s.png';
+    Image7= new Image(20,20);
+    Image7.src = '../img/game/footsteps_w.png';
+    Image8= new Image(20,20);
+    Image8.src = '../img/game/footsteps_ne.png';
+    Image9= new Image(20,20);
+    Image9.src = '../img/game/footsteps_nw.png';
+    Image10= new Image(20,20);
+    Image10.src = '../img/game/footsteps_se.png';
+    Image11= new Image(20,20);
+    Image11.src = '../img/game/footsteps_sw.png';
     var players = <?php echo Zend_Json::encode($this->players); ?>;
     var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
     my.color = '<?php echo $this->color ?>';
     my.playerId = '<?php echo $this->playerId ?>';
     turn.color = '<?php echo $this->turn['color'] ?>';
     turn.playerId = '<?php echo $this->turn['playerId'] ?>';
+    turn.nr = '<?php echo $this->turn['nr'] ?>';
     turn.myTurn = <?php echo $myTurn ?>;
     var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
     var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
@@ -31,6 +52,7 @@
     var urlCastleRaze = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'raze')) ?>';
     var urlCastleBuild = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'build')) ?>';
     var urlCastleGet = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'get')) ?>';
+    <?php $this->headScript()->captureEnd() ?>
     var board = $("#board")
     .mousedown(function(event) {
         if(lock) {
@@ -61,16 +83,10 @@
     });
 
     $('#'+my.color+'Color').append('You');
-    $('#'+turn.color+'Turn').html('Turn');
-    $('#connect').click(function() {
-        login();
-//         wsConnect();
-    });
+    $('#'+turn.color+'Turn').html('Turn ' + turn.nr);
+    $('#connect').click(function(){login()});
     $('#nextTurn').click(function(){sendNextTurn()});
     $('#nextArmy').click(function(){findNextArmy()});
+    goldUpdate(<?php echo $this->gold ?>);
 
-//     var enemyArmies = new Array();
-//     enemyArmies[0] = jQuery.parseJSON('{"0":{"defensePoints":3,"soldierId":"s1"},"1":{"defensePoints":3,"soldierId":"s2"},"2":{"defensePoints":3,"soldierId":"s3"}}');
-//     enemyArmies[0] = jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
-//     console.log(enemyArmies);
 </script>

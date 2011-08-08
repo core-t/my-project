@@ -89,6 +89,9 @@ function initGame(){
     for(i in castles) {
         castles[i] = new createCastle(i);
     }
+    for(i in ruins) {
+        new ruinCreate(i);
+    }
     for(color in players) {
         $('.'+color).css('display','block');
         $('#'+color+'Color').css({

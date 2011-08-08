@@ -2,6 +2,24 @@ $(document)[0].oncontextmenu = function() {
     return false;
 } // usuwa menu kontekstowe spod prawego przycisku
 
+// *** RUINS ***
+
+function ruinCreate(ruinId){
+    board.append(
+        $('<div>')
+        .addClass('ruin')
+        .attr({
+            id: 'ruin' + ruinId,
+            title: 'Ruins'
+        })
+        .css({
+            left: ruins[ruinId].x + 'px',
+             top: ruins[ruinId].y + 'px',
+        })
+    );
+    $('#ruin' + ruinId).fadeIn(1);
+}
+
 // *** CASTLES ***
 
 function castleUpdate(data) {
@@ -33,12 +51,6 @@ function createCastle(id) {
     .css({
         left: this.position.x + 'px',
         top: this.position.y + 'px',
-        position:'inherit',
-        width:'80px',
-        height:'80px',
-        background: 'url(../img/game/castle_neutral.png) center center no-repeat',
-        border:'none',
-        cursor: 'crosshair'
     });
     board.append(this.element);
     this.element.fadeIn(1);
@@ -309,7 +321,7 @@ function army(obj, color) {
     .addClass(color)
     .attr({
         id: 'army' + obj.armyId,
-        title: color + ' army ' + obj.armyId
+        title: obj.armyId + ' ' + color + ' army'
     }).css({
         background: 'url(../img/game/flag_' + color + '_'+numberOfUnits+'.png) top left no-repeat',
         left:       this.x + 'px',

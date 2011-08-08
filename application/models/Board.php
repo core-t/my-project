@@ -2,10 +2,10 @@
 
 class Application_Model_Board {
 
-    private $_castles = array();
+    private $castles = array();
 
     public function __construct() {
-        $this->_castles[0] = array(
+        $this->castles[0] = array(
             'name' => 'MARTHOS',
             'income' => 20,
             'defensePoints' => 6,
@@ -18,7 +18,7 @@ class Application_Model_Board {
                 'Pegasi' => array('time' => '7', 'cost' => '16'),
             )
         );
-        $this->_castles[1] = array(
+        $this->castles[1] = array(
             'name' => 'ELVALLIE',
             'income' => 33,
             'defensePoints' => 6,
@@ -30,7 +30,7 @@ class Application_Model_Board {
                 'Pegasi' => array('time' => '6', 'cost' => '16'),
             )
         );
-        $this->_castles[2] = array(
+        $this->castles[2] = array(
             'name' => 'CHARLING',
             'income' => 16,
             'defensePoints' => 3,
@@ -40,7 +40,7 @@ class Application_Model_Board {
                 'Light Infantry' => array('time' => '1', 'cost' => '4'),
             )
         );
-        $this->_castles[3] = array(
+        $this->castles[3] = array(
             'name' => 'GILDENHOME',
             'income' => 24,
             'defensePoints' => 5,
@@ -52,7 +52,7 @@ class Application_Model_Board {
                 'Pegasi' => array('time' => '7', 'cost' => '16'),
             )
         );
-        $this->_castles[4] = array(
+        $this->castles[4] = array(
             'name' => 'LOREMARK',
             'income' => 3,
             'defensePoints' => 4,
@@ -64,7 +64,7 @@ class Application_Model_Board {
                 'Pegasi' => array('time' => '7', 'cost' => '16'),
             )
         );
-        $this->_castles[5] = array(
+        $this->castles[5] = array(
             'name' => 'ARGENTHORN',
             'income' => 22,
             'defensePoints' => 4,
@@ -76,7 +76,7 @@ class Application_Model_Board {
                 'Pegasi' => array('time' => '7', 'cost' => '16'),
             )
         );
-        $this->_castles[6] = array(
+        $this->castles[6] = array(
             'name' => 'ANGBAR',
             'income' => 20,
             'defensePoints' => 4,
@@ -87,7 +87,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '4', 'cost' => '8'),
             )
         );
-        $this->_castles[7] = array(
+        $this->castles[7] = array(
             'name' => 'SSURI',
             'income' => 19,
             'defensePoints' => 4,
@@ -98,7 +98,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '4', 'cost' => '8'),
             )
         );
-        $this->_castles[8] = array(
+        $this->castles[8] = array(
             'name' => 'TROY',
             'income' => 13,
             'defensePoints' => 3,
@@ -109,7 +109,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '4', 'cost' => '8'),
             )
         );
-        $this->_castles[9] = array(
+        $this->castles[9] = array(
             'name' => 'HEREUTH',
             'income' => 26,
             'defensePoints' => 6,
@@ -121,7 +121,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '13', 'cost' => '20'),
             )
         );
-        $this->_castles[10] = array(
+        $this->castles[10] = array(
             'name' => 'GLUK',
             'income' => 17,
             'defensePoints' => 4,
@@ -133,7 +133,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[11] = array(
+        $this->castles[11] = array(
             'name' => 'GORK',
             'income' => 15,
             'defensePoints' => 4,
@@ -145,7 +145,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[12] = array(
+        $this->castles[12] = array(
             'name' => 'GAROM',
             'income' => 20,
             'defensePoints' => 4,
@@ -156,7 +156,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[13] = array(
+        $this->castles[13] = array(
             'name' => 'BALAD NARAN',
             'income' => 29,
             'defensePoints' => 6,
@@ -169,7 +169,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[14] = array(
+        $this->castles[14] = array(
             'name' => 'GALIN',
             'income' => 20,
             'defensePoints' => 4,
@@ -181,7 +181,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[15] = array(
+        $this->castles[15] = array(
             'name' => 'KOR',
             'income' => 30,
             'defensePoints' => 6,
@@ -193,7 +193,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[16] = array(
+        $this->castles[16] = array(
             'name' => 'DETHAL',
             'income' => 20,
             'defensePoints' => 4,
@@ -204,7 +204,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '5', 'cost' => '8'),
             )
         );
-        $this->_castles[17] = array(
+        $this->castles[17] = array(
             'name' => 'THURTZ',
             'income' => 18,
             'defensePoints' => 4,
@@ -215,7 +215,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[18] = array(
+        $this->castles[18] = array(
             'name' => 'DARCLAN',
             'income' => 23,
             'defensePoints' => 4,
@@ -226,7 +226,7 @@ class Application_Model_Board {
                 'Wolves' => array('time' => '3', 'cost' => '8'),
             )
         );
-        $this->_castles[19] = array(
+        $this->castles[19] = array(
             'name' => 'ILNYR',
             'income' => 21,
             'defensePoints' => 4,
@@ -238,7 +238,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[20] = array(
+        $this->castles[20] = array(
             'name' => 'DUINOTH',
             'income' => 19,
             'defensePoints' => 4,
@@ -249,7 +249,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '5', 'cost' => '8'),
             )
         );
-        $this->_castles[21] = array(
+        $this->castles[21] = array(
             'name' => 'KAZRACK',
             'income' => 21,
             'defensePoints' => 4,
@@ -261,7 +261,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[22] = array(
+        $this->castles[22] = array(
             'name' => 'VERNON',
             'income' => 24,
             'defensePoints' => 5,
@@ -273,7 +273,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[23] = array(
+        $this->castles[23] = array(
             'name' => 'HIMELTON',
             'income' => 14,
             'defensePoints' => 3,
@@ -284,7 +284,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '6', 'cost' => '8'),
             )
         );
-        $this->_castles[24] = array(
+        $this->castles[24] = array(
             'name' => 'STORMHEIM',
             'income' => 20,
             'defensePoints' => 6,
@@ -294,7 +294,7 @@ class Application_Model_Board {
                 'Giants' => array('time' => '2', 'cost' => '4'),
             )
         );
-        $this->_castles[25] = array(
+        $this->castles[25] = array(
             'name' => 'OHMSMOUTH',
             'income' => 24,
             'defensePoints' => 5,
@@ -305,7 +305,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '10', 'cost' => '18'),
             )
         );
-        $this->_castles[26] = array(
+        $this->castles[26] = array(
             'name' => 'WELLMORE',
             'income' => 20,
             'defensePoints' => 4,
@@ -316,7 +316,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[27] = array(
+        $this->castles[27] = array(
             'name' => 'TASME',
             'income' => 19,
             'defensePoints' => 4,
@@ -327,7 +327,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[28] = array(
+        $this->castles[28] = array(
             'name' => 'VARDE',
             'income' => 23,
             'defensePoints' => 4,
@@ -339,7 +339,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[29] = array(
+        $this->castles[29] = array(
             'name' => 'QUIESCE',
             'income' => 3,
             'defensePoints' => 4,
@@ -350,7 +350,7 @@ class Application_Model_Board {
                 'Navy' => array('time' => '11', 'cost' => '20'),
             )
         );
-        $this->_castles[30] = array(
+        $this->castles[30] = array(
             'name' => 'KHORFE',
             'income' => 26,
             'defensePoints' => 5,
@@ -361,7 +361,7 @@ class Application_Model_Board {
                 'Griffins' => array('time' => '2', 'cost' => '4'),
             )
         );
-        $this->_castles[31] = array(
+        $this->castles[31] = array(
             'name' => 'ALFAR\'S GAP',
             'income' => 18,
             'defensePoints' => 4,
@@ -372,7 +372,7 @@ class Application_Model_Board {
                 'Cavalry' => array('time' => '5', 'cost' => '8'),
             )
         );
-        $this->_castles[32] = array(
+        $this->castles[32] = array(
             'name' => 'LADOR',
             'income' => 16,
             'defensePoints' => 4,
@@ -388,25 +388,25 @@ class Application_Model_Board {
         return array(
             'white' => array(
                 'id' => 0,
-                'position' => $this->_castles[0]['position']
+                'position' => $this->castles[0]['position']
             ),
             'green' => array(
                 'id' => 1,
-                'position' => $this->_castles[1]['position']
+                'position' => $this->castles[1]['position']
             ),
             'red' => array(
                 'id' => 15,
-                'position' => $this->_castles[15]['position']
+                'position' => $this->castles[15]['position']
             ),
             'yellow' => array(
                 'id' => 24,
-                'position' => $this->_castles[24]['position']
+                'position' => $this->castles[24]['position']
             )
         );
     }
 
     public function getCastlesSchema() {
-        return $this->_castles;
+        return $this->castles;
     }
 
     static public function getBoardFields() {
@@ -623,7 +623,30 @@ class Application_Model_Board {
     }
 
     public function getCastle($castleId) {
-        return $this->_castles[$castleId];
+        return $this->castles[$castleId];
+    }
+
+    public function getRuins(){
+        $ruins = array();
+        $ruins[] = array('x'=>1360,'y'=>2320);
+        $ruins[] = array('x'=>1480,'y'=>2320);
+        $ruins[] = array('x'=>720,'y'=>1840);
+        $ruins[] = array('x'=>960,'y'=>1560);
+        $ruins[] = array('x'=>960,'y'=>1400);
+        $ruins[] = array('x'=>440,'y'=>1200);
+        $ruins[] = array('x'=>640,'y'=>480);
+        $ruins[] = array('x'=>1520,'y'=>240);
+        $ruins[] = array('x'=>1680,'y'=>1240);
+        $ruins[] = array('x'=>2640,'y'=>600);
+        $ruins[] = array('x'=>2760,'y'=>1800);
+        $ruins[] = array('x'=>2960,'y'=>2400);
+        $ruins[] = array('x'=>3080,'y'=>1360);
+        $ruins[] = array('x'=>3280,'y'=>1200);
+        $ruins[] = array('x'=>3480,'y'=>1520);
+        $ruins[] = array('x'=>3760,'y'=>1400);
+        $ruins[] = array('x'=>4200,'y'=>1840);
+        $ruins[] = array('x'=>4000,'y'=>880);
+        return $ruins;
     }
 
     static public function getTerrain($type, $canFly, $canSwim) {

@@ -47,6 +47,7 @@ class GameController extends Warlords_Controller_Action {
                 if ($game['turnPlayerId'] == $player['playerId']) {
                     $this->view->turn['playerId'] = $player['playerId'];
                     $this->view->turn['color'] = $player['color'];
+                    $this->view->turn['nr'] = $game['turnNumber'];
                     $this->_namespace->turn = $this->view->turn;
                 }
                 if($this->_namespace->player['playerId'] == $player['playerId']){
@@ -58,17 +59,16 @@ class GameController extends Warlords_Controller_Action {
             $this->view->castlesSchema = array();
             $castlesSchema = $modelBoard->getCastlesSchema();
             $razed = $modelCastle->getRazedCastles();
+            $this->view->ruins = $modelBoard->getRuins();
+            $this->view->fields = $modelBoard->getBoardFields();
             foreach($castlesSchema as $id=>$castle){
                 if(!isset($razed[$id])){
                     $this->view->castlesSchema[$id] = $castle;
+                    $y = $castle['position']['y']/40;
+                    $x = $castle['position']['x']/40;
+                    $this->view->fields[$y][$x] = 'r';
+                    $this->view->fields[$y + 1][$x + 1] = 'r';
                 }
-            }
-            $this->view->fields = $modelBoard->getBoardFields();
-            foreach($this->view->castlesSchema as $castle) {
-                $y = $castle['position']['y']/40;
-                $x = $castle['position']['x']/40;
-                $this->view->fields[$y][$x] = 'r';
-                $this->view->fields[$y + 1][$x + 1] = 'r';
             }
             $this->view->colors = $modelGame->getAllColors();
         } else {
