@@ -67,9 +67,19 @@ class GameajaxController extends Warlords_Controller_Action {
         $armyId = $this->_request->getParam('aid');
         if (!empty($armyId)) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-            $unitId = rand(11,15);
-            $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
-            $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+            $position = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
+            $position = explode(',', substr($position['position'], 1 , -1));
+            $ruinId = Application_Model_Board::confirmRuinPosition($position);
+            if($ruinId != null){
+                $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
+                if($modelRuin->ruinExists($ruinId)){
+                    throw new Exception('Ruiny są już przeszukane.');
+                }
+                $modelRuin->addRuin($ruinId);
+                $unitId = rand(11,15);
+                $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
+                $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+            }
         } else {
             throw new Exception('Brak "armyId"!');
         }

@@ -66,6 +66,7 @@
         <modelFile modelName="Game"/>
         <modelFile modelName="Board"/>
         <modelFile modelName="Unit"/>
+        <modelFile modelName="Ruin"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>

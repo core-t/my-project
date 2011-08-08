@@ -15,7 +15,7 @@ SET search_path = public, pg_catalog;
 -- Name: unit_unitId_seq; Type: SEQUENCE SET; Schema: public; Owner: warlords
 --
 
-SELECT pg_catalog.setval('"unit_unitId_seq"', 10, true);
+SELECT pg_catalog.setval('"unit_unitId_seq"', 15, true);
 
 
 --
@@ -33,6 +33,11 @@ COPY unit ("unitId", name, "numberOfMoves", "attackPoints", "defensePoints", "ca
 8	Pegasi	16	4	4	t	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	16
 9	Dwarves	9	5	5	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	4
 10	Griffins	18	6	5	t	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	16
+11	Wizard	52	6	6	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+12	Demon	16	7	7	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+13	Undead	14	7	7	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+14	Devil	14	8	8	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+15	Dragon	20	9	9	f	f	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
 \.
 
 

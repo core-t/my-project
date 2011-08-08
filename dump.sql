@@ -125,7 +125,9 @@ CREATE TABLE castle (
     "playerId" integer NOT NULL,
     "gameId" integer NOT NULL,
     production integer,
-    "productionTurn" integer DEFAULT 0 NOT NULL
+    "productionTurn" integer DEFAULT 0 NOT NULL,
+    razed boolean DEFAULT false NOT NULL,
+    "defenseMod" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -198,9 +200,9 @@ ALTER SEQUENCE "game_gameId_seq" OWNED BY game."gameId";
 CREATE TABLE hero (
     "heroId" integer NOT NULL,
     "playerId" integer NOT NULL,
-    "numberOfMoves" integer DEFAULT 12 NOT NULL,
-    "attackPoints" integer DEFAULT 6 NOT NULL,
-    "defensePoints" integer DEFAULT 6 NOT NULL,
+    "numberOfMoves" integer DEFAULT 16 NOT NULL,
+    "attackPoints" integer DEFAULT 5 NOT NULL,
+    "defensePoints" integer DEFAULT 5 NOT NULL,
     "armyId" integer,
     experience integer DEFAULT 0,
     "gameId" integer,
@@ -332,6 +334,18 @@ CREATE TABLE production (
 
 
 ALTER TABLE public.production OWNER TO warlords;
+
+--
+-- Name: ruin; Type: TABLE; Schema: public; Owner: warlords; Tablespace: 
+--
+
+CREATE TABLE ruin (
+    "ruinId" integer NOT NULL,
+    "gameId" integer NOT NULL
+);
+
+
+ALTER TABLE public.ruin OWNER TO warlords;
 
 --
 -- Name: soldier; Type: TABLE; Schema: public; Owner: warlords; Tablespace: 
@@ -543,6 +557,14 @@ ALTER TABLE ONLY player
 
 ALTER TABLE ONLY playersingame
     ADD CONSTRAINT "playersingame_gameId_playerId_key" UNIQUE ("gameId", "playerId");
+
+
+--
+-- Name: ruin_pkey; Type: CONSTRAINT; Schema: public; Owner: warlords; Tablespace: 
+--
+
+ALTER TABLE ONLY ruin
+    ADD CONSTRAINT ruin_pkey PRIMARY KEY ("ruinId");
 
 
 --
