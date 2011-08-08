@@ -49,10 +49,20 @@ class GameController extends Warlords_Controller_Action {
                     $this->view->turn['color'] = $player['color'];
                     $this->_namespace->turn = $this->view->turn;
                 }
+                if($this->_namespace->player['playerId'] == $player['playerId']){
+                    $this->view->gold = $player['gold'];
+                }
             }
             $this->view->color = $this->_namespace->player['color'];
             $this->view->playerId = $this->_namespace->player['playerId'];
-            $this->view->castlesSchema = $modelBoard->getCastlesSchema();
+            $this->view->castlesSchema = array();
+            $castlesSchema = $modelBoard->getCastlesSchema();
+            $razed = $modelCastle->getRazedCastles();
+            foreach($castlesSchema as $id=>$castle){
+                if(!isset($razed[$id])){
+                    $this->view->castlesSchema[$id] = $castle;
+                }
+            }
             $this->view->fields = $modelBoard->getBoardFields();
             foreach($this->view->castlesSchema as $castle) {
                 $y = $castle['position']['y']/40;

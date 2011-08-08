@@ -92,6 +92,10 @@ class FightController extends Warlords_Controller_Action
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+                if (empty($army)) {
+                    throw new Exception('Brak armii o podanym ID!');
+                    return false;
+                }
                 if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
@@ -101,6 +105,17 @@ class FightController extends Warlords_Controller_Action
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 if ($modelCastle->isEnemyCastle($castleId, $this->_namespace->player['playerId'])) {
                     $enemy = $modelArmy->getAllUnitsFromCastlePosition($castle['position']);
+                    $this->battle($army, $enemy);
+                    foreach($this->_result AS $r) {
+                        if(isset($r['heroId'])) {
+                            $modelArmy->armyRemoveHero($r['heroId']);
+                        } else {
+                            if(strpos($r['soldierId'],'s') === false){
+                                $modelArmy->destroySoldier($r['soldierId']);
+                            }
+                        }
+                    }
+                    $enemy = $modelArmy->updateAllArmiesFromCastlePosition($castle['position']);
                 } else {
                     $enemy = array(
                         'soldiers' => array(
@@ -119,42 +134,50 @@ class FightController extends Warlords_Controller_Action
                         ),
                         'heroes' => array()
                     );
-                }
-                $this->battle($army, $enemy);
-                foreach($this->_result AS $r) {
-                    if(isset($r['heroId'])) {
-                        $modelArmy->armyRemoveHero($r['heroId']);
-                    } else {
-                        if(strpos($r['soldierId'],'s') === false){
-                            $modelArmy->destroySoldier($r['soldierId']);
+                    $battle = $this->battle($army, $enemy);
+                    foreach($this->_result AS $r) {
+                        if(isset($r['heroId'])) {
+                            $modelArmy->armyRemoveHero($r['heroId']);
+                        } else {
+                            if(strpos($r['soldierId'],'s') === false){
+                                $modelArmy->destroySoldier($r['soldierId']);
+                            }
                         }
                     }
+                    $enemy = $battle['defender']['soldiers'];
+//                     throw new Exception(Zend_Debug::dump($enemy,null,false));
                 }
-                $enemy = $modelArmy->updateAllArmiesFromCastlePosition($castle['position']);
                 if (empty($enemy)) {
-                    $modelCastle->deleteCastle($castleId);
-                    $modelCastle->addCastle($castleId, $this->_namespace->player['playerId']);
-                    $data = array(
-                        'position' => $x . ',' . $y,
-                        'movesSpend' => $movesSpend
-                    );
-                    $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
-                    switch ($res) {
-                        case 1:
-                        $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                        $result['victory'] = true;
-                        $result['battle'] = $this->_result;
-                        $this->view->response = Zend_Json::encode($result);
-                            break;
-                        case 0:
-                            throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                            break;
-                        case null:
-                            throw new Exception('Zapytanie zwróciło błąd');
-                            break;
-                        default:
-                            throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                            break;
+                    if($modelCastle->castleExist($castleId)){
+                        $res = $modelCastle->changeOwner($castleId, $this->_namespace->player['playerId']);
+                    }else{
+                        $res = $modelCastle->addCastle($castleId, $this->_namespace->player['playerId']);
+                    }
+                    if($res == 1){
+                        $data = array(
+                            'position' => $x . ',' . $y,
+                            'movesSpend' => $movesSpend
+                        );
+                        $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
+                        switch ($res) {
+                            case 1:
+                                $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+                                $result['victory'] = true;
+                                $result['battle'] = $this->_result;
+                                $this->view->response = Zend_Json::encode($result);
+                                break;
+                            case 0:
+                                throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
+                                break;
+                            case null:
+                                throw new Exception('Zapytanie zwróciło błąd');
+                                break;
+                            default:
+                                throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
+                                break;
+                        }
+                    }else{
+                        throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.'.$res);
                     }
                 } else {
                     $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
@@ -290,7 +313,7 @@ class FightController extends Warlords_Controller_Action
             $fields[$cy + 1][$cx + 1] = 'r';
         }
         $terrainType = $fields[$y/40][$x/40];
-        $terrain = Application_Model_Board::getTerrain($terrainType);
+        $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
         return $terrain[1] + $this->_movesRequiredToAttack;
     }
 }

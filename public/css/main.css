@@ -41,6 +41,7 @@ a {
     font-weight:bold;
     text-shadow: black -1px -1px;
     background:#555;
+    display:block;
     /*     text-shadow: blue 2px 2px, red -2px -2px; */
 }
 

@@ -8,7 +8,7 @@ function startM(){
         .addClass('button go')
         .html('Start')
         .click(function(){
-            $('.message').remove();
+            removeM();
             initGame();
 //             wsConnect();
             showFirstCastle();
@@ -30,7 +30,7 @@ function lostM(){
         .addClass('button go')
         .html('Ok')
         .click(function(){
-            $('.message').remove();
+            removeM();
 
         })
         )
@@ -86,7 +86,7 @@ function splitArmyM(a){
         $('<div>')
         .addClass('message')
         .append(army)
-        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){$('.message').remove()}))
+        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
         .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmy(a.armyId)}))
         .css('min-height',height+'px')
     );
@@ -95,6 +95,8 @@ function splitArmyM(a){
 
 function castleM(castleId, color){
     removeM();
+    var time = '';
+    var attr;
     if(castles[castleId].capital){
         var capital = $('<h4>').append('Capital city');
     } else {
@@ -106,14 +108,15 @@ function castleM(castleId, color){
     for(unitName in castles[castleId].production){
         var img = unitName.replace(' ', '_').toLowerCase();
         if(getUnitId(unitName) == castles[castleId].currentProduction){
-            var attr = {
+            attr = {
                 type:'radio',
                 name:'production',
                 value:unitName,
                 checked:'checked'
             }
+            time = castles[castleId].currentProductionTurn+'/';
         } else {
-            var attr = {
+            attr = {
                 type:'radio',
                 name:'production',
                 value:unitName
@@ -124,7 +127,7 @@ function castleM(castleId, color){
         .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
         .append(
             $('<div>')
-            .append($('<p>').html('Time:&nbsp;'+castles[castleId].production[unitName].time+'t'))
+            .append($('<p>').html('Time:&nbsp;'+time+castles[castleId].production[unitName].time+'t'))
             .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
         )
         .append(
@@ -146,19 +149,64 @@ function castleM(castleId, color){
         }
         table.append(tr);
     }
-    var height = 62 + k*54 + 32;
+    table.append(
+        $('<tr>')
+        .append(
+            $('<td>')
+            .append(
+                $('<input>').attr({
+                    type:'radio',
+                    name:'production',
+                    value:'stop'
+                })
+            )
+            .append(' Stop production')
+        )
+    )
+    var height = 62 + k*54 + 96;
     $('#game').after(
         $('<div>')
         .addClass('message')
         .append(capital)
         .append($('<h3>').append(castles[castleId].name))
-        //                         .append($('<div>').addClass('close').click(function(){$('.message').remove()}))
         .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
         .append($('<h5>').append('Defense: '+castles[castleId].defense))
         .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
         .append(table)
-        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){$('.message').remove()}))
-        .append($('<div>').addClass('button submit').html('Set production').click(function(){setProduction(castleId)}))
+        .append(
+            $('<p>')
+            .append($('<div>').addClass('button submit').html('Set production').click(function(){setProduction(castleId)}))
+        )
+        .append(
+            $('<p>')
+            .addClass('h')
+            .append(
+                $('<input>').attr({
+                    type:'checkbox',
+                    name:'defense',
+                    value:castleId
+                })
+            )
+            .append(' cost 300g')
+            .append($('<div>').addClass('button right').html('Build defense').click(function(){castleBuildDefense()}))
+        )
+        .append(
+            $('<p>')
+            .addClass('h')
+            .append(
+                $('<input>').attr({
+                    type:'checkbox',
+                    name:'raze',
+                    value:castleId
+                })
+            )
+            .append(' income 1000g')
+            .append($('<div>').addClass('button right').html('Raze').click(function(){castleRaze()}))
+        )
+        .append(
+            $('<p>')
+            .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
+        )
         .css('min-height',height+'px')
     );
 
@@ -220,7 +268,7 @@ function battleM(battle, a, def) {
     }
     var height = 62 + 31 + 14 + h * 31;
     $('.message')
-    .append($('<div>').addClass('button go').html('OK').click(function(){$('.message').remove()}))
+    .append($('<div>').addClass('button go').html('OK').click(function(){removeM()}))
     .css('min-height',height+'px');
     if(battle){
         $('.message').fadeIn(100, function(){

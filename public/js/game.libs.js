@@ -4,20 +4,31 @@ $(document)[0].oncontextmenu = function() {
 
 // *** CASTLES ***
 
+function castleUpdate(data) {
+    if(data.razed){
+        castles[data.castleId].element.remove();
+        delete castles[data.castleId];
+    }else{
+        castles[data.castleId].defense = data.defense;
+        castles[data.castleId].currentProduction = data.production;
+        castles[data.castleId].currentProductionTurn = data.productionTurn;
+    }
+}
+
 function createCastle(id) {
-//     console.log(castles[i]);
-    this.capital = castles[i].capital;
-    this.position = castles[i].position;
-    this.defense = castles[i].defensePoints;
-    this.income = castles[i].income;
-    this.name = castles[i].name;
-    this.production = castles[i].production;
+//     console.log(castles[id]);
+    this.capital = castles[id].capital;
+    this.position = castles[id].position;
+    this.defense = castles[id].defensePoints;
+    this.income = castles[id].income;
+    this.name = castles[id].name;
+    this.production = castles[id].production;
     this.color = '';
     this.element = $('<div>')
     .addClass('castle')
     .attr({
         id: 'castle' + id,
-        title: castles[i].name
+        title: castles[id].name
     })
     .css({
         left: this.position.x + 'px',
@@ -48,95 +59,100 @@ function createCastle(id) {
 }
 
 function castleOwner(castleId, color) {
-    if(color == my.color) {
-        zindex = 100;
-        castles[castleId].element.mouseover(function() {
-            if(turn.myTurn){
-                if(selectedArmy) {
+    if(typeof players[color].castles[castleId] != 'undefined' && players[color].castles[castleId].razed){
+        castles[castleId].element.remove();
+        delete castles[castleId];
+    }else{
+        if(color == my.color) {
+            zindex = 100;
+            castles[castleId].element.mouseover(function() {
+                if(turn.myTurn){
+                    if(selectedArmy) {
+                        castles[this.id.substr(6)].element.css({
+                            cursor: 'default'
+                        });
+                    } else {
+                        castles[this.id.substr(6)].element.css({
+                            cursor: 'crosshair'
+                        });
+                    }
+                } else {
                     castles[this.id.substr(6)].element.css({
                         cursor: 'default'
                     });
-                } else {
-                    castles[this.id.substr(6)].element.css({
-                        cursor: 'crosshair'
-                    });
                 }
-            } else {
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'default'
-                });
-            }
-        });
-        castles[castleId].element.mousemove(function() {
-            if(turn.myTurn){
-                if(selectedArmy) {
+            });
+            castles[castleId].element.mousemove(function() {
+                if(turn.myTurn){
+                    if(selectedArmy) {
+                        castles[this.id.substr(6)].element.css({
+                            cursor: 'default'
+                        });
+                    } else {
+                        castles[this.id.substr(6)].element.css({
+                            cursor: 'url(../img/game/cursor_castle.png), crosshair'
+                        });
+                    }
+                } else {
                     castles[this.id.substr(6)].element.css({
                         cursor: 'default'
                     });
+                }
+            });
+            castles[castleId].element.click(function(){
+                if(turn.myTurn){
+                    if(!selectedArmy) {
+                        castleM(castleId, color);
+                    }
+                }
+            });
+        } else {
+            zindex = 600;
+            castles[castleId].element.mouseover(function() {
+                if(lock) {
+                    return null;
+                }
+                if(turn.myTurn && selectedArmy){
+                    castles[this.id.substr(6)].element.css({
+                        cursor: 'url(../img/game/cursor_attack.png), crosshair'
+                    });
                 } else {
                     castles[this.id.substr(6)].element.css({
-                        cursor: 'url(../img/game/cursor_castle.png), crosshair'
+                        cursor: 'default'
                     });
                 }
-            } else {
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'default'
-                });
-            }
-        });
-        castles[castleId].element.click(function(){
-            if(turn.myTurn){
-                if(!selectedArmy) {
-                    castleM(castleId, color);
+            });
+            castles[castleId].element.mousemove(function() {
+                if(lock) {
+                    return null;
                 }
-            }
+                if(turn.myTurn && selectedArmy){
+                    castles[this.id.substr(6)].element.css({
+                        cursor: 'url(../img/game/cursor_attack.png), crosshair'
+                    });
+                } else {
+                    castles[this.id.substr(6)].element.css({
+                        cursor: 'default'
+                    });
+                }
+            });
+        }
+        castles[castleId].element
+        .removeClass()
+        .addClass('castle castle_' + color)
+        .css({
+            'z-index':zindex,
+            background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
         });
-    } else {
-        zindex = 600;
-        castles[castleId].element.mouseover(function() {
-            if(lock) {
-                return null;
-            }
-            if(turn.myTurn && selectedArmy){
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'url(../img/game/cursor_attack.png), crosshair'
-                });
-            } else {
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'default'
-                });
-            }
-        });
-        castles[castleId].element.mousemove(function() {
-            if(lock) {
-                return null;
-            }
-            if(turn.myTurn && selectedArmy){
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'url(../img/game/cursor_attack.png), crosshair'
-                });
-            } else {
-                castles[this.id.substr(6)].element.css({
-                    cursor: 'default'
-                });
-            }
-        });
-    }
-    castles[castleId].element
-    .removeClass()
-    .addClass('castle castle_' + color)
-    .css({
-        'z-index':zindex,
-        background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
-    });
-    castles[castleId].element.fadeIn(1);
-    castles[castleId].color = color;
-    if(typeof players[color].castles[castleId] == 'undefined'){
-        castles[castleId].currentProduction = null;
-        castles[castleId].currentProductionTurn = 0;
-    } else {
-        castles[castleId].currentProduction = players[color].castles[castleId].production;
-        castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
+        castles[castleId].element.fadeIn(1);
+        castles[castleId].color = color;
+        if(typeof players[color].castles[castleId] == 'undefined'){
+            castles[castleId].currentProduction = null;
+            castles[castleId].currentProductionTurn = 0;
+        } else {
+            castles[castleId].currentProduction = players[color].castles[castleId].production;
+            castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
+        }
     }
 }
 
@@ -399,15 +415,27 @@ function getEnemyCastleGarrison(castleId) {
         for(i in players[color].armies) {
             var a = players[color].armies[i];
             if((a.x >= pos.x) && (a.x <= (pos.x + 40)) && (a.y >= pos.y) && (a.y <= (pos.y + 40))) {
-//                 console.log(a);
                 armies[i] = a;
             }
         }
     }
+/*    }else{
+        var armies = new Array();
+        armies[0] = function(){
+            this.soldiers = {
+                0:function(){this.soldierId = 's1'},
+                1:function(){this.soldierId = 's2'},
+                2:function(){this.soldierId = 's3'}
+            }
+        };
+    }*/
     return armies;
 }
 
 function findNextArmy() {
+    if(!turn.myTurn){
+        return null;
+    }
     if(lock) {
         return null;
     }

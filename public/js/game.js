@@ -49,48 +49,16 @@ $(document).ready(function() {
 
 function turnOn() {
     turn.myTurn = true;
-    $('#nextTurn')
-    .css({
-        'color':'#ddd',
-        'text-shadow': '#000 -1px -1px',
-        'background':'#555',
-        'border':'1px solid #fff',
-        'cursor':'pointer'
-    })
-    .click(function(){sendNextTurn()});
-    $('#nextArmy')
-    .css({
-        'color':'#ddd',
-         'text-shadow': '#000 -1px -1px',
-         'background':'#555',
-         'border':'1px solid #fff',
-         'cursor':'pointer'
-    })
-    .click(function(){findNextArmy()});
+    $('#nextTurn').removeClass('buttonOff')
+    $('#nextArmy').removeClass('buttonOff')
     showFirstCastle();
 }
 
 function turnOff() {
     turn.myTurn = false;
     unselectArmy();
-    $('#nextTurn')
-    .css({
-        'color':'#000',
-        'text-shadow': '#fff 1px 1px',
-        'background':'#eee',
-        'border':'1px solid #555',
-        'cursor':'default'
-    })
-    .click(function(){return null});
-    $('#nextArmy')
-    .css({
-        'color':'#000',
-         'text-shadow': '#fff 1px 1px',
-         'background':'#eee',
-         'border':'1px solid #555',
-         'cursor':'default'
-    })
-    .click(function(){return null});
+    $('#nextTurn').addClass('buttonOff')
+    $('#nextArmy').addClass('buttonOff')
 }
 
 function changeTurn(playerId, color) {
@@ -137,8 +105,8 @@ function initGame(){
         }
     }
     auth();
-
-//     setInterval ( 'wsPing()', 9000 );
-//     $('#game').fadeIn(1000);
 }
 
+function goldUpdate(gold){
+    $('#gold').html('Gold: '+gold);
+}

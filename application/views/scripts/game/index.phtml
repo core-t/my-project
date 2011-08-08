@@ -6,7 +6,7 @@
             }
 ?>
 <script type="text/javascript">
-
+    goldUpdate(<?php echo $this->gold ?>);
     var colors = <?php echo Zend_Json::encode($this->colors); ?>;
     <?php $this->headScript()->captureStart() ?>
     var fields = <?php echo Zend_Json::encode($this->fields); ?>;
@@ -28,6 +28,9 @@
     var urlGetPlayerArmies = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'armies')) ?>';
     var urlSplitArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'split')) ?>';
     var urlSetProduction = '<?php echo $this->url(array('controller' => 'production', 'action' => 'set')) ?>';
+    var urlCastleRaze = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'raze')) ?>';
+    var urlCastleBuild = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'build')) ?>';
+    var urlCastleGet = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'get')) ?>';
     var board = $("#board")
     .mousedown(function(event) {
         if(lock) {
@@ -63,4 +66,11 @@
         login();
 //         wsConnect();
     });
+    $('#nextTurn').click(function(){sendNextTurn()});
+    $('#nextArmy').click(function(){findNextArmy()});
+
+//     var enemyArmies = new Array();
+//     enemyArmies[0] = jQuery.parseJSON('{"0":{"defensePoints":3,"soldierId":"s1"},"1":{"defensePoints":3,"soldierId":"s2"},"2":{"defensePoints":3,"soldierId":"s3"}}');
+//     enemyArmies[0] = jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
+//     console.log(enemyArmies);
 </script>

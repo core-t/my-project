@@ -144,7 +144,7 @@
 }
 
 .message {
-    width: 200px;
+    width: 260px;
     min-height: 225px;
     position:inherit;
     border:1px solid white;
@@ -177,7 +177,7 @@
 
 .message .production .unit {
     margin:2px;
-    width:97px;
+    width:125px;
     text-align:center;
     border:1px solid #c0c0c0;
 }
@@ -201,11 +201,17 @@
 }
 
 .message .cancel {
-    float:left;
+/*     float:left; */
 }
 
-.message .submit {
+.message .right {
     float:right;
+}
+
+.message p.h{
+    height:26px;
+    background:#CECECE;
+    border-bottom:1px solid #555;
 }
 
 .message .go {
@@ -233,5 +239,17 @@
 
 #log{
     width:150px;
-    height:50px;
+    height:29px;
+}
+
+.buttonOff{
+    color:#000;
+    text-shadow: #fff 1px 1px;
+    background:#eee;
+    border:1px solid #555;
+    cursor:default;
+}
+
+table#colors{
+    height:104px;
 }

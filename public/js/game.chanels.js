@@ -57,7 +57,7 @@
                                 deleteArmy('army'+data.armyId, data.color);
                                 break;
                             case 'castle':
-                                castleOwner(data.castleId, data.color);
+                                castleGet(data.castleId);
                                 break;
                             case 'armies':
                                 getPlayerArmies(data.color);

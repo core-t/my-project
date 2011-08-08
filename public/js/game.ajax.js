@@ -65,7 +65,13 @@ function sendMove(movesSpend) {
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyDelete(unselectedArmy.armyId, my.color);
             }
-            battleM(result.battle, unselectedArmy, enemyArmies);
+            if(castles[castleId].color){
+                battleM(result.battle, unselectedArmy, enemyArmies);
+            }else{
+                var enemyArmies = new Array();
+                enemyArmies[0] = jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
+                battleM(result.battle, unselectedArmy, enemyArmies);
+            }
             lock = false;
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
@@ -120,7 +126,7 @@ function startMyTurn() {
             lostM();
         }else{
             wsPlayerArmies(my.color);
-            $('#gold').html('Gold: '+result['gold']);
+            goldUpdate(result['gold']);
             $('#costs').html('Costs: '+result['costs']);
             $('#income').html('Income: '+result['income']);
             for(i in result['armies']) {
@@ -140,7 +146,14 @@ function getAddArmy(armyId) {
 }
 
 function setProduction(castleId) {
-    var unitId = getUnitId($('input:radio[name=production]:checked').val());
+    var unitId
+    var production = $('input:radio[name=production]:checked').val();
+    if(production == 'stop'){
+        unitId = -1;
+    }else{
+        unitId = getUnitId(production);
+    }
+
     if(!unitId) {
         return null;
     }
@@ -148,6 +161,7 @@ function setProduction(castleId) {
         if(result.set) {
             $('.message').remove();
             castles[castleId].currentProduction = unitId;
+            castles[castleId].currentProductionTurn = 0;
         }
     });
 }
@@ -185,3 +199,25 @@ function splitArmy(armyId){
     });
 }
 
+function castleRaze(castleId){
+    var castleId = $('input[name=raze]:checked').val();
+    if(!castleId) {
+        return null;
+    }
+    $.getJSON(urlCastleRaze+'/cid/'+castleId, function(result) {
+        if(result.castleId == castleId){
+            castleUpdate(result);
+            removeM();
+            goldUpdate(result.gold);
+        }
+    });
+}
+
+function castleGet(castleId){
+    $.getJSON(urlCastleGet+'/cid/'+castleId, function(result) {
+        if(result.castleId == castleId){
+            castleUpdate(result);
+            castleOwner(result.castleId, result.color);
+        }
+    });
+}

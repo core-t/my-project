@@ -46,6 +46,12 @@
         <controllerFile controllerName="Gameover">
           <actionMethod actionName="index"/>
         </controllerFile>
+        <controllerFile controllerName="Castle">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="raze"/>
+          <actionMethod actionName="build"/>
+          <actionMethod actionName="get"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -111,6 +117,18 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Gameover">
             <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Castle">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Castle">
+            <viewScriptFile forActionName="raze"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Castle">
+            <viewScriptFile forActionName="build"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Castle">
+            <viewScriptFile forActionName="get"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -182,6 +200,12 @@
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Gameover">
             <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Castle">
+            <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="raze"/>
+            <testApplicationActionMethod forActionName="build"/>
+            <testApplicationActionMethod forActionName="get"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>
