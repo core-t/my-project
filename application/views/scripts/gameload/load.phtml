@@ -12,8 +12,8 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
 </table>
 
 <ul>
-    <li><a href="javascript:refresh()">Refresh</a></li>
-    <li><a href="<?php echo $this->url(array('controller' => 'gameload', 'action' => 'index', 'gameId' => null)) ?>">Back</a></li>
+    <li><a href="javascript:refresh()" class="button">Refresh</a></li>
+    <li><a href="<?php echo $this->url(array('controller' => 'gameload', 'action' => 'index', 'gameId' => null)) ?>" class="button">Back</a></li>
 </ul>
 <script type="text/javascript">
     var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';

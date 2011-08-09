@@ -52,6 +52,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         try {
             $select1 = $this->_db->select()
                         ->from('playersingame', $this->_primary)
+                        ->where('ready = true')
                         ->where('"playerId" = ?', $playerId);
             $select2 = $this->_db->select()
                     ->from($this->_name)
