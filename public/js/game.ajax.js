@@ -7,11 +7,44 @@ function sendNextTurn() {
 //         }
         $.getJSON(urlNextTurn, function(result) {
             unselectArmy();
-            changeTurn(result.color, result.nr);
-            wsTurn(result.color, result.nr);
+            if(result.win){
+                turnOff();
+                winM();
+            }else{
+                changeTurn(result.color, result.nr);
+            }
+            wsTurn();
         });
 
     }
+}
+
+function getTurn() {
+    $.getJSON(urlGetTurn, function(result) {
+        unselectArmy();
+        if(result.lost){
+            lostM();
+        }else{
+            changeTurn(result.color, result.nr);
+        }
+    });
+}
+
+function startMyTurn() {
+    $.getJSON(urlStartMyTurn, function(result) {
+        if(result['gameover']){
+            lostM();
+        }else{
+            wsPlayerArmies(my.color);
+            goldUpdate(result['gold']);
+            $('#costs').html('Costs: '+result['costs']);
+            $('#income').html('Income: '+result['income']);
+            for(i in result['armies']) {
+                players[my.color].armies[i] = new army(result['armies'][i], my.color);
+            }
+            lock = false;
+        }
+    });
 }
 
 function sendMove(movesSpend) {
@@ -121,23 +154,6 @@ function sendMove(movesSpend) {
         });
     }
     return true;
-}
-
-function startMyTurn() {
-    $.getJSON(urlStartMyTurn, function(result) {
-        if(result['gameover']){
-            lostM();
-        }else{
-            wsPlayerArmies(my.color);
-            goldUpdate(result['gold']);
-            $('#costs').html('Costs: '+result['costs']);
-            $('#income').html('Income: '+result['income']);
-            for(i in result['armies']) {
-                players[my.color].armies[i] = new army(result['armies'][i], my.color);
-            }
-            lock = false;
-        }
-    });
 }
 
 function getAddArmy(armyId) {

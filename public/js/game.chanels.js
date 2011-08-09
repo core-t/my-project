@@ -51,7 +51,7 @@
                                 getAddArmy(data.armyId);
                                 break;
                             case 'turn':
-                                changeTurn(data.playerId, data.color);
+                                getTurn();
                                 break;
                             case 'delete':
                                 deleteArmy('army'+data.armyId, data.color);

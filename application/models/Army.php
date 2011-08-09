@@ -651,5 +651,21 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             return $newArmyId;
         }
     }
+
+    public function playerArmiesExists($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'armyId')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
+                    ->where('"playerId" = (?)', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            if (count($result)) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
 }
 

@@ -73,7 +73,7 @@ class GameajaxController extends Warlords_Controller_Action {
             if($ruinId != null){
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
                 if($modelRuin->ruinExists($ruinId)){
-                    throw new Exception('Ruiny są już przeszukane.');
+                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
                 $unitId = rand(11,15);

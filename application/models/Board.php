@@ -651,9 +651,9 @@ class Application_Model_Board {
 
     static public function confirmRuinPosition($position) {
         $ruins = Application_Model_Board::getRuins();
-        foreach ($ruins as $ruin) {
+        foreach ($ruins as $ruinId => $ruin) {
             if ($position[0] == $ruin['x'] && $position[1] == $ruin['y']) {
-                return true;
+                return $ruinId;
             }
         }
     }

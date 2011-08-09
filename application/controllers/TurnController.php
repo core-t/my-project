@@ -12,11 +12,49 @@ class TurnController extends Warlords_Controller_Action {
 
     public function nextAction() {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        if ($modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
-            $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-            $modelCastle->raiseAllCastlesProductionTurn($this->_namespace->player['playerId']);
-            $this->view->response = Zend_Json::encode($modelGame->nextTurn($this->_namespace->player['playerId'], $this->_namespace->player['color']));
+        if ($modelGame->playerLost($this->_namespace->player['playerId'])) {
+            return null;
         }
+        if ($modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
+            $youWin = false;
+            $response = '';
+            $nextPlayer = array(
+                'color' => $this->_namespace->player['color']
+            );
+            while(empty($response)){
+                $nextPlayer = $modelGame->nextTurn($nextPlayer['color']);
+                $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
+                $playerCastlesExists = $modelCastle->playerCastlesExists($nextPlayer['playerId']);
+                $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+                $playerArmiesExists = $modelArmy->playerArmiesExists($nextPlayer['playerId']);
+                if($playerCastlesExists || $playerArmiesExists){
+                    $response = $nextPlayer;
+                    if($nextPlayer['playerId'] == $this->_namespace->player['playerId']){
+                        $youWin = true;
+                        $modelGame->endGame();
+                    }else{
+                        $nr = $modelGame->updateTurnNumber($nextPlayer['playerId']);
+                        if($nr){
+                            $response['nr'] = $nr;
+                        }
+                        $modelCastle->raiseAllCastlesProductionTurn($this->_namespace->player['playerId']);
+                    }
+                    $response['win'] = $youWin;
+                }else{
+                    $modelGame->setPlayerLostGame($nextPlayer['playerId']);
+                }
+            }
+            $this->view->response = Zend_Json::encode($response);
+        }
+    }
+
+    public function getAction() {
+        $modelGame = new Application_Model_Game($this->_namespace->gameId);
+        if ($modelGame->playerLost($this->_namespace->player['playerId'])) {
+            $this->view->response = Zend_Json::encode(array('lost' => 1));
+            return null;
+        }
+        $this->view->response = Zend_Json::encode($modelGame->getTurn());
     }
 
     public function startAction() {
@@ -25,8 +63,8 @@ class TurnController extends Warlords_Controller_Action {
             throw new Exception('To nie jest moja tura.');
             return false;
         }
-        if($modelGame->isPlayerTurnActive($this->_namespace->player['playerId'])) {
-            throw new Exception('Tura już aktywna. Próba ponownoego aktywowania tury i wygenerowania produkcji.');
+        if($modelGame->playerTurnActive($this->_namespace->player['playerId'])) {
+            throw new Exception('Tura jest już aktywna. Próba ponownego aktywowania tury i wygenerowania produkcji.');
             return false;
         }
         $modelGame->turnActivate($this->_namespace->player['playerId']);
@@ -61,7 +99,6 @@ class TurnController extends Warlords_Controller_Action {
         }
         $armies = $modelArmy->getPlayerArmies($this->_namespace->player['playerId']);
         if(empty($castles) && empty($armies)){
-            $modelGame->setPlayerLostGame($this->_namespace->player['playerId']);
             $this->view->response = Zend_Json::encode(array('gameover'=>1));
         }else{
             $array = array();

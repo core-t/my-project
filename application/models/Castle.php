@@ -13,6 +13,22 @@ class Application_Model_Castle extends Warlords_Db_Table_Abstract
         parent::__construct();
     }
 
+    public function playerCastlesExists($playerId){
+        try {
+            $select = $this->_db->select()
+                ->from($this->_name, $this->_primary)
+                ->where('"playerId" = ?', $playerId)
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('razed = false');
+            $result = $this->_db->query($select)->fetchAll();
+            if(count($result)){
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function getRazedCastles() {
         $castles = array();
         try {

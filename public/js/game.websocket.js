@@ -92,7 +92,7 @@ function wsCastleOwner(castleId, color) {
     });
 }
 
-function wsTurn(playerId, color) {
+function wsTurn() {
 //    socket.send(
 //        'turn',
 //        {
@@ -103,8 +103,7 @@ function wsTurn(playerId, color) {
 //    publish('turn',{playerId:playerId,color:color});
     lWSC.broadcastGamingEvent({
         'event':'turn',
-        'channel':channel,
-        'data':{playerId:playerId,color:color}
+        'channel':channel
     });
 }
 

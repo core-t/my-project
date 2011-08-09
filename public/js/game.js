@@ -25,7 +25,6 @@ $(document).ready(function() {
     zoomer = new zoom(758, 670);
     initWS()
     lock = false;
-    startM();
     if(my.turn){
         turnOn();
     }else{
@@ -44,6 +43,7 @@ $(document).ready(function() {
             );
         }
     }*/
+    startM();
 });
 
 function turnOn() {
@@ -99,14 +99,23 @@ function initGame(){
         })
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
+            if(color == my.color){
+                var myArmies = true;
+            }
         }
         for(i in players[color].castles) {
             castleOwner(i, color);
+            if(color == my.color){
+                var myCastles = true;
+            }
         }
     }
     $('.castle').fadeIn(1);
     auth();
     showFirstCastle();
+    if(typeof myArmies == 'undefined' && typeof myCastles == 'undefined'){
+        lostM();
+    }
 }
 
 function goldUpdate(gold){

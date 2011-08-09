@@ -40,6 +40,7 @@
     turn.nr = '<?php echo $this->turn['nr'] ?>';
     var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
     var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
+    var urlGetTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'get')) ?>';
     var urlStartMyTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'start')) ?>';
     var urlFightCastle = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'castle')) ?>';
     var urlFightArmy = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'army')) ?>';

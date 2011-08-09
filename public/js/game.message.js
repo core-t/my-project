@@ -4,14 +4,14 @@ function startM(){
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
-        .append($('<div>')
-        .addClass('button go')
-        .html('Start')
-        .click(function(){
-            removeM();
-            initGame();
-//             wsConnect();
-        })
+        .append(
+            $('<div>')
+            .addClass('button go')
+            .html('Start')
+            .click(function(){
+                removeM();
+                initGame();
+            })
         )
         .css('min-height','70px')
     );
@@ -34,7 +34,27 @@ function lostM(){
         .css({
             'min-height':'70px'
         })
-        );
+    );
+}
+
+function winM(){
+    removeM();
+    $('#nextTurn').after(
+        $('<div>')
+        .addClass('message')
+        .append($('<h3>').addClass('center').html('You win.'))
+        .append($('<div>')
+        .addClass('button go')
+        .html('Ok')
+        .click(function(){
+            removeM();
+
+        })
+        )
+        .css({
+            'min-height':'70px'
+        })
+    );
 }
 
 function disbandArmyM(){
