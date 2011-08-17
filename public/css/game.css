@@ -148,6 +148,7 @@ table#colors td {
     height:40px;
     border:none;
     z-index:500;
+    padding-left:2px;
 }
 
 .field {

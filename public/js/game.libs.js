@@ -41,12 +41,6 @@ function castleUpdate(data) {
 
 function castleCreate(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
-    /*    this.capital = castles[id].capital;
-    this.position = castles[id].position;
-    this.income = castles[id].income;
-    this.name = castles[id].name;
-    this.production = castles[id].production;
-    this.color = '';*/
     board.append(
         $('<div>')
         .addClass('castle')
@@ -133,6 +127,7 @@ function castleOwner(castleId, color) {
                     castle.css('cursor', 'default');
                 }
             });
+            castle.click(function(){return null});
         }
         castle
         .removeClass()
@@ -188,7 +183,6 @@ function army(obj, color) {
     var numberOfHeroes = 0;
     var numberOfSoldiers = 0;
     for(hero in this.heroes) {
-        this.heroKey = hero;
         if(typeof this.moves == 'undefined') {
             this.moves = this.heroes[hero].movesLeft;
         }
@@ -196,17 +190,11 @@ function army(obj, color) {
             this.moves = this.heroes[hero].movesLeft;
             this.heroKey = hero;
         }
-        numberOfHeroes++;
         this.canFly--;
+        numberOfHeroes++;
     }
     this.soldiers = obj.soldiers;
     for(soldier in this.soldiers) {
-        if(typeof this.moves == 'undefined') {
-            this.moves = this.soldiers[soldier].movesLeft;
-        }
-        if(this.soldiers[soldier].movesLeft < this.moves) {
-            this.moves = this.soldiers[soldier].movesLeft;
-        }
         if(typeof attack  == 'undefined') {
             var attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
@@ -215,7 +203,12 @@ function army(obj, color) {
             attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
         }
-        numberOfSoldiers++;
+        if(typeof this.moves == 'undefined') {
+            this.moves = this.soldiers[soldier].movesLeft;
+        }
+        if(this.soldiers[soldier].movesLeft < this.moves) {
+            this.moves = this.soldiers[soldier].movesLeft;
+        }
         if(this.soldiers[soldier].canFly){
             this.canFly++;
         }else{
@@ -224,13 +217,20 @@ function army(obj, color) {
         if(this.soldiers[soldier].canSwim){
             this.canSwim++;
         }
+        numberOfSoldiers++;
     }
     if(typeof this.heroes[this.heroKey] != 'undefined') {
-        this.name = 'hero';
+        if(this.heroes[this.heroKey].name == 'undefined'){
+            this.name = 'Anonymous hero';
+        }else{
+            this.name = this.heroes[this.heroKey].name;
+        }
         this.img = 'hero';
+        this.attack = this.heroes[this.heroKey].attackPoints;
     } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
         this.name = this.soldiers[this.soldierKey].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
+        this.attack = attack;
     } else {
         console.log('Armia nie posiada jednostek.');
         return null;
@@ -334,9 +334,9 @@ function inRuins(){
 
 function selectArmy(a) {
     $('#army' + a.armyId).css('border','1px solid #ccc');
-    $('#info').html('0');
     $('#name').html(a.name);
     $('#moves').html(a.moves);
+    $('#attack').html(a.attack);
     $('#splitArmy').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
     selectedArmy = a;
@@ -522,7 +522,6 @@ function cursorPosition(x, y) {
             movesSpend = downLeft(pfX, pfY);
         }
 
-        $('#info').html(movesSpend);
         $('#coord').html(newX + ' - ' + newY + ' ' + getTerrain(fields[fieldY][fieldX])[0]);
         return movesSpend;
     }
@@ -753,8 +752,8 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
     pX = pfX*40;
     pY = pfY*40;
     var terrain = getTerrain(terrainType);
-    //     console.log(terrain);
-    if((movesSpend + terrain[1]) > selectedArmy.moves) {
+    var moves = movesSpend + terrain[1];
+    if(moves > selectedArmy.moves) {
         return movesSpend;
     }
     board.append(
@@ -765,10 +764,11 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
             left:pX,
             top:pY
         })
+        .html(moves)
     );
     newX = pX;
     newY = pY;
-    return movesSpend + terrain[1];
+    return moves;
 }
 
 function getTerrain(type) {

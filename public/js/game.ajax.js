@@ -48,6 +48,10 @@ function startMyTurn() {
 }
 
 function sendMove(movesSpend) {
+    if(selectedArmy.moves == 0){
+        unselectArmy();
+        return null;
+    }
     if(!my.turn){
         return null;
     }
@@ -269,8 +273,11 @@ function searchRuins(){
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
         if(result.gold){
             console.log($('#gold').html());
-            goldUpdate(result.gold);
+            console.log('gold');
+            goldUpdate(result.gold + parseInt($('#gold').html()));
             simpleM('You have found '+result.gold+' gold.');
+        }else{
+            console.log(result);
         }
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         selectArmy(players[my.color].armies['army'+result.armyId]);
