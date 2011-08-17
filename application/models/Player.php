@@ -31,7 +31,8 @@ class Application_Model_Player extends Warlords_Db_Table_Abstract
 
     public function createPlayer() {
         $dane = array(
-            'fbId'=> $this->_fbid
+            'fbId'=> $this->_fbid,
+            'activity'=>'2011-06-15'
         );
         $this->_db->insert($this->_name, $dane);
         $seq = $this->_db->quoteIdentifier( $this->_sequence );
