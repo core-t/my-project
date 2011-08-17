@@ -7,7 +7,7 @@ function refresh() {
             }
             $('#'+result[i].color+'Id').html(result[i].playerId);
         }
-        if(game.alive['length'] <= playersReady) {
+        if(alivePlayers['length'] <= playersReady) {
             top.location = urlRedirect;
         }
     });

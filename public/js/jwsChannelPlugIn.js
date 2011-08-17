@@ -160,9 +160,8 @@ jws.ChannelPlugIn = {
 			// there's no server side plug-in for the client-pluh-in
 			aToken.ns = jws.SystemClientPlugIn.NS;
 			aToken.type = "broadcast";
-//			aToken.ns = jws.ChannelPlugIn.NS;
-//			aToken.type = jws.ChannelPlugIn.PUBLISH;
-//			aToken.event = "move";
+// 			aToken.ns = jws.ChannelPlugIn.NS;
+// 			aToken.type = jws.ChannelPlugIn.PUBLISH;
 			// explicitely include sender,
 			// default is false on the server
 			aToken.senderIncluded = false;

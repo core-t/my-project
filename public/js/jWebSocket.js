@@ -19,6 +19,15 @@
 // ## :#file:*:jWebSocket.js
 // ## :#d:en:Implements the jWebSocket Web Client.
 
+
+// Firefox temporarily used MozWebSocket (why?), anyway, consider this here.
+// Since the browserSupportNativeWebSocket method evaluates the existance of
+// the window.WebSocket class, this abstraction need to be done on the very top.
+// please do not move this lines down.
+if( window.MozWebSocket ) {
+	window.WebSocket = window.MozWebSocket;
+}
+
 //:package:*:jws
 //:class:*:jws
 //:ancestor:*:-
@@ -26,9 +35,9 @@
 //:d:en:including various utility methods.
 var jws = {
 
-	//:const:*:VERSION:String:1.0a10
+	//:const:*:VERSION:String:1.0b1 (10817)
 	//:d:en:Version of the jWebSocket JavaScript Client
-	VERSION: "1.0a10 (10519)",
+	VERSION: "1.0b1 (10817)",
 
 	//:const:*:NS_BASE:String:org.jwebsocket
 	//:d:en:Base namespace
@@ -53,7 +62,7 @@ var jws = {
 	JWS_SERVER_SSL_SCHEMA: "wss",
 	//:const:*:JWS_SERVER_HOST:String:[hostname|localhost|IP-Number]
 	//:d:en:Default hostname of current webbite or [tt]localhost|127.0.0.1[/tt] if no hostname can be detected.
-    JWS_SERVER_HOST: "217.153.170.18",
+    JWS_SERVER_HOST: ( self.location.hostname == 'warlords' ? self.location.hostname : "217.153.170.18" ),
 	//:const:*:JWS_SERVER_PORT:Integer:8787
 	//:d:en:Default port number, 8787 for stand-alone un-secured servers, _
 	//:d:en:80 for Jetty or Glassfish un-secured servers.
@@ -71,7 +80,8 @@ var jws = {
 	//:const:*:JWS_SERVER_URL:String:ws://[hostname]/jWebSocket/jWebSocket:8787
 	//:d:en:Current token id, incremented per token exchange to assign results.
 	//:@deprecated:en:Use [tt]getDefaultServerURL()[/tt] instead.
-// 	JWS_SERVER_URL: "ws://217.153.170.18:443/jWebSocket/jWebSocket",
+	JWS_SERVER_URL:
+		"ws://" + ( self.location.hostname ? self.location.hostname : "127.0.0.1" ) + ":8787/jWebSocket/jWebSocket",
 
 	//:const:*:CONNECTING:Integer:0
 	//:d:en:The connection has not yet been established.
@@ -86,18 +96,47 @@ var jws = {
 	//:d:en:The connection has been closed or could not be opened.
 	CLOSED: 3,
 
-	//:const:*:WS_SUBPROT_JSON:String:jwebsocket.org/json
+	//:const:*:RECONNECTING:Integer:1000
+	//:d:en:The connection manager is trying to re-connect, but not yet connected. _
+	//:d:en:This is jWebSocket specific and not part of the W3C API.
+	RECONNECTING: 1000,
+
+	// Default connection reliability options
+	RO_OFF: {
+		autoReconnect : false,
+		reconnectDelay: -1,
+		reconnectTimeout: -1,
+		queueItemLimit: -1,
+		queueSizeLimit: -1
+	},
+
+	RO_ON: {
+		autoReconnect: true,
+		reconnectDelay: 500,
+		reconnectTimeout: 30000,
+		queueItemLimit: 1000,
+		queueSizeLimit: 1024 * 1024 * 10 // 10 MByte
+	},
+
+	//:const:*:WS_SUBPROT_JSON:String:org.jwebsocket.json
 	//:d:en:jWebSocket sub protocol JSON
-	WS_SUBPROT_JSON: "jwebsocket.org/json",
-	//:const:*:WS_SUBPROT_XML:String:jwebsocket.org/xml
+	WS_SUBPROT_JSON: "org.jwebsocket.json",
+	//:const:*:WS_SUBPROT_XML:String:org.jwebsocket.xml
 	//:d:en:jWebSocket sub protocol XML
-	WS_SUBPROT_XML: "jwebsocket.org/xml",
-	//:const:*:WS_SUBPROT_CSV:String:jwebsocket.org/csv
+	WS_SUBPROT_XML: "org.jwebsocket.xml",
+	//:const:*:WS_SUBPROT_CSV:String:org.jwebsocket.csv
 	//:d:en:jWebSocket sub protocol CSV
-	WS_SUBPROT_CSV: "jwebsocket.org/csv",
-	//:const:*:WS_SUBPROT_CUSTOM:String:jwebsocket.org/custom
-	//:d:en:jWebSocket sub protocol Custom
-	WS_SUBPROT_CUSTOM: "jwebsocket.org/custom",
+	WS_SUBPROT_CSV: "org.jwebsocket.csv",
+	//:const:*:WS_SUBPROT_CUSTOM:String:org.jwebsocket.text
+	//:d:en:jWebSocket sub protocol text
+	//:@deprecated:en:Use [tt]WS_SUBPROT_TEXT()[/tt] instead.
+	WS_SUBPROT_CUSTOM: "org.jwebsocket.text",
+	//:const:*:WS_SUBPROT_TEXT:String:org.jwebsocket.text
+	//:d:en:jWebSocket sub protocol text
+	WS_SUBPROT_TEXT: "org.jwebsocket.text",
+	//:const:*:WS_SUBPROT_BINARY:String:org.jwebsocket.binary
+	//:d:en:jWebSocket sub protocol binary
+	WS_SUBPROT_BINARY: "org.jwebsocket.binary",
 
 	//:const:*:SCOPE_PRIVATE:String:private
 	//:d:en:private scope, only authenticated user can read and write his personal items
@@ -110,6 +149,49 @@ var jws = {
 	//:d:en:Default timeout in milliseconds for waiting on asynchronous responses.
 	//:d:en:An individual timeout can be passed per request.
 	DEF_RESP_TIMEOUT: 30000,
+
+
+	//:i:en:Browsertype Constants
+	//:const:*:BT_UNKNOWN
+	//:d:en:Browsertype is unknown.
+	BT_UNKNOWN		:  0,
+	//:const:*:BT_FIREFOX
+	//:d:en:Browser is "Firefox".
+	BT_FIREFOX		:  1,
+	//:const:*:BT_NETSCAPE
+	//:d:en:Browser is "Netscape".
+	BT_NETSCAPE		:  2,
+	//:const:*:BT_OPERA
+	//:d:en:Browser is "Opera".
+	BT_OPERA		:  3,
+	//:const:*:BT_IEXPLORER
+	//:d:en:Browser is "Internet Explorer".
+	BT_IEXPLORER	:  4,
+	//:const:*:BT_SAFARI
+	//:d:en:Browser is "Safari".
+	BT_SAFARI		:  5,
+	//:const:*:BT_CHROME
+	//:d:en:Browser is "Chrome".
+	BT_CHROME		: 6,
+
+	//:const:*:BROWSER_NAMES
+	//:d:en:Array of browser names. Each BT_xxx constant can be used as an index to this array.
+	BROWSER_NAMES : [
+		"Unknown",
+		"Firefox",
+		"Netscape",
+		"Opera",
+		"Internet Explorer",
+		"Safari",
+		"Chrome"
+	],
+
+	//:const:*:GUEST_USER_LOGINNAME:String:guest
+	//:d:en:Guest user login name is "guest" (if not changed on the server).
+	GUEST_USER_LOGINNAME: "guest",
+	//:const:*:GUEST_USER_PASSWORD:String:guest
+	//:d:en:Guest user password is "guest" (if not changed on the server).
+	GUEST_USER_PASSWORD: "guest",
 
 	//:m:*:$
 	//:d:en:Convenience replacement for [tt]document.getElementById()[/tt]. _
@@ -334,9 +416,313 @@ var jws = {
 		var lUserAgent = navigator.userAgent;
 		var lIsIE = lUserAgent.indexOf( "MSIE" );
 		return( lIsIE >= 0 );
-	})()
+	})(),
+
+	//:i:de:Bei Erweiterung der Browsertypen auch BROWSER_NAMES entsprechend anpassen!
+
+	//:m:*:getBrowserName
+	//:d:de:Liefert den Namen des aktuell verwendeten Browser zur&uuml;ck.
+	//:d:en:Returns the name of the browser.
+	//:a:*::-
+	//:r:de::browserName:String:Name des verwendeten Broswers.
+	//:r:en::browserName:String:Name of the used browser.
+	getBrowserName: function() {
+		return this.fBrowserName;
+	},
+
+	//:m:*:getBrowserVersion
+	//:d:de:Liefert die Browserversion als Flie&szlig;kommazahl zur&uuml;ck.
+	//:d:en:Returns the browser version als float value.
+	//:a:*::-
+	//:r:de::browserVersion:Float:Die Versions Nummer des Browsers.
+	//:r:en::browserVersion:Float:Version number of the browser.
+	getBrowserVersion: function() {
+		return this.fBrowserVerNo;
+	},
+
+	//:m:*:getBrowserVersionString
+	//:d:de:Liefert die Browserversion als String zur&uuml;ck.
+	//:d:en:Returns the browser version as string value.
+	//:a:*::-
+	//:r:de:::String:Die Versions Nummer des Browsers als String.
+	//:r:en:::String:Version string of the browser.
+	getBrowserVersionString: function() {
+		return this.fBrowserVerStr;
+	},
+
+	//:m:*:isFirefox
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Firefox" ist.
+	//:d:en:Determines, if the used browser is a "Firefox".
+	//:a:*::-
+	//:r:de::isFirefox:Boolean:true, wenn der Browser Firefox ist, andernfalls false.
+	//:r:en::isFirefox:Boolean:true, if Browser is Firefox, otherwise false.
+	isFirefox: function() {
+		return this.fIsFirefox;
+	},
+
+	//:m:*:isOpera
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Opera" ist.
+	//:d:en:Determines, if the used browser is a "Opera".
+	//:a:*::-
+	//:r:de::isOpera:Boolean:true, wenn der Browser Opera ist, andernfalls false.
+	//:r:en::isOpera:Boolean:true, if Browser is Opera, otherwise false.
+	isOpera: function() {
+		return this.fIsOpera;
+	},
+
+	//:m:*:isChrome
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Chrome" ist.
+	//:d:en:Determines, if the used browser is a "Chrome".
+	//:a:*::-
+	//:r:de::isOpera:Boolean:true, wenn der Browser Chrome ist, andernfalls false.
+	//:r:en::isOpera:Boolean:true, if Browser is Chrome, otherwise false.
+	isChrome: function() {
+		return this.fIsChrome;
+	},
+
+	//:m:*:isIExplorer
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Internet Explorer" ist.
+	//:d:en:Determines, if the used browser is a "Internet Explorer".
+	//:a:*::-
+	//:r:de::isIExplorer:Boolean:true, wenn der Browser Internet Explorer ist, andernfalls false.
+	//:r:en::isIExplorer:Boolean:true, if Browser is Internet Explorer, otherwise false.
+	isIExplorer: function() {
+		return this.fIsIExplorer;
+	},
+
+	isIE_LE6: function() {
+		return( this.isIExplorer() && this.getBrowserVersion() < 7 );
+	},
+
+	isIE_LE7: function() {
+		return( this.isIExplorer() && this.getBrowserVersion() < 8 );
+	},
+
+	isIE_GE8: function() {
+		return( this.isIExplorer() && this.getBrowserVersion() >= 8 );
+	},
+
+	//:m:*:isSafari
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Safari" ist.
+	//:d:en:Determines, if the used browser is a "Safari".
+	//:a:*::-
+	//:r:de::isSafari:Boolean:true, wenn der Browser Safari ist, andernfalls false.
+	//:r:en::isSafari:Boolean:true, if Browser is Safari, otherwise false.
+	isSafari: function() {
+		return this.fIsSafari;
+	},
+
+	//:m:*:isNetscape
+	//:d:de:Ermittelt, ob der verwendete Browser von Typ "Netscape" ist.
+	//:d:en:Determines, if the used browser is a "Netscape".
+	//:a:*::-
+	//:r:de:::Boolean:true, wenn der Browser Netscape ist, andernfalls false.
+	//:r:en:::Boolean:true, if Browser is Netscape, otherwise false.
+	isNetscape: function() {
+		return this.fIsNetscape;
+	},
+
+	//:m:de:isPocketIE
+	//:d:de:...
+	//:d:en:...
+	//:a:*::-
+	//:r:de::isPocketIE:Boolean:true, wenn der Browser Pocket Internet Explorer ist, andernfalls false.
+	//:r:en::isPocketIE:Boolean:true, if Browser is Pocket Internet Explorer, otherwise false.
+	isPocketIE: function() {
+		return this.fIsPocketIE;
+	}
 
 };
+
+
+//i:en:Browser detection (embedded into a function to not polute global namespace...
+(function() {
+
+	jws.fBrowserName	= "unknown";
+	jws.fBrowserType	= jws.BT_UNKNOWN;
+	jws.fBrowserVerNo	= undefined;
+
+	jws.fIsIExplorer	= false;
+	jws.fIsFirefox		= false;
+	jws.fIsNetscape		= false;
+	jws.fIsOpera		= false;
+	jws.fIsSafari		= false;
+	jws.fIsChrome		= false;
+
+	var lUA = navigator.userAgent;
+
+	//:i:en:First evaluate name of the browser
+	jws.fIsChrome = lUA.indexOf( "Chrome" ) >= 0;
+	if( jws.fIsChrome ) {
+		jws.fBrowserType = jws.BT_CHROME;
+	} else {
+		jws.fIsSafari = lUA.indexOf( "Safari" ) >= 0;
+		if( jws.fIsSafari ) {
+			jws.fBrowserType = jws.BT_SAFARI;
+		}
+		else {
+			jws.fIsNetscape = lUA.indexOf( "Netscape" ) >= 0;
+			if( jws.fIsNetscape ) {
+				jws.fBrowserType = jws.BT_NETSCAPE;
+			} else {
+				jws.fIsFirefox = navigator.appName == "Netscape";
+				if( jws.fIsFirefox ) {
+					jws.fBrowserType = jws.BT_FIREFOX;
+				} else {
+					jws.fIsOpera = navigator.appName == "Opera";
+					if( jws.fIsOpera ) {
+						jws.fBrowserType = jws.BT_OPERA;
+					} else {
+						jws.fIsIExplorer = navigator.appName == "Microsoft Internet Explorer";
+						if( jws.fIsIExplorer ) {
+							jws.fBrowserType = jws.BT_IEXPLORER;
+						} else {
+							jws.fIsPocketIE = navigator.appName == "Microsoft Pocket Internet Explorer";
+							if( jws.fIsPocketIE ) {
+								jws.fBrowserType = jws.BT_IEXPLORER;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	var p, i;
+	var lStr;
+	var lFound;
+	var lVersion;
+
+	if( jws.fIsIExplorer ) {
+		//:i:de:Beispiel f&uuml;r userAgent bei IE6:
+		//:i:de:"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)"
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_IEXPLORER ];
+		lVersion = lUA.match( /MSIE.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 5 );
+			p = lStr.indexOf( ";" );
+			jws.fBrowserVerStr = p > 0 ? lStr.substr( 0, p ) : lStr;
+			jws.fBrowserVerNo = parseFloat( jws.fBrowserVerStr );
+		}
+	} else if( jws.fIsFirefox ) {
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_FIREFOX ];
+		//:i:de:Beispiel f&uuml;r userAgent bei FF 2.0.0.11:
+		//:i:de:"Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11"
+		lVersion = lUA.match( /Firefox\/.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 8 );
+			p = lStr.indexOf( " " );
+			if( p > 0 ) {
+				jws.fBrowserVerStr = lStr.substring( 0, p );
+			} else	{
+				jws.fBrowserVerStr = lStr;
+			}
+			lFound = 0;
+			i = 0;
+			while( i < lStr.length ) {
+				if( lStr.charAt( i ) == '.' ) {
+					lFound++;
+				}
+				if( lFound >= 2 ) {
+					break;
+				}
+				i++;
+			}
+			lStr = lStr.substring( 0, i );
+			jws.fBrowserVerNo = parseFloat( lStr );
+		}
+	}
+	else if( jws.fIsNetscape ) {
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_NETSCAPE ];
+		//:i:de:Beispiel f&uuml;r userAgent bei FF 2.0.0.11:
+		//:i:de:"Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11"
+		lVersion = lUA.match( /Netscape\/.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 9 );
+			p = lStr.indexOf( " " );
+			if( p > 0 ) {
+				jws.fBrowserVerStr = lStr.substring( 0, p );
+			} else {
+				jws.fBrowserVerStr = lStr;
+			}
+			lFound = 0;
+			i = 0;
+			while( i < lStr.length ) {
+				if( lStr.charAt( i ) == '.' ) {
+					lFound++;
+				}
+				if( lFound >= 2 ) {
+					break;
+				}
+				i++;
+			}
+			lStr = lStr.substring( 0, i );
+			jws.fBrowserVerNo = parseFloat( lStr );
+		}
+	} else if( jws.fIsOpera ) {
+		//:i:de:Beispiel f&uuml;r userAgent bei Opera 9.24
+		//:i:de:Opera/9.24 (Windows NT 5.1; U; en)
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_OPERA ];
+		lVersion = lUA.match( /Opera\/.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 6 );
+			p = lStr.indexOf( " " );
+			jws.fBrowserVerStr = p > 0 ? lStr.substr( 0, p ) : lStr;
+			jws.fBrowserVerNo = parseFloat( lStr );
+			// since 10.0 opera provides a separate "version" field
+			lVersion = lUA.match( /Version\/.*/i );
+			lStr = lVersion[ 0 ].substr( 8 );
+			if ( lVersion ) {
+				p = lStr.indexOf( " " );
+				jws.fBrowserVerStr = ( p > 0 ? lStr.substr( 0, p ) : lStr ) + "/" + jws.fBrowserVerStr;
+				jws.fBrowserVerNo = parseFloat( lStr );
+			}
+		}
+	} else if( jws.fIsChrome ) {
+		//:i:de:Beispiel f&uuml;r userAgent bei Chrome 4.0.211.7
+		//:i:de:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.211.7 Safari/532.0
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_CHROME ];
+		lVersion = lUA.match( /Chrome\/.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 7 );
+			p = lStr.indexOf( " " );
+			jws.fBrowserVerStr = p > 0 ? lStr.substr( 0, p ) : lStr;
+			jws.fBrowserVerNo = parseFloat( lStr );
+		}
+	} else if( jws.fIsSafari ) {
+		jws.fBrowserName = jws.BROWSER_NAMES[ jws.BT_SAFARI ];
+		//:i:de:Beispiel f&uuml;r userAgent bei Safari 3.0.4 (523.15):
+		//:i:de:"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/523.15 (KHTML, like Gecko) Version/3.0 Safari/523.15"
+		lVersion = lUA.match( /Version\/.*/i );
+		if ( lVersion ) {
+			lStr = lVersion[ 0 ].substr( 8 );
+			p = lStr.indexOf( " " );
+			jws.fBrowserVerStr = p > 0 ? lStr.substr( 0, p ) : lStr;
+
+			lFound = 0;
+			i = 0;
+			while( i < lStr.length ) {
+				if( lStr.charAt( i ) == '.' ) {
+					lFound++;
+				}
+				if( lFound >= 2 ) {
+					break;
+				}
+				i++;
+			}
+			lStr = lStr.substring( 0, i );
+			jws.fBrowserVerNo = parseFloat( lStr );
+
+			lVersion = lUA.match( /Safari\/.*/i );
+			if ( lVersion ) {
+				lStr = "." + lVersion[ 0 ].substr( 7 );
+				p = lStr.indexOf( " " );
+				jws.fBrowserVerStr += p > 0 ? lStr.substr( 0, p ) : lStr;
+			}
+		}
+	}
+}());
+
 
 
 //:package:*:jws.events
@@ -457,17 +843,24 @@ jws.tools = {
 		var lAbsTZO = Math.abs( lTZO );
 		var lRes =
 			aDate.getUTCFullYear()
+			+ "-"
 			+ this.zerofill( aDate.getUTCMonth() + 1, 2 )
+			+ "-"
 			+ this.zerofill( aDate.getUTCDate(), 2 )
 			// use time separator
-			+ "T" +
+			+ "T"
 			+ this.zerofill( aDate.getUTCHours(), 2 )
+			+ ":"
 			+ this.zerofill( aDate.getUTCMinutes(), 2 )
+			+ ":"
 			+ this.zerofill( aDate.getUTCSeconds(), 2 )
-			+ this.zerofill( aDate.getUTCMilliseconds(), 2 )
+			+ "."
+			+ this.zerofill( aDate.getUTCMilliseconds(), 3 )
+			/*
 			+ ( lTZO >= 0 ? "+" : "-" )
 			+ this.zerofill( lAbsTZO / 60, 2 )
 			+ this.zerofill( lAbsTZO % 60, 2 )
+			*/
 			// trailing Z means it's UTC
 			+ "Z";
 		return lRes;
@@ -477,14 +870,40 @@ jws.tools = {
 		var lDate = new Date();
 		// date part
 		lDate.setUTCFullYear( aISO.substr( 0, 4 ) );
+		lDate.setUTCMonth( aISO.substr( 5, 2 ) - 1 );
+		lDate.setUTCDate( aISO.substr( 8, 2 ) );
+		// time
+		lDate.setUTCHours( aISO.substr( 11, 2 ) );
+		lDate.setUTCMinutes( aISO.substr( 14, 2 ) );
+		lDate.setUTCSeconds( aISO.substr( 17, 2 ) );
+		lDate.setUTCMilliseconds( aISO.substr( 20, 3 ) );
+		//:TODO:en:Analyze timezone
+		return lDate;
+	},
+
+	date2String: function( aDate ) {
+		var lRes =
+			aDate.getUTCFullYear()
+			+ this.zerofill( aDate.getUTCMonth() + 1, 2 )
+			+ this.zerofill( aDate.getUTCDate(), 2 )
+			+ this.zerofill( aDate.getUTCHours(), 2 )
+			+ this.zerofill( aDate.getUTCMinutes(), 2 )
+			+ this.zerofill( aDate.getUTCSeconds(), 2 )
+			+ this.zerofill( aDate.getUTCMilliseconds(), 2 )
+		return lRes;
+	},
+
+	string2Date: function( aISO ) {
+		var lDate = new Date();
+		// date part
+		lDate.setUTCFullYear( aISO.substr( 0, 4 ) );
 		lDate.setUTCMonth( aISO.substr( 4, 2 ) - 1 );
 		lDate.setUTCDate( aISO.substr( 6, 2 ) );
 		// time
-		lDate.setUTCHours( aISO.substr( 9, 2 ) );
-		lDate.setUTCMinutes( aISO.substr( 11, 2 ) );
-		lDate.setUTCSeconds( aISO.substr( 13, 2 ) );
-		lDate.setUTCMilliseconds( aISO.substr( 15, 3 ) );
-		//:TODO:en:Analyze timezone
+		lDate.setUTCHours( aISO.substr( 8, 2 ) );
+		lDate.setUTCMinutes( aISO.substr( 10, 2 ) );
+		lDate.setUTCSeconds( aISO.substr( 12, 2 ) );
+		lDate.setUTCMilliseconds( aISO.substr( 14, 3 ) );
 		return lDate;
 	},
 
@@ -835,15 +1254,18 @@ jws.oop = {};
 // implement simple class declaration to support multi-level inheritance
 // and easy 'inherited' calls (super-calls) in JavaScript
 jws.oop.declareClass = function( aNamespace, aClassname, aAncestor, aFields ) {
+
 	var lNS = self[ aNamespace ];
 	if( !lNS ) {
-		self[ aNamespace ] = { };
+		self[ aNamespace ] = {};
 	}
+
 	var lConstructor = function() {
 		if( this.create ) {
 			this.create.apply( this, arguments );
 		}
 	};
+
 	// publish the new class in the given name space
 	lNS[ aClassname ] = lConstructor;
 
@@ -918,6 +1340,13 @@ jws.oop.addPlugIn = function( aClass, aPlugIn ) {
 
 jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 
+	create: function( aOptions ) {
+		// turn off connection reliability by default
+		if( !this.fReliabilityOptions ) {
+			this.fReliabilityOptions = jws.RO_OFF;
+		}
+	},
+
 	//:m:*:processOpened
 	//:d:en:Called when the WebSocket connection successfully was established. _
 	//:d:en:Can to be overwritten in descendant classes to process _
@@ -974,19 +1403,37 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 				if( aOptions.subProtocol ) {
 					lSubProt = aOptions.subProtocol;
 				}
-				// console.log("Opening with sub-prot: " + lSubProt)
+				// check if connection reliability is desired
+				if( aOptions.reliabilityOptions ) {
+					this.fReliabilityOptions = aOptions.reliabilityOptions;
+				}
+				// turn off isExplicitClose flag
+				// to allow optional reconnect
+				if( this.fReliabilityOptions ) {
+					this.fReliabilityOptions.isExplicitClose = false;
+				}
 
+				// maintain own status flag
+				if( this.fStatus != jws.RECONNECTING ) {
+					this.fStatus = jws.CONNECTING;
+				}
 				// create a new web socket instance
 				this.fConn = new WebSocket( aURL, lSubProt );
+				// save URL and sub prot for optional re-connect
+				this.fURL = aURL;
+				this.fSubProt = lSubProt;
 
 				// assign the listeners to local functions (closure) to allow
 				// to handle event before and after the application
 				this.fConn.onopen = function( aEvent ) {
+					lThis.fStatus = jws.OPEN;
 					lValue = lThis.processOpened( aEvent );
 					// give application change to handle event
 					if( aOptions.OnOpen ) {
 						aOptions.OnOpen( aEvent, lValue, lThis );
 					}
+					// process outgoing queue
+					lThis.processQueue();
 				};
 
 				this.fConn.onmessage = function( aEvent ) {
@@ -998,6 +1445,7 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 				};
 
 				this.fConn.onclose = function( aEvent ) {
+					lThis.fStatus = jws.CLOSED;
 					// check if still disconnect timeout active and clear if needed
 					if( lThis.hDisconnectTimeout ) {
 						clearTimeout( lThis.hDisconnectTimeout );
@@ -1009,6 +1457,25 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 						aOptions.OnClose( aEvent, lValue, lThis );
 					}
 					lThis.fConn = null;
+
+					// connection was closed,
+					// check if auto-reconnect was configured
+					if( lThis.fReliabilityOptions
+						&& lThis.fReliabilityOptions.autoReconnect
+						&& !lThis.fReliabilityOptions.isExplicitClose ) {
+
+						lThis.fStatus = jws.RECONNECTING;
+
+						lThis.hReconnectDelayTimeout = setTimeout(
+							function() {
+								if( aOptions.OnReconnecting ) {
+									aOptions.OnReconnecting( aEvent, lValue, lThis );
+								}
+								lThis.open( lThis.fURL, aOptions );
+							},
+							lThis.fReliabilityOptions.reconnectDelay
+						);
+					}
 				};
 
 			} else {
@@ -1033,13 +1500,16 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 	//:a:en::::-
 	//:r:*:::void:none
 	processQueue: function() {
-		if( this.mQueue ) {
+		// is there a queue at all?
+		if( this.fOutQueue ) {
 			var lRes = this.checkConnected();
 			if( lRes.code == 0 ) {
-				var lPacket;
-				while( this.mQueue.length > 0 ) {
+				var lItem;
+				while( this.fOutQueue.length > 0 ) {
 					// get first element of the queue
-					lPacket = this.mQueue[ 0 ];
+					lItem = this.fOutQueue.shift();
+					// and send it to the server
+					this.fConn.send( lItem.packet );
 				}
 			}
 		}
@@ -1054,14 +1524,13 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 	//:a:en:aOptions:OnResponse:Function:Reference to callback function, which is called when the response is received.
 	//:r:*:::void:none
 	queuePacket: function( aPacket, aOptions ) {
-		if( !this.mQueue ) {
-			this.mQueue = [];
+		if( !this.fOutQueue ) {
+			this.fOutQueue = [];
 		}
-		this.mQueue.push({
+		this.fOutQueue.push({
 			packet: aPacket,
 			options: aOptions
 		});
-		this.processQueue();
 	},
 
 	//:m:*:sendStream
@@ -1071,17 +1540,124 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 	//:r:*:::void:none
 	sendStream: function( aData ) {
 		// is client already connected
-		if( this.isConnected() ) {
+		if( this.isOpened() ) {
 			try {
 				this.fConn.send( aData );
 			} catch( lEx ) {
 				// this is never fired !
 				// console.log( "Could not send!" );
 			}
-		// if not raise exception
 		} else {
-			throw new Error( "Not connected" );
+			if( this.isWriteable() ) {
+				this.queuePacket( aData, null );
+			} else {
+				// if not raise exception
+				throw new Error( "Not connected" );
+			}
 		}
+	},
+
+	//:m:*:abortReconnect
+	//:d:en:Aborts a pending automatic re-connection, if such.
+	//:a:en::::none
+	//:r:*:::boolean:[tt]true[/tt], if re-connect was pending, [tt]false[/tt] if nothing to abort.
+	abortReconnect: function() {
+		// in case connection could be established
+		// reset the re-connect interval.
+		if( this.hReconnectDelayTimeout ) {
+			clearTimeout( this.hReconnectDelayTimeout );
+			this.hReconnectDelayTimeout = null;
+			return true;
+		}
+		return false;
+	},
+
+	//:m:*:setAutoReconnect
+	//:d:en:Specifies whether to automatically re-connect in case of _
+	//:d:en:connection loss.
+	//:a:en::aAutoReconnect:Boolean:[tt]true[/tt] if auto-reconnect is desired, otherwise [tt]false[/tt].
+	//:r:*:::void:none
+	setAutoReconnect: function( aAutoReconnect ) {
+		if( aAutoReconnect && typeof( aLimit ) == "boolean" ) {
+			this.fReliabilityOptions.autoReconnect = aAutoReconnect;
+		} else {
+			this.fReliabilityOptions.autoReconnect = false;
+		}
+		// if no auto-reconnect is desired, abort a pending re-connect, if such.
+		if( !( this.fReliabilityOptions && this.fReliabilityOptions.autoReconnect ) ) {
+			abortReconnect();
+		}
+	},
+
+	//:m:*:setQueueItemLimit
+	//:d:en:Specifies the maximum number of allowed queue items. If a zero or _
+	//:d:en:negative number is passed the number of items is not checked. _
+	//:d:en:If the limit is exceeded the OnBufferOverflow event is fired.
+	//:a:en::aLimit:Integer:Maximum of allowed messages in the queue.
+	//:r:*:::void:none
+	setQueueItemLimit: function( aLimit ) {
+		if( aLimit && typeof( aLimit ) == "number" && aLimit > 0 ) {
+			this.fReliabilityOptions.queueItemLimit = parseInt( aLimit );
+		} else {
+			this.fReliabilityOptions.queueItemLimit = 0;
+		}
+	},
+
+	//:m:*:setQueueSizeLimit
+	//:d:en:Specifies the maximum size in bytes allowed for the queue. If a zero or _
+	//:d:en:negative number is passed the size of the queue is not checked. _
+	//:d:en:If the limit is exceeded the OnBufferOverflow event is fired.
+	//:a:en::aLimit:Integer:Maximum size of the queue in bytes.
+	//:r:*:::void:none
+	setQueueSizeLimit: function( aLimit ) {
+		if( aLimit && typeof( aLimit ) == "number" && aLimit > 0 ) {
+			this.fReliabilityOptions.queueSizeLimit = parseInt( aLimit );
+		} else {
+			this.fReliabilityOptions.queueSizeLimit = 0;
+		}
+	},
+
+	//:m:*:setReliabilityOptions
+	//:d:en:Specifies how the connection is management (null = no management) is done.
+	//:a:en::aOptions:Object:The various connection management options.
+	//:r:*:::void:none
+	setReliabilityOptions: function( aOptions ) {
+		this.fReliabilityOptions = aOptions;
+		// if no auto-reconnect is desired, abort a pending re-connect, if such.
+		// if no auto-reconnect is desired, abort a pending re-connect, if such.
+		if( this.fReliabilityOptions ) {
+			if( this.fReliabilityOptions.autoReconnect ) {
+				//:todo:en:here we could think about establishing the connection
+				// but this would required to pass all args for open!
+			} else {
+				abortReconnect();
+			}
+		}
+	},
+
+	//:m:*:getReliabilityOptions
+	//:d:en:Returns how the connection is management (null = no management) is done.
+	//:a:en::aOptions:Object:The various connection management options.
+	//:r:*:::void:none
+	getReliabilityOptions: function() {
+		return this.fReliabilityOptions;
+	},
+
+	//:m:*:getOutQueue
+	//:d:en:Returns the outgoing message queue.
+	//:a:en::::none
+	//:r:*:::Array:The outgoing message queue, if such, otherwise [tt]undefined[/tt] or [tt]null[/tt].
+	getOutQueue: function() {
+		return this.fOutQueue;
+	},
+
+	//:m:*:resetSendQueue
+	//:d:en:resets the send queue by simply deleting the queue field _
+	//:d:en:of the connection.
+	//:a:en::::none
+	//:r:*:::void:none
+	resetSendQueue: function() {
+		delete this.fOutQueue;
 	},
 
 	//:m:*:isOpened
@@ -1089,9 +1665,37 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 	//:a:en::::none
 	//:r:*:::boolean:[tt]true[/tt] if the WebSocket connection is up otherwise [tt]false[/tt].
 	isOpened: function() {
-		return( this.fConn != undefined
+		return(
+			this.fConn != undefined
 			&& this.fConn != null
-			&& this.fConn.readyState == jws.OPEN );
+			&& this.fConn.readyState == jws.OPEN
+		);
+	},
+
+	//:m:*:getURL
+	//:d:en:Returns the URL if the WebSocket connection opened up, otherwise [tt]null[/tt].
+	//:a:en::::none
+	//:r:*:::String:the URL if the WebSocket connection opened up, otherwise [tt]null[/tt].
+	getURL: function() {
+		return this.fURL;
+		/*
+		return(
+			this.fConn != undefined
+			&& this.fConn != null
+			&& this.fConn.readyState == jws.OPEN
+			? this.fURL
+			: null
+		);
+		*/
+	},
+
+	//:m:*:getSubProt
+	//:d:en:Returns the selected sub protocol when the WebSocket connection
+	//:d:en:was opened, otherwise [tt]null[/tt].
+	//:a:en::::none
+	//:r:*:::String:the URL if the WebSocket connection opened up, otherwise [tt]null[/tt].
+	getSubProt: function() {
+		return this.fSubProt;
 	},
 
 	//:m:*:isConnected
@@ -1113,6 +1717,11 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 		// if client closes usually no event is fired
 		// here you optionally can fire it if required in your app!
 		var lFireClose = false;
+		// turn on isExplicitClose flag to not auto re-connect in case
+		// of an explicit, i.e. desired client side close operation
+		if( this.fReliabilityOptions ) {
+			this.fReliabilityOptions.isExplicitClose = true;
+		}
 		if( aOptions ) {
 			if( aOptions.fireClose && this.fConn.onclose ) {
 				// TODO: Adjust to event fields
@@ -1213,8 +1822,9 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 		}
 		// add the plug-in to the class
 		this.fPlugIns.push( aPlugIn );
-
-		var lField;
+/*
+ 		 var lField;
+ */
 		if( !aId ) {
 			aId = aPlugIn.ID;
 		}
@@ -1257,6 +1867,8 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 	//:a:en::::none
 	//:r:*:::void:none
 	create: function( aOptions ) {
+		// call inherited create
+		arguments.callee.inherited.call( this, aOptions );
 		this.fRequestCallbacks = {};
 	},
 
@@ -1288,7 +1900,8 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 				// thus reset the timeout observer
 				clearTimeout( lClbkRec.hCleanUp );
 			}
-			lClbkRec.callback.OnResponse( aToken );
+			var lArgs = lClbkRec.args;
+			lClbkRec.callback.OnResponse( aToken, lArgs );
 			delete this.fRequestCallbacks[ lField ];
 		}
 	},
@@ -1320,10 +1933,42 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 	//:r:*:::void:none
 	checkConnected: function() {
 		var lRes = this.createDefaultResult();
-		if( !this.isConnected() ) {
+		if( !this.isOpened() ) {
 			lRes.code = -1;
 			lRes.localeKey = "jws.jsc.res.notConnected";
 			lRes.msg = "Not connected.";
+		}
+		return lRes;
+	},
+
+	//:m:*:isWriteable
+	//:d:en:Checks if the client currently is able to process send commands. _
+	//:d:en:In case the connection-reliability option in turned on the _
+	//:d:en:write queue is used to buffer outgoing packets. The queue may be _
+	//:d:en:in number of items as as well as in size and time.
+	//:a:en::::none
+	//:r:*:::void:none
+	isWriteable: function() {
+		return(
+			this.isOpened() || this.fStatus == jws.RECONNECTING
+		);
+	},
+
+	//:m:*:checkWriteable
+	//:d:en:Checks if the client is connected and if so returns a default _
+	//:d:en:response token (please refer to [tt]createDefaultResult[/tt] _
+	//:d:en:method. If the client is not connected an error token is returned _
+	//:d:en:with [tt]code = -1[/tt] and [tt]msg = "Not connected"[/tt]. _
+	//:d:en:This is a convenience method if a function needs to check if _
+	//:d:en:the client is connected and return an error token if not.
+	//:a:en::::none
+	//:r:*:::void:none
+	checkWriteable: function() {
+		var lRes = this.createDefaultResult();
+		if( !this.isWriteable() ) {
+			lRes.code = -1;
+			lRes.localeKey = "jws.jsc.res.notWriteable";
+			lRes.msg = "Not writable.";
 		}
 		return lRes;
 	},
@@ -1486,6 +2131,27 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 				if( this.fOnWelcome ) {
 					this.fOnWelcome( aToken );
 				}
+				var lFlashBridgeVer = "n/a";
+				if( swfobject) {
+					var lInfo = swfobject.getFlashPlayerVersion();
+					lFlashBridgeVer = lInfo.major + "." + lInfo.minor + "." + lInfo.release;
+				}
+				this.sendToken({
+					ns: jws.SystemClientPlugIn.NS,
+					type: "header",
+					clientType: "browser",
+					clientName: jws.getBrowserName(),
+					clientVersion: jws.getBrowserVersionString(),
+					clientInfo: navigator.userAgent,
+					jwsType: "javascript",
+					jwsVersion: jws.VERSION,
+					jwsInfo:
+						jws.browserSupportsNativeWebSockets
+							? "native"
+							: "flash " + lFlashBridgeVer
+					}, {
+					}
+				);
 			} else if( aToken.type == "goodBye" ) {
 				// fire OnGoodBye Event if assigned
 				if( this.fOnGoodBye ) {
@@ -1620,11 +2286,12 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 	//:a:en:aOptions:OnResponse:Function:Reference to callback function, which is called when the response is received.
 	//:r:*:::void:none
 	sendToken: function( aToken, aOptions ) {
-		var lRes = this.checkConnected();
+		var lRes = this.checkWriteable();
 		if( lRes.code == 0 ) {
 			var lSpawnThread = false;
 			var lL2FragmSize = 0;
 			var lTimeout = jws.DEF_RESP_TIMEOUT;
+			var lArgs = null;
 			var lCallbacks = {
 				OnResponse: null,
 				OnSuccess: null,
@@ -1651,6 +2318,9 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 					lCallbacks.OnTimeout = aOptions.OnTimeout;
 					lControlResponse = true;
 				}
+				if( aOptions.args ) {
+					lArgs = aOptions.args;
+				}
 				if( aOptions.timeout ) {
 					lTimeout = aOptions.timeout;
 				}
@@ -1669,6 +2339,7 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 				var lClbkRec = {
 					request: new Date().getTime(),
 					callback: lCallbacks,
+					args: lArgs,
 					timeout: lTimeout
 				};
 				this.fRequestCallbacks[ lClbkId ] = lClbkRec;
@@ -1808,7 +2479,7 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 	//:a:en::aData:String:An arbitrary string to be returned by the server.
 	//:r:*:::void:none
 	echo: function( aData ) {
-		var lRes = this.checkConnected();
+		var lRes = this.checkWriteable();
 		if( lRes.code == 0 ) {
 			this.sendToken({
 				ns: jws.NS_SYSTEM,
@@ -1871,6 +2542,12 @@ jws.oop.declareClass( "jws", "jWebSocketTokenClient", jws.jWebSocketBaseClient, 
 		var lNoGoodBye = false;
 		var lNoLogoutBroadcast = false;
 		var lNoDisconnectBroadcast = false;
+
+		// turn on isExplicitClose flag to not auto re-connect in case
+		// of an explicit, i.e. desired client side close operation
+		if( this.fReliabilityOptions ) {
+			this.fReliabilityOptions.isExplicitClose = true;
+		}
 
 		if( aOptions ) {
 			if( aOptions.timeout ) {
@@ -1961,6 +2638,17 @@ jws.SystemClientPlugIn = {
 	//:d:en:For [tt]getClients[/tt] method: Returns all non-authenticated clients only.
 	NON_AUTHENTICATED: 2,
 
+	//:const:*:PW_PLAIN:Number:null
+	//:d:en:Use no password encoding, password is passed as plain text.
+	PW_PLAIN		: null,
+	//:const:*:PW_ENCODE_MD5:Number:1
+	//:d:en:Use MD5 password encoding, password is given as plain but converted and passed as a MD5 hash.
+	PW_ENCODE_MD5	: 1,
+	//:const:*:PW_MD5_ENCODED:Number:2
+	//:d:en:Use MD5 password encoding, password is given and passed as a MD5 hash. _
+	//:d:en:The method relies on the correct encoding and does not check the hash.
+	PW_MD5_ENCODED	: 2,
+
 	//:m:*:login
 	//:d:en:Tries to authenticate the client against the jWebSocket Server by _
 	//:d:en:sending a [tt]login[/tt] token.
@@ -1972,35 +2660,42 @@ jws.SystemClientPlugIn = {
 	//:r:*:::void:none
 	login: function( aUsername, aPassword, aOptions ) {
 		var lPool = null;
-		var lAutoConnect = false;
+		var lEncoding = null;
 		if( aOptions ) {
 			if( aOptions.pool !== undefined ) {
 				lPool = aOptions.pool;
 			}
-			if( aOptions.autoConnect !== undefined ) {
-				lAutoConnect = aOptions.autoConnect;
+			if( aOptions.encoding !== undefined ) {
+				lEncoding = aOptions.encoding;
+				// check if password has to be converted into a MD5 sum
+				if( jws.SystemClientPlugIn.PW_ENCODE_MD5 == lEncoding ) {
+					if( aPassword ) {
+						aPassword = jws.tools.calcMD5( aPassword );
+					}
+					lEncoding = "md5";
+				// check if password is already md5 encoded
+				} else if( jws.SystemClientPlugIn.PW_MD5_ENCODED == lEncoding ) {
+					lEncoding = "md5";
+				} else {
+					// TODO: raise error here due to invalid encoding option
+					lEncoding = null;
+				}
 			}
 		}
 		var lRes = this.createDefaultResult();
-		if( this.isConnected() ) {
+		if( this.isOpened() ) {
 			this.sendToken({
 				ns: jws.SystemClientPlugIn.NS,
 				type: "login",
 				username: aUsername,
 				password: aPassword,
+				encoding: lEncoding,
 				pool: lPool
 			});
 		} else {
-			if( lAutoConnect ) {
-				// TODO: Implement auto connect! Update documentation when done.
-				lRes.code = -1;
-				lRes.localeKey = "jws.jsc.res.notConnected";
-				lRes.msg = "Not connected.";
-			} else {
-				lRes.code = -1;
-				lRes.localeKey = "jws.jsc.res.notConnected";
-				lRes.msg = "Not connected.";
-			}
+			lRes.code = -1;
+			lRes.localeKey = "jws.jsc.res.notConnected";
+			lRes.msg = "Not connected.";
 		}
 		return lRes;
 	},
@@ -2027,8 +2722,8 @@ jws.SystemClientPlugIn = {
 			aOptions = {};
 		}
 		// if already connected, just send the login token
-		if( this.isConnected() ) {
-			this.login( aUsername, aPassword );
+		if( this.isOpened() ) {
+			this.login( aUsername, aPassword, aOptions );
 		} else {
 			var lAppOnWelcomeClBk = aOptions.OnWelcome;
 			var lThis = this;
@@ -2036,7 +2731,7 @@ jws.SystemClientPlugIn = {
 				if( lAppOnWelcomeClBk ) {
 					lAppOnWelcomeClBk.call( lThis, aEvent );
 				}
-				lThis.login( aUsername, aPassword );
+				lThis.login( aUsername, aPassword, aOptions );
 			};
 			this.open(
 				aURL,
@@ -2073,7 +2768,7 @@ jws.SystemClientPlugIn = {
 	//:a:en::::none
 	//:r:*:::Boolean:[tt]true[/tt] when the client is authenticated, otherwise [tt]false[/tt].
 	isLoggedIn: function() {
-		return( this.isConnected() && this.fUsername );
+		return( this.isOpened() && this.fUsername );
 	},
 
 	broadcastToken: function( aToken, aOptions ) {
@@ -2194,7 +2889,7 @@ jws.SystemClientPlugIn = {
 			}
 		}
 		var lRes = this.createDefaultResult();
-		if( this.isConnected() ) {
+		if( this.isOpened() ) {
 			this.sendToken({
 				ns: jws.SystemClientPlugIn.NS,
 				type: "ping",
@@ -2257,7 +2952,7 @@ jws.SystemClientPlugIn = {
 			stopKeepAlive();
 		}
 		// return if not (yet) connected
-		if( !this.isConnected() ) {
+		if( !this.isOpened() ) {
 			// TODO: provide reasonable result here!
 			return;
 		}
@@ -2285,7 +2980,7 @@ jws.SystemClientPlugIn = {
 		var lThis = this;
 		this.hKeepAlive = setInterval(
 			function() {
-				if( lThis.isConnected() ) {
+				if( lThis.isOpened() ) {
 					lThis.ping({
 						echo: lEcho
 					});

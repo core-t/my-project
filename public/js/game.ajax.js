@@ -1,10 +1,10 @@
 function sendNextTurn() {
     if(my.turn){
         lock = true;
-//         if(typeof socket == 'undefined') {
-//             alert('Socket disconnected!');
-//             return null;
-//         }
+        if(!lWSC.isLoggedIn()){
+            alert('Socket disconnected!');
+            return null;
+        }
         $.getJSON(urlNextTurn, function(result) {
             unselectArmy();
             if(typeof result.win != 'undefined' && result.win){
@@ -54,10 +54,10 @@ function sendMove(movesSpend) {
     if(movesSpend == 0) {
         return null;
     }
-//    if(typeof socket == 'undefined') {
-//        alert('Socket disconnected!');
-//        return null;
-//    }
+    if(!lWSC.isLoggedIn()){
+        alert('Socket disconnected!');
+        return null;
+    }
     unselectArmy();
     if(unselectedArmy.x == newX && unselectedArmy.y == newY) {
         return null;
@@ -267,6 +267,11 @@ function searchRuins(){
     }
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
+        if(result.gold){
+            console.log($('#gold').html());
+            goldUpdate(result.gold);
+            simpleM('You have found '+result.gold+' gold.');
+        }
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         selectArmy(players[my.color].armies['army'+result.armyId]);
         wsArmyAdd(selectedArmy.armyId);

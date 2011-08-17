@@ -122,5 +122,5 @@ function initGame(){
 }
 
 function goldUpdate(gold){
-    $('#gold').html('Gold: '+gold);
+    $('#gold').html(gold);
 }

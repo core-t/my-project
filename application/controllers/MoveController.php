@@ -89,10 +89,10 @@ class MoveController extends Warlords_Controller_Action
         foreach($castlesSchema as $castle) {
             $y = $castle['position']['y']/40;
             $x = $castle['position']['x']/40;
-            $this->fields[$y][$x] = 'r';
-            $this->fields[$y + 1][$x] = 'r';
-            $this->fields[$y][$x + 1] = 'r';
-            $this->fields[$y + 1][$x + 1] = 'r';
+            $this->fields[$y][$x] = 'c';
+            $this->fields[$y + 1][$x] = 'c';
+            $this->fields[$y][$x + 1] = 'c';
+            $this->fields[$y + 1][$x + 1] = 'c';
         }
 
         $this->path = array();
@@ -301,11 +301,7 @@ class MoveController extends Warlords_Controller_Action
             return $movesSpend;
         }
         $terrainType = $this->fields[$pfY][$pfX];
-//         if($terrainType == 'M' || $terrainType == 'w') {
-//             return 0;
-//         }
         $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
-//         var_dump($terrain);
         $this->path[] = array(
             'terrain' => $terrain[0],
             'cost' => $terrain[1],

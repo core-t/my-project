@@ -77,6 +77,22 @@ function turnM(){
     );
 }
 
+function simpleM(message){
+    removeM();
+    $('#nextTurn').after(
+        $('<div>')
+        .addClass('message')
+        .append($('<h3>').addClass('center').html(message))
+        .append(
+            $('<div>')
+            .addClass('button go')
+            .html('Ok')
+            .click(function(){removeM();})
+        )
+        .css('min-height','70px')
+    );
+}
+
 function disbandArmyM(){
     if(typeof selectedArmy == 'undefined'){
         return null;
