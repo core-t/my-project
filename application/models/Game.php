@@ -363,7 +363,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getTurn() {
         try {
             $select = $this->_db->select()
-                    ->from(array('a' => $this->_name), array('playerId' => 'turnPlayerId'))
+                    ->from(array('a' => $this->_name), array('nr' => 'turnNumber'))
                     ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
                     ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();

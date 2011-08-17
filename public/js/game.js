@@ -53,6 +53,7 @@ function turnOn() {
     $('#nextTurn').removeClass('buttonOff');
     $('#nextArmy').removeClass('buttonOff');
     showFirstCastle();
+    turnM();
 }
 
 function turnOff() {
