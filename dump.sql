@@ -206,7 +206,8 @@ CREATE TABLE hero (
     "armyId" integer,
     experience integer DEFAULT 0,
     "gameId" integer,
-    "movesLeft" integer NOT NULL
+    "movesLeft" integer NOT NULL,
+    name character varying(32)
 );
 
 
@@ -564,7 +565,7 @@ ALTER TABLE ONLY playersingame
 --
 
 ALTER TABLE ONLY ruin
-    ADD CONSTRAINT ruin_pkey PRIMARY KEY ("ruinId");
+    ADD CONSTRAINT ruin_pkey PRIMARY KEY ("gameId", "ruinId");
 
 
 --
