@@ -1,7 +1,8 @@
-<h1>Waiting for other players</h1>
+<h1>Waiting for other players...</h1>
 
 <p>Number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
-<h4>Players in game</h4>
+
+<h2>Players in game:</h2>
 <table id="playersingame">
     <th>Player Id</th>
 <?php
@@ -18,8 +19,8 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
 <script type="text/javascript">
     var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';
     var urlRefresh = '<?php echo $this->url(array('controller' => 'gameloadajax', 'action' => 'refresh', 'gameId' => null)) ?>';
-    var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
+    var game = <?php echo Zend_Json::encode($this->game); ?>;
     var ready = 0;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
-
+console.log(game);
 </script>

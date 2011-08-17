@@ -533,6 +533,14 @@ function getVectorLenth(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
 }
 
+function setCursorArrow(dir){
+    if(cursorDirection != dir){
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        cursorDirection = dir;
+//         console.log(cursorDirection);
+    }
+}
+
 function downRight(pfX, pfY) {
     var xLenthPixels = (newX - selectedArmy.x);
     var xLenthPoints = xLenthPixels/40;
@@ -580,10 +588,7 @@ function downRight(pfX, pfY) {
             movesSpend = m;
         }
     }
-    if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
-        cursorDirection = dir;
-    }
+    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -634,10 +639,7 @@ function topRight(pfX, pfY) {
             movesSpend = m;
         }
     }
-    if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
-        cursorDirection = dir;
-    }
+    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -688,10 +690,7 @@ function topLeft(pfX, pfY) {
             movesSpend = m;
         }
     }
-    if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
-        cursorDirection = dir;
-    }
+    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -742,10 +741,7 @@ function downLeft(pfX, pfY) {
             movesSpend = m;
         }
     }
-    if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
-        cursorDirection = dir;
-    }
+    setCursorArrow(dir);
     return movesSpend;
 }
 

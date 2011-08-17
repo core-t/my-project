@@ -68,6 +68,19 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
+    public function getAlivePlayers() {
+        try {
+            $select = $this->_db->select()
+                        ->from('playersingame', 'playerId')
+                        ->where('ready = true')
+                        ->where('lost = false')
+                        ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function startGame() {
         $data['isOpen'] = 'false';
         $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);

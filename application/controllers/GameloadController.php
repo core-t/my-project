@@ -29,6 +29,7 @@ class GameloadController extends Warlords_Controller_Action
             $this->view->colors = $modelGame->getAllColors();
             $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);
             $this->view->game = $modelGame->getGame(); // pobieram informację na temat gry
+            $this->view->game['alive'] = $modelGame->getAlivePlayers();
             $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
             $this->view->player = $this->_namespace->player;
         } else {
