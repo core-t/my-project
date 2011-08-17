@@ -52,9 +52,13 @@
           <actionMethod actionName="build"/>
           <actionMethod actionName="get"/>
         </controllerFile>
+        <controllerFile controllerName="Hero">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
+        <formFile formName="Hero"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>
@@ -130,6 +134,9 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Castle">
             <viewScriptFile forActionName="get"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Hero">
+            <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -207,6 +214,9 @@
             <testApplicationActionMethod forActionName="raze"/>
             <testApplicationActionMethod forActionName="build"/>
             <testApplicationActionMethod forActionName="get"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Hero">
+            <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

@@ -17,7 +17,7 @@ class TurnController extends Warlords_Controller_Action {
         }
         if ($modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
             $youWin = false;
-            $response = '';
+            $response = array();
             $nextPlayer = array(
                 'color' => $this->_namespace->player['color']
             );

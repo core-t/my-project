@@ -21,6 +21,8 @@ var nextArmy;
 
 var channel = 'publicA';
 
+var cursorDirection;
+
 $(document).ready(function() {
     zoomer = new zoom(758, 670);
     initWS()

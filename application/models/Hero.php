@@ -28,5 +28,11 @@ class Application_Model_Hero extends Warlords_Db_Table_Abstract
                 ->where('"playerId" = ?', $this->_playerId);
         return $this->_db->query($select)->fetchAll();
     }
+
+    public function changeHoroName($heroId, $name) {
+        $data['name'] = $name;
+        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $heroId);
+        return $this->_db->update($this->_name, $data, $where);
+    }
 }
 

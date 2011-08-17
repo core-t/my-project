@@ -36,6 +36,7 @@ class GameController extends Warlords_Controller_Action {
             $modelBoard = new Application_Model_Board();
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
             $startPositions = $modelBoard->getDefaultStartPositions();
             $players = $modelGame->getPlayersInGame();
             $this->view->players = array();
@@ -60,16 +61,20 @@ class GameController extends Warlords_Controller_Action {
             $castlesSchema = $modelBoard->getCastlesSchema();
             $razed = $modelCastle->getRazedCastles();
             $this->view->ruins = $modelBoard->getRuins();
+            $emptyRuins = $modelRuin->getVisited();
+            foreach($emptyRuins as $id=>$ruin){
+                $this->view->ruins[$id]['e'] = 1;
+            }
             $this->view->fields = $modelBoard->getBoardFields();
             foreach($castlesSchema as $id=>$castle){
                 if(!isset($razed[$id])){
                     $this->view->castlesSchema[$id] = $castle;
                     $y = $castle['position']['y']/40;
                     $x = $castle['position']['x']/40;
-                    $this->view->fields[$y][$x] = 'r';
-                    $this->view->fields[$y + 1][$x] = 'r';
-                    $this->view->fields[$y][$x + 1] = 'r';
-                    $this->view->fields[$y + 1][$x + 1] = 'r';
+                    $this->view->fields[$y][$x] = 'c';
+                    $this->view->fields[$y + 1][$x] = 'c';
+                    $this->view->fields[$y][$x + 1] = 'c';
+                    $this->view->fields[$y + 1][$x + 1] = 'c';
                 }
             }
             $this->view->colors = $modelGame->getAllColors();

@@ -62,6 +62,22 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         }
     }
 
+    public function getHeroIdByArmyIdPlayerId($armyId, $playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from('hero', 'heroId')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"' . $this->_primary . '" = ?', $armyId);
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset($result[0]['heroId'])){
+                return $result[0]['heroId'];
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     private function getArmyHeroes($armyId, $in = false) {
         try {
             $select = $this->_db->select()
@@ -666,6 +682,17 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
+    }
+
+    public function zeroHeroMovesLeft($armyId, $heroId, $playerId) {
+        $data = array(
+            'movesLeft' => 0
+        );
+        $where[] = $this->_db->quoteInto('"armyId" = ?', $armyId);
+        $where[] = $this->_db->quoteInto('"heroId" = ?', $heroId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        return $this->_db->update('hero', $data, $where);
     }
 }
 

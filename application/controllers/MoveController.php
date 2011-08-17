@@ -90,6 +90,8 @@ class MoveController extends Warlords_Controller_Action
             $y = $castle['position']['y']/40;
             $x = $castle['position']['x']/40;
             $this->fields[$y][$x] = 'r';
+            $this->fields[$y + 1][$x] = 'r';
+            $this->fields[$y][$x + 1] = 'r';
             $this->fields[$y + 1][$x + 1] = 'r';
         }
 

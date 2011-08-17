@@ -628,24 +628,24 @@ class Application_Model_Board {
 
     static public function getRuins() {
         $ruins = array();
-        $ruins[] = array('x' => 1360, 'y' => 2320);
-        $ruins[] = array('x' => 1480, 'y' => 2320);
-        $ruins[] = array('x' => 720, 'y' => 1840);
-        $ruins[] = array('x' => 960, 'y' => 1560);
-        $ruins[] = array('x' => 960, 'y' => 1400);
-        $ruins[] = array('x' => 440, 'y' => 1200);
-        $ruins[] = array('x' => 640, 'y' => 480);
-        $ruins[] = array('x' => 1520, 'y' => 240);
-        $ruins[] = array('x' => 1680, 'y' => 1240);
-        $ruins[] = array('x' => 2640, 'y' => 600);
-        $ruins[] = array('x' => 2760, 'y' => 1800);
-        $ruins[] = array('x' => 2960, 'y' => 2400);
-        $ruins[] = array('x' => 3080, 'y' => 1360);
-        $ruins[] = array('x' => 3280, 'y' => 1200);
-        $ruins[] = array('x' => 3480, 'y' => 1520);
-        $ruins[] = array('x' => 3760, 'y' => 1400);
-        $ruins[] = array('x' => 4200, 'y' => 1840);
-        $ruins[] = array('x' => 4000, 'y' => 880);
+        $ruins[0] = array('x' => 1360, 'y' => 2320);
+        $ruins[1] = array('x' => 1480, 'y' => 2320);
+        $ruins[2] = array('x' => 720, 'y' => 1840);
+        $ruins[3] = array('x' => 960, 'y' => 1560);
+        $ruins[4] = array('x' => 960, 'y' => 1400);
+        $ruins[5] = array('x' => 440, 'y' => 1200);
+        $ruins[6] = array('x' => 640, 'y' => 480);
+        $ruins[7] = array('x' => 1520, 'y' => 240);
+        $ruins[8] = array('x' => 1680, 'y' => 1240);
+        $ruins[9] = array('x' => 2640, 'y' => 600);
+        $ruins[10] = array('x' => 2760, 'y' => 1800);
+        $ruins[11] = array('x' => 2960, 'y' => 2400);
+        $ruins[12] = array('x' => 3080, 'y' => 1360);
+        $ruins[13] = array('x' => 3280, 'y' => 1200);
+        $ruins[14] = array('x' => 3480, 'y' => 1520);
+        $ruins[15] = array('x' => 3760, 'y' => 1400);
+        $ruins[16] = array('x' => 4200, 'y' => 1840);
+        $ruins[17] = array('x' => 4000, 'y' => 880);
         return $ruins;
     }
 
@@ -671,6 +671,20 @@ class Application_Model_Board {
                 } else {
                     $moves = 1;
                 }
+                break;
+            case 'b':
+                $text = 'Bridge';
+                if ($canSwim > 0) {
+                    $moves = 1;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 1;
+                }
+                break;
+            case 'c':
+                $text = 'Castle';
+                $moves = 1;
                 break;
             case 'w':
                 $text = 'Water';

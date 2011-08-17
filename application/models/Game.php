@@ -53,6 +53,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             $select1 = $this->_db->select()
                         ->from('playersingame', $this->_primary)
                         ->where('ready = true')
+                        ->where('lost = false')
                         ->where('"playerId" = ?', $playerId);
             $select2 = $this->_db->select()
                     ->from($this->_name)
@@ -332,7 +333,9 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $data['turnPlayerId'] = $playerId;
 
         if ($this->updateGame($data) == 1) {
-            return $data['turnNumber'];
+            if(isset($data['turnNumber'])){
+                return $data['turnNumber'];
+            }
         } else {
             throw new Exception('Błąd zapytania!');
         }

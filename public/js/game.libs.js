@@ -5,12 +5,18 @@ $(document)[0].oncontextmenu = function() {
 // *** RUINS ***
 
 function ruinCreate(ruinId){
+    var title;
+    if(typeof ruins[ruinId].e == 'undefined'){
+        title = 'Ruins';
+    }else{
+        title = 'Ruins (empty)';
+    }
     board.append(
         $('<div>')
         .addClass('ruin')
         .attr({
             id: 'ruin' + ruinId,
-            title: 'Ruins'
+            title: title
         })
         .css({
             left: ruins[ruinId].x + 'px',
@@ -534,41 +540,49 @@ function downRight(pfX, pfY) {
     var yLenthPoints = yLenthPixels/40;
     var movesSpend = 0;
     if(xLenthPixels < yLenthPixels) {
+        dir = 'se';
         for(i = 1; i <= xLenthPoints; i++) {
             pfX += 1;
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'se',movesSpend);
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+        dir = 's';
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'s',movesSpend);
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
     } else {
+        dir = 'se';
         for(i = 1; i <= yLenthPoints; i++) {
             pfX += 1;
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'se',movesSpend);
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+        dir = 'e';
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX += 1;
-            m = addPathDiv(pfX,pfY,'e',movesSpend);
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+    }
+    if(cursorDirection != dir){
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        cursorDirection = dir;
     }
     return movesSpend;
 }
@@ -583,7 +597,8 @@ function topRight(pfX, pfY) {
         for(i = 1; i <= xLenthPoints; i++) {
             pfX += 1;
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'ne',movesSpend);
+            dir = 'ne';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -591,7 +606,8 @@ function topRight(pfX, pfY) {
         }
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'n',movesSpend);
+            dir = 'n';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -601,7 +617,8 @@ function topRight(pfX, pfY) {
         for(i = 1; i <= yLenthPoints; i++) {
             pfX += 1;
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'ne',movesSpend);
+            dir = 'ne';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -609,12 +626,17 @@ function topRight(pfX, pfY) {
         }
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX += 1;
-            m = addPathDiv(pfX,pfY,'e',movesSpend);
+            dir = 'e';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+    }
+    if(cursorDirection != dir){
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        cursorDirection = dir;
     }
     return movesSpend;
 }
@@ -629,7 +651,8 @@ function topLeft(pfX, pfY) {
         for(i = 1; i <= xLenthPoints; i++) {
             pfX -= 1;
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'nw',movesSpend);
+            dir = 'nw';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -637,7 +660,8 @@ function topLeft(pfX, pfY) {
         }
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'n',movesSpend);
+            dir = 'n';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -647,7 +671,8 @@ function topLeft(pfX, pfY) {
         for(i = 1; i <= yLenthPoints; i++) {
             pfX -= 1;
             pfY -= 1;
-            m = addPathDiv(pfX,pfY,'nw',movesSpend);
+            dir = 'nw';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -655,12 +680,17 @@ function topLeft(pfX, pfY) {
         }
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX -= 1;
-            m = addPathDiv(pfX,pfY,'w',movesSpend);
+            dir = 'w';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+    }
+    if(cursorDirection != dir){
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        cursorDirection = dir;
     }
     return movesSpend;
 }
@@ -675,7 +705,8 @@ function downLeft(pfX, pfY) {
         for(i = 1; i <= xLenthPoints; i++) {
             pfX -= 1;
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'sw',movesSpend);
+            dir = 'sw';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -683,7 +714,8 @@ function downLeft(pfX, pfY) {
         }
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'s',movesSpend);
+            dir = 's';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -693,7 +725,8 @@ function downLeft(pfX, pfY) {
         for(i = 1; i <= yLenthPoints; i++) {
             pfX -= 1;
             pfY += 1;
-            m = addPathDiv(pfX,pfY,'sw',movesSpend);
+            dir = 'sw';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
@@ -701,12 +734,17 @@ function downLeft(pfX, pfY) {
         }
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX -= 1;
-            m = addPathDiv(pfX,pfY,'w',movesSpend);
+            dir = 'w';
+            m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
+    }
+    if(cursorDirection != dir){
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        cursorDirection = dir;
     }
     return movesSpend;
 }
@@ -716,9 +754,6 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
         return movesSpend;
     }
     var terrainType = fields[pfY][pfX];
-//     if(terrainType == 'M' || terrainType == 'w') {
-//         return 0;
-//     }
     pX = pfX*40;
     pY = pfY*40;
     var terrain = getTerrain(terrainType);
@@ -753,6 +788,20 @@ function getTerrain(type) {
             }else{
                 moves = 1;
             }
+            break;
+        case 'b':
+            text = 'Bridge';
+            if(selectedArmy.canSwim){
+                moves = 1;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 1;
+            }
+            break;
+        case 'c':
+            text = 'Castle';
+            moves = 1;
             break;
         case 'w':
             text = 'Water';

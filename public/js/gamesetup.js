@@ -31,9 +31,11 @@ function refresh() {
             }
             if(urlStart) {
                 if(numberOfPlayers <= playersReady) {
-                    $('#start').html('<a class="button" href="javascript:start()">Start game</a>');
+                    $('#start a').removeClass('buttonOff');
+                    start = 1;
                 } else {
-                    $('#start').html('Start game');
+                    $('#start a').addClass('buttonOff');
+                    start = 0;
                 }
             }
         }

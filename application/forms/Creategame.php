@@ -19,7 +19,7 @@ class Application_Form_Creategame extends Zend_Form {
              )
          )
         );
-        $this->addElement('submit', 'submit', array('label' => 'Stwórz grę'));
+        $this->addElement('submit', 'submit', array('label' => 'Create game'));
     }
 
 }

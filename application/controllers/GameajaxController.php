@@ -67,18 +67,28 @@ class GameajaxController extends Warlords_Controller_Action {
         $armyId = $this->_request->getParam('aid');
         if (!empty($armyId)) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $heroId = $modelArmy->getHeroIdByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+            if(empty($heroId)){
+                throw new Exception('Brak heroId. Tylko Hero może przeszukiwać ruiny!');
+            }
             $position = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
             $position = explode(',', substr($position['position'], 1 , -1));
             $ruinId = Application_Model_Board::confirmRuinPosition($position);
-            if($ruinId != null){
+            if($ruinId !== null){
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
                 if($modelRuin->ruinExists($ruinId)){
                     throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
                 $unitId = rand(11,15);
-                $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
+                $numerOfUnits = rand(1,3);
+                for($i = 0; $i < $numerOfUnits; $i++){
+                    $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
+                }
+                $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+            }else{
+                throw new Exception('Brak ruinId');
             }
         } else {
             throw new Exception('Brak "armyId"!');

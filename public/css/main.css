@@ -52,6 +52,14 @@ a {
     border:1px solid #555;
 }
 
+.buttonOff{
+    color:#000;
+    text-shadow: #fff 1px 1px;
+    background:#eee;
+    border:1px solid #555;
+    cursor:default;
+}
+
 .block {
     display:block;
     width:50px;

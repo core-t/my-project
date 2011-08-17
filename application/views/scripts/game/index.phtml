@@ -85,12 +85,16 @@
 
     $('#'+my.color+'Color').append('You');
     $('#'+turn.color+'Turn').html('Turn ' + turn.nr);
-    $('#connect').click(function(){login()});
     $('#nextTurn').click(function(){sendNextTurn()});
     $('#nextArmy').click(function(){findNextArmy()});
     $('#splitArmy').click(function(){splitArmyM()});
     $('#disbandArmy').click(function(){disbandArmyM()});
     $('#searchRuins').click(function(){searchRuins()});
+    $('#nextTurn').addClass('buttonOff');
+    $('#nextArmy').addClass('buttonOff');
+    $('#splitArmy').addClass('buttonOff');
+    $('#disbandArmy').addClass('buttonOff');
+    $('#searchRuins').addClass('buttonOff');
     goldUpdate(<?php echo $this->gold ?>);
 
 </script>

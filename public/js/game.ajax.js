@@ -7,7 +7,7 @@ function sendNextTurn() {
 //         }
         $.getJSON(urlNextTurn, function(result) {
             unselectArmy();
-            if(result.win){
+            if(typeof result.win != 'undefined' && result.win){
                 turnOff();
                 winM();
             }else{
