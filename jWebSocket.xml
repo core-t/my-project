@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Document   : jWebSocket.xml
+	Created on : March 18, 2010, 10:24 AM
+	Author     : aschulze, puran
+	Description: Configuration of the jWebSocket Server.
+	This includes engines, servers, plug-ins, filter, rights, roles and users
+	as well as logging.
+-->
+
+<!-- jWebSocket server configuration -->
+<jWebSocket>
+	<!--
+		installation can be prod or dev.
+		  'prod'- installation means all the classes will be loaded
+		   from the jars defined in this configuration file
+		  'dev' - installation means running directly from the source,
+		   all the jar files given are ignored.
+		   Default value if not specified would be 'prod'
+	-->
+	<installation>prod</installation>
+
+	<!--
+		define the protocol, default protocol if not specified is 'json'
+		possible values are [json|xml|csv]
+	-->
+	<protocol>json</protocol>
+
+	<!--
+		the unique ID of this instance within a jWebSocket cluster
+		can be left empty to run just a single stand-alone server
+		Preparation for pending cluster-plug-in
+	-->
+	<node_id>01</node_id>
+
+	<!-- Auto load required external libraries -->
+	<!--
+	<libraries>
+		<library>
+			<id>Third Party Demo</id>
+			<url>/etc/myjars/test.jar</url>
+			<description>n/a</description>
+		</library>
+	</libraries>
+	-->
+
+	<!-- jWebSocket logging configuration -->
+	<logging>
+		<log4j>
+			<!-- log4j appender, one of the following options [console|singlefile|rollingfile] -->
+			<appender>rollingfile</appender>
+			<!-- layout, please refer to http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n</pattern>
+			<!-- log-level, one of the following options: [all|debug|info|warn|error|fatal|off] -->
+			<level>debug</level>
+			<!-- filename, used only when appender != console -->
+			<filename>jWebSocket.log</filename>
+			<!-- controls write cache for logging -->
+			<buffered>true</buffered>
+			<!-- specifies the size of the write cache for logging -->
+			<buffersize>65536</buffersize>
+		</log4j>
+	</logging>
+
+	<!--
+		initializer class required only in 'dev' mode so that client application can register custom servers,
+		plugins at compile time for debugging capability to test custom plugins and servers without a need for
+		jar files
+	-->
+	<initializerClass>org.jwebsocket.factory.JWebSocketInitializer</initializerClass>
+
+	<!--
+		 Engines available for jWebSocket.
+		 ONLY THE TOPMOST ENGINE WILL BE INITIALIZED AND RUN.
+		 YOU CANNOT RUN MULTIPLE ENGINES AT A TIME.
+	-->
+	<!-- jWebSocket engine configuration -->
+	<engines>
+		<!-- TCP Engine Configuration -->
+		<engine>
+			<name>org.jwebsocket.tcp.TCPEngine</name>
+			<id>tcp0</id>
+			<jar>jWebSocketTCPEngine-1.0.jar</jar>
+			<port>443</port>
+			<sslport>9797</sslport>
+			<!-- keystore file with in %JWEBSOCKET_HOME%/conf -->
+			<keystore>jWebSocket.ks</keystore>
+			<!-- password to access keystore file -->
+			<password>jWebSocket</password>
+			<!-- CAUTION! -->
+			<!-- not all browsers automatically accept self-signed certificates -->
+			<!-- please follow instructions on the jWebSocket.org website, how
+			     to trust self-signed certificates for the various browsers or
+				 how to import signed private key/certificate bundles into the keystore -->
+
+			<!-- these domains are accepted by the engine listening on the above mentioned port -->
+			<domains>
+				<domain>jwebsocket.org</domain>
+				<domain>jwebsocket.com</domain>
+				<domain>localhost</domain>
+			</domains>
+			<!-- default session timeout 1h, max timeout currently 1 hour -->
+			<timeout>0</timeout>
+			<!--
+				maximum size of the data packet that the engine will read,
+				if the frame size is larger than this the connection will be closed.
+			-->
+			<maxframesize>1048840</maxframesize>
+		</engine>
+
+	</engines>
+
+	<!-- server types to be instantiated for jWebSocket -->
+	<servers>
+		<server>
+			<name>org.jwebsocket.server.TokenServer</name>
+			<id>ts0</id>
+			<jar>jWebSocketTokenServer-1.0.jar</jar>
+			<!-- define the thread pool properties. Thread are spawned when Token's spawnThread value is true
+			 Queue sizes and maximum pool sizes may be traded off for each other: Using large queues and small pools minimizes CPU usage, OS resources, and context-switching overhead, but can lead to artificially low throughput.
+			 If tasks frequently block (for example if they are I/O bound), a system may be able to schedule time for more threads than you otherwise allow.
+			 Use of small queues generally requires larger pool sizes, which keeps CPUs busier but may encounter unacceptable scheduling overhead, which also decreases throughput.
+			 -->
+			<threadPool>
+				<!--  number of thread that are "waiting" even if the queue is empty  -->
+				<corePoolSize>10</corePoolSize>
+				<!--  number maximum of thread that can be running at the same time -->
+				<maximumPoolSize>100</maximumPoolSize>
+				<!--  time before the desctruction of "free" threads (seconds) -->
+				<keepAliveTime>60</keepAliveTime>
+				<!--  size of the blocking queue. Connection will be refused if the queue is full and the poolsize is equals to the maximumPoolSize -->
+				<blockingQueueSize>1000</blockingQueueSize>
+			</threadPool>
+		</server>
+	</servers>
+
+	<!-- jWebSocket global rights -->
+	<rights>
+		<!-- configuration of system plug-in specific rights -->
+		<right>
+			<ns>org.jwebsocket.plugins.system</ns>
+			<id>broadcast</id>
+			<description>Broadcast message to all other clients.</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.system</ns>
+			<id>send</id>
+			<description>Send message to a single target client.</description>
+		</right>
+
+		<!-- Channel rights -->
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>start</id>
+			<description>Allow to start a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>stop</id>
+			<description>Allow to stop a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>suspend</id>
+			<description>Allow to suspend a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>resume</id>
+			<description>Allow to resume a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>subscribe</id>
+			<description>Allow to subscribe to and unsubscribe from a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>publish</id>
+			<description>Allow to publish to a channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>getChannels</id>
+			<description>Allow to retrieve the list of available channels</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>getSubscribers</id>
+			<description>Allow to retrieve the list of scubscribers of a certain channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>getSubscriptions</id>
+			<description>Allow to retrieve the list of channels the current client subscribed to</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>createChannel</id>
+			<description>Allow to create a new channel</description>
+		</right>
+		<right>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<id>removeChannel</id>
+			<description>Allow to remove an existing channel</description>
+		</right>
+
+	</rights>
+
+	<!-- jWebSocket roles -->
+	<roles>
+		<role>
+			<id>Guest</id>
+			<description>Anonymous users (not registered)</description>
+			<rights>
+				<!-- list of rights for "Guest" role (ns + . + id) -->
+				<right>org.jwebsocket.plugins.system.broadcast</right>
+				<right>org.jwebsocket.plugins.system.send</right>
+				<right>org.jwebsocket.plugins.chat.broadcast</right>
+				<right>org.jwebsocket.plugins.rpc.rpc</right>
+
+				<!-- Channel rights -->
+				<right>org.jwebsocket.plugins.channels.subscribe</right>
+
+				<right>org.jwebsocket.plugins.channels.publish</right>
+				<right>org.jwebsocket.plugins.channels.getChannels</right>
+				<right>org.jwebsocket.plugins.channels.getSubscribers</right>
+				<right>org.jwebsocket.plugins.channels.getSubscriptions</right>
+				<right>org.jwebsocket.plugins.channels.getChannels</right>
+				<right>org.jwebsocket.plugins.channels.createChannel</right>
+				<right>org.jwebsocket.plugins.channels.removeChannel</right>
+
+			</rights>
+		</role>
+	</roles>
+
+	<!-- jWebSocket users -->
+	<users>
+		<user>
+			<uuid>000-000-001-2011-07-14-11-32-40-223</uuid>
+			<loginname>guest</loginname>
+			<firstname>jWebSocket Guest User</firstname>
+			<lastname>(Guest Role)</lastname>
+			<!-- no password means that the user does not need a password -->
+			<password>guest</password>
+			<description>jWebSocket Guest User</description>
+			<status>1</status>
+			<roles>
+				<!-- should be restricted in your application! open for demo purposes only! -->
+				<role>Guest</role>
+			</roles>
+		</user>
+		<user>
+			<uuid>000-000-004-2011-07-14-11-35-54-871</uuid>
+			<loginname>anonymous</loginname>
+			<firstname>jWebSocket Anonymous User</firstname>
+			<lastname>(Roles to be specified!)</lastname>
+			<!-- empty password -->
+			<password></password>
+			<description>jWebSocket Anonymous User (Specify if anonymous logins should be supported at all in System Plug-in)</description>
+			<!-- 0=blocked 1=allowed ... future states pending -->
+			<status>1</status>
+			<roles>
+				<!-- the rights of all roles are merged -->
+				<role>Guest</role>
+				<role>User</role>
+				<role>Administrator</role>
+			</roles>
+		</user>
+	</users>
+
+	<!-- plug-ins to be instantiated for jWebSocket -->
+	<plugins>
+		<!-- the system plug-in, do not remove, mandatory for basic WebsScket communication operations -->
+		<plugin>
+			<name>org.jwebsocket.plugins.system.SystemPlugIn</name>
+			<ns>org.jwebsocket.plugins.system</ns>
+			<id>jws.system</id>
+			<jar>jWebSocketServer-1.0.jar</jar>
+			<!-- plug-in specific settings -->
+			<settings>
+				<!-- specify whether open, close, login, logout events should
+					 be broadcasted per default. To suppress these broadcasts
+					 per events turn settings "on" here and optionally suppress
+					 them per client command. -->
+				<setting key="broadcastOpenEvent">true</setting>
+				<setting key="broadcastCloseEvent">true</setting>
+				<setting key="broadcastLoginEvent">true</setting>
+				<setting key="broadcastLogoutEvent">true</setting>
+				<setting key="allowAnonymousLogin">true</setting>
+				<!-- this is the user name used for anonymous logins,
+					all anonymous users that just connect will get this user
+					name and all roles and rights assigned to this user.
+					Hence, be careful with the roles and rights you assign to
+					this user when you set allowAnonymousLogin to true -->
+				<setting key="anonymousLoginName">anonymous</setting>
+				<setting key="loginNameCaseInsensitive">true</setting>
+				<!-- if this flag is set to true all unknown users automatically
+					are anonymous users. This means they required the optional
+					anonymous password and they get the roles and rights from
+					the anonymous user. -->
+				<setting key="allowAutoAnonymous">true</setting>
+			</settings>
+			<server-assignments>
+				<server-assignment>ts0</server-assignment>
+			</server-assignments>
+		</plugin>
+
+		<!-- plug-in to communicate via channels -->
+		<plugin>
+			<name>org.jwebsocket.plugins.channels.ChannelPlugIn</name>
+			<id>jws.channels</id>
+			<ns>org.jwebsocket.plugins.channels</ns>
+			<jar>jWebSocketServer-1.0.jar</jar>
+			<server-assignments>
+				<server-assignment>ts0</server-assignment>
+			</server-assignments>
+			<settings>
+				<!-- specify plug-in settings -->
+				<setting key="allow_new_channels">true</setting>
+
+				<!-- Caution! Do NOT break JSON lines, one single line per setting only! -->
+                <setting key="channel:1" type="json">{owner:"root",name:"1",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:2" type="json">{owner:"root",name:"2",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:3" type="json">{owner:"root",name:"3",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:4" type="json">{owner:"root",name:"4",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:5" type="json">{owner:"root",name:"5",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:6" type="json">{owner:"root",name:"6",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:7" type="json">{owner:"root",name:"7",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:8" type="json">{owner:"root",name:"8",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:9" type="json">{owner:"root",name:"9",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:10" type="json">{owner:"root",name:"10",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:11" type="json">{owner:"root",name:"11",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:12" type="json">{owner:"root",name:"12",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:13" type="json">{owner:"root",name:"13",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:14" type="json">{owner:"root",name:"14",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:15" type="json">{owner:"root",name:"15",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:16" type="json">{owner:"root",name:"16",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:17" type="json">{owner:"root",name:"17",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:18" type="json">{owner:"root",name:"18",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:19" type="json">{owner:"root",name:"19",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:20" type="json">{owner:"root",name:"20",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:21" type="json">{owner:"root",name:"21",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:22" type="json">{owner:"root",name:"22",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:23" type="json">{owner:"root",name:"23",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:24" type="json">{owner:"root",name:"24",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:25" type="json">{owner:"root",name:"25",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:26" type="json">{owner:"root",name:"26",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:27" type="json">{owner:"root",name:"27",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:28" type="json">{owner:"root",name:"28",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:29" type="json">{owner:"root",name:"29",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:30" type="json">{owner:"root",name:"30",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:31" type="json">{owner:"root",name:"31",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:32" type="json">{owner:"root",name:"32",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:33" type="json">{owner:"root",name:"33",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:34" type="json">{owner:"root",name:"34",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:35" type="json">{owner:"root",name:"35",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:36" type="json">{owner:"root",name:"36",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:37" type="json">{owner:"root",name:"37",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:38" type="json">{owner:"root",name:"38",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:39" type="json">{owner:"root",name:"39",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:40" type="json">{owner:"root",name:"40",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:41" type="json">{owner:"root",name:"41",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:42" type="json">{owner:"root",name:"42",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:43" type="json">{owner:"root",name:"43",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:44" type="json">{owner:"root",name:"44",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:45" type="json">{owner:"root",name:"45",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:46" type="json">{owner:"root",name:"46",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:47" type="json">{owner:"root",name:"47",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:48" type="json">{owner:"root",name:"48",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:49" type="json">{owner:"root",name:"49",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:50" type="json">{owner:"root",name:"50",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:51" type="json">{owner:"root",name:"51",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:52" type="json">{owner:"root",name:"52",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:53" type="json">{owner:"root",name:"53",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:54" type="json">{owner:"root",name:"54",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:55" type="json">{owner:"root",name:"55",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:56" type="json">{owner:"root",name:"56",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:57" type="json">{owner:"root",name:"57",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:58" type="json">{owner:"root",name:"58",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:59" type="json">{owner:"root",name:"59",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:60" type="json">{owner:"root",name:"60",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:61" type="json">{owner:"root",name:"61",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:62" type="json">{owner:"root",name:"62",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:63" type="json">{owner:"root",name:"63",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:64" type="json">{owner:"root",name:"64",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:65" type="json">{owner:"root",name:"65",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:66" type="json">{owner:"root",name:"66",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:67" type="json">{owner:"root",name:"67",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:68" type="json">{owner:"root",name:"68",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:69" type="json">{owner:"root",name:"69",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:70" type="json">{owner:"root",name:"70",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:71" type="json">{owner:"root",name:"71",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:72" type="json">{owner:"root",name:"72",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:73" type="json">{owner:"root",name:"73",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:74" type="json">{owner:"root",name:"74",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:75" type="json">{owner:"root",name:"75",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:76" type="json">{owner:"root",name:"76",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:77" type="json">{owner:"root",name:"77",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:78" type="json">{owner:"root",name:"78",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:79" type="json">{owner:"root",name:"79",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:80" type="json">{owner:"root",name:"80",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:81" type="json">{owner:"root",name:"81",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:82" type="json">{owner:"root",name:"82",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:83" type="json">{owner:"root",name:"83",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:84" type="json">{owner:"root",name:"84",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:85" type="json">{owner:"root",name:"85",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:86" type="json">{owner:"root",name:"86",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:87" type="json">{owner:"root",name:"87",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:88" type="json">{owner:"root",name:"88",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:89" type="json">{owner:"root",name:"89",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:90" type="json">{owner:"root",name:"90",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:91" type="json">{owner:"root",name:"91",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:92" type="json">{owner:"root",name:"92",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:93" type="json">{owner:"root",name:"93",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:94" type="json">{owner:"root",name:"94",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:95" type="json">{owner:"root",name:"95",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:96" type="json">{owner:"root",name:"96",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:97" type="json">{owner:"root",name:"97",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:98" type="json">{owner:"root",name:"98",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:99" type="json">{owner:"root",name:"99",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+                <setting key="channel:100" type="json">{owner:"root",name:"100",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>
+			</settings>
+		</plugin>
+
+	</plugins>
+
+	<!-- filters to be instantiated for jWebSocket -->
+	<filters>
+		<filter>
+			<name>org.jwebsocket.filters.system.SystemFilter</name>
+			<id>jws.sampleFilter</id>
+			<ns>org.jwebsocket.filters.system</ns>
+			<jar>jWebSocketPlugins-1.0.jar</jar>
+			<server-assignments>
+				<server-assignment>ts0</server-assignment>
+			</server-assignments>
+		</filter>
+	</filters>
+
+</jWebSocket>
