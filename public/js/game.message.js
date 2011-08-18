@@ -246,6 +246,7 @@ function castleM(castleId, color){
     $('#nextTurn').after(
         $('<div>')
         .addClass('message')
+        .css('min-height',height+'px')
         .append(capital)
         .append($('<h3>').append(castles[castleId].name))
         .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
@@ -286,7 +287,19 @@ function castleM(castleId, color){
             $('<p>')
             .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
         )
-        .css('min-height',height+'px')
+        .append(
+            $('<p>')
+            .addClass('h')
+            .append(
+                $('<input>').attr({
+                    type:'checkbox',
+                    name:'resurection',
+                    value:castleId
+                })
+            )
+            .append(' cost 300g')
+            .append($('<div>').addClass('button right').html('Hero resurection').click(function(){heroResurection()}))
+        )
     );
 
 }

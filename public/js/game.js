@@ -85,7 +85,7 @@ function changeTurn(color, nr) {
 }
 
 function initGame(){
-    subscribeChannel();
+//     subscribeChannel();
     for(i in castles) {
         new castleCreate(i);
     }
@@ -114,7 +114,7 @@ function initGame(){
         }
     }
     $('.castle').fadeIn(1);
-    auth();
+//     auth();
     showFirstCastle();
     if(typeof myArmies == 'undefined' && typeof myCastles == 'undefined'){
         lostM();

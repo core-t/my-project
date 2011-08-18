@@ -63,6 +63,12 @@ class GameajaxController extends Warlords_Controller_Action {
         }
     }
 
+    public function resurrectionAction(){
+        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+
+        $this->view->response = Zend_Json::encode();
+    }
+
     public function ruinsAction(){
         $armyId = $this->_request->getParam('aid');
         if (!empty($armyId)) {

@@ -262,6 +262,20 @@ function disbandArmy(){
     });
 }
 
+function heroResurection(){
+    if(!my.turn){
+        return null;
+    }
+    unselectArmy();
+    $.getJSON(urlHeroResurrection, function(result) {
+        if(result){
+            removeM();
+            players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+            wsArmyAdd(result.armyId);
+        }
+    });
+}
+
 function searchRuins(){
     if(!my.turn){
         return null;

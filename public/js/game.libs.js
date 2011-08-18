@@ -203,6 +203,12 @@ function army(obj, color) {
             attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
         }
+        if(typeof defense  == 'undefined') {
+            var defense = this.soldiers[soldier].defensePoints;
+        }
+        if(this.soldiers[soldier].defensePoints > defense) {
+            defense = this.soldiers[soldier].defensePoints;
+        }
         if(typeof this.moves == 'undefined') {
             this.moves = this.soldiers[soldier].movesLeft;
         }
@@ -227,10 +233,12 @@ function army(obj, color) {
         }
         this.img = 'hero';
         this.attack = this.heroes[this.heroKey].attackPoints;
+        this.defense = this.heroes[this.heroKey].defensePoints;
     } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
         this.name = this.soldiers[this.soldierKey].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
         this.attack = attack;
+        this.defense = defense;
     } else {
         console.log('Armia nie posiada jednostek.');
         return null;
@@ -337,6 +345,7 @@ function selectArmy(a) {
     $('#name').html(a.name);
     $('#moves').html(a.moves);
     $('#attack').html(a.attack);
+    $('#defense').html(a.defense);
     $('#splitArmy').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
     selectedArmy = a;
@@ -356,6 +365,8 @@ function unselectArmy() {
     $('#info').html('0');
     $('#name').html('');
     $('#moves').html('0');
+    $('#attack').html(0);
+    $('#defense').html(0);
     $('.path').remove();
     $('#splitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
