@@ -42,6 +42,7 @@ class GameController extends Warlords_Controller_Action {
             $this->view->players = array();
             $this->view->turn = array();
             $game = $modelGame->getGame();
+            $this->view->channel = $game['channel'];
             foreach ($players as $player) {
                 $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
                 $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);

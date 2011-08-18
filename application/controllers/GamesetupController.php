@@ -31,12 +31,7 @@ class GamesetupController extends Warlords_Controller_Action {
         if ($this->_request->isPost()) {
             if ($this->view->form->isValid($this->_request->getPost())) {
                 $modelGame = new Application_Model_Game ();
-                $data = array(
-                    'numberOfPlayers' => $this->_request->getParam('numberOfPlayers'),
-                    'gameMasterId' => $this->_namespace->player['playerId'],
-                    'turnPlayerId' => $this->_namespace->player['playerId']
-                );
-                $gameId = $modelGame->createGame($data);
+                $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId']);
                 $this->_helper->redirector('setup', 'gamesetup', null, array('gameId' => $gameId));
             }
         }

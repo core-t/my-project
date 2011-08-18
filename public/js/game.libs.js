@@ -176,6 +176,7 @@ function army(obj, color) {
         if(typeof $('#army'+obj.armyId) != 'undefined') {
             $('#army'+obj.armyId).remove();
         }
+        return null;
     }
     var position = changePointToPosition(obj.position);
     this.x = position[0];

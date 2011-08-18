@@ -54,6 +54,7 @@
     my.turn = <?php echo $myTurn ?>;
     turn.color = '<?php echo $this->turn['color'] ?>';
     turn.nr = '<?php echo $this->turn['nr'] ?>';
+    var channel = '<?php echo $this->channel ?>';
     var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
     var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
     var urlGetTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'get')) ?>';

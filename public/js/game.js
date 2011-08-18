@@ -19,8 +19,6 @@ var socket;
 
 var nextArmy;
 
-var channel = '1';
-
 var cursorDirection;
 
 $(document).ready(function() {
