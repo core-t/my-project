@@ -91,7 +91,7 @@ function sendMove(movesSpend) {
                 // delete enemy - find enemy at position?
                 for(i in enemyArmies) {
                     deleteArmy('army' + enemyArmies[i].armyId, enemyArmies[i].color);
-                    wsArmyDelete(enemyArmies[i].armyId, enemyArmies[i].color);
+                    wsArmyAdd(enemyArmies[i].armyId);
                 }
 
                 wsCastleOwner(castleId, my.color);
@@ -103,7 +103,7 @@ function sendMove(movesSpend) {
                     console.log(enemyArmies[i]);
                 }
                 deleteArmy('army' + unselectedArmy.armyId, my.color);
-                wsArmyDelete(unselectedArmy.armyId, my.color);
+                wsArmyAdd(unselectedArmy.armyId);
             }
             if(castles[castleId].color){
                 battleM(result.battle, unselectedArmy, enemyArmies);
@@ -136,12 +136,12 @@ function sendMove(movesSpend) {
                 wsArmyAdd(unselectedArmy.armyId);
 
                 deleteArmyByPosition(newX, newY, selectedEnemyArmy.color);
-                wsArmyDelete(selectedEnemyArmy.armyId, selectedEnemyArmy.color);
+                wsArmyAdd(selectedEnemyArmy.armyId);
 
 //                 selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
             } else {
                 deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
-                wsArmyDelete(unselectedArmy.armyId, my.color);
+                wsArmyAdd(unselectedArmy.armyId);
                 getAddArmy(selectedEnemyArmy.armyId);
                 wsArmyAdd(selectedEnemyArmy.armyId);
             }
@@ -257,7 +257,7 @@ function disbandArmy(){
         if(result == 1){
             removeM();
             deleteArmy('army' + unselectedArmy.armyId, my.color);
-            wsArmyDelete(unselectedArmy.armyId, my.color);
+            wsArmyAdd(unselectedArmy.armyId);
         }
     });
 }

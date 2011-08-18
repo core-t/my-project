@@ -40,27 +40,25 @@
                     } else {
                         $('#wsStatus').html('connected');
                     }
-//                    console.log(" Client-Id: " + lWSC.getId() + " "+ ( jws.browserSupportsNativeWebSockets ? "(native)" : "(flashbridge)" ));
-                    if(typeof aToken.event != 'undefined'){
-                        var data = aToken.data;
-                        switch(aToken.event){
-                            case 'move':
-                                changeArmyPosition(data.x, data.y, data.armyId, turn.color);
-                                break;
-                            case 'add':
-                                getAddArmy(data.armyId);
-                                break;
-                            case 'turn':
+
+                    if(typeof aToken.data != 'undefined'){
+                        var event = aToken.data.substr(0,1);
+                        var data = aToken.data.split('.');
+                        switch(event){
+                            case 't':
                                 getTurn();
                                 break;
-                            case 'delete':
-                                deleteArmy('army'+data.armyId, data.color);
+                            case 'c':
+                                castleGet(data[1]);
                                 break;
-                            case 'castle':
-                                castleGet(data.castleId);
+                            case 'a':
+                                getAddArmy(data[1]);
                                 break;
-                            case 'armies':
-                                getPlayerArmies(data.color);
+                            case 'm':
+                                changeArmyPosition(data[1], data[2], data[3], turn.color);
+                                break;
+                            case 's':
+                                getPlayerArmies(data[1]);
                                 break;
                             default:
                                 console.log(aToken.data);
@@ -115,10 +113,8 @@
 
     // try to subscribe at a certain channel
     function subscribeChannel() {
-        var lChannel = 'publicA';
         var lAccessKey = 'access';
-        log( "Subscribing at channel '" + lChannel + "'..." );
-        var lRes = lWSC.channelSubscribe( lChannel, lAccessKey );
+        var lRes = lWSC.channelSubscribe( channel, lAccessKey );
         log( lWSC.resultToString( lRes ) );
     }
 
@@ -131,43 +127,6 @@
         // required to publish data only
         var lRes = lWSC.channelAuth( channel, lAccessKey, lSecretKey );
         log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to publish data on a certain channel
-    function publish(data) {
-        log( "Publishing to channel '" + channel + "'..." );
-        var lRes = lWSC.channelPublish( channel, data );
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all available channels on the server
-    function getChannels() {
-        log( "Trying to obtain channels..." );
-        var lRes = lWSC.channelGetIds();
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all subscribers for a certain channel
-    function getSubscribers() {
-        var lAccessKey = 'aaa';
-        log( "Trying to obtain subscribers for channel '" + channel + "'..." );
-        var lRes = lWSC.channelGetSubscribers(channel, lAccessKey);
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    // try to obtain all channels the client has subscribed to
-    function getSubscriptions() {
-        log( "Trying to obtain subscriptions for client..." );
-        var lRes = lWSC.channelGetSubscriptions();
-        log( lWSC.resultToString( lRes ) );
-    }
-
-    function toggleKeepAlive() {
-        if( eKeepAlive.checked ) {
-            lWSC.startKeepAlive({ interval: 3000 });
-        } else {
-            lWSC.stopKeepAlive();
-        }
     }
 
     function initWS() {

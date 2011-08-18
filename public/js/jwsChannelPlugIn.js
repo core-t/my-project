@@ -58,7 +58,7 @@ jws.ChannelPlugIn = {
 					if( this.OnChannelRemoved ) {
 						this.OnChannelRemoved( aToken );
 					}
-				}
+				} 
 			} else if( "getChannels" == aToken.reqType ) {
 				if( this.OnChannelsReceived ) {
 					this.OnChannelsReceived( aToken );
@@ -77,7 +77,7 @@ jws.ChannelPlugIn = {
 	//:a:en::aChannel:String:The id of the server side data channel.
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get notified on error or success.
-	channelSubscribe: function( aChannel, aAccessKey ) {
+	channelSubscribe: function( aChannel, aAccessKey, aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
@@ -85,7 +85,7 @@ jws.ChannelPlugIn = {
 				type: jws.ChannelPlugIn.SUBSCRIBE,
 				channel: aChannel,
 				accessKey: aAccessKey
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -97,16 +97,16 @@ jws.ChannelPlugIn = {
 	//:a:en::aChannel:String:The id of the server side data channel.
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get notified on error or success.
-	channelUnsubscribe: function( aChannel ) {
+	channelUnsubscribe: function( aChannel, aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
 				ns: jws.ChannelPlugIn.NS,
 				type: jws.ChannelPlugIn.UNSUBSCRIBE,
 				channel: aChannel
-			});
+			}, aOptions );
 		}
-		return lRes;
+		return lRes ;
 	},
 
 	//:m:*:channelAuth
@@ -116,7 +116,7 @@ jws.ChannelPlugIn = {
 	//:a:en::aSecretKey:String:Secret key configured for the channel.
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get notified on error or success.
-	channelAuth: function( aChannel, aAccessKey, aSecretKey ) {
+	channelAuth: function( aChannel, aAccessKey, aSecretKey, aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
@@ -126,7 +126,7 @@ jws.ChannelPlugIn = {
 				login: this.getUsername(),
 				accessKey: aAccessKey,
 				secretKey: aSecretKey
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -140,7 +140,7 @@ jws.ChannelPlugIn = {
 	//:a:en::aData:String:Data to be sent to the server side data channel.
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get noticed on error or success.
-	channelPublish: function( aChannel, aData ) {
+	channelPublish: function( aChannel, aData, aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
@@ -148,27 +148,7 @@ jws.ChannelPlugIn = {
 				type: jws.ChannelPlugIn.PUBLISH,
 				channel: aChannel,
 				data: aData
-			});
-		}
-		return lRes;
-	},
-
-    broadcastGamingEvent: function( aToken, aOptions ) {
-		var lRes = this.checkConnected();
-		if( lRes.code == 0 ) {
-			// use name space of system plug in here because
-			// there's no server side plug-in for the client-pluh-in
-			aToken.ns = jws.SystemClientPlugIn.NS;
-			aToken.type = "broadcast";
-// 			aToken.ns = jws.ChannelPlugIn.NS;
-// 			aToken.type = jws.ChannelPlugIn.PUBLISH;
-			// explicitely include sender,
-			// default is false on the server
-			aToken.senderIncluded = false;
-			// do not need a response here, save some time ;-)
-			aToken.responseRequested = false;
-			aToken.username = this.getUsername();
-			this.sendToken( aToken, aOptions );
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -222,7 +202,7 @@ jws.ChannelPlugIn = {
 				secretKey: lSecretKey,
 				owner: lOwner,
 				password: lPassword
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -263,7 +243,7 @@ jws.ChannelPlugIn = {
 				secretKey: lSecretKey,
 				owner: lOwner,
 				password: lPassword
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -276,7 +256,7 @@ jws.ChannelPlugIn = {
 	//:a:en::aAccessKey:String:Access Key for the channel (required for private channels, optional for public channels).
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get noticed on error or success.
-	channelGetSubscribers: function( aChannel, aAccessKey ) {
+	channelGetSubscribers: function( aChannel, aAccessKey, aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
@@ -284,7 +264,7 @@ jws.ChannelPlugIn = {
 				type: jws.ChannelPlugIn.GET_SUBSCRIBERS,
 				channel: aChannel,
 				accessKey: aAccessKey
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -296,13 +276,13 @@ jws.ChannelPlugIn = {
 	//:a:en:::none
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get noticed on error or success.
-	channelGetSubscriptions: function() {
+	channelGetSubscriptions: function( aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
 				ns: jws.ChannelPlugIn.NS,
 				type: jws.ChannelPlugIn.GET_SUBSCRIPTIONS
-			});
+			}, aOptions );
 		}
 		return lRes;
 	},
@@ -313,7 +293,7 @@ jws.ChannelPlugIn = {
 	//:a:en:::none
 	//:r:*:::void:none
 	// TODO: introduce OnResponse here too to get noticed on error or success.
-	channelGetIds: function() {
+	channelGetIds: function( aOptions ) {
 		var lRes = this.checkConnected();
 		if( 0 == lRes.code ) {
 			this.sendToken({
