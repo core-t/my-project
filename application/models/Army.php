@@ -4,7 +4,6 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
 
     protected $_name = 'army';
     protected $_primary = 'armyId';
-    protected $_sequence = "army_armyId_seq";
     protected $_db;
     protected $_gameId;
 
@@ -14,7 +13,7 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
         parent::__construct();
     }
 
-    public function createArmy($position, $playerId) {
+    public function createArmy($position, $playerId, $sleep = 0) {
         $armyId = $this->getNewArmyId();
         $data = array(
             'armyId' => $armyId,
@@ -22,7 +21,16 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             'gameId' => $this->_gameId,
             'position' => $position['x'] . ',' . $position['y']
         );
-        $this->_db->insert($this->_name, $data);
+        try{
+            $this->_db->insert($this->_name, $data);
+            return $armyId;
+        }catch(Exception $e) {
+            if($sleep > 10){
+                throw new Exception($e->getMessage());
+            }
+            sleep(rand(0,$sleep));
+            $armyId = $this->createArmy($position, $playerId, $sleep + 1);
+        }
         return $armyId;
     }
 

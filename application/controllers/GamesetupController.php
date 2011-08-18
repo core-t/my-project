@@ -94,11 +94,25 @@ class GamesetupController extends Warlords_Controller_Action {
                     $modelHero->createHero();
                     $playerHeroes = $modelHero->getHeroes();
                 }
-                $this->_namespace->armyId = $modelArmy->createArmy(
+                $armyId = $modelArmy->createArmy(
                         $startPositions[$this->_namespace->player['color']]['position'],
                         $this->_namespace->player['playerId']);
-                $modelArmy->addHeroToArmy($this->_namespace->armyId, $playerHeroes[0]['heroId']);
-                $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
+                $res = $modelArmy->addHeroToArmy($armyId, $playerHeroes[0]['heroId']);
+                switch ($res) {
+                    case 1:
+                        $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
+                        $this->_namespace->armyId = $armyId;
+                        break;
+                    case 0:
+                        throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
+                        break;
+                    case null:
+                        throw new Exception('Zapytanie zwróciło błąd');
+                        break;
+                    default:
+                        throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
+                        break;
+                }
             }
         } else {
             throw new Exception('Brak gameId!');

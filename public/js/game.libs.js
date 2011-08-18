@@ -183,6 +183,7 @@ function army(obj, color) {
     var numberOfHeroes = 0;
     var numberOfSoldiers = 0;
     for(hero in this.heroes) {
+        this.heroKey = hero;
         if(typeof this.moves == 'undefined') {
             this.moves = this.heroes[hero].movesLeft;
         }

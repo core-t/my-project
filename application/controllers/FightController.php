@@ -49,10 +49,10 @@ class FightController extends Warlords_Controller_Action
                 $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
                 switch ($res) {
                     case 1:
-                    $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                    $result['victory'] = true;
-                    $result['battle'] = $this->_result;
-                    $this->view->response = Zend_Json::encode($result);
+                        $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
+                        $result['victory'] = true;
+                        $result['battle'] = $this->_result;
+                        $this->view->response = Zend_Json::encode($result);
                         break;
                     case 0:
                         throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');

@@ -8,14 +8,15 @@ class Application_Form_Creategame extends Zend_Form {
         $this->setMethod('post');
         $this->setAction('/gamesetup/create');
 
-        $this->addElement('text', 'numberOfPlayers',
+        $this->addElement('select', 'numberOfPlayers',
         array(
          'label'=>'Number of players',
+         'multiOptions'=>array(2=>2,3=>3,4=>4),
          'required'=>true,
          'filters'=>array('StringTrim'),
          'validators'=>array(
                  array('Alnum'),
-                 new Zend_Validate_Between(array('min' => 1, 'max' => 4))
+                 new Zend_Validate_Between(array('min' => 2, 'max' => 4))
              )
          )
         );
