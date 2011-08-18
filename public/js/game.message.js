@@ -411,13 +411,9 @@ function walkM(result) {
         return null;
     } else {
         wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
-        $('#army'+unselectedArmy.armyId).css({
-            display:'none',
-            left: result.path[i].x + 'px',
-            top: result.path[i].y + 'px'
-        });
         zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        $('#army'+unselectedArmy.armyId).fadeIn(1, function() {
+        $('#army'+unselectedArmy.armyId).animate({left: result.path[i].x + 'px',top: result.path[i].y + 'px'},300,
+        function(){
             delete result.path[i];
             walkM(result);
         });

@@ -8,7 +8,6 @@ class GameController extends Warlords_Controller_Action {
             throw new Exception('Brak "gameId"!');
         }
 //        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
-        $this->view->headScript()->prependFile('/js/jquery.min.js');
 //        $this->view->headScript()->appendFile('http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js');
 //         $this->view->headScript()->appendFile('/js/jquery.json-2.2.min.js');
 //        $this->view->headScript()->appendFile('http://jquery-websocket.googlecode.com/files/jquery.websocket-0.0.1.js');
@@ -21,6 +20,9 @@ class GameController extends Warlords_Controller_Action {
         // action body
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if ($modelGame->isActive()) {
+            $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
+            $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
+            $this->view->headScript()->prependFile('/js/jquery.min.js');
             $this->view->headScript()->appendFile('/js/jWebSocket.js');
             $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
             $this->view->headScript()->appendFile('/js/game.js');
@@ -30,8 +32,6 @@ class GameController extends Warlords_Controller_Action {
             $this->view->headScript()->appendFile('/js/game.ajax.js');
             $this->view->headScript()->appendFile('/js/game.message.js');
             $this->view->headScript()->appendFile('/js/game.chanels.js');
-            $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
-            $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
             $this->_helper->layout->setLayout('game');
             $modelBoard = new Application_Model_Board();
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);

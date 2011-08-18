@@ -170,8 +170,14 @@ class Application_Model_Army extends Warlords_Db_Table_Abstract {
             }
             $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
             $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
-            $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
-            return $result[0];
+            if(empty($result[0]['heroes']) && empty($result[0]['soldiers'])){
+                $result[0]['destroyed'] = true;
+                $this->destroyArmy($result[0]['armyId'], $result[0]['playerId']);
+                return $result[0];
+            }else{
+                $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
+                return $result[0];
+            }
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }

@@ -81,8 +81,12 @@ function sendMove(movesSpend) {
         }
         $.getJSON(urlFightCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
             var enemyArmies = getEnemyCastleGarrison(castleId);
+            var neutral = true;
+            if(castles[castleId].color){
+                neutral = false;
+            }
             if(result.victory) {
-                deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+//                 deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
                 players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
                 newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
                 newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
@@ -102,14 +106,14 @@ function sendMove(movesSpend) {
                     getAddArmy(enemyArmies[i].armyId);
                     console.log(enemyArmies[i]);
                 }
-                deleteArmy('army' + unselectedArmy.armyId, my.color);
+//                 deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyAdd(unselectedArmy.armyId);
             }
-            if(castles[castleId].color){
-                battleM(result.battle, unselectedArmy, enemyArmies);
-            }else{
+            if(neutral){
                 var enemyArmies = new Array();
                 enemyArmies[0] = jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
+                battleM(result.battle, unselectedArmy, enemyArmies);
+            }else{
                 battleM(result.battle, unselectedArmy, enemyArmies);
             }
             lock = false;

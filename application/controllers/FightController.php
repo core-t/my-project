@@ -309,8 +309,10 @@ class FightController extends Warlords_Controller_Action
         foreach($castlesSchema as $castle) {
             $cy = $castle['position']['y']/40;
             $cx = $castle['position']['x']/40;
-            $fields[$cy][$cx] = 'r';
-            $fields[$cy + 1][$cx + 1] = 'r';
+            $fields[$cy][$cx] = 'c';
+            $fields[$cy + 1][$cx] = 'c';
+            $fields[$cy][$cx + 1] = 'c';
+            $fields[$cy + 1][$cx + 1] = 'c';
         }
         $terrainType = $fields[$y/40][$x/40];
         $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
