@@ -16,7 +16,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     }
 
     public function createGame($numberOfPlayers, $playerId) {
-        $channel = $this->getFreeChannel();
+        $channel = $this->getFreeChannel(1);
 //         echo $channel;exit;
         $data = array(
             'numberOfPlayers' => $numberOfPlayers,
@@ -30,34 +30,19 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         return $this->_db->lastSequenceId($seq);
     }
 
-    private function getFreeChannel(){
-        try{
-            $select = $this->_db->select()
-                ->from($this->_name, array('channel' => 'min(channel)'))
-                ->where('"isActive" = false');
-            $result = $this->_db->query($select)->fetchAll();
-            if($result[0]['channel']){
-                return $result[0]['channel'];
-            }else{
-                return $this->isChannelFree(1);
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select2->__toString());
-        }
-    }
-
-    private function isChannelFree($channel){
+    private function getFreeChannel($channel){
         try{
             $select = $this->_db->select()
                 ->from($this->_name, 'channel')
-                ->where('channel = ?', $channel);
+                ->where('channel = ?', $channel)
+                ->where('"isActive" = true');
             $result = $this->_db->query($select)->fetchAll();
             if(isset($result[0]['channel'])){
-                $channel = $this->isChannelFree($channel+1);
+                $channel = $this->getFreeChannel($channel+1);
             }
             return $channel;
         } catch (PDOException $e) {
-            throw new Exception($select2->__toString());
+            throw new Exception($select->__toString());
         }
     }
 

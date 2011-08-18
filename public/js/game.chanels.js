@@ -21,20 +21,25 @@
 
         log( "Login to " + lURL + " ..." );
         try {
+            var lAccessKey = 'access';
+            var lSecretKey = 'secret';
             var lRes = lWSC.logon( lURL, "guest", "guest", {
 
                 // OnOpen callback
                 OnOpen: function( aEvent ) {
                     log( "jWebSocket connection established." );
                     $('#wsStatus').html('connected');
+                    var lRes = lWSC.channelSubscribe( channel, lAccessKey );
+                    log( lWSC.resultToString( lRes ) );
                 },
 
                 OnWelcome: function() {
-//                     getChannels();
                 },
 
                 // OnMessage callback
                 OnMessage: function( aEvent, aToken ) {
+                    console.log(aEvent);
+                    console.log(aToken);
                     if( lWSC.isLoggedIn() ) {
                         $('#wsStatus').html('authenticated');
                     } else {
@@ -42,6 +47,7 @@
                     }
 
                     if(typeof aToken.data != 'undefined'){
+                        console.log(aToken.data);
                         var event = aToken.data.substr(0,1);
                         var data = aToken.data.split('.');
                         switch(event){
@@ -88,28 +94,6 @@
             log( lWSC.resultToString( lRes ) );
         }
     }
-
-    // try to create a new channel on the server
-    // on success the OnChannelCreated event is fired
-//    function createChannel() {
-//        var lChannelId = '001';
-//        var lChannelName = 'game1';
-//        var lIsPrivate = true;
-//        var lIsSystem = false;
-//        var lAccessKey = 'akey';
-//        var lSecretKey = 'skey';
-//        log( "Creating channel '" + lChannelId + "'..." );
-//        var lRes = lWSC.channelCreate(
-//            lChannelId,
-//            lChannelName,
-//            {   isPrivate: lIsPrivate,
-//                isSystem: lIsSystem,
-//                accessKey: lAccessKey,
-//                secretKey: lSecretKey
-//            }
-//        );
-//        log( lWSC.resultToString( lRes ) );
-//    }
 
     // try to subscribe at a certain channel
     function subscribeChannel() {

@@ -83,7 +83,6 @@ function changeTurn(color, nr) {
 }
 
 function initGame(){
-    subscribeChannel();
     for(i in castles) {
         new castleCreate(i);
     }
