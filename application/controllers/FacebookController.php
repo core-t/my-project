@@ -12,9 +12,9 @@ class FacebookController extends Zend_Controller_Action {
         // action body
         $signed_request = $this->_getParam('signed_request', null);
         if (empty($signed_request)) {
-            throw new Facebook_Model_FacebookException('Security Error');
+            throw new Application_Model_FacebookException('Security Error');
         }
-        $this->_FB = new Facebook_Model_Facebook($signed_request);
+        $this->_FB = new Application_Model_Facebook($signed_request);
         // if the user has not installed,
         // redirect to the allow URL
         if (!$this->_FB->hasInstalled) {

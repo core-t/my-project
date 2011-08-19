@@ -1,6 +1,6 @@
 <?php
 
-class Facebook_Model_FacebookException extends Exception
+class Application_Model_FacebookException extends Exception
 {
 
 
