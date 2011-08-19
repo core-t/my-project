@@ -32,13 +32,13 @@ class Facebook_Model_Facebook
  /**
  * Facebook Application ID
  */
- const FACEBOOK_APP_ID = '146904668709389';
+ const FACEBOOK_APP_ID = '138834919525960';
 //  const FACEBOOK_APP_ID = '173001239427638';
 
  /**
  * Facebook Secret String
  */
- const FACEBOOK_SECRET = '920bb1bb2e8cec83f169f55f3b923048';
+ const FACEBOOK_SECRET = '49319aa0774350884be521e22a5b4b00';
 //  const FACEBOOK_SECRET = '09616a7fcfc34ea1547aae235ffa9baf';
 
  public function __construct($signed_request)
