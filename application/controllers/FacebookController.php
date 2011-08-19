@@ -19,7 +19,7 @@ class FacebookController extends Zend_Controller_Action {
         // redirect to the allow URL
         if (!$this->_FB->hasInstalled) {
             $this->_helper->layout->disableLayout();
-            $this->view->redirect_url = Facebook_Model_Facebook::FACEBOOK_ALLOW_URL . '?client_id=' . Facebook_Model_Facebook::FACEBOOK_APP_ID . '&redirect_uri=' . $_SERVER['HTTP_REFERER'];
+            $this->view->redirect_url = Application_Model_Facebook::FACEBOOK_ALLOW_URL . '?client_id=' . Application_Model_Facebook::FACEBOOK_APP_ID . '&redirect_uri=' . $_SERVER['HTTP_REFERER'];
             $this->_helper->viewRenderer->setScriptAction('redirect');
         } else {
             $this->_namespace->fbId = $this->_FB->fbData['user_id'];
@@ -32,15 +32,20 @@ class FacebookController extends Zend_Controller_Action {
                 }
             }
             $fbUserInfo = $this->_FB->getUserInfo();
-            $modelPlayer->
-            $playerActivity = new Warlords_Player_Activity();
-            $player = $modelPlayer->getPlayer();
+            $data = array(
+                'firstName' => $fbUserInfo['first_name'],
+                'lastName' => $fbUserInfo['last_name'],
+                'locale' => $fbUserInfo['locale']
+            );
+            $modelPlayer->updatePlayer($data);
+//            $playerActivity = new Warlords_Player_Activity();
+//            $player = $modelPlayer->getPlayer();
 
-            if(!$playerActivity->isActive( $player['playerId'])) {
+//            if(!$playerActivity->isActive( $player['playerId'])) {
                 $this->_helper->redirector('index', 'index');
-            } else {
-                $this->view->active = true;
-            }
+//            } else {
+//                $this->view->active = true;
+//            }
 //            $this->view->signedRequest = $this->_FB->getSignedRequest();
 //            $this->view->fbid = $this->_FB->fbData['user_id'];
 //            Zend_Debug::dump($fbUserInfo);
