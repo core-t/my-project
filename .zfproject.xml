@@ -55,6 +55,9 @@
         <controllerFile controllerName="Hero">
           <actionMethod actionName="index"/>
         </controllerFile>
+        <controllerFile controllerName="Facebook">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -138,6 +141,9 @@
           <viewControllerScriptsDirectory forControllerName="Hero">
             <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Facebook">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -216,6 +222,9 @@
             <testApplicationActionMethod forActionName="get"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Hero">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Facebook">
             <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
