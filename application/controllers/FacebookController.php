@@ -45,7 +45,7 @@ class FacebookController extends Zend_Controller_Action {
 //            $this->view->signedRequest = $this->_FB->getSignedRequest();
 //            $this->view->fbid = $this->_FB->fbData['user_id'];
             $fbUserInfo = $this->_FB->getUserInfo();
-//            Zend_Debug::dump($fbUserInfo);
+            Zend_Debug::dump($fbUserInfo);
         }
     }
 
