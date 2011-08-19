@@ -7,6 +7,8 @@ class FacebookController extends Zend_Controller_Action {
 
     public function init() {
         /* Initialize action controller here */
+        Zend_Session::start();
+        $this->_namespace = new Zend_Session_Namespace(); // default namespace
     }
 
     public function indexAction() {
