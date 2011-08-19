@@ -23,10 +23,27 @@ class FacebookController extends Zend_Controller_Action {
             $this->view->redirect_url = Facebook_Model_Facebook::FACEBOOK_ALLOW_URL . '?client_id=' . Facebook_Model_Facebook::FACEBOOK_APP_ID . '&redirect_uri=' . $_SERVER['HTTP_REFERER'];
             $this->_helper->viewRenderer->setScriptAction('redirect');
         } else {
-            $this->view->signedRequest = $this->_FB->getSignedRequest();
-            $this->view->fbid = $this->_FB->fbData['user_id'];
+            $this->_namespace->fbId = $this->_FB->fbData['user_id'];
+            $modelPlayer = new Application_Model_Player($this->_namespace->fbId);
+            if($modelPlayer->noPlayer()) {
+                $playerId = $modelPlayer->createPlayer();
+                if($playerId) {
+                    $modelHero = new Application_Model_Hero($playerId);
+                    $modelHero->createHero();
+                }
+            }
+            $playerActivity = new Warlords_Player_Activity();
+            $player = $modelPlayer->getPlayer();
+
+            if(!$playerActivity->isActive( $player['playerId'])) {
+                $this->_helper->redirector('index', 'index');
+            } else {
+                $this->view->active = true;
+            }
+//            $this->view->signedRequest = $this->_FB->getSignedRequest();
+//            $this->view->fbid = $this->_FB->fbData['user_id'];
             $fbUserInfo = $this->_FB->getUserInfo();
-            Zend_Debug::debug($fbUserInfo);
+//            Zend_Debug::dump($fbUserInfo);
         }
     }
 
