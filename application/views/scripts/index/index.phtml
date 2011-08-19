@@ -17,6 +17,6 @@ if( jws.browserSupportsWebSockets() ) {
     lWSC = new jws.jWebSocketJSONClient();
     login();
 }else{
-    alert(jws.MSG_WS_NOT_SUPPORTED);
+    top.location = '<?php echo $this->url(array('controller'=>'index', 'action'=>'unsupported')) ?>';
 }
 </script>

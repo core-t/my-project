@@ -15,6 +15,7 @@
         <controllerFile controllerName="Login">
           <actionMethod actionName="index"/>
           <actionMethod actionName="logout"/>
+          <actionMethod actionName="registration"/>
         </controllerFile>
         <controllerFile controllerName="Game">
           <actionMethod actionName="index"/>
@@ -62,6 +63,8 @@
       <formsDirectory>
         <formFile formName="Fbid"/>
         <formFile formName="Hero"/>
+        <formFile formName="Auth"/>
+        <formFile formName="Registration"/>
       </formsDirectory>
       <layoutsDirectory enabled="false"/>
       <modelsDirectory>
@@ -144,6 +147,9 @@
           <viewControllerScriptsDirectory forControllerName="Facebook">
             <viewScriptFile forActionName="index"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Login">
+            <viewScriptFile forActionName="registration"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -184,6 +190,7 @@
           <testApplicationControllerFile forControllerName="Login">
             <testApplicationActionMethod forActionName="index"/>
             <testApplicationActionMethod forActionName="logout"/>
+            <testApplicationActionMethod forActionName="registration"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Game">
             <testApplicationActionMethod forActionName="index"/>

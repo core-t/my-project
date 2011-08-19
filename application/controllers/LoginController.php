@@ -1,53 +1,60 @@
 <?php
 
-class LoginController extends Zend_Controller_Action
-{
+class LoginController extends Zend_Controller_Action {
 
-    public function init()
-    {
+    public function init() {
         /* Initialize action controller here */
         Zend_Session::start();
         $this->_namespace = new Zend_Session_Namespace(); // default namespace
+        $this->_helper->layout->setLayout('login');
     }
 
-    public function indexAction()
-    {
+    public function indexAction() {
         // action body
-        $form = new Application_Form_Fbid();
+        $form = new Application_Form_Auth();
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                $this->_namespace->fbId = $this->_request->getParam('fbid');
-                $modelPlayer = new Application_Model_Player($this->_namespace->fbId);
-                if($modelPlayer->noPlayer()) {
-                    $playerId = $modelPlayer->createPlayer();
-                    if($playerId) {
-                        $modelHero = new Application_Model_Hero($playerId);
-                        $modelHero->createHero();
-                    }
-                }
-//                $playerActivity = new Warlords_Player_Activity();
-//                $player = $modelPlayer->getPlayer();
-//
-//                if(!$playerActivity->isActive( $player['playerId'])) {
+                $login = $this->_request->getParam('login');
+                $modelPlayer = new Application_Model_Player(null, false);
+                $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
+                if($playerId){
+                    $this->_namespace->player = $modelPlayer->getPlayer($playerId);
                     $this->_helper->redirector('index', 'index');
-//                } else {
-//                    $this->view->active = true;
-//                }
-
+                }
             }
         }
         $this->view->form = $form;
     }
 
-    public function logoutAction()
-    {
+    public function logoutAction() {
         // action body
         Zend_Session::destroy(true);
         $this->_helper->redirector('index', 'login');
     }
 
+    public function registrationAction() {
+        // action body
+        $form = new Application_Form_Registration();
+        if ($this->_request->isPost()) {
+            if ($form->isValid($this->_request->getPost())) {
+                $modelPlayer = new Application_Model_Player(null, false);
+                $data = array(
+                    'firstName' => $this->_request->getParam('firstName'),
+                    'lastName' => $this->_request->getParam('lastName'),
+                    'login' => $this->_request->getParam('login'),
+                    'password' => md5($this->_request->getParam('password'))
+                );
+                $playerId = $modelPlayer->createPlayer($data);
+                if ($playerId) {
+                    $modelHero = new Application_Model_Hero($playerId);
+                    $modelHero->createHero();
+                    $this->_namespace->player = $modelPlayer->getPlayer($playerId);
+                    $this->_helper->redirector('index', 'index');
+                }
+            }
+        }
+        $this->view->form = $form;
+    }
 
 }
-
-
 
