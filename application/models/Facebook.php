@@ -1,7 +1,5 @@
 <?php
 
-require_once APPLICATION_PATH . '/../library/Facebook/FacebookException.php';
-
 class Facebook_Model_Facebook {
     const FACEBOOK_ALLOW_URL = 'https://www.facebook.com/dialog/oauth';
     const FACEBOOK_GRAPH_URL = 'http://graph.facebook.com/';

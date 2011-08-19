@@ -1,7 +1,5 @@
 <?php
 
-require_once APPLICATION_PATH . '/../library/Facebook/Facebook.php';
-
 class FacebookController extends Zend_Controller_Action {
 
     public function init() {
