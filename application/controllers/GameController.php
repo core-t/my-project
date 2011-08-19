@@ -31,7 +31,6 @@ class GameController extends Warlords_Controller_Action {
             $this->view->headScript()->appendFile('/js/game.websocket.js');
             $this->view->headScript()->appendFile('/js/game.ajax.js');
             $this->view->headScript()->appendFile('/js/game.message.js');
-            $this->view->headScript()->appendFile('/js/game.chanels.js');
             $this->_helper->layout->setLayout('game');
             $modelBoard = new Application_Model_Board();
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);

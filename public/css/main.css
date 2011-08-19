@@ -17,6 +17,13 @@ body {
     background: #000;
 }
 
+#menuTop p {
+    color:white;
+    float: left;
+    line-height:20px;
+    padding-left:10px;
+}
+
 #menuTop a {
     color:#f00;
     float: right;

@@ -10,7 +10,6 @@ function login() {
             // OnOpen callback
             OnOpen: function( aEvent ) {
                 $('#wsStatus').html('connected');
-                var lRes = lWSC.channelSubscribe( channel, lAccessKey );
             },
 
             OnWelcome: function() {
@@ -72,55 +71,7 @@ function logout() {
     }
 }
 
-// try to subscribe at a certain channel
-function subscribeChannel() {
-    var lAccessKey = 'access';
-    var lRes = lWSC.channelSubscribe( channel, lAccessKey );
-}
-
-// try to authenticate against a channel to publish data
-function auth() {
-    var lAccessKey = 'access';
-    var lSecretKey = 'secret';
-    // use access key and secret key for this channel to authenticate
-    // required to publish data only
-    var lRes = lWSC.channelAuth( channel, lAccessKey, lSecretKey );
-}
-
-function initWS() {
-
-    if( window.WebSocket ) {
-        lWSC = new jws.jWebSocketJSONClient();
-        login();
-    } else {
-        var lMsg = jws.MSG_WS_NOT_SUPPORTED;
-        alert( lMsg );
-    }
-    lWSC.startKeepAlive({
-        interval: 3000
-    });
-}
-
 function exitPage() {
     lWSC.stopKeepAlive();
     logout();
-}
-function wsCastleOwner(castleId, color) {
-    lWSC.channelPublish(channel,'c.'+castleId+'.'+color);
-}
-
-function wsTurn() {
-    lWSC.channelPublish(channel,'t');
-}
-
-function wsPlayerArmies(color){
-    lWSC.channelPublish(channel,'s.'+color);
-}
-
-function wsArmyMove(x, y, armyId) {
-    lWSC.channelPublish(channel,'m.'+x+'.'+y+'.'+armyId);
-}
-
-function wsArmyAdd(armyId) {
-    lWSC.channelPublish(channel,'a.'+armyId);
 }

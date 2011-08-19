@@ -12,3 +12,11 @@
 <a href="<?php echo $this->url(array('controller'=>'market')) ?>" class="button">Market</a>
 </li>
 </ul>
+<script type="text/javascript">
+if( jws.browserSupportsWebSockets() ) {
+    lWSC = new jws.jWebSocketJSONClient();
+    login();
+}else{
+    alert(jws.MSG_WS_NOT_SUPPORTED);
+}
+</script>
