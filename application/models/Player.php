@@ -46,5 +46,10 @@ class Application_Model_Player extends Warlords_Db_Table_Abstract
         $result = $this->_db->query($select)->fetchAll();
         if(isset($result[0])) return $result[0];
     }
+    
+    public function updatePlayer($data) {
+        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+        return $this->_db->update($this->_name, $data, $where);
+    }
 }
 

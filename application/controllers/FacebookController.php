@@ -31,6 +31,8 @@ class FacebookController extends Zend_Controller_Action {
                     $modelHero->createHero();
                 }
             }
+            $fbUserInfo = $this->_FB->getUserInfo();
+            $modelPlayer->
             $playerActivity = new Warlords_Player_Activity();
             $player = $modelPlayer->getPlayer();
 
@@ -41,9 +43,7 @@ class FacebookController extends Zend_Controller_Action {
             }
 //            $this->view->signedRequest = $this->_FB->getSignedRequest();
 //            $this->view->fbid = $this->_FB->fbData['user_id'];
-            $fbUserInfo = $this->_FB->getUserInfo();
-            echo 'aaa';
-            Zend_Debug::dump($fbUserInfo);
+//            Zend_Debug::dump($fbUserInfo);
         }
     }
 
