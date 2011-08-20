@@ -53,13 +53,21 @@ a {
 }
 
 .button:hover {
+    color:#C10909;
+    text-shadow: #fff 1px 1px;
+    background:#eee;
+    border:1px solid #C10909;
+}
+
+.buttonOff{
     color:#000;
     text-shadow: #fff 1px 1px;
     background:#eee;
     border:1px solid #555;
+    cursor:default;
 }
 
-.buttonOff{
+.buttonOff:hover{
     color:#000;
     text-shadow: #fff 1px 1px;
     background:#eee;

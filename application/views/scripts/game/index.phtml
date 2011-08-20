@@ -101,12 +101,13 @@
         cursorPosition(e.pageX, e.pageY);
     });
 
-    $('#'+my.color+'Color').append('You');
-    $('#'+turn.color+'Turn').html('Turn ' + turn.nr);
+    $('.'+my.color+' .color').append('You');
+    $('.'+turn.color+' .turn').html('Turn >');
+    $('#turnNumber').html(turn.nr);
     $('#nextTurn').click(function(){sendNextTurn()});
     $('#nextArmy').click(function(){findNextArmy()});
-    $('#splitArmy').click(function(){splitArmyM()});
-    $('#disbandArmy').click(function(){disbandArmyM()});
+    $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
+    $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});
     $('#searchRuins').click(function(){searchRuins()});
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');

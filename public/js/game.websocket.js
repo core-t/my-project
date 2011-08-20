@@ -87,18 +87,19 @@ function auth() {
     var lRes = lWSC.channelAuth( channel, lAccessKey, lSecretKey );
 }
 
-function initWS() {
-
-    if( window.WebSocket ) {
-        lWSC = new jws.jWebSocketJSONClient();
+function connect(){
+    if(lWSC.isOpened()){
+//        lWSC.startKeepAlive({
+//            interval: 3000
+//        });
+//        board.css('display','block');
+        lock = false;
+        startM();
+    }else{
         login();
-    } else {
-        var lMsg = jws.MSG_WS_NOT_SUPPORTED;
-        alert( lMsg );
+        simpleM('Sorry, server is disconnected.');
+        setTimeout ( 'connect()', 5000 );
     }
-    lWSC.startKeepAlive({
-        interval: 3000
-    });
 }
 
 function exitPage() {

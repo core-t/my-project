@@ -20,9 +20,9 @@ function ruinCreate(ruinId){
         })
         .css({
             left: ruins[ruinId].x + 'px',
-             top: ruins[ruinId].y + 'px',
+            top: ruins[ruinId].y + 'px',
         })
-    );
+        );
     $('#ruin' + ruinId).fadeIn(1);
 }
 
@@ -52,8 +52,8 @@ function castleCreate(castleId) {
             left: castles[castleId].position.x + 'px',
             top: castles[castleId].position.y + 'px',
         })
-    );
-//     $('#castle' + castleId).fadeIn(1);
+        );
+    //     $('#castle' + castleId).fadeIn(1);
     $('#castle' + castleId).mouseover(function(){
         if(lock) {
             return null;
@@ -127,7 +127,9 @@ function castleOwner(castleId, color) {
                     castle.css('cursor', 'default');
                 }
             });
-            castle.click(function(){return null});
+            castle.click(function(){
+                return null
+                });
         }
         castle
         .removeClass()
@@ -168,7 +170,7 @@ function showFirstCastle() {
 
 // *** ARMIES ***
 
-function army(obj, color) {
+function army(obj, color, dontFade) {
     if(obj.destroyed){
         if(typeof players[color].armies[obj.armyId] != 'undefined'){
             delete players[color].armies[obj.armyId];
@@ -267,6 +269,7 @@ function army(obj, color) {
                         splitArmyM();
                         unselectArmy();
                     } else { // klikam na inną jednostkę
+                        armyToJoinId = players[my.color].armies[this.id].armyId;
                         sendMove(cursorPosition(e.pageX, e.pageY));
                     }
                 } else {
@@ -280,13 +283,7 @@ function army(obj, color) {
                 return null;
             }
             if(my.turn) {
-                if(selectedArmy) {
-                    if(selectedArmy == players[my.color].armies[this.id]) {
-                        selectedArmy.element.css('cursor', 'default');
-                    } else {
-                        players[my.color].armies[this.id].element.css('cursor', 'url(../img/game/cursor_select.png), default');
-                    }
-                } else {
+                if(!selectedArmy) {
                     players[my.color].armies[this.id].element.css('cursor', 'url(../img/game/cursor_select.png), default');
                 }
             } else {
@@ -329,9 +326,12 @@ function army(obj, color) {
         $('<img>')
         .addClass('unit')
         .attr('src', '/img/game/' + this.img + '_' + color + '.png')
-    );
+        );
     board.append(this.element);
-    $('#army'+obj.armyId).fadeIn(1);
+    
+    if(typeof dontFade == 'undefined'){
+        $('#army'+obj.armyId).fadeIn(1);
+    }
     this.armyId = obj.armyId;
     this.color = color;
 }
@@ -559,7 +559,7 @@ function setCursorArrow(dir){
     if(cursorDirection != dir){
         board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
         cursorDirection = dir;
-//         console.log(cursorDirection);
+    //         console.log(cursorDirection);
     }
 }
 
@@ -788,7 +788,7 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
             top:pY
         })
         .html(moves)
-    );
+        );
     newX = pX;
     newY = pY;
     return moves;
@@ -883,5 +883,8 @@ function getTerrain(type) {
             }
             break;
     }
-    return {0:text, 1:moves};
+    return {
+        0:text, 
+        1:moves
+    };
 }

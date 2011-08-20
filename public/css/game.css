@@ -46,10 +46,11 @@
     position:absolute;
     top:0px;
     left:0px;
+/*    display:none;*/
 }
 
 .zoomPad{
-	float:left;
+    float:left;
     border:1px solid #fff;
     width:203px;
     height:128px;
@@ -117,29 +118,17 @@ table#colors{
 }
 
 table#colors td {
-    padding:2px;
     text-align:center;
     min-width:80px;
+    height:14px;
+    border:1px solid #cecece;
 }
 
-.white {
-    display:none;
-}
-
-.green {
-    display:none;
-}
-
-.orange {
-    display:none;
-}
-
-.yellow {
-    display:none;
-}
-
-.red {
-    display:none;
+table#colors div{
+    width:39px;
+    height:12px;
+    padding:2px;
+    float:left;
 }
 
 .path {
@@ -171,7 +160,7 @@ table#colors td {
     z-index:7000;
     background: #555555;
     position:relative;
-    left:80px;
+    left:-110px;
     top:200px;
 }
 

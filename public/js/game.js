@@ -12,24 +12,20 @@ var parentArmyId = null;
 var selectedEnemyArmy = null;
 var nextArmy = null;
 var nextArmySelected = false;
+var armyToJoinId = null;
 
 var zoomer;
-
-var socket;
 
 var nextArmy;
 
 var cursorDirection;
 
 $(document).ready(function() {
+    lWSC = new jws.jWebSocketJSONClient();
+    login();
     zoomer = new zoom(758, 670);
-    initWS()
-    lock = false;
-    if(my.turn){
-        turnOn();
-    }else{
-        turnOff();
-    }
+    setTimeout ( 'connect()', 1000 );
+
 /*    for(y in fields) {
         for(x in fields[y]) {
             board.append(
@@ -43,7 +39,6 @@ $(document).ready(function() {
             );
         }
     }*/
-    startM();
 });
 
 function turnOn() {
@@ -66,12 +61,13 @@ function changeTurn(color, nr) {
         console.log('Turn "color" not set');
         return false;
     }
-    $('#'+turn.color+'Turn').html('');
+    $('.'+turn.color+' .turn').html('');
     turn.color = color;
     if(typeof nr != 'undefined'){
         turn.nr = nr;
     }
-    $('#'+turn.color+'Turn').html('Turn ' + turn.nr);
+    $('.'+turn.color+' .turn').html('Turn >');
+    $('#turnNumber').html(turn.nr);
     if(turn.color == my.color) {
         turnOn();
         startMyTurn();
@@ -83,6 +79,8 @@ function changeTurn(color, nr) {
 }
 
 function initGame(){
+    var myArmies = false;
+    var myCastles = false;
     for(i in castles) {
         new castleCreate(i);
     }
@@ -90,31 +88,31 @@ function initGame(){
         new ruinCreate(i);
     }
     for(color in players) {
-        $('.'+color).css('display','block');
-        $('#'+color+'Color').css({
-            width:'50px',
-            height:'18px',
-            background:color,
-            border:'1px solid #cecece'
-        })
+        $('.'+color +' .color').css('background',color);
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
             if(color == my.color){
-                var myArmies = true;
+                myArmies = true;
             }
         }
         for(i in players[color].castles) {
             castleOwner(i, color);
             if(color == my.color){
-                var myCastles = true;
+                myCastles = true;
             }
         }
     }
     $('.castle').fadeIn(1);
     auth();
     showFirstCastle();
-    if(typeof myArmies == 'undefined' && typeof myCastles == 'undefined'){
+    if(!myArmies && !myCastles){
         lostM();
+    }else{
+        if(my.turn){
+            turnOn();
+        }else{
+            turnOff();
+        }
     }
 }
 

@@ -1,6 +1,11 @@
+function mElement(){
+    return $('#nextArmy');
+}
+
+
 function startM(){
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
@@ -19,7 +24,7 @@ function startM(){
 
 function lostM(){
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('You lose.'))
@@ -39,7 +44,7 @@ function lostM(){
 
 function winM(){
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('You win.'))
@@ -59,7 +64,7 @@ function winM(){
 
 function turnM(){
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('Your turn.'))
@@ -79,7 +84,7 @@ function turnM(){
 
 function simpleM(message){
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html(message))
@@ -101,7 +106,7 @@ function disbandArmyM(){
         return null;
     }
     removeM();
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append($('<h3>').addClass('center').html('Are you sure?'))
@@ -161,7 +166,7 @@ function splitArmyM(a){
         numberOfUnits++;
     }
     var height = numberOfUnits * 31 + 32;
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .append(army)
@@ -176,10 +181,9 @@ function castleM(castleId, color){
     removeM();
     var time = '';
     var attr;
-    if(castles[castleId].capital){
-        var capital = $('<h4>').append('Capital city');
-    } else {
         var capital = null;
+    if(castles[castleId].capital){
+        capital = $('<h4>').append('Capital city');
     }
     var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
     var j = 0;
@@ -243,7 +247,7 @@ function castleM(castleId, color){
         )
     )
     var height = 62 + k*54 + 96;
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .css('min-height',height+'px')
@@ -324,7 +328,7 @@ function battleM(battle, a, def) {
             })
         );
     }
-    $('#nextTurn').after(
+    mElement().after(
         $('<div>')
         .addClass('message')
         .css('display','none')
@@ -396,7 +400,11 @@ function walkM(result) {
         break;
     }
     if(typeof result.path[i] == 'undefined') {
-        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+//        deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
+        if(armyToJoinId){
+            deleteArmy(armyToJoinId, my.color, 1);
+            armyToJoinId = null;
+        }
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         newX = players[my.color].armies['army'+result.armyId].x;
         newY = players[my.color].armies['army'+result.armyId].y;
