@@ -104,7 +104,7 @@
     $('.'+my.color+' .color').append('You');
     $('.'+turn.color+' .turn').html('Turn >');
     $('#turnNumber').html(turn.nr);
-    $('#nextTurn').click(function(){sendNextTurn()});
+    $('#nextTurn').click(function(){nextTurnM()});
     $('#nextArmy').click(function(){findNextArmy()});
     $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
     $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});

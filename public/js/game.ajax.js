@@ -86,7 +86,7 @@ function sendMove(movesSpend) {
                 neutral = false;
             }
             if(result.victory) {
-//                 deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+                deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
                 players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
                 newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
                 newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
@@ -106,16 +106,15 @@ function sendMove(movesSpend) {
                     getAddArmy(enemyArmies[i].armyId);
                     console.log(enemyArmies[i]);
                 }
-//                 deleteArmy('army' + unselectedArmy.armyId, my.color);
+                deleteArmy('army' + unselectedArmy.armyId, my.color);
                 wsArmyAdd(unselectedArmy.armyId);
             }
             if(neutral){
-                var enemyArmies = new Array();
-                enemyArmies[0] = jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
-                battleM(result.battle, unselectedArmy, enemyArmies);
-            }else{
-                battleM(result.battle, unselectedArmy, enemyArmies);
+                enemyArmies = new Array();
+                enemyArmies[0] = getNeutralCastleGarrison();
             }
+            wsBattle(result.battle,unselectedArmy,enemyArmies);
+            battleM(result.battle, unselectedArmy, enemyArmies);
             lock = false;
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
@@ -149,7 +148,7 @@ function sendMove(movesSpend) {
                 getAddArmy(selectedEnemyArmy.armyId);
                 wsArmyAdd(selectedEnemyArmy.armyId);
             }
-
+            wsBattle(result.battle,unselectedArmy,{0:selectedEnemyArmy});
             battleM(result.battle, unselectedArmy, {0:selectedEnemyArmy});
             unselectEnemyArmy();
             lock = false;
@@ -226,7 +225,7 @@ function splitArmy(armyId){
     });
 }
 
-function castleRaze(castleId){
+function castleRaze(){
     var castleId = $('input[name=raze]:checked').val();
     if(!castleId) {
         return null;

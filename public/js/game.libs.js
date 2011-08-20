@@ -127,9 +127,7 @@ function castleOwner(castleId, color) {
                     castle.css('cursor', 'default');
                 }
             });
-            castle.click(function(){
-                return null
-                });
+            castle.click(function(){return null});
         }
         castle
         .removeClass()
@@ -368,7 +366,7 @@ function selectArmy(a) {
 }
 
 function unselectArmy() {
-    if(selectedArmy != null) {
+    if(selectedArmy) {
         unselectedArmy = selectedArmy;
         $('#army' + selectedArmy.armyId).css('border','none');
         board.css('cursor', 'default');
@@ -446,6 +444,10 @@ function getEnemyCastleGarrison(castleId) {
         }
     }
     return armies;
+}
+
+function getNeutralCastleGarrison(){
+    return jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
 }
 
 function findNextArmy() {
@@ -569,20 +571,21 @@ function downRight(pfX, pfY) {
     var yLenthPixels = (newY - selectedArmy.y);
     var yLenthPoints = yLenthPixels/40;
     var movesSpend = 0;
+    var dir = 'se';
     if(xLenthPixels < yLenthPixels) {
-        dir = 'se';
         for(i = 1; i <= xLenthPoints; i++) {
             pfX += 1;
             pfY += 1;
+            dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 's';
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY += 1;
+            dir = 's';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -590,19 +593,19 @@ function downRight(pfX, pfY) {
             movesSpend = m;
         }
     } else {
-        dir = 'se';
         for(i = 1; i <= yLenthPoints; i++) {
             pfX += 1;
             pfY += 1;
+            dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'e';
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX += 1;
+            dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -620,20 +623,21 @@ function topRight(pfX, pfY) {
     var yLenthPixels = (selectedArmy.y - newY);
     var yLenthPoints = yLenthPixels/40;
     var movesSpend = 0;
+    var dir = 'ne';
     if(xLenthPixels < yLenthPixels) {
-        dir = 'ne';
         for(i = 1; i <= xLenthPoints; i++) {
             pfX += 1;
             pfY -= 1;
+            dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'n';
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY -= 1;
+            dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -641,19 +645,19 @@ function topRight(pfX, pfY) {
             movesSpend = m;
         }
     } else {
-        dir = 'ne';
         for(i = 1; i <= yLenthPoints; i++) {
             pfX += 1;
             pfY -= 1;
+            dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'e';
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX += 1;
+            dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -671,20 +675,21 @@ function topLeft(pfX, pfY) {
     var yLenthPixels = (selectedArmy.y - newY);
     var yLenthPoints = yLenthPixels/40;
     var movesSpend = 0;
+    var dir = 'nw';
     if(xLenthPixels < yLenthPixels) {
-        dir = 'nw';
         for(i = 1; i <= xLenthPoints; i++) {
             pfX -= 1;
             pfY -= 1;
+            dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'n';
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY -= 1;
+            dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -692,19 +697,19 @@ function topLeft(pfX, pfY) {
             movesSpend = m;
         }
     } else {
-        dir = 'nw';
         for(i = 1; i <= yLenthPoints; i++) {
             pfX -= 1;
             pfY -= 1;
+            dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'w';
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX -= 1;
+            dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
@@ -722,6 +727,7 @@ function downLeft(pfX, pfY) {
     var yLenthPixels = (newY - selectedArmy.y);
     var yLenthPoints = yLenthPixels/40;
     var movesSpend = 0;
+    var dir = 'sw';
     if(xLenthPixels < yLenthPixels) {
         dir = 'sw';
         for(i = 1; i <= xLenthPoints; i++) {
@@ -743,19 +749,19 @@ function downLeft(pfX, pfY) {
             movesSpend = m;
         }
     } else {
-        dir = 'sw';
         for(i = 1; i <= yLenthPoints; i++) {
             pfX -= 1;
             pfY += 1;
+            dir = 'sw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
         }
-        dir = 'w';
         for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
             pfX -= 1;
+            dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
             if(!m || m == movesSpend) {
                 return movesSpend;

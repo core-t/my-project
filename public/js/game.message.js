@@ -82,6 +82,28 @@ function turnM(){
     );
 }
 
+function nextTurnM(){
+    removeM();
+    mElement().after(
+        $('<div>')
+        .addClass('message')
+        .append($('<h3>').addClass('center').html('Next turn. Are you sure?'))
+        .append(
+            $('<div>')
+            .addClass('button go')
+            .html('Ok')
+            .click(function(){
+                removeM();
+                sendNextTurn();
+            })
+        )
+        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
+        .css({
+            'min-height':'70px'
+        })
+    );
+}
+
 function simpleM(message){
     removeM();
     mElement().after(
@@ -400,11 +422,7 @@ function walkM(result) {
         break;
     }
     if(typeof result.path[i] == 'undefined') {
-//        deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
-        if(armyToJoinId){
-            deleteArmy(armyToJoinId, my.color, 1);
-            armyToJoinId = null;
-        }
+        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         newX = players[my.color].armies['army'+result.armyId].x;
         newY = players[my.color].armies['army'+result.armyId].y;
