@@ -75,6 +75,7 @@ function sendMove(movesSpend) {
             return null;
         }
         if(unselectedArmy.moves < (movesSpend + 1)) {
+            simpleM('Not enough moves left.');
             console.log(movesSpend);
             lock = false;
             return null;
@@ -125,6 +126,7 @@ function sendMove(movesSpend) {
             return null;
         }
         if(unselectedArmy.moves < (movesSpend + 1)) {
+            simpleM('Not enough moves left.');
             console.log(movesSpend);
             lock = false;
             unselectEnemyArmy();
@@ -288,16 +290,31 @@ function searchRuins(){
     }
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
-        if(result.gold){
-            console.log($('#gold').html());
-            console.log('gold');
-            goldUpdate(result.gold + parseInt($('#gold').html()));
-            simpleM('You have found '+result.gold+' gold.');
-        }else{
-            console.log(result);
+        console.log(result.find);
+        switch(result.find[0]){
+            case 'gold':
+                goldUpdate(result.find[1] + parseInt($('#gold').html()));
+                simpleM('You have found '+result.find[1]+' gold.');
+                break;
+            case 'death':
+                simpleM('You have found death.');
+                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+                wsArmyAdd(result.armyId);
+                break
+            case 'alies':
+                simpleM(result.find[1]+' alies joined your army.');
+                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+                wsArmyAdd(result.armyId);
+                break
+            case 'null':
+                simpleM('You have found nothing.');
+                break
+            case 'artefact':
+                simpleM('You have found an ancient artefact.');
+                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+                wsArmyAdd(result.armyId);
+                break
+
         }
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        selectArmy(players[my.color].armies['army'+result.armyId]);
-        wsArmyAdd(selectedArmy.armyId);
     });
 }

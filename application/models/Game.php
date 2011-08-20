@@ -30,15 +30,15 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         return $this->_db->lastSequenceId($seq);
     }
 
-    private function getFreeChannel($channel){
-        try{
+    private function getFreeChannel($channel) {
+        try {
             $select = $this->_db->select()
-                ->from($this->_name, 'channel')
-                ->where('channel = ?', $channel)
-                ->where('"isActive" = true');
+                    ->from($this->_name, 'channel')
+                    ->where('channel = ?', $channel)
+                    ->where('"isActive" = true');
             $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0]['channel'])){
-                $channel = $this->getFreeChannel($channel+1);
+            if (isset($result[0]['channel'])) {
+                $channel = $this->getFreeChannel($channel + 1);
             }
             return $channel;
         } catch (PDOException $e) {
@@ -62,7 +62,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                 ->where('"isOpen" = true')
                 ->order('begin DESC');
         $result = $this->_db->query($select)->fetchAll();
-        foreach($result as $k=>$game){
+        foreach ($result as $k => $game) {
             $select = $this->_db->select()
                     ->from('playersingame', 'count(*)')
                     ->where('"gameId" = ?', $game['gameId'])
@@ -70,10 +70,10 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
             $playersingame = $this->_db->query($select)->fetchAll();
             $result[$k]['playersingame'] = $playersingame[0]['count'];
             $select = $this->_db->select()
-                    ->from('player', array('firstName','lastName'))
+                    ->from('player', array('firstName', 'lastName'))
                     ->where('"playerId" = ?', $result[$k]['gameMasterId']);
             $gameMaster = $this->_db->query($select)->fetchAll();
-            $result[$k]['gameMaster'] = $gameMaster[0]['firstName'].' '.$gameMaster[0]['lastName'];
+            $result[$k]['gameMaster'] = $gameMaster[0]['firstName'] . ' ' . $gameMaster[0]['lastName'];
         }
         return $result;
     }
@@ -81,10 +81,10 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getMyGames($playerId) {
         try {
             $select1 = $this->_db->select()
-                        ->from('playersingame', $this->_primary)
-                        ->where('ready = true')
-                        ->where('lost = false')
-                        ->where('"playerId" = ?', $playerId);
+                    ->from('playersingame', $this->_primary)
+                    ->where('ready = true')
+                    ->where('lost = false')
+                    ->where('"playerId" = ?', $playerId);
             $select2 = $this->_db->select()
                     ->from($this->_name)
                     ->where('"isOpen" = false')
@@ -92,6 +92,13 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"gameId" IN ?', $select1)
                     ->order('begin DESC');
             $result = $this->_db->query($select2)->fetchAll();
+            foreach ($result as $k => $game) {
+                $select = $this->_db->select()
+                        ->from('player', array('firstName', 'lastName'))
+                        ->where('"playerId" = ?', $result[$k]['gameMasterId']);
+                $gameMaster = $this->_db->query($select)->fetchAll();
+                $result[$k]['gameMaster'] = $gameMaster[0]['firstName'] . ' ' . $gameMaster[0]['lastName'];
+            }
             return $result;
         } catch (PDOException $e) {
             throw new Exception($select2->__toString());
@@ -101,10 +108,10 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getAlivePlayers() {
         try {
             $select = $this->_db->select()
-                        ->from('playersingame', 'playerId')
-                        ->where('ready = true')
-                        ->where('lost = false')
-                        ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+                    ->from('playersingame', 'playerId')
+                    ->where('ready = true')
+                    ->where('lost = false')
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
@@ -114,7 +121,25 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function startGame() {
         $data['isOpen'] = 'false';
         $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        return $this->_db->update($this->_name, $data, $where);
+        $res = $this->_db->update($this->_name, $data, $where);
+        switch ($res) {
+            case 1:
+                $data = array(
+                    'ready' => 'false'
+                );
+                $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+                return $this->_db->update('playersingame', $data, $where);
+                break;
+            case 0:
+                throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
+                break;
+            case null:
+                throw new Exception('Zapytanie zwróciło błąd');
+                break;
+            default:
+                throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
+                break;
+        }
     }
 
     public function getGame() {
@@ -133,8 +158,8 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getPlayersWaitingForGame() {
         try {
             $select = $this->_db->select()
-                    ->from(array('a' => 'playersingame'), array('ready','color','playerId'))
-                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName','lastName'))
+                    ->from(array('a' => 'playersingame'), array('ready', 'color', 'playerId'))
+                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName'))
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             return $this->_db->query($select)->fetchAll();
@@ -253,7 +278,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function getPlayerInGame($playerId){
+    public function getPlayerInGame($playerId) {
         try {
             $select = $this->_db->select()
                     ->from('playersingame')
@@ -266,7 +291,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function isPlayerReady($playerId){
+    public function isPlayerReady($playerId) {
         try {
             $select = $this->_db->select()
                     ->from('playersingame', 'ready')
@@ -274,7 +299,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"playerId" = ?', $playerId)
                     ->where('ready = true');
             $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0]['ready'])){
+            if (isset($result[0]['ready'])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -282,7 +307,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function isColorInGame($playerId, $color){
+    public function isColorInGame($playerId, $color) {
         try {
             $select = $this->_db->select()
                     ->from('playersingame', 'color')
@@ -291,7 +316,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('color = ?', $this->_playerColors[$color])
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0]['color'])){
+            if (isset($result[0]['color'])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -300,7 +325,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     }
 
     public function updatePlayerReady($playerId, $color) {
-        if($this->isColorInGame($playerId, $color)){
+        if ($this->isColorInGame($playerId, $color)) {
             return false;
         }
         $player = $this->getPlayerInGame($playerId);
@@ -313,7 +338,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $result = $this->_db->update('playersingame', $data, $where);
-        if($result == 1){
+        if ($result == 1) {
             return array('ready' => $data['ready'], 'color' => $color);
         }
     }
@@ -366,8 +391,8 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         return array('playerId' => $nextPlayerId, 'color' => $nextPlayerColor);
     }
 
-    public function updateTurnNumber($playerId){
-        if($this->isGameMaster($playerId)) {
+    public function updateTurnNumber($playerId) {
+        if ($this->isGameMaster($playerId)) {
             $select = $this->_db->select()
                     ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
                     ->where('"' . $this->_primary . '" = ?', $this->_gameId);
@@ -377,7 +402,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         $data['turnPlayerId'] = $playerId;
 
         if ($this->updateGame($data) == 1) {
-            if(isset($data['turnNumber'])){
+            if (isset($data['turnNumber'])) {
                 return $data['turnNumber'];
             }
         } else {
@@ -385,7 +410,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function endGame(){
+    public function endGame() {
         $data['isActive'] = 'false';
 
         $this->updateGame($data);
@@ -464,7 +489,7 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function getPlayerInGameGold($playerId){
+    public function getPlayerInGameGold($playerId) {
         try {
             $select = $this->_db->select()
                     ->from('playersingame', 'gold')
@@ -477,18 +502,19 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function updatePlayerInGameGold($playerId, $gold){
+    public function updatePlayerInGameGold($playerId, $gold) {
         $data['gold'] = $gold;
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $this->_db->update('playersingame', $data, $where);
     }
 
-    public function setPlayerLostGame($playerId){
+    public function setPlayerLostGame($playerId) {
         $data['lost'] = 'true';
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $this->_db->update('playersingame', $data, $where);
     }
+
 }
 

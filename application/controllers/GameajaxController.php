@@ -81,7 +81,6 @@ class GameajaxController extends Warlords_Controller_Action {
             $position = explode(',', substr($position['position'], 1 , -1));
             $ruinId = Application_Model_Board::confirmRuinPosition($position);
             if($ruinId !== null){
-                $gold = 0;
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
                 if($modelRuin->ruinExists($ruinId)){
                     throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
@@ -90,10 +89,12 @@ class GameajaxController extends Warlords_Controller_Action {
                 $random = rand(0,100);
                 if($random < 10){
                     //śmierć
+                    $find = array('death',1);
                     $modelArmy->armyRemoveHero($heroId);
                 }elseif($random < 55){
                     //kasa
                     $gold = rand(500,1500);
+                    $find = array('gold',$gold);
                     $modelGame = new Application_Model_Game($this->_namespace->gameId);
                     $inGameGold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
                     $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold+$inGameGold);
@@ -102,19 +103,22 @@ class GameajaxController extends Warlords_Controller_Action {
                     //jednostki
                     $unitId = rand(11,15);
                     $numerOfUnits = rand(1,3);
+                    $find = array('alies',$numerOfUnits);
                     for($i = 0; $i < $numerOfUnits; $i++){
                         $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
                     }
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 }elseif($random < 95){
                     //nic
+                    $find = array('null',1);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 }else{
                     //artefakt
+                    $find = array('artefact',1);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 }
                 $response = $modelArmy->getArmyById($armyId);
-                $response['gold'] = $gold;
+                $response['find'] = $find;
                 $this->view->response = Zend_Json::encode($response);
             }else{
                 throw new Exception('Brak ruinId');

@@ -183,17 +183,19 @@ function wsBattle(battle,army,armies){
     }
     data += tmp+'.'+army.color+','+army.armyId;
     tmp = '';
-    if(armies[0].color == 'neutral'){
-        tmp = 'n';
-    }else{
-        for(i in armies){
-            if(tmp){
-                tmp += '|';
+    if(typeof armies != 'undefined'){
+        if(typeof armies[0] != 'undefined' && typeof armies[0].color != 'undefined' && armies[0].color == 'neutral'){
+            tmp = 'n';
+        }else{
+            for(i in armies){
+                if(tmp){
+                    tmp += '|';
+                }
+                tmp += armies[i].armyId;
             }
-            tmp += armies[i].armyId;
-        }
-        if(tmp){
-            tmp += ','+armies[i].color;
+            if(tmp){
+                tmp += ','+armies[i].color;
+            }
         }
     }
     if(tmp){
