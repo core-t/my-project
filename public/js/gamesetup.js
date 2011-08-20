@@ -5,7 +5,6 @@ function refresh() {
         } else {
             delete result.start;
             $('#playersout').html('');
-            $('#playersout').append(th);
             var playersReady = 0;
             for(i = 0; i < numberOfPlayers; i++) {
                 $('#'+colors[i]+' #td1').html('');
@@ -14,19 +13,21 @@ function refresh() {
             for(i in result){
                 if(result[i].ready) {
                     playersReady++;
-                    $('#'+result[i].color+' #td1').html(result[i].playerId);
+                    $('#'+result[i].color+' #td1').html(result[i].firstName+' '+result[i].lastName);
                     if(result[i].playerId == playerId){
                         if(ready) {
                             var html = 'Unready';
                         } else {
                             var html = 'Ready';
                         }
-                        $('#'+result[i].color+' #td2 a').html(html);
+                        $('#'+result[i].color+' #td2 a')
+                        .addClass('button')
+                        .html(html);
                     }else{
                         $('#'+result[i].color+' #td2 a').html('');
                     }
                 } else {
-                    $('#playersout').append('<tr><td>' + result[i].playerId + '</td></tr>');
+                    $('#playersout').append('<tr><td>' + result[i].firstName+' '+result[i].lastName + '</td></tr>');
                 }
             }
             if(urlStart) {
@@ -50,5 +51,6 @@ function playerReady(color) {
         if(typeof result.ready != 'undefined') {
             ready = result.ready;
         }
+        refresh();
     });
 }

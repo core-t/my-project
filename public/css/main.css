@@ -82,6 +82,7 @@ a {
 
 ul{
     list-style-type:none;
+    height: 40px;
 }
 li {
     float:left;

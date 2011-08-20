@@ -69,6 +69,11 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             $playersingame = $this->_db->query($select)->fetchAll();
             $result[$k]['playersingame'] = $playersingame[0]['count'];
+            $select = $this->_db->select()
+                    ->from('player', array('firstName','lastName'))
+                    ->where('"playerId" = ?', $result[$k]['gameMasterId']);
+            $gameMaster = $this->_db->query($select)->fetchAll();
+            $result[$k]['gameMaster'] = $gameMaster[0]['firstName'].' '.$gameMaster[0]['lastName'];
         }
         return $result;
     }
@@ -128,7 +133,8 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
     public function getPlayersWaitingForGame() {
         try {
             $select = $this->_db->select()
-                    ->from('playersingame')
+                    ->from(array('a' => 'playersingame'), array('ready','color','playerId'))
+                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName','lastName'))
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             return $this->_db->query($select)->fetchAll();

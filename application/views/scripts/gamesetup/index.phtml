@@ -1,35 +1,35 @@
 <h2>Open games:</h2>
 <div id="mygames"><table></table></div>
 <ul>
-<li>
-<a class="button" href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>">< Back</a>
-</li>
-<li>
-<a class="button" href="<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'create')) ?>">Create</a>
-</li>
-<li>
-<a class="button" href="javascript:refresh()">Refresh</a>
-</li>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
+    </li>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'create')) ?>">Create</a>
+    </li>
+    <li>
+        <a class="button" href="javascript:refresh()">Refresh</a>
+    </li>
 </ul>
 <script type="text/javascript">
-    var th = '<th>Game ID</th><th>Game master ID</th><th>Max number of players</th><th>Date</th>';
-    var url = '<?php echo $this->url(array('controller'=>'gamesetup', 'action'=>'setup', 'gameId'=>null)) ?>';
+    var th = '<th>Game master</th><th>Current number of players</th><th>Max number of players</th><th>Date</th>';
+    var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'setup', 'gameId' => null)) ?>';
     var mygames = $('#mygames table');
     function refresh() {
-        $.getJSON("<?php echo $this->url(array('controller'=>'gamesetupajax', 'action'=>'refresh')) ?>", function(result) {
+        $.getJSON("<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'refresh')) ?>", function(result) {
 
             mygames.html('');
             mygames.append(th);
             for(i in result) {
                 mygames.append(
-                    $('<tr>')
-                    .addClass('gid'+result[i].gameId)
-                    .append($('<td>').html(result[i].gameId))
-                    .append($('<td>').html(result[i].gameMasterId))
-                    .append($('<td>').html(result[i].playersingame+'/'+result[i].numberOfPlayers))
-                    .append($('<td>').html(result[i].begin.split('.')[0]))
-                    .bind('click', { gameId: result[i].gameId }, makeUrl)
-                );
+                $('<tr>')
+                .addClass('gid'+result[i].gameId)
+                .append($('<td>').html(result[i].gameMaster))
+                .append($('<td>').html(result[i].playersingame))
+                .append($('<td>').html(result[i].numberOfPlayers))
+                .append($('<td>').html(result[i].begin.split('.')[0]))
+                .bind('click', { gameId: result[i].gameId }, makeUrl)
+            );
                 $('#mygames td').mouseover(function(){
                     $('#mygames td').css('cursor', 'pointer')
                 });

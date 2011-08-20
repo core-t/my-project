@@ -2,17 +2,15 @@
 $urlStart = '';
 ?>
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
-<h4>Players in game</h4>
+<h2>Select your color</h2>
 <table id="playersingame">
-<th>Player Id</th><th>Ready</th>
+<th>Player</th><th>Status</th>
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"><a href="javascript:playerReady('.$i.')"></a></td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"><a class="button" href="javascript:playerReady('.$i.')"></a></td></tr>';
 }
 ?>
 </table>
-<h4>Players out</h4>
-<table id="playersout"></table>
 
 <ul>
     <li><a class="button" href="<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
@@ -24,8 +22,11 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
         }
         ?>
 </ul>
+
+<h4>Players out</h4>
+<table id="playersout"></table>
+
 <script type="text/javascript">
-    var th = '<th>Player Id</th>';
     var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'setup')) ?>';
     var urlStart = '<?php echo $urlStart; ?>';
     var urlRedirect = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
