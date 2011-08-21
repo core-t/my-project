@@ -88,6 +88,7 @@ function initGame(){
         new ruinCreate(i);
     }
     for(color in players) {
+        players[color].active = 0;
         $('.'+color +' .color').css('background',color);
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
@@ -114,7 +115,7 @@ function initGame(){
             turnOff();
         }
     }
-    setInterval ( 'wsPing()', 30000 );
+    setInterval ( 'wsPing()', 1000 );
 
 }
 
@@ -123,5 +124,5 @@ function goldUpdate(gold){
 }
 
 function updatePlayers(color){
-
+    players[color].active = 2;
 }

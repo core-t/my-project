@@ -157,6 +157,17 @@ function wsTurn() {
 
 function wsPing() {
     lWSC.channelPublish(channel,my.color+'.p');
+    for(color in players){
+        if(color == my.color){
+            continue;
+        }
+        if(players[color].active){
+            players[color].active--;
+            $('.'+color+' .turn').css('background','none');
+        }else{
+            $('.'+color+' .turn').css('background','url(../img/game/ajax_wait.gif) center center no-repeat');
+        }
+    }
 }
 
 function wsPlayerArmies(color){
