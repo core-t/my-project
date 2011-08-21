@@ -101,7 +101,7 @@
         cursorPosition(e.pageX, e.pageY);
     });
     $('#send').click(function(){wsChat()});
-
+    $('#msg').keypress(function(e){if(e.which == 13)wsChat()});
     $('.'+my.color+' .color').append('You');
     $('.'+turn.color+' .turn').html('Turn >');
     $('#turnNumber').html(turn.nr);

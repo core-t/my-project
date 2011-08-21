@@ -82,10 +82,13 @@ function refresh() {
         }
     });
 }
+function init(){
+    refresh();
+}
 $(document).ready(function() {
     lWSC = new jws.jWebSocketJSONClient();
     login();
-    refresh();
+    setTimeout('init()', 1500);
     setInterval ( 'refresh()', 5000 );
 });
 

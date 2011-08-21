@@ -15,7 +15,7 @@ function startM(){
             .html('Start')
             .click(function(){
                 removeM();
-                initGame();
+                startGame();
             })
         )
         .css('min-height','70px')

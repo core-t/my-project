@@ -294,8 +294,21 @@
     height:78px;
     border: none;
     overflow:hidden;
-    background:white;
     border-bottom:1px solid #cecece;
+    background:white;
+}
+
+#chatBox #chatWindow div{
+    position:relative;
+    top:0;
+    left:0;
+    width:183px;
+/*     height:78px; */
+    border: none;
+    border-bottom:none;
+    line-height:12px;
+    font-size:10px;
+    font-family:arial;
 }
 
 #chatBox input{

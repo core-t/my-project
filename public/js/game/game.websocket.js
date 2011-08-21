@@ -44,7 +44,16 @@ function login() {
                             castleGet(data[2]);
                             break;
                         case 'C':
-                            chat(color,data[2]);
+                            var msg = '';
+                            for(i in data){
+                                if(msg){
+                                    msg += '.';
+                                }
+                                msg += data[i];
+                            }
+                            if(msg){
+                                chat(color,msg);
+                            }
                             break;
                         case 'a':
                             getAddArmy(data[2]);
@@ -108,16 +117,6 @@ function login() {
     }
 }
 
-// log out the client from the jWebSocket server
-function logout() {
-    if( lWSC ) {
-        lWSC.stopKeepAlive();
-        var lRes = lWSC.close({
-            timeout: 3000
-        });
-    }
-}
-
 // try to subscribe at a certain channel
 function subscribeChannel() {
     var lAccessKey = 'access';
@@ -131,25 +130,6 @@ function auth() {
     var lRes = lWSC.channelAuth( channel, lAccessKey, lSecretKey );
 }
 
-function connect(){
-    if(lWSC.isOpened()){
-//        lWSC.startKeepAlive({
-//            interval: 3000
-//        });
-//        board.css('display','block');
-        lock = false;
-        startM();
-    }else{
-        login();
-        simpleM('Sorry, server is disconnected.');
-        setTimeout ( 'connect()', 5000 );
-    }
-}
-
-function exitPage() {
-    lWSC.stopKeepAlive();
-    logout();
-}
 function wsCastleOwner(castleId, color) {
     lWSC.channelPublish(channel,my.color+'.c.'+castleId+'.'+color);
 }
@@ -161,8 +141,10 @@ function wsTurn() {
 function wsChat() {
     var msg = $('#msg').val();
     $('#msg').val('');
-    $('#chatWindow').append('I: '+msg+'<br/>');
-    lWSC.channelPublish(channel,my.color+'.C.'+msg);
+    if(msg){
+        chat(my.color,msg);
+        lWSC.channelPublish(channel,my.color+'.C.'+msg);
+    }
 }
 
 function wsPing() {

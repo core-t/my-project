@@ -24,7 +24,7 @@ $(document).ready(function() {
     lWSC = new jws.jWebSocketJSONClient();
     login();
     zoomer = new zoom(758, 670);
-    setTimeout ( 'connect()', 1000 );
+    setTimeout ( 'connect()', 1500 );
 
 /*    for(y in fields) {
         for(x in fields[y]) {
@@ -78,7 +78,18 @@ function changeTurn(color, nr) {
     }
 }
 
-function initGame(){
+function connect(){
+    if(lWSC.isOpened()){
+        lock = false;
+        startM();
+    }else{
+        login();
+        simpleM('Sorry, server is disconnected.');
+        setTimeout ( 'connect()', 5000 );
+    }
+}
+
+function startGame(){
     var myArmies = false;
     var myCastles = false;
     for(i in castles) {
@@ -131,6 +142,27 @@ function updatePlayers(color){
 }
 
 function chat(color,msg){
-    $('#chatWindow').append(color+': '+msg+'<br/>');
-    console.log(msg);
+    var chatWindow = $('#chatWindow div');
+//     console.log($('#chatWindow div')[0].scrollHeight);
+    var scroll = 78 - chatWindow[0].scrollHeight;
+    if(chatWindow.html()){
+        scroll -= 12;
+    }else{
+        scroll -= 24;
+    }
+//     console.log(scroll);
+    chatWindow.animate({'top':scroll},100,function(){
+        chatWindow.append('<br/>')
+//         .append(
+//             $('<div>').css({
+//                 'float':'left',
+//                 'background':color,
+//                 'width':'4px',
+//                 'height':'12px'
+//             })
+//         )
+        .append(color+': '+msg);
+    });
+//     console.log(msg);
+    $('#msg').focus();
 }
