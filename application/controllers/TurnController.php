@@ -1,6 +1,6 @@
 <?php
 
-class TurnController extends Warlords_Controller_Action {
+class TurnController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */

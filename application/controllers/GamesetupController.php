@@ -5,39 +5,17 @@
  *
  */
 
-class GamesetupController extends Warlords_Controller_Action {
+class GamesetupController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */
 //        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
         $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/gamesetup.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
     }
 
     public function indexAction() {
-        // action bodys
-        $modelGame = new Application_Model_Game();
-        $this->view->openGames = $modelGame->getOpen();
-        if ($this->_namespace->gameId) {
-            $modelGame->disconnectFromGame($this->_namespace->gameId, $this->_namespace->player['playerId']);
-            unset($this->_namespace->gameId);
-        }
-        $this->view->player = $this->_namespace->player;
-    }
-
-    public function createAction() {
-        $this->view->form = new Application_Form_Creategame ();
-        if ($this->_request->isPost()) {
-            if ($this->view->form->isValid($this->_request->getPost())) {
-                $modelGame = new Application_Model_Game ();
-                $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId']);
-                $this->_helper->redirector('setup', 'gamesetup', null, array('gameId' => $gameId));
-            }
-        }
-    }
-
-    public function setupAction() {
         $this->view->headScript()->appendFile('/js/gamesetup.js');
         $gameId = $this->_request->getParam('gameId');
         if (!empty($gameId)) {
@@ -60,19 +38,6 @@ class GamesetupController extends Warlords_Controller_Action {
         }
     }
 
-    private function findPlayerColor($playersInGame, $playerColors) {
-        foreach ($playersInGame as $player) {
-            foreach ($playerColors as $k => $color) {
-                if ($player['color'] == $color) {
-                    unset($playerColors[$k]);
-                }
-            }
-        }
-        foreach ($playerColors as $color) {
-            return $color;
-        }
-    }
-
     public function startAction() {
         if (!empty($this->_namespace->gameId)) {
             if (empty($this->_namespace->armyId)) {
@@ -84,7 +49,6 @@ class GamesetupController extends Warlords_Controller_Action {
                 $startPositions = $modelBoard->getDefaultStartPositions();
                 $playerHeroes = $modelHero->getHeroes();
                 $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
-//                 throw new Exception($playerColor);
                 if(empty($playerHeroes)) {
                     $modelHero->createHero();
                     $playerHeroes = $modelHero->getHeroes();

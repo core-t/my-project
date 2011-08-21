@@ -23,33 +23,43 @@
                 </div>
                 <div id="gameMenu">
                     <div class="gameMenu">
-                        <table id="colors">
-                            <tr>
-                                <td class="white"><div class="turn"></div><div class="color"></div></td>
-                                <td class="green"><div class="turn"></div><div class="color"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="yellow"><div class="turn"></div><div class="color"></div></td>
-                                <td class="red"><div class="turn"></div><div class="color"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="orange"><div class="turn"></div><div class="color"></div></td>
-                                <td class="blue"><div class="turn"></div><div class="color"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="orange"><div class="turn"></div><div class="color"></div></td>
-                                <td class="blue"><div class="turn"></div><div class="color"></div></td>
-                            </tr>
-                            <tr>
-                                <td class="orange"><div class="turn"></div><div class="color"></div></td>
-                                <td class="blue"><div class="turn"></div><div class="color"></div></td>
-                            </tr>
-
-                            <tr>
-                                <td>Turn number: <span id="turnNumber"></span></td>
-                                <td><a id="nextTurn" class="button">Next turn >></a></td>
-                            </tr>
-                        </table>
+                        <div id="turnBox">
+                            <div class="left">Turn number: <span id="turnNumber"></span></div>
+                            <div class="right"><a id="nextTurn" class="button">Next turn >></a></div>
+                        </div>
+                        <h3>Players</h3>
+                        <div class="playersBox">
+                            <div class="left white">
+                                <div class="nr">1</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                            <div class="right green">
+                                <div class="nr">2</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                        </div>
+                        <div class="playersBox">
+                            <div class="left yellow">
+                                <div class="nr">3</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                            <div class="right red">
+                                <div class="nr">4</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                        </div>
+                        <div class="playersBox">
+                            <div class="left orange">
+                                <div class="nr">5</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                            <div class="right blue">
+                                <div class="nr">6</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                        </div>
+                        <div class="playersBox">
+                            <div class="left orange">
+                                <div class="nr">7</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                            <div class="right blue">
+                                <div class="nr">8</div><div class="turn"></div><div class="color"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="gameMenu">
                         <p>Terrain: <span id="coord"></span></p>

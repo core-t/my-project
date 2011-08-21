@@ -59,6 +59,18 @@
         <controllerFile controllerName="Facebook">
           <actionMethod actionName="index"/>
         </controllerFile>
+        <controllerFile controllerName="New">
+          <actionMethod actionName="index"/>
+        </controllerFile>
+        <controllerFile controllerName="Load">
+          <actionMethod actionName="index"/>
+        </controllerFile>
+        <controllerFile controllerName="Newajax">
+          <actionMethod actionName="index"/>
+        </controllerFile>
+        <controllerFile controllerName="Loadajax">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Fbid"/>
@@ -150,6 +162,18 @@
           <viewControllerScriptsDirectory forControllerName="Login">
             <viewScriptFile forActionName="registration"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="New">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Load">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Newajax">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Loadajax">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -232,6 +256,18 @@
             <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Facebook">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="New">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Load">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Newajax">
+            <testApplicationActionMethod forActionName="index"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Loadajax">
             <testApplicationActionMethod forActionName="index"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>

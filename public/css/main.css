@@ -38,15 +38,15 @@ a {
 }
 
 .button {
-    color:#ddd;
+    color:#00C200;
     padding:3px;
-    border:1px solid #fff;
+    border:1px solid #00C200;
     margin:2px;
     text-align:center;
     cursor:pointer;
     height:14px;
     font-weight:bold;
-    text-shadow: black -1px -1px;
+/*     text-shadow: #00A700 -1px -1px; */
     background:#555;
     display:block;
     /*     text-shadow: blue 2px 2px, red -2px -2px; */
@@ -92,4 +92,10 @@ h1{
 }
 h2{
     margin-top: 10px;
+}
+.left{
+    float:left;
+}
+.right{
+    float:right;
 }

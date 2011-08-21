@@ -1,0 +1,30 @@
+<h1>Waiting for other players...</h1>
+
+<p>Number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
+<p>Game: "<?php echo $this->game['gameId'] ?>"</p>
+<p>Game started: "<?php echo substr($this->game['begin'],0,strpos($this->game['begin'],'.')) ?>"</p>
+
+<h2>Players:</h2>
+<table id="playersingame">
+<?php
+for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
+    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id">empty</td></tr>';
+}
+?>
+</table>
+
+<ul>
+    <li><a href="javascript:refresh()" class="button">Refresh</a></li>
+    <li><a href="<?php echo $this->url(array('controller' => 'load', 'action' => 'index', 'gameId' => null)) ?>" class="button">Back</a></li>
+</ul>
+<script type="text/javascript">
+    var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';
+    var urlRefresh = '<?php echo $this->url(array('controller' => 'loadajax', 'action' => 'refresh', 'gameId' => null)) ?>';
+    var urlUpdate = '<?php echo $this->url(array('controller' => 'loadajax', 'action' => 'update', 'gameId' => null)) ?>';
+    var alivePlayers = <?php echo Zend_Json::encode($this->game['alive']); ?>;
+    var ready = 0;
+    var playerId = <?php echo (int) $this->player['playerId'] ?>;
+    var color = '<?php echo $this->player['color'] ?>';
+    var channel = '<?php echo $this->game['channel']; ?>'
+
+</script>

@@ -3,6 +3,7 @@
 class ErrorController extends Zend_Controller_Action {
 
     public function errorAction() {
+        $this->_helper->layout->disableLayout();
         $errors = $this->_getParam('error_handler');
 
         $logger = Zend_Registry::getInstance()->get('logger');

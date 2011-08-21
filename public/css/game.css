@@ -113,22 +113,31 @@
     height:11px;
 }
 
-table#colors{
-    height:108px;
-}
-
-table#colors td {
+.playersBox{
+    clear:both;
+    margin:2px;
     text-align:center;
     min-width:80px;
     height:14px;
+}
+.playersBox div {
     border:1px solid #cecece;
 }
 
-table#colors div{
-    width:39px;
+.playersBox div div{
+    border:none;
+    width:33px;
     height:12px;
     padding:2px;
     float:left;
+}
+
+.playersBox div div.nr{
+    width:10px;
+}
+
+.playersBox div.green div.color{
+    color:white;
 }
 
 .path {
@@ -265,4 +274,11 @@ table#colors div{
     height:29px;
 }
 
+#turnBox{
+    margin:2px;
+    /*     height:29px; */
+}
 
+#turnBox div{
+    width:90px;
+}

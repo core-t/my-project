@@ -1,6 +1,6 @@
 <?php
 
-class GameController extends Warlords_Controller_Action {
+class GameController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */
@@ -25,12 +25,12 @@ class GameController extends Warlords_Controller_Action {
             $this->view->headScript()->prependFile('/js/jquery.min.js');
             $this->view->headScript()->appendFile('/js/jWebSocket.js');
             $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
-            $this->view->headScript()->appendFile('/js/game.js');
-            $this->view->headScript()->appendFile('/js/game.libs.js');
-            $this->view->headScript()->appendFile('/js/game.zoom.js');
-            $this->view->headScript()->appendFile('/js/game.websocket.js');
-            $this->view->headScript()->appendFile('/js/game.ajax.js');
-            $this->view->headScript()->appendFile('/js/game.message.js');
+            $this->view->headScript()->appendFile('/js/game/game.js');
+            $this->view->headScript()->appendFile('/js/game/game.libs.js');
+            $this->view->headScript()->appendFile('/js/game/game.zoom.js');
+            $this->view->headScript()->appendFile('/js/game/game.websocket.js');
+            $this->view->headScript()->appendFile('/js/game/game.ajax.js');
+            $this->view->headScript()->appendFile('/js/game/game.message.js');
             $this->_helper->layout->setLayout('game');
             $modelBoard = new Application_Model_Board();
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);

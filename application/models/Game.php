@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Game extends Warlords_Db_Table_Abstract {
+class Application_Model_Game extends Game_Db_Table_Abstract {
 
     protected $_name = 'game';
     protected $_primary = 'gameId';
@@ -118,6 +118,23 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
+    public function playerIsAlive($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame', 'playerId')
+                    ->where('ready = true')
+                    ->where('lost = false')
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset($result[0]['playerId'])){
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function startGame() {
         $data['isOpen'] = 'false';
         $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
@@ -168,12 +185,12 @@ class Application_Model_Game extends Warlords_Db_Table_Abstract {
         }
     }
 
-    public function getPlayerColor($id) {
+    public function getPlayerColor($playerId) {
         try {
             $select = $this->_db->select()
                     ->from('playersingame', 'color')
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"playerId" = ?', $id);
+                    ->where('"playerId" = ?', $playerId);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0]['color'])) {
                 return $result[0]['color'];

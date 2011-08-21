@@ -1,6 +1,6 @@
 <?php
 
-class FightController extends Warlords_Controller_Action
+class FightController extends Game_Controller_Action
 {
     private $_result = array();
     private $_movesRequiredToAttack = 1;

@@ -1,6 +1,6 @@
 <?php
 
-class GamesetupajaxController extends Warlords_Controller_Action {
+class GamesetupajaxController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */
@@ -12,13 +12,6 @@ class GamesetupajaxController extends Warlords_Controller_Action {
     }
 
     public function refreshAction() {
-        // action body
-        $modelGame = new Application_Model_Game();
-        $response = $modelGame->getOpen();
-        $this->view->response = Zend_Json::encode($response);
-    }
-
-    public function setuprefreshAction() {
         if (!empty($this->_namespace->gameId)) {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
             $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);

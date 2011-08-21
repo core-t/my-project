@@ -1,6 +1,6 @@
 <?php
 
-class MoveController extends Warlords_Controller_Action
+class MoveController extends Game_Controller_Action
 {
     private $canFly = 1;
     private $canSwim = 0;

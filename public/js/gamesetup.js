@@ -1,5 +1,5 @@
 function refresh() {
-    $.getJSON(urlAjax, function(result) {
+    $.getJSON(urlRefresh, function(result) {
         if(result.start) {
             top.location = urlRedirect;
         } else {

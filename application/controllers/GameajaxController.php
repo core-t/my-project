@@ -1,6 +1,6 @@
 <?php
 
-class GameajaxController extends Warlords_Controller_Action {
+class GameajaxController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */

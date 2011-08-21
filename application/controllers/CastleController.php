@@ -1,6 +1,6 @@
 <?php
 
-class CastleController extends Warlords_Controller_Action
+class CastleController extends Game_Controller_Action
 {
     private $castleId;
     private $modelCastle;

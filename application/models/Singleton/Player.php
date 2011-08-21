@@ -5,7 +5,7 @@
  *
  * @author brzoza
  */
-class Application_Model_Singleton_Player extends Warlords_Model_Singleton {
+class Application_Model_Singleton_Player extends Game_Model_Singleton {
 
     private static $_oInstance = false;
     //private $_connection = null;
@@ -31,7 +31,7 @@ class Application_Model_Singleton_Player extends Warlords_Model_Singleton {
     }
 
     private function __clone () {
-        
+
     }
 
     public function test () {
@@ -51,8 +51,8 @@ class Application_Model_Singleton_Player extends Warlords_Model_Singleton {
             $this->setParams( $result );
             return $result;
         }
-    }    
-    
+    }
+
     public function updateActivity () {
        $data = array( 'activity' => 'now()' );
        $primary = $this->_db->quoteIdentifier( $this->_primary );
@@ -60,7 +60,7 @@ class Application_Model_Singleton_Player extends Warlords_Model_Singleton {
        $this->_db->update( $this->_name, $data, $where );
        return $this;
     }
-    
+
 
 
 }

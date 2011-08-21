@@ -1,6 +1,6 @@
 <?php
 
-class HeroController extends Warlords_Controller_Action
+class HeroController extends Game_Controller_Action
 {
 
     public function _init()

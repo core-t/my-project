@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Ruin extends Warlords_Db_Table_Abstract
+class Application_Model_Ruin extends Game_Db_Table_Abstract
 {
     protected $_name = 'ruin';
     protected $_primary = 'ruinId';

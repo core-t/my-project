@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends Warlords_Controller_Action
+class IndexController extends Game_Controller_Action
 {
 
     public function _init()
@@ -22,7 +22,7 @@ class IndexController extends Warlords_Controller_Action
     public function unsupportedAction()
     {
         // action body
-        
+
     }
 }
 
