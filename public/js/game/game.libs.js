@@ -136,15 +136,21 @@ function castleOwner(castleId, color) {
             'z-index':zindex,
             background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
         });
-        castle.fadeIn(1);
         castles[castleId].color = color;
         if(typeof players[color].castles[castleId] == 'undefined'){
+            console.log('sprawdź to');//20110821 - usunąć ifa za tydzień
             castles[castleId].currentProduction = null;
             castles[castleId].currentProductionTurn = 0;
         } else {
             castles[castleId].currentProduction = players[color].castles[castleId].production;
             castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
+            if(color == my.color && castles[castleId].currentProduction){
+                castle.append($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
+            }else{
+                castle.html('');
+            }
         }
+        castle.fadeIn(1);
     }
 }
 
@@ -326,7 +332,7 @@ function army(obj, color, dontFade) {
         .attr('src', '/img/game/' + this.img + '_' + color + '.png')
         );
     board.append(this.element);
-    
+
     if(typeof dontFade == 'undefined'){
         $('#army'+obj.armyId).fadeIn(1);
     }
@@ -890,7 +896,7 @@ function getTerrain(type) {
             break;
     }
     return {
-        0:text, 
+        0:text,
         1:moves
     };
 }

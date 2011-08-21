@@ -45,6 +45,7 @@ class GameController extends Game_Controller_Action {
             foreach ($players as $player) {
                 $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
                 $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);
+                $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
                 if ($game['turnPlayerId'] == $player['playerId']) {
                     $this->view->turn['playerId'] = $player['playerId'];
                     $this->view->turn['color'] = $player['color'];

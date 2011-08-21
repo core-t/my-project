@@ -37,8 +37,8 @@ function startMyTurn() {
         }else{
             wsPlayerArmies(my.color);
             goldUpdate(result['gold']);
-            $('#costs').html('Costs: '+result['costs']);
-            $('#income').html('Income: '+result['income']);
+            $('#costs').html(result['costs']);
+            $('#income').html(result['income']);
             for(i in result['armies']) {
                 players[my.color].armies[i] = new army(result['armies'][i], my.color);
             }
@@ -187,6 +187,11 @@ function setProduction(castleId) {
     }
     $.getJSON(urlSetProduction+'/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
+            if(unitId == -1){
+                $('#castle'+castleId).html('');
+            }else{
+                $('#castle'+castleId).append($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
+            }
             $('.message').remove();
             castles[castleId].currentProduction = unitId;
             castles[castleId].currentProductionTurn = 0;

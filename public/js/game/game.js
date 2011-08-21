@@ -115,8 +115,11 @@ function initGame(){
             turnOff();
         }
     }
-    setInterval ( 'wsPing()', 1000 );
-
+    wsPing();
+    setInterval ( 'wsPing()', 10000 );
+    if(my.turn && !players[my.color].turnActive){
+        startMyTurn();
+    }
 }
 
 function goldUpdate(gold){

@@ -163,7 +163,7 @@ function wsPing() {
         }
         if(players[color].active){
             players[color].active--;
-            $('.'+color+' .turn').css('background','none');
+            $('.'+color+' .turn').css('background','url(../img/game/smile.png) center center no-repeat');
         }else{
             $('.'+color+' .turn').css('background','url(../img/game/ajax_wait.gif) center center no-repeat');
         }
