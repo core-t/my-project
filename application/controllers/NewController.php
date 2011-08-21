@@ -1,6 +1,6 @@
 <?php
 
-class NewController extends Game_Controller_Game
+class NewController extends Game_Controller_Action
 {
 
     public function _init()
