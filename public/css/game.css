@@ -282,3 +282,27 @@
 #turnBox div{
     width:90px;
 }
+
+#chatBox{
+    width:183px;
+    height:98px;
+    border:1px solid #cecece;
+}
+
+#chatBox #chatWindow{
+    width:183px;
+    height:78px;
+    border: none;
+    overflow:hidden;
+    background:white;
+    border-bottom:1px solid #cecece;
+}
+
+#chatBox input{
+    border: none;
+    width:149px;
+    height:19px;
+}
+#chatBox .button{
+    margin:0;
+}

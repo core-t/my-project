@@ -43,6 +43,9 @@ function login() {
                         case 'c':
                             castleGet(data[2]);
                             break;
+                        case 'C':
+                            chat(color,data[2]);
+                            break;
                         case 'a':
                             getAddArmy(data[2]);
                             break;
@@ -153,6 +156,13 @@ function wsCastleOwner(castleId, color) {
 
 function wsTurn() {
     lWSC.channelPublish(channel,my.color+'.t');
+}
+
+function wsChat() {
+    var msg = $('#msg').val();
+    $('#msg').val('');
+    $('#chatWindow').append('I: '+msg+'<br/>');
+    lWSC.channelPublish(channel,my.color+'.C.'+msg);
 }
 
 function wsPing() {

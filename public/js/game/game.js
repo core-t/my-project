@@ -129,3 +129,8 @@ function goldUpdate(gold){
 function updatePlayers(color){
     players[color].active = 2;
 }
+
+function chat(color,msg){
+    $('#chatWindow').append(color+': '+msg+'<br/>');
+    console.log(msg);
+}
