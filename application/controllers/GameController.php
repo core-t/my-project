@@ -7,6 +7,7 @@ class GameController extends Game_Controller_Action {
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');
         }
+
 //        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
 //        $this->view->headScript()->appendFile('http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js');
 //         $this->view->headScript()->appendFile('/js/jquery.json-2.2.min.js');
@@ -37,7 +38,7 @@ class GameController extends Game_Controller_Action {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
             $startPositions = $modelBoard->getDefaultStartPositions();
-            $players = $modelGame->getPlayersInGame();
+            $players = $modelGame->getPlayersInGameReady();
             $this->view->players = array();
             $this->view->turn = array();
             $game = $modelGame->getGame();

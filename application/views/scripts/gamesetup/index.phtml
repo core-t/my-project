@@ -1,13 +1,10 @@
-<?php
-$urlStart = '';
-?>
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <h2>Select your color</h2>
 <table id="playersingame">
-<th>Player</th><th>Status</th>
+<th>Player name</th><th>Action</th>
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"><a class="button" href="javascript:playerReady('.$i.')"></a></td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"></td></tr>';
 }
 ?>
 </table>
@@ -15,35 +12,22 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
 <ul>
     <li><a class="button" href="<?php echo $this->url(array('controller' => 'new', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
     <li><a class="button" href="javascript:refresh()">Refresh</a></li>
-        <?php
-        if ($this->game['gameMasterId'] == $this->player['playerId']) {
-            echo '<li id="start"><a class="button" href="#">Start game</a></li>';
-            $urlStart = $this->url(array('controller' => 'gamesetupajax', 'action' => 'gamestart', 'gameId' => null));
-        }
-        ?>
+    <li id="start"></li>
 </ul>
 
 <h4>Players out</h4>
 <table id="playersout"></table>
 
 <script type="text/javascript">
-    var urlStart = '<?php echo $urlStart; ?>';
-    var urlRedirect = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
+    var urlStart = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'gamestart', 'gameId' => null)); ?>';
+    var urlRedirectStart = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
+    var urlRedirectKick = '<?php echo $this->url(array('controller' => 'new', 'action' => 'index', 'gameId' => null)); ?>';
     var urlReady = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'ready', 'gameId' => null)) ?>';
+    var urlKick = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'kick', 'gameId' => null)) ?>';
     var urlRefresh = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'refresh', 'gameId' => null)) ?>';
     var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
     var ready = '<?php echo $this->player['ready'] ?>';
     var colors = <?php echo Zend_Json::encode($this->colors) ?>;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
     var start = 0;
-
-<?php if ($urlStart) { ?>
-    $('#start a').click(function(){
-        if(start){
-            $.getJSON(urlStart, function(result) {
-                $('#start a').addClass('buttonOff');
-            });
-        }
-    });
-<?php } ?>
 </script>

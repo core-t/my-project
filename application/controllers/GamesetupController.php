@@ -1,10 +1,5 @@
 <?php
 
-/*
- * zapisać do bazy zamki, w których gracze rozpoczynają grę oraz ich armie a w nich herosi
- *
- */
-
 class GamesetupController extends Game_Controller_Action {
 
     public function _init() {
@@ -24,6 +19,7 @@ class GamesetupController extends Game_Controller_Action {
                 unset($this->_namespace->armyId);
             }
             $modelGame = new Application_Model_Game($gameId);
+            $modelGame->updateGameMaster($this->_namespace->player['playerId']);
             $playersInGame = $modelGame->getPlayersWaitingForGame();
             $this->view->colors = $modelGame->getAllColors();
             if($modelGame->isPlayerInGame($this->_namespace->player['playerId'])){

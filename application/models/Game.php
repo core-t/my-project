@@ -138,25 +138,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     public function startGame() {
         $data['isOpen'] = 'false';
         $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        $res = $this->_db->update($this->_name, $data, $where);
-        switch ($res) {
-            case 1:
-                $data = array(
-                    'ready' => 'false'
-                );
-                $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-                return $this->_db->update('playersingame', $data, $where);
-                break;
-            case 0:
-                throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                break;
-            case null:
-                throw new Exception('Zapytanie zwróciło błąd');
-                break;
-            default:
-                throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                break;
-        }
+        return $this->_db->update($this->_name, $data, $where);
     }
 
     public function getGame() {
@@ -177,9 +159,26 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from(array('a' => 'playersingame'), array('ready', 'color', 'playerId'))
                     ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName'))
-                    ->where('"gameId" = ?', $this->_gameId)
+                    ->join(array('c' => 'game'), 'a."gameId" = c."gameId"', 'gameMasterId')
+                    ->where('a."gameId" = ?', $this->_gameId)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function isPlayerWaitingForGame($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a' => 'playersingame'), 'playerId')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset($result[0]['playerId'])){
+                return true;
+            }
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
@@ -253,6 +252,28 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         return $this->_db->update('playersingame', $data, $where);
     }
 
+    public function getGameMaster(){
+        try {
+            $select = $this->_db->select()
+                ->from($this->_name, 'gameMasterId')
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['gameMasterId'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function updateGameMaster($playerId) {
+        if(!$this->isPlayerWaitingForGame($this->getGameMaster())){
+            $data = array(
+                'gameMasterId' => $playerId,
+                'turnPlayerId' => $playerId,
+            );
+            $this->updateGame($data);
+        }
+    }
+
     public function isGameMaster($playerId) {
         $select = $this->_db->select()
                 ->from($this->_name, array('gameMasterId'))
@@ -295,6 +316,18 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         }
     }
 
+    public function getPlayersInGameReady() {
+        try {
+            $select = $this->_db->select()
+                    ->from('playersingame')
+                    ->where('ready = true')
+                    ->where('"gameId" = ?', $this->_gameId);
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function getPlayerInGame($playerId) {
         try {
             $select = $this->_db->select()
@@ -330,7 +363,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->from('playersingame', 'color')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"playerId" != ?', $playerId)
-                    ->where('color = ?', $this->_playerColors[$color])
+                    ->where('color = ?', $color)
                     ->where('"timeout" > (SELECT now() - interval \'10 seconds\')');
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0]['color'])) {
@@ -346,17 +379,26 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             return false;
         }
         $player = $this->getPlayerInGame($playerId);
-        if ($player['ready'] && $player['color'] == $this->_playerColors[$color])
+        if ($player['ready'] && $player['color'] == $color)
             $data['ready'] = 'false';
         else
             $data['ready'] = 'true';
         $data['timeout'] = 'now()';
-        $data['color'] = $this->_playerColors[$color];
+        $data['color'] = $color;
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $result = $this->_db->update('playersingame', $data, $where);
         if ($result == 1) {
-            return array('ready' => $data['ready'], 'color' => $color);
+            return array('ready' => $data['ready']);
+        }
+    }
+
+    public function kick($colorKick, $playerId) {
+        if ($this->isGameMaster($playerId)) {
+            $playerId = $this->getPlayerIdByColor($colorKick);
+            if($playerId){
+                return $this->disconnectFromGame($this->_gameId, $playerId);
+            }
         }
     }
 

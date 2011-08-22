@@ -353,6 +353,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 $number = $result[0]['number'];
                 $select = $this->_db->select()
                         ->from('playersingame', 'count(*) as number')
+                        ->where('ready = true')
                         ->where('"gameId" = ?', $this->_gameId);
                 $result = $this->_db->query($select)->fetchAll();
                 if (isset($result[0]['number'])) {
