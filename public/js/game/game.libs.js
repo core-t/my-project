@@ -138,7 +138,6 @@ function castleOwner(castleId, color) {
         });
         castles[castleId].color = color;
         if(typeof players[color].castles[castleId] == 'undefined'){
-            console.log('sprawdź to');//20110821 - usunąć ifa za tydzień
             castles[castleId].currentProduction = null;
             castles[castleId].currentProductionTurn = 0;
         } else {

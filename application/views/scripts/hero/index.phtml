@@ -1,19 +1,4 @@
-<div>
-    <ul>
-        <li>
-            <a href="<?php echo $this->url(array('controller'=>'gamesetup')) ?>" class="button">New game</a>
-        </li>
-        <li>
-            <a href="<?php echo $this->url(array('controller'=>'gameload')) ?>" class="button">Load game</a>
-        </li>
-        <li>
-            <a href="<?php echo $this->url(array('controller'=>'hero')) ?>" class="button">Hero</a>
-        </li>
-        <li>
-            <a href="<?php echo $this->url(array('controller'=>'market')) ?>" class="button">Market</a>
-        </li>
-    </ul>
-</div>
+
 <?php
 if(isset($this->heroes[0])){
     echo 'Attack points: '.$this->heroes[0]['attackPoints'].'</br>';
@@ -25,3 +10,8 @@ if(isset($this->heroes[0])){
 echo $this->form
 
 ?>
+<ul>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
+    </li>
+</ul>
