@@ -212,7 +212,9 @@ function castleM(castleId, color){
     var td = new Array();
     for(unitName in castles[castleId].production){
         var img = unitName.replace(' ', '_').toLowerCase();
-        if(getUnitId(unitName) == castles[castleId].currentProduction){
+        var unitId = getUnitId(unitName);
+        var travelBy = '';
+        if(unitId == castles[castleId].currentProduction){
             attr = {
                 type:'radio',
                 name:'production',
@@ -226,21 +228,32 @@ function castleM(castleId, color){
                 name:'production',
                 value:unitName
             }
+            time = '';
+        }
+        if(units[unitId].canFly){
+            travelBy = 'ground/air';
+        }else if(units[unitId].canSwimm){
+            travelBy = 'water';
+        }else{
+            travelBy = 'ground';
         }
         td[j] = $('<td>')
         .addClass('unit')
-        .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
-        .append(
-            $('<div>')
-            .append($('<p>').html('Time:&nbsp;'+time+castles[castleId].production[unitName].time+'t'))
-            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
-        )
         .append(
             $('<p>')
             .append($('<input>').attr(attr))
             .append(' '+unitName)
-            );
-            j++;
+        )
+        .append($('<div>').append($('<img>').attr('src','/img/game/' + img + '_' + color + '.png')))
+        .append(
+            $('<div>')
+            .addClass('attributes')
+            .append($('<p>').html('Time:&nbsp;'+time+castles[castleId].production[unitName].time+'t'))
+            .append($('<p>').html('Cost:&nbsp;'+castles[castleId].production[unitName].cost+'g'))
+            .append($('<p>').html(travelBy))
+            .append($('<p>').html('M '+units[unitId].numberOfMoves+' . A '+units[unitId].attackPoints+' . D '+units[unitId].defensePoints))
+        );
+        j++;
     }
     var k = Math.ceil(j/2);
     for(l = 0; l < k; l++) {

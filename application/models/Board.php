@@ -118,7 +118,6 @@ class Application_Model_Board {
             'production' => array(
                 'Light Infantry' => array('time' => '1', 'cost' => '4'),
                 'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Navy' => array('time' => '13', 'cost' => '20'),
             )
         );
         $this->castles[10] = array(

@@ -37,6 +37,8 @@ class GameController extends Game_Controller_Action {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
+            $modelUnit = new Application_Model_Unit();
+            $this->view->units = $modelUnit->getUnits();
             $startPositions = $modelBoard->getDefaultStartPositions();
             $players = $modelGame->getPlayersInGameReady();
             $this->view->players = array();

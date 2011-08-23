@@ -227,7 +227,13 @@
 .message .production .unit div {
     float:left;
     padding:5px;
-    width:39%;
+    /*     width:39%; */
+}
+
+.message .production .unit div.attributes {
+    float:left;
+    padding:5px;
+    width:81px;
 }
 
 .message .production .unit div p {

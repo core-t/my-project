@@ -190,7 +190,7 @@ function setProduction(castleId) {
             if(unitId == -1){
                 $('#castle'+castleId).html('');
             }else{
-                $('#castle'+castleId).append($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
+                $('#castle'+castleId).html($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
             }
             $('.message').remove();
             castles[castleId].currentProduction = unitId;

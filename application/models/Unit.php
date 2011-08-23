@@ -22,5 +22,21 @@ class Application_Model_Unit extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
     }
+
+    public function getUnits(){
+        $units = array(null);
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name)
+                    ->order($this->_primary);
+            $result = $this->_db->query($select)->fetchAll();
+            foreach($result as $k=>$unit){
+                $units[$k+1] = $unit;
+            }
+            return $units;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
 }
 

@@ -144,7 +144,7 @@ function castleOwner(castleId, color) {
             castles[castleId].currentProduction = players[color].castles[castleId].production;
             castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
             if(color == my.color && castles[castleId].currentProduction){
-                castle.append($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
+                castle.html($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
             }else{
                 castle.html('');
             }
@@ -367,6 +367,7 @@ function selectArmy(a) {
     $('#defense').html(a.defense);
     $('#splitArmy').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
+    $('#skipArmy').removeClass('buttonOff');
     selectedArmy = a;
     if(typeof selectedArmy.heroKey != 'undefined' && inRuins()){
         $('#searchRuins').removeClass('buttonOff');
@@ -388,6 +389,7 @@ function unselectArmy() {
     $('#defense').html(0);
     $('.path').remove();
     $('#splitArmy').addClass('buttonOff');
+    $('#skipArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     removeM();
@@ -486,6 +488,7 @@ function findNextArmy() {
             if(nextArmySelected == false){
                 nextArmySelected = true;
                 unselectArmy();
+                console.log(players[my.color].armies[nextArmy]);
                 selectArmy(players[my.color].armies[nextArmy]);
             }
         }
