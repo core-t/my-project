@@ -146,7 +146,7 @@ function moveA(movesSpend) {
 
 //                 selectArmy(players[my.color].armies['army'+unselectedArmy.armyId]);
             } else {
-                deleteArmyByPosition(unselectedArmy.x, unselectedArmy.y, my.color);
+                deleteArmy(unselectedArmy.armyId, my.color, 1);
                 wsArmy(unselectedArmy.armyId);
                 getArmyA(selectedEnemyArmy.armyId);
                 wsArmy(selectedEnemyArmy.armyId);

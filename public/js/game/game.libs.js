@@ -54,9 +54,22 @@ function castleCreate(castleId) {
             }
         }
     });
+    $('#castle' + castleId).mousemove(function(){
+        if(lock) {
+            return null;
+        }
+        if(my.turn) {
+            if(selectedArmy) {
+                $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+            } else {
+                $('#' + this.id).css('cursor','default');
+            }
+        }
+    });
 }
 
 function castleUpdate(data) {
+    removeM();
     zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
     if(data.razed){
         castles[data.castleId].razed = true;
