@@ -1,13 +1,14 @@
 <h2>Select which game you want to load</h2>
 <div id="mygames">
 <table>
-    <th>Game master</th><th>Turn number</th><th>Max number of players</th><th>Date</th>
+    <th>Game master</th><th>Color</th><th>Turn number</th><th>Max number of players</th><th>Date</th>
 <?php
 if(is_array($this->myGames)) {
     foreach($this->myGames as $game) {
         $url = $this->url(array('controller'=>'load', 'action'=>'load', 'gameId'=>$game['gameId']));
         echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'">
         <td><a href="'.$url.'">'.$game['gameMaster'].'</a></td>
+        <td style="background:'.$game['color'].'"><a href="'.$url.'">'.$game['color'].'</a></td>
         <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
         <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
         <td><a href="'.$url.'">'.strftime('%F', strtotime($game['begin'])).'</a></td>

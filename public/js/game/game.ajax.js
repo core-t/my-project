@@ -50,6 +50,7 @@ function startMyTurn() {
 function sendMove(movesSpend) {
     if(selectedArmy.moves == 0){
         unselectArmy();
+        simpleM('Not enough moves left.');
         return null;
     }
     if(!my.turn){

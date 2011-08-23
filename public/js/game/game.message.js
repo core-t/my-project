@@ -280,7 +280,21 @@ function castleM(castleId, color){
             )
             .append(' Stop production')
         )
-    )
+    );
+    var resurection;
+    if(heroResurection){
+        resurection = $('<p>')
+        .addClass('h')
+        .append(
+            $('<input>').attr({
+                type:'checkbox',
+                name:'resurection',
+                value:castleId
+            })
+        )
+        .append(' cost 300g')
+        .append($('<div>').addClass('button right').html('Hero resurection').click(function(){heroResurection()}));
+    }
     var height = 62 + k*54 + 96;
     mElement().after(
         $('<div>')
@@ -326,19 +340,7 @@ function castleM(castleId, color){
             $('<p>')
             .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
         )
-        .append(
-            $('<p>')
-            .addClass('h')
-            .append(
-                $('<input>').attr({
-                    type:'checkbox',
-                    name:'resurection',
-                    value:castleId
-                })
-            )
-            .append(' cost 300g')
-            .append($('<div>').addClass('button right').html('Hero resurection').click(function(){heroResurection()}))
-        )
+        .append(resurection)
     );
 
 }

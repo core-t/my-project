@@ -14,6 +14,7 @@ var nextArmy = null;
 var nextArmySelected = false;
 var armyToJoinId = null;
 var skippedArmies = new Array();
+var heroResurection = true;
 
 var zoomer;
 

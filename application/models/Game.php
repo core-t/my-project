@@ -21,7 +21,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         $data = array(
             'numberOfPlayers' => $numberOfPlayers,
             'gameMasterId' => $playerId,
-            'turnPlayerId' => $playerId,
             'channel' => $channel
         );
 
@@ -86,10 +85,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->where('lost = false')
                     ->where('"playerId" = ?', $playerId);
             $select2 = $this->_db->select()
-                    ->from($this->_name)
+                    ->from(array('a' => $this->_name))
+                    ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', array('color'))
                     ->where('"isOpen" = false')
                     ->where('"isActive" = true')
-                    ->where('"gameId" IN ?', $select1)
+                    ->where('a."gameId" IN ?', $select1)
+                    ->where('b."playerId" = ?', $playerId)
                     ->order('begin DESC');
             $result = $this->_db->query($select2)->fetchAll();
             foreach ($result as $k => $game) {
@@ -136,9 +137,11 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function startGame() {
-        $data['isOpen'] = 'false';
-        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        return $this->_db->update($this->_name, $data, $where);
+        $data = array(
+            'turnPlayerId' => $this->getPlayerIdByColor('white'),
+            'isOpen' => 'false'
+        );
+        $this->updateGame($data);
     }
 
     public function getGame() {
@@ -267,8 +270,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     public function updateGameMaster($playerId) {
         if(!$this->isPlayerWaitingForGame($this->getGameMaster())){
             $data = array(
-                'gameMasterId' => $playerId,
-                'turnPlayerId' => $playerId,
+                'gameMasterId' => $playerId
             );
             $this->updateGame($data);
         }

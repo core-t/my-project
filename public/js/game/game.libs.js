@@ -249,6 +249,7 @@ function army(obj, color, dontFade) {
         this.img = 'hero';
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
+        heroResurection = false;
     } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
         this.name = this.soldiers[this.soldierKey].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
@@ -358,7 +359,7 @@ function inRuins(){
 function selectArmy(a) {
     var index = $.inArray( a.armyId, skippedArmies );
     if(index != -1){
-        skippedArmyId.splice(index,1);
+        skippedArmies.splice(index,1);
     }
     $('#army' + a.armyId).css('border','1px solid #ccc');
     $('#name').html(a.name);

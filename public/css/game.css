@@ -226,14 +226,14 @@
 
 .message .production .unit div {
     float:left;
-    padding:5px;
-    /*     width:39%; */
+    padding:5px 0 5px 5px;
+    width:25px;
 }
 
 .message .production .unit div.attributes {
     float:left;
-    padding:5px;
-    width:81px;
+    padding:1px;
+    width:88px;
 }
 
 .message .production .unit div p {
@@ -332,7 +332,7 @@
     position:relative;
     top:0;
     left:0;
-    width:183px;
+    width:100%;
     border: none;
     line-height:12px;
     font-size:10px;

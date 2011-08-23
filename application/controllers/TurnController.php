@@ -75,6 +75,7 @@ class TurnController extends Game_Controller_Action {
         $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
         $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
         $income = 0;
+        $costs = 0;
         if($modelGame->getTurnNumber() > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->_namespace->player['playerId']);
@@ -89,9 +90,15 @@ class TurnController extends Game_Controller_Action {
                 }
                 if (!empty($armyId)) {
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->_namespace->player['playerId']);
-                    if($castleProduction['production'] AND $castle['production'][$modelBoard->getUnitName($castleProduction['production'])]['time'] <= $castleProduction['productionTurn']) {
+                    $unitName = $modelBoard->getUnitName($castleProduction['production']);
+                    if($castleProduction['production'] AND
+                    $castle['production'][$unitName]['time'] <= $castleProduction['productionTurn']
+                    AND $castle['production'][$unitName]['cost'] <= $gold
+                    ) {
                         if($modelCastle->resetProductionTurn($castleId, $this->_namespace->player['playerId']) == 1) {
                             $modelArmy->addSoldierToArmy($armyId, $castleProduction['production'], $this->_namespace->player['playerId']);
+                            $gold -= $castle['production'][$unitName]['cost'];
+                            $costs += $castle['production'][$unitName]['cost'];
                         }
                     }
                 }
@@ -103,14 +110,10 @@ class TurnController extends Game_Controller_Action {
         }else{
             $array = array();
             $resutl = array();
-            $costs = 0;
             foreach ($armies as $k => $army) {
-                foreach($army['soldiers'] as $unit){
-                    $costs += $unit['cost'];
-                }
                 $array['army'.$army['armyId']] = $army;
             }
-            $gold = $gold + $income - $costs;
+            $gold = $gold + $income;
             $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
             $resutl['gold'] = $gold;
             $resutl['costs'] = $costs;

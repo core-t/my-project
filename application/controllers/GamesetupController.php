@@ -38,6 +38,9 @@ class GamesetupController extends Game_Controller_Action {
         if (!empty($this->_namespace->gameId)) {
             if (empty($this->_namespace->armyId)) {
                 $modelGame = new Application_Model_Game($this->_namespace->gameId);
+                if(!$modelGame->isPlayerReady($this->_namespace->player['playerId'])){
+                    $this->_helper->redirector('index', 'new');
+                }
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $modelBoard = new Application_Model_Board();
                 $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
