@@ -17,7 +17,7 @@ class NewController extends Game_Controller_Action
         $modelGame = new Application_Model_Game();
         $this->view->openGames = $modelGame->getOpen();
         if ($this->_namespace->gameId) {
-            $modelGame->disconnectFromGame($this->_namespace->gameId, $this->_namespace->player['playerId']);
+//             $modelGame->disconnectFromGame($this->_namespace->gameId, $this->_namespace->player['playerId']);
             unset($this->_namespace->gameId);
         }
         $this->view->player = $this->_namespace->player;
