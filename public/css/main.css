@@ -4,6 +4,7 @@ body {
     color: #000;
     background: #eee;
     font-size: 11px;
+    font-family:arial;
 }
 
 #page {
@@ -98,4 +99,7 @@ h2{
 }
 .right{
     float:right;
+}
+.clear{
+    clear:both;
 }

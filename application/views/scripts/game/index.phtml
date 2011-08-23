@@ -107,11 +107,13 @@
     $('#turnNumber').html(turn.nr);
     $('#nextTurn').click(function(){nextTurnM()});
     $('#nextArmy').click(function(){findNextArmy()});
+    $('#skipArmy').click(function(){skipArmy(this.id)});
     $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
     $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});
     $('#searchRuins').click(function(){searchRuins()});
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
+    $('#skipArmy').addClass('buttonOff');
     $('#splitArmy').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');

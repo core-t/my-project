@@ -1,6 +1,6 @@
 function sendNextTurn() {
     if(my.turn){
-        lock = true;
+        setlock();
         if(!lWSC.isLoggedIn()){
             alert('Socket disconnected!');
             return null;
@@ -42,7 +42,7 @@ function startMyTurn() {
             for(i in result['armies']) {
                 players[my.color].armies[i] = new army(result['armies'][i], my.color);
             }
-            lock = false;
+            unlock();
         }
     });
 }
@@ -66,18 +66,18 @@ function sendMove(movesSpend) {
     if(unselectedArmy.x == newX && unselectedArmy.y == newY) {
         return null;
     }
-    lock = true;
+    setlock();
     var castleId = isEnemyCastle(newX, newY)
     if(castleId) {
         var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
         if(vectorLenth >= 80) {
-            lock = false;
+            unlock();
             return null;
         }
         if(unselectedArmy.moves < (movesSpend + 1)) {
             simpleM('Not enough moves left.');
             console.log(movesSpend);
-            lock = false;
+            unlock();
             return null;
         }
         $.getJSON(urlFightCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
@@ -116,19 +116,19 @@ function sendMove(movesSpend) {
             }
             wsBattle(result.battle,unselectedArmy,enemyArmies);
             battleM(result.battle, unselectedArmy, enemyArmies);
-            lock = false;
+            unlock();
         });
     } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
         var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
         if(vectorLenth >= 80) {
-            lock = false;
+            unlock();
             unselectEnemyArmy();
             return null;
         }
         if(unselectedArmy.moves < (movesSpend + 1)) {
             simpleM('Not enough moves left.');
             console.log(movesSpend);
-            lock = false;
+            unlock();
             unselectEnemyArmy();
             return null;
         }
@@ -153,12 +153,12 @@ function sendMove(movesSpend) {
             wsBattle(result.battle,unselectedArmy,{0:selectedEnemyArmy});
             battleM(result.battle, unselectedArmy, {0:selectedEnemyArmy});
             unselectEnemyArmy();
-            lock = false;
+            unlock();
         });
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
-                walkM(result);
+                walk(result);
             }
         });
     }

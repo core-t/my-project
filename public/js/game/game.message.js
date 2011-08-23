@@ -1,5 +1,5 @@
 function mElement(){
-    return $('#nextArmy');
+    return board;
 }
 
 
@@ -414,35 +414,6 @@ function killM(r){
         });
     } else {
         console.log('zonk');
-    }
-}
-
-function walkM(result) {
-    for(i in result.path) {
-        break;
-    }
-    if(typeof result.path[i] == 'undefined') {
-        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        newX = players[my.color].armies['army'+result.armyId].x;
-        newY = players[my.color].armies['army'+result.armyId].y;
-        wsArmyAdd(result.armyId);
-        if(parentArmyId){
-            getAddArmy(parentArmyId);
-            wsArmyAdd(parentArmyId);
-            unsetParentArmyId();
-        }
-        selectArmy(players[my.color].armies['army'+result.armyId]);
-        lock = false;
-        return null;
-    } else {
-        wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
-        zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        $('#army'+unselectedArmy.armyId).animate({left: result.path[i].x + 'px',top: result.path[i].y + 'px'},300,
-        function(){
-            delete result.path[i];
-            walkM(result);
-        });
     }
 }
 

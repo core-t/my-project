@@ -13,6 +13,7 @@ var selectedEnemyArmy = null;
 var nextArmy = null;
 var nextArmySelected = false;
 var armyToJoinId = null;
+var skippedArmies = new Array();
 
 var zoomer;
 
@@ -144,7 +145,7 @@ function updatePlayers(color){
 function chat(color,msg){
     var chatWindow = $('#chatWindow div');
 //     console.log($('#chatWindow div')[0].scrollHeight);
-    var scroll = 78 - chatWindow[0].scrollHeight;
+    var scroll = 110 - chatWindow[0].scrollHeight;
     if(chatWindow.html()){
         scroll -= 12;
     }else{
@@ -165,4 +166,18 @@ function chat(color,msg){
     });
 //     console.log(msg);
     $('#msg').focus();
+}
+
+function setlock(){
+    lock = true;
+    $('#nextTurn').addClass('buttonOff');
+    $('#nextArmy').addClass('buttonOff');
+}
+
+function unlock(){
+    lock = false;
+    if(my.turn){
+        $('#nextTurn').removeClass('buttonOff');
+        $('#nextArmy').removeClass('buttonOff');
+    }
 }
