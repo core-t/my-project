@@ -35,13 +35,13 @@ function login() {
                     delete data[1];
                     switch(event){
                         case 't':
-                            getTurn();
+                            getTurnA();
                             break;
                         case 'p':
                             updatePlayers(color);
                             break;
                         case 'c':
-                            castleGet(data[2]);
+                            getCastleA(data[2]);
                             break;
                         case 'C':
                             var msg = '';
@@ -56,13 +56,13 @@ function login() {
                             }
                             break;
                         case 'a':
-                            getAddArmy(data[2]);
+                            getArmyA(data[2]);
                             break;
                         case 'm':
                             changeArmyPosition(data[2], data[3], data[4], turn.color);
                             break;
                         case 's':
-                            getPlayerArmies(data[2]);
+                            getPlayerArmiesA(data[2]);
                             break;
                         case 'b':
                             var battle = '';
@@ -120,18 +120,18 @@ function login() {
 // try to subscribe at a certain channel
 function subscribeChannel() {
     var lAccessKey = 'access';
-    var lRes = lWSC.channelSubscribe( channel, lAccessKey );
+    return lWSC.channelSubscribe( channel, lAccessKey );
 }
 
 // try to authenticate against a channel to publish data
 function auth() {
     var lAccessKey = 'access';
     var lSecretKey = 'secret';
-    var lRes = lWSC.channelAuth( channel, lAccessKey, lSecretKey );
+    return lWSC.channelAuth( channel, lAccessKey, lSecretKey );
 }
 
-function wsCastleOwner(castleId, color) {
-    lWSC.channelPublish(channel,my.color+'.c.'+castleId+'.'+color);
+function wsCastle(castleId) {
+    lWSC.channelPublish(channel,my.color+'.c.'+castleId);
 }
 
 function wsTurn() {
@@ -170,7 +170,7 @@ function wsArmyMove(x, y, armyId) {
     lWSC.channelPublish(channel,my.color+'.m.'+x+'.'+y+'.'+armyId);
 }
 
-function wsArmyAdd(armyId) {
+function wsArmy(armyId) {
     lWSC.channelPublish(channel,my.color+'.a.'+armyId);
 }
 function wsBattle(battle,army,armies){

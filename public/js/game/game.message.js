@@ -94,7 +94,7 @@ function nextTurnM(){
             .html('Ok')
             .click(function(){
                 removeM();
-                sendNextTurn();
+                nextTurnA();
             })
         )
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
@@ -193,7 +193,7 @@ function splitArmyM(a){
         .addClass('message')
         .append(army)
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
-        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmy(selectedArmy.armyId)}))
+        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
         .css('min-height',height+'px')
     );
 
@@ -298,8 +298,8 @@ function castleM(castleId, color){
                 value:castleId
             })
         )
-        .append(' cost 300g')
-        .append($('<div>').addClass('button right').html('Hero resurrection').click(function(){heroResurrection(castleId)}));
+        .append(' cost 100g')
+        .append($('<div>').addClass('button right').html('Hero resurrection').click(function(){heroResurrectionA(castleId)}));
     }
     var height = 62 + k*54 + 96;
     mElement().after(
@@ -314,7 +314,7 @@ function castleM(castleId, color){
         .append(table)
         .append(
             $('<p>')
-            .append($('<div>').addClass('button submit').html('Set production').click(function(){setProduction(castleId)}))
+            .append($('<div>').addClass('button submit').html('Set production').click(function(){setProductionA(castleId)}))
         )
         .append(
             $('<p>')
@@ -327,7 +327,7 @@ function castleM(castleId, color){
                 })
             )
             .append(' cost 300g')
-            .append($('<div>').addClass('button right').html('Build defense').click(function(){castleBuildDefense()}))
+            .append($('<div>').addClass('button right').html('Build defense').click(function(){castleBuildDefenseA()}))
         )
         .append(
             $('<p>')
@@ -340,7 +340,7 @@ function castleM(castleId, color){
                 })
             )
             .append(' income 1000g')
-            .append($('<div>').addClass('button right').html('Raze').click(function(){castleRaze()}))
+            .append($('<div>').addClass('button right').html('Raze').click(function(){razeCastleA()}))
         )
         .append(
             $('<p>')

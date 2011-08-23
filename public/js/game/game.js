@@ -72,7 +72,7 @@ function changeTurn(color, nr) {
     $('#turnNumber').html(turn.nr);
     if(turn.color == my.color) {
         turnOn();
-        startMyTurn();
+        startMyTurnA();
         return 0;
     } else {
         turnOff();
@@ -131,7 +131,7 @@ function startGame(){
     wsPing();
     setInterval ( 'wsPing()', 10000 );
     if(my.turn && !players[my.color].turnActive){
-        startMyTurn();
+        startMyTurnA();
     }
 }
 

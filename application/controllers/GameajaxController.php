@@ -75,10 +75,17 @@ class GameajaxController extends Game_Controller_Action {
             if(!$heroId){
                 throw new Exception('Twój heros żyje!');
             }
+            $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
+            if($gold < 100){
+                throw new Exception('Za mało złota!');
+            }
             $modelBoard = new Application_Model_Board();
             $position = $modelBoard->getCastlePosition($castleId);
             $armyId = $modelArmy->heroResurection($heroId, $position, $this->_namespace->player['playerId']);
-            $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+            $response = $modelArmy->getArmyById($armyId);
+            $response['gold'] = $gold - 100;
+            $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $response['gold']);
+            $this->view->response = Zend_Json::encode($response);
         } else {
             throw new Exception('Brak "castleId"!');
         }

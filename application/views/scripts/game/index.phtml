@@ -82,7 +82,7 @@
         switch (event.which) {
             case 1:
                 if(selectedArmy != null) {
-                    sendMove(cursorPosition(event.pageX, event.pageY));
+                    moveA(cursorPosition(event.pageX, event.pageY));
                 }
                 break;
             case 2:
@@ -111,7 +111,7 @@
     $('#skipArmy').click(function(){skipArmy(this.id)});
     $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
     $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});
-    $('#searchRuins').click(function(){searchRuins()});
+    $('#searchRuins').click(function(){searchRuinsA()});
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');

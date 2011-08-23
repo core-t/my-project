@@ -731,6 +731,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
             $armyId = $this->createArmy($position, $playerId);
         }
         $this->addHeroToArmy($armyId, $heroId);
+        $this->zeroHeroMovesLeft($armyId, $heroId, $playerId);
         return $armyId;
     }
 }

@@ -28,6 +28,7 @@ class CastleController extends Game_Controller_Action
                 $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']) + 1000;
                 $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
                 $response = $this->modelCastle->getCastle($this->castleId);
+                $response['color'] = $this->_namespace->player['color'];
                 $response['gold'] = $gold;
                 $this->view->response = Zend_Json::encode($response);
                 break;

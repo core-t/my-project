@@ -20,24 +20,13 @@ function ruinCreate(ruinId){
         })
         .css({
             left: ruins[ruinId].x + 'px',
-            top: ruins[ruinId].y + 'px',
+            top: ruins[ruinId].y + 'px'
         })
         );
     $('#ruin' + ruinId).fadeIn(1);
 }
 
 // *** CASTLES ***
-
-function castleUpdate(data) {
-    if(data.razed){
-        $('#castle' + data.castleId).remove();
-        delete castles[data.castleId];
-    }else{
-        castles[data.castleId].defense = data.defense;
-        castles[data.castleId].currentProduction = data.production;
-        castles[data.castleId].currentProductionTurn = data.productionTurn;
-    }
-}
 
 function castleCreate(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
@@ -50,10 +39,9 @@ function castleCreate(castleId) {
         })
         .css({
             left: castles[castleId].position.x + 'px',
-            top: castles[castleId].position.y + 'px',
+            top: castles[castleId].position.y + 'px'
         })
-        );
-    //     $('#castle' + castleId).fadeIn(1);
+    );
     $('#castle' + castleId).mouseover(function(){
         if(lock) {
             return null;
@@ -68,11 +56,23 @@ function castleCreate(castleId) {
     });
 }
 
+function castleUpdate(data) {
+    zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
+    if(data.razed){
+        castles[data.castleId].razed = true;
+    }else{
+        castles[data.castleId].defense = data.defense;
+        castles[data.castleId].currentProduction = data.production;
+        castles[data.castleId].currentProductionTurn = data.productionTurn;
+    }
+}
+
 function castleOwner(castleId, color) {
     var castle = $('#castle' + castleId);
-    if(typeof players[color].castles[castleId] != 'undefined' && players[color].castles[castleId].razed){
+    if(typeof castles[castleId] != 'undefined' && castles[castleId].razed){
         castle.remove();
         delete castles[castleId];
+//        delete players[color].castles[castleId];
     }else{
         if(color == my.color) {
             zindex = 100;
@@ -81,7 +81,7 @@ function castleOwner(castleId, color) {
                     if(selectedArmy) {
                         castle.css('cursor', 'default');
                     } else {
-                        castle.css('cursor', 'crosshair');
+                        castle.css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
                     }
                 } else {
                     castle.css('cursor', 'default');
@@ -127,7 +127,9 @@ function castleOwner(castleId, color) {
                     castle.css('cursor', 'default');
                 }
             });
-            castle.click(function(){return null});
+            castle.click(function(){
+                return null
+                });
         }
         castle
         .removeClass()
@@ -273,7 +275,7 @@ function army(obj, color, dontFade) {
                         unselectArmy();
                     } else { // klikam na inną jednostkę
                         armyToJoinId = players[my.color].armies[this.id].armyId;
-                        sendMove(cursorPosition(e.pageX, e.pageY));
+                        moveA(cursorPosition(e.pageX, e.pageY));
                     }
                 } else {
                     unselectArmy();
@@ -426,6 +428,7 @@ function deleteArmyByPosition(x, y, color) {
 
 function changeArmyPosition(x, y, armyId, color) {
     if(typeof players[color].armies['army'+armyId] != 'undefined') {
+        removeM();
         players[color].armies['army'+armyId].element.css({
             left: x + 'px',
             top: y + 'px'
@@ -488,7 +491,7 @@ function findNextArmy() {
             if(nextArmySelected == false){
                 nextArmySelected = true;
                 unselectArmy();
-                console.log(players[my.color].armies[nextArmy]);
+//                console.log(players[my.color].armies[nextArmy]);
                 selectArmy(players[my.color].armies[nextArmy]);
             }
         }
@@ -523,10 +526,10 @@ function walk(result) {
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         newX = players[my.color].armies['army'+result.armyId].x;
         newY = players[my.color].armies['army'+result.armyId].y;
-        wsArmyAdd(result.armyId);
+        wsArmy(result.armyId);
         if(parentArmyId){
             getAddArmy(parentArmyId);
-            wsArmyAdd(parentArmyId);
+            wsArmy(parentArmyId);
             unsetParentArmyId();
         }
         selectArmy(players[my.color].armies['army'+result.armyId]);
@@ -535,11 +538,14 @@ function walk(result) {
     } else {
         wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
         zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
-        $('#army'+unselectedArmy.armyId).animate({left: result.path[i].x + 'px',top: result.path[i].y + 'px'},300,
-            function(){
-                delete result.path[i];
-                walk(result);
-            }
+        $('#army'+unselectedArmy.armyId).animate({
+            left: result.path[i].x + 'px',
+            top: result.path[i].y + 'px'
+            },300,
+        function(){
+            delete result.path[i];
+            walk(result);
+        }
         );
     }
 }
