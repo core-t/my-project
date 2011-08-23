@@ -14,7 +14,6 @@ var nextArmy = null;
 var nextArmySelected = false;
 var armyToJoinId = null;
 var skippedArmies = new Array();
-var heroResurection = true;
 
 var zoomer;
 
@@ -44,6 +43,7 @@ $(document).ready(function() {
 });
 
 function turnOn() {
+    skippedArmies = new Array();
     my.turn = true;
     $('#nextTurn').removeClass('buttonOff');
     $('#nextArmy').removeClass('buttonOff');

@@ -241,15 +241,14 @@ function army(obj, color, dontFade) {
         numberOfSoldiers++;
     }
     if(typeof this.heroes[this.heroKey] != 'undefined') {
-        if(this.heroes[this.heroKey].name == 'undefined'){
-            this.name = 'Anonymous hero';
-        }else{
+        if(this.heroes[this.heroKey].name){
             this.name = this.heroes[this.heroKey].name;
+        }else{
+            this.name = 'Anonymous hero';
         }
         this.img = 'hero';
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
-        heroResurection = false;
     } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
         this.name = this.soldiers[this.soldierKey].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
@@ -509,6 +508,7 @@ function skipArmy(){
     }
     if(selectedArmy){
         skippedArmies.push(selectedArmy.armyId);
+        unselectArmy();
         findNextArmy();
     }
 }

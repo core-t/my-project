@@ -147,6 +147,22 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         }
     }
 
+    public function isPlayerCastle($castleId, $playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, $this->_primary)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"castleId" = ?', $castleId);
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset ($result[0][$this->_primary])) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function setCastleProduction($castleId, $unitId, $playerId) {
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"castleId" = ?', $castleId);
@@ -190,5 +206,6 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         );
         return $this->_db->update($this->_name, $data, $where);
     }
+
 
 }

@@ -11,7 +11,7 @@ if(is_array($this->myGames)) {
         <td style="background:'.$game['color'].'"><a href="'.$url.'">'.$game['color'].'</a></td>
         <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
         <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
-        <td><a href="'.$url.'">'.strftime('%F', strtotime($game['begin'])).'</a></td>
+        <td><a href="'.$url.'">'.strftime('%F %H:%M:%S', strtotime($game['begin'])).'</a></td>
         </tr>';
     }
 }

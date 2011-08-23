@@ -281,19 +281,25 @@ function castleM(castleId, color){
             .append(' Stop production')
         )
     );
-    var resurection;
-    if(heroResurection){
-        resurection = $('<p>')
+    var resurrectionElement;
+    var resurrection = true;
+    for(armyId in players[my.color].armies){
+        for(j in players[my.color].armies[armyId].heroes){
+            resurrection = false;
+        }
+    }
+    if(resurrection){
+        resurrectionElement = $('<p>')
         .addClass('h')
         .append(
             $('<input>').attr({
                 type:'checkbox',
-                name:'resurection',
+                name:'resurrection',
                 value:castleId
             })
         )
         .append(' cost 300g')
-        .append($('<div>').addClass('button right').html('Hero resurection').click(function(){heroResurection()}));
+        .append($('<div>').addClass('button right').html('Hero resurrection').click(function(){heroResurrection(castleId)}));
     }
     var height = 62 + k*54 + 96;
     mElement().after(
@@ -340,7 +346,7 @@ function castleM(castleId, color){
             $('<p>')
             .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
         )
-        .append(resurection)
+        .append(resurrectionElement)
     );
 
 }

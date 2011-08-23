@@ -64,9 +64,24 @@ class GameajaxController extends Game_Controller_Action {
     }
 
     public function resurrectionAction(){
-        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-
-        $this->view->response = Zend_Json::encode();
+        $castleId = $this->_request->getParam('cid');
+        if ($castleId != null){
+            $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
+            if(!$modelCastle->isPlayerCastle($castleId, $this->_namespace->player['playerId'])){
+                throw new Exception('To nie jest Twój zamek!');
+            }
+            $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $heroId = $modelArmy->getDeadHeroId($this->_namespace->player['playerId']);
+            if(!$heroId){
+                throw new Exception('Twój heros żyje!');
+            }
+            $modelBoard = new Application_Model_Board();
+            $position = $modelBoard->getCastlePosition($castleId);
+            $armyId = $modelArmy->heroResurection($heroId, $position, $this->_namespace->player['playerId']);
+            $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+        } else {
+            throw new Exception('Brak "castleId"!');
+        }
     }
 
     public function ruinsAction(){

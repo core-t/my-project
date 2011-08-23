@@ -625,6 +625,10 @@ class Application_Model_Board {
         return $this->castles[$castleId];
     }
 
+    public function getCastlePosition($castleId) {
+        return $this->castles[$castleId]['position'];
+    }
+
     static public function getRuins() {
         $ruins = array();
         $ruins[0] = array('x' => 1360, 'y' => 2320);

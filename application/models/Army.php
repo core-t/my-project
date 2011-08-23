@@ -689,7 +689,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->from($this->_name, 'armyId')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('destroyed = false')
-                    ->where('"playerId" = (?)', $playerId);
+                    ->where('"playerId" = ?', $playerId);
             $result = $this->_db->query($select)->fetchAll();
             if (count($result)) {
                 return true;
@@ -708,6 +708,30 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         return $this->_db->update('hero', $data, $where);
+    }
+
+    public function getDeadHeroId($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from('hero', array('heroId','armyId'))
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            if (!isset($result[0]['armyId'])) {
+                return $result[0]['heroId'];
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function heroResurection($heroId, $position, $playerId){
+        $armyId = $this->getArmyIdFromPosition($position);
+        if(!$armyId){
+            $armyId = $this->createArmy($position, $playerId);
+        }
+        $this->addHeroToArmy($armyId, $heroId);
+        return $armyId;
     }
 }
 

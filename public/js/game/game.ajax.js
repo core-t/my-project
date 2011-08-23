@@ -273,12 +273,12 @@ function disbandArmy(){
     });
 }
 
-function heroResurection(){
+function heroResurrection(castleId){
     if(!my.turn){
         return null;
     }
     unselectArmy();
-    $.getJSON(urlHeroResurrection, function(result) {
+    $.getJSON(urlHeroResurrection+'/cid/'+castleId, function(result) {
         if(result){
             removeM();
             players[my.color].armies['army'+result.armyId] = new army(result, my.color);
@@ -297,18 +297,17 @@ function searchRuins(){
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
         switch(result.find[0]){
+            players[my.color].armies['army'+result.armyId] = new army(result, my.color);
             case 'gold':
                 goldUpdate(result.find[1] + parseInt($('#gold').html()));
                 simpleM('You have found '+result.find[1]+' gold.');
                 break;
             case 'death':
                 simpleM('You have found death.');
-                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
                 wsArmyAdd(result.armyId);
                 break
             case 'alies':
                 simpleM(result.find[1]+' alies joined your army.');
-                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
                 wsArmyAdd(result.armyId);
                 break
             case 'null':
@@ -316,7 +315,6 @@ function searchRuins(){
                 break
             case 'artefact':
                 simpleM('You have found an ancient artefact.');
-                players[my.color].armies['army'+result.armyId] = new army(result, my.color);
                 wsArmyAdd(result.armyId);
                 break
 
