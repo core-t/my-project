@@ -30,6 +30,7 @@ function ruinCreate(ruinId){
 
 function castleCreate(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
+    el = $('#castle' + castleId);
     board.append(
         $('<div>')
         .addClass('castle')
@@ -41,31 +42,22 @@ function castleCreate(castleId) {
             left: castles[castleId].position.x + 'px',
             top: castles[castleId].position.y + 'px'
         })
-        );
-    $('#castle' + castleId).mouseover(function(){
-        if(lock) {
-            return null;
+    );
+    el.mouseover(function(){castleCursor()});
+    el.mousemove(function(){castleCursor()});
+}
+
+function castleCursor(){
+    if(lock) {
+        return null;
+    }
+    if(my.turn) {
+        if(selectedArmy) {
+            $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+        } else {
+            $('#' + this.id).css('cursor','default');
         }
-        if(my.turn) {
-            if(selectedArmy) {
-                $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-            } else {
-                $('#' + this.id).css('cursor','default');
-            }
-        }
-    });
-    $('#castle' + castleId).mousemove(function(){
-        if(lock) {
-            return null;
-        }
-        if(my.turn) {
-            if(selectedArmy) {
-                $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-            } else {
-                $('#' + this.id).css('cursor','default');
-            }
-        }
-    });
+    }
 }
 
 function castleUpdate(data) {
