@@ -57,6 +57,8 @@ function castleCursor(){
         } else {
             $('#' + this.id).css('cursor','default');
         }
+    } else {
+        $('#' + this.id).css('cursor','default');
     }
 }
 
