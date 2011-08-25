@@ -14,8 +14,6 @@ var nextArmy = null;
 var nextArmySelected = false;
 var armyToJoinId = null;
 var skippedArmies = new Array();
-var neutralCastleId = null;
-var enemyCastleId = null;
 
 var zoomer;
 
@@ -52,6 +50,7 @@ function turnOn() {
     $('#nextArmy').removeClass('buttonOff');
     showFirstCastle();
     turnM();
+    titleBlink('Your turn!');
 }
 
 function turnOff() {
@@ -149,18 +148,8 @@ function updatePlayers(color){
 
 function chat(color,msg){
     var chatWindow = $('#chatWindow div').append('<br/>').append(color+': '+msg);
-    console.log($('#chatWindow div')[0].scrollHeight);
-    console.log(msg);
     var scroll = 110 - chatWindow[0].scrollHeight;
-    console.log(scroll);
-//    if(chatWindow.html()){
-//        scroll -= 12;
-//    }else{
-//        scroll -= 24;
-//    }
-//    console.log(scroll);
     chatWindow.animate({'top':scroll},100);
-//     console.log(msg);
     $('#msg').focus();
 }
 
@@ -176,4 +165,20 @@ function unlock(){
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');
     }
+}
+
+function titleBlink(msg) {
+    var oldTitle = document.title;
+    var timeoutId = setInterval(function() {
+        if(document.title == msg){
+            document.title = '...';
+        }else{
+            document.title = msg;
+        }
+    }, 1000);
+    window.onmousemove = function() {
+        clearInterval(timeoutId);
+        document.title = oldTitle;
+        window.onmousemove = null;
+    };
 }

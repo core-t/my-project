@@ -316,7 +316,7 @@
 #chatBox{
     width:200px;
     height:130px;
-    border-left:1px solid #cecece;
+    border-left:1px solid #fff;
 }
 
 #chatBox #chatWindow{

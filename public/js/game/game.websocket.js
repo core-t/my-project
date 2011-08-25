@@ -52,6 +52,7 @@ function login() {
                                 msg += data[i];
                             }
                             if(msg){
+                                titleBlink('Incoming chat!');
                                 chat(color,msg);
                             }
                             break;

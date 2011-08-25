@@ -33,6 +33,7 @@ function substrCastleId(id){
 }
 function createNeutralCastle(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
+    castles[castleId].color = null;
     board.append(
         $('<div>')
         .addClass('castle')
@@ -44,10 +45,8 @@ function createNeutralCastle(castleId) {
             left: castles[castleId].position.x + 'px',
             top: castles[castleId].position.y + 'px'
         })
-        .mouseover(function(){castleCursor(this.id);neutralCastleId = this.id})
-        .mousemove(function(){castleCursor(this.id);neutralCastleId = this.id})
-        .mouseleave(function(){neutralCastleId = null})
-        .mouseout(function(){neutralCastleId = null})
+        .mouseover(function(){castleCursor(this.id)})
+        .mousemove(function(){castleCursor(this.id)})
     );
 }
 
@@ -95,17 +94,19 @@ function castleOwner(castleId, color) {
     var zindex;
     if(color == my.color) {
         zindex = 100;
-        castle.unbind()
+        castle
+        .unbind('mouseover')
+        .unbind('mousemove')
         .mouseover(function() {myCastleCursor(this.id)})
         .mousemove(function() {myCastleCursor(this.id)})
         .click(function(){castleM(castleId, color)});
     } else {
         zindex = 600;
-        castle.unbind()
-        .mouseover(function() {castleCursor(this.id);enemyCastleId = this.id})
-        .mousemove(function() {castleCursor(this.id);enemyCastleId = this.id})
-        .mouseleave(function(){enemyCastleId = null})
-        .mouseout(function(){enemyCastleId = null})
+        castle
+        .unbind('mouseover')
+        .unbind('mousemove')
+        .mouseover(function() {castleCursor(this.id)})
+        .mousemove(function() {castleCursor(this.id)})
     }
     castle.removeClass()
     .addClass('castle ' + color)
@@ -236,7 +237,9 @@ function army(obj, color, dontFade) {
     }
     this.element = $('<div>');
     if(color == my.color) { // moja armia
-        myArmyMouse(this.element);
+        this.element.click(function(e) {myArmyClick(this, e)});
+        this.element.mouseover(function() {myArmyMouse(this.id)});
+        this.element.mousemove(function() {myArmyMouse(this.id)});
     } else { // nie moja armia
         enemyArmyMouse(this.element);
     }
@@ -278,57 +281,49 @@ function myArmyWin(result){
     wsArmy(unselectedArmy.armyId);
 }
 
-function myArmyMouse(el){
-    el.click(function(e) {
+function myArmyClick(obj, e){
+    if(e.which == 1){
         if(lock) {
             return null;
         }
         if(my.turn) {
             if(selectedArmy) {
-                if(selectedArmy == players[my.color].armies[this.id]) { // klikam na siebie
+                console.log('selected army');
+                if(selectedArmy == players[my.color].armies[obj.id]) { // klikam na siebie
                     unselectArmy();
                 } else { // klikam na inną jednostkę
-                    armyToJoinId = players[my.color].armies[this.id].armyId;
+                    armyToJoinId = players[my.color].armies[obj.id].armyId;
                     moveA(cursorPosition(e.pageX, e.pageY));
                 }
             } else {
                 unselectArmy();
-                selectArmy(players[my.color].armies[this.id]);
+                selectArmy(players[my.color].armies[obj.id]);
             }
         }
-    })
-    .mouseover(function() {
-        if(lock) {
-            return null;
-        }
-        if(my.turn && !selectedArmy) {
-            el.css('cursor', 'url(../img/game/cursor_select.png), default');
-        } else {
-            el.css('cursor', 'default');
-        }
-    })
-    .mousemove(function() {
-        if(lock) {
-            return null;
-        }
-        if(my.turn && !selectedArmy) {
-            $('#'+this.id).css('cursor', 'url(../img/game/cursor_select.png), default');
-        } else {
-            $('#'+this.id).css('cursor', 'default');
-        }
-    });
+    }
+}
+
+function myArmyMouse(id){
+    if(lock) {
+        return null;
+    }
+    if(my.turn && !selectedArmy) {
+        $('#'+id).css('cursor', 'url(../img/game/cursor_select.png), default');
+    } else {
+        $('#'+id).css('cursor', 'default');
+    }
 }
 
 function enemyArmyMouse(el){
-    el.mouseover(function() {
+    return el.mouseover(function() {
         if(lock) {
             return null;
         }
         if(my.turn && selectedArmy) {
             selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-            el.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+            $('#'+this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
         } else {
-            el.css('cursor', 'default');
+            $('#'+this.id).css('cursor', 'default');
         }
     })
     .mousemove(function() {
@@ -337,9 +332,9 @@ function enemyArmyMouse(el){
         }
         if(my.turn && selectedArmy) {
             selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-            el.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+            $('#'+this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
         } else {
-            el.css('cursor', 'default');
+            $('#'+this.id).css('cursor', 'default');
         }
     });
 }
@@ -685,7 +680,6 @@ function downRight(pfX, pfY) {
             movesSpend = m;
         }
     }
-    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -737,7 +731,6 @@ function topRight(pfX, pfY) {
             movesSpend = m;
         }
     }
-    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -789,7 +782,6 @@ function topLeft(pfX, pfY) {
             movesSpend = m;
         }
     }
-    setCursorArrow(dir);
     return movesSpend;
 }
 
@@ -841,11 +833,11 @@ function downLeft(pfX, pfY) {
             movesSpend = m;
         }
     }
-    setCursorArrow(dir);
     return movesSpend;
 }
 
 function addPathDiv(pfX,pfY,direction,movesSpend) {
+    setCursorArrow(direction);
     if(movesSpend >= selectedArmy.moves) {
         return movesSpend;
     }

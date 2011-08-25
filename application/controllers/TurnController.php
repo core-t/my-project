@@ -97,8 +97,6 @@ class TurnController extends Game_Controller_Action {
                     ) {
                         if($modelCastle->resetProductionTurn($castleId, $this->_namespace->player['playerId']) == 1) {
                             $modelArmy->addSoldierToArmy($armyId, $castleProduction['production'], $this->_namespace->player['playerId']);
-                            $gold -= $castle['production'][$unitName]['cost'];
-                            $costs += $castle['production'][$unitName]['cost'];
                         }
                     }
                 }
@@ -111,9 +109,12 @@ class TurnController extends Game_Controller_Action {
             $array = array();
             $resutl = array();
             foreach ($armies as $k => $army) {
+                foreach($army['soldiers'] as $unit){
+                    $costs += $unit['cost'];
+                }
                 $array['army'.$army['armyId']] = $army;
             }
-            $gold = $gold + $income;
+            $gold = $gold + $income - $costs;
             $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
             $resutl['gold'] = $gold;
             $resutl['costs'] = $costs;

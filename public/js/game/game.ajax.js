@@ -68,7 +68,17 @@ function moveA(movesSpend) {
         return null;
     }
     setlock();
-    if(neutralCastleId || enemyCastleId || selectedEnemyArmy){
+    var neutralCastleId = null;
+    var enemyCastleId = null;
+    var castleId = isEnemyCastle(newX, newY);
+    if(castleId){
+        if(castles[castleId].color){
+            enemyCastleId = castleId;
+        }else{
+            neutralCastleId = castleId;
+        }
+    }
+    if(castleId || selectedEnemyArmy){
         var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
         if(vectorLenth >= 80) {
             unlock();
@@ -81,10 +91,8 @@ function moveA(movesSpend) {
             unselectEnemyArmy();
             return null;
         }
-        var castleId;
+
         if(neutralCastleId){
-            castleId = neutralCastleId.substr(6);
-            neutralCastleId = null;
             $.getJSON(urlFightNeutralCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
                 var enemyArmies = new Array();
                 enemyArmies[0] = getNeutralCastleGarrison();
@@ -102,8 +110,6 @@ function moveA(movesSpend) {
                 unlock();
             });
         } else if(enemyCastleId){
-            castleId = enemyCastleId.substr(6);
-            enemyCastleId = null;
             $.getJSON(urlFightEnemyCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
                 var enemyArmies = getEnemyCastleGarrison(castleId);
                 if(result.victory) {
@@ -161,7 +167,7 @@ function getArmyA(armyId) {
     $.getJSON(urlAddArmy+'/armyId/'+armyId, function(result) {
         if(typeof result.armyId != 'undefined') {
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
-            zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
+//            zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
         }
     });
 }
