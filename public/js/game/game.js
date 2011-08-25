@@ -14,7 +14,8 @@ var nextArmy = null;
 var nextArmySelected = false;
 var armyToJoinId = null;
 var skippedArmies = new Array();
-var clickedCastle = null;
+var neutralCastleId = null;
+var enemyCastleId = null;
 
 var zoomer;
 
@@ -23,11 +24,12 @@ var nextArmy;
 var cursorDirection;
 
 $(document).ready(function() {
-    lWSC = new jws.jWebSocketJSONClient();
-    login();
-    zoomer = new zoom(758, 670);
-    setTimeout ( 'connect()', 1500 );
-
+//    $(window).load(function () {
+        lWSC = new jws.jWebSocketJSONClient();
+        login();
+        zoomer = new zoom(758, 670);
+        setTimeout ( 'connect()', 1500 );
+//    });
 /*    for(y in fields) {
         for(x in fields[y]) {
             board.append(
@@ -96,7 +98,7 @@ function startGame(){
     var myArmies = false;
     var myCastles = false;
     for(i in castles) {
-        new castleCreate(i);
+        new createNeutralCastle(i);
     }
     for(i in ruins) {
         new ruinCreate(i);
@@ -114,6 +116,7 @@ function startGame(){
             castleOwner(i, color);
             if(color == my.color){
                 myCastles = true;
+                setMyCastleProduction(i);
             }
         }
     }

@@ -28,9 +28,11 @@ function ruinCreate(ruinId){
 
 // *** CASTLES ***
 
-function castleCreate(castleId) {
+function substrCastleId(id){
+    return id.substr(6);
+}
+function createNeutralCastle(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
-    el = $('#castle' + castleId);
     board.append(
         $('<div>')
         .addClass('castle')
@@ -42,23 +44,31 @@ function castleCreate(castleId) {
             left: castles[castleId].position.x + 'px',
             top: castles[castleId].position.y + 'px'
         })
+        .mouseover(function(){castleCursor(this.id);neutralCastleId = this.id})
+        .mousemove(function(){castleCursor(this.id);neutralCastleId = this.id;})
+        .mouseleave(function(){neutralCastleId = null;})
     );
-    el.mouseover(function(){castleCursor()});
-    el.mousemove(function(){castleCursor()});
 }
 
-function castleCursor(){
+function castleCursor(id){
     if(lock) {
         return null;
     }
-    if(my.turn) {
-        if(selectedArmy) {
-            $('#' + this.id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-        } else {
-            $('#' + this.id).css('cursor','default');
-        }
+    if(my.turn && selectedArmy) {
+        $('#' + id).css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
     } else {
-        $('#' + this.id).css('cursor','default');
+        $('#' + id).css('cursor','default');
+    }
+}
+
+function myCastleCursor(id){
+    if(lock) {
+        return null;
+    }
+    if(my.turn && !selectedArmy) {
+        $('#' + id).css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
+    } else {
+        $('#' + id).css('cursor', 'default');
     }
 }
 
@@ -79,86 +89,38 @@ function castleOwner(castleId, color) {
     if(typeof castles[castleId] != 'undefined' && castles[castleId].razed){
         castle.remove();
         delete castles[castleId];
-    //        delete players[color].castles[castleId];
-    }else{
-        if(color == my.color) {
-            zindex = 100;
-            castle.mouseover(function() {
-                if(my.turn){
-                    if(selectedArmy) {
-                        castle.css('cursor', 'default');
-                    } else {
-                        castle.css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
-                    }
-                } else {
-                    castle.css('cursor', 'default');
-                }
-            });
-            castle.mousemove(function() {
-                if(my.turn){
-                    if(selectedArmy) {
-                        castle.css('cursor', 'default');
-                    } else {
-                        castle.css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
-                    }
-                } else {
-                    castle.css('cursor', 'default');
-                }
-            });
-            castle.click(function(){
-                if(my.turn){
-                    if(!selectedArmy) {
-                        castleM(castleId, color);
-                    }
-                }
-            });
-        } else {
-            zindex = 600;
-            castle.mouseover(function() {
-                if(lock) {
-                    return null;
-                }
-                if(my.turn && selectedArmy){
-                    castle.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-                } else {
-                    castle.css('cursor', 'default');
-                }
-            });
-            castle.mousemove(function() {
-                if(lock) {
-                    return null;
-                }
-                if(my.turn && selectedArmy){
-                    castle.css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-                } else {
-                    castle.css('cursor', 'default');
-                }
-            });
-            castle.click(function(){
-                return null
-            });
-        }
-        castle
-        .removeClass()
-        .addClass('castle ' + color)
-        .css({
-            'z-index':zindex,
-            background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
-        });
-        castles[castleId].color = color;
-        if(typeof players[color].castles[castleId] == 'undefined'){
-            castles[castleId].currentProduction = null;
-            castles[castleId].currentProductionTurn = 0;
-        } else {
-            castles[castleId].currentProduction = players[color].castles[castleId].production;
-            castles[castleId].currentProductionTurn = players[color].castles[castleId].productionTurn;
-            if(color == my.color && castles[castleId].currentProduction){
-                castle.html($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
-            }else{
-                castle.html('');
-            }
-        }
-        castle.fadeIn(1);
+        return null;
+    }
+    var zindex;
+    if(color == my.color) {
+        zindex = 100;
+        castle.unbind()
+        .mouseover(function() {myCastleCursor(this.id)})
+        .mousemove(function() {myCastleCursor(this.id)})
+        .click(function(){castleM(castleId, color)});
+    } else {
+        zindex = 600;
+        castle.unbind()
+        .mouseover(function() {castleCursor(this.id);enemyCastleId = this.id})
+        .mousemove(function() {castleCursor(this.id);enemyCastleId = this.id})
+        .mouseleave(function(){enemyCastleId = null})
+    }
+    castle.removeClass()
+    .addClass('castle ' + color)
+    .css({
+        'z-index':zindex,
+        background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
+    });
+    castles[castleId].color = color;
+
+    castle.fadeIn(1);
+}
+
+function setMyCastleProduction(castleId){
+    castles[castleId].currentProduction = players[my.color].castles[castleId].production;
+    castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
+    if(castles[castleId].currentProduction){
+        $('#castle' + castleId).html($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
     }
 }
 

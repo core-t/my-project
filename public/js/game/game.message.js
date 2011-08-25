@@ -200,6 +200,12 @@ function splitArmyM(a){
 }
 
 function castleM(castleId, color){
+    if(!my.turn){
+        return null;
+    }
+    if(selectedArmy) {
+        return null;
+    }
     removeM();
     var time = '';
     var attr;
