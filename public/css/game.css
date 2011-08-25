@@ -330,7 +330,7 @@
 
 #chatBox #chatWindow div{
     position:relative;
-    top:0;
+    top:85px;
     left:0;
     width:100%;
     border: none;

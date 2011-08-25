@@ -148,27 +148,18 @@ function updatePlayers(color){
 }
 
 function chat(color,msg){
-    var chatWindow = $('#chatWindow div');
-//     console.log($('#chatWindow div')[0].scrollHeight);
+    var chatWindow = $('#chatWindow div').append('<br/>').append(color+': '+msg);
+    console.log($('#chatWindow div')[0].scrollHeight);
+    console.log(msg);
     var scroll = 110 - chatWindow[0].scrollHeight;
-    if(chatWindow.html()){
-        scroll -= 12;
-    }else{
-        scroll -= 24;
-    }
-//     console.log(scroll);
-    chatWindow.animate({'top':scroll},100,function(){
-        chatWindow.append('<br/>')
-//         .append(
-//             $('<div>').css({
-//                 'float':'left',
-//                 'background':color,
-//                 'width':'4px',
-//                 'height':'12px'
-//             })
-//         )
-        .append(color+': '+msg);
-    });
+    console.log(scroll);
+//    if(chatWindow.html()){
+//        scroll -= 12;
+//    }else{
+//        scroll -= 24;
+//    }
+//    console.log(scroll);
+    chatWindow.animate({'top':scroll},100);
 //     console.log(msg);
     $('#msg').focus();
 }
