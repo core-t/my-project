@@ -24,6 +24,9 @@ class ProductionController extends Game_Controller_Action
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
             if($modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
+                if(!$modelCastle->isPlayerCastle($castleId, $this->_namespace->player['playerId'])){
+                    throw new Exception('To nie jest Twój zamek!');
+                }
                 $res = $modelCastle->setCastleProduction($castleId, $unitId, $this->_namespace->player['playerId']);
                 switch ($res) {
                     case 1:

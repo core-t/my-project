@@ -96,9 +96,6 @@ function login() {
                                     }
                                 }
                             }
-                            console.log(battle);
-                            console.log(army);
-                            console.log(enemyArmies);
                             battleM(battle, army, enemyArmies);
                             break;
                         default:

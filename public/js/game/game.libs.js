@@ -45,8 +45,9 @@ function createNeutralCastle(castleId) {
             top: castles[castleId].position.y + 'px'
         })
         .mouseover(function(){castleCursor(this.id);neutralCastleId = this.id})
-        .mousemove(function(){castleCursor(this.id);neutralCastleId = this.id;})
-        .mouseleave(function(){neutralCastleId = null;})
+        .mousemove(function(){castleCursor(this.id);neutralCastleId = this.id})
+        .mouseleave(function(){neutralCastleId = null})
+        .mouseout(function(){neutralCastleId = null})
     );
 }
 
@@ -104,6 +105,7 @@ function castleOwner(castleId, color) {
         .mouseover(function() {castleCursor(this.id);enemyCastleId = this.id})
         .mousemove(function() {castleCursor(this.id);enemyCastleId = this.id})
         .mouseleave(function(){enemyCastleId = null})
+        .mouseout(function(){enemyCastleId = null})
     }
     castle.removeClass()
     .addClass('castle ' + color)

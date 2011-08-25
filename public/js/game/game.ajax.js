@@ -84,6 +84,7 @@ function moveA(movesSpend) {
         var castleId;
         if(neutralCastleId){
             castleId = neutralCastleId.substr(6);
+            neutralCastleId = null;
             $.getJSON(urlFightNeutralCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
                 var enemyArmies = new Array();
                 enemyArmies[0] = getNeutralCastleGarrison();
@@ -102,6 +103,7 @@ function moveA(movesSpend) {
             });
         } else if(enemyCastleId){
             castleId = enemyCastleId.substr(6);
+            enemyCastleId = null;
             $.getJSON(urlFightEnemyCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
                 var enemyArmies = getEnemyCastleGarrison(castleId);
                 if(result.victory) {

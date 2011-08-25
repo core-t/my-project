@@ -150,10 +150,11 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
     public function isPlayerCastle($castleId, $playerId) {
         try {
             $select = $this->_db->select()
-                    ->from($this->_name, $this->_primary)
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"playerId" = ?', $playerId)
-                    ->where('"castleId" = ?', $castleId);
+                ->from($this->_name, $this->_primary)
+                ->where('razed = false')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('"playerId" = ?', $playerId)
+                ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
             if(isset ($result[0][$this->_primary])) {
                 return true;
