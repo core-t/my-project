@@ -22,6 +22,8 @@ var nextArmy;
 var cursorDirection;
 
 $(document).ready(function() {
+        terrain();
+
 //    $(window).load(function () {
         lWSC = new jws.jWebSocketJSONClient();
         login();
@@ -181,4 +183,15 @@ function titleBlink(msg) {
         document.title = oldTitle;
         window.onmousemove = null;
     };
+}
+
+function terrain(){
+    board.after(
+        $('<div>')
+        .addClass('terrain')
+        .append('Terrain: ')
+        .append(
+            $('<span>').attr('id','coord')
+        )
+    );
 }

@@ -122,7 +122,8 @@
 }
 
 #gameMenu .button{
-    height:11px;
+    height:15px;
+    padding:1px;
 }
 
 .playersBox{
@@ -151,16 +152,18 @@
 .playersBox div.green div.color{
     color:white;
 }
-
-.armyButtonsBox{
+#armyButtonsBox{
+    height:69px;
+}
+#armyButtonsBox div.armyButtons {
     clear:both;
     margin:2px;
     text-align:center;
-    min-width:50px;
+/*    width:50px;*/
     height:17px;
 }
 
-.armyButtonsBox .armyButton{
+#armyButtonsBox div div.armyButton{
     width:83px;
 }
 
@@ -188,7 +191,6 @@
 .message {
     width: 260px;
     min-height: 225px;
-    position:inherit;
     border:1px solid white;
     z-index:7000;
     background: #555555;
@@ -341,9 +343,42 @@
 
 #chatBox input{
     border: none;
-    width:164px;
+    width:168px;
     height:19px;
 }
 #chatBox .button{
     margin:0;
+}
+
+#goldBox{
+    height:28px;
+}
+
+#goldBox div div{
+    width:56px;
+    height:14px;
+}
+
+#nameBox{
+    height:14px;
+}
+
+#attrBox{
+    height:14px;
+}
+
+#attrBox div{
+    width:56px;
+}
+
+.text-right{
+    text-align:right;
+}
+
+.terrain {
+    z-index:7000;
+    position:relative;
+    color:white;
+    top:0px;
+    left:0px;
 }

@@ -75,6 +75,7 @@ class GameajaxController extends Game_Controller_Action {
             if(!$heroId){
                 throw new Exception('Twój heros żyje!');
             }
+            $modelGame = new Application_Model_Game($this->_namespace->gameId);
             $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
             if($gold < 100){
                 throw new Exception('Za mało złota!');

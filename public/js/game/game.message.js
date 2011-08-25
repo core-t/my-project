@@ -1,7 +1,6 @@
 function mElement(){
-    return board;
+    return $('.terrain');
 }
-
 
 function startM(){
     removeM();
@@ -449,3 +448,4 @@ function removeM(){
         $('.message').remove();
     }
 }
+

@@ -62,12 +62,23 @@
                         </div>
                     </div>
                     <div class="gameMenu two">
-                        <p>Income: <span id="income">0</span> Costs: <span id="costs">0</span> Treasure: <span id="gold">0</span></p>
-                        <p>Terrain: <span id="coord"></span></p>
-                        <p>Name: <span id="name"></span></p>
-                        <p>Moves: <span id="moves">0</span> Attack: <span id="attack">0</span> Defense: <span id="defense">0</span></p>
-                        <div id="buttons">
-                            <div class="armyButtonsBox">
+                        <div id="goldBox">
+                            <div class="left">
+                                <div>Income</div>
+                                <div class="text-right" id="income">0</div>
+                            </div>
+                            <div class="left">
+                                <div>Costs</div>
+                                <div class="text-right" id="costs">0</div>
+                            </div>
+                            <div class="left">
+                                <div>Treasure</div>
+                                <div class="text-right" id="gold">0</div>
+                            </div>
+                        </div>
+                        <div id="nameBox">Name: <span id="name"></span></div>
+                        <div id="armyButtonsBox">
+                            <div class="armyButtons">
                                 <div class="left armyButton">
                                     <a id="disbandArmy" class="button buttonOff">Disband</a>
                                 </div>
@@ -75,7 +86,7 @@
                                     <a id="splitArmy" class="button buttonOff">Split army</a>
                                 </div>
                             </div>
-                            <div class="armyButtonsBox">
+                            <div class="armyButtons">
                                 <div class="left armyButton">
                                     <a id="searchRuins" class="button buttonOff">Search ruins</a>
                                 </div>
@@ -83,7 +94,7 @@
 
                                 </div>
                             </div>
-                            <div class="armyButtonsBox">
+                            <div class="armyButtons">
                                 <div class="left armyButton">
                                     <a id="skipArmy" class="button">Skip army</a>
                                 </div>
@@ -91,6 +102,11 @@
                                     <a id="nextArmy" class="button">Next army >></a>
                                 </div>
                             </div>
+                        </div>
+                        <div id="attrBox">
+                            <div class="left">Moves: <span id="moves">0</span></div>
+                            <div class="left">Attack: <span id="attack">0</span></div>
+                            <div class="left">Defense: <span id="defense">0</span></div>
                         </div>
                     </div>
                     <div class="gameMenu three">

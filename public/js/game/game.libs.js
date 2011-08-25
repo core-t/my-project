@@ -493,7 +493,7 @@ function findNextArmy() {
             if(nextArmySelected == false){
                 nextArmySelected = true;
                 unselectArmy();
-                //                console.log(players[my.color].armies[nextArmy]);
+                console.log(players[my.color].armies[nextArmy]);
                 selectArmy(players[my.color].armies[nextArmy]);
             }
         }
