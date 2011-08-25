@@ -97,6 +97,7 @@ function castleOwner(castleId, color) {
         castle
         .unbind('mouseover')
         .unbind('mousemove')
+        .unbind('click')
         .mouseover(function() {myCastleCursor(this.id)})
         .mousemove(function() {myCastleCursor(this.id)})
         .click(function(){castleM(castleId, color)});
@@ -105,6 +106,7 @@ function castleOwner(castleId, color) {
         castle
         .unbind('mouseover')
         .unbind('mousemove')
+        .unbind('click')
         .mouseover(function() {castleCursor(this.id)})
         .mousemove(function() {castleCursor(this.id)})
     }
@@ -493,8 +495,12 @@ function findNextArmy() {
             if(nextArmySelected == false){
                 nextArmySelected = true;
                 unselectArmy();
-                console.log(players[my.color].armies[nextArmy]);
-                selectArmy(players[my.color].armies[nextArmy]);
+                if(typeof players[my.color].armies[nextArmy].armyId != 'undefined'){
+                    selectArmy(players[my.color].armies[nextArmy]);
+                }else{
+                    console.log(players[my.color].armies[nextArmy]);
+                    skipArmy();
+                }
             }
         }
     }

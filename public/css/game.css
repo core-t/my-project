@@ -379,6 +379,7 @@
     z-index:7000;
     position:relative;
     color:white;
+    text-shadow: #000 1px 1px, #000 -1px -1px;
     top:0px;
     left:0px;
 }

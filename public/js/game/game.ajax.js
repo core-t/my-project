@@ -78,7 +78,7 @@ function moveA(movesSpend) {
             neutralCastleId = castleId;
         }
     }
-    if(castleId || selectedEnemyArmy){
+    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY)){
         var vectorLenth = getVectorLenth(unselectedArmy.x, unselectedArmy.y, newX, newY);
         if(vectorLenth >= 80) {
             unlock();
@@ -133,7 +133,7 @@ function moveA(movesSpend) {
                 battleM(result.battle, unselectedArmy, enemyArmies);
                 unlock();
             });
-        } else if(selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY) {
+        } else if(selectedEnemyArmy) {
             $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
                 if(result.victory == true) {
                     myArmyWin(result);
