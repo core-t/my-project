@@ -73,7 +73,7 @@ function myCastleCursor(id){
 }
 
 function castleUpdate(data) {
-    removeM();
+//    removeM();
     zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
     if(data.razed){
         castles[data.castleId].razed = true;
@@ -107,6 +107,7 @@ function castleOwner(castleId, color) {
     }
     castle.removeClass()
     .addClass('castle ' + color)
+    .html('')
     .css({
         'z-index':zindex,
         background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
@@ -292,8 +293,6 @@ function myArmyMouse(el){
                 unselectArmy();
                 selectArmy(players[my.color].armies[this.id]);
             }
-        }else{
-            return null;
         }
     })
     .mouseover(function() {
