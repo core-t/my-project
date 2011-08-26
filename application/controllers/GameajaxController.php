@@ -52,6 +52,26 @@ class GameajaxController extends Game_Controller_Action {
         }
     }
 
+    public function joinAction(){
+        $armyId1 = $this->_request->getParam('aid1');
+        $armyId2 = $this->_request->getParam('aid2');
+        if (!empty($armyId1) && !empty($armyId2)) {
+            $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            $position1 = $modelArmy->getArmyPositionByArmyId($armyId1, $this->_namespace->player['playerId']);
+            $position2 = $modelArmy->getArmyPositionByArmyId($armyId2, $this->_namespace->player['playerId']);
+            if(!empty ($position1['position']) && ($position1['position'] == $position2['position'])){
+                $position = substr($position1['position'], 1 , -1);
+                $armyId = $modelArmy->joinArmiesAtPosition($position, $this->_namespace->player['playerId']);
+                $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
+                
+            }else{
+                throw new Exception('Armie nie są na tej samej pozycji!');
+            }
+        } else {
+            throw new Exception('Brak "armyId"!');
+        }
+    }
+
     public function disbandAction(){
         $armyId = $this->_request->getParam('aid');
         if (!empty($armyId)) {

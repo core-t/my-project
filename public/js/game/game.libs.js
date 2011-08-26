@@ -28,9 +28,19 @@ function ruinCreate(ruinId){
 
 // *** CASTLES ***
 
-function substrCastleId(id){
-    return id.substr(6);
+//function substrCastleId(id){
+//    return id.substr(6);
+//}
+
+function castleFields(castleId, type){
+    x = castles[castleId].position.x;
+    y = castles[castleId].position.y;
+    fields[y/40][x/40] = type;
+    fields[y/40+1][x/40] = type;
+    fields[y/40][x/40+1] = type;
+    fields[y/40+1][x/40+1] = type;
 }
+
 function createNeutralCastle(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
     castles[castleId].color = null;
@@ -48,6 +58,7 @@ function createNeutralCastle(castleId) {
         .mouseover(function(){castleCursor(this.id)})
         .mousemove(function(){castleCursor(this.id)})
     );
+    castleFields(castleId, 'e');
 }
 
 function castleCursor(id){
@@ -77,6 +88,7 @@ function castleUpdate(data) {
     zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
     if(data.razed){
         castles[data.castleId].razed = true;
+        castleFields(data.castleId, 'g');
     }else{
         castles[data.castleId].defense = data.defense;
         castles[data.castleId].currentProduction = data.production;
@@ -91,10 +103,10 @@ function castleOwner(castleId, color) {
         delete castles[castleId];
         return null;
     }
-    var zindex;
     if(color == my.color) {
-        zindex = 100;
+        castleFields(castleId, 'c');
         castle
+        .css('z-index', 100)
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
@@ -102,8 +114,9 @@ function castleOwner(castleId, color) {
         .mousemove(function() {myCastleCursor(this.id)})
         .click(function(){castleM(castleId, color)});
     } else {
-        zindex = 600;
+        castleFields(castleId, 'e');
         castle
+        .css('z-index', 600)
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
@@ -113,10 +126,7 @@ function castleOwner(castleId, color) {
     castle.removeClass()
     .addClass('castle ' + color)
     .html('')
-    .css({
-        'z-index':zindex,
-        background: 'url(../img/game/castle_'+color+'.png) center center no-repeat'
-    });
+    .css('background', 'url(../img/game/castle_'+color+'.png) center center no-repeat');
     castles[castleId].color = color;
 
     castle.fadeIn(1);
@@ -147,6 +157,40 @@ function showFirstCastle() {
     var sp = $('.castle.' + turn.color);
     zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
 }
+
+//function checkCastleVectorLength(castleId){
+//    x = newX;
+//    y = newY;
+//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+//    if(vectorLenth < 80) {
+//        return {'x':x, 'y':y};
+//    }
+//    x = castles[castleId].position.x;
+//    y = castles[castleId].position.y;
+//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+//    if(vectorLenth < 80) {
+//        return {'x':x, 'y':y};
+//    }
+//    x = castles[castleId].position.x + 40;
+//    y = castles[castleId].position.y;
+//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+//    if(vectorLenth < 80) {
+//        return {'x':x, 'y':y};
+//    }
+//    x = castles[castleId].position.x;
+//    y = castles[castleId].position.y + 40;
+//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+//    if(vectorLenth < 80) {
+//        return {'x':x, 'y':y};
+//    }
+//    x = castles[castleId].position.x + 40;
+//    y = castles[castleId].position.y + 40;
+//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+//    if(vectorLenth < 80) {
+//        return {'x':x, 'y':y};
+//    }
+//    return null;
+//}
 
 // *** ARMIES ***
 
@@ -243,6 +287,10 @@ function army(obj, color, dontFade) {
         this.element.mouseover(function() {myArmyMouse(this.id)});
         this.element.mousemove(function() {myArmyMouse(this.id)});
     } else { // nie moja armia
+        var x = this.x/40;
+        var y = this.y/40;
+        this.fieldType = fields[y][x];
+        fields[y][x] = 'e';
         enemyArmyMouse(this.element);
     }
     numberOfUnits = numberOfHeroes + numberOfSoldiers;
@@ -290,7 +338,6 @@ function myArmyClick(obj, e){
         }
         if(my.turn) {
             if(selectedArmy) {
-                console.log('selected army');
                 if(selectedArmy == players[my.color].armies[obj.id]) { // klikam na siebie
                     unselectArmy();
                 } else { // klikam na inną jednostkę
@@ -341,19 +388,19 @@ function enemyArmyMouse(el){
     });
 }
 
-function setParentArmyId(armyId) {
-    parentArmyId = armyId;
+function setParentArmy(army) {
+    parentArmy = army;
 }
 
-function unsetParentArmyId() {
-    parentArmyId = null;
+function unsetParentArmy() {
+    parentArmy = null;
 }
 
 function handleParentArmy(){
-    if(parentArmyId){
-        getArmyA(parentArmyId);
-        wsArmy(parentArmyId);
-        unsetParentArmyId();
+    if(parentArmy){
+        getArmyA(parentArmy.armyId);
+        wsArmy(parentArmy.armyId);
+        unsetParentArmy();
     }
 }
 
@@ -385,18 +432,31 @@ function selectArmy(a) {
     zoomer.lensSetCenter(a.x, a.y);
 }
 
+function joinSplitedArmy(){
+    if(selectedArmy.x == parentArmy.x && selectedArmy.y == parentArmy.y){
+        joinArmyA(parentArmy.armyId, selectedArmy.armyId);
+    }
+}
+
 function unselectArmy() {
+    if(parentArmy){
+        joinSplitedArmy();
+    }
+    $('#info').html(0);
+    $('#name').html('');
+    $('#moves').html(0);
+    $('#attack').html(0);
+    $('#defense').html(0);
+    tmpUnselectArmy();
+}
+
+function tmpUnselectArmy() {
     if(selectedArmy) {
         unselectedArmy = selectedArmy;
         $('#army' + selectedArmy.armyId).css('border','none');
         board.css('cursor', 'default');
     }
     selectedArmy = null;
-    $('#info').html('0');
-    $('#name').html('');
-    $('#moves').html('0');
-    $('#attack').html(0);
-    $('#defense').html(0);
     $('.path').remove();
     $('#splitArmy').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');
@@ -412,14 +472,15 @@ function unselectEnemyArmy() {
 function deleteArmy(armyId, color, quiet) {
     if(quiet) {
         if(typeof players[color].armies[armyId] != 'undefined') {
-            players[color].armies[armyId].element.fadeOut(1);
-            players[color].armies[armyId].element.remove();
+            armyFields(players[color].armies[armyId]);
+            $('#' + armyId).remove();
             delete players[color].armies[armyId];
         }
     } else {
         zoomer.lensSetCenter(players[color].armies[armyId].x, players[color].armies[armyId].y);
-        players[color].armies[armyId].element.fadeOut(500, function() {
-            players[color].armies[armyId].element.remove();
+        armyFields(players[color].armies[armyId]);
+        $('#' + armyId).fadeOut(500, function() {
+            $('#' + armyId).remove();
             delete players[color].armies[armyId];
             console.log('usuni\u0119ta ' + armyId + ' - ' + color);
         });
@@ -434,16 +495,22 @@ function deleteArmyByPosition(x, y, color) {
     }
 }
 
+function armyFields(a){
+    x = a.x/40;
+    y = a.y/40;
+    fields[y][x] = a.fieldType;
+}
+
 function changeArmyPosition(x, y, armyId, color) {
     if(typeof players[color].armies['army'+armyId] != 'undefined') {
         removeM();
-        players[color].armies['army'+armyId].element.css({
+        zoomer.lensSetCenter(x, y);
+        $('#army' + armyId).animate({
             left: x + 'px',
             top: y + 'px'
-        });
+        },300);
         players[color].armies['army'+armyId].x = x;
         players[color].armies['army'+armyId].y = y;
-        zoomer.lensSetCenter(x, y);
     }
 }
 
@@ -596,11 +663,11 @@ function changePointToPosition(point) {
 }
 
 function cursorPosition(x, y) {
-    if(selectedArmy != null) {
+    if(selectedArmy) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        var vectorLenth = getVectorLenth(selectedArmy.x, selectedArmy.y, X, Y);
+        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
         var cosa = (X - selectedArmy.x)/vectorLenth;
         var sina = (Y - selectedArmy.y)/vectorLenth;
 
@@ -626,10 +693,10 @@ function cursorPosition(x, y) {
         $('#coord').html(newX + ' - ' + newY + ' ' + getTerrain(fields[fieldY][fieldX])[0]);
         return movesSpend;
     }
-    return 0;
+    return null;
 }
 
-function getVectorLenth(x1, y1, x2, y2) {
+function getVectorLength(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
 }
 
@@ -646,7 +713,7 @@ function downRight(pfX, pfY) {
     var xLenthPoints = xLenthPixels/40;
     var yLenthPixels = (newY - selectedArmy.y);
     var yLenthPoints = yLenthPixels/40;
-    var movesSpend = 0;
+    var movesSpend = null;
     var dir = 'se';
     if(xLenthPixels < yLenthPixels) {
         for(i = 1; i <= xLenthPoints; i++) {
@@ -654,7 +721,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -663,7 +730,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 's';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -674,7 +741,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -683,7 +750,7 @@ function downRight(pfX, pfY) {
             pfX += 1;
             dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -697,7 +764,7 @@ function topRight(pfX, pfY) {
     var xLenthPoints = xLenthPixels/40;
     var yLenthPixels = (selectedArmy.y - newY);
     var yLenthPoints = yLenthPixels/40;
-    var movesSpend = 0;
+    var movesSpend = null;
     var dir = 'ne';
     if(xLenthPixels < yLenthPixels) {
         for(i = 1; i <= xLenthPoints; i++) {
@@ -705,7 +772,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -714,7 +781,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -725,7 +792,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -734,7 +801,7 @@ function topRight(pfX, pfY) {
             pfX += 1;
             dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -748,7 +815,7 @@ function topLeft(pfX, pfY) {
     var xLenthPoints = xLenthPixels/40;
     var yLenthPixels = (selectedArmy.y - newY);
     var yLenthPoints = yLenthPixels/40;
-    var movesSpend = 0;
+    var movesSpend = null;
     var dir = 'nw';
     if(xLenthPixels < yLenthPixels) {
         for(i = 1; i <= xLenthPoints; i++) {
@@ -756,7 +823,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -765,7 +832,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -776,7 +843,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -785,7 +852,7 @@ function topLeft(pfX, pfY) {
             pfX -= 1;
             dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -799,7 +866,7 @@ function downLeft(pfX, pfY) {
     var xLenthPoints = xLenthPixels/40;
     var yLenthPixels = (newY - selectedArmy.y);
     var yLenthPoints = yLenthPixels/40;
-    var movesSpend = 0;
+    var movesSpend = null;
     var dir = 'sw';
     if(xLenthPixels < yLenthPixels) {
         dir = 'sw';
@@ -807,7 +874,7 @@ function downLeft(pfX, pfY) {
             pfX -= 1;
             pfY += 1;
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -816,7 +883,7 @@ function downLeft(pfX, pfY) {
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY += 1;
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -827,7 +894,7 @@ function downLeft(pfX, pfY) {
             pfY += 1;
             dir = 'sw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -836,7 +903,7 @@ function downLeft(pfX, pfY) {
             pfX -= 1;
             dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(!m || m == movesSpend) {
+            if(m === null || m == movesSpend) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -899,16 +966,30 @@ function getTerrain(type) {
             break;
         case 'c':
             text = 'Castle';
-            moves = 1;
+            moves = 0;
             break;
-        case 'w':
-            text = 'Water';
+        case 'e':
+            text = 'Enemy';
+            moves = null;
+            break;
+        case 'f':
+            text = 'Forest';
             if(selectedArmy.canSwim){
-                moves = 1;
+                moves = 100;
             }else if(selectedArmy.canFly > 0){
                 moves = 2;
             }else{
+                moves = 3;
+            }
+            break;
+        case 'g':
+            text = 'Grassland';
+            if(selectedArmy.canSwim){
                 moves = 100;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 2;
             }
             break;
         case 'm':
@@ -931,26 +1012,6 @@ function getTerrain(type) {
                 moves = 100;
             }
             break;
-        case 'g':
-            text = 'Grassland';
-            if(selectedArmy.canSwim){
-                moves = 100;
-            }else if(selectedArmy.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 2;
-            }
-            break;
-        case 'f':
-            text = 'Forest';
-            if(selectedArmy.canSwim){
-                moves = 100;
-            }else if(selectedArmy.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 3;
-            }
-            break;
         case 's':
             text = 'Swamp';
             if(selectedArmy.canSwim){
@@ -959,6 +1020,16 @@ function getTerrain(type) {
                 moves = 2;
             }else{
                 moves = 4;
+            }
+            break;
+        case 'w':
+            text = 'Water';
+            if(selectedArmy.canSwim){
+                moves = 1;
+            }else if(selectedArmy.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 100;
             }
             break;
     }

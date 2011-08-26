@@ -57,7 +57,7 @@ function login() {
                             }
                             break;
                         case 'a':
-                            getArmyA(data[2]);
+                            getArmyA(data[2],data[3]);
                             break;
                         case 'm':
                             changeArmyPosition(data[2], data[3], data[4], turn.color);
@@ -171,8 +171,12 @@ function wsArmyMove(x, y, armyId) {
     lWSC.channelPublish(channel,my.color+'.m.'+x+'.'+y+'.'+armyId);
 }
 
-function wsArmy(armyId) {
-    lWSC.channelPublish(channel,my.color+'.a.'+armyId);
+function wsArmy(armyId, center) {
+    if(center){
+        lWSC.channelPublish(channel,my.color+'.a.'+armyId+'.1');
+    }else{
+        lWSC.channelPublish(channel,my.color+'.a.'+armyId+'.0');
+    }
 }
 function wsBattle(battle,army,armies){
     var data = my.color+'.b.';

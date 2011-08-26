@@ -37,7 +37,7 @@ class MoveController extends Game_Controller_Action
             if($movesSpend > $army['movesLeft']){
                 throw new Exception('Próba wykonania większej ilości ruchów niż jednostka posiada');
             }
-            if($movesSpend > 0) {
+//            if($movesSpend > 0) {
                 $data = array(
                     'position' => $x . ',' . $y,
                     'movesSpend' => $movesSpend
@@ -60,7 +60,7 @@ class MoveController extends Game_Controller_Action
                         throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
                         break;
                 }
-            }
+//            }
         } else {
             throw new Exception('Brak "armyId" lub "x" lub "y" lub "movesSpend"!');
         }

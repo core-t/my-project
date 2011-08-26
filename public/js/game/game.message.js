@@ -135,7 +135,7 @@ function disbandArmyM(){
             $('<div>')
             .addClass('button go')
             .html('Disband')
-            .click(function(){disbandArmy()})
+            .click(function(){disbandArmyA()})
         )
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
         .css('min-height','70px')

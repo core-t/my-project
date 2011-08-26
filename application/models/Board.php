@@ -687,7 +687,7 @@ class Application_Model_Board {
                 break;
             case 'c':
                 $text = 'Castle';
-                $moves = 1;
+                $moves = 0;
                 break;
             case 'w':
                 $text = 'Water';
