@@ -3,9 +3,6 @@
 class FightController extends Game_Controller_Action
 {
     private $_result = array();
-    private $_movesRequiredToAttack = 1;
-    private $canFly = 1;
-    private $canSwim = 0;
     public function _init()
     {
         /* Initialize action controller here */
@@ -28,7 +25,7 @@ class FightController extends Game_Controller_Action
             if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
-            if(($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
+            if(($movesSpend = $this->movesSpend($x, $y, $army, 1)) > $army['movesLeft']) {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji ('.$movesSpend.'>'.$army['movesLeft'].').');
             }
             $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
@@ -99,7 +96,7 @@ class FightController extends Game_Controller_Action
                 if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
-                if(($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
+                if(($movesSpend = 2) > $army['movesLeft']) {
                     throw new Exception('Armia ma za mało ruchów do wykonania akcji('.$movesSpend.'>'.$army['movesLeft'].').');
                 }
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
@@ -290,33 +287,26 @@ class FightController extends Game_Controller_Action
     }
 
     private function movesSpend($x, $y, $army) {
+        $canFly = 1;
+        $canSwim = 0;
+        $movesRequiredToAttack = 1;
         foreach($army['heroes'] as $hero) {
-            $this->canFly--;
+            $canFly--;
         }
         foreach($army['soldiers'] as $soldier) {
             if($soldier['canFly']){
-                $this->canFly++;
+                $canFly++;
             }else{
-                $this->canFly -= 200;
+                $canFly -= 200;
             }
             if($soldier['canSwim']){
-                $this->canSwim++;
+                $canSwim++;
             }
         }
-        $modelBoard = new Application_Model_Board();
         $fields = Application_Model_Board::getBoardFields();
-        $castlesSchema = $modelBoard->getCastlesSchema();
-        foreach($castlesSchema as $castle) {
-            $cy = $castle['position']['y']/40;
-            $cx = $castle['position']['x']/40;
-            $fields[$cy][$cx] = 'c';
-            $fields[$cy + 1][$cx] = 'c';
-            $fields[$cy][$cx + 1] = 'c';
-            $fields[$cy + 1][$cx + 1] = 'c';
-        }
         $terrainType = $fields[$y/40][$x/40];
-        $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
-        return $terrain[1] + $this->_movesRequiredToAttack;
+        $terrain = Application_Model_Board::getTerrain($terrainType, $canFly, $canSwim);
+        return $terrain[1] + $movesRequiredToAttack;
     }
 }
 

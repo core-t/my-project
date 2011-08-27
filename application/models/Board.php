@@ -8,7 +8,7 @@ class Application_Model_Board {
         $this->castles[0] = array(
             'name' => 'MARTHOS',
             'income' => 20,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 2480, 'y' => 2240),
             'capital' => true,
             'production' => array(
@@ -21,7 +21,7 @@ class Application_Model_Board {
         $this->castles[1] = array(
             'name' => 'ELVALLIE',
             'income' => 33,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 1640, 'y' => 1480),
             'capital' => true,
             'production' => array(
@@ -33,7 +33,7 @@ class Application_Model_Board {
         $this->castles[2] = array(
             'name' => 'CHARLING',
             'income' => 16,
-            'defensePoints' => 3,
+            'defensePoints' => 0,
             'position' => array('x' => 1920, 'y' => 1360),
             'capital' => false,
             'production' => array(
@@ -43,7 +43,7 @@ class Application_Model_Board {
         $this->castles[3] = array(
             'name' => 'GILDENHOME',
             'income' => 24,
-            'defensePoints' => 5,
+            'defensePoints' => 2,
             'position' => array('x' => 1320, 'y' => 1520),
             'capital' => false,
             'production' => array(
@@ -55,7 +55,7 @@ class Application_Model_Board {
         $this->castles[4] = array(
             'name' => 'LOREMARK',
             'income' => 3,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 1720, 'y' => 1800),
             'capital' => false,
             'production' => array(
@@ -67,7 +67,7 @@ class Application_Model_Board {
         $this->castles[5] = array(
             'name' => 'ARGENTHORN',
             'income' => 22,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 1680, 'y' => 1040),
             'capital' => false,
             'production' => array(
@@ -79,7 +79,7 @@ class Application_Model_Board {
         $this->castles[6] = array(
             'name' => 'ANGBAR',
             'income' => 20,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 2160, 'y' => 880),
             'capital' => false,
             'production' => array(
@@ -90,7 +90,7 @@ class Application_Model_Board {
         $this->castles[7] = array(
             'name' => 'SSURI',
             'income' => 19,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 2360, 'y' => 960),
             'capital' => false,
             'production' => array(
@@ -101,7 +101,7 @@ class Application_Model_Board {
         $this->castles[8] = array(
             'name' => 'TROY',
             'income' => 13,
-            'defensePoints' => 3,
+            'defensePoints' => 0,
             'position' => array('x' => 2240, 'y' => 1080),
             'capital' => false,
             'production' => array(
@@ -112,7 +112,7 @@ class Application_Model_Board {
         $this->castles[9] = array(
             'name' => 'HEREUTH',
             'income' => 26,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 2600, 'y' => 1400),
             'capital' => false,
             'production' => array(
@@ -123,7 +123,7 @@ class Application_Model_Board {
         $this->castles[10] = array(
             'name' => 'GLUK',
             'income' => 17,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3360, 'y' => 1680),
             'capital' => false,
             'production' => array(
@@ -135,7 +135,7 @@ class Application_Model_Board {
         $this->castles[11] = array(
             'name' => 'GORK',
             'income' => 15,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3440, 'y' => 1800),
             'capital' => false,
             'production' => array(
@@ -147,7 +147,7 @@ class Application_Model_Board {
         $this->castles[12] = array(
             'name' => 'GAROM',
             'income' => 20,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3480, 'y' => 1080),
             'capital' => false,
             'production' => array(
@@ -158,7 +158,7 @@ class Application_Model_Board {
         $this->castles[13] = array(
             'name' => 'BALAD NARAN',
             'income' => 29,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 3600, 'y' => 640),
             'capital' => false,
             'production' => array(
@@ -171,7 +171,7 @@ class Application_Model_Board {
         $this->castles[14] = array(
             'name' => 'GALIN',
             'income' => 20,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 1640, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -183,7 +183,7 @@ class Application_Model_Board {
         $this->castles[15] = array(
             'name' => 'KOR',
             'income' => 30,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 4000, 'y' => 120),
             'capital' => true,
             'production' => array(
@@ -195,7 +195,7 @@ class Application_Model_Board {
         $this->castles[16] = array(
             'name' => 'DETHAL',
             'income' => 20,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3560, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -206,7 +206,7 @@ class Application_Model_Board {
         $this->castles[17] = array(
             'name' => 'THURTZ',
             'income' => 18,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3400, 'y' => 80),
             'capital' => false,
             'production' => array(
@@ -217,7 +217,7 @@ class Application_Model_Board {
         $this->castles[18] = array(
             'name' => 'DARCLAN',
             'income' => 23,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 3120, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -228,7 +228,7 @@ class Application_Model_Board {
         $this->castles[19] = array(
             'name' => 'ILNYR',
             'income' => 21,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 2840, 'y' => 240),
             'capital' => false,
             'production' => array(
@@ -240,7 +240,7 @@ class Application_Model_Board {
         $this->castles[20] = array(
             'name' => 'DUINOTH',
             'income' => 19,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 2720, 'y' => 720),
             'capital' => false,
             'production' => array(
@@ -251,7 +251,7 @@ class Application_Model_Board {
         $this->castles[21] = array(
             'name' => 'KAZRACK',
             'income' => 21,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 2320, 'y' => 120),
             'capital' => false,
             'production' => array(
@@ -263,7 +263,7 @@ class Application_Model_Board {
         $this->castles[22] = array(
             'name' => 'VERNON',
             'income' => 24,
-            'defensePoints' => 5,
+            'defensePoints' => 2,
             'position' => array('x' => 1920, 'y' => 80),
             'capital' => false,
             'production' => array(
@@ -275,7 +275,7 @@ class Application_Model_Board {
         $this->castles[23] = array(
             'name' => 'HIMELTON',
             'income' => 14,
-            'defensePoints' => 3,
+            'defensePoints' => 0,
             'position' => array('x' => 880, 'y' => 320),
             'capital' => false,
             'production' => array(
@@ -286,7 +286,7 @@ class Application_Model_Board {
         $this->castles[24] = array(
             'name' => 'STORMHEIM',
             'income' => 20,
-            'defensePoints' => 6,
+            'defensePoints' => 3,
             'position' => array('x' => 760, 'y' => 800),
             'capital' => true,
             'production' => array(
@@ -296,7 +296,7 @@ class Application_Model_Board {
         $this->castles[25] = array(
             'name' => 'OHMSMOUTH',
             'income' => 24,
-            'defensePoints' => 5,
+            'defensePoints' => 2,
             'position' => array('x' => 280, 'y' => 280),
             'capital' => false,
             'production' => array(
@@ -307,7 +307,7 @@ class Application_Model_Board {
         $this->castles[26] = array(
             'name' => 'WELLMORE',
             'income' => 20,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 160, 'y' => 640),
             'capital' => false,
             'production' => array(
@@ -318,7 +318,7 @@ class Application_Model_Board {
         $this->castles[27] = array(
             'name' => 'TASME',
             'income' => 19,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 320, 'y' => 1000),
             'capital' => false,
             'production' => array(
@@ -329,7 +329,7 @@ class Application_Model_Board {
         $this->castles[28] = array(
             'name' => 'VARDE',
             'income' => 23,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 320, 'y' => 1360),
             'capital' => false,
             'production' => array(
@@ -341,7 +341,7 @@ class Application_Model_Board {
         $this->castles[29] = array(
             'name' => 'QUIESCE',
             'income' => 3,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 600, 'y' => 1280),
             'capital' => false,
             'production' => array(
@@ -352,7 +352,7 @@ class Application_Model_Board {
         $this->castles[30] = array(
             'name' => 'KHORFE',
             'income' => 26,
-            'defensePoints' => 5,
+            'defensePoints' => 2,
             'position' => array('x' => 320, 'y' => 1680),
             'capital' => false,
             'production' => array(
@@ -363,7 +363,7 @@ class Application_Model_Board {
         $this->castles[31] = array(
             'name' => 'ALFAR\'S GAP',
             'income' => 18,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 880, 'y' => 2160),
             'capital' => false,
             'production' => array(
@@ -374,7 +374,7 @@ class Application_Model_Board {
         $this->castles[32] = array(
             'name' => 'LADOR',
             'income' => 16,
-            'defensePoints' => 4,
+            'defensePoints' => 1,
             'position' => array('x' => 1240, 'y' => 720),
             'capital' => false,
             'production' => array(
@@ -665,16 +665,6 @@ class Application_Model_Board {
         $text = '';
         $moves = 0;
         switch ($type) {
-            case 'r':
-                $text = 'Road';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 1;
-                }
-                break;
             case 'b':
                 $text = 'Bridge';
                 if ($canSwim > 0) {
@@ -689,14 +679,28 @@ class Application_Model_Board {
                 $text = 'Castle';
                 $moves = 0;
                 break;
-            case 'w':
-                $text = 'Water';
+            case 'e':
+                $text = 'Enemy';
+                $moves = null;
+            break;
+            case 'f':
+                $text = 'Forest';
                 if ($canSwim > 0) {
-                    $moves = 1;
+                    $moves = 100;
                 } else if ($canFly > 0) {
                     $moves = 2;
                 } else {
+                    $moves = 3;
+                }
+                break;
+            case 'g':
+                $text = 'Grassland';
+                if ($canSwim > 0) {
                     $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 2;
                 }
                 break;
             case 'm':
@@ -719,24 +723,14 @@ class Application_Model_Board {
                     $moves = 100;
                 }
                 break;
-            case 'g':
-                $text = 'Grassland';
+            case 'r':
+                $text = 'Road';
                 if ($canSwim > 0) {
                     $moves = 100;
                 } else if ($canFly > 0) {
                     $moves = 2;
                 } else {
-                    $moves = 2;
-                }
-                break;
-            case 'f':
-                $text = 'Forest';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 3;
+                    $moves = 1;
                 }
                 break;
             case 's':
@@ -747,6 +741,16 @@ class Application_Model_Board {
                     $moves = 2;
                 } else {
                     $moves = 4;
+                }
+                break;
+            case 'w':
+                $text = 'Water';
+                if ($canSwim > 0) {
+                    $moves = 1;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 100;
                 }
                 break;
         }

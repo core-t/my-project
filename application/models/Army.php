@@ -183,6 +183,26 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
+    public function getEnemyArmiesFieldsPositions($playerId) {
+        $fields = Application_Model_Board::getBoardFields();
+//         echo '<pre>';print_r($fields);echo '</pre>';
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'position')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" != ?', $playerId)
+                    ->where('destroyed = false');
+            $result = $this->_db->query($select)->fetchAll();
+            foreach($result as $row){
+                $position = explode(',', substr($row['position'], 1 , -1));
+                $fields[$position[1]/40][$position[0]/40] = 'e';
+            }
+            return $fields;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function getArmyPositionByArmyId($armyId, $playerId) {
         try {
             $select = $this->_db->select()

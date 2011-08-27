@@ -30,6 +30,8 @@ class MoveController extends Game_Controller_Action
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
 //             $army['movesLeft'] = $modelArmy->calculateArmyMovesLeft($armyId);
             $movesSpend = 0;
+            $this->fields = $modelArmy->getEnemyArmiesFieldsPositions($this->_namespace->player['playerId']);
+//             echo '<pre>';print_r($this->fields);echo '</pre>';
             $this->calculateNewArmyPosition($army, $x, $y);
             foreach($this->path as $path) {
                 $movesSpend += $path['cost'];
@@ -84,7 +86,7 @@ class MoveController extends Game_Controller_Action
         $position = array('x' => $position[0], 'y' => $position[1]);
         $this->movesLeft = $army['movesLeft'];
         $modelBoard = new Application_Model_Board();
-        $this->fields = $modelBoard->getBoardFields();
+
         $castlesSchema = $modelBoard->getCastlesSchema();
         foreach($castlesSchema as $castle) {
             $y = $castle['position']['y']/40;
@@ -118,21 +120,21 @@ class MoveController extends Game_Controller_Action
         $xLenthPoints = $xLenthPixels / 40;
         $yLenthPixels = $newY - $position['y'];
         $yLenthPoints = $yLenthPixels / 40;
-        $movesSpend = 0;
+        $movesSpend = null;
         if($xLenthPixels < $yLenthPixels) {
             for($i = 1; $i <= $xLenthPoints; $i++) {
                 $pfX += 1;
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'se', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'se', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 's', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 's', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -141,16 +143,16 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= $yLenthPoints; $i++) {
                 $pfX += 1;
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'se', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'se', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'e', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'e', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -164,21 +166,21 @@ class MoveController extends Game_Controller_Action
         $xLenthPoints = $xLenthPixels / 40;
         $yLenthPixels = $position['y'] - $newY;
         $yLenthPoints = $yLenthPixels / 40;
-        $movesSpend = 0;
+        $movesSpend = null;
         if($xLenthPixels < $yLenthPixels) {
             for($i = 1; $i <= $xLenthPoints; $i++) {
                 $pfX += 1;
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'ne', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'ne', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'n', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'n', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -187,16 +189,16 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= $yLenthPoints; $i++) {
                 $pfX += 1;
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'ne', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'ne', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'e', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'e', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;        }
@@ -209,21 +211,21 @@ class MoveController extends Game_Controller_Action
         $xLenthPoints = $xLenthPixels / 40;
         $yLenthPixels = $position['y'] - $newY;
         $yLenthPoints = $yLenthPixels / 40;
-        $movesSpend = 0;
+        $movesSpend = null;
         if($xLenthPixels < $yLenthPixels) {
             for($i = 1; $i <= $xLenthPoints; $i++) {
                 $pfX -= 1;
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'nw', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'nw', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'n', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'n', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -232,16 +234,16 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= $yLenthPoints; $i++) {
                 $pfX -= 1;
                 $pfY -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'nw', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'nw', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'w', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'w', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -255,21 +257,21 @@ class MoveController extends Game_Controller_Action
         $xLenthPoints = $xLenthPixels / 40;
         $yLenthPixels = $newY - $position['y'];
         $yLenthPoints = $yLenthPixels / 40;
-        $movesSpend = 0;
+        $movesSpend = null;
         if($xLenthPixels < $yLenthPixels) {
             for($i = 1; $i <= $xLenthPoints; $i++) {
                 $pfX -= 1;
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'sw', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'sw', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 's', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 's', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -278,16 +280,16 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= $yLenthPoints; $i++) {
                 $pfX -= 1;
                 $pfY += 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'sw', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'sw', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
             }
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX -= 1;
-                $m = $this->addPathDiv($pfX, $pfY, 'w', $movesSpend);
-                if(!$m || $m == $movesSpend) {
+                $m = $this->addPath($pfX, $pfY, 'w', $movesSpend);
+                if($m === null  || $m === $movesSpend) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -296,7 +298,7 @@ class MoveController extends Game_Controller_Action
         return $movesSpend;
     }
 
-    private function addPathDiv($pfX, $pfY, $direction, $movesSpend) {
+    private function addPath($pfX, $pfY, $direction, $movesSpend) {
         if($movesSpend >= $this->movesLeft) {
             return $movesSpend;
         }

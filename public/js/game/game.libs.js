@@ -207,6 +207,9 @@ function army(obj, color, dontFade) {
     var position = changePointToPosition(obj.position);
     this.x = position[0];
     this.y = position[1];
+    var x = this.x/40;
+    var y = this.y/40;
+    this.fieldType = fields[y][x];
     deleteArmyByPosition(this.x, this.y, color);
     if(typeof $('#army'+obj.armyId) != 'undefined') {
         $('#army'+obj.armyId).remove();
@@ -287,9 +290,6 @@ function army(obj, color, dontFade) {
         this.element.mouseover(function() {myArmyMouse(this.id)});
         this.element.mousemove(function() {myArmyMouse(this.id)});
     } else { // nie moja armia
-        var x = this.x/40;
-        var y = this.y/40;
-        this.fieldType = fields[y][x];
         fields[y][x] = 'e';
         enemyArmyMouse(this.element);
     }
@@ -1032,6 +1032,9 @@ function getTerrain(type) {
                 moves = 100;
             }
             break;
+        default:
+            console.log('error');
+            console.log(type);
     }
     return {
         0:text,

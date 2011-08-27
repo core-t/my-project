@@ -78,14 +78,14 @@ function moveA(movesSpend) {
             unselectEnemyArmy();
             return null;
         }
-        if(unselectedArmy.moves < (movesSpend + 1)) {
-            simpleM('Not enough moves left.');
-            unlock();
-            unselectEnemyArmy();
-            return null;
-        }
         if(castleId){
-//            var newArmyPosition = checkCastleVectorLength(castleId);
+            if(unselectedArmy.moves < (movesSpend + 2)) {
+                simpleM('Not enough moves left.');
+                unlock();
+                unselectEnemyArmy();
+                return null;
+            }
+            //            var newArmyPosition = checkCastleVectorLength(castleId);
 //            if(!newArmyPosition){
 //                unlock();
 //                return null;
@@ -138,6 +138,12 @@ function moveA(movesSpend) {
                 });
             }
         } else if(selectedEnemyArmy) {
+            if(unselectedArmy.moves < (movesSpend + 1)) {
+                simpleM('Not enough moves left.');
+                unlock();
+                unselectEnemyArmy();
+                return null;
+            }
             $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
                 if(result.victory == true) {
                     myArmyWin(result);
@@ -159,7 +165,7 @@ function moveA(movesSpend) {
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
-//                console.log(result.path);
+//                 console.log(result.path);
                 walk(result);
             }
         });
@@ -175,6 +181,7 @@ function getArmyA(armyId, center) {
             }
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
             if(center){
+                removeM();
                 zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
             }
         }

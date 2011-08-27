@@ -73,12 +73,12 @@ class GameController extends Game_Controller_Action {
             foreach($castlesSchema as $id=>$castle){
                 if(!isset($razed[$id])){
                     $this->view->castlesSchema[$id] = $castle;
-                    $y = $castle['position']['y']/40;
-                    $x = $castle['position']['x']/40;
-                    $this->view->fields[$y][$x] = 'c';
-                    $this->view->fields[$y + 1][$x] = 'c';
-                    $this->view->fields[$y][$x + 1] = 'c';
-                    $this->view->fields[$y + 1][$x + 1] = 'c';
+//                    $y = $castle['position']['y']/40;
+//                    $x = $castle['position']['x']/40;
+//                    $this->view->fields[$y][$x] = 'c';
+//                    $this->view->fields[$y + 1][$x] = 'c';
+//                    $this->view->fields[$y][$x + 1] = 'c';
+//                    $this->view->fields[$y + 1][$x + 1] = 'c';
                 }
             }
             $this->view->colors = $modelGame->getAllColors();
