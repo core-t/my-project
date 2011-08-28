@@ -180,7 +180,7 @@ function getArmyA(armyId, center) {
                 armyFields(players[result.color].armies['army' + result.armyId]);
             }
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
-            if(center){
+            if(center == 1){
                 removeM();
                 zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
             }
