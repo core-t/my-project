@@ -95,6 +95,9 @@ function startGame(){
     for(i in ruins) {
         new ruinCreate(i);
     }
+    for(i in towers) {
+        new towerCreate(i);
+    }
     for(color in players) {
         players[color].active = 0;
         $('.'+color +' .color').css('background',color);

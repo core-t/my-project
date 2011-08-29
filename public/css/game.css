@@ -25,6 +25,16 @@
     z-index: 600;
     display:none;
 }
+.tower {
+    position:inherit;
+    width:40px;
+    height:40px;
+    background: url(../img/game/tower_neutral.png) center center no-repeat;
+    border:none;
+    cursor: crosshair;
+    z-index: 600;
+    display:none;
+}
 .army {
     position:inherit;
     width:40px;

@@ -59,6 +59,9 @@ function login() {
                         case 'a':
                             getArmyA(data[2],data[3]);
                             break;
+                        case 'T':
+                            getTowerA(data[2]);
+                            break;
                         case 'm':
                             changeArmyPosition(data[2], data[3], data[4], turn.color);
                             break;
@@ -178,6 +181,9 @@ function wsArmy(armyId, center) {
     }else{
         lWSC.channelPublish(channel,my.color+'.a.'+armyId+'.0');
     }
+}
+function wsAddTower(towerId){
+    lWSC.channelPublish(channel,my.color+'.T.'+towerId);
 }
 function wsBattle(battle,army,armies){
     var data = my.color+'.b.';

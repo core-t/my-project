@@ -2,6 +2,43 @@ $(document)[0].oncontextmenu = function() {
     return false;
 } // usuwa menu kontekstowe spod prawego przycisku
 
+// *** TOWERS ***
+
+function towerCreate(towerId){
+    var title = 'Tower';
+    board.append(
+        $('<div>')
+        .addClass('tower')
+        .attr({
+            id: 'tower' + towerId,
+            title: title
+        })
+        .css({
+            left: towers[towerId].x + 'px',
+            top: towers[towerId].y + 'px',
+            background:'url(../img/game/tower_'+towers[towerId].color+'.png) center center no-repeat'
+        })
+    );
+    $('#tower' + towerId).fadeIn(1);
+}
+
+function changeMyTower(x, y){
+    for(towerId in towers){
+        if(towers[towerId].x == x && towers[towerId].y == y){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+    }
+    
+}
+
+function changeEnemyTower(towerId, color){
+    towers[towerId].color = color;
+    $('#tower' + towerId).css('background','url(../img/game/tower_'+color+'.png) center center no-repeat');
+}
+
 // *** RUINS ***
 
 function ruinCreate(ruinId){

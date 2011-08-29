@@ -37,8 +37,21 @@ class GameController extends Game_Controller_Action {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
+            $modelTower = new Application_Model_Tower($this->_namespace->gameId);
             $modelUnit = new Application_Model_Unit();
             $this->view->units = $modelUnit->getUnits();
+            $neutralTowers = $modelBoard->getTowers();
+            $playersTowers = $modelTower->getTowers();
+            $towers = array();
+            foreach($neutralTowers as $k=>$tower){
+                $towers[$k] = $neutralTowers[$k];
+                if(isset($playersTowers[$k])){
+                    $towers[$k]['color'] = $playersTowers[$k];
+                }else{
+                    $towers[$k]['color'] = 'neutral';
+                }
+            }
+            $this->view->towers = $towers;
             $startPositions = $modelBoard->getDefaultStartPositions();
             $players = $modelGame->getPlayersInGameReady();
             $this->view->players = array();
@@ -92,7 +105,7 @@ class GameController extends Game_Controller_Action {
 //         $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
 //         $this->_helper->layout->setLayout('game');
 //         $castles = array();
-//         $this->_helper->layout->disableLayout();
+         $this->_helper->layout->disableLayout();
 //         $str = Application_Model_Board::production();
 //         $model = new Application_Model_Board();
 //         $Schema = $model->getCastlesSchema();

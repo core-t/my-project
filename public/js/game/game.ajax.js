@@ -165,6 +165,7 @@ function moveA(movesSpend) {
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
+                changeMyTower(newX, newY);
 //                 console.log(result.path);
                 walk(result);
             }
@@ -345,5 +346,20 @@ function searchRuinsA(){
                 break
 
         }
+    });
+}
+
+function addTowerA(towerId){
+    if(!my.turn){
+        return null;
+    }
+    $.getJSON(urlTowerAdd+'/tid/'+towerId, function() {
+        wsAddTower(towerId);
+    });
+}
+
+function getTowerA(towerId){
+    $.getJSON(urlTowerGet+'/tid/'+towerId, function(result) {
+        changeEnemyTower(result.towerId, result.color);
     });
 }

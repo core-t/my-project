@@ -170,4 +170,5 @@ class GameajaxController extends Game_Controller_Action {
             throw new Exception('Brak "armyId"!');
         }
     }
+
 }

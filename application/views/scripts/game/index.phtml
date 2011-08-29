@@ -11,6 +11,7 @@
     var fields = <?php echo Zend_Json::encode($this->fields); ?>;
     var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
     var units = <?php echo Zend_Json::encode($this->units); ?>;
+    var towers = <?php echo Zend_Json::encode($this->towers); ?>;
     Image1= new Image(27,32);
     Image1.src = '../img/game/cursor_attack.png';
     Image2= new Image(14,46);
@@ -74,6 +75,8 @@
     var urlCastleRaze = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'raze')) ?>';
     var urlCastleBuild = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'build')) ?>';
     var urlCastleGet = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'get')) ?>';
+    var urlTowerAdd = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'add')) ?>';
+    var urlTowerGet = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'get')) ?>';
     <?php $this->headScript()->captureEnd() ?>
     var board = $("#board")
     .mousedown(function(event) {

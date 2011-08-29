@@ -1,56 +1,65 @@
 <?php
-for($i=1;$i<101;$i++){
-    echo htmlentities('<setting key="channel:'.$i.'" type="json">{owner:"root",name:"'.$i.'",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>').'</br>';
-}
-exit;
+//for($i=1;$i<101;$i++){
+//    echo htmlentities('<setting key="channel:'.$i.'" type="json">{owner:"root",name:"'.$i.'",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret"}</setting>').'</br>';
+//}
+//exit;
 $img = imagecreatefrompng("img/game/board.png");
 
 for ($y = 0; $y <= 68; $y++) {
-   echo '$fields[' . $y . '] = array(<br/>';
-   $g = false;
+//   echo '$fields[' . $y . '] = array(<br/>';
+//   $g = false;
    for ($x = 0; $x <= 108; $x++) {
-       if ($g)
-           echo ',';
-       $g = true;
-       $x1 = $x*40 + 8;
-       $y1 = $y*40 + 8;
-       $rgb1 = imagecolorat($img, $x1, $y1);
-       $x2 = $x*40 + 8;
-       $y2 = $y*40 + 32;
-       $rgb2 = imagecolorat($img, $x2, $y2);
-       $x3 = $x*40 + 32;
-       $y3 = $y*40 + 6;
-       $rgb3 = imagecolorat($img, $x3, $y3);
-       $x4 = $x*40 + 32;
-       $y4 = $y*40 + 34;
-       $rgb4 = imagecolorat($img, $x4, $y4);
-       $x5 = $x*40 + 20;
-       $y5 = $y*40 + 20;
-       $rgb5 = imagecolorat($img, $x5, $y5);
-       $x6 = $x*40 + 20;
-       $y6 = $y*40 + 6;
-       $rgb6 = imagecolorat($img, $x6, $y6);
-       $x7 = $x*40 + 20;
-       $y7 = $y*40 + 38;
-       $rgb7 = imagecolorat($img, $x7, $y7);
-       $x8 = $x*40 + 25;
-       $y8 = $y*40 + 6;
-       $rgb8 = imagecolorat($img, $x8, $y8);
-       $x9 = $x*40 + 21;
-       $y9 = $y*40 + 38;
-       $rgb9 = imagecolorat($img, $x9, $y9);
-       echo "'".getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9)."'";
+//       if ($g)
+//           echo ',';
+//       $g = true;
+//       $x1 = $x*40 + 8;
+//       $y1 = $y*40 + 8;
+//       $rgb1 = imagecolorat($img, $x1, $y1);
+//       $x2 = $x*40 + 8;
+//       $y2 = $y*40 + 32;
+//       $rgb2 = imagecolorat($img, $x2, $y2);
+//       $x3 = $x*40 + 32;
+//       $y3 = $y*40 + 6;
+//       $rgb3 = imagecolorat($img, $x3, $y3);
+//       $x4 = $x*40 + 32;
+//       $y4 = $y*40 + 34;
+//       $rgb4 = imagecolorat($img, $x4, $y4);
+//       $x5 = $x*40 + 20;
+//       $y5 = $y*40 + 20;
+//       $rgb5 = imagecolorat($img, $x5, $y5);
+//       $x6 = $x*40 + 20;
+//       $y6 = $y*40 + 6;
+//       $rgb6 = imagecolorat($img, $x6, $y6);
+//       $x7 = $x*40 + 20;
+//       $y7 = $y*40 + 38;
+//       $rgb7 = imagecolorat($img, $x7, $y7);
+//       $x8 = $x*40 + 25;
+//       $y8 = $y*40 + 6;
+//       $rgb8 = imagecolorat($img, $x8, $y8);
+//       $x9 = $x*40 + 21;
+//       $y9 = $y*40 + 38;
+//       $rgb9 = imagecolorat($img, $x9, $y9);
+       $x10 = $x*40 + 22;
+       $y10 = $y*40 + 32;
+       $rgb10 = imagecolorat($img, $x10, $y10);
+       if(!$rgb10){
+           $newx = $x*40;
+           $newy = $y*40;
+           echo '$towers[] = array(\'x\' => '.$newx.', \'y\' => '.$newy.');<br/>';
+       }
+//       echo "'".getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9, $rgb10)."'";
    }
-   echo '<br/>);<br/>';
+//   echo '<br/>);<br/>';
 }
 
-function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9) {
-   if(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4))  return 'r'; // road
-   elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
-   elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
-   elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water
-   elseif(isEqual($rgb1) OR isEqual($rgb2) OR isEqual($rgb3) OR isEqual($rgb4)) return 'M'; // big mountains
-   elseif(getG($rgb1) OR getG($rgb2) OR getG($rgb3) OR getG($rgb4)) return 'm'; // small mountains
+function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9, $rgb10) {
+    if(!$rgb10)  return 't'; // tower
+    elseif(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4))  return 'r'; // road
+    elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
+    elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
+    elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water
+    elseif(isEqual($rgb1) OR isEqual($rgb2) OR isEqual($rgb3) OR isEqual($rgb4)) return 'M'; // big mountains
+    elseif(getG($rgb1) OR getG($rgb2) OR getG($rgb3) OR getG($rgb4)) return 'm'; // small mountains
    // swamp
 
    else return 'g'; // grass
