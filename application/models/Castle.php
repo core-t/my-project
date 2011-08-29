@@ -131,13 +131,27 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         }
     }
 
+    public function getCastleDefenseModifier($castleId) {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'defenseMod')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"castleId" = ?', $castleId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['defenseMod'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function isEnemyCastle($castleId, $playerId) {
         try {
             $select = $this->_db->select()
-                    ->from($this->_name, $this->_primary)
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"playerId" != ?', $playerId)
-                    ->where('"castleId" = ?', $castleId);
+                ->from($this->_name, $this->_primary)
+                ->where('razed = false')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('"playerId" != ?', $playerId)
+                ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
             if(isset ($result[0][$this->_primary])) {
                 return true;

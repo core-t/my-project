@@ -165,7 +165,6 @@ function moveA(movesSpend) {
     } else {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
-                changeMyTower(newX, newY);
 //                 console.log(result.path);
                 walk(result);
             }
@@ -257,6 +256,14 @@ function splitArmyA(armyId){
     });
 }
 
+function castleBuildDefenseA(){
+    var castleId = $('input[name=build]:checked').val();
+    if(!castleId) {
+        return null;
+    }
+    console.log(castleId);
+}
+
 function razeCastleA(){
     var castleId = $('input[name=raze]:checked').val();
     if(!castleId) {
@@ -326,6 +333,10 @@ function searchRuinsA(){
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         switch(result.find[0]){
             case 'gold':
+                var gold = result.find[1] + parseInt($('#gold').html());
+                console.log(result.find[1]);
+                console.log(parseInt($('#gold').html()));
+                console.log(gold);
                 goldUpdate(result.find[1] + parseInt($('#gold').html()));
                 simpleM('You have found '+result.find[1]+' gold.');
                 break;

@@ -24,7 +24,55 @@ function towerCreate(towerId){
 
 function changeMyTower(x, y){
     for(towerId in towers){
-        if(towers[towerId].x == x && towers[towerId].y == y){
+        if(x == towers[towerId].x && y == towers[towerId].y){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x-1) && y == (towers[towerId].y-1)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x) && y == (towers[towerId].y-1)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x+1) && y == (towers[towerId].y-1)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x-1) && y == (towers[towerId].y)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x+1) && y == (towers[towerId].y)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x-1) && y == (towers[towerId].y+1)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x) && y == (towers[towerId].y+1)){
+            towers[towerId].color = my.color;
+            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+            addTowerA(towerId);
+            break;
+        }
+        if(x == (towers[towerId].x+1) && y == (towers[towerId].y+1)){
             towers[towerId].color = my.color;
             $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
             addTowerA(towerId);
@@ -664,6 +712,7 @@ function walk(result) {
             top: result.path[i].y + 'px'
         },300,
         function(){
+            changeMyTower(result.path[i].x, result.path[i].y);
             delete result.path[i];
             walk(result);
         }

@@ -8,7 +8,7 @@ class Application_Model_Board {
         $this->castles[0] = array(
             'name' => 'MARTHOS',
             'income' => 20,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 2480, 'y' => 2240),
             'capital' => true,
             'production' => array(
@@ -21,7 +21,7 @@ class Application_Model_Board {
         $this->castles[1] = array(
             'name' => 'ELVALLIE',
             'income' => 33,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 1640, 'y' => 1480),
             'capital' => true,
             'production' => array(
@@ -33,7 +33,7 @@ class Application_Model_Board {
         $this->castles[2] = array(
             'name' => 'CHARLING',
             'income' => 16,
-            'defensePoints' => 0,
+            'defensePoints' => 1,
             'position' => array('x' => 1920, 'y' => 1360),
             'capital' => false,
             'production' => array(
@@ -43,7 +43,7 @@ class Application_Model_Board {
         $this->castles[3] = array(
             'name' => 'GILDENHOME',
             'income' => 24,
-            'defensePoints' => 2,
+            'defensePoints' => 3,
             'position' => array('x' => 1320, 'y' => 1520),
             'capital' => false,
             'production' => array(
@@ -55,7 +55,7 @@ class Application_Model_Board {
         $this->castles[4] = array(
             'name' => 'LOREMARK',
             'income' => 3,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 1720, 'y' => 1800),
             'capital' => false,
             'production' => array(
@@ -67,7 +67,7 @@ class Application_Model_Board {
         $this->castles[5] = array(
             'name' => 'ARGENTHORN',
             'income' => 22,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 1680, 'y' => 1040),
             'capital' => false,
             'production' => array(
@@ -79,7 +79,7 @@ class Application_Model_Board {
         $this->castles[6] = array(
             'name' => 'ANGBAR',
             'income' => 20,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 2160, 'y' => 880),
             'capital' => false,
             'production' => array(
@@ -90,7 +90,7 @@ class Application_Model_Board {
         $this->castles[7] = array(
             'name' => 'SSURI',
             'income' => 19,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 2360, 'y' => 960),
             'capital' => false,
             'production' => array(
@@ -101,7 +101,7 @@ class Application_Model_Board {
         $this->castles[8] = array(
             'name' => 'TROY',
             'income' => 13,
-            'defensePoints' => 0,
+            'defensePoints' => 1,
             'position' => array('x' => 2240, 'y' => 1080),
             'capital' => false,
             'production' => array(
@@ -112,7 +112,7 @@ class Application_Model_Board {
         $this->castles[9] = array(
             'name' => 'HEREUTH',
             'income' => 26,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 2600, 'y' => 1400),
             'capital' => false,
             'production' => array(
@@ -123,7 +123,7 @@ class Application_Model_Board {
         $this->castles[10] = array(
             'name' => 'GLUK',
             'income' => 17,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3360, 'y' => 1680),
             'capital' => false,
             'production' => array(
@@ -135,7 +135,7 @@ class Application_Model_Board {
         $this->castles[11] = array(
             'name' => 'GORK',
             'income' => 15,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3440, 'y' => 1800),
             'capital' => false,
             'production' => array(
@@ -147,7 +147,7 @@ class Application_Model_Board {
         $this->castles[12] = array(
             'name' => 'GAROM',
             'income' => 20,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3480, 'y' => 1080),
             'capital' => false,
             'production' => array(
@@ -158,7 +158,7 @@ class Application_Model_Board {
         $this->castles[13] = array(
             'name' => 'BALAD NARAN',
             'income' => 29,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 3600, 'y' => 640),
             'capital' => false,
             'production' => array(
@@ -171,7 +171,7 @@ class Application_Model_Board {
         $this->castles[14] = array(
             'name' => 'GALIN',
             'income' => 20,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 1640, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -183,7 +183,7 @@ class Application_Model_Board {
         $this->castles[15] = array(
             'name' => 'KOR',
             'income' => 30,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 4000, 'y' => 120),
             'capital' => true,
             'production' => array(
@@ -195,7 +195,7 @@ class Application_Model_Board {
         $this->castles[16] = array(
             'name' => 'DETHAL',
             'income' => 20,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3560, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -206,7 +206,7 @@ class Application_Model_Board {
         $this->castles[17] = array(
             'name' => 'THURTZ',
             'income' => 18,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3400, 'y' => 80),
             'capital' => false,
             'production' => array(
@@ -217,7 +217,7 @@ class Application_Model_Board {
         $this->castles[18] = array(
             'name' => 'DARCLAN',
             'income' => 23,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 3120, 'y' => 0),
             'capital' => false,
             'production' => array(
@@ -228,7 +228,7 @@ class Application_Model_Board {
         $this->castles[19] = array(
             'name' => 'ILNYR',
             'income' => 21,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 2840, 'y' => 240),
             'capital' => false,
             'production' => array(
@@ -240,7 +240,7 @@ class Application_Model_Board {
         $this->castles[20] = array(
             'name' => 'DUINOTH',
             'income' => 19,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 2720, 'y' => 720),
             'capital' => false,
             'production' => array(
@@ -251,7 +251,7 @@ class Application_Model_Board {
         $this->castles[21] = array(
             'name' => 'KAZRACK',
             'income' => 21,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 2320, 'y' => 120),
             'capital' => false,
             'production' => array(
@@ -263,7 +263,7 @@ class Application_Model_Board {
         $this->castles[22] = array(
             'name' => 'VERNON',
             'income' => 24,
-            'defensePoints' => 2,
+            'defensePoints' => 3,
             'position' => array('x' => 1920, 'y' => 80),
             'capital' => false,
             'production' => array(
@@ -275,7 +275,7 @@ class Application_Model_Board {
         $this->castles[23] = array(
             'name' => 'HIMELTON',
             'income' => 14,
-            'defensePoints' => 0,
+            'defensePoints' => 1,
             'position' => array('x' => 880, 'y' => 320),
             'capital' => false,
             'production' => array(
@@ -286,7 +286,7 @@ class Application_Model_Board {
         $this->castles[24] = array(
             'name' => 'STORMHEIM',
             'income' => 20,
-            'defensePoints' => 3,
+            'defensePoints' => 4,
             'position' => array('x' => 760, 'y' => 800),
             'capital' => true,
             'production' => array(
@@ -296,7 +296,7 @@ class Application_Model_Board {
         $this->castles[25] = array(
             'name' => 'OHMSMOUTH',
             'income' => 24,
-            'defensePoints' => 2,
+            'defensePoints' => 3,
             'position' => array('x' => 280, 'y' => 280),
             'capital' => false,
             'production' => array(
@@ -307,7 +307,7 @@ class Application_Model_Board {
         $this->castles[26] = array(
             'name' => 'WELLMORE',
             'income' => 20,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 160, 'y' => 640),
             'capital' => false,
             'production' => array(
@@ -318,7 +318,7 @@ class Application_Model_Board {
         $this->castles[27] = array(
             'name' => 'TASME',
             'income' => 19,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 320, 'y' => 1000),
             'capital' => false,
             'production' => array(
@@ -329,7 +329,7 @@ class Application_Model_Board {
         $this->castles[28] = array(
             'name' => 'VARDE',
             'income' => 23,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 320, 'y' => 1360),
             'capital' => false,
             'production' => array(
@@ -341,7 +341,7 @@ class Application_Model_Board {
         $this->castles[29] = array(
             'name' => 'QUIESCE',
             'income' => 3,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 600, 'y' => 1280),
             'capital' => false,
             'production' => array(
@@ -352,7 +352,7 @@ class Application_Model_Board {
         $this->castles[30] = array(
             'name' => 'KHORFE',
             'income' => 26,
-            'defensePoints' => 2,
+            'defensePoints' => 3,
             'position' => array('x' => 320, 'y' => 1680),
             'capital' => false,
             'production' => array(
@@ -363,7 +363,7 @@ class Application_Model_Board {
         $this->castles[31] = array(
             'name' => 'ALFAR\'S GAP',
             'income' => 18,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 880, 'y' => 2160),
             'capital' => false,
             'production' => array(
@@ -374,7 +374,7 @@ class Application_Model_Board {
         $this->castles[32] = array(
             'name' => 'LADOR',
             'income' => 16,
-            'defensePoints' => 1,
+            'defensePoints' => 2,
             'position' => array('x' => 1240, 'y' => 720),
             'capital' => false,
             'production' => array(
@@ -406,6 +406,252 @@ class Application_Model_Board {
 
     public function getCastlesSchema() {
         return $this->castles;
+    }
+
+
+    public function getCastle($castleId) {
+        return $this->castles[$castleId];
+    }
+
+    public function getCastlePosition($castleId) {
+        return $this->castles[$castleId]['position'];
+    }
+
+    public function getCastleDefense($castleId) {
+        return $this->castles[$castleId]['defensePoints'];
+    }
+    
+    public function isCastle($castleId) {
+        if(isset($this->castles[$castleId])){
+            return true;
+        }
+    }
+
+    static public function getRuins() {
+        $ruins = array();
+        $ruins[0] = array('x' => 1360, 'y' => 2320);
+        $ruins[1] = array('x' => 1480, 'y' => 2320);
+        $ruins[2] = array('x' => 720, 'y' => 1840);
+        $ruins[3] = array('x' => 960, 'y' => 1560);
+        $ruins[4] = array('x' => 960, 'y' => 1400);
+        $ruins[5] = array('x' => 440, 'y' => 1200);
+        $ruins[6] = array('x' => 640, 'y' => 480);
+        $ruins[7] = array('x' => 1520, 'y' => 240);
+        $ruins[8] = array('x' => 1680, 'y' => 1240);
+        $ruins[9] = array('x' => 2640, 'y' => 600);
+        $ruins[10] = array('x' => 2760, 'y' => 1800);
+        $ruins[11] = array('x' => 2960, 'y' => 2400);
+        $ruins[12] = array('x' => 3080, 'y' => 1360);
+        $ruins[13] = array('x' => 3280, 'y' => 1200);
+        $ruins[14] = array('x' => 3480, 'y' => 1520);
+        $ruins[15] = array('x' => 3760, 'y' => 1400);
+        $ruins[16] = array('x' => 4200, 'y' => 1840);
+        $ruins[17] = array('x' => 4000, 'y' => 880);
+        return $ruins;
+    }
+
+    static public function confirmRuinPosition($position) {
+        $ruins = Application_Model_Board::getRuins();
+        foreach ($ruins as $ruinId => $ruin) {
+            if ($position[0] == $ruin['x'] && $position[1] == $ruin['y']) {
+                return $ruinId;
+            }
+        }
+    }
+
+    static public function getTowers() {
+        $towers = array();
+        $towers[] = array('x' => 3800, 'y' => 120);
+        $towers[] = array('x' => 3640, 'y' => 200);
+        $towers[] = array('x' => 3240, 'y' => 360);
+        $towers[] = array('x' => 2880, 'y' => 480);
+        $towers[] = array('x' => 3640, 'y' => 480);
+        $towers[] = array('x' => 3720, 'y' => 480);
+        $towers[] = array('x' => 1080, 'y' => 560);
+        $towers[] = array('x' => 2080, 'y' => 560);
+        $towers[] = array('x' => 2160, 'y' => 560);
+        $towers[] = array('x' => 3640, 'y' => 920);
+        $towers[] = array('x' => 2520, 'y' => 960);
+        $towers[] = array('x' => 3600, 'y' => 1000);
+        $towers[] = array('x' => 2880, 'y' => 1240);
+        $towers[] = array('x' => 2920, 'y' => 1360);
+        $towers[] = array('x' => 2200, 'y' => 1400);
+        $towers[] = array('x' => 2920, 'y' => 1440);
+        $towers[] = array('x' => 560, 'y' => 1480);
+        $towers[] = array('x' => 880, 'y' => 1520);
+        $towers[] = array('x' => 2280, 'y' => 1560);
+        $towers[] = array('x' => 2920, 'y' => 1560);
+        $towers[] = array('x' => 600, 'y' => 1600);
+        $towers[] = array('x' => 880, 'y' => 1600);
+        $towers[] = array('x' => 2880, 'y' => 1680);
+        $towers[] = array('x' => 2280, 'y' => 1840);
+        $towers[] = array('x' => 2000, 'y' => 1960);
+        $towers[] = array('x' => 2800, 'y' => 2000);
+        $towers[] = array('x' => 800, 'y' => 2040);
+        $towers[] = array('x' => 2000, 'y' => 2040);
+        $towers[] = array('x' => 2240, 'y' => 2040);
+        $towers[] = array('x' => 2400, 'y' => 2160);
+        $towers[] = array('x' => 2680, 'y' => 2160);
+        return $towers;
+    }
+    
+    static public function isTowerAtPosition($x, $y){
+        $towers = Application_Model_Board::getTowers();
+        foreach($towers as $k=>$tower){
+            if($tower['x'] == $x && $tower['y'] == $y){
+                return true;
+            }
+        }
+    }
+
+    static public function getTerrain($type, $canFly, $canSwim) {
+        $text = '';
+        $moves = 0;
+        switch ($type) {
+            case 'b':
+                $text = 'Bridge';
+                if ($canSwim > 0) {
+                    $moves = 1;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 1;
+                }
+                break;
+            case 'c':
+                $text = 'Castle';
+                $moves = 0;
+                break;
+            case 'e':
+                $text = 'Enemy';
+                $moves = null;
+                break;
+            case 'f':
+                $text = 'Forest';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 3;
+                }
+                break;
+            case 'g':
+                $text = 'Grassland';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 2;
+                }
+                break;
+            case 'm':
+                $text = 'Hills';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 5;
+                }
+                break;
+            case 'M':
+                $text = 'Mountains';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 100;
+                }
+                break;
+            case 'r':
+                $text = 'Road';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 1;
+                }
+                break;
+            case 's':
+                $text = 'Swamp';
+                if ($canSwim > 0) {
+                    $moves = 100;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 4;
+                }
+                break;
+            case 'w':
+                $text = 'Water';
+                if ($canSwim > 0) {
+                    $moves = 1;
+                } else if ($canFly > 0) {
+                    $moves = 2;
+                } else {
+                    $moves = 100;
+                }
+                break;
+        }
+        return array($text, $moves);
+    }
+
+    static public function getUnitId($name) {
+        switch ($name) {
+            case 'Light Infantry':
+                return 1;
+            case 'Heavy Infantry':
+                return 2;
+            case 'Cavalry':
+                return 3;
+            case 'Giants':
+                return 4;
+            case 'Wolves':
+                return 5;
+            case 'Navy':
+                return 6;
+            case 'Archers':
+                return 7;
+            case 'Pegasi':
+                return 8;
+            case 'Dwarves':
+                return 9;
+            case 'Griffins':
+                return 10;
+            default:
+                return null;
+        }
+    }
+
+    static public function getUnitName($unitId) {
+        switch ($unitId) {
+            case 1:
+                return 'Light Infantry';
+            case 2:
+                return 'Heavy Infantry';
+            case 3:
+                return 'Cavalry';
+            case 4:
+                return 'Giants';
+            case 5:
+                return 'Wolves';
+            case 6:
+                return 'Navy';
+            case 7:
+                return 'Archers';
+            case 8:
+                return 'Pegasi';
+            case 9:
+                return 'Dwarves';
+            case 10:
+                return 'Griffins';
+            default:
+                return null;
+        }
     }
 
     static public function getBoardFields() {
@@ -620,231 +866,4 @@ class Application_Model_Board {
 
         return $fields;
     }
-
-    public function getCastle($castleId) {
-        return $this->castles[$castleId];
-    }
-
-    public function getCastlePosition($castleId) {
-        return $this->castles[$castleId]['position'];
-    }
-
-    static public function getRuins() {
-        $ruins = array();
-        $ruins[0] = array('x' => 1360, 'y' => 2320);
-        $ruins[1] = array('x' => 1480, 'y' => 2320);
-        $ruins[2] = array('x' => 720, 'y' => 1840);
-        $ruins[3] = array('x' => 960, 'y' => 1560);
-        $ruins[4] = array('x' => 960, 'y' => 1400);
-        $ruins[5] = array('x' => 440, 'y' => 1200);
-        $ruins[6] = array('x' => 640, 'y' => 480);
-        $ruins[7] = array('x' => 1520, 'y' => 240);
-        $ruins[8] = array('x' => 1680, 'y' => 1240);
-        $ruins[9] = array('x' => 2640, 'y' => 600);
-        $ruins[10] = array('x' => 2760, 'y' => 1800);
-        $ruins[11] = array('x' => 2960, 'y' => 2400);
-        $ruins[12] = array('x' => 3080, 'y' => 1360);
-        $ruins[13] = array('x' => 3280, 'y' => 1200);
-        $ruins[14] = array('x' => 3480, 'y' => 1520);
-        $ruins[15] = array('x' => 3760, 'y' => 1400);
-        $ruins[16] = array('x' => 4200, 'y' => 1840);
-        $ruins[17] = array('x' => 4000, 'y' => 880);
-        return $ruins;
-    }
-
-    static public function confirmRuinPosition($position) {
-        $ruins = Application_Model_Board::getRuins();
-        foreach ($ruins as $ruinId => $ruin) {
-            if ($position[0] == $ruin['x'] && $position[1] == $ruin['y']) {
-                return $ruinId;
-            }
-        }
-    }
-
-    static public function getTowers() {
-        $towers = array();
-        $towers[] = array('x' => 3800, 'y' => 120);
-        $towers[] = array('x' => 3640, 'y' => 200);
-        $towers[] = array('x' => 3240, 'y' => 360);
-        $towers[] = array('x' => 2880, 'y' => 480);
-        $towers[] = array('x' => 3640, 'y' => 480);
-        $towers[] = array('x' => 3720, 'y' => 480);
-        $towers[] = array('x' => 1080, 'y' => 560);
-        $towers[] = array('x' => 2080, 'y' => 560);
-        $towers[] = array('x' => 2160, 'y' => 560);
-        $towers[] = array('x' => 3640, 'y' => 920);
-        $towers[] = array('x' => 2520, 'y' => 960);
-        $towers[] = array('x' => 3600, 'y' => 1000);
-        $towers[] = array('x' => 2880, 'y' => 1240);
-        $towers[] = array('x' => 2920, 'y' => 1360);
-        $towers[] = array('x' => 2200, 'y' => 1400);
-        $towers[] = array('x' => 2920, 'y' => 1440);
-        $towers[] = array('x' => 560, 'y' => 1480);
-        $towers[] = array('x' => 880, 'y' => 1520);
-        $towers[] = array('x' => 2280, 'y' => 1560);
-        $towers[] = array('x' => 2920, 'y' => 1560);
-        $towers[] = array('x' => 600, 'y' => 1600);
-        $towers[] = array('x' => 880, 'y' => 1600);
-        $towers[] = array('x' => 2880, 'y' => 1680);
-        $towers[] = array('x' => 2280, 'y' => 1840);
-        $towers[] = array('x' => 2000, 'y' => 1960);
-        $towers[] = array('x' => 2800, 'y' => 2000);
-        $towers[] = array('x' => 800, 'y' => 2040);
-        $towers[] = array('x' => 2000, 'y' => 2040);
-        $towers[] = array('x' => 2240, 'y' => 2040);
-        $towers[] = array('x' => 2400, 'y' => 2160);
-        $towers[] = array('x' => 2680, 'y' => 2160);
-        return $towers;
-    }
-
-    static public function getTerrain($type, $canFly, $canSwim) {
-        $text = '';
-        $moves = 0;
-        switch ($type) {
-            case 'b':
-                $text = 'Bridge';
-                if ($canSwim > 0) {
-                    $moves = 1;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 1;
-                }
-                break;
-            case 'c':
-                $text = 'Castle';
-                $moves = 0;
-                break;
-            case 'e':
-                $text = 'Enemy';
-                $moves = null;
-                break;
-            case 'f':
-                $text = 'Forest';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 3;
-                }
-                break;
-            case 'g':
-                $text = 'Grassland';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 2;
-                }
-                break;
-            case 'm':
-                $text = 'Hills';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 5;
-                }
-                break;
-            case 'M':
-                $text = 'Mountains';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 100;
-                }
-                break;
-            case 'r':
-                $text = 'Road';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 1;
-                }
-                break;
-            case 's':
-                $text = 'Swamp';
-                if ($canSwim > 0) {
-                    $moves = 100;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 4;
-                }
-                break;
-            case 'w':
-                $text = 'Water';
-                if ($canSwim > 0) {
-                    $moves = 1;
-                } else if ($canFly > 0) {
-                    $moves = 2;
-                } else {
-                    $moves = 100;
-                }
-                break;
-        }
-        return array($text, $moves);
-    }
-
-    static public function getUnitId($name) {
-        switch ($name) {
-            case 'Light Infantry':
-                return 1;
-            case 'Heavy Infantry':
-                return 2;
-            case 'Cavalry':
-                return 3;
-            case 'Giants':
-                return 4;
-            case 'Wolves':
-                return 5;
-            case 'Navy':
-                return 6;
-            case 'Archers':
-                return 7;
-            case 'Pegasi':
-                return 8;
-            case 'Dwarves':
-                return 9;
-            case 'Griffins':
-                return 10;
-            default:
-                return null;
-        }
-    }
-
-    static public function getUnitName($unitId) {
-        switch ($unitId) {
-            case 1:
-                return 'Light Infantry';
-            case 2:
-                return 'Heavy Infantry';
-            case 3:
-                return 'Cavalry';
-            case 4:
-                return 'Giants';
-            case 5:
-                return 'Wolves';
-            case 6:
-                return 'Navy';
-            case 7:
-                return 'Archers';
-            case 8:
-                return 'Pegasi';
-            case 9:
-                return 'Dwarves';
-            case 10:
-                return 'Griffins';
-            default:
-                return null;
-        }
-    }
-
 }

@@ -91,6 +91,9 @@ class GameajaxController extends Game_Controller_Action {
                 throw new Exception('To nie jest Twój zamek!');
             }
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+            if(!$modelArmy->isHeroInGame($this->_namespace->player['playerId'])){
+                $modelArmy->connectHero($this->_namespace->player['playerId']);
+            }
             $heroId = $modelArmy->getDeadHeroId($this->_namespace->player['playerId']);
             if(!$heroId){
                 throw new Exception('Twój heros żyje!');
