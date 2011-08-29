@@ -21,6 +21,9 @@ var nextArmy;
 
 var cursorDirection;
 
+var documentTitle = document.title;
+var timeoutId = null;
+
 $(document).ready(function() {
         terrain();
 
@@ -30,19 +33,7 @@ $(document).ready(function() {
         zoomer = new zoom(758, 670);
         setTimeout ( 'connect()', 1500 );
 //    });
-/*    for(y in fields) {
-        for(x in fields[y]) {
-            board.append(
-                $('<div>')
-                .html(fields[y][x])
-                .addClass('field')
-                .css({
-                    left:(x*40)+'px',
-                    top:(y*40)+'px'
-                })
-            );
-        }
-    }*/
+    
 });
 
 function turnOn() {
@@ -138,6 +129,19 @@ function startGame(){
     if(my.turn && !players[my.color].turnActive){
         startMyTurnA();
     }
+//    for(y in fields) {
+//        for(x in fields[y]) {
+//            board.append(
+//                $('<div>')
+//                .html(fields[y][x])
+//                .addClass('field')
+//                .css({
+//                    left:(x*40)+'px',
+//                    top:(y*40)+'px'
+//                })
+//            );
+//        }
+//    }
 }
 
 function goldUpdate(gold){
@@ -170,17 +174,19 @@ function unlock(){
 }
 
 function titleBlink(msg) {
-    var oldTitle = document.title;
-    var timeoutId = setInterval(function() {
+    if(timeoutId){
+        clearInterval(timeoutId);
+    }
+    timeoutId = setInterval(function() {
         if(document.title == msg){
             document.title = '...';
         }else{
             document.title = msg;
         }
-    }, 1000);
+    });
     window.onmousemove = function() {
         clearInterval(timeoutId);
-        document.title = oldTitle;
+        document.title = documentTitle;
         window.onmousemove = null;
     };
 }

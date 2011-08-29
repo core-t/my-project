@@ -62,7 +62,7 @@ function login() {
                         case 'm':
                             changeArmyPosition(data[2], data[3], data[4], turn.color);
                             break;
-                        case 's':
+                        case 'A':
                             getPlayerArmiesA(data[2]);
                             break;
                         case 'b':
@@ -97,6 +97,7 @@ function login() {
                                     }
                                 }
                             }
+                            zoomer.lensSetCenter(army.x, army.y);
                             battleM(battle, army, enemyArmies);
                             break;
                         default:
@@ -164,7 +165,7 @@ function wsPing() {
 }
 
 function wsPlayerArmies(color){
-    lWSC.channelPublish(channel,my.color+'.s.'+color);
+    lWSC.channelPublish(channel,my.color+'.A.'+color);
 }
 
 function wsArmyMove(x, y, armyId) {

@@ -242,11 +242,23 @@ function army(obj, color, dontFade) {
             attack = this.soldiers[soldier].attackPoints;
             this.soldierKey = soldier;
         }
-        if(typeof defense  == 'undefined') {
+        if(typeof defense == 'undefined') {
             var defense = this.soldiers[soldier].defensePoints;
         }
         if(this.soldiers[soldier].defensePoints > defense) {
             defense = this.soldiers[soldier].defensePoints;
+            if(defense > this.soldiers[this.soldierKey].defensePoints){
+                this.soldierKey = soldier;
+            }
+        }
+        if(typeof moves == 'undefined') {
+            var moves = this.soldiers[soldier].numberOfMoves;
+        }
+        if(this.soldiers[soldier].numberOfMoves > moves) {
+            moves = this.soldiers[soldier].numberOfMoves;
+            if(moves > this.soldiers[this.soldierKey].numberOfMoves){
+                this.soldierKey = soldier;
+            }
         }
         if(typeof this.moves == 'undefined') {
             this.moves = this.soldiers[soldier].movesLeft;
@@ -257,7 +269,7 @@ function army(obj, color, dontFade) {
         if(this.soldiers[soldier].canFly){
             this.canFly++;
         }else{
-            this.canFly -= 2;
+            this.canFly -= 200;
         }
         if(this.soldiers[soldier].canSwim){
             this.canSwim++;
@@ -323,12 +335,10 @@ function army(obj, color, dontFade) {
 }
 
 function myArmyWin(result){
-//    deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-//    $('#army'+unselectedArmy.armyId).remove();
+    wsArmy(unselectedArmy.armyId, 1);
     players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
     newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
     newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
-    wsArmy(unselectedArmy.armyId);
 }
 
 function myArmyClick(obj, e){
@@ -342,7 +352,7 @@ function myArmyClick(obj, e){
                     unselectArmy();
                 } else { // klikam na inną jednostkę
                     armyToJoinId = players[my.color].armies[obj.id].armyId;
-                    moveA(cursorPosition(e.pageX, e.pageY));
+                    moveA(cursorPosition(e.pageX, e.pageY, 1));
                 }
             } else {
                 unselectArmy();
@@ -662,7 +672,7 @@ function changePointToPosition(point) {
     return position;
 }
 
-function cursorPosition(x, y) {
+function cursorPosition(x, y, force) {
     if(selectedArmy) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
@@ -671,27 +681,30 @@ function cursorPosition(x, y) {
         var cosa = (X - selectedArmy.x)/vectorLenth;
         var sina = (Y - selectedArmy.y)/vectorLenth;
 
-        $('.path').remove();
 
         var fieldX = Math.round(X/40);
         var fieldY = Math.round(Y/40);
-        newX = fieldX*40;
-        newY = fieldY*40;
+        tmpX = fieldX*40;
+        tmpY = fieldY*40;
+        if(newX != tmpX || newY != tmpY || force == 1){
+            newX = tmpX;
+            newY = tmpY;
+            var pfX = selectedArmy.x/40;
+            var pfY = selectedArmy.y/40;
+            $('.path').remove();
+            if(cosa>=0 && sina>=0) {
+                movesSpend = downRight(pfX, pfY);
+            } else if (cosa>=0 && sina<=0) {
+                movesSpend = topRight(pfX, pfY);
+            } else if (cosa<=0 && sina<=0) {
+                movesSpend = topLeft(pfX, pfY);
+            } else if (cosa<=0 && sina>=0) {
+                movesSpend = downLeft(pfX, pfY);
+            }
 
-        var pfX = selectedArmy.x/40;
-        var pfY = selectedArmy.y/40;
-        if(cosa>=0 && sina>=0) {
-            movesSpend = downRight(pfX, pfY);
-        } else if (cosa>=0 && sina<=0) {
-            movesSpend = topRight(pfX, pfY);
-        } else if (cosa<=0 && sina<=0) {
-            movesSpend = topLeft(pfX, pfY);
-        } else if (cosa<=0 && sina>=0) {
-            movesSpend = downLeft(pfX, pfY);
+            $('#coord').html(fieldX + ' - ' + fieldY + ' ' + getTerrain(fields[fieldY][fieldX], selectedArmy)[0]);
+            return movesSpend;
         }
-
-        $('#coord').html(newX + ' - ' + newY + ' ' + getTerrain(fields[fieldY][fieldX])[0]);
-        return movesSpend;
     }
     return null;
 }
@@ -920,7 +933,7 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
     var terrainType = fields[pfY][pfX];
     pX = pfX*40;
     pY = pfY*40;
-    var terrain = getTerrain(terrainType);
+    var terrain = getTerrain(terrainType, selectedArmy);
     var moves = movesSpend + terrain[1];
     if(moves > selectedArmy.moves) {
         return movesSpend;
@@ -940,25 +953,15 @@ function addPathDiv(pfX,pfY,direction,movesSpend) {
     return moves;
 }
 
-function getTerrain(type) {
+function getTerrain(type, a) {
     var text;
     var moves;
     switch(type) {
-        case 'r':
-            text = 'Road';
-            if(selectedArmy.canSwim){
-                moves = 100;
-            }else if(selectedArmy.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 1;
-            }
-            break;
         case 'b':
             text = 'Bridge';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 1;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 1;
@@ -974,9 +977,9 @@ function getTerrain(type) {
             break;
         case 'f':
             text = 'Forest';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 100;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 3;
@@ -984,9 +987,9 @@ function getTerrain(type) {
             break;
         case 'g':
             text = 'Grassland';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 100;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 2;
@@ -994,9 +997,9 @@ function getTerrain(type) {
             break;
         case 'm':
             text = 'Hills';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 200;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 5;
@@ -1004,19 +1007,29 @@ function getTerrain(type) {
             break;
         case 'M':
             text = 'Mountains';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 1000;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 100;
             }
             break;
+        case 'r':
+            text = 'Road';
+            if(a.canSwim){
+                moves = 100;
+            }else if(a.canFly > 0){
+                moves = 2;
+            }else{
+                moves = 1;
+            }
+            break;
         case 's':
             text = 'Swamp';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 100;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 4;
@@ -1024,9 +1037,9 @@ function getTerrain(type) {
             break;
         case 'w':
             text = 'Water';
-            if(selectedArmy.canSwim){
+            if(a.canSwim){
                 moves = 1;
-            }else if(selectedArmy.canFly > 0){
+            }else if(a.canFly > 0){
                 moves = 2;
             }else{
                 moves = 100;

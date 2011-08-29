@@ -91,7 +91,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from('hero', array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'armyId', 'experience', 'movesLeft'))
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->order('attackPoints DESC');
+                    ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
             if($in) {
                 $select->where('"' . $this->_primary . '" IN (?)', new Zend_Db_Expr($armyId));
             } else {
@@ -125,7 +125,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->from(array('a' => 'soldier'))
                     ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"')
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->order(array('canFly', 'attackPoints', 'a.unitId'));
+                    ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
             if($in) {
                 $select->where('"' . $this->_primary . '" IN (?)', new Zend_Db_Expr($armyId));
             } else {

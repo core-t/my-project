@@ -191,8 +191,18 @@ function splitArmyM(a){
         $('<div>')
         .addClass('message')
         .append(army)
-        .append($('<div>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
-        .append($('<div>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
+        .append(
+            $('<div>')
+            .css({'height':'28px','padding':'0 2px'})
+            .append(
+                $('<div>').addClass('left')
+                .append($('<a>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
+            )
+            .append(
+                $('<div>').addClass('right')
+                .append($('<a>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
+            )
+        )
         .css('min-height',height+'px')
     );
 

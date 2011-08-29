@@ -138,7 +138,7 @@ function moveA(movesSpend) {
                 });
             }
         } else if(selectedEnemyArmy) {
-            if(unselectedArmy.moves < (movesSpend + 1)) {
+            if(unselectedArmy.moves < (getTerrain(selectedEnemyArmy.fieldType, selectedEnemyArmy)[1] + 1)) {
                 simpleM('Not enough moves left.');
                 unlock();
                 unselectEnemyArmy();
