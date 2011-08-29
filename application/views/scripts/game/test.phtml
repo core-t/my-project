@@ -53,8 +53,8 @@ for ($y = 0; $y <= 68; $y++) {
 }
 
 function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9, $rgb10) {
-    if(!$rgb10)  return 't'; // tower
-    elseif(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4))  return 'r'; // road
+    if(!$rgb10) return 'g'; // tower (grass)
+    elseif(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4)) return 'r'; // road
     elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
     elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
     elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water

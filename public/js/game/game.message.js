@@ -209,6 +209,9 @@ function splitArmyM(a){
 }
 
 function castleM(castleId, color){
+    if(lock){
+        return null;
+    }
     if(!my.turn){
         return null;
     }

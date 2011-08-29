@@ -257,11 +257,12 @@ function splitArmyA(armyId){
 }
 
 function castleBuildDefenseA(){
-    var castleId = $('input[name=build]:checked').val();
+    var castleId = $('input[name=defense]:checked').val();
     if(!castleId) {
         return null;
     }
     console.log(castleId);
+    removeM();
 }
 
 function razeCastleA(){
@@ -316,7 +317,7 @@ function heroResurrectionA(castleId){
             removeM();
             players[my.color].armies['army'+result.armyId] = new army(result, my.color);
             wsArmy(result.armyId, true);
-            goldUpdate($('#gold').html(result.gold));
+            goldUpdate(result.gold);
         }
     });
 }
@@ -334,10 +335,7 @@ function searchRuinsA(){
         switch(result.find[0]){
             case 'gold':
                 var gold = result.find[1] + parseInt($('#gold').html());
-                console.log(result.find[1]);
-                console.log(parseInt($('#gold').html()));
-                console.log(gold);
-                goldUpdate(result.find[1] + parseInt($('#gold').html()));
+                goldUpdate(gold);
                 simpleM('You have found '+result.find[1]+' gold.');
                 break;
             case 'death':

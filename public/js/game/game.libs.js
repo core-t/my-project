@@ -22,64 +22,67 @@ function towerCreate(towerId){
     $('#tower' + towerId).fadeIn(1);
 }
 
-function changeMyTower(x, y){
+function searchTower(x, y){
     for(towerId in towers){
-        if(x == towers[towerId].x && y == towers[towerId].y){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == x && towers[towerId].y == y){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x-1) && y == (towers[towerId].y-1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x-40) && towers[towerId].y == (y-40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x) && y == (towers[towerId].y-1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x) && towers[towerId].y == (y-40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x+1) && y == (towers[towerId].y-1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x+40) && towers[towerId].y == (y-40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x-1) && y == (towers[towerId].y)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x-40) && towers[towerId].y == (y)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x+1) && y == (towers[towerId].y)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x+40) && towers[towerId].y == (y)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x-1) && y == (towers[towerId].y+1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x-40) && towers[towerId].y == (y+40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x) && y == (towers[towerId].y+1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x) && towers[towerId].y == (y+40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
-        if(x == (towers[towerId].x+1) && y == (towers[towerId].y+1)){
-            towers[towerId].color = my.color;
-            $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
-            addTowerA(towerId);
-            break;
+        if(towers[towerId].x == (x+40) && towers[towerId].y == (y+40)){
+            if(changeMyTower(x, y, towerId)){
+                break;
+            }
         }
+    }    
+}
+
+function changeMyTower(x, y, towerId){
+    var fx = x/40;
+    var fy = y/40;
+    if(fields[fy][fx] != 'e'){
+        towers[towerId].color = my.color;
+        $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+        addTowerA(towerId);
+        return true;
+    }else{
+        return false;
     }
-    
 }
 
 function changeEnemyTower(towerId, color){
@@ -282,6 +285,7 @@ function showFirstCastle() {
 function army(obj, color, dontFade) {
     if(obj.destroyed){
         if(typeof players[color].armies[obj.armyId] != 'undefined'){
+            armyFields(players[color].armies[obj.armyId]);
             delete players[color].armies[obj.armyId];
         }
         if(typeof $('#army'+obj.armyId) != 'undefined') {
@@ -420,7 +424,7 @@ function army(obj, color, dontFade) {
 }
 
 function myArmyWin(result){
-    wsArmy(unselectedArmy.armyId, 1);
+    wsArmy(unselectedArmy.armyId);
     players[my.color].armies['army'+unselectedArmy.armyId] = new army(result, my.color);
     newX = players[my.color].armies['army'+unselectedArmy.armyId].x;
     newY = players[my.color].armies['army'+unselectedArmy.armyId].y;
@@ -701,7 +705,11 @@ function walk(result) {
         newY = players[my.color].armies['army'+result.armyId].y;
         wsArmy(result.armyId);
         handleParentArmy();
-        selectArmy(players[my.color].armies['army'+result.armyId]);
+        if(players[my.color].armies['army'+result.armyId].moves){
+            selectArmy(players[my.color].armies['army'+result.armyId]);
+        }else{
+            unselectArmy();
+        }
         unlock();
         return null;
     } else {
@@ -712,7 +720,7 @@ function walk(result) {
             top: result.path[i].y + 'px'
         },300,
         function(){
-            changeMyTower(result.path[i].x, result.path[i].y);
+            searchTower(result.path[i].x, result.path[i].y);
             delete result.path[i];
             walk(result);
         }
