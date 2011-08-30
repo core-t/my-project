@@ -7,14 +7,14 @@ table {
 }
 
 th {
-    height:20px;
+    line-height:20px;
     text-align:center;
-    background:#ccc;
+    background:transparent url(../img/bg_0.jpg) repeat;
     padding:4px;
 }
 
 #mygames td {
-    border:1px solid #ccc;
+    border:1px solid #555;
     height:20px;
     text-align:center;
     padding:2px;
@@ -23,12 +23,20 @@ th {
 #playersingame td {
     height:20px;
     min-width: 200px;
-    background: #0398CA;
-    border:1px solid #ccc;
+    background: #999;
+    border:1px solid #555;
     padding:2px;
     margin:2px;
+    text-shadow:none;
+    text-align: center;
 }
 
+.whitebg a{
+    color:#333;
+}
+.greenbg a{
+    color:#333;
+}
 #playersingame tr#green td {
     background: #0f0;
 }

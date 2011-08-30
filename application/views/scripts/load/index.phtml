@@ -6,9 +6,9 @@
 if(is_array($this->myGames)) {
     foreach($this->myGames as $game) {
         $url = $this->url(array('controller'=>'load', 'action'=>'load', 'gameId'=>$game['gameId']));
-        echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'">
+        echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'" class="trlink">
         <td><a href="'.$url.'">'.$game['gameMaster'].'</a></td>
-        <td style="background:'.$game['color'].'"><a href="'.$url.'">'.$game['color'].'</a></td>
+        <td class="'.$game['color'].'bg"><a href="'.$url.'">'.$game['color'].'</a></td>
         <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
         <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
         <td><a href="'.$url.'">'.strftime('%F %H:%M:%S', strtotime($game['begin'])).'</a></td>
@@ -24,3 +24,12 @@ if(is_array($this->myGames)) {
         <a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>" class="button">< Back</a>
     </li>
 </ul>
+<script type="text/javascript">
+    $('.trlink').mouseover(function(){
+        $('#'+this.id).css('background','transparent url(../img/nav_bg.png) repeat');
+    })
+    .mouseleave(function(){
+        $('#'+this.id).css('background','transparent');
+    })
+    ;
+</script>

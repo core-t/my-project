@@ -7,7 +7,8 @@ class LoadController extends Game_Controller_Action
     {
         /* Initialize action controller here */
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/gameload.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
+        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
     }
 
     public function indexAction()
@@ -20,7 +21,6 @@ class LoadController extends Game_Controller_Action
     public function loadAction()
     {
         // action body
-        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
         $this->view->headScript()->appendFile('/js/jWebSocket.js');
         $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
         $this->view->headScript()->appendFile('/js/load/load.js');

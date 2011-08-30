@@ -541,11 +541,11 @@ function unselectArmy() {
     if(parentArmy){
         joinSplitedArmy();
     }
-    $('#info').html(0);
+//    $('#info').html('');
     $('#name').html('');
-    $('#moves').html(0);
-    $('#attack').html(0);
-    $('#defense').html(0);
+    $('#moves').html('');
+    $('#attack').html('');
+    $('#defense').html('');
     tmpUnselectArmy();
 }
 

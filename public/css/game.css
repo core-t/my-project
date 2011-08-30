@@ -1,8 +1,7 @@
 #game {
     width:760px;
     height:800px;
-    background:#ddd;
-/*     display:none; */
+    background: transparent url(../img/bg_1.jpg) repeat scroll top left;
 }
 
 .castle {
@@ -61,7 +60,7 @@
 
 .zoomPad{
     float:left;
-    border:1px solid #fff;
+    border:1px solid #555;
     width:203px;
     height:128px;
     position:relative;
@@ -110,6 +109,10 @@
     height:129px;
 }
 
+#gameMenu span{
+    color:#eee;
+}
+
 .gameMenu {
     float:left;
     overflow:hidden;
@@ -132,8 +135,15 @@
 }
 
 #gameMenu .button{
-    height:15px;
+    line-height:15px;
     padding:1px;
+    background: #800;
+    color:#fff;
+}
+
+#gameMenu .buttonOff{
+    background: #555;
+    color:#444;
 }
 
 .playersBox{
@@ -144,7 +154,7 @@
     height:17px;
 }
 .playersBox div {
-    border:1px solid #cecece;
+    border:1px solid #555;
 }
 
 .playersBox div div{
@@ -159,9 +169,14 @@
     width:10px;
 }
 
-.playersBox div.green div.color{
-    color:white;
+.playersBox div div.turn{
+    color:#e00;
 }
+
+.playersBox div.green div.color{
+    color:#ddd;
+}
+
 #armyButtonsBox{
     height:69px;
 }
@@ -201,16 +216,16 @@
 .message {
     width: 260px;
     min-height: 225px;
-    border:1px solid white;
+    border:1px solid #555;
     z-index:7000;
-    background: #555555;
+    background: #444;
     position:relative;
     left:280px;
     top:50px;
 }
 
 .message h3 {
-    color:#cecece;
+    color:#c00000;
     margin:4px;
 }
 
@@ -328,7 +343,7 @@
 #chatBox{
     width:200px;
     height:130px;
-    border-left:1px solid #fff;
+    border-left:1px solid #555;
 }
 
 #chatBox #chatWindow{
@@ -337,7 +352,9 @@
     border: none;
     overflow:hidden;
     border-bottom:1px solid #cecece;
-    background:white;
+    background:#eee;
+    color:#000;
+    text-shadow:none;
 }
 
 #chatBox #chatWindow div{
@@ -358,6 +375,7 @@
 }
 #chatBox .button{
     margin:0;
+    width:28px;
 }
 
 #goldBox{
@@ -367,6 +385,10 @@
 #goldBox div div{
     width:56px;
     height:14px;
+}
+
+#goldBox div .text-right{
+    color:#eee;
 }
 
 #nameBox{
@@ -389,7 +411,7 @@
     z-index:7000;
     position:relative;
     color:white;
-    text-shadow: #000 1px 1px, #000 -1px -1px;
+    text-shadow: #000 1px 1px 3px;
     top:0px;
     left:0px;
 }

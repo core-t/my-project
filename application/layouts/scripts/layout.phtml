@@ -13,8 +13,11 @@
         <div id="page">
             <div id="menuTop">
                 <p>Server status: <span id="wsStatus"></span></p>
-                <a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a></div>
+                <a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'logout')); ?>">Logout</a>
+            </div>
+            <div id="content">
             <?php echo $this->layout()->content; ?>
+            </div>
         </div>
     </body>
 </html>

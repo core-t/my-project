@@ -1,21 +1,32 @@
 *{padding: 0; margin: 0;}
 
+html{
+    background: #000 url(../img/bg_0.jpg) repeat scroll top left;
+}
 body {
-    color: #000;
-    background: #eee;
+    background: #000 url(../img/bg_0.jpg) repeat scroll top left;
     font-size: 11px;
     font-family:arial;
+    color:#6C6E6D;
+    text-shadow:0 -1px 2px #111;
 }
 
 #page {
+    background: transparent url(../img/bg_1.jpg) repeat scroll top left;
     margin:0 auto;
     width:760px;
+    min-height:500px;
+}
+
+#content{
+    padding:0 20px;
+    
 }
 
 #menuTop {
     width:760px;
     height:20px;
-    background: #000;
+    background:transparent url(../img/nav_bg.png) repeat;
 }
 
 #menuTop p {
@@ -26,7 +37,7 @@ body {
 }
 
 #menuTop a {
-    color:#f00;
+    color:#e00;
     float: right;
     text-decoration: none;
     line-height:20px;
@@ -34,45 +45,55 @@ body {
 }
 
 a {
-    color:blue;
+    color:#ccc;
+    text-decoration: none;
+}
+
+a:hover {
+    color:#eee;
     text-decoration: none;
 }
 
 .button {
-    color:#00C200;
     padding:3px;
-    border:1px solid #00C200;
     margin:2px;
     text-align:center;
     cursor:pointer;
-    height:14px;
+    line-height:14px;
     font-weight:bold;
-/*     text-shadow: #00A700 -1px -1px; */
-    background:#555;
+    color:#aaa;
+    text-shadow: -1px -1px 1px #111; 
+    background:#600;
+    border-top:1px solid #555;
+    border-left:1px solid #555;
+    border-right:1px solid #111;
+    border-bottom:1px solid #111;
     display:block;
-    /*     text-shadow: blue 2px 2px, red -2px -2px; */
 }
 
 .button:hover {
-    color:#C10909;
-    text-shadow: #fff 1px 1px;
-    background:#eee;
-    border:1px solid #C10909;
+    color:#000;
+    text-shadow: none;
+    background:#500;
+    border-top:1px solid #111;
+    border-left:1px solid #111;
+    border-right:1px solid #555;
+    border-bottom:1px solid #555;
 }
 
 .buttonOff{
-    color:#000;
-    text-shadow: #fff 1px 1px;
-    background:#eee;
-    border:1px solid #555;
+    color:#444;
+    text-shadow: none;
+    background:#555;
+    border:1px solid #444;
     cursor:default;
 }
 
 .buttonOff:hover{
-    color:#000;
-    text-shadow: #fff 1px 1px;
-    background:#eee;
-    border:1px solid #555;
+    color:#111;
+    text-shadow: none;
+    background:#555;
+    border:1px solid #111;
     cursor:default;
 }
 
@@ -90,9 +111,14 @@ li {
 }
 h1{
     margin-top: 20px;
+    color:#999;
 }
 h2{
     margin-top: 10px;
+    color:#999;
+}
+h3{
+    color:#aaa;
 }
 .left{
     float:left;
@@ -102,4 +128,12 @@ h2{
 }
 .clear{
     clear:both;
+}
+.whitebg{
+    background:#fff;
+    text-shadow:none;
+}
+.greenbg{
+    background:green;
+    text-shadow:none;
 }

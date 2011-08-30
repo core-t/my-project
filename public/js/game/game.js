@@ -100,7 +100,7 @@ function startGame(){
     }
     for(color in players) {
         players[color].active = 0;
-        $('.'+color +' .color').css('background',color);
+        $('.'+color +' .color').addClass(color +'bg');
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
             if(color == my.color){
