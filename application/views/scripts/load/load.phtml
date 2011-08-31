@@ -8,14 +8,14 @@
 <table id="playersingame">
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id">empty</td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="'.$this->colors[$i].'Id"><div class="left">empty</div><div class="right">'.$this->colors[$i].'</div></td></tr>';
 }
 ?>
 </table>
 
 <ul>
+    <li><a href="<?php echo $this->url(array('controller' => 'load', 'action' => 'index', 'gameId' => null)) ?>" class="button">< Back</a></li>
     <li><a href="javascript:refresh()" class="button">Refresh</a></li>
-    <li><a href="<?php echo $this->url(array('controller' => 'load', 'action' => 'index', 'gameId' => null)) ?>" class="button">Back</a></li>
 </ul>
 <script type="text/javascript">
     var urlRedirect = '<?php echo $this->url(array('controller' => 'game', 'action' => 'index', 'gameId' => null)); ?>';

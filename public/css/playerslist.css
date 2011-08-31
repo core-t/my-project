@@ -21,13 +21,11 @@ th {
 }
 
 #playersingame td {
-    height:20px;
-    min-width: 200px;
-    background: #999;
+    line-height:26px;
+    min-width: 100px;
+    background: #444;
     border:1px solid #555;
     padding:2px;
-    margin:2px;
-    text-shadow:none;
     text-align: center;
 }
 
@@ -37,43 +35,34 @@ th {
 .greenbg a{
     color:#333;
 }
-#playersingame tr#green td {
+#playersingame tr td div.left {
+    min-width: 534px;
+}
+#playersingame tr td div.right {
+    text-shadow:none;
+    min-width:70px;
+    margin-right:1px;
+    line-height:24px;
+}
+#playersingame tr#green td div.right {
     background: #0f0;
 }
 
-#playersingame tr#white td {
+#playersingame tr#white td div.right {
     background: #fff;
 }
 
-#playersingame tr#red td {
+#playersingame tr#red td div.right {
     background: #f00;
 }
 
-#playersingame tr#yellow td {
+#playersingame tr#yellow td div.right {
     background: yellow;
 }
 
 #playersout td {
-    height:20px;
-    min-width: 200px;
-/*     background: #cecece; */
-    border:1px solid #ccc;
+    line-height:24px;
     padding:2px;
     margin:2px;
 }
 
-#playersout tr#green td {
-    background: #0f0;
-}
-
-#playersout tr#white td {
-    background: #fff;
-}
-
-#playersout tr#red td {
-    background: #f00;
-}
-
-#playersout tr#orange td {
-    background: #FFAE57;
-}

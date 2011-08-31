@@ -56,7 +56,7 @@ function update(color){
             if(result[i].ready) {
                 playersReady++;
             }
-            $('#'+result[i].color+'Id').html(result[i].firstName+' '+result[i].lastName);
+            $('#'+result[i].color+'Id div.left').html(result[i].firstName+' '+result[i].lastName);
         }
         if(alivePlayers['length'] <= playersReady) {
             top.location = urlRedirect;
@@ -75,7 +75,7 @@ function refresh() {
             if(result[i].ready) {
                 playersReady++;
             }
-            $('#'+result[i].color+'Id').html(result[i].firstName+' '+result[i].lastName);
+            $('#'+result[i].color+'Id div.left').html(result[i].firstName+' '+result[i].lastName);
         }
         if(alivePlayers['length'] <= playersReady) {
             top.location = urlRedirect;

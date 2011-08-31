@@ -4,7 +4,7 @@
 <th>Player name</th><th>Action</th>
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="td1"></td><td id="td2"></td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="td1"><div class="left"></div><div class="right">'.$this->colors[$i].'</div></td><td id="td2"></td></tr>';
 }
 ?>
 </table>
@@ -15,7 +15,7 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
     <li id="start"></li>
 </ul>
 
-<h4>Players out</h4>
+<!--<h4>Players out</h4>-->
 <table id="playersout"></table>
 
 <script type="text/javascript">

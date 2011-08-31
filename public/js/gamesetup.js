@@ -11,7 +11,7 @@ function refresh() {
             $('#playersout').html('');
             var playersReady = 0;
             for(i = 0; i < numberOfPlayers; i++) {
-                $('#'+colors[i]+' #td1').html('');
+                $('#'+colors[i]+' #td1 div.left').html('');
                 $('#'+colors[i]+' #td2').html(
                     $('<a>')
                     .addClass('button')
@@ -23,7 +23,7 @@ function refresh() {
             for(i in result){
                 if(result[i].ready) {
                     playersReady++;
-                    $('#'+result[i].color+' #td1').html(result[i].firstName+' '+result[i].lastName);
+                    $('#'+result[i].color+' #td1 div.left').html(result[i].firstName+' '+result[i].lastName);
                     if(result[i].playerId == playerId){
                         if(ready) {
                             var html = 'Unselect';
@@ -40,7 +40,7 @@ function refresh() {
                     }
 
                 } else {
-                    $('#playersout').append('<tr><td>' + result[i].firstName+' '+result[i].lastName + '</td></tr>');
+                    $('#playersout').append('<tr><td># ' + result[i].firstName+' '+result[i].lastName + '</td></tr>');
                 }
             }
             if(result[i].gameMasterId == playerId) {
