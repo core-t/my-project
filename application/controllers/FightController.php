@@ -186,7 +186,7 @@ class FightController extends Game_Controller_Action
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                $this->attackModifier = $this->getCombatModifiers($army);
+                $army = $this->getCombatModifiers($army);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
