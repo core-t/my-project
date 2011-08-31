@@ -1,0 +1,27 @@
+<?php echo $this->doctype() ?>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <?php
+        echo $this->headTitle() . "\n";
+        echo $this->headLink() . "\n";
+        echo $this->headScript() . "\n";
+        echo $this->headMeta() . "\n";
+        ?>
+    </head>
+    <body>
+        <div id="page">
+            <div id="game">
+                <div class="zoomPad">
+                    <div class="zoomPup"></div>
+                    <img id="map" src="/img/game/board.png" width="218px">
+                </div>
+                
+                <div class="zoomWindow">
+                    <div id="board"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<?php echo $this->layout()->content; ?>

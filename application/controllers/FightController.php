@@ -25,7 +25,7 @@ class FightController extends Game_Controller_Action
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-            $this->attackModifier = 0;
+            $this->attackModifier = $this->getArmyAttackModifiers($army);
             if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
@@ -388,6 +388,20 @@ class FightController extends Game_Controller_Action
         $terrainType = $fields[$y/40][$x/40];
         $terrain = Application_Model_Board::getTerrain($terrainType, $canFly, $canSwim);
         return $terrain[1] + $movesRequiredToAttack;
+    }
+    
+    private function getArmyAttackModifiers($army){
+        $attackModifier = 0;
+        if(count($army['heroes']) > 0){
+            $attackModifier++;
+        }
+        foreach($army['soldiers'] as $soldier){
+            if($soldier['canFly']){
+                $attackModifier++;
+                break;
+            }
+        }
+        return $attackModifier;
     }
 }
 

@@ -90,6 +90,7 @@ class TurnController extends Game_Controller_Action {
                 }
                 if (!empty($armyId)) {
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->_namespace->player['playerId']);
+                    $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
                     $unitName = $modelBoard->getUnitName($castleProduction['production']);
                     if($castleProduction['production'] AND
                     $castle['production'][$unitName]['time'] <= $castleProduction['productionTurn']
@@ -120,6 +121,7 @@ class TurnController extends Game_Controller_Action {
             $resutl['costs'] = $costs;
             $resutl['income'] = $income;
             $resutl['armies'] = $array;
+            $resutl['castles'] = $castles;
             $resutl['gameover'] = 0;
             $this->view->response = Zend_Json::encode($resutl);
         }

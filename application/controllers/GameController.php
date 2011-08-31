@@ -4,9 +4,7 @@ class GameController extends Game_Controller_Action {
 
     public function _init() {
         /* Initialize action controller here */
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
+
 
 //        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
 //        $this->view->headScript()->appendFile('http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js');
@@ -19,6 +17,9 @@ class GameController extends Game_Controller_Action {
 
     public function indexAction() {
         // action body
+        if (empty($this->_namespace->gameId)) {
+            throw new Exception('Brak "gameId"!');
+        }
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if ($modelGame->isActive()) {
             $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
@@ -98,6 +99,16 @@ class GameController extends Game_Controller_Action {
         } else {
             throw new Exception('Game initialization error');
         }
+    }
+    
+    public function boardAction() {
+        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
+        $this->view->headScript()->prependFile('/js/jquery.min.js');
+
+        $this->view->headScript()->appendFile('/js/game/game.zoom.js');
+
+        $this->_helper->layout->setLayout('board');
     }
 
     public function testAction() {

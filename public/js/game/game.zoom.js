@@ -12,11 +12,7 @@ function zoom(zoomWidth, zoomHeight) {
     var smallimage = new Smallimage();
     var lens = new Lens();
     var largeimage = new Largeimage();
-    //preventing default click,allowing the onclick event [exmple: lightbox]
-/*    $(el).bind('click', function (e) {
-        e.preventDefault();
-        return false;
-    });*/
+
     $.extend(obj, {
         init: function () {
             //drag option
@@ -141,10 +137,23 @@ function zoom(zoomWidth, zoomHeight) {
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
         };
         this.setcenter = function (x, y) {
+//            console.log(el);
+//            console.log(x);
+//            console.log(y);
             this.node.top = (parseInt(y) - 315)/21;
 //            console.log(this.node.top);
             this.node.left = (parseInt(x) - 358)/21;
 //            console.log(this.node.left);
+            if(this.node.top > 103){
+                this.node.top = 103;
+            }else if(this.node.top < 0){
+                this.node.top = 0;
+            }
+            if(this.node.left > 179){
+                this.node.left = 179;
+            }else if(this.node.left < 0){
+                this.node.left = 0;
+            }
             this.node.css({
                 top: this.node.top,
                 left: this.node.left

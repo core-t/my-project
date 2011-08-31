@@ -30,7 +30,7 @@ $(document).ready(function() {
 //    $(window).load(function () {
         lWSC = new jws.jWebSocketJSONClient();
         login();
-        zoomer = new zoom(758, 670);
+        zoomer = new zoom(760, 670);
         setTimeout ( 'connect()', 1500 );
 //    });
     
@@ -157,7 +157,7 @@ function updatePlayers(color){
 
 function chat(color,msg){
     var chatWindow = $('#chatWindow div').append('<br/>').append(color+': '+msg);
-    var scroll = 110 - chatWindow[0].scrollHeight;
+    var scroll = 120 - chatWindow[0].scrollHeight;
     chatWindow.animate({'top':scroll},100);
     $('#msg').focus();
 }

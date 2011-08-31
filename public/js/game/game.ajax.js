@@ -42,6 +42,9 @@ function startMyTurnA() {
             for(i in result['armies']) {
                 players[my.color].armies[i] = new army(result['armies'][i], my.color);
             }
+            for(i in result.castles){
+                updateCastleCurrentProductionTurn(i, result.castles[i].productionTurn);
+            }
             unlock();
         }
     });

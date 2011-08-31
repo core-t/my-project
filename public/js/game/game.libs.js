@@ -228,6 +228,10 @@ function setMyCastleProduction(castleId){
     }
 }
 
+function updateCastleCurrentProductionTurn(castleId, productionTurn){
+    castles[castleId].currentProductionTurn = productionTurn;
+}
+
 function isEnemyCastle(x, y) {
     for(castleId in castles) {
         if(castles[castleId].color == my.color) {
@@ -597,6 +601,14 @@ function deleteArmyByPosition(x, y, color) {
 function armyFields(a){
     x = a.x/40;
     y = a.y/40;
+    if(typeof fields[y] == 'undefined'){
+        console.log('Y error');
+        return null;
+    }
+    if(typeof fields[y][x] == 'undefined'){
+        console.log('X error');
+        return null;
+    }
     fields[y][x] = a.fieldType;
 }
 
@@ -608,8 +620,8 @@ function changeArmyPosition(x, y, armyId, color) {
             left: x + 'px',
             top: y + 'px'
         },300);
-        players[color].armies['army'+armyId].x = x;
-        players[color].armies['army'+armyId].y = y;
+    }else{
+        console.log('Army undefined');
     }
 }
 

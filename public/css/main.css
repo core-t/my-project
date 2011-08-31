@@ -7,7 +7,8 @@ body {
     background: #000 url(../img/bg_0.jpg) repeat scroll top left;
     font-size: 11px;
     font-family:arial;
-    color:#6C6E6D;
+/*    color:#6C6E6D;*/
+    color:#878988;
     text-shadow:0 -1px 2px #111;
 }
 
@@ -93,7 +94,7 @@ a:hover {
     color:#111;
     text-shadow: none;
     background:#555;
-    border:1px solid #111;
+    border:1px solid #444;
     cursor:default;
 }
 
