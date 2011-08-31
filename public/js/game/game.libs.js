@@ -18,7 +18,7 @@ function towerCreate(towerId){
             top: towers[towerId].y + 'px',
             background:'url(../img/game/tower_'+towers[towerId].color+'.png) center center no-repeat'
         })
-    );
+        );
     $('#tower' + towerId).fadeIn(1);
 }
 
@@ -143,9 +143,13 @@ function createNeutralCastle(castleId) {
             left: castles[castleId].position.x + 'px',
             top: castles[castleId].position.y + 'px'
         })
-        .mouseover(function(){castleCursor(this.id)})
-        .mousemove(function(){castleCursor(this.id)})
-    );
+        .mouseover(function(){
+            castleCursor(this.id)
+            })
+        .mousemove(function(){
+            castleCursor(this.id)
+            })
+        );
     castleFields(castleId, 'e');
 }
 
@@ -172,7 +176,7 @@ function myCastleCursor(id){
 }
 
 function castleUpdate(data) {
-//    removeM();
+    //    removeM();
     zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
     if(data.razed){
         castles[data.castleId].razed = true;
@@ -198,9 +202,15 @@ function castleOwner(castleId, color) {
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
-        .mouseover(function() {myCastleCursor(this.id)})
-        .mousemove(function() {myCastleCursor(this.id)})
-        .click(function(){castleM(castleId, color)});
+        .mouseover(function() {
+            myCastleCursor(this.id)
+            })
+        .mousemove(function() {
+            myCastleCursor(this.id)
+            })
+        .click(function(){
+            castleM(castleId, color)
+            });
     } else {
         castleFields(castleId, 'e');
         castle
@@ -208,8 +218,12 @@ function castleOwner(castleId, color) {
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
-        .mouseover(function() {castleCursor(this.id)})
-        .mousemove(function() {castleCursor(this.id)})
+        .mouseover(function() {
+            castleCursor(this.id)
+            })
+        .mousemove(function() {
+            castleCursor(this.id)
+            })
     }
     castle.removeClass()
     .addClass('castle ' + color)
@@ -391,9 +405,15 @@ function army(obj, color, dontFade) {
     }
     this.element = $('<div>');
     if(color == my.color) { // moja armia
-        this.element.click(function(e) {myArmyClick(this, e)});
-        this.element.mouseover(function() {myArmyMouse(this.id)});
-        this.element.mousemove(function() {myArmyMouse(this.id)});
+        this.element.click(function(e) {
+            myArmyClick(this, e)
+            });
+        this.element.mouseover(function() {
+            myArmyMouse(this.id)
+            });
+        this.element.mousemove(function() {
+            myArmyMouse(this.id)
+            });
     } else { // nie moja armia
         fields[y][x] = 'e';
         enemyArmyMouse(this.element);
@@ -545,7 +565,7 @@ function unselectArmy() {
     if(parentArmy){
         joinSplitedArmy();
     }
-//    $('#info').html('');
+    //    $('#info').html('');
     $('#name').html('');
     $('#moves').html('');
     $('#attack').html('');
@@ -732,11 +752,15 @@ function walk(result) {
             top: result.path[i].y + 'px'
         },300,
         function(){
-            searchTower(result.path[i].x, result.path[i].y);
-            delete result.path[i];
-            walk(result);
-        }
-        );
+            if(typeof result.path[i] == 'undefined'){
+                console.log('coś tu niegra');
+                console.log(result);
+            }else{
+                searchTower(result.path[i].x, result.path[i].y);
+                delete result.path[i];
+                walk(result);
+            }
+        });
     }
 }
 

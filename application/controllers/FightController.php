@@ -25,7 +25,7 @@ class FightController extends Game_Controller_Action
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-            $this->attackModifier = $this->getArmyAttackModifiers($army);
+            $army = $this->getCombatModifiers($army);
             if($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
@@ -33,6 +33,7 @@ class FightController extends Game_Controller_Action
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji ('.$movesSpend.'>'.$army['movesLeft'].').');
             }
             $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
+            $enemy = $this->getCombatModifiers($enemy);
             if(Application_Model_Board::isTowerAtPosition($x, $y)){
                 $this->defenseModifier += 1;
             }
@@ -96,7 +97,7 @@ class FightController extends Game_Controller_Action
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                $this->attackModifier = 0;
+                $army = $this->getCombatModifiers($army);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
@@ -185,7 +186,7 @@ class FightController extends Game_Controller_Action
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                $this->attackModifier = 0;
+                $this->attackModifier = $this->getCombatModifiers($army);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
@@ -390,18 +391,38 @@ class FightController extends Game_Controller_Action
         return $terrain[1] + $movesRequiredToAttack;
     }
     
-    private function getArmyAttackModifiers($army){
-        $attackModifier = 0;
+    private function getCombatModifiers($army){
+        $heroExists = false;
+        $canFly = false;
         if(count($army['heroes']) > 0){
-            $attackModifier++;
+            $heroExists = true;
         }
         foreach($army['soldiers'] as $soldier){
             if($soldier['canFly']){
-                $attackModifier++;
+                $canFly = true;
                 break;
             }
         }
-        return $attackModifier;
+        if($canFly){
+            foreach($army['heroes'] as $k=>$hero){
+                $army['heroes'][$k]['attackPoints']++;
+                $army['heroes'][$k]['defensePoints']++;
+            }
+            foreach($army['soldiers'] as $k=>$soldier){
+                if($soldier['canFly']){
+                    continue;
+                }
+                $army['soldiers'][$k]['attackPoints']++;
+                $army['soldiers'][$k]['defensePoints']++;
+            }
+        }
+        if($heroExists){
+            foreach($army['soldiers'] as $k=>$soldier){
+                $army['soldiers'][$k]['attackPoints']++;
+                $army['soldiers'][$k]['defensePoints']++;
+            }
+        }
+        return $army;
     }
 }
 
