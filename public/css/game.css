@@ -60,9 +60,9 @@
 
 .zoomPad{
     float:left;
-    border:1px solid #555;
-    width:203px;
-    height:128px;
+/*    border:1px solid #555;*/
+/*    width:203px;*/
+    height:0;
     position:relative;
     left:0;
     top:0px;
@@ -87,8 +87,8 @@
 
 #map {
     position: inherit;
-    top: -33px;
-    left: 1px;
+    top: -32px;
+    left: 0;
 }
 
 .zoomWindow{
@@ -98,15 +98,15 @@
     background:#000;
     display:block;
     overflow:hidden;
-    width: 758px;
+    width: 760px;
     height: 670px;
-    border:1px solid #000;
+/*    border:1px solid #000;*/
     clear:both;
 }
 
 #gameMenu {
     float:right;
-    height:129px;
+    height:130px;
 }
 
 #gameMenu span{
@@ -222,6 +222,7 @@
     position:relative;
     left:280px;
     top:50px;
+    
 }
 
 .message h3 {
@@ -242,6 +243,7 @@
 
 .message .production {
     background: #CECECE;
+    text-shadow:none;
 }
 
 .message .production .unit {
@@ -286,9 +288,8 @@
 }
 
 .message p.h{
-    height:26px;
-    background:#CECECE;
-    border-bottom:1px solid #555;
+    line-height:24px;
+/*    border-bottom:1px solid #555;*/
 }
 
 .message .split p{
@@ -296,7 +297,7 @@
 }
 
 .message p{
-    height:23px;
+    height:24px;
 }
 
 #gameMenu .message .button{
@@ -388,7 +389,7 @@
 }
 
 #goldBox div .text-right{
-    color:#eee;
+    color:yellow;
 }
 
 #nameBox{

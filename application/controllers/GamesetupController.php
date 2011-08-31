@@ -55,7 +55,7 @@ class GamesetupController extends Game_Controller_Action {
                 $armyId = $modelArmy->createArmy(
                         $startPositions[$this->_namespace->player['color']]['position'],
                         $this->_namespace->player['playerId']);
-                $res = $modelArmy->addHeroToArmy($armyId, $playerHeroes[0]['heroId']);
+                $res = $modelArmy->addHeroToGame($armyId, $playerHeroes[0]['heroId']);
                 switch ($res) {
                     case 1:
                         $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);

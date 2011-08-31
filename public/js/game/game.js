@@ -198,7 +198,7 @@ function terrain(){
     board.after(
         $('<div>')
         .addClass('terrain')
-        .append('Terrain: ')
+        .append(' Terrain: ')
         .append(
             $('<span>').attr('id','coord')
         )

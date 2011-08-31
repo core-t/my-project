@@ -29,6 +29,8 @@
                 .append($('<td>').html(result[i].numberOfPlayers))
                 .append($('<td>').html(result[i].begin.split('.')[0]))
                 .bind('click', { gameId: result[i].gameId }, makeUrl)
+                .mouseover(function(){$(this).css('background','transparent url(../img/nav_bg.png) repeat')})
+                .mouseleave(function(){$(this).css('background','transparent')})
             );
                 $('#mygames td').mouseover(function(){
                     $('#mygames td').css('cursor', 'pointer')

@@ -45,7 +45,7 @@ class GamesetupajaxController extends Game_Controller_Action {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if ($modelGame->isGameMaster($this->_namespace->player['playerId'])) {
             $modelGame->startGame();
-            $modelGame->setFirstTurnPlayerId();
+//            $modelGame->setFirstTurnPlayerId();
         }
     }
 

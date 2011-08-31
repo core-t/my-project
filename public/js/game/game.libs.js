@@ -137,7 +137,7 @@ function createNeutralCastle(castleId) {
         .addClass('castle')
         .attr({
             id: 'castle' + castleId,
-            title: castles[castleId].name
+            title: castles[castleId].name+'('+castles[castleId].defense+')'
         })
         .css({
             left: castles[castleId].position.x + 'px',
