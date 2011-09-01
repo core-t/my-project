@@ -93,7 +93,6 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
                     ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"armyId" = ?', $armyId)
                     ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
             if($in) {
                 $select->where('"' . $this->_primary . '" IN (?)', new Zend_Db_Expr($armyId));

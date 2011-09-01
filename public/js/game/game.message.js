@@ -151,6 +151,76 @@ function splitArmyM(a){
     var numberOfUnits = 0;
     for(i in selectedArmy.soldiers) {
         var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+        numberOfUnits++;
+        army.append(
+            $('<div>')
+            .addClass('row')
+            .append($('<span>').addClass('nr').html(numberOfUnits))
+            .append(
+                $('<img>').attr({
+                    'src':'/img/game/' + img + '_' + selectedArmy.color + '.png',
+                    'id':'unit'+selectedArmy.soldiers[i].soldierId
+                })
+            )
+            .append($('<span>').html(' Moves left: '+selectedArmy.soldiers[i].movesLeft+' '))
+            .append($('<div>').addClass('right').html($('<input>').attr({
+                type:'checkbox',
+                name:'soldierId',
+                value:selectedArmy.soldiers[i].soldierId
+            })))
+        );
+    }
+    for(i in selectedArmy.heroes) {
+        numberOfUnits++;
+        army.append(
+            $('<div>')
+            .addClass('row')
+            .append($('<span>').html(numberOfUnits))
+            .append(
+                $('<img>').attr({
+                    'src':'/img/game/hero_' + selectedArmy.color + '.png',
+                    'id':'hero'+selectedArmy.heroes[i].heroId
+                })
+            )
+            .append($('<span>').html(' Moves left: '+selectedArmy.heroes[i].movesLeft+' '))
+            .append($('<div>').addClass('right').html($('<input>').attr({
+                type:'checkbox',
+                name:'heroId',
+                value:selectedArmy.heroes[i].heroId
+            })))
+        );
+    }
+    var height = numberOfUnits * 30 + 32;
+    mElement().after(
+        $('<div>')
+        .addClass('message')
+        .append(army)
+        .append(
+            $('<div>')
+            .css({'height':'28px','padding':'0 2px'})
+            .append(
+                $('<div>').addClass('left')
+                .append($('<a>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
+            )
+            .append(
+                $('<div>').addClass('right')
+                .append($('<a>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
+            )
+        )
+        .css('min-height',height+'px')
+    );
+
+}
+
+function armyStatusM(){
+    if(typeof selectedArmy == 'undefined'){
+        return null;
+    }
+    removeM();
+    var army = $('<div>').addClass('split');
+    var numberOfUnits = 0;
+    for(i in selectedArmy.soldiers) {
+        var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
         army.append(
             $('<p>')
             .append(
@@ -159,7 +229,10 @@ function splitArmyM(a){
                     'id':'unit'+selectedArmy.soldiers[i].soldierId
                 })
             )
-            .append(' Moves left: '+selectedArmy.soldiers[i].movesLeft+' ')
+            .append(' Current moves left: '+selectedArmy.soldiers[i].movesLeft+' ')
+            .append(' Moves when: '+selectedArmy.soldiers[i].moves+' ')
+            .append(' Attack points: '+selectedArmy.soldiers[i].attackPoints+' ')
+            .append(' Defense points: '+selectedArmy.soldiers[i].defensePoints+' ')
             .append($('<input>').attr({
                 type:'checkbox',
                 name:'soldierId',
@@ -186,7 +259,6 @@ function splitArmyM(a){
         );
         numberOfUnits++;
     }
-    var height = numberOfUnits * 31 + 32;
     mElement().after(
         $('<div>')
         .addClass('message')
@@ -203,9 +275,7 @@ function splitArmyM(a){
                 .append($('<a>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
             )
         )
-        .css('min-height',height+'px')
     );
-
 }
 
 function castleM(castleId, color){
@@ -307,8 +377,18 @@ function castleM(castleId, color){
         }
     }
     if(resurrection){
+        var buttonResurestion;
+        var cssResurestion;
+        if($('#gold').html() < 100){
+            buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection');
+            cssResurestion = {'color':'#d00000'};
+        }else{
+            buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection').click(function(){heroResurrectionA(castleId)});
+            cssResurestion = {};
+        }
         resurrectionElement = $('<p>')
         .addClass('h')
+        .css(cssResurestion)
         .append(
             $('<input>').attr({
                 type:'checkbox',
@@ -317,7 +397,7 @@ function castleM(castleId, color){
             })
         )
         .append(' cost 100g')
-        .append($('<div>').addClass('button right').html('Hero resurrection').click(function(){heroResurrectionA(castleId)}));
+        .append(buttonResurestion);
     }
     var height = 62 + k*54 + 96;
     mElement().after(

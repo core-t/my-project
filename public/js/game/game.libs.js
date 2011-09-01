@@ -546,6 +546,7 @@ function selectArmy(a) {
     $('#attack').html(a.attack);
     $('#defense').html(a.defense);
     $('#splitArmy').removeClass('buttonOff');
+    $('#armyStatus').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
     $('#skipArmy').removeClass('buttonOff');
     selectedArmy = a;
@@ -582,6 +583,7 @@ function tmpUnselectArmy() {
     selectedArmy = null;
     $('.path').remove();
     $('#splitArmy').addClass('buttonOff');
+    $('#armyStatus').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');

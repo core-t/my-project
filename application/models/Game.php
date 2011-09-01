@@ -7,7 +7,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     protected $_sequence = "game_gameId_seq";
     protected $_db;
     protected $_id;
-    protected $_playerColors = array('white', 'green', 'yellow', 'red', 'orange');
+    protected $_playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
     public function __construct($gameId = 0) {
         $this->_gameId = $gameId;
