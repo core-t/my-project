@@ -111,6 +111,7 @@ class FightController extends Game_Controller_Action
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 if ($modelCastle->isEnemyCastle($castleId, $this->_namespace->player['playerId'])) {
                     $enemy = $modelArmy->getAllUnitsFromCastlePosition($castle['position']);
+                    $enemy = $this->getCombatModifiers($enemy);
                     $this->defenseModifier += $castle['defensePoints'];
 //                    $this->defenseModifier += $modelCastle->getCastleDefenseModifier($castleId);
                     $this->battle($army, $enemy);
@@ -404,10 +405,6 @@ class FightController extends Game_Controller_Action
             }
         }
         if($canFly){
-            foreach($army['heroes'] as $k=>$hero){
-                $army['heroes'][$k]['attackPoints']++;
-                $army['heroes'][$k]['defensePoints']++;
-            }
             foreach($army['soldiers'] as $k=>$soldier){
                 if($soldier['canFly']){
                     continue;

@@ -24,6 +24,8 @@ var cursorDirection;
 var documentTitle = document.title;
 var timeoutId = null;
 
+var enemyArmiesPositions = new Array();
+
 $(document).ready(function() {
         terrain();
 
@@ -203,4 +205,56 @@ function terrain(){
             $('<span>').attr('id','coord')
         )
     );
+}
+
+function test(){
+    var all = 0;
+    $('.path').remove();
+    for(y in fields){
+        for(x in fields[y]){
+            if(fields[y][x] == 'e'){
+                var pX = x*40;
+                var pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html('e')
+                );
+            }else if(!fields[y][x]){
+                var pX = x*40;
+                var pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html('X')
+                );
+            }else if(all){
+                var pX = x*40;
+                var pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html(fields[y][x])
+                );
+            }
+        }
+    }
 }

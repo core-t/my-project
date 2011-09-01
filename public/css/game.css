@@ -132,6 +132,7 @@
 #gameMenu .button{
     line-height:12px;
     padding:1px;
+    margin:1px;
     background: #800;
     color:#fff;
 }
@@ -195,14 +196,14 @@
 }
 #armyButtonsBox div.armyButtons {
     clear:both;
-    margin:2px;
+/*    margin:2px;*/
     text-align:center;
 /*    width:50px;*/
-/*    height:17px;*/
+    height:18px;
 }
 
 #armyButtonsBox div div.armyButton{
-    width:83px;
+/*    width:83px;*/
 }
 
 .path {
@@ -335,7 +336,31 @@
     left:0px;
 }
 
-.message .split div.row img{
+.message .status div.row{
+    background:#555;
+    clear:both;
+    height:55px;
+    border-left:1px solid #444;
+    border-right:1px solid #444;
+    border-top:1px solid #444;
+}
+
+.message .status div.row div{
+    width:200px;
+    height:55px;
+}
+
+.message .status div.row div p{
+    height:14px;
+}
+
+.message .status div.row span.nr{
+    position:relative;
+    top:-17px;
+    left:2px;
+}
+
+.message .status div.row img{
     margin:1px 12px;
 }
 

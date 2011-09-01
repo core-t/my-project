@@ -22,6 +22,15 @@ function towerCreate(towerId){
     $('#tower' + towerId).fadeIn(1);
 }
 
+function isTowerAtPosition(x, y){
+    for(towerId in towers){
+        if(towers[towerId].x == x && towers[towerId].y == y){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 function searchTower(x, y){
     for(towerId in towers){
         if(towers[towerId].x == x && towers[towerId].y == y){
@@ -259,6 +268,18 @@ function isEnemyCastle(x, y) {
     return false;
 }
 
+function getMyCastleDefenseFromPosition(x, y) {
+    for(castleId in castles) {
+        if(castles[castleId].color == my.color) {
+            var pos = castles[castleId].position;
+            if((x >= pos.x) && (x < (pos.x + 80)) && (y >= pos.y) && (y < (pos.y + 80))) {
+                return castles[castleId].defense;
+            }
+        }
+    }
+    return 0;
+}
+
 function showFirstCastle() {
     var sp = $('.castle.' + turn.color);
     zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
@@ -316,11 +337,11 @@ function army(obj, color, dontFade) {
     this.y = position[1];
     var x = this.x/40;
     var y = this.y/40;
-    this.fieldType = fields[y][x];
     deleteArmyByPosition(this.x, this.y, color);
     if(typeof $('#army'+obj.armyId) != 'undefined') {
         $('#army'+obj.armyId).remove();
     }
+    this.flyBonus = 0;
     this.canFly = 1;
     this.canSwim = 0;
     this.heroes = obj.heroes;
@@ -375,6 +396,9 @@ function army(obj, color, dontFade) {
         }
         if(this.soldiers[soldier].canFly){
             this.canFly++;
+            if(!this.flyBonus){
+                this.flyBonus = 1;
+            }
         }else{
             this.canFly -= 200;
         }
@@ -415,6 +439,11 @@ function army(obj, color, dontFade) {
             myArmyMouse(this.id)
             });
     } else { // nie moja armia
+        if(fields[y][x] != 'e'){
+            this.fieldType = fields[y][x];
+        }else{
+            console.log('nie mogę ustawić fieldType');
+        }
         fields[y][x] = 'e';
         enemyArmyMouse(this.element);
     }
@@ -621,6 +650,10 @@ function deleteArmyByPosition(x, y, color) {
 }
 
 function armyFields(a){
+    if(a.color == my.color){
+        console.log('my color');
+        return null;
+    }
     x = a.x/40;
     y = a.y/40;
     if(typeof fields[y] == 'undefined'){
@@ -631,7 +664,15 @@ function armyFields(a){
         console.log('X error');
         return null;
     }
-    fields[y][x] = a.fieldType;
+    if(typeof a.fieldType == 'undefined'){
+        console.log('fieldType undefined');
+        return null;
+    }
+    if(isEnemyCastle(a.x, a.y) !== false){
+        fields[y][x] = 'e';
+    }else{
+        fields[y][x] = a.fieldType;
+    }
 }
 
 function changeArmyPosition(x, y, armyId, color) {

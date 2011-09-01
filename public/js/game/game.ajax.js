@@ -227,6 +227,8 @@ function getPlayerArmiesA(color){
 
 function joinArmyA(armyId1, armyId2){
     $.getJSON(urlJoinArmy+'/aid1/'+armyId1+'/aid2/'+armyId2, function(result) {
+        console.log(players[my.color].armies['army'+armyId1]);
+        console.log(players[my.color].armies['army'+armyId2]);
         unsetParentArmy();
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         wsArmy(result.armyId, true);

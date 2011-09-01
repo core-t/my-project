@@ -175,7 +175,7 @@ function splitArmyM(a){
         army.append(
             $('<div>')
             .addClass('row')
-            .append($('<span>').html(numberOfUnits))
+            .append($('<span>').addClass('nr').html(numberOfUnits))
             .append(
                 $('<img>').attr({
                     'src':'/img/game/hero_' + selectedArmy.color + '.png',
@@ -216,34 +216,59 @@ function armyStatusM(){
     if(typeof selectedArmy == 'undefined'){
         return null;
     }
+    console.log(selectedArmy);
     removeM();
-    var army = $('<div>').addClass('split');
+    var army = $('<div>').addClass('status');
     var numberOfUnits = 0;
+    var bonusTower = 0;
+    var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
+    if(isTowerAtPosition(selectedArmy.x, selectedArmy.y)){
+        bonusTower = 1;
+    }
     for(i in selectedArmy.soldiers) {
+        numberOfUnits++;
         var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+        var attackPoints = $('<p>').html('Attack points: '+selectedArmy.soldiers[i].attackPoints);
+        var defensePoints = $('<p>').html('Defense points: '+selectedArmy.soldiers[i].defensePoints);
+        if(selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly){
+            attackPoints.append($('<span>').html(' +1').css('color','#d00000'));
+            defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
+        }
+        if(selectedArmy.heroKey){
+            attackPoints.append($('<span>').html(' +1').css('color','#d00000'));
+            defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
+        }
+        if(bonusTower){
+            defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
+        }
+        if(castleDefense){
+            defensePoints.append($('<span>').html(' +'+castleDefense).css('color','#d00000'));
+        }
         army.append(
-            $('<p>')
+            $('<div>')
+            .addClass('row')
+            .append($('<span>').addClass('nr').html(numberOfUnits))
             .append(
                 $('<img>').attr({
                     'src':'/img/game/' + img + '_' + selectedArmy.color + '.png',
                     'id':'unit'+selectedArmy.soldiers[i].soldierId
                 })
             )
-            .append(' Current moves left: '+selectedArmy.soldiers[i].movesLeft+' ')
-            .append(' Moves when: '+selectedArmy.soldiers[i].moves+' ')
-            .append(' Attack points: '+selectedArmy.soldiers[i].attackPoints+' ')
-            .append(' Defense points: '+selectedArmy.soldiers[i].defensePoints+' ')
-            .append($('<input>').attr({
-                type:'checkbox',
-                name:'soldierId',
-                value:selectedArmy.soldiers[i].soldierId
-            }))
+            .append(
+                $('<div>').addClass('right')
+                .append($('<p>').html('Current moves: '+selectedArmy.soldiers[i].movesLeft))
+                .append($('<p>').html('Default moves: '+selectedArmy.soldiers[i].numberOfMoves))
+                .append(attackPoints)
+                .append(defensePoints)
+            )
         );
-        numberOfUnits++;
     }
     for(i in selectedArmy.heroes) {
+        numberOfUnits++;
         army.append(
-            $('<p>')
+            $('<div>')
+            .addClass('row')
+            .append($('<span>').addClass('nr').html(numberOfUnits))
             .append(
                 $('<img>').attr({
                     'src':'/img/game/hero_' + selectedArmy.color + '.png',
@@ -251,30 +276,16 @@ function armyStatusM(){
                 })
             )
             .append(' Moves left: '+selectedArmy.heroes[i].movesLeft+' ')
-            .append($('<input>').attr({
-                type:'checkbox',
-                name:'heroId',
-                value:selectedArmy.heroes[i].heroId
-            }))
+
         );
-        numberOfUnits++;
     }
+    var height = numberOfUnits * 56 + 26;
     mElement().after(
         $('<div>')
         .addClass('message')
         .append(army)
-        .append(
-            $('<div>')
-            .css({'height':'28px','padding':'0 2px'})
-            .append(
-                $('<div>').addClass('left')
-                .append($('<a>').addClass('button cancel').html('Cancel').click(function(){removeM()}))
-            )
-            .append(
-                $('<div>').addClass('right')
-                .append($('<a>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
-            )
-        )
+        .append($('<div>').addClass('button cancel').html('Ok').click(function(){removeM()}))
+        .css('min-height',height+'px')
     );
 }
 
