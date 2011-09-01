@@ -114,7 +114,8 @@
     $('#turnNumber').html(turn.nr);
     $('#nextTurn').click(function(){nextTurnM()});
     $('#nextArmy').click(function(){findNextArmy()});
-    $('#skipArmy').click(function(){skipArmy(this.id)});
+    $('#skipArmy').click(function(){skipArmy()});
+    $('#quitArmy').click(function(){quitArmy()});
     $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
     $('#armyStatus').click(function(){if(selectedArmy){armyStatusM()}});
     $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});
@@ -123,6 +124,7 @@
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');
+    $('#quitArmy').addClass('buttonOff');
     $('#splitArmy').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');

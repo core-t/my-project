@@ -238,7 +238,7 @@
     position:relative;
     left:280px;
     top:50px;
-    
+    overflow-x: hidden;
 }
 
 .message h3 {
@@ -310,7 +310,7 @@
 .message .split div.row{
     background:#555;
     clear:both;
-    height:30px;
+    height:31px;
     border-left:1px solid #444;
     border-right:1px solid #444;
     border-top:1px solid #444;
@@ -324,15 +324,32 @@
     left:9px;
 }
 
-.message .split div.row span.nr{
+.message .split div.row div.nr{
     position:relative;
-    top:-17px;
+    top:2px;
     left:2px;
+    width:20px;
+    height:15px;
+    float:left;
+    display: block;
 }
 
 .message .split div.row span{
     position:relative;
-    top:-1px;
+    top:17px;
+    left:0px;
+}
+
+.message .split div.row img{
+    margin:1px 12px;
+}
+
+.message .split div.row div.img{
+    width:50px;
+    height:30px;
+    float:left;
+    position:relative;
+    top:0px;
     left:0px;
 }
 
@@ -346,22 +363,38 @@
 }
 
 .message .status div.row div{
-    width:200px;
+/*    width:180px;*/
     height:55px;
+    position:relative;
+    top:0px;
+    left:0px;
 }
 
 .message .status div.row div p{
     height:14px;
 }
 
-.message .status div.row span.nr{
+.message .status div.row div.nr{
     position:relative;
-    top:-17px;
+    top:2px;
     left:2px;
+    width:20px;
+    height:15px;
+    float:left;
+    display: block;
 }
 
 .message .status div.row img{
-    margin:1px 12px;
+    margin:10px 5px;
+}
+
+.message .status div.row div.img{
+    width:43px;
+    height:30px;
+    float:left;
+    position:relative;
+    top:0px;
+    left:0px;
 }
 
 .message p{

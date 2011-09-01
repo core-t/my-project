@@ -422,7 +422,7 @@ function army(obj, color, dontFade) {
         this.attack = attack;
         this.defense = defense;
     } else {
-        console.log('Armia nie posiada jednostek.');
+        console.log('Armia nie posiada jednostek:');
         console.log(obj);
         delete players[color].armies[obj.armyId];
         return null;
@@ -442,7 +442,8 @@ function army(obj, color, dontFade) {
         if(fields[y][x] != 'e'){
             this.fieldType = fields[y][x];
         }else{
-            console.log('nie mogę ustawić fieldType');
+            console.log('nie mogę ustawić fieldType:');
+            console.log(obj);
         }
         fields[y][x] = 'e';
         enemyArmyMouse(this.element);
@@ -569,6 +570,10 @@ function selectArmy(a) {
     if(index != -1){
         skippedArmies.splice(index,1);
     }
+    index = $.inArray( a.armyId, quitedArmies );
+    if(index != -1){
+        quitedArmies.splice(index,1);
+    }
     $('#army' + a.armyId).css('border','1px solid #ccc');
     $('#name').html(a.name);
     $('#moves').html(a.moves);
@@ -578,6 +583,7 @@ function selectArmy(a) {
     $('#armyStatus').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
     $('#skipArmy').removeClass('buttonOff');
+    $('#quitArmy').removeClass('buttonOff');
     selectedArmy = a;
     if(typeof selectedArmy.heroKey != 'undefined' && inRuins()){
         $('#searchRuins').removeClass('buttonOff');
@@ -614,6 +620,7 @@ function tmpUnselectArmy() {
     $('#splitArmy').addClass('buttonOff');
     $('#armyStatus').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');
+    $('#quitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     removeM();
@@ -665,7 +672,8 @@ function armyFields(a){
         return null;
     }
     if(typeof a.fieldType == 'undefined'){
-        console.log('fieldType undefined');
+        console.log('fieldType undefined:');
+        console.log(a);
         return null;
     }
     if(isEnemyCastle(a.x, a.y) !== false){
@@ -727,6 +735,9 @@ function findNextArmy() {
         if($.inArray( players[my.color].armies[i].armyId, skippedArmies ) != -1){
             continue;
         }
+        if($.inArray( players[my.color].armies[i].armyId, quitedArmies ) != -1){
+            continue;
+        }
         if(nextArmySelected) {
             nextArmy = i;
             var reset = false;
@@ -768,6 +779,19 @@ function skipArmy(){
     }
 }
 
+function quitArmy(){
+    if(!my.turn){
+        return null;
+    }
+    if(lock) {
+        return null;
+    }
+    if(selectedArmy){
+        quitedArmies.push(selectedArmy.armyId);
+        unselectArmy();
+        findNextArmy();
+    }
+}
 
 function walk(result) {
     for(i in result.path) {
@@ -888,7 +912,7 @@ function getVectorLength(x1, y1, x2, y2) {
 
 function setCursorArrow(dir){
     if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png) center center, crosshair');
         cursorDirection = dir;
     //         console.log(cursorDirection);
     }

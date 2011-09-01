@@ -155,13 +155,13 @@ function splitArmyM(a){
         army.append(
             $('<div>')
             .addClass('row')
-            .append($('<span>').addClass('nr').html(numberOfUnits))
-            .append(
+            .append($('<div>').addClass('nr').html(numberOfUnits))
+            .append($('<div>').addClass('img').html(
                 $('<img>').attr({
                     'src':'/img/game/' + img + '_' + selectedArmy.color + '.png',
                     'id':'unit'+selectedArmy.soldiers[i].soldierId
                 })
-            )
+            ))
             .append($('<span>').html(' Moves left: '+selectedArmy.soldiers[i].movesLeft+' '))
             .append($('<div>').addClass('right').html($('<input>').attr({
                 type:'checkbox',
@@ -175,13 +175,13 @@ function splitArmyM(a){
         army.append(
             $('<div>')
             .addClass('row')
-            .append($('<span>').addClass('nr').html(numberOfUnits))
-            .append(
+            .append($('<div>').addClass('nr').html(numberOfUnits))
+            .append($('<div>').addClass('img').html(
                 $('<img>').attr({
                     'src':'/img/game/hero_' + selectedArmy.color + '.png',
                     'id':'hero'+selectedArmy.heroes[i].heroId
                 })
-            )
+            ))
             .append($('<span>').html(' Moves left: '+selectedArmy.heroes[i].movesLeft+' '))
             .append($('<div>').addClass('right').html($('<input>').attr({
                 type:'checkbox',
@@ -190,7 +190,13 @@ function splitArmyM(a){
             })))
         );
     }
-    var height = numberOfUnits * 30 + 32;
+    var height = numberOfUnits * 31 + 38;
+    if(height > 561){
+        height = 561;
+        overflow = 'scroll';
+    }else{
+        overflow = 'hidden';
+    }
     mElement().after(
         $('<div>')
         .addClass('message')
@@ -207,7 +213,11 @@ function splitArmyM(a){
                 .append($('<a>').addClass('button submit').html('Select units').click(function(){splitArmyA(selectedArmy.armyId)}))
             )
         )
-        .css('min-height',height+'px')
+        .css({
+            'min-height':height+'px',
+            'height':height+'px',
+            'overflow-y':overflow
+        })
     );
 
 }
@@ -228,8 +238,8 @@ function armyStatusM(){
     for(i in selectedArmy.soldiers) {
         numberOfUnits++;
         var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
-        var attackPoints = $('<p>').html('Attack points: '+selectedArmy.soldiers[i].attackPoints);
-        var defensePoints = $('<p>').html('Defense points: '+selectedArmy.soldiers[i].defensePoints);
+        var attackPoints = $('<p>').html(selectedArmy.soldiers[i].attackPoints).css('color','#da8');
+        var defensePoints = $('<p>').html(selectedArmy.soldiers[i].defensePoints).css('color','#da8');
         if(selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly){
             attackPoints.append($('<span>').html(' +1').css('color','#d00000'));
             defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
@@ -247,17 +257,24 @@ function armyStatusM(){
         army.append(
             $('<div>')
             .addClass('row')
-            .append($('<span>').addClass('nr').html(numberOfUnits))
-            .append(
+            .append($('<div>').addClass('nr').html(numberOfUnits))
+            .append($('<div>').addClass('img').html(
                 $('<img>').attr({
                     'src':'/img/game/' + img + '_' + selectedArmy.color + '.png',
                     'id':'unit'+selectedArmy.soldiers[i].soldierId
                 })
+            ))
+            .append(
+                $('<div>').addClass('left')
+                .append($('<p>').html('Current moves: '))
+                .append($('<p>').html('Default moves: '))
+                .append($('<p>').html('Attack points: '))
+                .append($('<p>').html('Defense points: '))
             )
             .append(
-                $('<div>').addClass('right')
-                .append($('<p>').html('Current moves: '+selectedArmy.soldiers[i].movesLeft))
-                .append($('<p>').html('Default moves: '+selectedArmy.soldiers[i].numberOfMoves))
+                $('<div>').addClass('left')
+                .append($('<p>').html(selectedArmy.soldiers[i].movesLeft).css('color','#da8'))
+                .append($('<p>').html(selectedArmy.soldiers[i].numberOfMoves).css('color','#da8'))
                 .append(attackPoints)
                 .append(defensePoints)
             )
@@ -265,6 +282,14 @@ function armyStatusM(){
     }
     for(i in selectedArmy.heroes) {
         numberOfUnits++;
+        var attackPoints = $('<p>').html('Attack points: '+selectedArmy.heroes[i].attackPoints);
+        var defensePoints = $('<p>').html('Defense points: '+selectedArmy.heroes[i].defensePoints);
+        if(bonusTower){
+            defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
+        }
+        if(castleDefense){
+            defensePoints.append($('<span>').html(' +'+castleDefense).css('color','#d00000'));
+        }
         army.append(
             $('<div>')
             .addClass('row')
@@ -275,17 +300,33 @@ function armyStatusM(){
                     'id':'hero'+selectedArmy.heroes[i].heroId
                 })
             )
-            .append(' Moves left: '+selectedArmy.heroes[i].movesLeft+' ')
+            .append(
+                $('<div>').addClass('right')
+                .append($('<p>').html('Current moves: '+selectedArmy.heroes[i].movesLeft))
+                .append($('<p>').html('Default moves: '+selectedArmy.heroes[i].numberOfMoves))
+                .append(attackPoints)
+                .append(defensePoints)
+            )
 
         );
     }
     var height = numberOfUnits * 56 + 26;
+    if(height > 561){
+        height = 561;
+        overflow = 'auto';
+    }else{
+        overflow = 'hidden';
+    }
     mElement().after(
         $('<div>')
         .addClass('message')
         .append(army)
         .append($('<div>').addClass('button cancel').html('Ok').click(function(){removeM()}))
-        .css('min-height',height+'px')
+        .css({
+            'min-height':height+'px',
+            'height':height+'px',
+            'overflow':overflow
+        })
     );
 }
 
