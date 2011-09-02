@@ -7,6 +7,8 @@ class NewController extends Game_Controller_Action
     {
         /* Initialize action controller here */
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
+        new Application_View_Helper_Logout($this->view, $this->_namespace->player);
+        new Application_View_Helper_Menu($this->view, null);
     }
 
     public function indexAction()

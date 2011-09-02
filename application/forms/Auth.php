@@ -13,7 +13,8 @@ class Application_Form_Auth extends Zend_Form {
         ));
         $this->addElement('password', 'password', array(
             'label' => 'Password',
-            'required' => true
+            'required' => true,
+            'filters' => array('StringTrim')
         ));
         $this->addElement('submit', 'submit', array('label' => 'Login'));
     }

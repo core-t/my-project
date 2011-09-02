@@ -11,13 +11,31 @@ class EditorController extends Game_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jWebSocket.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jwsChannelPlugIn.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/index.websocket.js');
+        new Application_View_Helper_Logout($this->view, $this->_namespace->player);
+        new Application_View_Helper_Menu($this->view, null);
+        
     }
 
     public function indexAction()
     {
         // action body
+        if ($this->_namespace->mapId) {
+            unset($this->_namespace->mapId);
+        }
     }
 
+    public function createAction() {
+        $this->view->form = new Application_Form_Createmap ();
+        if ($this->_request->isPost()) {
+            if ($this->view->form->isValid($this->_request->getPost())) {
+                $modelMap = new Application_Model_Map ();
+                $mapId = $modelMap->createMap($this->view->form->getValues(), $this->_namespace->player['playerId']);
+                if($mapId){
+                    $this->_helper->redirector('index', 'gamesetup', null, array('mapId' => $mapId));
+                }
+            }
+        }
+    }
 
 }
 

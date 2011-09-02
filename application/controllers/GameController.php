@@ -12,6 +12,7 @@ class GameController extends Game_Controller_Action {
 //        $this->view->headScript()->appendFile('http://jquery-websocket.googlecode.com/files/jquery.websocket-0.0.1.js');
 //         $this->view->headScript()->appendFile('/js/jquery.websocket-0.0.1.js');
 //        $this->view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js');
+        new Application_View_Helper_Logout($this->view, $this->_namespace->player);
 
     }
 
