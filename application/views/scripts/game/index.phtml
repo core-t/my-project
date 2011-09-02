@@ -78,6 +78,7 @@
     var urlTowerAdd = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'add')) ?>';
     var urlTowerGet = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'get')) ?>';
     <?php $this->headScript()->captureEnd() ?>
+    var zoomPad = $(".zoomPad");
     var board = $("#board")
     .mousedown(function(event) {
         if(lock) {

@@ -140,9 +140,9 @@ function zoom(zoomWidth, zoomHeight) {
 //            console.log(el);
 //            console.log(x);
 //            console.log(y);
-            this.node.top = (parseInt(y) - 315)/21;
+            this.node.top = (parseInt(y) - 340)/20;
 //            console.log(this.node.top);
-            this.node.left = (parseInt(x) - 358)/21;
+            this.node.left = (parseInt(x) - 380)/20;
 //            console.log(this.node.left);
             if(this.node.top > 103){
                 this.node.top = 103;

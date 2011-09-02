@@ -32,51 +32,46 @@ function isTowerAtPosition(x, y){
 }
 
 function searchTower(x, y){
+    var stop = 0;
     for(towerId in towers){
         if(towers[towerId].x == x && towers[towerId].y == y){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y-40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y-40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y-40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y+40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y+40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y+40)){
-            if(changeMyTower(x, y, towerId)){
-                break;
-            }
+            changeMyTower(x, y, towerId);
+            stop = 1;
+        }
+        if(stop){
+            break;
         }
     }    
 }
@@ -160,6 +155,16 @@ function createNeutralCastle(castleId) {
             })
         );
     castleFields(castleId, 'e');
+    mX = castles[castleId].position.x/20;
+    mY = castles[castleId].position.y/20;
+    zoomPad.append(
+        $('<div>').css({
+            'left':mX + 'px',
+            'top':mY + 'px'
+        })
+        .attr('id','c'+castleId)
+        .addClass('c')
+    );
 }
 
 function castleCursor(id){
@@ -207,7 +212,7 @@ function castleOwner(castleId, color) {
     if(color == my.color) {
         castleFields(castleId, 'c');
         castle
-        .css('z-index', 100)
+        .css('z-index', 10)
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
@@ -223,7 +228,7 @@ function castleOwner(castleId, color) {
     } else {
         castleFields(castleId, 'e');
         castle
-        .css('z-index', 600)
+        .css('z-index', 202)
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('click')
@@ -239,8 +244,8 @@ function castleOwner(castleId, color) {
     .html('')
     .css('background', 'url(../img/game/castle_'+color+'.png) center center no-repeat');
     castles[castleId].color = color;
-
-    castle.fadeIn(1);
+    $('#c'+castleId).css('background',color);
+//    castle.fadeIn(1);
 }
 
 function setMyCastleProduction(castleId){
@@ -441,9 +446,6 @@ function army(obj, color, dontFade) {
     } else { // nie moja armia
         if(fields[y][x] != 'e'){
             this.fieldType = fields[y][x];
-        }else{
-            console.log('nie mogę ustawić fieldType:');
-            console.log(obj);
         }
         fields[y][x] = 'e';
         enemyArmyMouse(this.element);
@@ -475,6 +477,19 @@ function army(obj, color, dontFade) {
     }
     this.armyId = obj.armyId;
     this.color = color;
+    var mX = x*2;
+    var mY = y*2;
+    zoomPad.append(
+        $('<div>').css({
+            'left':mX + 'px',
+            'top':mY + 'px',
+            'background':color,
+            'z-index':10
+        })
+        .attr('id',this.armyId)
+        .addClass('a')
+    );
+
 }
 
 function myArmyWin(result){
@@ -635,6 +650,7 @@ function deleteArmy(armyId, color, quiet) {
         if(typeof players[color].armies[armyId] != 'undefined') {
             armyFields(players[color].armies[armyId]);
             $('#' + armyId).remove();
+            $('#' + armyId.substr(4)).remove();
             delete players[color].armies[armyId];
         }
     } else {
@@ -642,6 +658,7 @@ function deleteArmy(armyId, color, quiet) {
         armyFields(players[color].armies[armyId]);
         $('#' + armyId).fadeOut(500, function() {
             $('#' + armyId).remove();
+            $('#' + armyId.substr(4)).remove();
             delete players[color].armies[armyId];
             console.log('usuni\u0119ta ' + armyId + ' - ' + color);
         });
@@ -672,8 +689,6 @@ function armyFields(a){
         return null;
     }
     if(typeof a.fieldType == 'undefined'){
-        console.log('fieldType undefined:');
-        console.log(a);
         return null;
     }
     if(isEnemyCastle(a.x, a.y) !== false){

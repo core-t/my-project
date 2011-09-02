@@ -24,7 +24,6 @@
 }
 
 .zoomPup{
-    float:left;
     background-color: #FFF;
     opacity: 0.6;
     border:1px solid #f00;
@@ -38,11 +37,12 @@
 }
 
 #map {
-    position: inherit;
-    top: -36px;
-    left: 0;
+    position:absolute;
+    top: 0px;
+    left: 0px;
+    width: 218px;
+    height:138px;
 }
-
 .zoomWindow{
     position:relative;
     left:0;
@@ -56,47 +56,80 @@
 }
 
 .castle {
-    position:inherit;
+    position:absolute;
     width:80px;
     height:80px;
     background: url(../img/game/castle_neutral.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 600;
-    display:none;
+    z-index: 202;
+/*    display:none;*/
 }
+.c{
+    width:4px;
+    height:4px;
+    position:absolute;
+    background:#757575;
+}
+
 .ruin {
-    position:inherit;
+    position:absolute;
     width:40px;
     height:40px;
     background: url(../img/game/ruin.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 600;
+    z-index: 200;
     display:none;
 }
 .tower {
-    position:inherit;
+    position:absolute;
     width:40px;
     height:40px;
     background: url(../img/game/tower_neutral.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 600;
+    z-index: 200;
     display:none;
 }
 .army {
-    position:inherit;
+    position:absolute;
     width:40px;
     height:40px;
-    display:none;
+/*    display:none;*/
     border:none;
-    z-index: 5000;
+    z-index: 1000;
 }
-
+.a{
+    width:2px;
+    height:2px;
+    position:absolute;
+}
 .unit {
     margin-top:10px;
     margin-left:12px;
+}
+.path {
+    position:inherit;
+    width:40px;
+    height:40px;
+    border:none;
+    z-index:201;
+    padding-left:2px;
+    color:white;
+    text-shadow:#000 1px 1px 3px;
+}
+
+.field {
+    width:38px;
+    height:38px;
+    position:inherit;
+    border:1px solid white;
+    color:yellow;
+    font-size:10px;
+    text-align:center;
+    line-height:38px;
+    z-index:7000;
 }
 
 #gameMenu {
@@ -206,28 +239,6 @@
 /*    width:83px;*/
 }
 
-.path {
-    position:inherit;
-    width:40px;
-    height:40px;
-    border:none;
-    z-index:500;
-    padding-left:2px;
-    color:white;
-    text-shadow:#000 1px 1px 3px;
-}
-
-.field {
-    width:38px;
-    height:38px;
-    position:inherit;
-    border:1px solid white;
-    color:yellow;
-    font-size:10px;
-    text-align:center;
-    line-height:38px;
-    z-index:7000;
-}
 
 .message {
     width: 260px;

@@ -118,7 +118,8 @@ function startGame(){
             }
         }
     }
-    $('.castle').fadeIn(1);
+//    $('.castle').fadeIn(1);
+//    $('.c').fadeIn(1);
     auth();
     showFirstCastle();
     if(!myArmies && !myCastles){

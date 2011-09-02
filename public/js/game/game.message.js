@@ -282,8 +282,8 @@ function armyStatusM(){
     }
     for(i in selectedArmy.heroes) {
         numberOfUnits++;
-        var attackPoints = $('<p>').html('Attack points: '+selectedArmy.heroes[i].attackPoints);
-        var defensePoints = $('<p>').html('Defense points: '+selectedArmy.heroes[i].defensePoints);
+        var attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color','#da8');
+        var defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color','#da8');
         if(bonusTower){
             defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
         }
@@ -293,17 +293,24 @@ function armyStatusM(){
         army.append(
             $('<div>')
             .addClass('row')
-            .append($('<span>').addClass('nr').html(numberOfUnits))
-            .append(
+            .append($('<div>').addClass('nr').html(numberOfUnits))
+            .append($('<div>').addClass('img').html(
                 $('<img>').attr({
                     'src':'/img/game/hero_' + selectedArmy.color + '.png',
                     'id':'hero'+selectedArmy.heroes[i].heroId
                 })
+            ))
+            .append(
+                $('<div>').addClass('left')
+                .append($('<p>').html('Current moves: '))
+                .append($('<p>').html('Default moves: '))
+                .append($('<p>').html('Attack points: '))
+                .append($('<p>').html('Defense points: '))
             )
             .append(
-                $('<div>').addClass('right')
-                .append($('<p>').html('Current moves: '+selectedArmy.heroes[i].movesLeft))
-                .append($('<p>').html('Default moves: '+selectedArmy.heroes[i].numberOfMoves))
+                $('<div>').addClass('left')
+                .append($('<p>').html(selectedArmy.heroes[i].movesLeft).css('color','#da8'))
+                .append($('<p>').html(selectedArmy.heroes[i].numberOfMoves).css('color','#da8'))
                 .append(attackPoints)
                 .append(defensePoints)
             )
