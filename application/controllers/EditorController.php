@@ -22,6 +22,7 @@ class EditorController extends Game_Controller_Action
         if ($this->_namespace->mapId) {
             unset($this->_namespace->mapId);
         }
+        
     }
 
     public function createAction() {
@@ -31,10 +32,16 @@ class EditorController extends Game_Controller_Action
                 $modelMap = new Application_Model_Map ();
                 $mapId = $modelMap->createMap($this->view->form->getValues(), $this->_namespace->player['playerId']);
                 if($mapId){
-                    $this->_helper->redirector('index', 'gamesetup', null, array('mapId' => $mapId));
+                    $this->_helper->redirector('edit', 'editor', null, array('mapId' => $mapId));
                 }
             }
         }
+    }
+    
+    public function editAction(){
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
+        $this->view->headScript()->appendFile('/js/game/game.zoom.js');
+        $this->_helper->layout->setLayout('board');
     }
 
 }

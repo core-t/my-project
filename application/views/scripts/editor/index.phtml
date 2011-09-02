@@ -2,3 +2,11 @@
 <div id="view-content">
 	<p>View script for controller <b>Editor</b> and script/action name <b>index</b></p>
 </div>
+<ul>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
+    </li>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'editor', 'action' => 'create')) ?>">Create</a>
+    </li>
+</ul>

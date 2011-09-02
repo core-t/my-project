@@ -16,9 +16,9 @@ class Application_Model_Map extends Game_Db_Table_Abstract
 
     public function createMap($params, $playerId) {
         $data = array(
-            'name' => $params,
-            'mapWidth' => $params,
-            'mapHeight' => $params,
+            'name' => $params['name'],
+            'mapWidth' => $params['mapWidth'],
+            'mapHeight' => $params['mapHeight'],
             'playerId' => $playerId
         );
 
