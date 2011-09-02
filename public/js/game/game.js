@@ -28,13 +28,13 @@ var timeoutId = null;
 var enemyArmiesPositions = new Array();
 
 $(document).ready(function() {
-        terrain();
+    terrain();
+    lWSC = new jws.jWebSocketJSONClient();
+    login();
+    zoomer = new zoom(760, 670);
+    setTimeout ( 'connect()', 1500 );
 
 //    $(window).load(function () {
-        lWSC = new jws.jWebSocketJSONClient();
-        login();
-        zoomer = new zoom(760, 670);
-        setTimeout ( 'connect()', 1500 );
 //    });
     
 });
@@ -118,8 +118,6 @@ function startGame(){
             }
         }
     }
-//    $('.castle').fadeIn(1);
-//    $('.c').fadeIn(1);
     auth();
     showFirstCastle();
     if(!myArmies && !myCastles){
@@ -257,6 +255,12 @@ function test(){
                     .html(fields[y][x])
                 );
             }
+        }
+    }
+    console.log('PLAYERS:');
+    for(color in players) {
+        for(i in players[color].armies) {
+            console.log(i);
         }
     }
 }

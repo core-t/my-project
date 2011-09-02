@@ -187,6 +187,7 @@ function getArmyA(armyId, center) {
                 removeM();
                 zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
             }
+//            clearPlayerArmiesTrash();
         }
     });
 }
@@ -219,6 +220,7 @@ function setProductionA(castleId) {
 
 function getPlayerArmiesA(color){
     $.getJSON(urlGetPlayerArmies+'/color/'+color, function(result) {
+//        clearPlayerArmiesTrash();
         for(i in result){
             players[color].armies[i] = new army(result[i], color);
         }

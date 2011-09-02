@@ -80,7 +80,6 @@
     border:none;
     cursor: crosshair;
     z-index: 200;
-    display:none;
 }
 .tower {
     position:absolute;
@@ -90,7 +89,6 @@
     border:none;
     cursor: crosshair;
     z-index: 200;
-    display:none;
 }
 .army {
     position:absolute;

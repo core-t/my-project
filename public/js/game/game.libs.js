@@ -18,8 +18,8 @@ function towerCreate(towerId){
             top: towers[towerId].y + 'px',
             background:'url(../img/game/tower_'+towers[towerId].color+'.png) center center no-repeat'
         })
-        );
-    $('#tower' + towerId).fadeIn(1);
+    );
+//    $('#tower' + towerId).fadeIn(1);
 }
 
 function isTowerAtPosition(x, y){
@@ -115,7 +115,7 @@ function ruinCreate(ruinId){
             top: ruins[ruinId].y + 'px'
         })
         );
-    $('#ruin' + ruinId).fadeIn(1);
+//    $('#ruin' + ruinId).fadeIn(1);
 }
 
 // *** CASTLES ***
@@ -326,14 +326,13 @@ function showFirstCastle() {
 
 // *** ARMIES ***
 
-function army(obj, color, dontFade) {
+function army(obj, color) {
+    $('#army'+obj.armyId).remove();
+    $('#'+obj.armyId).remove();
     if(obj.destroyed){
         if(typeof players[color].armies[obj.armyId] != 'undefined'){
             armyFields(players[color].armies[obj.armyId]);
             delete players[color].armies[obj.armyId];
-        }
-        if(typeof $('#army'+obj.armyId) != 'undefined') {
-            $('#army'+obj.armyId).remove();
         }
         return null;
     }
@@ -343,9 +342,6 @@ function army(obj, color, dontFade) {
     var x = this.x/40;
     var y = this.y/40;
     deleteArmyByPosition(this.x, this.y, color);
-    if(typeof $('#army'+obj.armyId) != 'undefined') {
-        $('#army'+obj.armyId).remove();
-    }
     this.flyBonus = 0;
     this.canFly = 1;
     this.canSwim = 0;
@@ -472,9 +468,9 @@ function army(obj, color, dontFade) {
         );
     board.append(this.element);
 
-    if(typeof dontFade == 'undefined'){
-        $('#army'+obj.armyId).fadeIn(1);
-    }
+//    if(typeof dontFade == 'undefined'){
+//        $('#army'+obj.armyId).fadeIn(1);
+//    }
     this.armyId = obj.armyId;
     this.color = color;
     var mX = x*2;
@@ -675,7 +671,6 @@ function deleteArmyByPosition(x, y, color) {
 
 function armyFields(a){
     if(a.color == my.color){
-        console.log('my color');
         return null;
     }
     x = a.x/40;
@@ -844,6 +839,22 @@ function walk(result) {
             }
         });
     }
+}
+
+function clearPlayerArmiesTrash(){
+    // czyszczenie śmieci
+    $('.army').each( function(){
+        var classList = $(this).attr('class').split(/\s+/);
+        console.log(classList[1]);
+        $.each( classList, function(index, item){
+            if (item === turn.color) {
+                var id = $(this).attr('id');
+                if(typeof players[turn.color].armies[id] == 'undefined'){
+                    $('#'+id).remove();
+                }
+            }
+        });
+    });
 }
 
 // *** UNITS ***
