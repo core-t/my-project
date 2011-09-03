@@ -1,5 +1,5 @@
 <h2>Open games:</h2>
-<div id="mygames"><table></table></div>
+<div class="table"><table></table></div>
 <ul>
     <li>
         <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
@@ -14,7 +14,7 @@
 <script type="text/javascript">
     var th = '<th>Game master</th><th>Current number of players</th><th>Max number of players</th><th>Date</th>';
     var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'gameId' => null)) ?>';
-    var mygames = $('#mygames table');
+    var mygames = $('.table table');
     function refresh() {
         $.getJSON("<?php echo $this->url(array('controller' => 'newajax', 'action' => 'refresh')) ?>", function(result) {
 

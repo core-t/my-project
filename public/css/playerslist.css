@@ -1,24 +1,3 @@
-table {
-    border-spacing:1px;
-}
-
-#mygames {
-    height:400px;
-}
-
-th {
-    line-height:20px;
-    text-align:center;
-    background:transparent url(../img/bg_0.jpg) repeat;
-    padding:4px;
-}
-
-#mygames td {
-    border:1px solid #555;
-    height:20px;
-    text-align:center;
-    padding:2px;
-}
 
 #playersingame td {
     line-height:26px;

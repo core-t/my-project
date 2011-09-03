@@ -4,3 +4,4 @@ Zend
 *.log
 .directory
 *kate-swp
+*/maps/*.png

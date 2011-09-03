@@ -22,6 +22,8 @@ class EditorController extends Game_Controller_Action
         if ($this->_namespace->mapId) {
             unset($this->_namespace->mapId);
         }
+        $modelMap = new Application_Model_Map ();
+        $this->view->mapList = $modelMap->getPlayerMapList($this->_namespace->player['playerId']);
         
     }
 
@@ -32,6 +34,7 @@ class EditorController extends Game_Controller_Action
                 $modelMap = new Application_Model_Map ();
                 $mapId = $modelMap->createMap($this->view->form->getValues(), $this->_namespace->player['playerId']);
                 if($mapId){
+                    $this->_namespace->mapId = $mapId;
                     $this->_helper->redirector('edit', 'editor', null, array('mapId' => $mapId));
                 }
             }
@@ -39,9 +42,33 @@ class EditorController extends Game_Controller_Action
     }
     
     public function editAction(){
+        $mapId = $armyId = $this->_request->getParam('mapId');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
         $this->view->headScript()->appendFile('/js/game/game.zoom.js');
-        $this->_helper->layout->setLayout('board');
+        $this->_helper->layout->setLayout('editor');
+        $modelMap = new Application_Model_Map ($mapId);
+        $map = $modelMap->getMap($this->_namespace->player['playerId']);
+        $map['width'] = $map['mapWidth']*40;
+        $map['height'] = $map['mapHeight']*40;
+        Zend_Debug::dump($map);
+        $img = imagecreatetruecolor($map['width'], $map['height']); 
+        imagesavealpha($img, true); 
+
+        // Fill the image with transparent color 
+        $color = imagecolorallocatealpha($img,0x00,0x00,0x00,127);
+        $color_background = imagecolorallocate($img, 255, 255, 255); 
+        $color_normal = imagecolorallocate($img, 200, 200, 200); 
+        $color_marked = imagecolorallocate($img, 255, 0, 0);
+        imagefill($img, 0, 0, $color_background); 
+
+        // Save the image to file.png 
+        imagepng($img, APPLICATION_PATH.'/../public/img/maps/'.$map['mapId'].'.png'); 
+
+        // Destroy image 
+        imagedestroy($img); 
+
+        new Application_View_Helper_Minimap($this->view, $map);
+        new Application_View_Helper_Board($this->view, $map);
     }
 
 }

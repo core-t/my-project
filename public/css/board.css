@@ -5,9 +5,6 @@
 }
 
 #board {
-    background: url('../img/game/board.png') no-repeat;
-    width: 4360px;
-    height:2760px;
     position:absolute;
     top:0px;
     left:0px;
@@ -24,7 +21,6 @@
 }
 
 .zoomPup{
-    float:left;
     background-color: #FFF;
     opacity: 0.6;
     border:1px solid #f00;
@@ -38,11 +34,10 @@
 }
 
 #map {
-    position: inherit;
-    top: -36px;
-    left: 0;
+    position:absolute;
+    top: 0px;
+    left: 0px;
 }
-
 .zoomWindow{
     position:relative;
     left:0;

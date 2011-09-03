@@ -5,9 +5,6 @@
 }
 
 #board {
-    background: url('../img/game/board.png') no-repeat;
-    width: 4360px;
-    height:2760px;
     position:absolute;
     top:0px;
     left:0px;
@@ -40,8 +37,6 @@
     position:absolute;
     top: 0px;
     left: 0px;
-    width: 218px;
-    height:138px;
 }
 .zoomWindow{
     position:relative;

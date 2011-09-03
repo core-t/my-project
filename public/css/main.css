@@ -142,3 +142,25 @@ h3{
     background:yellow;
     text-shadow:none;
 }
+
+table {
+    border-spacing:1px;
+}
+
+.table {
+    min-height:400px;
+}
+
+.table th {
+    line-height:20px;
+    text-align:center;
+    background:transparent url(../img/bg_0.jpg) repeat;
+    padding:4px;
+}
+
+.table td {
+    border:1px solid #555;
+    height:20px;
+    text-align:center;
+    padding:2px;
+}

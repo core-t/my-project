@@ -1,6 +1,20 @@
-<br /><br />
-<div id="view-content">
-	<p>View script for controller <b>Editor</b> and script/action name <b>index</b></p>
+<h2>Map editor</h2>
+<div class="table">
+<table>
+    <th>Map name</th><th>Width</th><th>Height</th><th>Map author</th><th>Creation date</th>
+<?php
+if(is_array($this->mapList)){
+    foreach($this->mapList as $map){
+        $url = $this->url(array('controller'=>'editor', 'action'=>'edit', 'mapId'=>$map['mapId']));
+        echo '<tr id="gid'.$map['mapId'].'" onclick="'.$url.'" class="trlink">
+        <td><a href="'.$url.'">'.$map['name'].'</a></td>
+        <td><a href="'.$url.'">'.$map['mapWidth'].'</a></td>
+        <td><a href="'.$url.'">'.$map['mapHeight'].'</a></td>
+        </tr>';
+    }
+}
+?>
+    </table>
 </div>
 <ul>
     <li>

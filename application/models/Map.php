@@ -26,5 +26,29 @@ class Application_Model_Map extends Game_Db_Table_Abstract
         $seq = $this->_db->quoteIdentifier($this->_sequence);
         return $this->_db->lastSequenceId($seq);
     }
+    
+    public function getPlayerMapList($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name)
+                    ->where('"playerId" = ?', $playerId);
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+    
+    public function getMap($playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name)
+                    ->where('"'.$this->_primary.'" = ?', $this->mapId)
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
 }
 
