@@ -14,7 +14,7 @@
     float:left;
     position:relative;
     left:0;
-    top:138px;
+    top:0px;
     cursor: default;
     z-index:10000;
     background-color: red;
@@ -50,4 +50,8 @@
     width: 760px;
     height: 660px;
     clear:both;
+}
+
+#editorMenu{
+    height:138px;
 }

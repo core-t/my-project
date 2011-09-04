@@ -32,46 +32,42 @@ function isTowerAtPosition(x, y){
 }
 
 function searchTower(x, y){
-    var stop = 0;
     for(towerId in towers){
         if(towers[towerId].x == x && towers[towerId].y == y){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y-40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y-40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y-40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y+40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y+40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
+            continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y+40)){
             changeMyTower(x, y, towerId);
-            stop = 1;
-        }
-        if(stop){
-            break;
+            continue;
         }
     }    
 }
@@ -938,7 +934,7 @@ function getVectorLength(x1, y1, x2, y2) {
 
 function setCursorArrow(dir){
     if(cursorDirection != dir){
-        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png) center center, crosshair');
+        board.css('cursor','url(../img/game/cursor_arrow_'+dir+'.png), crosshair');
         cursorDirection = dir;
     //         console.log(cursorDirection);
     }
@@ -957,7 +953,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -966,7 +962,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 's';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -977,7 +973,7 @@ function downRight(pfX, pfY) {
             pfY += 1;
             dir = 'se';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -986,7 +982,7 @@ function downRight(pfX, pfY) {
             pfX += 1;
             dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1008,7 +1004,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1017,7 +1013,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1028,7 +1024,7 @@ function topRight(pfX, pfY) {
             pfY -= 1;
             dir = 'ne';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1037,7 +1033,7 @@ function topRight(pfX, pfY) {
             pfX += 1;
             dir = 'e';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1059,7 +1055,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1068,7 +1064,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'n';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1079,7 +1075,7 @@ function topLeft(pfX, pfY) {
             pfY -= 1;
             dir = 'nw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1088,7 +1084,7 @@ function topLeft(pfX, pfY) {
             pfX -= 1;
             dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1110,7 +1106,7 @@ function downLeft(pfX, pfY) {
             pfX -= 1;
             pfY += 1;
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1119,7 +1115,7 @@ function downLeft(pfX, pfY) {
         for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
             pfY += 1;
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1130,7 +1126,7 @@ function downLeft(pfX, pfY) {
             pfY += 1;
             dir = 'sw';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1139,7 +1135,7 @@ function downLeft(pfX, pfY) {
             pfX -= 1;
             dir = 'w';
             m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null || m == movesSpend) {
+            if(m === null) {
                 return movesSpend;
             }
             movesSpend = m;
@@ -1151,15 +1147,18 @@ function downLeft(pfX, pfY) {
 function addPathDiv(pfX,pfY,direction,movesSpend) {
     setCursorArrow(direction);
     if(movesSpend >= selectedArmy.moves) {
-        return movesSpend;
+        return null;
     }
     var terrainType = fields[pfY][pfX];
-    pX = pfX*40;
+    pX = pfX*40;//optymalizacja <-
     pY = pfY*40;
     var terrain = getTerrain(terrainType, selectedArmy);
+    if(terrain[1] === null){
+        return null;
+    }
     var moves = movesSpend + terrain[1];
     if(moves > selectedArmy.moves) {
-        return movesSpend;
+        return null;
     }
     board.append(
         $('<div>')

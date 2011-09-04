@@ -15,6 +15,7 @@ class TowerController extends Game_Controller_Action {
         if ($towerId !== null) {
             $modelTower = new Application_Model_Tower($this->_namespace->gameId);
             if($modelTower->towerExists($towerId)){
+                Zend_Debug::dump('dupa');
                 $modelTower->changeTowerOwner($towerId, $this->_namespace->player['playerId']);
             }else{
                 $modelTower->addTower($towerId, $this->_namespace->player['playerId']);

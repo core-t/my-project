@@ -21,23 +21,23 @@ class Application_Form_Createmap extends Zend_Form
         );
         $this->addElement('text', 'mapWidth',
         array(
-         'label'=>'Map width (50 - 400)',
+         'label'=>'Map width (50 - 200)',
          'required'=>true,
          'filters'=>array('StringTrim'),
          'validators'=>array(
                  array('Alnum'),
-                 new Zend_Validate_Between(array('min' => 50, 'max' => 400))
+                 new Zend_Validate_Between(array('min' => 50, 'max' => 200))
              )
          )
         );
         $this->addElement('text', 'mapHeight',
         array(
-         'label'=>'Map height (50 - 400)',
+         'label'=>'Map height (50 - 200)',
          'required'=>true,
          'filters'=>array('StringTrim'),
          'validators'=>array(
                  array('Alnum'),
-                 new Zend_Validate_Between(array('min' => 50, 'max' => 400))
+                 new Zend_Validate_Between(array('min' => 50, 'max' => 200))
              )
          )
         );

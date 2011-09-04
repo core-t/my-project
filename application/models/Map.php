@@ -50,5 +50,7 @@ class Application_Model_Map extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
     }
+    
+    
 }
 

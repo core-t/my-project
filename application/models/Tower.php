@@ -26,6 +26,15 @@ class Application_Model_Tower extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
     }
+    
+    public function changeTowerOwner($towerId, $playerId){
+        $data = array(
+            'playerId' => $playerId
+        );
+        $where[] = $this->_db->quoteInto('"'.$this->_primary.'" = ?', $towerId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        return $this->_db->update($this->_name, $data, $where);
+    }
 
     public function addTower($towerId, $playerId) {
         $data = array(

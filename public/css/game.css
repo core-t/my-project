@@ -12,12 +12,14 @@
 
 .zoomPad{
     float:left;
-    width:218px;
-    height:139px;
+/*    width:218px;*/
+/*    height:138px;*/
     position:relative;
     left:0;
-    top:0;
+    top:139px;
     cursor: default;
+    z-index:10000;
+    background-color: #000;
 }
 
 .zoomPup{
@@ -37,6 +39,8 @@
     position:absolute;
     top: 0px;
     left: 0px;
+    border-right:1px solid #444;
+    border-bottom:1px solid #444;
 }
 .zoomWindow{
     position:relative;
@@ -126,8 +130,8 @@
 }
 
 #gameMenu {
-    float:right;
-    height:130px;
+/*    float:right;*/
+/*    height:130px;*/
 }
 
 #gameMenu span{
@@ -528,5 +532,5 @@
     color:white;
     text-shadow: #000 1px 1px 3px;
     top:0px;
-    left:0px;
+    left:220px;
 }

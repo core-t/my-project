@@ -57,6 +57,8 @@ function login() {
                             }
                             break;
                         case 'a':
+                            console.log(data[2]);
+                            console.log(data[3]);
                             getArmyA(data[2],data[3]);
                             break;
                         case 'T':

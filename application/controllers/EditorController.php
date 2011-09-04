@@ -43,14 +43,14 @@ class EditorController extends Game_Controller_Action
     
     public function editAction(){
         $mapId = $armyId = $this->_request->getParam('mapId');
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/editor.css');
         $this->view->headScript()->appendFile('/js/game/game.zoom.js');
         $this->_helper->layout->setLayout('editor');
         $modelMap = new Application_Model_Map ($mapId);
         $map = $modelMap->getMap($this->_namespace->player['playerId']);
         $map['width'] = $map['mapWidth']*40;
         $map['height'] = $map['mapHeight']*40;
-        Zend_Debug::dump($map);
+//        Zend_Debug::dump($map);
         $img = imagecreatetruecolor($map['width'], $map['height']); 
         imagesavealpha($img, true); 
 

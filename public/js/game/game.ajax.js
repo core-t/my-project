@@ -59,9 +59,6 @@ function moveA(movesSpend) {
     if(!my.turn){
         return null;
     }
-    if(movesSpend === null) {
-        return null;
-    }
     if(!lWSC.isLoggedIn()){
         alert('Socket disconnected!');
         return null;
@@ -166,6 +163,9 @@ function moveA(movesSpend) {
             });
         }
     } else {
+        if(movesSpend === null) {
+            return null;
+        }
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
 //                 console.log(result.path);
