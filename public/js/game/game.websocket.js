@@ -57,12 +57,13 @@ function login() {
                             }
                             break;
                         case 'a':
-                            console.log(data[2]);
-                            console.log(data[3]);
                             getArmyA(data[2],data[3]);
                             break;
                         case 'T':
                             getTowerA(data[2]);
+                            break;
+                        case 'r':
+                            getRuinA(data[2]);
                             break;
                         case 'm':
                             changeArmyPosition(data[2], data[3], data[4], turn.color);
@@ -186,6 +187,9 @@ function wsArmy(armyId, center) {
 }
 function wsAddTower(towerId){
     lWSC.channelPublish(channel,my.color+'.T.'+towerId);
+}
+function wsGetRuin(ruinId){
+    lWSC.channelPublish(channel,my.color+'.r.'+ruinId);
 }
 function wsBattle(battle,army,armies){
     var data = my.color+'.b.';

@@ -594,7 +594,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('destroyed = false')
                     ->where('position::varchar = (?)', $position);
             $result = $this->_db->query($select)->fetchAll();
-            if (count($result) == 1) {
+            if (count($result) == 1) {// jeśli jest tylko jedna armia na pozycji
                 return $result[0]['armyId'];
             }
             foreach ($result as $army) {

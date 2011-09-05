@@ -94,10 +94,13 @@ function changeEnemyTower(towerId, color){
 
 function ruinCreate(ruinId){
     var title;
+    var css;
     if(typeof ruins[ruinId].e == 'undefined'){
         title = 'Ruins';
+        css = '';
     }else{
         title = 'Ruins (empty)';
+        css = '_empty';
     }
     board.append(
         $('<div>')
@@ -108,10 +111,33 @@ function ruinCreate(ruinId){
         })
         .css({
             left: ruins[ruinId].x + 'px',
-            top: ruins[ruinId].y + 'px'
+            top: ruins[ruinId].y + 'px',
+            background:'url(../img/game/ruin'+css+'.png) center center no-repeat'
         })
-        );
-//    $('#ruin' + ruinId).fadeIn(1);
+    );
+}
+
+function ruinUpdate(ruinId, empty){
+    var title;
+    var css;
+    if(empty){
+        title = 'Ruins (empty)';
+        css = '_empty';
+    }else{
+        title = 'Ruins';
+        css = '';
+    }
+    $('#ruin'+ruinId).attr('title',title)
+    .css('background','url(../img/game/ruin'+css+'.png) center center no-repeat');
+}
+
+function getRuinId(a){
+    for(i in ruins){
+        if(a.x == ruins[i].x && a.y == ruins[i].y){
+            return i;
+        }
+    }
+    return null;
 }
 
 // *** CASTLES ***
@@ -202,6 +228,7 @@ function castleOwner(castleId, color) {
     var castle = $('#castle' + castleId);
     if(typeof castles[castleId] != 'undefined' && castles[castleId].razed){
         castle.remove();
+        $('#c'+castleId).remove();
         delete castles[castleId];
         return null;
     }
@@ -564,14 +591,6 @@ function handleParentArmy(){
     }
 }
 
-function inRuins(){
-    for(i in ruins){
-        if(selectedArmy.x == ruins[i].x && selectedArmy.y == ruins[i].y){
-            return true;
-        }
-    }
-}
-
 function selectArmy(a) {
     var index = $.inArray( a.armyId, skippedArmies );
     if(index != -1){
@@ -592,7 +611,7 @@ function selectArmy(a) {
     $('#skipArmy').removeClass('buttonOff');
     $('#quitArmy').removeClass('buttonOff');
     selectedArmy = a;
-    if(typeof selectedArmy.heroKey != 'undefined' && inRuins()){
+    if(typeof selectedArmy.heroKey != 'undefined' && getRuinId(selectedArmy) !== null){
         $('#searchRuins').removeClass('buttonOff');
     }
     zoomer.lensSetCenter(a.x, a.y);

@@ -231,6 +231,12 @@ function joinArmyA(armyId1, armyId2){
     $.getJSON(urlJoinArmy+'/aid1/'+armyId1+'/aid2/'+armyId2, function(result) {
         unsetParentArmy();
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+        if(armyId1 != result.armyId){
+            wsArmy(armyId1, false);
+        }
+        if(armyId2 != result.armyId){
+            wsArmy(armyId2, false);
+        }
         wsArmy(result.armyId, true);
         removeM();
     });
@@ -336,6 +342,7 @@ function searchRuinsA(){
     }
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
+        wsGetRuin(getRuinId(unselectedArmy));
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         switch(result.find[0]){
             case 'gold':
@@ -360,6 +367,12 @@ function searchRuinsA(){
                 break
 
         }
+    });
+}
+
+function getRuinA(ruinId){
+    $.getJSON(urlGetRuins+'/rid/'+ruinId, function(result) {
+        ruinUpdate(ruinId, result.empty);
     });
 }
 

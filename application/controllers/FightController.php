@@ -283,6 +283,8 @@ class FightController extends Game_Controller_Action
                     break;
                 }
             }
+        }
+        foreach ($attacker['soldiers'] as $a => $unitAttaking) {
             foreach ($defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
@@ -303,6 +305,8 @@ class FightController extends Game_Controller_Action
                     break;
                 }
             }
+        }
+        foreach ($attacker['heroes'] as $a => $unitAttaking) {
             foreach ($defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
