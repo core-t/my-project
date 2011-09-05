@@ -132,12 +132,14 @@ class GameajaxController extends Game_Controller_Action {
                     throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
+                $modelGame = new Application_Model_Game($this->_namespace->gameId);
+                $turn = $modelGame->getTurn();
                 $random = rand(0,100);
-                if($random < 10){
+                if($random < 10){//10%
                     //śmierć
                     $find = array('death',1);
                     $modelArmy->armyRemoveHero($heroId);
-                }elseif($random < 55){
+                }elseif($random < 55){//45%
                     //kasa
                     $gold = rand(500,1500);
                     $find = array('gold',$gold);
@@ -145,20 +147,53 @@ class GameajaxController extends Game_Controller_Action {
                     $inGameGold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
                     $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold+$inGameGold);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
-                }elseif($random < 85){
+                }elseif($random < 85){//30%
                     //jednostki
-                    $unitId = rand(11,15);
-                    $numerOfUnits = rand(1,3);
+                    if($turn['nr'] <= 7){
+                        $max1 = 11;
+                        $min2 = 1;
+                        $max2 = 1;
+                    }elseif($turn['nr'] <= 12){
+                        $max1 = 13;
+                        $min2 = 1;
+                        $max2 = 1;
+                    }elseif($turn['nr'] <= 16){
+                        $max1 = 14;
+                        $min2 = 1;
+                        $max2 = 1;
+                    }elseif($turn['nr'] <= 19){
+                        $max1 = 15;
+                        $min2 = 1;
+                        $max2 = 1;
+                    }elseif($turn['nr'] <= 21){
+                        $max1 = 15;
+                        $min2 = 1;
+                        $max2 = 2;
+                    }elseif($turn['nr'] <= 23){
+                        $max1 = 15;
+                        $min2 = 1;
+                        $max2 = 3;
+                    }elseif($turn['nr'] <= 25){
+                        $max1 = 15;
+                        $min2 = 2;
+                        $max2 = 3;
+                    }elseif($turn['nr'] <= 27){
+                        $max1 = 15;
+                        $min2 = 3;
+                        $max2 = 3;
+                    }
+                    $unitId = rand(11,$max1);
+                    $numerOfUnits = rand($min2,$max2);
                     $find = array('alies',$numerOfUnits);
                     for($i = 0; $i < $numerOfUnits; $i++){
                         $modelArmy->addSoldierToArmy($armyId, $unitId, $this->_namespace->player['playerId']);
                     }
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
-                }elseif($random < 95){
+                }elseif($random < 95){//10%
                     //nic
                     $find = array('null',1);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
-                }else{
+                }else{//5%
                     //artefakt
                     $find = array('artefact',1);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);

@@ -9,13 +9,13 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract {
         $this->logActivity();
     }
 
-    protected function setNamespace () {
-        Zend_Session::start ();
-        $this->_namespace = new Zend_Session_Namespace();
-    }
     protected  function logActivity (){
         $activity = new Game_Player_Activity();
         $activity->logActivity();
-        //var_dump($activity->isActive());
+    }
+    
+    protected  function logRequest(){
+        $activity = new Game_Player_Request();
+//        $activity->logRequest();
     }
 }
