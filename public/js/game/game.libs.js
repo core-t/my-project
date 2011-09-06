@@ -267,7 +267,7 @@ function castleOwner(castleId, color) {
     .html('')
     .css('background', 'url(../img/game/castle_'+color+'.png) center center no-repeat');
     castles[castleId].color = color;
-    $('#c'+castleId).css('background',color);
+    $('#c'+castleId).css('background',getColor(color));
 //    castle.fadeIn(1);
 }
 
@@ -498,11 +498,12 @@ function army(obj, color) {
     this.color = color;
     var mX = x*2;
     var mY = y*2;
+
     zoomPad.append(
         $('<div>').css({
             'left':mX + 'px',
             'top':mY + 'px',
-            'background':color,
+            'background':getColor(color),
             'z-index':10
         })
         .attr('id',this.armyId)

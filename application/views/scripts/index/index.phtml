@@ -2,7 +2,8 @@
 <script type="text/javascript">
 if( jws.browserSupportsWebSockets() ) {
     lWSC = new jws.jWebSocketJSONClient();
-    login();
+    var res = login();
+    console.log(res);
 }else{
     top.location = '<?php echo $this->url(array('controller'=>'index', 'action'=>'unsupported')) ?>';
 }

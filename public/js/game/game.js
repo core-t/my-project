@@ -264,3 +264,11 @@ function test(){
         }
     }
 }
+
+function getColor(color){
+    if(color == 'green'){
+        return '#00db00';
+    }else{
+        return color;
+    }
+}

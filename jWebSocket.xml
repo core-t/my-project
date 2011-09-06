@@ -311,7 +311,7 @@
 			<name>org.jwebsocket.plugins.channels.ChannelPlugIn</name>
 			<id>jws.channels</id>
 			<ns>org.jwebsocket.plugins.channels</ns>
-			<jar>jWebSocketServer-1.0.jar</jar>
+			<jar>jWebSocketChannelPlugIn-1.0.jar</jar>
 			<server-assignments>
 				<server-assignment>ts0</server-assignment>
 			</server-assignments>
