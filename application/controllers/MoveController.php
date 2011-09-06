@@ -126,7 +126,7 @@ class MoveController extends Game_Controller_Action
                 $pfX += 1;
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 'se', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -134,7 +134,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 's', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -144,7 +144,7 @@ class MoveController extends Game_Controller_Action
                 $pfX += 1;
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 'se', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -152,7 +152,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX += 1;
                 $m = $this->addPath($pfX, $pfY, 'e', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -172,7 +172,7 @@ class MoveController extends Game_Controller_Action
                 $pfX += 1;
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'ne', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -180,7 +180,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'n', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -190,7 +190,7 @@ class MoveController extends Game_Controller_Action
                 $pfX += 1;
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'ne', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -198,7 +198,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX += 1;
                 $m = $this->addPath($pfX, $pfY, 'e', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;        }
@@ -217,7 +217,7 @@ class MoveController extends Game_Controller_Action
                 $pfX -= 1;
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'nw', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -225,7 +225,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'n', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -235,7 +235,7 @@ class MoveController extends Game_Controller_Action
                 $pfX -= 1;
                 $pfY -= 1;
                 $m = $this->addPath($pfX, $pfY, 'nw', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -243,7 +243,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX -= 1;
                 $m = $this->addPath($pfX, $pfY, 'w', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -263,7 +263,7 @@ class MoveController extends Game_Controller_Action
                 $pfX -= 1;
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 'sw', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -271,7 +271,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($yLenthPoints - $xLenthPoints); $i++) {
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 's', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -281,7 +281,7 @@ class MoveController extends Game_Controller_Action
                 $pfX -= 1;
                 $pfY += 1;
                 $m = $this->addPath($pfX, $pfY, 'sw', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -289,7 +289,7 @@ class MoveController extends Game_Controller_Action
             for($i = 1; $i <= ($xLenthPoints - $yLenthPoints); $i++) {
                 $pfX -= 1;
                 $m = $this->addPath($pfX, $pfY, 'w', $movesSpend);
-                if($m === null  || $m === $movesSpend) {
+                if($m === null) {
                     return $movesSpend;
                 }
                 $movesSpend = $m;
@@ -300,7 +300,7 @@ class MoveController extends Game_Controller_Action
 
     private function addPath($pfX, $pfY, $direction, $movesSpend) {
         if($movesSpend >= $this->movesLeft) {
-            return $movesSpend;
+            return null;
         }
         $terrainType = $this->fields[$pfY][$pfX];
         $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
@@ -311,7 +311,7 @@ class MoveController extends Game_Controller_Action
             'y' => $pfY * 40
             );
         if(($movesSpend + $terrain[1]) > $this->movesLeft) {
-            return $movesSpend;
+            return null;
         }
         return $movesSpend + $terrain[1];
     }

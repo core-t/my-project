@@ -164,12 +164,14 @@ function moveA(movesSpend) {
         }
     } else {
         if(movesSpend === null) {
+            unlock();
             return null;
         }
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
+                var res = result;
 //                 console.log(result.path);
-                walk(result);
+                walk(res);
             }
         });
     }

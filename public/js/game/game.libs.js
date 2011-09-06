@@ -819,39 +819,44 @@ function quitArmy(){
     }
 }
 
-function walk(result) {
-    for(i in result.path) {
+function walk(res) {
+//    console.log(res);
+    var i;
+    for(i in res.path) {
         break;
     }
-    if(typeof result.path[i] == 'undefined') {
+    if(typeof res.path[i] == 'undefined') {
         deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        newX = players[my.color].armies['army'+result.armyId].x;
-        newY = players[my.color].armies['army'+result.armyId].y;
-        wsArmy(result.armyId);
+        players[my.color].armies['army'+res.armyId] = new army(res, my.color);
+        newX = players[my.color].armies['army'+res.armyId].x;
+        newY = players[my.color].armies['army'+res.armyId].y;
+        if(res.armyId != unselectedArmy.armyId){
+            wsArmy(unselectedArmy.armyId);
+        }
+        wsArmy(res.armyId);
         handleParentArmy();
-        if(players[my.color].armies['army'+result.armyId].moves){
-            selectArmy(players[my.color].armies['army'+result.armyId]);
+        if(players[my.color].armies['army'+res.armyId].moves){
+            selectArmy(players[my.color].armies['army'+res.armyId]);
         }else{
             unselectArmy();
         }
         unlock();
         return null;
     } else {
-        wsArmyMove(result.path[i].x, result.path[i].y, unselectedArmy.armyId);
-        zoomer.lensSetCenter(result.path[i].x, result.path[i].y);
+        wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
+        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
         $('#army'+unselectedArmy.armyId).animate({
-            left: result.path[i].x + 'px',
-            top: result.path[i].y + 'px'
+            left: res.path[i].x + 'px',
+            top: res.path[i].y + 'px'
         },300,
         function(){
-            if(typeof result.path[i] == 'undefined'){
+            if(typeof res.path[i] == 'undefined'){
                 console.log('coś tu niegra');
-                console.log(result);
+                console.log(res);
             }else{
-                searchTower(result.path[i].x, result.path[i].y);
-                delete result.path[i];
-                walk(result);
+                searchTower(res.path[i].x, res.path[i].y);
+                delete res.path[i];
+                walk(res);
             }
         });
     }
