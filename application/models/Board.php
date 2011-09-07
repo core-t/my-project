@@ -586,6 +586,10 @@ class Application_Model_Board {
                     $moves = 4;
                 }
                 break;
+            case 'S':
+                $text = 'Ship';
+                $moves = 1;
+                break;
             case 'w':
                 $text = 'Water';
                 if ($canSwim > 0) {

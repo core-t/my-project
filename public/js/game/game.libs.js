@@ -468,6 +468,12 @@ function army(obj, color) {
         this.element.mousemove(function() {
             myArmyMouse(this.id)
             });
+        if(this.canSwim){
+            if(fields[y][x] != 'S'){
+                this.fieldType = fields[y][x];
+            }
+            fields[y][x] = 'S';
+        }
     } else { // nie moja armia
         if(fields[y][x] != 'e'){
             this.fieldType = fields[y][x];
@@ -1287,6 +1293,10 @@ function getTerrain(type, a) {
             }else{
                 moves = 4;
             }
+            break;
+        case 'S':
+            text = 'Ship';
+            moves = 1;
             break;
         case 'w':
             text = 'Water';

@@ -422,7 +422,7 @@
     width:100%;
     text-align:center;
     margin-top:4px;
-    height:31px;
+    min-height:31px;
 }
 
 .center {

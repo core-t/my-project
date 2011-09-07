@@ -104,6 +104,7 @@
         <modelFile modelName="Ruin"/>
         <modelFile modelName="Tower"/>
         <modelFile modelName="Map"/>
+        <modelFile modelName="Artefact"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>

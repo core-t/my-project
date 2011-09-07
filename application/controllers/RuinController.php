@@ -95,7 +95,14 @@ class RuinController extends Game_Controller_Action {
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 }else{//5%
                     //artefakt
-                    $find = array('artefact',1);
+                    $artefactId = rand(5,34);
+                    $modelInventory->Application_Model_Inventory($this->_namespace->gameId);
+                    if($modelInventory->itemExists($artefactId, $this->_namespace->player['playerId'])){
+                        $modelInventory->increaseItemQuantity($artefactId, $this->_namespace->player['playerId']);
+                    }else{
+                        $modelInventory->addArtefact($artefactId, $this->_namespace->player['playerId']);
+                    }
+                    $find = array('artefact',$artefactId);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);
                 }
                 $response = $modelArmy->getArmyById($armyId);

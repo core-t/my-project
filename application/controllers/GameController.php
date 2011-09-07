@@ -41,6 +41,8 @@ class GameController extends Game_Controller_Action {
             $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
             $modelTower = new Application_Model_Tower($this->_namespace->gameId);
             $modelUnit = new Application_Model_Unit();
+            $modelArtefact = new Application_Model_Artefact();
+            $this->view->artefacts = $modelArtefact->getArtefacts();
             $this->view->units = $modelUnit->getUnits();
             $neutralTowers = $modelBoard->getTowers();
             $playersTowers = $modelTower->getTowers();

@@ -226,7 +226,6 @@ function armyStatusM(){
     if(typeof selectedArmy == 'undefined'){
         return null;
     }
-    console.log(selectedArmy);
     removeM();
     var army = $('<div>').addClass('status');
     var numberOfUnits = 0;
