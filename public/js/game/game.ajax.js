@@ -274,8 +274,15 @@ function castleBuildDefenseA(){
     if(!castleId) {
         return null;
     }
-    console.log(castleId);
-    removeM();
+    $.getJSON(urlCastleBuild+'/cid/'+castleId, function(result) {
+        if(result.castleId == castleId){
+            wsCastle(castleId);
+            castleUpdate(result);
+            castleOwner(result.castleId, result.color);
+            removeM();
+            goldUpdate(result.gold);
+        }
+    });
 }
 
 function razeCastleA(){
@@ -345,6 +352,7 @@ function searchRuinsA(){
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
         wsGetRuin(getRuinId(unselectedArmy));
+        ruinUpdate(result.ruinId, 1)
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         switch(result.find[0]){
             case 'gold':
@@ -367,6 +375,9 @@ function searchRuinsA(){
                 simpleM('You have found an ancient artefact.');
                 wsArmy(result.armyId, true);
                 break
+            case 'empty':
+                simpleM('Ruins are empty.');
+                break;
 
         }
     });

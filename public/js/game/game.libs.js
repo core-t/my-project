@@ -218,9 +218,10 @@ function castleUpdate(data) {
         castles[data.castleId].razed = true;
         castleFields(data.castleId, 'g');
     }else{
-        castles[data.castleId].defense = data.defense;
+        castles[data.castleId].defense = data.defensePoints;
         castles[data.castleId].currentProduction = data.production;
         castles[data.castleId].currentProductionTurn = data.productionTurn;
+        updateCastleDefense(data.castleId, data.defenseMod);
     }
 }
 
@@ -281,6 +282,11 @@ function setMyCastleProduction(castleId){
 
 function updateCastleCurrentProductionTurn(castleId, productionTurn){
     castles[castleId].currentProductionTurn = productionTurn;
+}
+
+function updateCastleDefense(castleId, defenseMod){
+    castles[castleId].defense += defenseMod;
+    $('#castle' + castleId).attr('title', castles[castleId].name+'('+castles[castleId].defense+')');
 }
 
 function isEnemyCastle(x, y) {

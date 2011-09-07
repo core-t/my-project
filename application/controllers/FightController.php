@@ -113,7 +113,7 @@ class FightController extends Game_Controller_Action
                     $enemy = $modelArmy->getAllUnitsFromCastlePosition($castle['position']);
                     $enemy = $this->getCombatModifiers($enemy);
                     $this->defenseModifier += $castle['defensePoints'];
-//                    $this->defenseModifier += $modelCastle->getCastleDefenseModifier($castleId);
+                    $this->defenseModifier += $modelCastle->getCastleDefenseModifier($castleId);
                     $this->battle($army, $enemy);
                     foreach($this->_result AS $r) {
                         if(isset($r['heroId'])) {

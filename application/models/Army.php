@@ -781,12 +781,21 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     }
 
     public function connectHero($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from('hero', 'heroId')
+                    ->where('"playerId" = ?', $playerId);
+            $result = $this->_db->query($select)->fetchAll();
+            $heroId = $result[0]['heroId'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
         $data = array(
             'armyId' => null,
-            'gameId' => $this->_gameId
+            'gameId' => $this->_gameId,
+            'heroId' => $heroId
         );
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        return $this->_db->update('hero', $data, $where);
+        return $this->_db->insert('heroesingame', $data);
     }
     
     public function getDeadHeroId($playerId){

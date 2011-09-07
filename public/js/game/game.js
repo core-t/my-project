@@ -111,6 +111,7 @@ function startGame(){
             }
         }
         for(i in players[color].castles) {
+            updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
             if(color == my.color){
                 myCastles = true;

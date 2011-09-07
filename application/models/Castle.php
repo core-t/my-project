@@ -222,5 +222,15 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         return $this->_db->update($this->_name, $data, $where);
     }
 
+    public function buildDefense($castleId, $playerId) {
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $where[] = $this->_db->quoteInto('"castleId" = ?', $castleId);
+        $data = array(
+            'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
+        );
+        return $this->_db->update($this->_name, $data, $where);
+    }
+
 
 }

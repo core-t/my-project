@@ -458,6 +458,19 @@ function castleM(castleId, color){
         .append(' cost 100g')
         .append(buttonResurestion);
     }
+    var buttonBuilDefense;
+    var cssBuilDefense;
+    var costBuilDefense = 0;
+    for(i = 1; i <= castles[castleId].defense; i++){
+        costBuilDefense += i*100;
+    }
+    if($('#gold').html() < costBuilDefense){
+        buttonBuilDefense = $('<div>').addClass('button right buttonOff').html('Build defense');
+        cssBuilDefense = {'color':'#d00000'};
+    }else{
+        buttonBuilDefense = $('<div>').addClass('button right').html('Build defense').click(function(){castleBuildDefenseA()});
+        cssBuilDefense = {};
+    }
     var height = 62 + k*54 + 96;
     mElement().after(
         $('<div>')
@@ -476,6 +489,7 @@ function castleM(castleId, color){
         .append(
             $('<p>')
             .addClass('h')
+            .css(cssBuilDefense)
             .append(
                 $('<input>').attr({
                     type:'checkbox',
@@ -483,8 +497,8 @@ function castleM(castleId, color){
                     value:castleId
                 })
             )
-            .append(' cost 300g')
-            .append($('<div>').addClass('button right').html('Build defense').click(function(){castleBuildDefenseA()}))
+            .append(' cost '+costBuilDefense+'g')
+            .append(buttonBuilDefense)
         )
         .append(
             $('<p>')

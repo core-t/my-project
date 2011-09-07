@@ -146,13 +146,13 @@ function zoom(zoomWidth, zoomHeight) {
 //            console.log(this.node.left);
             if(this.node.top > 103){
                 this.node.top = 103;
-            }else if(this.node.top < 0){
-                this.node.top = 0;
+            }else if(this.node.top < -1){
+                this.node.top = -1;
             }
             if(this.node.left > 179){
                 this.node.left = 179;
-            }else if(this.node.left < 0){
-                this.node.left = 0;
+            }else if(this.node.left < -1){
+                this.node.left = -1;
             }
             this.node.css({
                 top: this.node.top,

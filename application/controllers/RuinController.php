@@ -24,6 +24,11 @@ class RuinController extends Game_Controller_Action {
             if($ruinId !== null){
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
                 if($modelRuin->ruinExists($ruinId)){
+                    $response = $modelArmy->getArmyById($armyId);
+                    $response['find'] = 'empty';
+                    $response['ruinId'] = $ruinId;
+                    $this->view->response = Zend_Json::encode($response);
+                    return null;
                     throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
@@ -72,7 +77,7 @@ class RuinController extends Game_Controller_Action {
                         $max1 = 15;
                         $min2 = 2;
                         $max2 = 3;
-                    }elseif($turn['nr'] <= 27){
+                    }else{
                         $max1 = 15;
                         $min2 = 3;
                         $max2 = 3;
@@ -95,6 +100,7 @@ class RuinController extends Game_Controller_Action {
                 }
                 $response = $modelArmy->getArmyById($armyId);
                 $response['find'] = $find;
+                $response['ruinId'] = $ruinId;
                 $this->view->response = Zend_Json::encode($response);
             }else{
                 throw new Exception('Brak ruinId');
