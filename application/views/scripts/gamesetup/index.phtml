@@ -1,10 +1,10 @@
 <p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <h2>Select your color</h2>
 <table id="playersingame">
-<th>Player name</th><th>Action</th>
+<th>Player name & color</th><th>Action</th><th>Human/AI</th>
 <?php
 for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="td1"><div class="left"></div><div class="right">'.$this->colors[$i].'</div></td><td id="td2"></td></tr>';
+    echo '<tr id="'.$this->colors[$i].'"><td id="td1"><div class="left"></div><div class="right">'.$this->colors[$i].'</div></td><td id="td2"></td><td class="td3"></td></tr>';
 }
 ?>
 </table>
@@ -24,10 +24,12 @@ for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
     var urlRedirectKick = '<?php echo $this->url(array('controller' => 'new', 'action' => 'index', 'gameId' => null)); ?>';
     var urlReady = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'ready', 'gameId' => null)) ?>';
     var urlKick = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'kick', 'gameId' => null)) ?>';
+    var urlHumanAI = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'humanai', 'gameId' => null)) ?>';
     var urlRefresh = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'refresh', 'gameId' => null)) ?>';
     var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
     var ready = '<?php echo $this->player['ready'] ?>';
     var colors = <?php echo Zend_Json::encode($this->colors) ?>;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
     var start = 0;
+    var gameMaster = 0;
 </script>

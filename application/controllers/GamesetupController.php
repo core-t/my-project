@@ -11,14 +11,12 @@ class GamesetupController extends Game_Controller_Action {
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jWebSocket.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jwsChannelPlugIn.js');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/index.websocket.js');
-        new Application_View_Helper_Logout($this->view, $this->_namespace->player);
-        new Application_View_Helper_Menu($this->view, null);
-        new Application_View_Helper_Websocket($this->view, null);
     }
 
     public function indexAction() {
         new Application_View_Helper_Logout($this->view, $this->_namespace->player);
         new Application_View_Helper_Menu($this->view, null);
+        new Application_View_Helper_Websocket($this->view, null);
         $this->view->headScript()->appendFile('/js/gamesetup.js');
         $gameId = $this->_request->getParam('gameId');
         if (!empty($gameId)) {
@@ -28,7 +26,7 @@ class GamesetupController extends Game_Controller_Action {
             }
             $modelGame = new Application_Model_Game($gameId);
             $modelGame->updateGameMaster($this->_namespace->player['playerId']);
-            $playersInGame = $modelGame->getPlayersWaitingForGame();
+//             $playersInGame = $modelGame->getPlayersWaitingForGame();
             $this->view->colors = $modelGame->getAllColors();
             if($modelGame->isPlayerInGame($this->_namespace->player['playerId'])){
                 $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);

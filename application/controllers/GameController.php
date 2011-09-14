@@ -66,6 +66,7 @@ class GameController extends Game_Controller_Action {
                 $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
                 $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);
                 $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
+                $this->view->players[$player['color']]['computer']  = $player['computer'];
                 if ($game['turnPlayerId'] == $player['playerId']) {
                     $this->view->turn['playerId'] = $player['playerId'];
                     $this->view->turn['color'] = $player['color'];
@@ -90,20 +91,13 @@ class GameController extends Game_Controller_Action {
             foreach($castlesSchema as $id=>$castle){
                 if(!isset($razed[$id])){
                     $this->view->castlesSchema[$id] = $castle;
-//                    $y = $castle['position']['y']/40;
-//                    $x = $castle['position']['x']/40;
-//                    $this->view->fields[$y][$x] = 'c';
-//                    $this->view->fields[$y + 1][$x] = 'c';
-//                    $this->view->fields[$y][$x + 1] = 'c';
-//                    $this->view->fields[$y + 1][$x + 1] = 'c';
                 }
             }
-            $this->view->colors = $modelGame->getAllColors();
         } else {
             throw new Exception('Game initialization error');
         }
     }
-    
+
     public function boardAction() {
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');

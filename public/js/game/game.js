@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 //    $(window).load(function () {
 //    });
-    
+
 });
 
 function turnOn() {
@@ -134,6 +134,10 @@ function startGame(){
     setInterval ( 'wsPing()', 10000 );
     if(my.turn && !players[my.color].turnActive){
         startMyTurnA();
+    } else {
+        if(players[turn.color].computer){
+            console.log(players[turn.color]);
+        }
     }
 //    for(y in fields) {
 //        for(x in fields[y]) {

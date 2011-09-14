@@ -17,10 +17,14 @@ function refresh() {
                     .addClass('button')
                     .html('Select')
                     .attr('id',colors[i])
-                )
+                );
                 $('#'+colors[i]+' #td2 a').click(function(){playerReady(this.id)});
+                $('#'+colors[i]+' .td3').html('Human');
             }
             for(i in result){
+                if(result[i].computer){
+                    $('#'+colors[i]+' .td3').html('Computer');
+                }
                 if(result[i].ready) {
                     playersReady++;
                     $('#'+result[i].color+' #td1 div.left').html(result[i].firstName+' '+result[i].lastName);
@@ -44,6 +48,15 @@ function refresh() {
                 }
             }
             if(result[i].gameMasterId == playerId) {
+                for(i = 0; i < numberOfPlayers; i++) {
+                    $('#'+colors[i]+' .td3').html(
+                        $('<a>')
+                        .addClass('button')
+                        .html('Human')
+                        .attr('id',colors[i])
+                    );
+                    $('#'+colors[i]+' .td3 a').click(function(){playerHumanAI(this.id)});
+                }
                 $('#start').html($('<a>').addClass('button').html('Start game'));
                 $('#start a').click(function(){
                     if(start){
@@ -78,6 +91,12 @@ function playerReady(color) {
 
 function kick(color){
     $.getJSON(urlKick+'/color/'+color, function(result) {
+        refresh();
+    });
+}
+
+function playerHumanAI(color){
+    $.getJSON(urlHumanAI+'/color/'+color, function(result) {
         refresh();
     });
 }
