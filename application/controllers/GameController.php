@@ -85,9 +85,9 @@ class GameController extends Game_Controller_Action {
             }
             $gameMasterId = $modelGame->getGameMaster();
             if($gameMasterId == $this->_namespace->player['playerId']){
-                $this->view->myGame = true;
+                $this->view->myGame = 1;
             }else{
-                $this->view->myGame = false;
+                $this->view->myGame = 0;
             }
             $this->view->castlesSchema = array();
             $castlesSchema = $modelBoard->getCastlesSchema();
