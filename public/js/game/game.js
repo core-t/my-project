@@ -81,11 +81,12 @@ function changeTurn(color, nr) {
 function connect(){
     if(lWSC.isOpened()){
         lock = false;
-        startM();
+        startGame();
+//        startM();
     }else{
         login();
         simpleM('Sorry, server is disconnected.');
-        setTimeout ( 'connect()', 5000 );
+        setTimeout ( 'connect()', 1000 );
     }
 }
 
