@@ -65,7 +65,6 @@ class TurnController extends Game_Controller_Action {
         }
         if($modelGame->playerTurnActive($this->_namespace->player['playerId'])) {
             throw new Exception('Tura jest już aktywna. Próba ponownego aktywowania tury i wygenerowania produkcji.');
-            return false;
         }
         $modelGame->turnActivate($this->_namespace->player['playerId']);
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);

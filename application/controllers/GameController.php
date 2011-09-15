@@ -78,7 +78,17 @@ class GameController extends Game_Controller_Action {
                 }
             }
             $this->view->color = $this->_namespace->player['color'];
-            $this->view->playerId = $this->_namespace->player['playerId'];
+            if ($this->view->turn['playerId'] == $this->_namespace->player['playerId']) {
+                $this->view->myTurn = 'true';
+            } else {
+                $this->view->myTurn = 'false';
+            }
+            $gameMasterId = $modelGame->getGameMaster();
+            if($gameMasterId == $this->_namespace->player['playerId']){
+                $this->view->myGame = true;
+            }else{
+                $this->view->myGame = false;
+            }
             $this->view->castlesSchema = array();
             $castlesSchema = $modelBoard->getCastlesSchema();
             $razed = $modelCastle->getRazedCastles();

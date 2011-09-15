@@ -1,3 +1,12 @@
+function computerA(){
+    if(!players[turn.color].computer){
+        return null;
+    }
+    $.getJSON(urlComputer, function(result) {
+        console.log(result);
+    });
+}
+
 function nextTurnA() {
     if(my.turn){
         setlock();

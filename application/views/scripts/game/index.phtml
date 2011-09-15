@@ -1,10 +1,3 @@
-<?php
-            if ($this->turn['playerId'] == $this->playerId) {
-                $myTurn = 'true';
-            } else {
-                $myTurn = 'false';
-            }
-?>
 <script type="text/javascript">
     <?php $this->headScript()->captureStart() ?>
     var fields = <?php echo Zend_Json::encode($this->fields); ?>;
@@ -12,6 +5,8 @@
     var units = <?php echo Zend_Json::encode($this->units); ?>;
     var towers = <?php echo Zend_Json::encode($this->towers); ?>;
     var artefacts = <?php echo Zend_Json::encode($this->artefacts); ?>;
+    var players = <?php echo Zend_Json::encode($this->players); ?>;
+    var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
     Image1= new Image(27,32);
     Image1.src = '../img/game/cursor_attack.png';
     Image2= new Image(14,46);
@@ -50,10 +45,9 @@
     Image18.src = '../img/game/cursor_arrow_se.png';
     Image19= new Image(28,28);
     Image19.src = '../img/game/cursor_arrow_sw.png';
-    var players = <?php echo Zend_Json::encode($this->players); ?>;
-    var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
     my.color = '<?php echo $this->color ?>';
-    my.turn = <?php echo $myTurn ?>;
+    my.turn = <?php echo $this->myTurn ?>;
+    my.game = <?php echo $this->myGame ?>;
     turn.color = '<?php echo $this->turn['color'] ?>';
     turn.nr = '<?php echo $this->turn['nr'] ?>';
     var channel = '<?php echo $this->channel ?>';
@@ -78,6 +72,7 @@
     var urlCastleGet = '<?php echo $this->url(array('controller' => 'castle', 'action' => 'get')) ?>';
     var urlTowerAdd = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'add')) ?>';
     var urlTowerGet = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'get')) ?>';
+    var urlComputer = '<?php echo $this->url(array('controller' => 'computer', 'action' => null)) ?>';
     <?php $this->headScript()->captureEnd() ?>
     var zoomPad = $(".zoomPad");
     var board = $("#board")

@@ -434,6 +434,14 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         }
     }
 
+    public function getTurnPlayerId(){
+        $select = $this->_db->select()
+                ->from($this->_name, 'turnPlayerId')
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+        $result = $this->_db->query($select)->fetchAll();
+        return $result[0]['turnPlayerId'];
+    }
+
     public function nextTurn($playerColor) {
         $find = false;
         foreach ($this->_playerColors as $color) {

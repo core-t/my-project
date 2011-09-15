@@ -81,5 +81,14 @@ class Application_Model_Player extends Game_Db_Table_Abstract {
         return $this->_db->update($this->_name, $data, $where);
     }
 
+    public function isComputer($playerId) {
+        $select = $this->_db->select()
+            ->from($this->_name, 'computer')
+            ->where('"' . $this->_primary . '" = ?', $playerId);
+        $result = $this->_db->query($select)->fetchAll();
+        return $result[0]['computer'];
+    }
+
+
 }
 
