@@ -27,6 +27,8 @@ var timeoutId = null;
 
 var enemyArmiesPositions = new Array();
 
+var largeimageloaded = false;
+
 $(document).ready(function() {
     terrain();
     lWSC = new jws.jWebSocketJSONClient();
@@ -80,9 +82,11 @@ function changeTurn(color, nr) {
 
 function connect(){
     if(lWSC.isOpened()){
-        lock = false;
-        startGame();
-//        startM();
+        if(largeimageloaded){
+            lock = false;
+            startGame();
+//            startM();
+        }
     }else{
         login();
         simpleM('Sorry, server is disconnected.');
