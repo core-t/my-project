@@ -17,7 +17,7 @@ class LoadajaxController extends Game_Controller_Action
         // action body
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);
-        $response = $modelGame->getPlayersWaitingForGame();
+        $response = $modelGame->getPlayersInGameLoad();
         $this->view->response = Zend_Json::encode($response);
     }
 

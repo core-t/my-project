@@ -115,8 +115,9 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from('playersingame', 'playerId')
                     ->where('ready = true')
+                    ->where('color IS NOT NULL')
                     ->where('lost = false')
-                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+                    ->where('"' . $this->_primary . '" = ?', $this->_gameId);//throw new Exception($select->__toString());
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
@@ -213,10 +214,19 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         );
         $this->_db->insert('playersingame', $data);
     }
-
+    
     public function disconnectFromGame($gameId, $playerId) {
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        $this->_db->delete('playersingame', $where);
+    }
+    
+    public function disconnectNotActive(){
+        $select = $this->_db->select()
+            ->from('playersingame', 'playerId')
+            ->where('"' . $this->_primary . '" = ?', $this->_gameId)
+            ->where('"timeout" < (SELECT now() - interval \'20 seconds\')');
+        $where[] = $this->_db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString()));
         $this->_db->delete('playersingame', $where);
     }
 
@@ -299,6 +309,21 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
                     ->where('ready = true')
                     ->where('a."gameId" = ?', $this->_gameId);
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function getPlayersInGameLoad() {
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a' => 'playersingame'), array('ready', 'color', 'playerId'))
+                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
+                    ->join(array('c' => 'game'), 'a."gameId" = c."gameId"', 'gameMasterId')
+                    ->where('a."gameId" = ?', $this->_gameId)
+                    ->where('color IS NOT NULL')
+                    ->where('"timeout" > (SELECT now() - interval \'10 seconds\') OR computer = true');
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());

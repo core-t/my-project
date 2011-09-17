@@ -69,6 +69,7 @@ class GamesetupajaxController extends Game_Controller_Action {
     public function gamestartAction() {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if ($modelGame->isGameMaster($this->_namespace->player['playerId'])) {
+            $modelGame->disconnectNotActive();
             $modelGame->startGame();
             $computerPlayers = $modelGame->getComputerPlayers();
             foreach($computerPlayers as $computer){
