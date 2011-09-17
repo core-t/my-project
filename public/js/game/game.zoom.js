@@ -5,7 +5,7 @@ function zoom(zoomWidth, zoomHeight) {
         zoomWidth: zoomWidth,
         zoomHeight: zoomHeight
     };
-    el.largeimageloaded = false; //tell us if large image is loaded
+    largeimageloaded = false; //tell us if large image is loaded
     el.scale = {};
     el.mousepos = {};
     el.mouseDown = false;
@@ -32,7 +32,7 @@ function zoom(zoomWidth, zoomHeight) {
                 if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
                     return false;
                 }
-                if (el.largeimageloaded && el.mouseDown) {
+                if (largeimageloaded && el.mouseDown) {
                     lens.setposition(e);
                 }
             });
@@ -247,7 +247,7 @@ function zoom(zoomWidth, zoomHeight) {
             lens.setdimensions();
             lens.show();
 //             lens.setcenter(settings.zoomPupX, settings.zoomPupY);
-            el.largeimageloaded = true;
+            largeimageloaded = true;
         };
         this.setposition = function () {
             var left = -el.scale.x * (lens.getoffset().left - smallimage.bleft + 1);

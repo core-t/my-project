@@ -45,6 +45,9 @@ class GamesetupajaxController extends Game_Controller_Action {
         $color = $this->_request->getParam('color');
         if (!empty($color)) {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
+            if (!$modelGame->isColorInGame(null, $color)){
+                throw new Exception('Color jest już w grze!');
+            }
             if ($modelGame->isGameMaster($this->_namespace->player['playerId'])) {
                 $modelPlayer = new Application_Model_Player(null, false);
                 $data = array(

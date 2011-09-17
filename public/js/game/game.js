@@ -27,6 +27,8 @@ var timeoutId = null;
 
 var enemyArmiesPositions = new Array();
 
+var largeimageloaded = false;
+
 $(document).ready(function() {
     terrain();
     lWSC = new jws.jWebSocketJSONClient();
@@ -81,62 +83,66 @@ function changeTurn(color, nr) {
 function connect(){
     if(lWSC.isOpened()){
         lock = false;
-        startM();
+        startGame();
+//        startM();
     }else{
         login();
         simpleM('Sorry, server is disconnected.');
-        setTimeout ( 'connect()', 5000 );
+        setTimeout ( 'connect()', 1000 );
     }
 }
 
 function startGame(){
-    var myArmies = false;
-    var myCastles = false;
-    for(i in castles) {
-        new createNeutralCastle(i);
-    }
-    for(i in ruins) {
-        new ruinCreate(i);
-    }
-    for(i in towers) {
-        new towerCreate(i);
-    }
-    for(color in players) {
-        players[color].active = 0;
-        $('.'+color +' .color').addClass(color +'bg');
-        for(i in players[color].armies) {
-            players[color].armies[i] = new army(players[color].armies[i], color);
-            if(color == my.color){
-                myArmies = true;
-            }
-        }
-        for(i in players[color].castles) {
-            updateCastleDefense(i, players[color].castles[i].defenseMod);
-            castleOwner(i, color);
-            if(color == my.color){
-                myCastles = true;
-                setMyCastleProduction(i);
-            }
-        }
-    }
-    auth();
-    showFirstCastle();
-    if(!myArmies && !myCastles){
-        lostM();
+    if(!largeimageloaded){
+        setTimeout ( 'startGame()', 1000 );
     }else{
-        if(my.turn){
-            turnOn();
-        }else{
-            turnOff();
+        var myArmies = false;
+        var myCastles = false;
+        for(i in castles) {
+            new createNeutralCastle(i);
         }
-    }
-    wsPing();
-    setInterval ( 'wsPing()', 10000 );
-    if(my.turn && !players[my.color].turnActive){
-        startMyTurnA();
-    } else if(my.game){
-        computerA();
-    }
+        for(i in ruins) {
+            new ruinCreate(i);
+        }
+        for(i in towers) {
+            new towerCreate(i);
+        }
+        for(color in players) {
+            players[color].active = 0;
+            $('.'+color +' .color').addClass(color +'bg');
+            for(i in players[color].armies) {
+                players[color].armies[i] = new army(players[color].armies[i], color);
+                if(color == my.color){
+                    myArmies = true;
+                }
+            }
+            for(i in players[color].castles) {
+                updateCastleDefense(i, players[color].castles[i].defenseMod);
+                castleOwner(i, color);
+                if(color == my.color){
+                    myCastles = true;
+                    setMyCastleProduction(i);
+                }
+            }
+        }
+        auth();
+        showFirstCastle();
+        if(!myArmies && !myCastles){
+            lostM();
+        }else{
+            if(my.turn){
+                turnOn();
+            }else{
+                turnOff();
+            }
+        }
+        wsPing();
+        setInterval ( 'wsPing()', 10000 );
+        if(my.turn && !players[my.color].turnActive){
+            startMyTurnA();
+        } else if(my.game){
+            computerA();
+        }
 //    for(y in fields) {
 //        for(x in fields[y]) {
 //            board.append(
@@ -150,6 +156,7 @@ function startGame(){
 //            );
 //        }
 //    }
+    }
 }
 
 function goldUpdate(gold){
