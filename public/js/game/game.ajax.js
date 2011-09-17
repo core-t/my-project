@@ -215,6 +215,9 @@ function setProductionA(castleId) {
     if(!unitId) {
         return null;
     }
+    if(castles[castleId].currentProduction == unitId){
+        return null;
+    }
     $.getJSON(urlSetProduction+'/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
             if(unitId == -1){
