@@ -29,7 +29,7 @@ class RuinController extends Game_Controller_Action {
                     $response['ruinId'] = $ruinId;
                     $this->view->response = Zend_Json::encode($response);
                     return null;
-                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
+//                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
                 $modelGame = new Application_Model_Game($this->_namespace->gameId);
@@ -37,11 +37,15 @@ class RuinController extends Game_Controller_Action {
                 $random = rand(0,100);
                 if($random < 10){//10%
                     //śmierć
-                    $find = array('death',1);
-                    $modelArmy->armyRemoveHero($heroId);
+                    if($turn['nr'] <= 7){
+                        $find = array('null',1);
+                    }else{
+                        $find = array('death',1);
+                        $modelArmy->armyRemoveHero($heroId);
+                    }
                 }elseif($random < 55){//45%
                     //kasa
-                    $gold = rand(500,1500);
+                    $gold = rand(50,150);
                     $find = array('gold',$gold);
                     $modelGame = new Application_Model_Game($this->_namespace->gameId);
                     $inGameGold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
