@@ -752,7 +752,15 @@ function getEnemyCastleGarrison(castleId) {
 }
 
 function getNeutralCastleGarrison(){
-    return jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":[{"soldierId":"s1","name":"light infantry"},{"soldierId":"s2","name":"light infantry"},{"soldierId":"s3","name":"light infantry"}]}');
+    var numberOfSoldiers = Math.ceil(turn.nr/10);
+    var string = '';
+    for(i = 1; i <= numberOfSoldiers; i++){
+        if(string){
+            string += ',';
+        }
+        string += '{"soldierId":"s'+i+'","name":"light infantry"}';
+    }
+    return jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":['+string+']}');
 }
 
 function findNextArmy() {

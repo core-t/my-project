@@ -200,21 +200,18 @@ class FightController extends Game_Controller_Action
                     throw new Exception('Armia ma za mało ruchów do wykonania akcji('.$movesSpend.'>'.$army['movesLeft'].').');
                 }
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
+                $modelGame = new Application_Model_Game($this->_namespace->gameId);
+                $turn = $modelGame->getTurn();
+                $numberOfSoldiers = ceil($turn['nr'] / 10);
+                $soldiers = array();
+                for($i = 1; $i <= $numberOfSoldiers; $i++){
+                    $soldiers[] = array(
+                            'defensePoints' => 3,
+                            'soldierId' => 's'.$i
+                            );
+                }
                 $enemy = array(
-                    'soldiers' => array(
-                        array(
-                            'defensePoints' => 3,
-                            'soldierId' => 's1'
-                            ),
-                        array(
-                            'defensePoints' => 3,
-                            'soldierId' => 's2'
-                            ),
-                        array(
-                            'defensePoints' => 3,
-                            'soldierId' => 's3'
-                            )
-                    ),
+                    'soldiers' => $soldiers,
                     'heroes' => array()
                 );
                 $battle = $this->battle($army, $enemy);
