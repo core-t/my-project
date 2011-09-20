@@ -19,7 +19,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('XHTML1_STRICT');
 
         // Set the initial title and separator:
-        $view->headTitle('Warlords')->setSeparator(' :: ');
+        $view->headTitle('Wars of Fate')->setSeparator(' :: ');
 
 //         $view->headScript()->prependFile('/js/jquery-1.4.4.min.js');
 //         $view->headScript()->appendFile('/js/global.js');

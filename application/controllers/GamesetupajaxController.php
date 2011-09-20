@@ -19,6 +19,9 @@ class GamesetupajaxController extends Game_Controller_Action {
         $gamestart = false;
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         $modelGame->updateGameMaster($this->_namespace->player['playerId']);
+        if ($modelGame->isGameMaster($this->_namespace->player['playerId'])) {
+            $modelGame->updateComputerPlayersReady();
+        }
         $res = $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);
         if($res == 1){
             $response = $modelGame->getPlayersWaitingForGame();
@@ -45,21 +48,29 @@ class GamesetupajaxController extends Game_Controller_Action {
         $color = $this->_request->getParam('color');
         if (!empty($color)) {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
-            if (!$modelGame->isColorInGame(null, $color)){
-                throw new Exception('Color jest już w grze!');
-            }
             if ($modelGame->isGameMaster($this->_namespace->player['playerId'])) {
-                $modelPlayer = new Application_Model_Player(null, false);
-                $data = array(
-                    'firstName' => 'Computer',
-                    'lastName' => 'Player',
-                    'computer' => 'true'
-                );
-                $playerId = $modelPlayer->createPlayer($data);
-                $modelHero = new Application_Model_Hero($playerId);
-                $modelHero->createHero();
-                $modelGame->joinGame($playerId);
-                $modelGame->updatePlayerReady($playerId, $color);
+                if ($modelGame->isColorInGame(0, $color)){
+                    $playerId = $modelGame->getPlayerIdByColor($color);
+                    $modelPlayer = new Application_Model_Player(null, false);
+                    if($modelPlayer->isComputer($playerId)){
+                        $modelGame->disconnectFromGame(null, $playerId);
+                    }
+                }else{
+                    $playerId = $modelGame->getComputerPlayerId();
+                    if(!$playerId){
+                        $modelPlayer = new Application_Model_Player(null, false);
+                        $data = array(
+                            'firstName' => 'Computer',
+                            'lastName' => 'Player',
+                            'computer' => 'true'
+                        );
+                        $playerId = $modelPlayer->createPlayer($data);
+                        $modelHero = new Application_Model_Hero($playerId);
+                        $modelHero->createHero();
+                    }
+                    $modelGame->joinGame($playerId);
+                    $modelGame->updatePlayerReady($playerId, $color);
+                }
             }
         } else {
             throw new Exception('Brak color!');
@@ -85,7 +96,6 @@ class GamesetupajaxController extends Game_Controller_Action {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
             $res = $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $color);
             $this->view->response = Zend_Json::encode($res);
-//             echo $res;
         } else {
             throw new Exception('Brak color!');
         }

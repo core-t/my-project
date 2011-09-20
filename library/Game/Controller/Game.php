@@ -19,8 +19,8 @@ abstract class Game_Controller_Game extends Zend_Controller_Action
         {
             $this->_init();
         }
-        $request = Zend_Controller_Front::getInstance()->getRequest();
-        $this->view->headTitle($request->getActionName());
+//        $request = Zend_Controller_Front::getInstance()->getRequest();
+//        $this->view->headTitle($request->getActionName());
     }
 
     public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array())

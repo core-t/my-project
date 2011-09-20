@@ -140,7 +140,7 @@ function startGame(){
         setInterval ( 'wsPing()', 10000 );
         if(my.turn && !players[my.color].turnActive){
             startMyTurnA();
-        } else if(my.game){
+        } else if(my.game && players[turn.color].computer){
             computerA();
         }
 //    for(y in fields) {

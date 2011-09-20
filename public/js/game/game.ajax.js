@@ -3,6 +3,19 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
+        if(typeof result.action == 'undefined'){
+            switch(result.action){
+                case 'start':
+                    computerA();
+                    break;
+                case 'end':
+                    changeTurn(result.color, result.nr);
+                    break;
+                case 'gameover':
+                    computerA();
+                    break;
+            }
+        }
         console.log(result);
     });
 }

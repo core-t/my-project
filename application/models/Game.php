@@ -113,7 +113,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     public function getAlivePlayers() {
         try {
             $select = $this->_db->select()
-                    ->from('playersingame', 'playerId')
+                    ->from('playersingame', array('playerId', 'color'))
                     ->where('ready = true')
                     ->where('color IS NOT NULL')
                     ->where('lost = false')
@@ -216,6 +216,9 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
     
     public function disconnectFromGame($gameId, $playerId) {
+        if(empty($gameId)){
+            $gameId = $this->_gameId;
+        }
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $this->_db->delete('playersingame', $where);
@@ -329,6 +332,21 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             throw new Exception($select->__toString());
         }
     }
+    
+    public function getComputerPlayerId(){
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a' => 'playersingame'), 'min("playerId")')
+                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"')
+                    ->where('a."gameId" != ?', $this->_gameId)
+                    ->where('ready = true')
+                    ->where('computer = true');
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['min'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
 
     public function getComputerPlayers(){
         try {
@@ -339,6 +357,27 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->where('ready = true')
                     ->where('computer = true');
             return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+    public function getComputerPlayersIds(){
+        $ids = '';
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a' => 'playersingame'), 'playerId')
+                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+                    ->where('a."gameId" = ?', $this->_gameId)
+                    ->where('ready = true')
+                    ->where('computer = true');
+            $result = $this->_db->query($select)->fetchAll();
+            foreach($result as $row){
+                if($ids){
+                    $ids .= ',';
+                }
+                $ids .= $row['playerId'];
+            }
+            return $ids;
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
@@ -440,6 +479,14 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             return array('ready' => $data['ready']);
         }
     }
+    
+    public function updateComputerPlayersReady(){
+        $ids = $this->getComputerPlayersIds();
+        $data['timeout'] = 'now()';
+        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+        $where[] = $this->_db->quoteInto('"playerId" IN (?)', $ids);
+        $result = $this->_db->update('playersingame', $data, $where);
+    }
 
     public function kick($colorKick, $playerId) {
         if ($this->isGameMaster($playerId)) {
@@ -473,6 +520,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
 
     public function nextTurn($playerColor) {
         $find = false;
+        // szukam następnego koloru w dostępnych kolorach
         foreach ($this->_playerColors as $color) {
             if ($playerColor == $color) {
                 $find = true;
@@ -486,17 +534,20 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         if (!isset($nextPlayerColor)) {
             throw new Exception('Nie znalazłem koloru gracza');
         }
-        $playersInGame = $this->getPlayersInGame();
-        foreach ($playersInGame as $k => $player) {
+        $alivePlayersInGame = $this->getAlivePlayers();
+        // przypisuję playerId do koloru
+        foreach ($alivePlayersInGame as $k => $player) {
             if ($player['color'] == $nextPlayerColor) {
                 $nextPlayerId = $player['playerId'];
             }
         }
+        // jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
         if (!isset($nextPlayerId)) {
-            foreach ($playersInGame as $k => $player) {
-                if ($player['color'] == 'white') {
+            foreach ($alivePlayersInGame as $k => $player) {
+                if ($player['color'] == $this->_playerColors[0]) {
                     $nextPlayerId = $player['playerId'];
                     $nextPlayerColor = $player['color'];
+                    break;
                 }
             }
         }
