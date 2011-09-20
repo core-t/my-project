@@ -8,7 +8,7 @@ class Application_View_Helper_Websocket extends Zend_View_Helper_Abstract {
 if( jws.browserSupportsWebSockets() ) {
     lWSC = new jws.jWebSocketJSONClient();
     var res = login();
-    console.log(res);
+//    console.log(res);
 }else{
     top.location = '.$view->url(array('controller'=>'index', 'action'=>'unsupported')).'
 }

@@ -161,7 +161,15 @@ function wsPing() {
         if(color == my.color){
             continue;
         }
-        if(players[color].active){
+        if(players[color].computer){
+            if(players[color].lost){
+                $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
+            }
+            continue;
+        }
+        if(players[color].lost){
+            $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
+        }else if(players[color].active){
             players[color].active--;
             $('.'+color+' .color').css('background',color+' url(../img/game/smile.png) center center no-repeat');
         }else{

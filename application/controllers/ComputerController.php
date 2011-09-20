@@ -36,7 +36,6 @@ class ComputerController extends Game_Controller_Action
     private function endTurn(){
             $youWin = false;
             $response = array();
-            $response['end'] = 1;
             $nextPlayer = array(
                 'color' => $this->modelGame->getPlayerColor($this->playerId)
             );
@@ -63,6 +62,7 @@ class ComputerController extends Game_Controller_Action
                     $this->modelGame->setPlayerLostGame($nextPlayer['playerId']);
                 }
             }
+            $response['action'] = 'end';
             $this->view->response = Zend_Json::encode($response);
     }
 
@@ -105,7 +105,7 @@ class ComputerController extends Game_Controller_Action
         }
         $armies = $modelArmy->getPlayerArmies($this->playerId);
         if(empty($castles) && empty($armies)){
-            $this->view->response = Zend_Json::encode(array('gameover'=>1));
+            $this->view->response = Zend_Json::encode(array('action' => 'gameover'));
         }else{
             foreach ($armies as $k => $army) {
                 foreach($army['soldiers'] as $unit){
@@ -115,7 +115,7 @@ class ComputerController extends Game_Controller_Action
             $gold = $gold + $income - $costs;
             $this->modelGame->updatePlayerInGameGold($this->playerId, $gold);
 
-            $this->view->response = Zend_Json::encode(array('start'=>1));
+            $this->view->response = Zend_Json::encode(array('action' => 'start'));
         }
         
     }

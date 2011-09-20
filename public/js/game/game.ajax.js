@@ -1,22 +1,29 @@
 function computerA(){
+    if(!my.game){
+        return null;
+    }
     if(!players[turn.color].computer){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
-        if(typeof result.action == 'undefined'){
+        if(typeof result.action != 'undefined'){
             switch(result.action){
                 case 'start':
                     computerA();
                     break;
                 case 'end':
+                    wsTurn();
                     changeTurn(result.color, result.nr);
+                    if(players[result.color].computer){
+                        computerA();
+                    }
                     break;
                 case 'gameover':
                     computerA();
                     break;
             }
         }
-        console.log(result);
+        console.log(result.action);
     });
 }
 
@@ -34,6 +41,7 @@ function nextTurnA() {
                 winM();
             }else{
                 changeTurn(result.color, result.nr);
+                computerA();
             }
             wsTurn();
         });
@@ -48,6 +56,7 @@ function getTurnA() {
             lostM();
         }else{
             changeTurn(result.color, result.nr);
+            computerA();
         }
     });
 }
