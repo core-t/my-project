@@ -113,7 +113,7 @@ function startGame(){
             if(players[color].computer){
                 $('.'+color+' .color').css('background',color+' url(../img/game/computer.png) center center no-repeat');
             }
-            console.log(players[color]);
+//            console.log(players[color]);
             for(i in players[color].armies) {
                 players[color].armies[i] = new army(players[color].armies[i], color);
                 if(color == my.color){

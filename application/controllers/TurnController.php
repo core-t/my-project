@@ -50,10 +50,10 @@ class TurnController extends Game_Controller_Action {
 
     public function getAction() {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        if ($modelGame->playerLost($this->_namespace->player['playerId'])) {
-            $this->view->response = Zend_Json::encode(array('lost' => 1));
-            return null;
-        }
+//        if ($modelGame->playerLost($this->_namespace->player['playerId'])) {
+//            $this->view->response = Zend_Json::encode(array('lost' => 1));
+//            return null;
+//        }
         $this->view->response = Zend_Json::encode($modelGame->getTurn());
     }
 

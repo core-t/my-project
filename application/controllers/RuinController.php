@@ -102,10 +102,10 @@ class RuinController extends Game_Controller_Action {
                     //artefakt
                     $artefactId = rand(5,34);
                     $modelInventory = new Application_Model_Inventory($this->_namespace->gameId);
-                    if($modelInventory->itemExists($artefactId, $this->_namespace->player['playerId'])){
-                        $modelInventory->increaseItemQuantity($artefactId, $this->_namespace->player['playerId']);
+                    if($modelInventory->itemExists($artefactId, $heroId)){
+                        $modelInventory->increaseItemQuantity($artefactId, $heroId);
                     }else{
-                        $modelInventory->addArtefact($artefactId, $this->_namespace->player['playerId']);
+                        $modelInventory->addArtefact($artefactId, $heroId);
                     }
                     $find = array('artefact',$artefactId);
                     $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $this->_namespace->player['playerId']);

@@ -340,8 +340,11 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
                     ->where('a."gameId" != ?', $this->_gameId)
                     ->where('ready = true')
-                    ->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($this->getComputerPlayersIds()))
                     ->where('computer = true');//throw new Exception($select->__toString());
+            $ids = $this->getComputerPlayersIds();
+            if($ids){
+                $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
+            }
             $result = $this->_db->query($select)->fetchAll();
             return $result[0]['min'];
         } catch (PDOException $e) {
@@ -595,11 +598,10 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         try {
             $select = $this->_db->select()
                     ->from(array('a' => $this->_name), array('nr' => 'turnNumber'))
-                    ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
+                    ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
                     ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0])) {
-                $result[0]['lost'] = 0;
                 return $result[0];
             }
         } catch (PDOException $e) {
