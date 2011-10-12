@@ -8,10 +8,12 @@ function computerA(){
     $.getJSON(urlComputer, function(result) {
         if(typeof result.action != 'undefined'){
             switch(result.action){
-                case 'start':
+                case 'continue':
                     computerA();
                     break;
                 case 'end':
+                    wsPlayerArmies(turn.color);
+                    getPlayerArmiesA(turn.color);
                     wsTurn();
                     changeTurn(result.color, result.nr);
                     if(players[result.color].computer){
@@ -36,7 +38,7 @@ function nextTurnA() {
         }
         $.getJSON(urlNextTurn, function(result) {
             unselectArmy();
-            if(typeof result.win != 'undefined' && result.win){
+            if((typeof result.win != 'undefined') && result.win){
                 turnOff();
                 winM();
             }else{
@@ -117,10 +119,10 @@ function moveA(movesSpend) {
                 return null;
             }
             //            var newArmyPosition = checkCastleVectorLength(castleId);
-//            if(!newArmyPosition){
-//                unlock();
-//                return null;
-//            }
+            //            if(!newArmyPosition){
+            //                unlock();
+            //                return null;
+            //            }
             if(castles[castleId].color){
                 enemyCastleId = castleId;
             }else{
@@ -187,8 +189,12 @@ function moveA(movesSpend) {
                     wsArmy(selectedEnemyArmy.armyId);
                 }
                 handleParentArmy();
-                wsBattle(result.battle,unselectedArmy,{0:selectedEnemyArmy});
-                battleM(result.battle, unselectedArmy, {0:selectedEnemyArmy});
+                wsBattle(result.battle,unselectedArmy,{
+                    0:selectedEnemyArmy
+                });
+                battleM(result.battle, unselectedArmy, {
+                    0:selectedEnemyArmy
+                });
                 unselectEnemyArmy();
                 unlock();
             });
@@ -201,7 +207,7 @@ function moveA(movesSpend) {
         $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
             if(result) {
                 var res = result;
-//                 console.log(result.path);
+                //                 console.log(result.path);
                 walk(res);
             }
         });
@@ -220,7 +226,7 @@ function getArmyA(armyId, center) {
                 removeM();
                 zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
             }
-//            clearPlayerArmiesTrash();
+        //            clearPlayerArmiesTrash();
         }
     });
 }
@@ -256,7 +262,7 @@ function setProductionA(castleId) {
 
 function getPlayerArmiesA(color){
     $.getJSON(urlGetPlayerArmies+'/color/'+color, function(result) {
-//        clearPlayerArmiesTrash();
+        //        clearPlayerArmiesTrash();
         for(i in result){
             players[color].armies[i] = new army(result[i], color);
         }

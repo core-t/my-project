@@ -17,6 +17,12 @@ class Application_Form_Auth extends Zend_Form {
             'filters' => array('StringTrim')
         ));
         $this->addElement('submit', 'submit', array('label' => 'Login'));
+        $this->setDecorators(array(
+            'FormElements',
+            array('HtmlTag', array('tag' => 'dl', 'class' => 'zend_form')),
+            array('Description', array('placement' => 'prepend')),
+            'Form'
+        ));
     }
 
 }

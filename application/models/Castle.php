@@ -1,7 +1,7 @@
 <?php
 
-class Application_Model_Castle extends Game_Db_Table_Abstract
-{
+class Application_Model_Castle extends Game_Db_Table_Abstract {
+
     protected $_name = 'castle';
     protected $_primary = 'castleId';
     protected $_db;
@@ -13,15 +13,15 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         parent::__construct();
     }
 
-    public function playerCastlesExists($playerId){
+    public function playerCastlesExists($playerId) {
         try {
             $select = $this->_db->select()
-                ->from($this->_name, $this->_primary)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('razed = false');
+                    ->from($this->_name, $this->_primary)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('razed = false');
             $result = $this->_db->query($select)->fetchAll();
-            if(count($result)){
+            if (count($result)) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -33,11 +33,11 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         $castles = array();
         try {
             $select = $this->_db->select()
-                ->from($this->_name)
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('razed = true');
+                    ->from($this->_name)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('razed = true');
             $result = $this->_db->query($select)->fetchAll();
-            foreach($result as $key => $val) {
+            foreach ($result as $key => $val) {
                 $castles[$val['castleId']] = $val;
             }
             return $castles;
@@ -50,12 +50,12 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         $playersCastles = array();
         try {
             $select = $this->_db->select()
-                ->from($this->_name)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('razed = false');
+                    ->from($this->_name)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('razed = false');
             $result = $this->_db->query($select)->fetchAll();
-            foreach($result as $key => $val) {
+            foreach ($result as $key => $val) {
                 $playersCastles[$val['castleId']] = $val;
             }
             return $playersCastles;
@@ -110,7 +110,7 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
-            if(isset ($result[0][$this->_primary])) {
+            if (isset($result[0][$this->_primary])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -147,13 +147,13 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
     public function isEnemyCastle($castleId, $playerId) {
         try {
             $select = $this->_db->select()
-                ->from($this->_name, $this->_primary)
-                ->where('razed = false')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"playerId" != ?', $playerId)
-                ->where('"castleId" = ?', $castleId);
+                    ->from($this->_name, $this->_primary)
+                    ->where('razed = false')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" != ?', $playerId)
+                    ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
-            if(isset ($result[0][$this->_primary])) {
+            if (isset($result[0][$this->_primary])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -164,13 +164,13 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
     public function isPlayerCastle($castleId, $playerId) {
         try {
             $select = $this->_db->select()
-                ->from($this->_name, $this->_primary)
-                ->where('razed = false')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"castleId" = ?', $castleId);
+                    ->from($this->_name, $this->_primary)
+                    ->where('razed = false')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
-            if(isset ($result[0][$this->_primary])) {
+            if (isset($result[0][$this->_primary])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -203,7 +203,7 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
             $select = $this->_db->select()
                     ->from($this->_name, array('production', 'productionTurn'))
                     ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"'.$this->_primary.'" = ?', $castleId)
+                    ->where('"' . $this->_primary . '" = ?', $castleId)
                     ->where('"playerId" = ?', $playerId);
             $result = $this->_db->query($select)->fetchAll();
             return $result[0];
@@ -231,6 +231,5 @@ class Application_Model_Castle extends Game_Db_Table_Abstract
         );
         return $this->_db->update($this->_name, $data, $where);
     }
-
 
 }

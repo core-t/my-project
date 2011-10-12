@@ -222,6 +222,10 @@ function terrain(){
 }
 
 function test(){
+    
+}
+
+function test2(){
     var i, j = 0;
     var startX = selectedArmy.x/40;
     var startY = selectedArmy.y/40;

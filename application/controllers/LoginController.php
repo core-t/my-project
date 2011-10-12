@@ -17,13 +17,17 @@ class LoginController extends Zend_Controller_Action {
                 $login = $this->_request->getParam('login');
                 $modelPlayer = new Application_Model_Player(null, false);
                 $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
-                if($playerId){
+                if ($playerId) {
                     $this->_namespace->player = $modelPlayer->getPlayer($playerId);
                     $this->_helper->redirector('index', 'index');
+                } else {
+                    $this->view->form = $form;
+                    $this->view->form->setDescription('Incorrect login or password!');
                 }
             }
+        } else {
+            $this->view->form = $form;
         }
-        $this->view->form = $form;
     }
 
     public function logoutAction() {

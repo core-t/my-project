@@ -823,5 +823,25 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         $this->addHeroToArmy($armyId, $heroId, 0);
         return $armyId;
     }
+    
+    public function getComputerArmyToMove($playerId){
+        $armies = $this->getPlayerArmies($playerId);
+        foreach($armies as $army){
+            $movesLeft = $this->calculateArmyMovesLeft($army['armyId']);
+            if($movesLeft > 0){
+                return $army;
+            }
+        }
+    }
+    
+    public function zeroArmyMovesLeft($armyId, $playerId) {
+        $data = array(
+            'movesLeft' => 0
+        );
+        $where[] = $this->_db->quoteInto('"armyId" = ?', $armyId);
+        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
+        $this->_db->update('soldier', $data, $where);
+        $this->_db->update('heroesingame', $data, $where);
+    }
 }
 

@@ -421,6 +421,19 @@ class Application_Model_Board {
         return $this->castles[$castleId]['defensePoints'];
     }
     
+    public function getMinProductionTimeUnit($castleId){
+        $castle = $this->getCastle($castleId);
+        $min = 100;
+        foreach($castle['production'] as $key => $val){
+            if($val['time'] < $min){
+                $min = $val['time'];
+                $unitName = $key;
+            }
+        }
+        return $unitName;
+    }
+
+
     public function isCastle($castleId) {
         if(isset($this->castles[$castleId])){
             return true;
