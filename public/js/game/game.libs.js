@@ -959,77 +959,8 @@ function cursorPosition(x, y, force) {
             $('#coord').html(destX + ' - ' + destY + ' ' + getTerrain(fields[destY][destX], selectedArmy)[0]);
             return showPath(close, destX+'_'+destY, selectedArmy.moves);
         }
-
-    //        var cosa = X - selectedArmy.x;
-    //        var sina = Y - selectedArmy.y;
-    //
-    //
-    //        var fieldX = Math.round(X/40);
-    //        var fieldY = Math.round(Y/40);
-    //        tmpX = fieldX*40;
-    //        tmpY = fieldY*40;
-    //        if(newX != tmpX || newY != tmpY || force == 1){
-    //            newX = tmpX;
-    //            newY = tmpY;
-    //            var pfX = selectedArmy.x/40;
-    //            var pfY = selectedArmy.y/40;
-    //            $('.path').remove();
-    //            if(cosa>=0 && sina>=0) {
-    //                movesSpend = downRight(pfX, pfY);
-    //            } else if (cosa>=0 && sina<=0) {
-    //                movesSpend = topRight(pfX, pfY);
-    //            } else if (cosa<=0 && sina<=0) {
-    //                movesSpend = topLeft(pfX, pfY);
-    //            } else if (cosa<=0 && sina>=0) {
-    //                movesSpend = downLeft(pfX, pfY);
-    //            }
-    //
-    //            $('#coord').html(fieldX + ' - ' + fieldY + ' ' + getTerrain(fields[fieldY][fieldX], selectedArmy)[0]);
-    //            return movesSpend;
-    //        }
     }
     return null;
-}
-
-function cursorPosition2(x, y, force) {
-    if(selectedArmy) {
-        var offset = $('.zoomWindow').offset();
-        var X = x - 20 - parseInt(board.css('left')) - offset.left;
-        var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        //        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
-        var cosa = X - selectedArmy.x;
-        var sina = Y - selectedArmy.y;
-
-
-        var fieldX = Math.round(X/40);
-        var fieldY = Math.round(Y/40);
-        tmpX = fieldX*40;
-        tmpY = fieldY*40;
-        if(newX != tmpX || newY != tmpY || force == 1){
-            newX = tmpX;
-            newY = tmpY;
-            var pfX = selectedArmy.x/40;
-            var pfY = selectedArmy.y/40;
-            $('.path').remove();
-            if(cosa>=0 && sina>=0) {
-                movesSpend = downRight(pfX, pfY);
-            } else if (cosa>=0 && sina<=0) {
-                movesSpend = topRight(pfX, pfY);
-            } else if (cosa<=0 && sina<=0) {
-                movesSpend = topLeft(pfX, pfY);
-            } else if (cosa<=0 && sina>=0) {
-                movesSpend = downLeft(pfX, pfY);
-            }
-
-            $('#coord').html(fieldX + ' - ' + fieldY + ' ' + getTerrain(fields[fieldY][fieldX], selectedArmy)[0]);
-            return movesSpend;
-        }
-    }
-    return null;
-}
-
-function getVectorLength(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
 }
 
 function setCursorArrow(dir){
@@ -1038,241 +969,6 @@ function setCursorArrow(dir){
         cursorDirection = dir;
     //         console.log(cursorDirection);
     }
-}
-
-function downRight(pfX, pfY) {
-    var xLenthPixels = (newX - selectedArmy.x);
-    var xLenthPoints = xLenthPixels/40;
-    var yLenthPixels = (newY - selectedArmy.y);
-    var yLenthPoints = yLenthPixels/40;
-    var movesSpend = null;
-    var dir = 'se';
-    if(xLenthPixels < yLenthPixels) {
-        for(i = 1; i <= xLenthPoints; i++) {
-            pfX += 1;
-            pfY += 1;
-            dir = 'se';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
-            pfY += 1;
-            dir = 's';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    } else {
-        for(i = 1; i <= yLenthPoints; i++) {
-            pfX += 1;
-            pfY += 1;
-            dir = 'se';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
-            pfX += 1;
-            dir = 'e';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    }
-    return movesSpend;
-}
-
-function topRight(pfX, pfY) {
-    var xLenthPixels = (newX - selectedArmy.x);
-    var xLenthPoints = xLenthPixels/40;
-    var yLenthPixels = (selectedArmy.y - newY);
-    var yLenthPoints = yLenthPixels/40;
-    var movesSpend = null;
-    var dir = 'ne';
-    if(xLenthPixels < yLenthPixels) {
-        for(i = 1; i <= xLenthPoints; i++) {
-            pfX += 1;
-            pfY -= 1;
-            dir = 'ne';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
-            pfY -= 1;
-            dir = 'n';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    } else {
-        for(i = 1; i <= yLenthPoints; i++) {
-            pfX += 1;
-            pfY -= 1;
-            dir = 'ne';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
-            pfX += 1;
-            dir = 'e';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    }
-    return movesSpend;
-}
-
-function topLeft(pfX, pfY) {
-    var xLenthPixels = (selectedArmy.x - newX);
-    var xLenthPoints = xLenthPixels/40;
-    var yLenthPixels = (selectedArmy.y - newY);
-    var yLenthPoints = yLenthPixels/40;
-    var movesSpend = null;
-    var dir = 'nw';
-    if(xLenthPixels < yLenthPixels) {
-        for(i = 1; i <= xLenthPoints; i++) {
-            pfX -= 1;
-            pfY -= 1;
-            dir = 'nw';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
-            pfY -= 1;
-            dir = 'n';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    } else {
-        for(i = 1; i <= yLenthPoints; i++) {
-            pfX -= 1;
-            pfY -= 1;
-            dir = 'nw';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
-            pfX -= 1;
-            dir = 'w';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    }
-    return movesSpend;
-}
-
-function downLeft(pfX, pfY) {
-    var xLenthPixels = (selectedArmy.x - newX);
-    var xLenthPoints = xLenthPixels/40;
-    var yLenthPixels = (newY - selectedArmy.y);
-    var yLenthPoints = yLenthPixels/40;
-    var movesSpend = null;
-    var dir = 'sw';
-    if(xLenthPixels < yLenthPixels) {
-        dir = 'sw';
-        for(i = 1; i <= xLenthPoints; i++) {
-            pfX -= 1;
-            pfY += 1;
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        dir = 's';
-        for(i = 1; i <= (yLenthPoints - xLenthPoints); i++) {
-            pfY += 1;
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    } else {
-        for(i = 1; i <= yLenthPoints; i++) {
-            pfX -= 1;
-            pfY += 1;
-            dir = 'sw';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-        for(i = 1; i <= (xLenthPoints - yLenthPoints); i++) {
-            pfX -= 1;
-            dir = 'w';
-            m = addPathDiv(pfX,pfY,dir,movesSpend);
-            if(m === null) {
-                return movesSpend;
-            }
-            movesSpend = m;
-        }
-    }
-    return movesSpend;
-}
-
-function addPathDiv(pfX,pfY,direction,movesSpend) {
-    setCursorArrow(direction);
-    if(movesSpend >= selectedArmy.moves) {
-        return null;
-    }
-    var terrainType = fields[pfY][pfX];
-    pX = pfX*40;//optymalizacja <-
-    pY = pfY*40;
-    var terrain = getTerrain(terrainType, selectedArmy);
-    if(terrain[1] === null){
-        return null;
-    }
-    var moves = movesSpend + terrain[1];
-    if(moves > selectedArmy.moves) {
-        return null;
-    }
-    board.append(
-        $('<div>')
-        .addClass('path')
-        .css({
-            background:'url(../img/game/footsteps_'+direction+'.png) center center no-repeat',
-            left:pX,
-            top:pY
-        })
-        .html(moves)
-        );
-    newX = pX;
-    newY = pY;
-    return moves;
 }
 
 function getTerrain(type, a) {
@@ -1385,16 +1081,22 @@ function showPath(close, key, moves){
     if(typeof close[key] == 'undefined'){
         return 0;
     }
+    var pX = close[key].x * 40;
+    var pY = close[key].y * 40;
+    var x = pX;
+    var y = pY;
+    var set = 0;
+    var klasa = 'path2';
     while(typeof close[key].parent != 'undefined'){
-        var pX = close[key].x * 40;
-        var pY = close[key].y * 40;
-        newX = pX;
-        newY = pY;
-        var klasa = '';
+        pX = close[key].x * 40;
+        pY = close[key].y * 40;
         if(close[key].G <= moves){
+            if(!set){
+                x = pX;
+                y = pY;
+                set = 1;
+            }
             klasa = 'path1';
-        }else{
-            klasa = 'path2';
         }
         board.append(
             $('<div>')
@@ -1407,6 +1109,8 @@ function showPath(close, key, moves){
             );
         key = close[key].parent.x+'_'+close[key].parent.y;
     }
+    newX = x;
+    newY = y;
     var movesLeft = moves - close[key].G;
     if(movesLeft >= 0){
         return movesLeft;
@@ -1543,5 +1247,9 @@ function node(x, y, destX, destY, g, parent){
     this.H = calculateH(this.x, this.y, destX, destY);
     this.F = this.H + this.G;
     this.parent = parent;
+}
+
+function getVectorLength(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
 }
 
