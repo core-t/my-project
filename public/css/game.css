@@ -12,8 +12,8 @@
 
 .zoomPad{
     float:left;
-/*    width:218px;*/
-/*    height:138px;*/
+    /*    width:218px;*/
+    /*    height:138px;*/
     position:relative;
     left:0;
     top:139px;
@@ -62,7 +62,7 @@
     border:none;
     cursor: crosshair;
     z-index: 202;
-/*    display:none;*/
+    /*    display:none;*/
 }
 .c{
     width:4px;
@@ -93,7 +93,7 @@
     position:absolute;
     width:40px;
     height:40px;
-/*    display:none;*/
+    /*    display:none;*/
     border:none;
     z-index: 1000;
 }
@@ -106,6 +106,7 @@
     margin-top:10px;
     margin-left:12px;
 }
+
 .path {
     position:inherit;
     width:40px;
@@ -115,17 +116,16 @@
     padding-left:2px;
     color:white;
     text-shadow:#000 1px 1px 3px;
+    background:#000;
+    opacity:0.66;
+}
+
+.path1 {
+    opacity:0.66;
 }
 
 .path2 {
-    position:inherit;
-    width:40px;
-    height:40px;
-    border:none;
-    z-index:201;
-    padding-left:2px;
-    color:white;
-    text-shadow:#000 1px 1px 3px;
+    opacity:0.33;
 }
 
 .field {
@@ -141,8 +141,8 @@
 }
 
 #gameMenu {
-/*    float:right;*/
-/*    height:130px;*/
+    /*    float:right;*/
+    /*    height:130px;*/
 }
 
 #gameMenu span{
@@ -155,7 +155,7 @@
 }
 
 .gameMenu.one {
-/*    width:184px;*/
+    /*    width:184px;*/
 }
 
 .gameMenu.two {
@@ -205,7 +205,7 @@
     clear:both;
     margin:2px;
     text-align:center;
-/*    min-width:80px;*/
+    /*    min-width:80px;*/
     height:17px;
 }
 .playersBox div {
@@ -233,18 +233,18 @@
 }
 
 #armyButtonsBox{
-/*    height:69px;*/
+    /*    height:69px;*/
 }
 #armyButtonsBox div.armyButtons {
     clear:both;
-/*    margin:2px;*/
+    /*    margin:2px;*/
     text-align:center;
-/*    width:50px;*/
+    /*    width:50px;*/
     height:18px;
 }
 
 #armyButtonsBox div div.armyButton{
-/*    width:83px;*/
+    /*    width:83px;*/
 }
 
 
@@ -315,7 +315,7 @@
 }
 
 .message .cancel {
-/*     float:left; */
+    /*     float:left; */
 }
 
 .message .right {
@@ -382,7 +382,7 @@
 }
 
 .message .status div.row div{
-/*    width:180px;*/
+    /*    width:180px;*/
     height:55px;
     position:relative;
     top:0px;
@@ -458,11 +458,11 @@
 }
 
 #turnBox div{
-/*    width:90px;*/
+    /*    width:90px;*/
 }
 
 #chatBox{
-    
+
 }
 
 #chatBox #chatWindow{
@@ -470,7 +470,7 @@
     height:121px;
     border: none;
     overflow:hidden;
-/*    border-bottom:1px solid #cecece;*/
+    /*    border-bottom:1px solid #cecece;*/
     background:#444;
     color:#fff;
     text-shadow:none;

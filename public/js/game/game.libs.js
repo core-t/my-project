@@ -18,7 +18,7 @@ function towerCreate(towerId){
             top: towers[towerId].y + 'px',
             background:'url(../img/game/tower_'+towers[towerId].color+'.png) center center no-repeat'
         })
-    );
+        );
 //    $('#tower' + towerId).fadeIn(1);
 }
 
@@ -114,7 +114,7 @@ function ruinCreate(ruinId){
             top: ruins[ruinId].y + 'px',
             background:'url(../img/game/ruin'+css+'.png) center center no-repeat'
         })
-    );
+        );
 }
 
 function ruinUpdate(ruinId, empty){
@@ -171,10 +171,10 @@ function createNeutralCastle(castleId) {
         })
         .mouseover(function(){
             castleCursor(this.id)
-            })
+        })
         .mousemove(function(){
             castleCursor(this.id)
-            })
+        })
         );
     castleFields(castleId, 'e');
     mX = castles[castleId].position.x/20;
@@ -186,7 +186,7 @@ function createNeutralCastle(castleId) {
         })
         .attr('id','c'+castleId)
         .addClass('c')
-    );
+        );
 }
 
 function castleCursor(id){
@@ -242,13 +242,13 @@ function castleOwner(castleId, color) {
         .unbind('click')
         .mouseover(function() {
             myCastleCursor(this.id)
-            })
+        })
         .mousemove(function() {
             myCastleCursor(this.id)
-            })
+        })
         .click(function(){
             castleM(castleId, color)
-            });
+        });
     } else {
         castleFields(castleId, 'e');
         castle
@@ -258,10 +258,10 @@ function castleOwner(castleId, color) {
         .unbind('click')
         .mouseover(function() {
             castleCursor(this.id)
-            })
+        })
         .mousemove(function() {
             castleCursor(this.id)
-            })
+        })
     }
     castle.removeClass()
     .addClass('castle ' + color)
@@ -461,13 +461,13 @@ function army(obj, color) {
     if(color == my.color) { // moja armia
         this.element.click(function(e) {
             myArmyClick(this, e)
-            });
+        });
         this.element.mouseover(function() {
             myArmyMouse(this.id)
-            });
+        });
         this.element.mousemove(function() {
             myArmyMouse(this.id)
-            });
+        });
         if(this.canSwim){
             if(fields[y][x] != 'S'){
                 this.fieldType = fields[y][x];
@@ -503,9 +503,9 @@ function army(obj, color) {
         );
     board.append(this.element);
 
-//    if(typeof dontFade == 'undefined'){
-//        $('#army'+obj.armyId).fadeIn(1);
-//    }
+    //    if(typeof dontFade == 'undefined'){
+    //        $('#army'+obj.armyId).fadeIn(1);
+    //    }
     this.armyId = obj.armyId;
     this.color = color;
     var mX = x*2;
@@ -520,7 +520,7 @@ function army(obj, color) {
         })
         .attr('id',this.armyId)
         .addClass('a')
-    );
+        );
 
 }
 
@@ -840,7 +840,7 @@ function quitArmy(){
 }
 
 function walk(res) {
-//    console.log(res);
+    //    console.log(res);
     var i;
     for(i in res.path) {
         break;
@@ -941,7 +941,62 @@ function cursorPosition(x, y, force) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-//        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
+        var destX = Math.round(X/40);
+        var destY = Math.round(Y/40);
+        var tmpX = destX*40;
+        var tmpY = destY*40;
+        if(newX != tmpX || newY != tmpY || force == 1){
+            $('.path').remove();
+            newX = tmpX;
+            newY = tmpY;
+            var startX = selectedArmy.x/40;
+            var startY = selectedArmy.y/40;
+            var open = new Object();
+            var close = new Object();
+            var start = new node(startX, startY, destX, destY, 0);
+            open[startX+'_'+startY] = start;
+            aStar(close, open, destX, destY, 1);
+            $('#coord').html(destX + ' - ' + destY + ' ' + getTerrain(fields[destY][destX], selectedArmy)[0]);
+            return showPath(close, destX+'_'+destY, selectedArmy.moves);
+        }
+
+    //        var cosa = X - selectedArmy.x;
+    //        var sina = Y - selectedArmy.y;
+    //
+    //
+    //        var fieldX = Math.round(X/40);
+    //        var fieldY = Math.round(Y/40);
+    //        tmpX = fieldX*40;
+    //        tmpY = fieldY*40;
+    //        if(newX != tmpX || newY != tmpY || force == 1){
+    //            newX = tmpX;
+    //            newY = tmpY;
+    //            var pfX = selectedArmy.x/40;
+    //            var pfY = selectedArmy.y/40;
+    //            $('.path').remove();
+    //            if(cosa>=0 && sina>=0) {
+    //                movesSpend = downRight(pfX, pfY);
+    //            } else if (cosa>=0 && sina<=0) {
+    //                movesSpend = topRight(pfX, pfY);
+    //            } else if (cosa<=0 && sina<=0) {
+    //                movesSpend = topLeft(pfX, pfY);
+    //            } else if (cosa<=0 && sina>=0) {
+    //                movesSpend = downLeft(pfX, pfY);
+    //            }
+    //
+    //            $('#coord').html(fieldX + ' - ' + fieldY + ' ' + getTerrain(fields[fieldY][fieldX], selectedArmy)[0]);
+    //            return movesSpend;
+    //        }
+    }
+    return null;
+}
+
+function cursorPosition2(x, y, force) {
+    if(selectedArmy) {
+        var offset = $('.zoomWindow').offset();
+        var X = x - 20 - parseInt(board.css('left')) - offset.left;
+        var Y = y - 20 - parseInt(board.css('top')) - offset.top;
+        //        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
         var cosa = X - selectedArmy.x;
         var sina = Y - selectedArmy.y;
 
@@ -1325,3 +1380,168 @@ function getTerrain(type, a) {
         1:moves
     };
 }
+
+function showPath(close, key, moves){
+    if(typeof close[key] == 'undefined'){
+        return 0;
+    }
+    while(typeof close[key].parent != 'undefined'){
+        var pX = close[key].x * 40;
+        var pY = close[key].y * 40;
+        newX = pX;
+        newY = pY;
+        var klasa = '';
+        if(close[key].G <= moves){
+            klasa = 'path1';
+        }else{
+            klasa = 'path2';
+        }
+        board.append(
+            $('<div>')
+            .addClass('path '+klasa)
+            .css({
+                left:pX,
+                top:pY
+            })
+            .html(close[key].G)
+            );
+        key = close[key].parent.x+'_'+close[key].parent.y;
+    }
+    var movesLeft = moves - close[key].G;
+    if(movesLeft >= 0){
+        return movesLeft;
+    }else{
+        return 0;
+    }
+}
+
+function aStar(close, open, destX, destY, nr){
+    nr++;
+    var f = findSmallestF(open);
+    var x = open[f].x;
+    var y = open[f].y;
+    close[f] = open[f];
+    delete open[f];
+    addOpen(x, y, close, open, destX, destY);
+    if(x == destX && y == destY){
+        //        console.log(nr + ' bingo!');
+        return f;
+    }
+    if(!isNotEmpty(open)){
+        console.log('dupa!');
+        return f;
+    }
+    if(nr > 30000){
+        nr--;
+        console.log('>'+nr);
+        return f;
+    }
+    aStar(close, open, destX, destY, nr);
+    return null;
+}
+
+function isNotEmpty(obj){
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)){
+            return true;
+        }
+    }
+    return false;
+}
+
+function findSmallestF(open){
+    var i;
+    var f;
+    for(i in open){
+        if(typeof open[f] == 'undefined'){
+            f = i;
+        }
+        if(open[i].F < open[f].F){
+            f = i;
+        }
+    }
+    return f;
+}
+
+function addOpen(x, y, close, open, destX, destY){
+    var startX = x - 1;
+    var startY = y - 1;
+    var endX = x + 1;
+    var endY = y + 1;
+    var i,j = 0;
+    for(i = startX; i <= endX; i++){
+        for(j = startY; j <= endY; j++){
+            var key = i+'_'+j;
+            if(x == i && y == j){
+                continue;
+            }
+            if(typeof close[key] != 'undefined' && close[key].x == i && close[key].y == j){
+                continue;
+            }
+            if(typeof fields[j] == 'undefined'){
+                continue;
+            }
+            if(typeof fields[j][i] == 'undefined'){
+                continue;
+            }
+            var type = fields[j][i];
+            if(type == 'e' || type == 'w' || type == 'M'){
+                continue;
+            }
+            var g = getTerrain(type, selectedArmy)[1];
+            if(typeof open[key] != 'undefined'){
+                calculatePath(x+'_'+y, open, close, g, key);
+                continue;
+            }
+            var parent = {
+                'x':x, 
+                'y':y
+            };
+            g += close[x+'_'+y].G;
+            open[key] = new node(i, j, destX, destY, g, parent);
+        }
+    }
+}
+
+function calculatePath(kA, open, close, g, key){
+    if(open[key].G > (g + close[kA].G)){
+        open[key].parent = {
+            'x':close[kA].x, 
+            'y':close[kA].y
+        };
+        open[key].G = g + close[kA].G;
+        open[key].F = open[key].G + open[key].H;
+    }
+}
+
+function calculateH(x, y, destX, destY){
+    var h = 0;
+    var xLengthPoints = x - destX;
+    var yLengthPoints = y - destY;
+    if(xLengthPoints < yLengthPoints) {
+        for(i = 1; i <= xLengthPoints; i++) {
+            h++;
+        }
+        for(i = 1; i <= (yLengthPoints - xLengthPoints); i++) {
+            h++;
+        }
+    } else {
+        for(i = 1; i <= yLengthPoints; i++) {
+            h++;
+        }
+        for(i = 1; i <= (xLengthPoints - yLengthPoints); i++) {
+            h++;
+        }
+    }
+    return h;
+}
+
+function node(x, y, destX, destY, g, parent){
+    this.x = x;
+    this.y = y;
+    this.G = g;
+    this.H = calculateH(this.x, this.y, destX, destY);
+    this.F = this.H + this.G;
+    this.parent = parent;
+}
+
