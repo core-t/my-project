@@ -941,9 +941,9 @@ function cursorPosition(x, y, force) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
-        var cosa = (X - selectedArmy.x)/vectorLenth;
-        var sina = (Y - selectedArmy.y)/vectorLenth;
+//        var vectorLenth = getVectorLength(selectedArmy.x, selectedArmy.y, X, Y);
+        var cosa = X - selectedArmy.x;
+        var sina = Y - selectedArmy.y;
 
 
         var fieldX = Math.round(X/40);
