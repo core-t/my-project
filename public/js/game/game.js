@@ -84,7 +84,7 @@ function connect(){
     if(lWSC.isOpened()){
         lock = false;
         startGame();
-//        startM();
+    //        startM();
     }else{
         login();
         simpleM('Sorry, server is disconnected.');
@@ -113,7 +113,7 @@ function startGame(){
             if(players[color].computer){
                 $('.'+color+' .color').css('background',color+' url(../img/game/computer.png) center center no-repeat');
             }
-//            console.log(players[color]);
+            //            console.log(players[color]);
             for(i in players[color].armies) {
                 players[color].armies[i] = new army(players[color].armies[i], color);
                 if(color == my.color){
@@ -147,19 +147,19 @@ function startGame(){
         } else if(my.game && players[turn.color].computer){
             computerA();
         }
-//    for(y in fields) {
-//        for(x in fields[y]) {
-//            board.append(
-//                $('<div>')
-//                .html(fields[y][x])
-//                .addClass('field')
-//                .css({
-//                    left:(x*40)+'px',
-//                    top:(y*40)+'px'
-//                })
-//            );
-//        }
-//    }
+    //    for(y in fields) {
+    //        for(x in fields[y]) {
+    //            board.append(
+    //                $('<div>')
+    //                .html(fields[y][x])
+    //                .addClass('field')
+    //                .css({
+    //                    left:(x*40)+'px',
+    //                    top:(y*40)+'px'
+    //                })
+    //            );
+    //        }
+    //    }
     }
 }
 
@@ -174,7 +174,9 @@ function updatePlayers(color){
 function chat(color,msg){
     var chatWindow = $('#chatWindow div').append('<br/>').append(color+': '+msg);
     var scroll = 120 - chatWindow[0].scrollHeight;
-    chatWindow.animate({'top':scroll},100);
+    chatWindow.animate({
+        'top':scroll
+    },100);
     $('#msg').focus();
 }
 
@@ -217,12 +219,147 @@ function terrain(){
         .append(' Terrain: ')
         .append(
             $('<span>').attr('id','coord')
-        )
-    );
+            )
+        );
+}
+
+function showOpen(open){
+    for(i in open){
+        var pX = open[i].x * 40;
+        var pY = open[i].y * 40;
+        board.append(
+            $('<div>')
+            .addClass('path')
+            .css({
+                left:pX,
+                top:pY,
+                'text-align':'center',
+                'z-index':10000
+            })
+            .html(open[i].H)
+            );
+    }
 }
 
 function test(){
-    
+    var x = selectedArmy.x/40;
+    var y = selectedArmy.y/40;
+    var open = new Array();
+    var close = new Array();
+    var destX = 96;
+    var destY = 3;
+    var start = new node(x, y, destX, destY, 'r');
+    open.push(start);
+    aStar(close, open, destX, destY, 1);
+    showOpen(open);
+    console.log(open);
+    console.log(close);
+//    console.log(open[y]);
+//    console.log(open[y][x]);
+}
+
+function aStar(close, open, destX, destY, nr){
+    nr++;
+    var f = findSmallestF(open);
+    var x = open[f].x;
+    var y = open[f].y;
+    close[f] = open[f];
+    open.splice(f,1);
+    addOpen(x, y, close, open, destX, destY);
+    if(x == destX && y == destY){
+        console.log('bingo!');
+        return f;
+    }
+    if(open.length == 0){
+        console.log('dupa!');
+        return f;
+    }
+    if(nr > 10){
+        console.log('>10');
+        return f;
+    }
+    aStar(close, open, destX, destY, nr);
+    return null;
+}
+
+function findSmallestF(open){
+    var i = 0;
+    var f = 0;
+    for(i in open){
+        if(open[i].F < open[f].F){
+            f = i;
+        }
+    }
+    return f;
+}
+
+function addOpen(x, y, close, open, destX, destY){
+    var startX = x - 1;
+    var startY = y - 1;
+    var endX = x + 1;
+    var endY = y + 1;
+    var i,j = 0;
+    for(i = startX; i <= endX; i++){
+        for(j = startY; j <= endY; j++){
+            if(x == i && y == j){
+                continue;
+            }
+            if(close.x == i && close.y == j){
+                continue;
+            }
+            var type = fields[j][i];
+            if(type == 'e'){
+                continue;
+            }
+            var parent = {
+                'x':x, 
+                'y':y
+            };
+            open.push(new node(i, j, destX, destY, type, parent));
+        }
+    }
+}
+
+function calculateH(x, y, destX, destY){
+    //    return Math.abs(x - destX) + Math.abs(y - destY);
+    var h = 0;
+    if(x < destX){
+        for(i = x; x < destX; x++){
+            h += getTerrain(fields[y][i], selectedArmy)[1];
+        }
+        if(y < destY){
+            for(i = y; y < destY; y++){
+                h += getTerrain(fields[i][destX], selectedArmy)[1];
+            }
+        }else if(y > destY){
+            for(i = y; y > destY; y--){
+                h += getTerrain(fields[i][destX], selectedArmy)[1];
+            }
+        }
+    }else if(x > destX){
+        for(i = x; x > destX; x--){
+            h += getTerrain(fields[y][i], selectedArmy)[1];
+        }
+        if(y < destY){
+            for(i = y; y < destY; y++){
+                h += getTerrain(fields[i][destX], selectedArmy)[1];
+            }
+        }else if(y > destY){
+            for(i = y; y > destY; y--){
+                h += getTerrain(fields[i][destX], selectedArmy)[1];
+            }
+        }
+    }
+    return h;
+}
+
+function node(x, y, destX, destY, type, parent){
+    this.x = x;
+    this.y = y;
+    this.G = getTerrain(type, selectedArmy)[1];
+    this.H = calculateH(this.x, this.y, destX, destY);
+    this.F = this.H + this.G;
+    this.parent = parent;
 }
 
 function test2(){
@@ -247,19 +384,19 @@ function test2(){
         for(j = 0; j < lenght; j++){
             weight = getTerrain(fields[y][x], selectedArmy)[1];
             matrix[y][x] = weight;
-//            var pX = x * 40;
-//            var pY = y * 40;
-//            board.append(
-//                $('<div>')
-//                .addClass('path')
-//                .css({
-//                    left:pX,
-//                    top:pY,
-//                    'text-align':'center',
-//                    'z-index':10000
-//                })
-//                .html(weight)
-//            );
+            //            var pX = x * 40;
+            //            var pY = y * 40;
+            //            board.append(
+            //                $('<div>')
+            //                .addClass('path')
+            //                .css({
+            //                    left:pX,
+            //                    top:pY,
+            //                    'text-align':'center',
+            //                    'z-index':10000
+            //                })
+            //                .html(weight)
+            //            );
             x++;
         }
         y++;
@@ -285,7 +422,7 @@ function test1(){
                         'z-index':10000
                     })
                     .html('e')
-                );
+                    );
             }else if(!fields[y][x]){
                 var pX = x*40;
                 var pY = y*40;
@@ -299,7 +436,7 @@ function test1(){
                         'z-index':10000
                     })
                     .html('X')
-                );
+                    );
             }else if(all){
                 var pX = x*40;
                 var pY = y*40;
@@ -313,7 +450,7 @@ function test1(){
                         'z-index':10000
                     })
                     .html(fields[y][x])
-                );
+                    );
             }
         }
     }
