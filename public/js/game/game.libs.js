@@ -69,7 +69,7 @@ function searchTower(x, y){
             changeMyTower(x, y, towerId);
             continue;
         }
-    }    
+    }
 }
 
 function changeMyTower(x, y, towerId){
@@ -1129,19 +1129,19 @@ function aStar(close, open, destX, destY, nr){
     addOpen(x, y, close, open, destX, destY);
     if(x == destX && y == destY){
         //        console.log(nr + ' bingo!');
-        return f;
+        return;
     }
     if(!isNotEmpty(open)){
-        console.log('dupa!');
-        return f;
+//        console.log('dupa!');
+        return;
     }
     if(nr > 30000){
         nr--;
         console.log('>'+nr);
-        return f;
+        return;
     }
     aStar(close, open, destX, destY, nr);
-    return null;
+    return;
 }
 
 function isNotEmpty(obj){
@@ -1198,7 +1198,7 @@ function addOpen(x, y, close, open, destX, destY){
                 continue;
             }
             var parent = {
-                'x':x, 
+                'x':x,
                 'y':y
             };
             g += close[x+'_'+y].G;
@@ -1210,7 +1210,7 @@ function addOpen(x, y, close, open, destX, destY){
 function calculatePath(kA, open, close, g, key){
     if(open[key].G > (g + close[kA].G)){
         open[key].parent = {
-            'x':close[kA].x, 
+            'x':close[kA].x,
             'y':close[kA].y
         };
         open[key].G = g + close[kA].G;

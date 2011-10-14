@@ -12,26 +12,34 @@ class Game_Astar {
     private $canFly;
     private $canSwim;
 
-    public function __construct($srcX, $srcY, $destX, $destY, $fields, $canFly, $canSwim, $moves) {
-        $this->destX = $destX;
-        $this->destY = $destY;
+    public function __construct($srcX, $srcY, $destX, $destY, $fields, $canFly, $canSwim) {
+        $this->setDestX($destX);
+        $this->setDestY($destY);
         $this->fields = $fields;
         $this->canFly = $canFly;
         $this->canSwim = $canSwim;
         $this->open[$srcX . '_' . $srcY] = $this->node($srcX, $srcY, 0, null);
         $this->aStar();
-        return restorePath($destX . '_' . $destY, $moves);
+    }
+
+    public function setDestX($destX){
+        $this->destX = $destX;
+    }
+
+    public function setDestY($destY){
+        $this->destY = $destY;
     }
 
     private function aStar() {
         $this->nr++;
         if ($this->nr > 30000) {
             $this->nr--;
+//            throw new Exception(Zend_Debug::dump($this->close));
             throw new Exception('>' + $this->nr);
         }
         $key = $this->findSmallestF();
-        $x = $this->open[$key][x];
-        $y = $this->open[$key][y];
+        $x = $this->open[$key]['x'];
+        $y = $this->open[$key]['y'];
         $this->close[$key] = $this->open[$key];
         unset($this->open[$key]);
         $this->addOpen($x, $y);
@@ -49,12 +57,12 @@ class Game_Astar {
     }
 
     private function findSmallestF() {
-        $i;
+        $i = 0;
         foreach ($this->open as $k => $v) {
             if (!isset($this->open[$i])) {
                 $i = $k;
             }
-            if ($this->open[$i]['F'] < $this->open[$k]['F']) {
+            if ($this->open[$k]['F'] < $this->open[$i]['F']) {
                 $i = $k;
             }
         }
@@ -106,7 +114,7 @@ class Game_Astar {
         }
     }
 
-    private function calculateH($x, $y) {
+    public function calculateH($x, $y) {
         $h = 0;
         $xLengthPoints = $x - $this->destX;
         $yLengthPoints = $y - $this->destY;
@@ -144,12 +152,22 @@ class Game_Astar {
         if (!isset($this->close[$key])) {
             return 0;
         }
+        $this->movesSpend = 0;
         while (!empty($this->close[$key]['parent'])) {
             if ($this->close[$key]['G'] <= $moves) {
-                $this->path . push(array('x' => $this->close[$key]['x'], 'y' => $this->close[$key]['y']));
+                if (!$this->movesSpend) {
+                    $this->movesSpend = $this->close[$key]['G'];
+                }
+                $this->path[] = array('x' => $this->close[$key]['x'] * 40, 'y' => $this->close[$key]['y'] * 40);
             }
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
+        $this->path = array_reverse($this->path);
+        return $this->path;
+    }
+
+    public function getMovesSpend() {
+        return $this->movesSpend;
     }
 
 }
