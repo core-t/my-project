@@ -34,50 +34,50 @@ function isTowerAtPosition(x, y){
 function searchTower(x, y){
     for(towerId in towers){
         if(towers[towerId].x == x && towers[towerId].y == y){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y-40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y-40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y-40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x-40) && towers[towerId].y == (y+40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x) && towers[towerId].y == (y+40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
         if(towers[towerId].x == (x+40) && towers[towerId].y == (y+40)){
-            changeMyTower(x, y, towerId);
+            changeTower(x, y, towerId);
             continue;
         }
     }
 }
 
-function changeMyTower(x, y, towerId){
+function changeTower(x, y, towerId){
     var fx = x/40;
     var fy = y/40;
     if(fields[fy][fx] != 'e'){
-        towers[towerId].color = my.color;
-        $('#tower' + towerId).css('background','url(../img/game/tower_'+my.color+'.png) center center no-repeat');
+        towers[towerId].color = turn.color;
+        $('#tower' + towerId).css('background','url(../img/game/tower_'+turn.color+'.png) center center no-repeat');
         addTowerA(towerId);
         return true;
     }else{
@@ -895,7 +895,7 @@ function enemyWalk(res) {
             wsArmy(res.oldArmyId);
         }
         wsArmy(res.armyId);
-//        handleParentArmy();
+        wait = 0;
         return null;
     } else {
         wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
@@ -1219,10 +1219,13 @@ function addOpen(x, y, close, open, destX, destY){
                 continue;
             }
             var type = fields[j][i];
-            if(type == 'e' || type == 'w' || type == 'M'){
+            if(type == 'e'){
                 continue;
             }
             var g = getTerrain(type, selectedArmy)[1];
+            if (g > 5) {
+                continue;
+            }
             if(typeof open[key] != 'undefined'){
                 calculatePath(x+'_'+y, open, close, g, key);
                 continue;

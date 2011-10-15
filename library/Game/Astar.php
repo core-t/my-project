@@ -18,7 +18,10 @@ class Game_Astar {
         $this->destY = $destY;
     }
 
-    public function start($srcX, $srcY, $fields, $canFly, $canSwim){
+    public function start($srcX, $srcY, $fields, $canFly, $canSwim) {
+        if ($srcX == $this->destX && $srcY == $this->destY) {
+            return null;
+        }
         $this->fields = $fields;
         $this->canFly = $canFly;
         $this->canSwim = $canSwim;
@@ -82,7 +85,11 @@ class Game_Astar {
                 if (!isset($this->fields[$j][$i])) {
                     continue;
                 }
-                $terrain = Application_Model_Board::getTerrain($this->fields[$j][$i], $this->canFly, $this->canSwim);
+                $type = $this->fields[$j][$i];
+//                if ($type == 'e') {
+//                    continue;
+//                }
+                $terrain = Application_Model_Board::getTerrain($type, $this->canFly, $this->canSwim);
                 $g = $terrain[1];
                 if ($g > 5) {
                     continue;
@@ -132,6 +139,21 @@ class Game_Astar {
         return $h;
     }
 
+    public function isCastleInterior($x, $y, $newX, $newY) {
+        if ($x == $newX && $y == $newY) {
+            return true;
+        }
+        if ($x == $newX && ($y + 1) == $newY) {
+            return true;
+        }
+        if (($x + 1) == $newX && $y == $newY) {
+            return true;
+        }
+        if (($x + 1) == $newX && ($y + 1) == $newY) {
+            return true;
+        }
+    }
+
     private function node($x, $y, $g, $parent) {
         $h = $this->calculateH($x, $y);
         return array(
@@ -144,20 +166,20 @@ class Game_Astar {
         );
     }
 
-    public function restoreFullPath($key){
+    public function restoreFullPath($key) {
         if (!isset($this->close[$key])) {
             return null;
         }
         while (!empty($this->close[$key]['parent'])) {
-                $path[] = array(
-                    'x' => $this->close[$key]['x'] * 40,
-                    'y' => $this->close[$key]['y'] * 40);
+            $path[] = array(
+                'x' => $this->close[$key]['x'] * 40,
+                'y' => $this->close[$key]['y'] * 40);
         }
         $path = array_reverse($path);
         return $path;
     }
 
-    public function getFullPathMovesSpend($key){
+    public function getFullPathMovesSpend($key) {
         if (!isset($this->close[$key])) {
             return null;
         }

@@ -42,27 +42,24 @@ class ComputerController extends Game_Controller_Action {
         $position = $this->modelArmy->convertPosition($army['position']);
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
         $modelBoard = new Application_Model_Board();
-        $fields = Application_Model_Board::getBoardFields();
+        $fields = $this->modelArmy->getEnemyArmiesFieldsPositions($this->playerId);
         $castlesSchema = $modelBoard->getCastlesSchema();
         $castles = array();
         foreach ($castlesSchema as $castleId => $castleSchema) {
             $x = $castleSchema['position']['x'] / 40;
             $y = $castleSchema['position']['y'] / 40;
-            if (!$modelCastle->isPlayerCastle($castleId, $this->playerId)) {
-                $castles[$castleId] = $castleSchema;
-                $fields[$y][$x] = 'e';
-                $fields[$y + 1][$x] = 'e';
-                $fields[$y][$x + 1] = 'e';
-                $fields[$y + 1][$x + 1] = 'e';
-            } else {
+            if ($modelCastle->isPlayerCastle($castleId, $this->playerId)) {
                 $fields[$y][$x] = 'c';
                 $fields[$y + 1][$x] = 'c';
                 $fields[$y][$x + 1] = 'c';
                 $fields[$y + 1][$x + 1] = 'c';
+            } else {
+                $castles[$castleId] = $castleSchema;
+//                $fields[$y][$x] = 'e';
+//                $fields[$y + 1][$x] = 'e';
+//                $fields[$y][$x + 1] = 'e';
+//                $fields[$y + 1][$x + 1] = 'e';
             }
-        }
-        foreach ($castlesSchema as $castle) {
-
         }
         $heuristics = array();
         foreach ($castles as $castleId => $castle) {
@@ -84,24 +81,36 @@ class ComputerController extends Game_Controller_Action {
             $destY = $castlesSchema[$castleId]['position']['y'] / 40;
             $aStar = new Game_Astar($destX, $destY);
             $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
-            $paths[$aStar->getFullPathMovesSpend($destX . '_' . $destY)] = $castleId;
+            $paths[$castleId] = $aStar->getFullPathMovesSpend($destX . '_' . $destY);
         }
-        arsort($paths, SORT_NUMERIC);
-        $castleId = array_pop($paths);
+        asort($paths, SORT_NUMERIC);
+        foreach ($paths as $castleId => $v) {
+            if ($v) {
+                break;
+            }
+        }
+//        throw new Exception($castleId . ' ' . Zend_Debug::dump($paths));
         $destX = $castlesSchema[$castleId]['position']['x'] / 40;
         $destY = $castlesSchema[$castleId]['position']['y'] / 40;
+        $fields[$destY][$destX] = 'c';
+        $fields[$destY + 1][$destX] = 'c';
+        $fields[$destY][$destX + 1] = 'c';
+        $fields[$destY + 1][$destX + 1] = 'c';
         $aStar = new Game_Astar($destX, $destY);
         $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
         $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
         $currentPosition = $aStar->getCurrentPosition();
+        $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
+        if (!$currentPosition) {
+            $this->view->response = Zend_Json::encode(array('action' => 'continue'));
+            return null;
+        }
+//        throw new Exception(Zend_Debug::dump($currentPosition));
         $data = array(
             'position' => $currentPosition['x'] . ',' . $currentPosition['y'],
             'movesSpend' => $currentPosition['movesSpend']
         );
         $res = $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
-
-//        throw new Exception(Zend_Debug::dump($path));
-
         switch ($res) {
             case 1:
                 $armyId = $this->modelArmy->joinArmiesAtPosition($data['position'], $this->playerId);
@@ -109,7 +118,6 @@ class ComputerController extends Game_Controller_Action {
                 $result['action'] = 'continue';
                 $result['path'] = $path;
                 $result['oldArmyId'] = $army['armyId'];
-                $this->modelArmy->zeroArmyMovesLeft($armyId, $this->playerId);
                 $this->view->response = Zend_Json::encode($result);
                 break;
             case 0:

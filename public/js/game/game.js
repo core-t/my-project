@@ -29,6 +29,8 @@ var enemyArmiesPositions = new Array();
 
 var largeimageloaded = false;
 
+var wait = 0;
+
 $(document).ready(function() {
     terrain();
     lWSC = new jws.jWebSocketJSONClient();
@@ -262,66 +264,7 @@ function showClose(close){
 }
 
 function test(){
-    var x = selectedArmy.x/40;
-    var y = selectedArmy.y/40;
-    var open = new Object();
-    var close = new Object();
-    var destX = 62;
-    var destY = 58;
-    var start = new node(x, y, destX, destY, 0);
-    open[x+'_'+y] = start;
-    aStar(close, open, destX, destY, 1);
-    //    showOpen(open);
-    //    showClose(close);
-    showPath(close, destX+'_'+destY);
-//    console.log(open);
-//    console.log(close);
-}
-
-function test2(){
-    var i, j = 0;
-    var startX = selectedArmy.x/40;
-    var startY = selectedArmy.y/40;
-    var X = startX - selectedArmy.moves;
-    if(X < 0){
-        X = 0;
-    }
-    var y = startY - selectedArmy.moves;
-    if(y < 0){
-        y = 0;
-    }
-    $('.path').remove();
-    var lenght = startX - X + startY - y + 1;
-    var matrix = new Array(lenght);
-    var weight;
-    for(i = 0; i < lenght; i++){
-        x = X;
-        matrix[y] = new Array(lenght);
-        for(j = 0; j < lenght; j++){
-            weight = getTerrain(fields[y][x], selectedArmy)[1];
-            matrix[y][x] = weight;
-            //            var pX = x * 40;
-            //            var pY = y * 40;
-            //            board.append(
-            //                $('<div>')
-            //                .addClass('path')
-            //                .css({
-            //                    left:pX,
-            //                    top:pY,
-            //                    'text-align':'center',
-            //                    'z-index':10000
-            //                })
-            //                .html(weight)
-            //            );
-            x++;
-        }
-        y++;
-    }
-    console.log(matrix);
-}
-
-function test1(){
-    var all = 1;
+    var all = 0;
     $('.path').remove();
     for(y in fields){
         for(x in fields[y]){

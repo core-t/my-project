@@ -12,10 +12,12 @@ class TowerController extends Game_Controller_Action {
 
     public function addAction(){
         $towerId = $this->_request->getParam('tid');
-        if ($towerId !== null) {
+        $color = $this->_request->getParam('c');
+        if ($towerId !== null || empty($color)) {
             $modelTower = new Application_Model_Tower($this->_namespace->gameId);
+            $modelGame = new Application_Model_Game($this->_namespace->gameId);
+            $modelGame->getPlayerIdByColor($color);
             if($modelTower->towerExists($towerId)){
-                Zend_Debug::dump('dupa');
                 $modelTower->changeTowerOwner($towerId, $this->_namespace->player['playerId']);
             }else{
                 $modelTower->addTower($towerId, $this->_namespace->player['playerId']);
@@ -24,7 +26,7 @@ class TowerController extends Game_Controller_Action {
             throw new Exception('Brak "towerId"!');
         }
     }
-    
+
     public function getAction(){
         $towerId = $this->_request->getParam('tid');
         if ($towerId !== null) {

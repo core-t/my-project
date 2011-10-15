@@ -10,9 +10,12 @@ function computerA(){
             switch(result.action){
                 case 'continue':
                     if(typeof result.path != 'undefined'){
+                        wait = 1;
                         enemyWalk(result);
+                        sleep();
+                    }else{
+                        computerA();
                     }
-                    computerA();
                     break;
                 case 'end':
                     wsPlayerArmies(turn.color);
@@ -28,8 +31,16 @@ function computerA(){
                     break;
             }
         }
-        console.log(result);
+        console.log(result.action);
     });
+}
+
+function sleep(){
+    if(wait){
+        setTimeout(sleep, 500);
+    }else{
+        computerA();
+    }
 }
 
 function nextTurnA() {
@@ -433,10 +444,10 @@ function getRuinA(ruinId){
 }
 
 function addTowerA(towerId){
-    if(!my.turn){
-        return null;
-    }
-    $.getJSON(urlTowerAdd+'/tid/'+towerId, function() {
+//    if(!my.turn){
+//        return null;
+//    }
+    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color, function() {
         wsAddTower(towerId);
     });
 }
