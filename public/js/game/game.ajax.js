@@ -9,6 +9,9 @@ function computerA(){
         if(typeof result.action != 'undefined'){
             switch(result.action){
                 case 'continue':
+                    if(typeof result.path != 'undefined'){
+                        enemyWalk(result);
+                    }
                     computerA();
                     break;
                 case 'end':
@@ -25,7 +28,7 @@ function computerA(){
                     break;
             }
         }
-        console.log(result.action);
+        console.log(result);
     });
 }
 

@@ -28,13 +28,17 @@ class MoveController extends Game_Controller_Action {
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
             $this->fields = $modelArmy->getEnemyArmiesFieldsPositions($this->_namespace->player['playerId']);
 //             echo '<pre>';print_r($this->fields);echo '</pre>';
-            $movesSpend = $this->calculateNewArmyPosition($army, $x/40, $y/40);
-            if ($movesSpend > $army['movesLeft']) {
+            $currentPosition = $this->calculateNewArmyPosition($army, $x / 40, $y / 40);
+//            throw new Exception(Zend_Debug::dump($currentPosition));
+            if (!$currentPosition) {
+                throw new Exception('Nie wykonano nuchu');
+            }
+            if ($currentPosition['movesSpend'] > $army['movesLeft']) {
                 throw new Exception('Próba wykonania większej ilości ruchów niż jednostka posiada');
             }
             $data = array(
-                'position' => $x . ',' . $y,
-                'movesSpend' => $movesSpend
+                'position' => $currentPosition['x'] . ',' . $currentPosition['y'],
+                'movesSpend' => $currentPosition['movesSpend']
             );
             $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
             $armyId = $modelArmy->joinArmiesAtPosition($data['position'], $this->_namespace->player['playerId']);
@@ -75,41 +79,29 @@ class MoveController extends Game_Controller_Action {
         }
         $position = explode(',', substr($army['position'], 1, -1));
         $position = array('x' => $position[0], 'y' => $position[1]);
-        $this->movesLeft = $army['movesLeft'];
         $modelBoard = new Application_Model_Board();
-
+        $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
         $castlesSchema = $modelBoard->getCastlesSchema();
-        foreach ($castlesSchema as $castle) {
+        foreach ($castlesSchema as $castleId => $castle) {
             $y = $castle['position']['y'] / 40;
             $x = $castle['position']['x'] / 40;
-            $this->fields[$y][$x] = 'c';
-            $this->fields[$y + 1][$x] = 'c';
-            $this->fields[$y][$x + 1] = 'c';
-            $this->fields[$y + 1][$x + 1] = 'c';
+            if (!$modelCastle->isPlayerCastle($castleId, $this->_namespace->player['playerId'])) {
+                $fields[$y][$x] = 'e';
+                $fields[$y + 1][$x] = 'e';
+                $fields[$y][$x + 1] = 'e';
+                $fields[$y + 1][$x + 1] = 'e';
+            } else {
+                $fields[$y][$x] = 'c';
+                $fields[$y + 1][$x] = 'c';
+                $fields[$y][$x + 1] = 'c';
+                $fields[$y + 1][$x + 1] = 'c';
+            }
         }
 
-        $aStar = new Game_Astar($position['x'] / 40, $position['y'] / 40, $destX, $destY, $this->fields, $this->canFly, $this->canSwim);
-        $key = $destX . '_' . $destY;
-        $this->path = $aStar->restorePath($key, $this->movesLeft);
-        return $aStar->getMovesSpend();
-    }
-
-    private function addPath($pfX, $pfY, $direction, $movesSpend) {
-        if ($movesSpend >= $this->movesLeft) {
-            return null;
-        }
-        $terrainType = $this->fields[$pfY][$pfX];
-        $terrain = Application_Model_Board::getTerrain($terrainType, $this->canFly, $this->canSwim);
-        $this->path[] = array(
-            'terrain' => $terrain[0],
-            'cost' => $terrain[1],
-            'x' => $pfX * 40,
-            'y' => $pfY * 40
-        );
-        if (($movesSpend + $terrain[1]) > $this->movesLeft) {
-            return null;
-        }
-        return $movesSpend + $terrain[1];
+        $aStar = new Game_Astar($destX, $destY);
+        $aStar->start($position['x'] / 40, $position['y'] / 40, $this->fields, $this->canFly, $this->canSwim);
+        $this->path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
+        return $aStar->getCurrentPosition();
     }
 
 }

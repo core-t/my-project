@@ -882,6 +882,41 @@ function walk(res) {
     }
 }
 
+function enemyWalk(res) {
+    //    console.log(res);
+    var i;
+    for(i in res.path) {
+        break;
+    }
+    if(typeof res.path[i] == 'undefined') {
+        deleteArmyByPosition(players[turn.color].armies['army'+res.oldArmyId].x, players[turn.color].armies['army'+res.oldArmyId].y, turn.color);
+        players[turn.color].armies['army'+res.armyId] = new army(res, turn.color);
+        if(res.armyId != res.oldArmyId){
+            wsArmy(res.oldArmyId);
+        }
+        wsArmy(res.armyId);
+//        handleParentArmy();
+        return null;
+    } else {
+        wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
+        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
+        $('#army'+res.oldArmyId).animate({
+            left: res.path[i].x + 'px',
+            top: res.path[i].y + 'px'
+        },300,
+        function(){
+            if(typeof res.path[i] == 'undefined'){
+                console.log('coś tu niegra');
+                console.log(res);
+            }else{
+                searchTower(res.path[i].x, res.path[i].y);
+                delete res.path[i];
+                enemyWalk(res);
+            }
+        });
+    }
+}
+
 function clearPlayerArmiesTrash(){
     // czyszczenie śmieci
     $('.army').each( function(){
@@ -1081,20 +1116,16 @@ function showPath(close, key, moves){
     if(typeof close[key] == 'undefined'){
         return 0;
     }
-    var pX = close[key].x * 40;
-    var pY = close[key].y * 40;
-    var x = pX;
-    var y = pY;
-    var set = 0;
     var klasa = 'path2';
     while(typeof close[key].parent != 'undefined'){
-        pX = close[key].x * 40;
-        pY = close[key].y * 40;
+        var pX = close[key].x * 40;
+        var pY = close[key].y * 40;
         if(close[key].G <= moves){
-            if(!set){
-                x = pX;
-                y = pY;
-                set = 1;
+            if(typeof set == 'undefined'){
+                var set = new Object();
+                set.x = pX;
+                set.y = pY;
+                set.movesSpend = close[key].G;
             }
             klasa = 'path1';
         }
@@ -1109,13 +1140,12 @@ function showPath(close, key, moves){
             );
         key = close[key].parent.x+'_'+close[key].parent.y;
     }
-    newX = x;
-    newY = y;
-    var movesLeft = moves - close[key].G;
-    if(movesLeft >= 0){
-        return movesLeft;
+    if(typeof set == 'undefined'){
+        return null;
     }else{
-        return 0;
+        newX = set.x;
+        newY = set.y;
+        return set.movesSpend;
     }
 }
 
@@ -1132,7 +1162,7 @@ function aStar(close, open, destX, destY, nr){
         return;
     }
     if(!isNotEmpty(open)){
-//        console.log('dupa!');
+        //        console.log('dupa!');
         return;
     }
     if(nr > 30000){

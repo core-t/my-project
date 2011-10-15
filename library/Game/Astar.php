@@ -11,23 +11,19 @@ class Game_Astar {
     private $fields;
     private $canFly;
     private $canSwim;
+    private $currentPosition;
 
-    public function __construct($srcX, $srcY, $destX, $destY, $fields, $canFly, $canSwim) {
-        $this->setDestX($destX);
-        $this->setDestY($destY);
+    public function __construct($destX, $destY) {
+        $this->destX = $destX;
+        $this->destY = $destY;
+    }
+
+    public function start($srcX, $srcY, $fields, $canFly, $canSwim){
         $this->fields = $fields;
         $this->canFly = $canFly;
         $this->canSwim = $canSwim;
         $this->open[$srcX . '_' . $srcY] = $this->node($srcX, $srcY, 0, null);
         $this->aStar();
-    }
-
-    public function setDestX($destX){
-        $this->destX = $destX;
-    }
-
-    public function setDestY($destY){
-        $this->destY = $destY;
     }
 
     private function aStar() {
@@ -83,7 +79,7 @@ class Game_Astar {
                 if (isset($this->close[$key]) && $this->close[$key]['x'] == $i && $this->close[$key]['y'] == $j) {
                     continue;
                 }
-                if (isset($fields[$j][$i])) {
+                if (!isset($this->fields[$j][$i])) {
                     continue;
                 }
                 $terrain = Application_Model_Board::getTerrain($this->fields[$j][$i], $this->canFly, $this->canSwim);
@@ -148,17 +144,42 @@ class Game_Astar {
         );
     }
 
+    public function restoreFullPath($key){
+        if (!isset($this->close[$key])) {
+            return null;
+        }
+        while (!empty($this->close[$key]['parent'])) {
+                $path[] = array(
+                    'x' => $this->close[$key]['x'] * 40,
+                    'y' => $this->close[$key]['y'] * 40);
+        }
+        $path = array_reverse($path);
+        return $path;
+    }
+
+    public function getFullPathMovesSpend($key){
+        if (!isset($this->close[$key])) {
+            return null;
+        }
+        return $this->close[$key]['G'];
+    }
+
     public function restorePath($key, $moves) {
         if (!isset($this->close[$key])) {
             return 0;
         }
-        $this->movesSpend = 0;
+        $this->currentPosition;
         while (!empty($this->close[$key]['parent'])) {
             if ($this->close[$key]['G'] <= $moves) {
-                if (!$this->movesSpend) {
-                    $this->movesSpend = $this->close[$key]['G'];
+                if (!$this->currentPosition) {
+                    $this->currentPosition = array(
+                        'x' => $this->close[$key]['x'] * 40,
+                        'y' => $this->close[$key]['y'] * 40,
+                        'movesSpend' => $this->close[$key]['G']);
                 }
-                $this->path[] = array('x' => $this->close[$key]['x'] * 40, 'y' => $this->close[$key]['y'] * 40);
+                $this->path[] = array(
+                    'x' => $this->close[$key]['x'] * 40,
+                    'y' => $this->close[$key]['y'] * 40);
             }
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
@@ -166,8 +187,8 @@ class Game_Astar {
         return $this->path;
     }
 
-    public function getMovesSpend() {
-        return $this->movesSpend;
+    public function getCurrentPosition() {
+        return $this->currentPosition;
     }
 
 }
