@@ -14,12 +14,14 @@ function computerA(){
                         enemyWalk(result);
                         sleep();
                     }else{
+                        wsPlayerArmies(turn.color);
+                        getPlayerArmiesA(turn.color);
                         computerA();
                     }
                     break;
                 case 'end':
-                    wsPlayerArmies(turn.color);
-                    getPlayerArmiesA(turn.color);
+//                    wsPlayerArmies(turn.color);
+//                    getPlayerArmiesA(turn.color);
                     wsTurn();
                     changeTurn(result.color, result.nr);
                     if(players[result.color].computer){

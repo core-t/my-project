@@ -55,10 +55,10 @@ class ComputerController extends Game_Controller_Action {
                 $fields[$y + 1][$x + 1] = 'c';
             } else {
                 $castles[$castleId] = $castleSchema;
-//                $fields[$y][$x] = 'e';
-//                $fields[$y + 1][$x] = 'e';
-//                $fields[$y][$x + 1] = 'e';
-//                $fields[$y + 1][$x + 1] = 'e';
+                $fields[$y][$x] = 'e';
+                $fields[$y + 1][$x] = 'e';
+                $fields[$y][$x + 1] = 'e';
+                $fields[$y + 1][$x + 1] = 'e';
             }
         }
         $heuristics = array();
@@ -72,6 +72,7 @@ class ComputerController extends Game_Controller_Action {
         $srcX = $position[0] / 40;
         $srcY = $position[1] / 40;
         $paths = array();
+//        throw new Exception(Zend_Debug::dump($heuristics));
         foreach ($heuristics as $castleId => $v) {
             $i++;
             if ($i > 4) {
@@ -79,10 +80,13 @@ class ComputerController extends Game_Controller_Action {
             }
             $destX = $castlesSchema[$castleId]['position']['x'] / 40;
             $destY = $castlesSchema[$castleId]['position']['y'] / 40;
+            $fields = $this->changeCasteFields($fields, $destX, $destY, 'c');
             $aStar = new Game_Astar($destX, $destY);
             $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
             $paths[$castleId] = $aStar->getFullPathMovesSpend($destX . '_' . $destY);
+            $fields = $this->changeCasteFields($fields, $destX, $destY, 'e');
         }
+//        throw new Exception(Zend_Debug::dump($paths));
         asort($paths, SORT_NUMERIC);
         foreach ($paths as $castleId => $v) {
             if ($v) {
@@ -92,10 +96,8 @@ class ComputerController extends Game_Controller_Action {
 //        throw new Exception($castleId . ' ' . Zend_Debug::dump($paths));
         $destX = $castlesSchema[$castleId]['position']['x'] / 40;
         $destY = $castlesSchema[$castleId]['position']['y'] / 40;
-        $fields[$destY][$destX] = 'c';
-        $fields[$destY + 1][$destX] = 'c';
-        $fields[$destY][$destX + 1] = 'c';
-        $fields[$destY + 1][$destX + 1] = 'c';
+//        throw new Exception($castleId . ' y = ' . $srcY . ' x = ' . $srcX . Zend_Debug::dump($fields[$srcY][$srcX]));s
+        $fields = $this->changeCasteFields($fields, $destX, $destY, 'c');
         $aStar = new Game_Astar($destX, $destY);
         $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
         $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
@@ -216,6 +218,14 @@ class ComputerController extends Game_Controller_Action {
                 $this->view->response = Zend_Json::encode(array('action' => 'continue'));
             }
         }
+    }
+
+    private function changeCasteFields($fields, $destX, $destY, $type){
+        $fields[$destY][$destX] = $type;
+        $fields[$destY + 1][$destX] = $type;
+        $fields[$destY][$destX + 1] = $type;
+        $fields[$destY + 1][$destX + 1] = $type;
+        return $fields;
     }
 
 }

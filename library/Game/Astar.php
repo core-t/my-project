@@ -46,7 +46,8 @@ class Game_Astar {
             return true;
         }
         if (!$this->isNotEmpty()) {
-            throw new Exception('Nie znalazłem ścieżki');
+            return null;
+//            throw new Exception('Nie znalazłem ścieżki');
         }
         $this->aStar();
     }
@@ -86,9 +87,9 @@ class Game_Astar {
                     continue;
                 }
                 $type = $this->fields[$j][$i];
-//                if ($type == 'e') {
-//                    continue;
-//                }
+                if ($type == 'e') {
+                    continue;
+                }
                 $terrain = Application_Model_Board::getTerrain($type, $this->canFly, $this->canSwim);
                 $g = $terrain[1];
                 if ($g > 5) {
