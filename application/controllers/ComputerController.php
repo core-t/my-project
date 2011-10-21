@@ -92,15 +92,18 @@ class ComputerController extends Game_Controller_Action {
         $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
         $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
         $currentPosition = $aStar->getCurrentPosition();
+        $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
+        if (!$currentPosition) {
+            $this->view->response = Zend_Json::encode(array('action' => 'continue'));
+            return null;
+        }
         $movesSpend = $currentPosition['movesSpend'];
+        $isCastle = null;
         if ($this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])) {
             if (($army['movesLeft'] - $movesSpend) < 2) {
-                for ($i = 1; $i <= 2; $i++) {
-                    $currentPosition = $path[count($path) - $i];
-                    if (!$this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])) {
-                        break;
-                    }
-                }
+                $rew = $this->rewindPathOutOfCastle($path, $currentPosition, $castlesSchema[$castleId]['position']);
+                $path = $rew[0];
+                $currentPosition = $rew[1];
             } else {
                 if ($modelCastle->isEnemyCastle($castleId, $this->playerId)) {
                     $enemy = $this->modelArmy->getAllUnitsFromCastlePosition($castlesSchema[$castleId]['position']);
@@ -111,8 +114,12 @@ class ComputerController extends Game_Controller_Action {
                     $enemy = $this->modelArmy->updateAllArmiesFromCastlePosition($castlesSchema[$castleId]['position']);
                     if (empty($enemy)) {
                         $modelCastle->changeOwner($castleId, $this->playerId);
+                        $isCastle = $castleId;
                         $victory = true;
                     } else {
+                        $rew = $this->rewindPathOutOfCastle($path, $currentPosition, $castlesSchema[$castleId]['position']);
+                        $path = $rew[0];
+                        $currentPosition = $rew[1];
                         $this->modelArmy->destroyArmy($army['armyId'], $this->playerId);
                         $victory = false;
                     }
@@ -123,18 +130,17 @@ class ComputerController extends Game_Controller_Action {
                     $defender = $battle->getDefender();
                     if (empty($defender['soldiers'])) {
                         $modelCastle->addCastle($castleId, $this->playerId);
+                        $isCastle = $castleId;
                         $victory = true;
                     } else {
+                        $rew = $this->rewindPathOutOfCastle($path, $currentPosition, $castlesSchema[$castleId]['position']);
+                        $path = $rew[0];
+                        $currentPosition = $rew[1];
                         $this->modelArmy->destroyArmy($army['armyId'], $this->playerId);
                         $victory = false;
                     }
                 }
             }
-        }
-        $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-        if (!$currentPosition) {
-            $this->view->response = Zend_Json::encode(array('action' => 'continue'));
-            return null;
         }
 //        throw new Exception(Zend_Debug::dump($currentPosition));
         $data = array(
@@ -147,12 +153,13 @@ class ComputerController extends Game_Controller_Action {
                 $armyId = $this->modelArmy->joinArmiesAtPosition($data['position'], $this->playerId);
                 if ($armyId) {
                     $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
-                }else{
+                } else {
                     $result = array();
                 }
                 $result['action'] = 'continue';
                 $result['path'] = $path;
                 $result['oldArmyId'] = $army['armyId'];
+                $result['castleId'] = $isCastle;
                 if (isset($battle)) {
                     $result['battle'] = $battle->getResult();
                 }
@@ -277,6 +284,16 @@ class ComputerController extends Game_Controller_Action {
         if (($armyPosition['x'] == ($castlePosition['x'] + 1)) && (($armyPosition['y'] + 1) == $castlePosition['y'])) {
             return true;
         }
+    }
+
+    private function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
+        for ($i = 1; $i <= 2; $i++) {
+            $currentPosition = array_pop($path);
+            if (!$this->isCastleFild($currentPosition, $castlePosition)) {
+                break;
+            }
+        }
+        return array($path, $currentPosition);
     }
 
 }

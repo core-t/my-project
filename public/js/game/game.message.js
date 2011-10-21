@@ -584,6 +584,7 @@ function battleM(battle, a, def) {
             killM(battle);
         })
     }
+    wait = 0;
 }
 
 function killM(r){

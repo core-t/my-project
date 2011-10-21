@@ -602,7 +602,9 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 $this->heroesUpdateArmyId($army['armyId'], $result[0]['armyId']);
                 $this->soldiersUpdateArmyId($army['armyId'], $result[0]['armyId']);
             }
-            return $result[0]['armyId'];
+            if (isset($result[0]['armyId'])) {
+                return $result[0]['armyId'];
+            }
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
