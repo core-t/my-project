@@ -92,8 +92,44 @@ class ComputerController extends Game_Controller_Action {
         $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
         $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
         $currentPosition = $aStar->getCurrentPosition();
-        if($this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])){
-            
+        $movesSpend = $currentPosition['movesSpend'];
+        if ($this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])) {
+            if (($army['movesLeft'] - $movesSpend) < 2) {
+                for ($i = 1; $i <= 2; $i++) {
+                    $currentPosition = $path[count($path) - $i];
+                    if (!$this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])) {
+                        break;
+                    }
+                }
+            } else {
+                if ($modelCastle->isEnemyCastle($castleId, $this->playerId)) {
+                    $enemy = $this->modelArmy->getAllUnitsFromCastlePosition($castlesSchema[$castleId]['position']);
+                    $battle = new Game_Battle($army, $enemy);
+                    $battle->addCastleDefenseModifier($castlesSchema[$castleId]['defensePoints'] + $modelCastle->getCastleDefenseModifier($castleId));
+                    $battle->fight();
+                    $battle->updateArmies();
+                    $enemy = $this->modelArmy->updateAllArmiesFromCastlePosition($castlesSchema[$castleId]['position']);
+                    if (empty($enemy)) {
+                        $modelCastle->changeOwner($castleId, $this->playerId);
+                        $victory = true;
+                    } else {
+                        $this->modelArmy->destroyArmy($army['armyId'], $this->playerId);
+                        $victory = false;
+                    }
+                } else {
+                    $battle = new Game_Battle($army, null);
+                    $battle->fight();
+                    $battle->updateArmies();
+                    $defender = $battle->getDefender();
+                    if (empty($defender['soldiers'])) {
+                        $modelCastle->addCastle($castleId, $this->playerId);
+                        $victory = true;
+                    } else {
+                        $this->modelArmy->destroyArmy($army['armyId'], $this->playerId);
+                        $victory = false;
+                    }
+                }
+            }
         }
         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
         if (!$currentPosition) {
@@ -103,16 +139,23 @@ class ComputerController extends Game_Controller_Action {
 //        throw new Exception(Zend_Debug::dump($currentPosition));
         $data = array(
             'position' => $currentPosition['x'] . ',' . $currentPosition['y'],
-            'movesSpend' => $currentPosition['movesSpend']
+            'movesSpend' => $movesSpend
         );
         $res = $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
         switch ($res) {
             case 1:
                 $armyId = $this->modelArmy->joinArmiesAtPosition($data['position'], $this->playerId);
-                $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
+                if ($armyId) {
+                    $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
+                }else{
+                    $result = array();
+                }
                 $result['action'] = 'continue';
                 $result['path'] = $path;
                 $result['oldArmyId'] = $army['armyId'];
+                if (isset($battle)) {
+                    $result['battle'] = $battle->getResult();
+                }
                 $this->view->response = Zend_Json::encode($result);
                 break;
             case 0:
@@ -213,7 +256,7 @@ class ComputerController extends Game_Controller_Action {
         }
     }
 
-    private function changeCasteFields($fields, $destX, $destY, $type){
+    private function changeCasteFields($fields, $destX, $destY, $type) {
         $fields[$destY][$destX] = $type;
         $fields[$destY + 1][$destX] = $type;
         $fields[$destY][$destX + 1] = $type;
@@ -221,8 +264,19 @@ class ComputerController extends Game_Controller_Action {
         return $fields;
     }
 
-    private function isCastleFild($armyPosition, $castlePosition){
-
+    private function isCastleFild($armyPosition, $castlePosition) {
+        if (($armyPosition['x'] == $castlePosition['x']) && ($armyPosition['y'] == $castlePosition['y'])) {
+            return true;
+        }
+        if (($armyPosition['x'] == $castlePosition['x']) && (($armyPosition['y'] + 1) == $castlePosition['y'])) {
+            return true;
+        }
+        if (($armyPosition['x'] == ($castlePosition['x'] + 1)) && ($armyPosition['y'] == $castlePosition['y'])) {
+            return true;
+        }
+        if (($armyPosition['x'] == ($castlePosition['x'] + 1)) && (($armyPosition['y'] + 1) == $castlePosition['y'])) {
+            return true;
+        }
     }
 
 }

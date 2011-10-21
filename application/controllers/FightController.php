@@ -19,7 +19,6 @@ class FightController extends Game_Controller_Action {
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-            $army = $this->getCombatModifiers($army);
             if ($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
@@ -27,18 +26,10 @@ class FightController extends Game_Controller_Action {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji (' . $movesSpend . '>' . $army['movesLeft'] . ').');
             }
             $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
-            $enemy = $this->getCombatModifiers($enemy);
-            $battle = new Game_Battle();
+            $battle = new Game_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($x, $y);
-            $battle->fight($army, $enemy);
-            $battleResult = $battle->getResult();
-            foreach ($battleResult AS $r) {
-                if (isset($r['heroId'])) {
-                    $modelArmy->armyRemoveHero($r['heroId']);
-                } else {
-                    $modelArmy->destroySoldier($r['soldierId']);
-                }
-            }
+            $battle->fight();
+            $battle->updateArmies();
             $enemy = $modelArmy->updateAllArmiesFromPosition(array('x' => $x, 'y' => $y));
             if (empty($enemy)) {
                 $data = array(
@@ -50,7 +41,7 @@ class FightController extends Game_Controller_Action {
                     case 1:
                         $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                         $result['victory'] = true;
-                        $result['battle'] = $battleResult;
+                        $result['battle'] = $battle->getResult();
                         $this->view->response = Zend_Json::encode($result);
                         break;
                     case 0:
@@ -65,7 +56,7 @@ class FightController extends Game_Controller_Action {
                 }
             } else {
                 $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
-                $enemy['battle'] = $battleResult;
+                $enemy['battle'] = $battle->getResult();
                 $enemy['victory'] = false;
                 $this->view->response = Zend_Json::encode($enemy);
             }
@@ -90,7 +81,6 @@ class FightController extends Game_Controller_Action {
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                $army = $this->getCombatModifiers($army);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
@@ -104,20 +94,10 @@ class FightController extends Game_Controller_Action {
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 if ($modelCastle->isEnemyCastle($castleId, $this->_namespace->player['playerId'])) {
                     $enemy = $modelArmy->getAllUnitsFromCastlePosition($castle['position']);
-                    $enemy = $this->getCombatModifiers($enemy);
-                    $battle = new Game_Battle();
+                    $battle = new Game_Battle($army, $enemy);
                     $battle->addCastleDefenseModifier($castle['defensePoints'] + $modelCastle->getCastleDefenseModifier($castleId));
-                    $battle->fight($army, $enemy);
-                    $battleResult = $battle->getResult();
-                    foreach ($battleResult AS $r) {
-                        if (isset($r['heroId'])) {
-                            $modelArmy->armyRemoveHero($r['heroId']);
-                        } else {
-                            if (strpos($r['soldierId'], 's') === false) {
-                                $modelArmy->destroySoldier($r['soldierId']);
-                            }
-                        }
-                    }
+                    $battle->fight();
+                    $battle->updateArmies();
                     $enemy = $modelArmy->updateAllArmiesFromCastlePosition($castle['position']);
                 } else {
                     throw new Exception('To nie jest zamek wroga.');
@@ -134,7 +114,7 @@ class FightController extends Game_Controller_Action {
                             case 1:
                                 $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                                 $result['victory'] = true;
-                                $result['battle'] = $battleResult;
+                                $result['battle'] = $battle->getResult();
                                 $this->view->response = Zend_Json::encode($result);
                                 break;
                             case 0:
@@ -152,7 +132,7 @@ class FightController extends Game_Controller_Action {
                     }
                 } else {
                     $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
-                    $enemy['battle'] = $battleResult;
+                    $enemy['battle'] = $battle->getResult();
                     $enemy['victory'] = false;
                     $this->view->response = Zend_Json::encode($enemy);
                 }
@@ -180,7 +160,6 @@ class FightController extends Game_Controller_Action {
             if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-                $army = $this->getCombatModifiers($army);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
@@ -192,34 +171,13 @@ class FightController extends Game_Controller_Action {
                 if ($movesSpend > $army['movesLeft']) {
                     throw new Exception('Armia ma za mało ruchów do wykonania akcji(' . $movesSpend . '>' . $army['movesLeft'] . ').');
                 }
-                $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-                $modelGame = new Application_Model_Game($this->_namespace->gameId);
-                $turn = $modelGame->getTurn();
-                $numberOfSoldiers = ceil($turn['nr'] / 10);
-                $soldiers = array();
-                for ($i = 1; $i <= $numberOfSoldiers; $i++) {
-                    $soldiers[] = array(
-                        'defensePoints' => 3,
-                        'soldierId' => 's' . $i
-                    );
-                }
-                $enemy = array(
-                    'soldiers' => $soldiers,
-                    'heroes' => array()
-                );
-                $battle = new Game_Battle();
-                $defender = $battle->fight($army, $enemy);
-                $battleResult = $battle->getResult();
-                foreach ($battleResult AS $r) {
-                    if (isset($r['heroId'])) {
-                        $modelArmy->armyRemoveHero($r['heroId']);
-                    } else {
-                        if (strpos($r['soldierId'], 's') === false) {
-                            $modelArmy->destroySoldier($r['soldierId']);
-                        }
-                    }
-                }
-                if (empty($defender)) {
+                $battle = new Game_Battle($army, null);
+                $battle->fight();
+                $battle->updateArmies();
+                $defender = $battle->getDefender();
+
+                if (empty($defender['soldiers'])) {
+                    $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                     $res = $modelCastle->addCastle($castleId, $this->_namespace->player['playerId']);
                     if ($res == 1) {
                         $data = array(
@@ -231,7 +189,7 @@ class FightController extends Game_Controller_Action {
                             case 1:
                                 $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                                 $result['victory'] = true;
-                                $result['battle'] = $battleResult;
+                                $result['battle'] = $battle->getResult();
                                 $this->view->response = Zend_Json::encode($result);
                                 break;
                             case 0:
@@ -249,7 +207,7 @@ class FightController extends Game_Controller_Action {
                     }
                 } else {
                     $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
-                    $defender['battle'] = $battleResult;
+                    $defender['battle'] = $battle->getResult();
                     $defender['victory'] = false;
                     $this->view->response = Zend_Json::encode($defender);
                 }
@@ -289,35 +247,6 @@ class FightController extends Game_Controller_Action {
         return $terrain[1] + $movesRequiredToAttack;
     }
 
-    private function getCombatModifiers($army) {
-        $heroExists = false;
-        $canFly = false;
-        if (count($army['heroes']) > 0) {
-            $heroExists = true;
-        }
-        foreach ($army['soldiers'] as $soldier) {
-            if ($soldier['canFly']) {
-                $canFly = true;
-                break;
-            }
-        }
-        if ($canFly) {
-            foreach ($army['soldiers'] as $k => $soldier) {
-                if ($soldier['canFly']) {
-                    continue;
-                }
-                $army['soldiers'][$k]['attackPoints']++;
-                $army['soldiers'][$k]['defensePoints']++;
-            }
-        }
-        if ($heroExists) {
-            foreach ($army['soldiers'] as $k => $soldier) {
-                $army['soldiers'][$k]['attackPoints']++;
-                $army['soldiers'][$k]['defensePoints']++;
-            }
-        }
-        return $army;
-    }
 
 }
 

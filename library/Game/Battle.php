@@ -5,9 +5,16 @@ class Game_Battle {
     private $_result = array();
     private $defenseModifier = 0;
     private $attackModifier = 0;
+    private $attacker;
+    private $defender;
 
-    public function __construct() {
-
+    public function __construct($attacker, $defender) {
+        $this->_namespace = new Zend_Session_Namespace();
+        if($defender === null){
+            $defender = $this->getNeutralCastleGarrizon();
+        }
+        $this->defender = $this->getCombatModifiers($defender);
+        $this->attacker = $this->getCombatModifiers($attacker);
     }
 
     public function addTowerDefenseModifier($x, $y) {
@@ -16,58 +23,74 @@ class Game_Battle {
         }
     }
 
-    public function addCastleDefenseModifier($defenseModifier){
+    public function addCastleDefenseModifier($defenseModifier) {
         $this->defenseModifier += $defenseModifier;
     }
 
-    public function fight($attacker, $defender) {
+    public function updateArmies() {
+        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+        foreach ($this->_result AS $r) {
+            if (isset($r['heroId'])) {
+                $modelArmy->armyRemoveHero($r['heroId']);
+            } else {
+                if (strpos($r['soldierId'], 's') === false) {
+                    $modelArmy->destroySoldier($r['soldierId']);
+                }
+            }
+        }
+    }
+
+    public function getDefender(){
+        return $this->defender;
+    }
+
+    public function fight() {
 //        Zend_Debug::dump($defender);
         $hits = array('attack' => 2, 'defense' => 2);
-        foreach ($attacker['soldiers'] as $a => $unitAttaking) {
-            foreach ($defender['soldiers'] as $d => $unitDefending) {
+        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
+            foreach ($this->defender['soldiers'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
-                    unset($defender['soldiers'][$d]);
+                    unset($this->defender['soldiers'][$d]);
                 } else {
-                    unset($attacker['soldiers'][$a]);
+                    unset($this->attacker['soldiers'][$a]);
                     break;
                 }
             }
         }
-        foreach ($attacker['soldiers'] as $a => $unitAttaking) {
-            foreach ($defender['heroes'] as $d => $unitDefending) {
+        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
+            foreach ($this->defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
-                    unset($defender['heroes'][$d]);
+                    unset($this->defender['heroes'][$d]);
                 } else {
-                    unset($attacker['soldiers'][$a]);
+                    unset($this->attacker['soldiers'][$a]);
                     break;
                 }
             }
         }
-        foreach ($attacker['heroes'] as $a => $unitAttaking) {
-            foreach ($defender['soldiers'] as $d => $unitDefending) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
+            foreach ($this->defender['soldiers'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
-                    unset($defender['soldiers'][$d]);
+                    unset($this->defender['soldiers'][$d]);
                 } else {
-                    unset($attacker['heroes'][$a]);
+                    unset($this->attacker['heroes'][$a]);
                     break;
                 }
             }
         }
-        foreach ($attacker['heroes'] as $a => $unitAttaking) {
-            foreach ($defender['heroes'] as $d => $unitDefending) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
+            foreach ($this->defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
-                    unset($defender['heroes'][$d]);
+                    unset($this->defender['heroes'][$d]);
                 } else {
-                    unset($attacker['heroes'][$a]);
+                    unset($this->attacker['heroes'][$a]);
                     break;
                 }
             }
         }
-        return $defender;
     }
 
     private function combat($unitAttaking, $unitDefending, $hits) {
@@ -120,6 +143,53 @@ class Game_Battle {
 
     public function getResult() {
         return $this->_result;
+    }
+
+    private function getNeutralCastleGarrizon() {
+        $modelGame = new Application_Model_Game($this->_namespace->gameId);
+        $turn = $modelGame->getTurn();
+        $numberOfSoldiers = ceil($turn['nr'] / 10);
+        $soldiers = array();
+        for ($i = 1; $i <= $numberOfSoldiers; $i++) {
+            $soldiers[] = array(
+                'defensePoints' => 3,
+                'soldierId' => 's' . $i
+            );
+        }
+        return array(
+            'soldiers' => $soldiers,
+            'heroes' => array()
+        );
+    }
+
+    private function getCombatModifiers($army) {
+        $heroExists = false;
+        $canFly = false;
+        if (count($army['heroes']) > 0) {
+            $heroExists = true;
+        }
+        foreach ($army['soldiers'] as $soldier) {
+            if (isset($soldier['canFly']) && $soldier['canFly']) {
+                $canFly = true;
+                break;
+            }
+        }
+        if ($canFly) {
+            foreach ($army['soldiers'] as $k => $soldier) {
+                if ($soldier['canFly']) {
+                    continue;
+                }
+                $army['soldiers'][$k]['attackPoints']++;
+                $army['soldiers'][$k]['defensePoints']++;
+            }
+        }
+        if ($heroExists) {
+            foreach ($army['soldiers'] as $k => $soldier) {
+                $army['soldiers'][$k]['attackPoints']++;
+                $army['soldiers'][$k]['defensePoints']++;
+            }
+        }
+        return $army;
     }
 
 }
