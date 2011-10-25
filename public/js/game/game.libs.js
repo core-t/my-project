@@ -304,7 +304,7 @@ function isEnemyCastle(x, y) {
 
 function isNeutralCastle(x, y) {
     for(castleId in castles) {
-        if(castles[castleId].color == null){
+        if(castles[castleId].position.x == x && castles[castleId].position.y == y && castles[castleId].color == null){
             return true;
         }
     }
@@ -747,7 +747,7 @@ function getEnemyCastleGarrison(castleId) {
     var pos = castles[castleId].position;
     var armies = new Array();
     for(color in players) {
-        if(color == my.color) {
+        if(color == turn.color) {
             continue;
         }
         for(i in players[color].armies) {
@@ -915,6 +915,7 @@ function enemyWalk(res) {
             waitOn();
             if(res.castleId){
                 var enemyArmies = new Array();
+                zoomer.lensSetCenter(castles[res.castleId].position.x, castles[res.castleId].position.y);
                 if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
                     enemyArmies[0] = getNeutralCastleGarrison();
                 }else{

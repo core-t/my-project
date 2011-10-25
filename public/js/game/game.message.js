@@ -553,7 +553,6 @@ function castleM(castleId, color){
 }
 
 function battleM(battle, a, def) {
-    console.log('a1');
     removeM();
     var attack = $('<div>').addClass('battle attack');
     for(i in a.soldiers) {
@@ -617,21 +616,17 @@ function battleM(battle, a, def) {
         $('.message').fadeIn(100, function(){
             killM(battle, waitOff);
         })
-//        $.when($('.message').fadeIn(100)).then(killM(battle, waitOff));
     }
 }
 
 function killM(r, clb){
-    console.log('a');
     for(i in r) {
         break;
     }
     if(typeof r[i] == 'undefined') {
         if(typeof clb != 'undefined'){
-            console.log('b');
             clb();
         }else{
-            console.log('c');
         }
         return null;
     }
