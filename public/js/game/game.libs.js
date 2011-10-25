@@ -302,6 +302,15 @@ function isEnemyCastle(x, y) {
     return false;
 }
 
+function isNeutralCastle(x, y) {
+    for(castleId in castles) {
+        if(castles[castleId].color == null){
+            return true;
+        }
+    }
+    return false;
+}
+
 function getMyCastleDefenseFromPosition(x, y) {
     for(castleId in castles) {
         if(castles[castleId].color == my.color) {
@@ -897,17 +906,25 @@ function enemyWalk(res) {
                 wsArmy(res.oldArmyId);
             }
             wsArmy(res.armyId);
-            if(res.castleId != null){
-                getCastleA(res.castleId);
+            if(res.castleId != null && res.victory){
                 wsCastle(res.castleId);
+                getCastleA(res.castleId);
             }
         }
-        var aaa;
         if(typeof res.battle != 'undefined'){
-            wsBattle(res.battle,oldArmy,aaa);
-            battleM(res.battle, oldArmy, aaa);
+            waitOn();
+            if(res.castleId){
+                var enemyArmies = new Array();
+                if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
+                    enemyArmies[0] = getNeutralCastleGarrison();
+                }else{
+                    enemyArmies = getEnemyCastleGarrison(res.castleId);
+                }
+            }
+            wsBattle(res.battle,oldArmy,enemyArmies);
+            battleM(res.battle, oldArmy, enemyArmies);
         }else{
-            wait = 0;
+            waitOff();
         }
         return null;
     } else {
@@ -918,14 +935,17 @@ function enemyWalk(res) {
             top: res.path[i].y + 'px'
         },300,
         function(){
-            //            if(typeof res.path[i] != 'undefined'){
             if(typeof res.path[i] == 'undefined'){
                 console.log('coś tu niegra');
                 console.log(res);
             }else{
-                searchTower(res.path[i].x, res.path[i].y);
-                delete res.path[i];
-                enemyWalk(res);
+                var x = res.path[i].x;
+                var y = res.path[i].y;
+                //                searchTower(x, y);
+                res.path.splice(i, 1);
+                //                delete res.path[i];
+                $.when(searchTower(x, y)).then(enemyWalk(res));
+            //                enemyWalk(res);
             }
         });
     }

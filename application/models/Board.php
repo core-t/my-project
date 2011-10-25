@@ -420,7 +420,7 @@ class Application_Model_Board {
     public function getCastleDefense($castleId) {
         return $this->castles[$castleId]['defensePoints'];
     }
-    
+
     public function getMinProductionTimeUnit($castleId){
         $castle = $this->getCastle($castleId);
         $min = 100;
@@ -507,7 +507,7 @@ class Application_Model_Board {
         $towers[] = array('x' => 2680, 'y' => 2160);
         return $towers;
     }
-    
+
     static public function isTowerAtPosition($x, $y){
         $towers = Application_Model_Board::getTowers();
         foreach($towers as $k=>$tower){
@@ -669,6 +669,14 @@ class Application_Model_Board {
             default:
                 return null;
         }
+    }
+
+    static public function changeCasteFields($fields, $destX, $destY, $type) {
+        $fields[$destY][$destX] = $type;
+        $fields[$destY + 1][$destX] = $type;
+        $fields[$destY][$destX + 1] = $type;
+        $fields[$destY + 1][$destX + 1] = $type;
+        return $fields;
     }
 
     static public function getBoardFields() {

@@ -6,13 +6,13 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
+        removeM();
         if(typeof result.action != 'undefined'){
             switch(result.action){
                 case 'continue':
                     if(typeof result.path != 'undefined'){
-                        wait = 1;
-                        enemyWalk(result);
-                        sleep();
+                        waitOn();
+                        $.when(enemyWalk(result)).then(sleep());
                     }else{
                         wsPlayerArmies(turn.color);
                         getPlayerArmiesA(turn.color);
@@ -20,8 +20,6 @@ function computerA(){
                     }
                     break;
                 case 'end':
-//                    wsPlayerArmies(turn.color);
-//                    getPlayerArmiesA(turn.color);
                     wsTurn();
                     changeTurn(result.color, result.nr);
                     if(players[result.color].computer){
@@ -33,15 +31,15 @@ function computerA(){
                     break;
             }
         }
-        console.log(result.action);
+        console.log(result);
     });
 }
 
 function sleep(){
-    if(wait){
-        setTimeout(sleep, 500);
+    if(!wait){
+        setTimeout(computerA(), 200);
     }else{
-        computerA();
+        setTimeout('sleep()', 500);
     }
 }
 

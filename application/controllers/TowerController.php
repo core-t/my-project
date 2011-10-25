@@ -16,11 +16,11 @@ class TowerController extends Game_Controller_Action {
         if ($towerId !== null || empty($color)) {
             $modelTower = new Application_Model_Tower($this->_namespace->gameId);
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
-            $modelGame->getPlayerIdByColor($color);
+            $playerId = $modelGame->getPlayerIdByColor($color);
             if($modelTower->towerExists($towerId)){
-                $modelTower->changeTowerOwner($towerId, $this->_namespace->player['playerId']);
+                $modelTower->changeTowerOwner($towerId, $playerId);
             }else{
-                $modelTower->addTower($towerId, $this->_namespace->player['playerId']);
+                $modelTower->addTower($towerId, $playerId);
             }
         } else {
             throw new Exception('Brak "towerId"!');

@@ -196,6 +196,14 @@ function unlock(){
     }
 }
 
+function waitOn(){
+    wait = 1;
+}
+
+function waitOff(){
+    wait = 0;
+}
+
 function titleBlink(msg) {
     if(timeoutId){
         clearInterval(timeoutId);

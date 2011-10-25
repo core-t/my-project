@@ -46,6 +46,22 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
         }
     }
 
+    public function isCastleRazed($castleId){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'razed')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"castleId" = ?', $castleId)
+                    ->where('razed = true');
+            $result = $this->_db->query($select)->fetchAll();
+            if(isset ($result[0]['razed'])){
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function getPlayerCastles($playerId) {
         $playersCastles = array();
         try {

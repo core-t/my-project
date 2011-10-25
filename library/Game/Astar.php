@@ -98,8 +98,10 @@ class Game_Astar {
                 if (isset($this->open[$key])) {
                     $this->calculatePath($x . '_' . $y, $g, $key);
                 } else {
-                    $parent = array('x' => $x,
-                        'y' => $y);
+                    $parent = array(
+                        'x' => $x,
+                        'y' => $y
+                    );
                     $g += $this->close[$x . '_' . $y]['G'];
                     $this->open[$key] = $this->node($i, $j, $g, $parent);
                 }
@@ -188,11 +190,13 @@ class Game_Astar {
     }
 
     public function restorePath($key, $moves) {
+//        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
             return 0;
         }
         $this->currentPosition;
         while (!empty($this->close[$key]['parent'])) {
+//            throw new Exception(Zend_Debug::dump($this->close));
             if ($this->close[$key]['G'] <= $moves) {
                 if (!$this->currentPosition) {
                     $this->currentPosition = array(
@@ -206,6 +210,9 @@ class Game_Astar {
             }
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
+        $this->path[] = array(
+                    'x' => $this->close[$key]['x'] * 40,
+                    'y' => $this->close[$key]['y'] * 40);
         $this->path = array_reverse($this->path);
         return $this->path;
     }

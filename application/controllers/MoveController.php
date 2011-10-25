@@ -31,7 +31,7 @@ class MoveController extends Game_Controller_Action {
             $currentPosition = $this->calculateNewArmyPosition($army, $x / 40, $y / 40);
 //            throw new Exception(Zend_Debug::dump($currentPosition));
             if (!$currentPosition) {
-                throw new Exception('Nie wykonano nuchu');
+                throw new Exception('Nie wykonano ruchu');
             }
             if ($currentPosition['movesSpend'] > $army['movesLeft']) {
                 throw new Exception('Próba wykonania większej ilości ruchów niż jednostka posiada');
@@ -83,24 +83,22 @@ class MoveController extends Game_Controller_Action {
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
         $castlesSchema = $modelBoard->getCastlesSchema();
         foreach ($castlesSchema as $castleId => $castle) {
+            if($modelCastle->isCastleRazed($castleId)){
+                continue;
+            }
             $y = $castle['position']['y'] / 40;
             $x = $castle['position']['x'] / 40;
             if (!$modelCastle->isPlayerCastle($castleId, $this->_namespace->player['playerId'])) {
-                $fields[$y][$x] = 'e';
-                $fields[$y + 1][$x] = 'e';
-                $fields[$y][$x + 1] = 'e';
-                $fields[$y + 1][$x + 1] = 'e';
+                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $x, $y, 'e');
             } else {
-                $fields[$y][$x] = 'c';
-                $fields[$y + 1][$x] = 'c';
-                $fields[$y][$x + 1] = 'c';
-                $fields[$y + 1][$x + 1] = 'c';
+                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $x, $y, 'c');
             }
         }
 
         $aStar = new Game_Astar($destX, $destY);
         $aStar->start($position['x'] / 40, $position['y'] / 40, $this->fields, $this->canFly, $this->canSwim);
         $this->path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
+//        throw new Exception(Zend_Debug::dump($path));
         return $aStar->getCurrentPosition();
     }
 
