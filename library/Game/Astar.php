@@ -122,8 +122,8 @@ class Game_Astar {
 
     public function calculateH($x, $y) {
         $h = 0;
-        $xLengthPoints = $x - $this->destX;
-        $yLengthPoints = $y - $this->destY;
+        $xLengthPoints = abs($x - $this->destX);
+        $yLengthPoints = abs($y - $this->destY);
         if ($xLengthPoints < $yLengthPoints) {
             for ($i = 1; $i <= $xLengthPoints; $i++) {
                 $h++;

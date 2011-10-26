@@ -44,6 +44,10 @@ class ComputerController extends Game_Controller_Action {
         $modelBoard = new Application_Model_Board();
         $fields = $this->modelArmy->getEnemyArmiesFieldsPositions($this->playerId);
         $castlesSchema = $modelBoard->getCastlesSchema();
+        $castles = $modelCastle->getPlayerCastles($this->playerId);
+        if ($this->isArmyInCastle($position, $castles, $castlesSchema)) {
+//            throw new Exception('ehe');
+        }
         $castles = array();
         foreach ($castlesSchema as $castleId => $castleSchema) {
             if ($modelCastle->isCastleRazed($castleId)) {
@@ -62,8 +66,10 @@ class ComputerController extends Game_Controller_Action {
         foreach ($castles as $castleId => $castle) {
             $aStar = new Game_Astar($castle['position']['x'], $castle['position']['y']);
             $heuristics[$castleId] = $aStar->calculateH($position[0], $position[1]);
+//            $heuristics[$castleId.'_'.$castle['position']['x'].'_'.$castle['position']['y'].'/'.$position[0].'_'.$position[1]] = $aStar->calculateH($position[0], $position[1]);
         }
         asort($heuristics, SORT_NUMERIC);
+//        throw new Exception(Zend_Debug::dump($heuristics));
         $canFlySwim = $this->modelArmy->getArmyCanFlySwim($army);
         $i = 0;
         $srcX = $position[0] / 40;
@@ -82,7 +88,7 @@ class ComputerController extends Game_Controller_Action {
             $aStar->start($srcX, $srcY, $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
             $paths[$castleId] = $aStar->getFullPathMovesSpend($destX . '_' . $destY);
             $fields = Application_Model_Board::changeCasteFields($fields, $destX, $destY, 'e');
-            if ($v < 40 * $army['movesLeft']) {
+            if ($paths[$castleId] < $army['movesLeft']) {
                 $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
                 $currentPosition = $aStar->getCurrentPosition();
                 if ($currentPosition['movesSpend'] <= $army['movesLeft']) {
@@ -106,17 +112,19 @@ class ComputerController extends Game_Controller_Action {
             $path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
             $currentPosition = $aStar->getCurrentPosition();
         }
+//        throw new Exception(Zend_Debug::dump($paths).Zend_Debug::dump($currentPosition));
         if (!$currentPosition) {
             $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
             $this->view->response = Zend_Json::encode(array('action' => 'continue'));
             return null;
         }
-//        throw new Exception(Zend_Debug::dump($position[0] . '_' . $position[1]).Zend_Debug::dump($destX . '_' . $destY).Zend_Debug::dump($currentPosition).Zend_Debug::dump($path));
         $movesSpend = $currentPosition['movesSpend'];
         $isCastle = null;
         $victory = null;
+//        throw new Exception(Zend_Debug::dump($army['movesLeft']).Zend_Debug::dump($movesSpend).Zend_Debug::dump($currentPosition).Zend_Debug::dump($path));
         if ($this->isCastleFild($currentPosition, $castlesSchema[$castleId]['position'])) {
-            if (($army['movesLeft'] - $movesSpend) < 2) {
+            $movesSpend += 2;
+            if (($army['movesLeft'] - $movesSpend) < 0) {
                 $rew = $this->rewindPathOutOfCastle($path, $currentPosition, $castlesSchema[$castleId]['position']);
                 $path = $rew[0];
                 $currentPosition = $rew[1];
@@ -238,7 +246,8 @@ class ComputerController extends Game_Controller_Action {
         $gold = $this->modelGame->getPlayerInGameGold($this->playerId);
         $income = 0;
         $costs = 0;
-        if ($this->modelGame->getTurnNumber() > 0) {
+        $turnNumber = $this->modelGame->getTurnNumber();
+        if ($turnNumber > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->playerId);
             foreach ($castlesId as $id) {
@@ -247,13 +256,20 @@ class ComputerController extends Game_Controller_Action {
                 $castle = $castles[$castleId];
                 $income += $castle['income'];
                 $castleProduction = $modelCastle->getCastleProduction($castleId, $this->playerId);
-                if (!$castleProduction['production']) {
+//                if (!$castleProduction['production']) {
+                if ($turnNumber < 10) {
                     $unitName = $modelBoard->getMinProductionTimeUnit($castleId);
-                    $modelUnit = new Application_Model_Unit();
-                    $unitId = $modelUnit->getUnitIdByName($unitName);
+                } else {
+                    $unitName = $modelBoard->getCastleOptimalProduction($castleId);
+                }
+//                throw new Exception(Zend_Debug::dump($castleProduction));
+                $modelUnit = new Application_Model_Unit();
+                $unitId = $modelUnit->getUnitIdByName($unitName);
+                if ($unitId != $castleProduction['production']) {
                     $modelCastle->setCastleProduction($castleId, $unitId, $this->playerId);
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->playerId);
                 }
+//                }
                 $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
                 $unitName = $modelBoard->getUnitName($castleProduction['production']);
                 if ($castle['production'][$unitName]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitName]['cost'] <= $gold) {
@@ -289,19 +305,36 @@ class ComputerController extends Game_Controller_Action {
         }
     }
 
+    private function isArmyInCastle($position, $castles, $castlesSchema) {
+        $aP = array(
+            'x' => $position[0],
+            'y' => $position[1]
+        );
+        foreach ($castles as $castle) {
+            if ($this->isCastleFild($aP, $castlesSchema[$castle['castleId']]['position'])) {
+                return true;
+            }
+        }
+    }
+
     private function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
-        $a = $path;
-        $b = $currentPosition;
-        $c = $castlePosition;
+        $oldPath = $path;
+        $oldCurrentPosition = $currentPosition;
+        $rewind = false;
         while (true) {
             if (!$this->isCastleFild($currentPosition, $castlePosition)) {
+                $rewind = true;
                 break;
             } else {
                 $currentPosition = array_pop($path);
             }
         }
 //        throw new Exception(Zend_Debug::dump($path) . Zend_Debug::dump($a) . Zend_Debug::dump($currentPosition) . Zend_Debug::dump($b) . Zend_Debug::dump($c));
-        return array($path, $currentPosition);
+        if ($rewind) {
+            return array($path, $currentPosition);
+        } else {
+            return array($oldPath, $oldCurrentPosition);
+        }
     }
 
 }

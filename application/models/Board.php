@@ -408,7 +408,6 @@ class Application_Model_Board {
         return $this->castles;
     }
 
-
     public function getCastle($castleId) {
         return $this->castles[$castleId];
     }
@@ -421,11 +420,51 @@ class Application_Model_Board {
         return $this->castles[$castleId]['defensePoints'];
     }
 
-    public function getMinProductionTimeUnit($castleId){
+    public function getCastleOptimalProduction($castleId) {
+        $units = array();
+        foreach ($this->castles[$castleId]['production'] as $unitName => $productionUnit) {
+            switch ($unitName) {
+                case 'Griffins':
+                    $units[1] = $unitName;
+                    break;
+                case 'Pegasi':
+                    $units[2] = $unitName;
+                    break;
+                case 'Wolves':
+                    $units[3] = $unitName;
+                    break;
+                case 'Giants':
+                    $units[4] = $unitName;
+                    break;
+                case 'Cavalry':
+                    $units[5] = $unitName;
+                    break;
+                case 'Dwarves':
+                    $units[6] = $unitName;
+                    break;
+                case 'Heavy Infantry':
+                    $units[7] = $unitName;
+                    break;
+                case 'Archers':
+                    $units[8] = $unitName;
+                    break;
+                case 'Light Infantry':
+                    $units[9] = $unitName;
+                    break;
+            }
+        }
+        asort($units, SORT_NUMERIC);
+//        throw new Exception(Zend_Debug::dump($units));
+        foreach ($units as $unit) {
+            return $unit;
+        }
+    }
+
+    public function getMinProductionTimeUnit($castleId) {
         $castle = $this->getCastle($castleId);
         $min = 100;
-        foreach($castle['production'] as $key => $val){
-            if($val['time'] < $min){
+        foreach ($castle['production'] as $key => $val) {
+            if ($val['time'] < $min) {
                 $min = $val['time'];
                 $unitName = $key;
             }
@@ -433,9 +472,8 @@ class Application_Model_Board {
         return $unitName;
     }
 
-
     public function isCastle($castleId) {
-        if(isset($this->castles[$castleId])){
+        if (isset($this->castles[$castleId])) {
             return true;
         }
     }
@@ -508,10 +546,10 @@ class Application_Model_Board {
         return $towers;
     }
 
-    static public function isTowerAtPosition($x, $y){
+    static public function isTowerAtPosition($x, $y) {
         $towers = Application_Model_Board::getTowers();
-        foreach($towers as $k=>$tower){
-            if($tower['x'] == $x && $tower['y'] == $y){
+        foreach ($towers as $k => $tower) {
+            if ($tower['x'] == $x && $tower['y'] == $y) {
                 return true;
             }
         }
@@ -891,4 +929,5 @@ class Application_Model_Board {
 
         return $fields;
     }
+
 }

@@ -6,6 +6,7 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
+        console.log(result);
         removeM();
         if(typeof result.action != 'undefined'){
             switch(result.action){
@@ -31,7 +32,7 @@ function computerA(){
                     break;
             }
         }
-        console.log(result);
+//        console.log(result);
     });
 }
 
