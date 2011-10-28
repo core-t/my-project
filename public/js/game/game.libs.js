@@ -910,6 +910,8 @@ function enemyWalk(res) {
                 wsCastle(res.castleId);
                 getCastleA(res.castleId);
             }
+        }else{
+            wsArmy(res.oldArmyId);
         }
         if(typeof res.battle != 'undefined'){
             waitOn();
@@ -922,34 +924,40 @@ function enemyWalk(res) {
                     enemyArmies = getEnemyCastleGarrison(res.castleId);
                 }
             }
-            wsBattle(res.battle,oldArmy,enemyArmies);
-            battleM(res.battle, oldArmy, enemyArmies);
-        }else{
-            waitOff();
-        }
-        return null;
-    } else {
-        wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
-        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
-        $('#army'+res.oldArmyId).animate({
-            left: res.path[i].x + 'px',
-            top: res.path[i].y + 'px'
-        },300,
-        function(){
-            if(typeof res.path[i] == 'undefined'){
-                console.log('coś tu niegra');
-                console.log(res);
-            }else{
-                var x = res.path[i].x;
-                var y = res.path[i].y;
-                //                searchTower(x, y);
-                res.path.splice(i, 1);
-                //                delete res.path[i];
-                $.when(searchTower(x, y)).then(enemyWalk(res));
-            //                enemyWalk(res);
+            if(res.castleId != null){
+                for(i in enemyArmies) {
+                    wsArmy(enemyArmies[i].armyId);
+                    getArmyA(enemyArmies[i].armyId);
+                }
             }
-        });
+        wsBattle(res.battle,oldArmy,enemyArmies);
+        battleM(res.battle, oldArmy, enemyArmies);
+    }else{
+        waitOff();
     }
+    return null;
+} else {
+    wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
+    zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
+    $('#army'+res.oldArmyId).animate({
+        left: res.path[i].x + 'px',
+        top: res.path[i].y + 'px'
+    },300,
+    function(){
+        if(typeof res.path[i] == 'undefined'){
+            console.log('coś tu niegra');
+            console.log(res);
+        }else{
+            var x = res.path[i].x;
+            var y = res.path[i].y;
+            //                searchTower(x, y);
+            res.path.splice(i, 1);
+            //                delete res.path[i];
+            $.when(searchTower(x, y)).then(enemyWalk(res));
+        //                enemyWalk(res);
+        }
+    });
+}
 }
 
 function clearPlayerArmiesTrash(){
@@ -1201,6 +1209,8 @@ function aStar(close, open, destX, destY, nr){
         return;
     }
     if(nr > 30000){
+        //        console.log(open);
+        //        console.log(close);
         nr--;
         console.log('>'+nr);
         return;

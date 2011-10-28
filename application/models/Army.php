@@ -869,5 +869,51 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         return array('canFly' => $canFly, 'canSwim' => $canSwim);
     }
 
+    public function getAllEnemiesArmies($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"playerId" != ?', $playerId)
+                    ->where('destroyed = false');
+            $result = $this->_db->query($select)->fetchAll();
+            $array = array();
+            foreach ($result as $k => $army) {
+                $array['army' . $army['armyId']] = $army;
+                $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
+                $array['army' . $army['armyId']]['soldiers'] = $this->getArmySoldiers($army['armyId']);
+                if (empty($array['army' . $army['armyId']]['heroes']) AND empty($array['army' . $army['armyId']]['soldiers'])) {
+                    $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);
+                    unset($array['army' . $army['armyId']]);
+                } else {
+                    $array['army' . $army['armyId']]['movesLeft'] = $this->calculateArmyMovesLeft($army['armyId']);
+                }
+            }
+            return $array;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    public function getAllArmiesIdsFromCastlePosition($position) {
+        $points = array(
+            '(' . $position['x'] . ',' . $position['y'] . ')',
+            '(' . ($position['x'] + 40) . ',' . $position['y'] . ')',
+            '(' . $position['x'] . ',' . ($position['y'] + 40) . ')',
+            '(' . ($position['x'] + 40) . ',' . ($position['y'] + 40) . ')'
+        );
+        $ids = '';
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, $this->_primary)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
+                    ->where('position::varchar IN (?)', $points);
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
 }
 

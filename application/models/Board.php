@@ -709,12 +709,36 @@ class Application_Model_Board {
         }
     }
 
+    static public function isCastleFild($aP, $cP) {
+        if (($aP['x'] >= $cP['x']) && ($aP['x'] < ($cP['x'] + 80)) && ($aP['y'] >= $cP['y']) && ($aP['y'] < ($cP['y'] + 80))) {
+            return true;
+        }
+    }
+
     static public function changeCasteFields($fields, $destX, $destY, $type) {
         $fields[$destY][$destX] = $type;
         $fields[$destY + 1][$destX] = $type;
         $fields[$destY][$destX + 1] = $type;
         $fields[$destY + 1][$destX + 1] = $type;
         return $fields;
+    }
+
+    public function prepareCastlesAndFields($castlesSchema, $razed, $myCastles, $fields) {
+        foreach ($castlesSchema as $castleId => $castleSchema) {
+            if (isset($razed[$castleId])) {
+                continue;
+            }
+            $x = $castleSchema['position']['x'] / 40;
+            $y = $castleSchema['position']['y'] / 40;
+            if (isset($myCastles[$castleId])) {
+//            if ($modelCastle->isPlayerCastle($castleId, $this->playerId)) {
+                $fields = $this->changeCasteFields($fields, $x, $y, 'c');
+            } else {
+                $castles[$castleId] = $castleSchema;
+                $fields = $this->changeCasteFields($fields, $x, $y, 'e');
+            }
+        }
+        return array($fields, $castles);
     }
 
     static public function getBoardFields() {
