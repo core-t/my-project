@@ -286,7 +286,11 @@ function updateCastleCurrentProductionTurn(castleId, productionTurn){
 
 function updateCastleDefense(castleId, defenseMod){
     castles[castleId].defense += defenseMod;
-    $('#castle' + castleId).attr('title', castles[castleId].name+'('+castles[castleId].defense+')');
+    if(castles[castleId].defense > 0){
+        $('#castle' + castleId).attr('title', castles[castleId].name+'('+castles[castleId].defense+')');
+    }else{
+        $('#castle' + castleId).attr('title', castles[castleId].name+'(1)');
+    }
 }
 
 function isEnemyCastle(x, y) {
@@ -915,49 +919,47 @@ function enemyWalk(res) {
         }
         if(typeof res.battle != 'undefined'){
             waitOn();
+            var enemyArmies = new Array();
             if(res.castleId){
-                var enemyArmies = new Array();
                 zoomer.lensSetCenter(castles[res.castleId].position.x, castles[res.castleId].position.y);
                 if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
                     enemyArmies[0] = getNeutralCastleGarrison();
                 }else{
                     enemyArmies = getEnemyCastleGarrison(res.castleId);
+                    for(i in enemyArmies) {
+                        wsArmy(enemyArmies[i].armyId);
+                        getArmyA(enemyArmies[i].armyId);
+                    }
                 }
             }
-            if(res.castleId != null){
-                for(i in enemyArmies) {
-                    wsArmy(enemyArmies[i].armyId);
-                    getArmyA(enemyArmies[i].armyId);
-                }
-            }
-        wsBattle(res.battle,oldArmy,enemyArmies);
-        battleM(res.battle, oldArmy, enemyArmies);
-    }else{
-        waitOff();
-    }
-    return null;
-} else {
-    wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
-    zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
-    $('#army'+res.oldArmyId).animate({
-        left: res.path[i].x + 'px',
-        top: res.path[i].y + 'px'
-    },300,
-    function(){
-        if(typeof res.path[i] == 'undefined'){
-            console.log('coś tu niegra');
-            console.log(res);
+            wsBattle(res.battle,oldArmy,enemyArmies);
+            battleM(res.battle, oldArmy, enemyArmies);
         }else{
-            var x = res.path[i].x;
-            var y = res.path[i].y;
-            //                searchTower(x, y);
-            res.path.splice(i, 1);
-            //                delete res.path[i];
-            $.when(searchTower(x, y)).then(enemyWalk(res));
-        //                enemyWalk(res);
+            waitOff();
         }
-    });
-}
+        return null;
+    } else {
+        wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
+        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
+        $('#army'+res.oldArmyId).animate({
+            left: res.path[i].x + 'px',
+            top: res.path[i].y + 'px'
+        },300,
+        function(){
+            if(typeof res.path[i] == 'undefined'){
+                console.log('coś tu niegra');
+                console.log(res);
+            }else{
+                var x = res.path[i].x;
+                var y = res.path[i].y;
+                //                searchTower(x, y);
+                res.path.splice(i, 1);
+                //                delete res.path[i];
+                $.when(searchTower(x, y)).then(enemyWalk(res));
+            //                enemyWalk(res);
+            }
+        });
+    }
 }
 
 function clearPlayerArmiesTrash(){

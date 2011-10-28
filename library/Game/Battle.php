@@ -10,7 +10,7 @@ class Game_Battle {
 
     public function __construct($attacker, $defender) {
         $this->_namespace = new Zend_Session_Namespace();
-        if($defender === null){
+        if ($defender === null) {
             $defender = $this->getNeutralCastleGarrizon();
         }
         $this->defender = $this->getCombatModifiers($defender);
@@ -24,7 +24,9 @@ class Game_Battle {
     }
 
     public function addCastleDefenseModifier($defenseModifier) {
-        $this->defenseModifier += $defenseModifier;
+        if ($defenseModifier > 0) {
+            $this->defenseModifier += $defenseModifier;
+        }
     }
 
     public function updateArmies() {
@@ -40,7 +42,7 @@ class Game_Battle {
         }
     }
 
-    public function getDefender(){
+    public function getDefender() {
         return $this->defender;
     }
 

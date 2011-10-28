@@ -265,6 +265,44 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
+    public function calculateMaxArmyMoves($armyId) {
+        $heroMoves = $this->getMaxHeroesMoves($armyId);
+        $soldierMoves = $this->getMaxSoldiersMoves($armyId);
+        if($heroMoves > $soldierMoves){
+            return $heroMoves;
+        }else{
+            return $soldierMoves;
+        }
+    }
+
+    private function getMaxHeroesMoves($armyId) {
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a'=>'hero'), 'max("numberOfMoves")')
+                    ->join(array('b'=>'heroesingame'), 'a."heroId" = b."heroId"', '')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"' . $this->_primary . '" = ?', $armyId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['max'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    private function getMaxSoldiersMoves($armyId) {
+        try {
+            $select = $this->_db->select()
+                    ->from(array('a'=>'unit'), 'max("numberOfMoves")')
+                    ->join(array('b'=>'soldier'), 'a."unitId" = b."unitId"', '')
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"' . $this->_primary . '" = ?', $armyId);
+            $result = $this->_db->query($select)->fetchAll();
+            return $result[0]['max'];
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function updateArmyPosition($armyId, $playerId, $data) {
         $data1 = array(
             'position' => $data['position']
@@ -886,7 +924,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);
                     unset($array['army' . $army['armyId']]);
                 } else {
-                    $array['army' . $army['armyId']]['movesLeft'] = $this->calculateArmyMovesLeft($army['armyId']);
+                    $array['army' . $army['armyId']]['numberOfMoves'] = $this->calculateMaxArmyMoves($army['armyId']);
                 }
             }
             return $array;

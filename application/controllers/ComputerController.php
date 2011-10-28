@@ -87,6 +87,9 @@ class ComputerController extends Game_Controller_Action {
                 } else {
                     $result = array();
                 }
+                if ($inCastle && $castleId) {
+                    $this->handleEnemyIsNear($castlesSchema[$castleId]['position']);
+                }
                 $result['action'] = 'continue';
                 $result['oldArmyId'] = $army['armyId'];
                 $result['castleId'] = $castleId;
@@ -185,30 +188,7 @@ class ComputerController extends Game_Controller_Action {
                         $this->modelArmy->addSoldierToArmy($armyId, $castleProduction['production'], $this->playerId);
                     }
                 }
-                $armyIds = $this->modelArmy->getAllArmiesIdsFromCastlePosition($castle['position']);
-                if ($armyIds) {
-                    $enemies = $this->modelArmy->getAllEnemiesArmies($this->playerId);
-                    $heuristics = array();
-                    $aaa = array();
-                    foreach ($enemies as $id => $enemy) {
-                        $position = $this->modelArmy->convertPosition($enemy['position']);
-                        $aStar = new Game_Astar($castle['position']['x'], $castle['position']['y']);
-                        $h = $aStar->calculateH($position[0], $position[1]);
-                        if ($h < ($enemy['movesLeft'] * 40)) {
-                            $heuristics[$id] = array($h, $enemy['movesLeft'] * 40);
-                        } else {
-                            $aaa[$id] = array($h, $enemy['movesLeft'] * 40);
-                        }
-                    }
-//                    if ('KAZRACK' != $castle['name']) {
-//                        throw new Exception(Zend_Debug::dump($castle) . Zend_Debug::dump($aaa) . Zend_Debug::dump($heuristics));
-//                    }
-                    if (!empty($heuristics)) {
-                        foreach ($armyIds as $armyId) {
-                            $this->modelArmy->zeroArmyMovesLeft($armyId, $this->playerId);
-                        }
-                    }
-                }
+                $this->handleEnemyIsNear($castle['position']);
             }
             $armies = $this->modelArmy->getPlayerArmies($this->playerId);
             if (empty($castles) && empty($armies)) {
@@ -356,6 +336,35 @@ class ComputerController extends Game_Controller_Action {
             }
         }
         return array('path' => $path, 'currentPosition' => $currentPosition, 'victory' => $victory, 'movesSpend' => $movesSpend, 'battle' => $battle);
+    }
+
+    private function handleEnemyIsNear($castlePosition) {
+        $armyIds = $this->modelArmy->getAllArmiesIdsFromCastlePosition($castlePosition);
+        if ($armyIds) {
+//            throw new Exception(Zend_Debug::dump($armyIds));
+            $enemies = $this->modelArmy->getAllEnemiesArmies($this->playerId);
+            $heuristics = array();
+            $aaa = array();
+            foreach ($enemies as $id => $enemy) {
+                $position = $this->modelArmy->convertPosition($enemy['position']);
+                $aStar = new Game_Astar($castlePosition['x'], $castlePosition['y']);
+                $h = $aStar->calculateH($position[0], $position[1]);
+                if ($h < ($enemy['numberOfMoves'] * 40)) {
+                    $heuristics[$id] = array($h, $enemy['numberOfMoves'] * 40);
+                } else {
+                    $aaa[$id] = array($h, $enemy['numberOfMoves'] * 40);
+                }
+            }
+//                    if ('KAZRACK' != $castle['name']) {
+//            throw new Exception(Zend_Debug::dump($castle) . Zend_Debug::dump($aaa) . Zend_Debug::dump($heuristics));
+//                    }
+            if (!empty($heuristics)) {
+                foreach ($armyIds as $armyId) {
+//                    throw new Exception(Zend_Debug::dump($castlePosition) . Zend_Debug::dump($heuristics));
+                    $this->modelArmy->zeroArmyMovesLeft($armyId, $this->playerId);
+                }
+            }
+        }
     }
 
 }
