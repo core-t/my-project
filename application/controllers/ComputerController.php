@@ -190,6 +190,9 @@ class ComputerController extends Game_Controller_Action {
                 }
                 $this->handleEnemyIsNear($castle['position']);
             }
+            if (isset($castle['position'])) {
+                $gold = $this->handleHeroResurrection($gold, $castle['position']);
+            }
             $armies = $this->modelArmy->getPlayerArmies($this->playerId);
             if (empty($castles) && empty($armies)) {
                 $this->view->response = Zend_Json::encode(array('action' => 'gameover'));
@@ -341,7 +344,6 @@ class ComputerController extends Game_Controller_Action {
     private function handleEnemyIsNear($castlePosition) {
         $armyIds = $this->modelArmy->getAllArmiesIdsFromCastlePosition($castlePosition);
         if ($armyIds) {
-//            throw new Exception(Zend_Debug::dump($armyIds));
             $enemies = $this->modelArmy->getAllEnemiesArmies($this->playerId);
             $heuristics = array();
             $aaa = array();
@@ -355,16 +357,29 @@ class ComputerController extends Game_Controller_Action {
                     $aaa[$id] = array($h, $enemy['numberOfMoves'] * 40);
                 }
             }
-//                    if ('KAZRACK' != $castle['name']) {
-//            throw new Exception(Zend_Debug::dump($castle) . Zend_Debug::dump($aaa) . Zend_Debug::dump($heuristics));
-//                    }
             if (!empty($heuristics)) {
                 foreach ($armyIds as $armyId) {
-//                    throw new Exception(Zend_Debug::dump($castlePosition) . Zend_Debug::dump($heuristics));
                     $this->modelArmy->zeroArmyMovesLeft($armyId, $this->playerId);
                 }
             }
         }
+    }
+
+    private function handleHeroResurrection($gold, $position) {
+        if (!$this->modelArmy->isHeroInGame($this->playerId)) {
+            $this->modelArmy->connectHero($this->playerId);
+        }
+        $heroId = $this->modelArmy->getDeadHeroId($this->playerId);
+        if ($heroId) {
+            if ($gold >= 100) {
+                $modelBoard = new Application_Model_Board();
+                $armyId = $this->modelArmy->heroResurection($heroId, $position, $this->playerId);
+                if ($armyId) {
+                    return $gold - 100;
+                }
+            }
+        }
+        return $gold;
     }
 
 }
