@@ -196,13 +196,14 @@ function unlock(){
     }
 }
 
-function waitOn(){
-    wait = 1;
-}
-
-function waitOff(){
-    wait = 0;
-}
+//function waitOn(){
+//    wait = 1;
+//}
+//
+//function waitOff(){
+//    wait = 0;
+//    console.log('b');
+//}
 
 function titleBlink(msg) {
     if(timeoutId){

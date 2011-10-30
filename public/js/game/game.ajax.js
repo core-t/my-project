@@ -6,17 +6,18 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
-//        console.log(result);
+//        console.log(result.path);
         removeM();
         if(typeof result.action != 'undefined'){
             switch(result.action){
                 case 'continue':
-                    if(typeof result.path != 'undefined'){
-                        waitOn();
-                        $.when(enemyWalk(result)).then(sleep());
-                    }else{
+                    if(typeof result.oldArmyId == 'undefined'){
                         wsPlayerArmies(turn.color);
-                        getPlayerArmiesA(turn.color);
+                        $.when(getPlayerArmiesA(turn.color)).then(computerA());
+                    }else if(typeof result.path != 'undefined'){
+//                        waitOn();
+                        enemyWalk(result);
+                    }else{
                         computerA();
                     }
                     break;
@@ -32,17 +33,18 @@ function computerA(){
                     break;
             }
         }
-//        console.log(result);
+    //        console.log(result);
     });
 }
 
-function sleep(){
-    if(!wait){
-        setTimeout(computerA(), 200);
-    }else{
-        setTimeout('sleep()', 500);
-    }
-}
+//function sleep(){
+//    console.log('s');
+//    if(!wait){
+//        setTimeout('computerA()', 200);
+//    }else{
+//        setTimeout('sleep()', 500);
+//    }
+//}
 
 function nextTurnA() {
     if(my.turn){
@@ -445,9 +447,9 @@ function getRuinA(ruinId){
 }
 
 function addTowerA(towerId){
-//    if(!my.turn){
-//        return null;
-//    }
+    //    if(!my.turn){
+    //        return null;
+    //    }
     $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color, function() {
         wsAddTower(towerId);
     });

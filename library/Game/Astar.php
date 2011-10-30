@@ -211,14 +211,34 @@ class Game_Astar {
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
         $this->path[] = array(
-                    'x' => $this->close[$key]['x'] * 40,
-                    'y' => $this->close[$key]['y'] * 40);
+            'x' => $this->close[$key]['x'] * 40,
+            'y' => $this->close[$key]['y'] * 40);
         $this->path = array_reverse($this->path);
         return $this->path;
     }
 
     public function getCurrentPosition() {
         return $this->currentPosition;
+    }
+
+    static public function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
+        $previousPath = $oldPath = $path;
+        $oldCurrentPosition = $currentPosition;
+        $rewind = false;
+        while (true) {
+            if (!Application_Model_Board::isCastleFild($currentPosition, $castlePosition)) {
+                $rewind = true;
+                break;
+            } else {
+                $previousPath = $path;
+                $currentPosition = array_pop($path);
+            }
+        }
+        if ($rewind) {
+            return array('path' => $previousPath, 'currentPosition' => $currentPosition);
+        } else {
+            return array('path' => $oldPath, 'currentPosition' => $oldCurrentPosition);
+        }
     }
 
 }

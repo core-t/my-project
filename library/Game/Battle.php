@@ -46,6 +46,10 @@ class Game_Battle {
         return $this->defender;
     }
 
+    public function getAttacker() {
+        return $this->attacker;
+    }
+
     public function fight() {
 //        Zend_Debug::dump($defender);
         $hits = array('attack' => 2, 'defense' => 2);

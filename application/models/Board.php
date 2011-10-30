@@ -723,7 +723,7 @@ class Application_Model_Board {
         return $fields;
     }
 
-    public function prepareCastlesAndFields($castlesSchema, $razed, $myCastles, $fields) {
+    static public function prepareCastlesAndFields($fields, $razed, $myCastles, $castlesSchema) {
         foreach ($castlesSchema as $castleId => $castleSchema) {
             if (isset($razed[$castleId])) {
                 continue;
@@ -731,15 +731,26 @@ class Application_Model_Board {
             $x = $castleSchema['position']['x'] / 40;
             $y = $castleSchema['position']['y'] / 40;
             if (isset($myCastles[$castleId])) {
-//            if ($modelCastle->isPlayerCastle($castleId, $this->playerId)) {
-                $fields = $this->changeCasteFields($fields, $x, $y, 'c');
+                $fields = Application_Model_Board::changeCasteFields($fields, $x, $y, 'c');
             } else {
-                $castles[$castleId] = $castleSchema;
-                $fields = $this->changeCasteFields($fields, $x, $y, 'e');
+                $hostileCastles[$castleId] = $castleSchema;
+                $fields = Application_Model_Board::changeCasteFields($fields, $x, $y, 'e');
             }
         }
-        return array($fields, $castles);
+        return array('hostileCastles' => $hostileCastles, 'fields' => $fields);
     }
+
+//    static public function isArmyInCastle($position, $castles, $castlesSchema) {
+//        $aP = array(
+//            'x' => $position[0],
+//            'y' => $position[1]
+//        );
+//        foreach ($castles as $castle) {
+//            if (Application_Model_Board::isCastleFild($aP, $castlesSchema[$castle['castleId']]['position'])) {
+//                return true;
+//            }
+//        }
+//    }
 
     static public function getBoardFields() {
         // x*y = 108*68 = 7344

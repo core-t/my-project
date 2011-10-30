@@ -552,7 +552,7 @@ function castleM(castleId, color){
 
 }
 
-function battleM(battle, a, def) {
+function battleM(battle, a, def, clb, r, n) {
     removeM();
     var attack = $('<div>').addClass('battle attack');
     for(i in a.soldiers) {
@@ -614,31 +614,30 @@ function battleM(battle, a, def) {
     .css('min-height',height+'px');
     if(battle){
         $('.message').fadeIn(100, function(){
-            killM(battle, waitOff);
+            killM(battle, clb, r, def, n);
         })
     }
 }
 
-function killM(r, clb){
-    for(i in r) {
+function killM(b, clb, r, e, n){
+    for(i in b) {
         break;
     }
-    if(typeof r[i] == 'undefined') {
+    if(typeof b[i] == 'undefined') {
         if(typeof clb != 'undefined'){
-            clb();
-        }else{
+            clb(r, e, n);
         }
         return null;
     }
-    if(typeof r[i].soldierId != 'undefined') {
-        $('#unit'+r[i].soldierId).fadeOut(1500, function(){
-            delete r[i];
-            killM(r, clb);
+    if(typeof b[i].soldierId != 'undefined') {
+        $('#unit'+b[i].soldierId).fadeOut(1500, function(){
+            delete b[i];
+            killM(b, clb, r, e, n);
         });
-    } else if(typeof r[i].heroId != 'undefined'){
-        $('#hero'+r[i].heroId).fadeOut(1500, function(){
-            delete r[i];
-            killM(r, clb);
+    } else if(typeof b[i].heroId != 'undefined'){
+        $('#hero'+b[i].heroId).fadeOut(1500, function(){
+            delete b[i];
+            killM(b, clb, r, e, n);
         });
     } else {
         console.log('zonk');
