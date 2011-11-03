@@ -28,7 +28,7 @@ class MoveController extends Game_Controller_Action {
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
             $this->fields = $modelArmy->getEnemyArmiesFieldsPositions($this->_namespace->player['playerId']);
 //             echo '<pre>';print_r($this->fields);echo '</pre>';
-            $currentPosition = $this->calculateNewArmyPosition($army, $x / 40, $y / 40);
+            $currentPosition = $this->calculateNewArmyPosition($army, $x, $y);
 //            throw new Exception(Zend_Debug::dump($currentPosition));
             if (!$currentPosition) {
                 throw new Exception('Nie wykonano ruchu');
@@ -36,12 +36,8 @@ class MoveController extends Game_Controller_Action {
             if ($currentPosition['movesSpend'] > $army['movesLeft']) {
                 throw new Exception('Próba wykonania większej ilości ruchów niż jednostka posiada');
             }
-            $data = array(
-                'position' => $currentPosition['x'] . ',' . $currentPosition['y'],
-                'movesSpend' => $currentPosition['movesSpend']
-            );
-            $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
-            $armyId = $modelArmy->joinArmiesAtPosition($data['position'], $this->_namespace->player['playerId']);
+            $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $currentPosition);
+            $armyId = $modelArmy->joinArmiesAtPosition($currentPosition, $this->_namespace->player['playerId']);
             switch ($res) {
                 case 1:
                     $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
@@ -77,25 +73,21 @@ class MoveController extends Game_Controller_Action {
                 $this->canSwim++;
             }
         }
-        $position = explode(',', substr($army['position'], 1, -1));
-        $position = array('x' => $position[0], 'y' => $position[1]);
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
         $castlesSchema = Application_Model_Board::getCastlesSchema();
         foreach ($castlesSchema as $castleId => $castle) {
             if($modelCastle->isCastleRazed($castleId)){
                 continue;
             }
-            $y = $castle['position']['y'] / 40;
-            $x = $castle['position']['x'] / 40;
             if (!$modelCastle->isPlayerCastle($castleId, $this->_namespace->player['playerId'])) {
-                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $x, $y, 'e');
+                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $castle['position']['x'], $castle['position']['y'], 'e');
             } else {
-                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $x, $y, 'c');
+                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $castle['position']['x'], $castle['position']['y'], 'c');
             }
         }
 
         $aStar = new Game_Astar($destX, $destY);
-        $aStar->start($position['x'] / 40, $position['y'] / 40, $this->fields, $this->canFly, $this->canSwim);
+        $aStar->start($army['x'], $army['y'], $this->fields, $this->canFly, $this->canSwim);
         $this->path = $aStar->restorePath($destX . '_' . $destY, $army['movesLeft']);
 //        throw new Exception(Zend_Debug::dump($path));
         return $aStar->getCurrentPosition();

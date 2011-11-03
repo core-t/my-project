@@ -19,7 +19,7 @@ class FightController extends Game_Controller_Action {
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-            if ($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
+            if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
             if (($movesSpend = $this->movesSpend($x, $y, $army, 1)) > $army['movesLeft']) {
@@ -33,7 +33,8 @@ class FightController extends Game_Controller_Action {
             $enemy = $modelArmy->updateAllArmiesFromPosition(array('x' => $x, 'y' => $y));
             if (empty($enemy)) {
                 $data = array(
-                    'position' => $x . ',' . $y,
+                    'x' => $x,
+                    'y' => $y,
                     'movesSpend' => $movesSpend
                 );
                 $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
@@ -77,14 +78,14 @@ class FightController extends Game_Controller_Action {
                 throw new Exception('Brak zamku o podanym ID!');
                 return false;
             }
-            if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
+            if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 2)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 2))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
                 }
-                if ($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
+                if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
                 if (($movesSpend = 2) > $army['movesLeft']) {
@@ -105,7 +106,8 @@ class FightController extends Game_Controller_Action {
                     $res = $modelCastle->changeOwner($castleId, $this->_namespace->player['playerId']);
                     if ($res == 1) {
                         $data = array(
-                            'position' => $x . ',' . $y,
+                            'x' => $x,
+                            'y'=>$y,
                             'movesSpend' => $movesSpend
                         );
                         $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
@@ -155,14 +157,14 @@ class FightController extends Game_Controller_Action {
                 throw new Exception('Brak zamku o podanym ID!');
                 return false;
             }
-            if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 80)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 80))) {
+            if (($x >= $castle['position']['x']) AND ($x < ($castle['position']['x'] + 2)) AND ($y >= $castle['position']['y']) AND ($y < ($castle['position']['y'] + 2))) {
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                 if (empty($army)) {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
                 }
-                if ($this->calculateArmiesDistance($x, $y, $army['position']) >= 80) {
+                if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
                     throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
                 }
                 $movesSpend = 2;
@@ -179,7 +181,8 @@ class FightController extends Game_Controller_Action {
                     $res = $modelCastle->addCastle($castleId, $this->_namespace->player['playerId']);
                     if ($res == 1) {
                         $data = array(
-                            'position' => $x . ',' . $y,
+                            'x' => $x,
+                            'y' => $y,
                             'movesSpend' => $movesSpend
                         );
                         $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);

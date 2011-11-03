@@ -19,7 +19,6 @@ class RuinController extends Game_Controller_Action {
                 throw new Exception('Brak heroId. Tylko Hero może przeszukiwać ruiny!');
             }
             $position = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
-            $position = explode(',', substr($position['position'], 1 , -1));
             $ruinId = Application_Model_Board::confirmRuinPosition($position);
             if($ruinId !== null){
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);

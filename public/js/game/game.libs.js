@@ -14,8 +14,8 @@ function towerCreate(towerId){
             title: title
         })
         .css({
-            left: towers[towerId].x + 'px',
-            top: towers[towerId].y + 'px',
+            left: (towers[towerId].x*40) + 'px',
+            top: (towers[towerId].y*40) + 'px',
             background:'url(../img/game/tower_'+towers[towerId].color+'.png) center center no-repeat'
         })
         );
@@ -36,35 +36,35 @@ function searchTower(x, y){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x-40) && towers[towerId].y == (y-40)){
+        if(towers[towerId].x == (x-1) && towers[towerId].y == (y-1)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x) && towers[towerId].y == (y-40)){
+        if(towers[towerId].x == (x) && towers[towerId].y == (y-1)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x+40) && towers[towerId].y == (y-40)){
+        if(towers[towerId].x == (x+1) && towers[towerId].y == (y-1)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x-40) && towers[towerId].y == (y)){
+        if(towers[towerId].x == (x-1) && towers[towerId].y == (y)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x+40) && towers[towerId].y == (y)){
+        if(towers[towerId].x == (x+1) && towers[towerId].y == (y)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x-40) && towers[towerId].y == (y+40)){
+        if(towers[towerId].x == (x-1) && towers[towerId].y == (y+1)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x) && towers[towerId].y == (y+40)){
+        if(towers[towerId].x == (x) && towers[towerId].y == (y+1)){
             changeTower(x, y, towerId);
             continue;
         }
-        if(towers[towerId].x == (x+40) && towers[towerId].y == (y+40)){
+        if(towers[towerId].x == (x+1) && towers[towerId].y == (y+1)){
             changeTower(x, y, towerId);
             continue;
         }
@@ -72,9 +72,7 @@ function searchTower(x, y){
 }
 
 function changeTower(x, y, towerId){
-    var fx = x/40;
-    var fy = y/40;
-    if(fields[fy][fx] != 'e'){
+    if(fields[y][x] != 'e'){
         towers[towerId].color = turn.color;
         $('#tower' + towerId).css('background','url(../img/game/tower_'+turn.color+'.png) center center no-repeat');
         addTowerA(towerId);
@@ -144,10 +142,10 @@ function getRuinId(a){
 function castleFields(castleId, type){
     x = castles[castleId].position.x;
     y = castles[castleId].position.y;
-    fields[y/40][x/40] = type;
-    fields[y/40+1][x/40] = type;
-    fields[y/40][x/40+1] = type;
-    fields[y/40+1][x/40+1] = type;
+    fields[y][x] = type;
+    fields[y+1][x] = type;
+    fields[y][x+1] = type;
+    fields[y+1][x+1] = type;
 }
 
 function createNeutralCastle(castleId) {
@@ -161,8 +159,8 @@ function createNeutralCastle(castleId) {
             title: castles[castleId].name+'('+castles[castleId].defense+')'
         })
         .css({
-            left: castles[castleId].position.x + 'px',
-            top: castles[castleId].position.y + 'px'
+            left: (castles[castleId].position.x*40) + 'px',
+            top: (castles[castleId].position.y*40) + 'px'
         })
         .mouseover(function(){
             castleCursor(this.id)
@@ -373,11 +371,8 @@ function army(obj, color) {
         }
         return null;
     }
-    var position = changePointToPosition(obj.position);
-    this.x = position[0];
-    this.y = position[1];
-    var x = this.x/40;
-    var y = this.y/40;
+    this.x = obj.x;
+    this.y = obj.y;
     deleteArmyByPosition(this.x, this.y, color);
     this.flyBonus = 0;
     this.canFly = 1;
@@ -477,16 +472,16 @@ function army(obj, color) {
             myArmyMouse(this.id)
         });
         if(this.canSwim){
-            if(fields[y][x] != 'S'){
-                this.fieldType = fields[y][x];
+            if(fields[this.y][this.x] != 'S'){
+                this.fieldType = fields[this.y][this.x];
             }
             fields[y][x] = 'S';
         }
     } else { // nie moja armia
-        if(fields[y][x] != 'e'){
-            this.fieldType = fields[y][x];
+        if(fields[this.y][this.x] != 'e'){
+            this.fieldType = fields[this.y][this.x];
         }
-        fields[y][x] = 'e';
+        fields[this.y][this.x] = 'e';
         enemyArmyMouse(this.element);
     }
     numberOfUnits = numberOfHeroes + numberOfSoldiers;
@@ -501,8 +496,8 @@ function army(obj, color) {
         title: obj.armyId + ' ' + color + ' army'
     }).css({
         background: 'url(../img/game/flag_' + color + '_'+numberOfUnits+'.png) top left no-repeat',
-        left:       this.x + 'px',
-        top:        this.y + 'px'
+        left:       (this.x*40) + 'px',
+        top:        (this.y*40) + 'px'
     });
     this.element.append(
         $('<img>')
@@ -516,8 +511,8 @@ function army(obj, color) {
     //    }
     this.armyId = obj.armyId;
     this.color = color;
-    var mX = x*2;
-    var mY = y*2;
+    var mX = this.x*2;
+    var mY = this.y*2;
 
     zoomPad.append(
         $('<div>').css({
@@ -709,13 +704,11 @@ function armyFields(a){
     if(a.color == my.color){
         return null;
     }
-    x = a.x/40;
-    y = a.y/40;
-    if(typeof fields[y] == 'undefined'){
+    if(typeof fields[a.y] == 'undefined'){
         console.log('Y error');
         return null;
     }
-    if(typeof fields[y][x] == 'undefined'){
+    if(typeof fields[a.y][a.x] == 'undefined'){
         console.log('X error');
         return null;
     }
@@ -723,9 +716,9 @@ function armyFields(a){
         return null;
     }
     if(isEnemyCastle(a.x, a.y) !== false){
-        fields[y][x] = 'e';
+        fields[a.y][a.x] = 'e';
     }else{
-        fields[y][x] = a.fieldType;
+        fields[a.y][a.x] = a.fieldType;
     }
 }
 
@@ -734,8 +727,8 @@ function changeArmyPosition(x, y, armyId, color) {
         removeM();
         zoomer.lensSetCenter(x, y);
         $('#army' + armyId).animate({
-            left: x + 'px',
-            top: y + 'px'
+            left: (x*40) + 'px',
+            top: (y*40) + 'px'
         },300);
     }else{
         console.log('Army undefined');
@@ -751,7 +744,7 @@ function getEnemyCastleGarrison(castleId) {
         }
         for(i in players[color].armies) {
             var a = players[color].armies[i];
-            if((a.x >= pos.x) && (a.x <= (pos.x + 40)) && (a.y >= pos.y) && (a.y <= (pos.y + 40))) {
+            if((a.x >= pos.x) && (a.x <= (pos.x + 1)) && (a.y >= pos.y) && (a.y <= (pos.y + 1))) {
                 armies[i] = a;
             }
         }
@@ -874,8 +867,8 @@ function walk(res) {
         wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
         zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
         $('#army'+unselectedArmy.armyId).animate({
-            left: res.path[i].x + 'px',
-            top: res.path[i].y + 'px'
+            left: (res.path[i].x*40) + 'px',
+            top: (res.path[i].y*40) + 'px'
         },300,
         function(){
             if(typeof res.path[i] == 'undefined'){
@@ -1011,13 +1004,6 @@ function getUnitId(name) {
 }
 
 // *** POSITIONING ***
-
-function changePointToPosition(point) {
-    position = point.substr(1);
-    position = position.split(',');
-    position = new Array(parseInt(position[0]), parseInt(position[1]));
-    return position;
-}
 
 function cursorPosition(x, y, force) {
     if(selectedArmy) {

@@ -12,7 +12,7 @@ class Application_Model_Board {
                 'name' => 'MARTHOS',
                 'income' => 20,
                 'defensePoints' => 4,
-                'position' => array('x' => 2480, 'y' => 2240),
+                'position' => array('x' => 62, 'y' => 56),
                 'capital' => true,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -25,7 +25,7 @@ class Application_Model_Board {
                 'name' => 'ELVALLIE',
                 'income' => 33,
                 'defensePoints' => 4,
-                'position' => array('x' => 1640, 'y' => 1480),
+                'position' => array('x' => 41, 'y' => 37),
                 'capital' => true,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -37,7 +37,7 @@ class Application_Model_Board {
                 'name' => 'CHARLING',
                 'income' => 16,
                 'defensePoints' => 1,
-                'position' => array('x' => 1920, 'y' => 1360),
+                'position' => array('x' => 48, 'y' => 34),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -47,7 +47,7 @@ class Application_Model_Board {
                 'name' => 'GILDENHOME',
                 'income' => 24,
                 'defensePoints' => 3,
-                'position' => array('x' => 1320, 'y' => 1520),
+                'position' => array('x' => 33, 'y' => 38),
                 'capital' => false,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -59,7 +59,7 @@ class Application_Model_Board {
                 'name' => 'LOREMARK',
                 'income' => 3,
                 'defensePoints' => 2,
-                'position' => array('x' => 1720, 'y' => 1800),
+                'position' => array('x' => 43, 'y' => 45),
                 'capital' => false,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -71,7 +71,7 @@ class Application_Model_Board {
                 'name' => 'ARGENTHORN',
                 'income' => 22,
                 'defensePoints' => 2,
-                'position' => array('x' => 1680, 'y' => 1040),
+                'position' => array('x' => 42, 'y' => 26),
                 'capital' => false,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -83,7 +83,7 @@ class Application_Model_Board {
                 'name' => 'ANGBAR',
                 'income' => 20,
                 'defensePoints' => 2,
-                'position' => array('x' => 2160, 'y' => 880),
+                'position' => array('x' => 54, 'y' => 22),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -94,7 +94,7 @@ class Application_Model_Board {
                 'name' => 'SSURI',
                 'income' => 19,
                 'defensePoints' => 2,
-                'position' => array('x' => 2360, 'y' => 960),
+                'position' => array('x' => 59, 'y' => 24),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -105,7 +105,7 @@ class Application_Model_Board {
                 'name' => 'TROY',
                 'income' => 13,
                 'defensePoints' => 1,
-                'position' => array('x' => 2240, 'y' => 1080),
+                'position' => array('x' => 56, 'y' => 27),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -116,7 +116,7 @@ class Application_Model_Board {
                 'name' => 'HEREUTH',
                 'income' => 26,
                 'defensePoints' => 4,
-                'position' => array('x' => 2600, 'y' => 1400),
+                'position' => array('x' => 65, 'y' => 35),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -127,7 +127,7 @@ class Application_Model_Board {
                 'name' => 'GLUK',
                 'income' => 17,
                 'defensePoints' => 2,
-                'position' => array('x' => 3360, 'y' => 1680),
+                'position' => array('x' => 84, 'y' => 42),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -139,7 +139,7 @@ class Application_Model_Board {
                 'name' => 'GORK',
                 'income' => 15,
                 'defensePoints' => 2,
-                'position' => array('x' => 3440, 'y' => 1800),
+                'position' => array('x' => 86, 'y' => 45),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -151,7 +151,7 @@ class Application_Model_Board {
                 'name' => 'GAROM',
                 'income' => 20,
                 'defensePoints' => 2,
-                'position' => array('x' => 3480, 'y' => 1080),
+                'position' => array('x' => 87, 'y' => 27),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -162,7 +162,7 @@ class Application_Model_Board {
                 'name' => 'BALAD NARAN',
                 'income' => 29,
                 'defensePoints' => 4,
-                'position' => array('x' => 3600, 'y' => 640),
+                'position' => array('x' => 90, 'y' => 16),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -175,7 +175,7 @@ class Application_Model_Board {
                 'name' => 'GALIN',
                 'income' => 20,
                 'defensePoints' => 2,
-                'position' => array('x' => 1640, 'y' => 0),
+                'position' => array('x' => 41, 'y' => 0),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -187,7 +187,7 @@ class Application_Model_Board {
                 'name' => 'KOR',
                 'income' => 30,
                 'defensePoints' => 4,
-                'position' => array('x' => 4000, 'y' => 120),
+                'position' => array('x' => 100, 'y' => 3),
                 'capital' => true,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -199,7 +199,7 @@ class Application_Model_Board {
                 'name' => 'DETHAL',
                 'income' => 20,
                 'defensePoints' => 2,
-                'position' => array('x' => 3560, 'y' => 0),
+                'position' => array('x' => 89, 'y' => 0),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -210,7 +210,7 @@ class Application_Model_Board {
                 'name' => 'THURTZ',
                 'income' => 18,
                 'defensePoints' => 2,
-                'position' => array('x' => 3400, 'y' => 80),
+                'position' => array('x' => 85, 'y' => 2),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -221,7 +221,7 @@ class Application_Model_Board {
                 'name' => 'DARCLAN',
                 'income' => 23,
                 'defensePoints' => 2,
-                'position' => array('x' => 3120, 'y' => 0),
+                'position' => array('x' => 78, 'y' => 0),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -232,7 +232,7 @@ class Application_Model_Board {
                 'name' => 'ILNYR',
                 'income' => 21,
                 'defensePoints' => 2,
-                'position' => array('x' => 2840, 'y' => 240),
+                'position' => array('x' => 71, 'y' => 6),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -244,7 +244,7 @@ class Application_Model_Board {
                 'name' => 'DUINOTH',
                 'income' => 19,
                 'defensePoints' => 2,
-                'position' => array('x' => 2720, 'y' => 720),
+                'position' => array('x' => 68, 'y' => 18),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -255,7 +255,7 @@ class Application_Model_Board {
                 'name' => 'KAZRACK',
                 'income' => 21,
                 'defensePoints' => 2,
-                'position' => array('x' => 2320, 'y' => 120),
+                'position' => array('x' => 58, 'y' => 3),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -267,7 +267,7 @@ class Application_Model_Board {
                 'name' => 'VERNON',
                 'income' => 24,
                 'defensePoints' => 3,
-                'position' => array('x' => 1920, 'y' => 80),
+                'position' => array('x' => 48, 'y' => 2),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -279,7 +279,7 @@ class Application_Model_Board {
                 'name' => 'HIMELTON',
                 'income' => 14,
                 'defensePoints' => 1,
-                'position' => array('x' => 880, 'y' => 320),
+                'position' => array('x' => 22, 'y' => 8),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -290,7 +290,7 @@ class Application_Model_Board {
                 'name' => 'STORMHEIM',
                 'income' => 20,
                 'defensePoints' => 4,
-                'position' => array('x' => 760, 'y' => 800),
+                'position' => array('x' => 19, 'y' => 20),
                 'capital' => true,
                 'production' => array(
                     'Giants' => array('time' => '2', 'cost' => '4'),
@@ -300,7 +300,7 @@ class Application_Model_Board {
                 'name' => 'OHMSMOUTH',
                 'income' => 24,
                 'defensePoints' => 3,
-                'position' => array('x' => 280, 'y' => 280),
+                'position' => array('x' => 7, 'y' => 7),
                 'capital' => false,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -311,7 +311,7 @@ class Application_Model_Board {
                 'name' => 'WELLMORE',
                 'income' => 20,
                 'defensePoints' => 2,
-                'position' => array('x' => 160, 'y' => 640),
+                'position' => array('x' => 4, 'y' => 16),
                 'capital' => false,
                 'production' => array(
                     'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
@@ -322,7 +322,7 @@ class Application_Model_Board {
                 'name' => 'TASME',
                 'income' => 19,
                 'defensePoints' => 2,
-                'position' => array('x' => 320, 'y' => 1000),
+                'position' => array('x' => 8, 'y' => 25),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -333,7 +333,7 @@ class Application_Model_Board {
                 'name' => 'VARDE',
                 'income' => 23,
                 'defensePoints' => 2,
-                'position' => array('x' => 320, 'y' => 1360),
+                'position' => array('x' => 8, 'y' => 34),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -345,7 +345,7 @@ class Application_Model_Board {
                 'name' => 'QUIESCE',
                 'income' => 3,
                 'defensePoints' => 2,
-                'position' => array('x' => 600, 'y' => 1280),
+                'position' => array('x' => 15, 'y' => 32),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -356,7 +356,7 @@ class Application_Model_Board {
                 'name' => 'KHORFE',
                 'income' => 26,
                 'defensePoints' => 3,
-                'position' => array('x' => 320, 'y' => 1680),
+                'position' => array('x' => 8, 'y' => 42),
                 'capital' => false,
                 'production' => array(
                     'Dwarves' => array('time' => '2', 'cost' => '4'),
@@ -367,7 +367,7 @@ class Application_Model_Board {
                 'name' => 'ALFAR\'S GAP',
                 'income' => 18,
                 'defensePoints' => 2,
-                'position' => array('x' => 880, 'y' => 2160),
+                'position' => array('x' => 22, 'y' => 54),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -378,7 +378,7 @@ class Application_Model_Board {
                 'name' => 'LADOR',
                 'income' => 16,
                 'defensePoints' => 2,
-                'position' => array('x' => 1240, 'y' => 720),
+                'position' => array('x' => 31, 'y' => 18),
                 'capital' => false,
                 'production' => array(
                     'Light Infantry' => array('time' => '1', 'cost' => '4'),
@@ -510,31 +510,31 @@ class Application_Model_Board {
 
     static public function getRuins() {
         $ruins = array();
-        $ruins[0] = array('x' => 1360, 'y' => 2320);
-        $ruins[1] = array('x' => 1480, 'y' => 2320);
-        $ruins[2] = array('x' => 720, 'y' => 1840);
-        $ruins[3] = array('x' => 960, 'y' => 1560);
-        $ruins[4] = array('x' => 960, 'y' => 1400);
-        $ruins[5] = array('x' => 440, 'y' => 1200);
-        $ruins[6] = array('x' => 640, 'y' => 480);
-        $ruins[7] = array('x' => 1520, 'y' => 240);
-        $ruins[8] = array('x' => 1680, 'y' => 1240);
-        $ruins[9] = array('x' => 2640, 'y' => 600);
-        $ruins[10] = array('x' => 2760, 'y' => 1800);
-        $ruins[11] = array('x' => 2960, 'y' => 2400);
-        $ruins[12] = array('x' => 3080, 'y' => 1360);
-        $ruins[13] = array('x' => 3280, 'y' => 1200);
-        $ruins[14] = array('x' => 3480, 'y' => 1520);
-        $ruins[15] = array('x' => 3760, 'y' => 1400);
-        $ruins[16] = array('x' => 4200, 'y' => 1840);
-        $ruins[17] = array('x' => 4000, 'y' => 880);
+        $ruins[0] = array('x' => 34, 'y' => 58);
+        $ruins[1] = array('x' => 37, 'y' => 58);
+        $ruins[2] = array('x' => 18, 'y' => 46);
+        $ruins[3] = array('x' => 24, 'y' => 39);
+        $ruins[4] = array('x' => 24, 'y' => 35);
+        $ruins[5] = array('x' => 11, 'y' => 30);
+        $ruins[6] = array('x' => 16, 'y' => 12);
+        $ruins[7] = array('x' => 38, 'y' => 6);
+        $ruins[8] = array('x' => 42, 'y' => 31);
+        $ruins[9] = array('x' => 66, 'y' => 15);
+        $ruins[10] = array('x' => 69, 'y' => 45);
+        $ruins[11] = array('x' => 74, 'y' => 60);
+        $ruins[12] = array('x' => 77, 'y' => 34);
+        $ruins[13] = array('x' => 82, 'y' => 30);
+        $ruins[14] = array('x' => 87, 'y' => 38);
+        $ruins[15] = array('x' => 94, 'y' => 35);
+        $ruins[16] = array('x' => 105, 'y' => 46);
+        $ruins[17] = array('x' => 100, 'y' => 22);
         return $ruins;
     }
 
     static public function confirmRuinPosition($position) {
         $ruins = self::getRuins();
         foreach ($ruins as $ruinId => $ruin) {
-            if ($position[0] == $ruin['x'] && $position[1] == $ruin['y']) {
+            if ($position['x'] == $ruin['x'] && $position['y'] == $ruin['y']) {
                 return $ruinId;
             }
         }
@@ -542,37 +542,37 @@ class Application_Model_Board {
 
     static public function getTowers() {
         $towers = array();
-        $towers[] = array('x' => 3800, 'y' => 120);
-        $towers[] = array('x' => 3640, 'y' => 200);
-        $towers[] = array('x' => 3240, 'y' => 360);
-        $towers[] = array('x' => 2880, 'y' => 480);
-        $towers[] = array('x' => 3640, 'y' => 480);
-        $towers[] = array('x' => 3720, 'y' => 480);
-        $towers[] = array('x' => 1080, 'y' => 560);
-        $towers[] = array('x' => 2080, 'y' => 560);
-        $towers[] = array('x' => 2160, 'y' => 560);
-        $towers[] = array('x' => 3640, 'y' => 920);
-        $towers[] = array('x' => 2520, 'y' => 960);
-        $towers[] = array('x' => 3600, 'y' => 1000);
-        $towers[] = array('x' => 2880, 'y' => 1240);
-        $towers[] = array('x' => 2920, 'y' => 1360);
-        $towers[] = array('x' => 2200, 'y' => 1400);
-        $towers[] = array('x' => 2920, 'y' => 1440);
-        $towers[] = array('x' => 560, 'y' => 1480);
-        $towers[] = array('x' => 880, 'y' => 1520);
-        $towers[] = array('x' => 2280, 'y' => 1560);
-        $towers[] = array('x' => 2920, 'y' => 1560);
-        $towers[] = array('x' => 600, 'y' => 1600);
-        $towers[] = array('x' => 880, 'y' => 1600);
-        $towers[] = array('x' => 2880, 'y' => 1680);
-        $towers[] = array('x' => 2280, 'y' => 1840);
-        $towers[] = array('x' => 2000, 'y' => 1960);
-        $towers[] = array('x' => 2800, 'y' => 2000);
-        $towers[] = array('x' => 800, 'y' => 2040);
-        $towers[] = array('x' => 2000, 'y' => 2040);
-        $towers[] = array('x' => 2240, 'y' => 2040);
-        $towers[] = array('x' => 2400, 'y' => 2160);
-        $towers[] = array('x' => 2680, 'y' => 2160);
+        $towers[] = array('x' => 95, 'y' => 3);
+        $towers[] = array('x' => 91, 'y' => 5);
+        $towers[] = array('x' => 81, 'y' => 9);
+        $towers[] = array('x' => 72, 'y' => 12);
+        $towers[] = array('x' => 91, 'y' => 12);
+        $towers[] = array('x' => 93, 'y' => 12);
+        $towers[] = array('x' => 27, 'y' => 14);
+        $towers[] = array('x' => 52, 'y' => 14);
+        $towers[] = array('x' => 54, 'y' => 14);
+        $towers[] = array('x' => 91, 'y' => 23);
+        $towers[] = array('x' => 63, 'y' => 24);
+        $towers[] = array('x' => 90, 'y' => 25);
+        $towers[] = array('x' => 72, 'y' => 31);
+        $towers[] = array('x' => 73, 'y' => 34);
+        $towers[] = array('x' => 55, 'y' => 35);
+        $towers[] = array('x' => 73, 'y' => 36);
+        $towers[] = array('x' => 14, 'y' => 37);
+        $towers[] = array('x' => 22, 'y' => 38);
+        $towers[] = array('x' => 57, 'y' => 39);
+        $towers[] = array('x' => 73, 'y' => 39);
+        $towers[] = array('x' => 15, 'y' => 40);
+        $towers[] = array('x' => 22, 'y' => 40);
+        $towers[] = array('x' => 72, 'y' => 42);
+        $towers[] = array('x' => 57, 'y' => 46);
+        $towers[] = array('x' => 50, 'y' => 49);
+        $towers[] = array('x' => 70, 'y' => 50);
+        $towers[] = array('x' => 20, 'y' => 51);
+        $towers[] = array('x' => 50, 'y' => 51);
+        $towers[] = array('x' => 56, 'y' => 51);
+        $towers[] = array('x' => 60, 'y' => 54);
+        $towers[] = array('x' => 67, 'y' => 54);
         return $towers;
     }
 
