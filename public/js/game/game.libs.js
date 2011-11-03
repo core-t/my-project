@@ -107,8 +107,8 @@ function ruinCreate(ruinId){
             title: title
         })
         .css({
-            left: ruins[ruinId].x + 'px',
-            top: ruins[ruinId].y + 'px',
+            left: (ruins[ruinId].x*40) + 'px',
+            top: (ruins[ruinId].y*40) + 'px',
             background:'url(../img/game/ruin'+css+'.png) center center no-repeat'
         })
         );
@@ -170,8 +170,8 @@ function createNeutralCastle(castleId) {
         })
         );
     castleFields(castleId, 'e');
-    mX = castles[castleId].position.x/20;
-    mY = castles[castleId].position.y/20;
+    mX = castles[castleId].position.x*2;
+    mY = castles[castleId].position.y*2;
     zoomPad.append(
         $('<div>').css({
             'left':mX + 'px',
@@ -206,7 +206,7 @@ function myCastleCursor(id){
 
 function castleUpdate(data) {
     //    removeM();
-    zoomer.lensSetCenter(castles[data.castleId].position['x'], castles[data.castleId].position['y']);
+    zoomer.lensSetCenter(castles[data.castleId].position['x']*40, castles[data.castleId].position['y']*40);
     if(data.razed){
         castles[data.castleId].razed = true;
         castleFields(data.castleId, 'g');
@@ -292,7 +292,7 @@ function isEnemyCastle(x, y) {
             continue;
         }
         var pos = castles[castleId].position;
-        if((x >= pos.x) && (x < (pos.x + 80)) && (y >= pos.y) && (y < (pos.y + 80))) {
+        if((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
             return castleId;
         }
     }
@@ -312,7 +312,7 @@ function getMyCastleDefenseFromPosition(x, y) {
     for(castleId in castles) {
         if(castles[castleId].color == my.color) {
             var pos = castles[castleId].position;
-            if((x >= pos.x) && (x < (pos.x + 80)) && (y >= pos.y) && (y < (pos.y + 80))) {
+            if((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
                 return castles[castleId].defense;
             }
         }
@@ -630,7 +630,7 @@ function selectArmy(a) {
     if(typeof selectedArmy.heroKey != 'undefined' && getRuinId(selectedArmy) !== null){
         $('#searchRuins').removeClass('buttonOff');
     }
-    zoomer.lensSetCenter(a.x, a.y);
+    zoomer.lensSetCenter(a.x*40, a.y*40);
 }
 
 function joinSplitedArmy(){
@@ -681,7 +681,7 @@ function deleteArmy(armyId, color, quiet) {
             delete players[color].armies[armyId];
         }
     } else {
-        zoomer.lensSetCenter(players[color].armies[armyId].x, players[color].armies[armyId].y);
+        zoomer.lensSetCenter(players[color].armies[armyId].x*40, players[color].armies[armyId].y*40);
         armyFields(players[color].armies[armyId]);
         $('#' + armyId).fadeOut(500, function() {
             $('#' + armyId).remove();
@@ -725,7 +725,7 @@ function armyFields(a){
 function changeArmyPosition(x, y, armyId, color) {
     if(typeof players[color].armies['army'+armyId] != 'undefined') {
         removeM();
-        zoomer.lensSetCenter(x, y);
+        zoomer.lensSetCenter(x*40, y*40);
         $('#army' + armyId).animate({
             left: (x*40) + 'px',
             top: (y*40) + 'px'
@@ -865,7 +865,7 @@ function walk(res) {
         return null;
     } else {
         wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
-        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
+        zoomer.lensSetCenter(res.path[i].x*40, res.path[i].y*40);
         $('#army'+unselectedArmy.armyId).animate({
             left: (res.path[i].x*40) + 'px',
             top: (res.path[i].y*40) + 'px'
@@ -921,7 +921,7 @@ function enemyWalk(res) {
             var enemyArmies = new Array();
             var neutral = 0;
             if(res.castleId){
-                zoomer.lensSetCenter(castles[res.castleId].position.x, castles[res.castleId].position.y);
+                zoomer.lensSetCenter(castles[res.castleId].position.x*40, castles[res.castleId].position.y*40);
                 if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
                     var enemyArmies = new Array();
                     enemyArmies[0] = getNeutralCastleGarrison();
@@ -1018,8 +1018,8 @@ function cursorPosition(x, y, force) {
             $('.path').remove();
             newX = tmpX;
             newY = tmpY;
-            var startX = selectedArmy.x/40;
-            var startY = selectedArmy.y/40;
+            var startX = selectedArmy.x;
+            var startY = selectedArmy.y;
             var open = new Object();
             var close = new Object();
             var start = new node(startX, startY, destX, destY, 0);
@@ -1167,8 +1167,8 @@ function showPath(close, key, moves){
             $('<div>')
             .addClass('path '+klasa)
             .css({
-                left:pX,
-                top:pY
+                left:pX+'px',
+                top:pY+'px'
             })
             .html(close[key].G)
             );

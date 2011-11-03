@@ -175,8 +175,8 @@ class Game_Astar {
         }
         while (!empty($this->close[$key]['parent'])) {
             $path[] = array(
-                'x' => $this->close[$key]['x'] * 40,
-                'y' => $this->close[$key]['y'] * 40);
+                'x' => $this->close[$key]['x'],
+                'y' => $this->close[$key]['y']);
         }
         $path = array_reverse($path);
         return $path;
@@ -200,19 +200,19 @@ class Game_Astar {
             if ($this->close[$key]['G'] <= $moves) {
                 if (!$this->currentPosition) {
                     $this->currentPosition = array(
-                        'x' => $this->close[$key]['x'] * 40,
-                        'y' => $this->close[$key]['y'] * 40,
+                        'x' => $this->close[$key]['x'],
+                        'y' => $this->close[$key]['y'],
                         'movesSpend' => $this->close[$key]['G']);
                 }
                 $this->path[] = array(
-                    'x' => $this->close[$key]['x'] * 40,
-                    'y' => $this->close[$key]['y'] * 40);
+                    'x' => $this->close[$key]['x'],
+                    'y' => $this->close[$key]['y']);
             }
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
         $this->path[] = array(
-            'x' => $this->close[$key]['x'] * 40,
-            'y' => $this->close[$key]['y'] * 40);
+            'x' => $this->close[$key]['x'],
+            'y' => $this->close[$key]['y']);
         $this->path = array_reverse($this->path);
         return $this->path;
     }

@@ -103,7 +103,7 @@ function login() {
                                     }
                                 }
                             }
-                            zoomer.lensSetCenter(army.x, army.y);
+                            zoomer.lensSetCenter(army.x*40, army.y*40);
                             battleM(battle, army, enemyArmies);
                             break;
                         default:

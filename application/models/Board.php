@@ -771,10 +771,10 @@ class Application_Model_Board {
         return array('hostileCastles' => $hostileCastles, 'fields' => $fields);
     }
 
-    static public function isArmyInCastle($position, $castles) {
+    static public function isArmyInCastle($x, $y, $castles) {
         $aP = array(
-            'x' => $position[0],
-            'y' => $position[1]
+            'x' => $x,
+            'y' => $y
         );
         foreach ($castles as $castle) {
             if (self::isCastleFild($aP, self::getCastlePosition($castle['castleId']))) {

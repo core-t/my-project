@@ -101,6 +101,8 @@ function startMyTurnA() {
 }
 
 function moveA(movesSpend) {
+    var x = newX/40;
+    var y = newY/40;
     if(selectedArmy.moves == 0){
         unselectArmy();
         simpleM('Not enough moves left.');
@@ -114,15 +116,15 @@ function moveA(movesSpend) {
         return null;
     }
     tmpUnselectArmy();
-    if(unselectedArmy.x == newX && unselectedArmy.y == newY) {
+    if(unselectedArmy.x == x && unselectedArmy.y == y) {
         return null;
     }
     setlock();
     var neutralCastleId = null;
     var enemyCastleId = null;
-    var castleId = isEnemyCastle(newX, newY);
-    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == newX && selectedEnemyArmy.y == newY)){
-        var vectorLength  = getVectorLength(unselectedArmy.x, unselectedArmy.y, newX, newY);
+    var castleId = isEnemyCastle(x, y);
+    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
+        var vectorLength  = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
         if(vectorLength >= 80) {
             unlock();
             unselectEnemyArmy();
@@ -146,7 +148,7 @@ function moveA(movesSpend) {
                 neutralCastleId = castleId;
             }
             if(neutralCastleId){
-                $.getJSON(urlFightNeutralCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
+                $.getJSON(urlFightNeutralCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/cid/' + castleId, function(result) {
                     var enemyArmies = new Array();
                     enemyArmies[0] = getNeutralCastleGarrison();
                     if(result.victory) {
@@ -163,7 +165,7 @@ function moveA(movesSpend) {
                     unlock();
                 });
             } else if(enemyCastleId){
-                $.getJSON(urlFightEnemyCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/cid/' + castleId, function(result) {
+                $.getJSON(urlFightEnemyCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/cid/' + castleId, function(result) {
                     var enemyArmies = getEnemyCastleGarrison(castleId);
                     if(result.victory) {
                         myArmyWin(result);
@@ -194,10 +196,10 @@ function moveA(movesSpend) {
                 unselectEnemyArmy();
                 return null;
             }
-            $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
+            $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
                 if(result.victory == true) {
                     myArmyWin(result);
-                    deleteArmyByPosition(newX, newY, selectedEnemyArmy.color);
+                    deleteArmyByPosition(x, y, selectedEnemyArmy.color);
                     wsArmy(selectedEnemyArmy.armyId);
                 } else {
                     deleteArmy('army' + unselectedArmy.armyId, my.color, 1);
@@ -221,7 +223,7 @@ function moveA(movesSpend) {
             unlock();
             return null;
         }
-        $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + newX + '/y/' + newY, function(result) {
+        $.getJSON(urlMove + '/aid/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y, function(result) {
             if(result) {
                 var res = result;
                 //                 console.log(result.path);
@@ -241,7 +243,7 @@ function getArmyA(armyId, center) {
             players[result.color].armies['army' + result.armyId] = new army(result, result.color);
             if(center == 1){
                 removeM();
-                zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x, players[result.color].armies['army' + result.armyId].y);
+                zoomer.lensSetCenter(players[result.color].armies['army' + result.armyId].x*40, players[result.color].armies['army' + result.armyId].y*40);
             }
         //            clearPlayerArmiesTrash();
         }

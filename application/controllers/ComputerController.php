@@ -41,16 +41,15 @@ class ComputerController extends Game_Controller_Action {
     private function moveArmy($army) {
         $modelCastle= new Application_Model_Castle($this->_namespace->gameId);
         $computer = new Game_Computer($this->playerId, $army, $this->modelArmy);
-        $position = $this->modelArmy->convertPosition($army['position']);
         $myCastles = $modelCastle->getPlayerCastles($this->playerId);
-        $myCastleId = Application_Model_Board::isArmyInCastle($position, $myCastles);
+        $myCastleId = Application_Model_Board::isArmyInCastle($army['x'], $army['y'], $myCastles);
         $fields = $this->modelArmy->getEnemyArmiesFieldsPositions($this->playerId);
         $razed = $modelCastle->getRazedCastles();
         $castlesAndFields = Application_Model_Board::prepareCastlesAndFields($fields, $razed, $myCastles);
         if ($myCastleId !== null) {
             $computer->handleEnemyIsNearCastle(Application_Model_Board::getCastlePosition($myCastleId), $this->modelArmy, $castlesAndFields, $modelCastle);
         }else{
-            $castleId = $computer->getClosestEnemyCastle($castlesAndFields, $position);
+            $castleId = $computer->getClosestEnemyCastle($castlesAndFields, $army['x'], $army['y']);
         }
         $currentPosition = $computer->getCurrentPosition();
         if ($currentPosition) {

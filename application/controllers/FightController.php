@@ -22,7 +22,7 @@ class FightController extends Game_Controller_Action {
             if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
                 throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
             }
-            if (($movesSpend = $this->movesSpend($x, $y, $army, 1)) > $army['movesLeft']) {
+            if (($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji (' . $movesSpend . '>' . $army['movesLeft'] . ').');
             }
             $enemy = $modelArmy->getAllUnitsFromPosition(array('x' => $x, 'y' => $y));
@@ -220,9 +220,8 @@ class FightController extends Game_Controller_Action {
         }
     }
 
-    private function calculateArmiesDistance($x, $y, $position) {
-        $position = explode(',', substr($position, 1, -1));
-        return sqrt(pow($x - $position[0], 2) + pow($position[1] - $y, 2));
+    private function calculateArmiesDistance($x, $y, $x2, $y2) {
+        return sqrt(pow($x - $x2, 2) + pow($y2 - $y, 2));
     }
 
     private function movesSpend($x, $y, $army) {
@@ -243,7 +242,7 @@ class FightController extends Game_Controller_Action {
             }
         }
         $fields = Application_Model_Board::getBoardFields();
-        $terrainType = $fields[$y / 40][$x / 40];
+        $terrainType = $fields[$y][$x];
         $terrain = Application_Model_Board::getTerrain($terrainType, $canFly, $canSwim);
         return $terrain[1] + $movesRequiredToAttack;
     }
