@@ -113,10 +113,9 @@ class GamesetupajaxController extends Game_Controller_Action {
 
     private function startComputerPlayer($playerId, $color){
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-        $modelBoard = new Application_Model_Board();
         $modelHero = new Application_Model_Hero($playerId);
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-        $startPositions = $modelBoard->getDefaultStartPositions();
+        $startPositions = Application_Model_Board::getDefaultStartPositions();
         $playerHeroes = $modelHero->getHeroes();
         if(empty($playerHeroes)) {
             $modelHero->createHero();

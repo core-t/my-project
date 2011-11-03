@@ -39,11 +39,32 @@ class ComputerController extends Game_Controller_Action {
     }
 
     private function moveArmy($army) {
-        $modelBoard = new Application_Model_Board();
-        $castlesSchema = $modelBoard->getCastlesSchema();
-        $computer = new Game_Computer($this->playerId, $army, $this->modelArmy, new Application_Model_Castle($this->_namespace->gameId), $castlesSchema);
+        $modelCastle= new Application_Model_Castle($this->_namespace->gameId);
+        $computer = new Game_Computer($this->playerId, $army, $this->modelArmy);
+        $position = $this->modelArmy->convertPosition($army['position']);
+        $myCastles = $modelCastle->getPlayerCastles($this->playerId);
+        $myCastleId = Application_Model_Board::isArmyInCastle($position, $myCastles);
+        $fields = $this->modelArmy->getEnemyArmiesFieldsPositions($this->playerId);
+        $razed = $modelCastle->getRazedCastles();
+        $castlesAndFields = Application_Model_Board::prepareCastlesAndFields($fields, $razed, $myCastles);
+        if ($myCastleId !== null) {
+            $computer->handleEnemyIsNearCastle(Application_Model_Board::getCastlePosition($myCastleId), $this->modelArmy, $castlesAndFields, $modelCastle);
+        }else{
+            $castleId = $computer->getClosestEnemyCastle($castlesAndFields, $position);
+        }
         $currentPosition = $computer->getCurrentPosition();
-//            Zend_Debug::dump($currentPosition);
+        if ($currentPosition) {
+            if ($castleId) {
+                $this->movesSpend = $currentPosition['movesSpend'];
+                if (Application_Model_Board::isCastleFild($currentPosition, Application_Model_Board::getCastlePosition($castleId))) {
+                    $this->victory = $computer->fightCastle($modelCastle, $castleId);
+                    $this->inCastle = true;
+                } else {
+                    $this->inCastle = false;
+                }
+            }
+        }
+        $currentPosition = $computer->getCurrentPosition();
         if (!$currentPosition) {
             $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
             $this->view->response = Zend_Json::encode(array('action' => 'continue'));
@@ -66,9 +87,6 @@ class ComputerController extends Game_Controller_Action {
                     $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
                 } else {
                     $result = array();
-                }
-                if ($inCastle && $castleId) {
-                    $this->handleEnemyIsNear($castlesSchema[$castleId]['position']);
                 }
                 $result['action'] = 'continue';
                 $result['oldArmyId'] = $army['armyId'];
@@ -129,7 +147,6 @@ class ComputerController extends Game_Controller_Action {
 
     private function startTurn() {
         $this->modelGame->turnActivate($this->playerId);
-        $modelBoard = new Application_Model_Board();
         $castles = array();
         $this->modelArmy->resetHeroesMovesLeft($this->playerId);
         $this->modelArmy->resetSoldiersMovesLeft($this->playerId);
@@ -142,14 +159,14 @@ class ComputerController extends Game_Controller_Action {
             $castlesId = $modelCastle->getPlayerCastles($this->playerId);
             foreach ($castlesId as $id) {
                 $castleId = $id['castleId'];
-                $castles[$castleId] = $modelBoard->getCastle($castleId);
+                $castles[$castleId] = Application_Model_Board::getCastle($castleId);
                 $castle = $castles[$castleId];
                 $income += $castle['income'];
                 $castleProduction = $modelCastle->getCastleProduction($castleId, $this->playerId);
                 if ($turnNumber < 10) {
-                    $unitName = $modelBoard->getMinProductionTimeUnit($castleId);
+                    $unitName = Application_Model_Board::getMinProductionTimeUnit($castleId);
                 } else {
-                    $unitName = $modelBoard->getCastleOptimalProduction($castleId);
+                    $unitName = Application_Model_Board::getCastleOptimalProduction($castleId);
                 }
                 $modelUnit = new Application_Model_Unit();
                 $unitId = $modelUnit->getUnitIdByName($unitName);
@@ -158,7 +175,7 @@ class ComputerController extends Game_Controller_Action {
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->playerId);
                 }
                 $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-                $unitName = $modelBoard->getUnitName($castleProduction['production']);
+                $unitName = Application_Model_Board::getUnitName($castleProduction['production']);
                 if ($castle['production'][$unitName]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitName]['cost'] <= $gold) {
                     if ($modelCastle->resetProductionTurn($castleId, $this->playerId) == 1) {
                         $armyId = $this->modelArmy->getArmyIdFromPosition($castle['position']);
@@ -168,7 +185,6 @@ class ComputerController extends Game_Controller_Action {
                         $this->modelArmy->addSoldierToArmy($armyId, $castleProduction['production'], $this->playerId);
                     }
                 }
-                $this->handleEnemyIsNear($castle['position']);
             }
             if (isset($castle['position'])) {
                 $gold = $this->handleHeroResurrection($gold, $castle['position']);
@@ -186,27 +202,6 @@ class ComputerController extends Game_Controller_Action {
                 $this->modelGame->updatePlayerInGameGold($this->playerId, $gold);
 
                 $this->view->response = Zend_Json::encode(array('action' => 'continue'));
-            }
-        }
-    }
-
-    private function handleEnemyIsNear($castlePosition) {
-        $armyIds = $this->modelArmy->getAllArmiesIdsFromCastlePosition($castlePosition);
-        if ($armyIds) {
-            $enemies = $this->modelArmy->getAllEnemiesArmies($this->playerId);
-            $heuristics = array();
-            foreach ($enemies as $id => $enemy) {
-                $position = $this->modelArmy->convertPosition($enemy['position']);
-                $aStar = new Game_Astar($castlePosition['x'], $castlePosition['y']);
-                $h = $aStar->calculateH($position[0], $position[1]);
-                if ($h < ($enemy['numberOfMoves'] * 40)) {
-                    $heuristics[$id] = $h;
-                }
-            }
-            if (!empty($heuristics)) {
-                foreach ($armyIds as $armyId) {
-                    $this->modelArmy->zeroArmyMovesLeft($armyId, $this->playerId);
-                }
             }
         }
     }

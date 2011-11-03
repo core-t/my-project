@@ -79,9 +79,8 @@ class MoveController extends Game_Controller_Action {
         }
         $position = explode(',', substr($army['position'], 1, -1));
         $position = array('x' => $position[0], 'y' => $position[1]);
-        $modelBoard = new Application_Model_Board();
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-        $castlesSchema = $modelBoard->getCastlesSchema();
+        $castlesSchema = Application_Model_Board::getCastlesSchema();
         foreach ($castlesSchema as $castleId => $castle) {
             if($modelCastle->isCastleRazed($castleId)){
                 continue;

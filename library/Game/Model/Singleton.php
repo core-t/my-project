@@ -25,8 +25,7 @@ abstract class Game_Model_Singleton {
     }
 
     public function setNamespace () {
-        Zend_Session::start ();
-        $this->_namespace = new Zend_Session_Namespace();
+        $this->_namespace = Game_Namespace::getNamespace();
     }
 
     public function setParams ( $aParams ) {

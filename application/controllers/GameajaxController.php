@@ -63,7 +63,7 @@ class GameajaxController extends Game_Controller_Action {
                 $position = substr($position1['position'], 1 , -1);
                 $armyId = $modelArmy->joinArmiesAtPosition($position, $this->_namespace->player['playerId']);
                 $this->view->response = Zend_Json::encode($modelArmy->getArmyById($armyId));
-                
+
             }else{
                 throw new Exception('Armie nie są na tej samej pozycji!');
             }
@@ -103,8 +103,7 @@ class GameajaxController extends Game_Controller_Action {
             if($gold < 100){
                 throw new Exception('Za mało złota!');
             }
-            $modelBoard = new Application_Model_Board();
-            $position = $modelBoard->getCastlePosition($castleId);
+            $position = Application_Model_Board::getCastlePosition($castleId);
             $armyId = $modelArmy->heroResurection($heroId, $position, $this->_namespace->player['playerId']);
             $response = $modelArmy->getArmyById($armyId);
             $response['gold'] = $gold - 100;

@@ -35,7 +35,6 @@ class GameController extends Game_Controller_Action {
             $this->view->headScript()->appendFile('/js/game/game.ajax.js');
             $this->view->headScript()->appendFile('/js/game/game.message.js');
             $this->_helper->layout->setLayout('game');
-            $modelBoard = new Application_Model_Board();
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
@@ -44,7 +43,7 @@ class GameController extends Game_Controller_Action {
             $modelArtefact = new Application_Model_Artefact();
             $this->view->artefacts = $modelArtefact->getArtefacts();
             $this->view->units = $modelUnit->getUnits();
-            $neutralTowers = $modelBoard->getTowers();
+            $neutralTowers = Application_Model_Board::getTowers();
             $playersTowers = $modelTower->getTowers();
             $towers = array();
             foreach($neutralTowers as $k=>$tower){
@@ -56,7 +55,7 @@ class GameController extends Game_Controller_Action {
                 }
             }
             $this->view->towers = $towers;
-            $startPositions = $modelBoard->getDefaultStartPositions();
+            $startPositions = Application_Model_Board::getDefaultStartPositions();
             $players = $modelGame->getPlayersInGameReady();
             $this->view->players = array();
             $this->view->turn = array();
@@ -91,14 +90,14 @@ class GameController extends Game_Controller_Action {
                 $this->view->myGame = 0;
             }
             $this->view->castlesSchema = array();
-            $castlesSchema = $modelBoard->getCastlesSchema();
+            $castlesSchema = Application_Model_Board::getCastlesSchema();
             $razed = $modelCastle->getRazedCastles();
-            $this->view->ruins = $modelBoard->getRuins();
+            $this->view->ruins = Application_Model_Board::getRuins();
             $emptyRuins = $modelRuin->getVisited();
             foreach($emptyRuins as $id=>$ruin){
                 $this->view->ruins[$id]['e'] = 1;
             }
-            $this->view->fields = $modelBoard->getBoardFields();
+            $this->view->fields = Application_Model_Board::getBoardFields();
             foreach($castlesSchema as $id=>$castle){
                 if(!isset($razed[$id])){
                     $this->view->castlesSchema[$id] = $castle;

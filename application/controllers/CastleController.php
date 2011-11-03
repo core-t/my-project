@@ -51,10 +51,9 @@ class CastleController extends Game_Controller_Action
             throw new Exception('Nie Twój zamek.');
         }
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        $modelBoard = new Application_Model_Board();
         $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
         $defenseModifier = $this->modelCastle->getCastleDefenseModifier($this->castleId);
-        $defensePoints = $modelBoard->getCastleDefense($this->castleId);
+        $defensePoints = Application_Model_Board::getCastleDefense($this->castleId);
         $defense = $defenseModifier + $defensePoints;
         $costs = 0;
         for($i = 1; $i <= $defense; $i++){
@@ -91,8 +90,7 @@ class CastleController extends Game_Controller_Action
         $castle = $this->modelCastle->getCastle($this->castleId);
         if(isset($castle['playerId'])){
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
-            $modelBoard = new Application_Model_Board();
-            $castle['defensePoints'] = $modelBoard->getCastleDefense($this->castleId);
+            $castle['defensePoints'] = Application_Model_Board::getCastleDefense($this->castleId);
             $castle['color'] = $modelGame->getPlayerColor($castle['playerId']);
             $this->view->response = Zend_Json::encode($castle);
         }

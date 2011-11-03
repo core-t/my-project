@@ -6,8 +6,7 @@ class Game_Player_Request {
     private $_namespace;
 
     public function __construct () {
-        Zend_Session::start ();
-        $this->_namespace = new Zend_Session_Namespace();
+        $this->_namespace = Game_Namespace::getNamespace();
     }
 
     public function logRequest () {

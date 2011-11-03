@@ -5,8 +5,7 @@ abstract class Game_Controller_Game extends Zend_Controller_Action
     {
         parent::init();
 
-        Zend_Session::start();
-        $this->_namespace = new Zend_Session_Namespace(); // default namespace
+        $this->_namespace = Game_Namespace::getNamespace(); // default namespace
 
         if(empty($this->_namespace->player['playerId'])) {
             $this->_helper->redirector('index', 'login');

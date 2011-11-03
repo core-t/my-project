@@ -72,8 +72,7 @@ class FightController extends Game_Controller_Action {
         $y = $this->_request->getParam('y');
         $castleId = $this->_request->getParam('cid');
         if ($armyId !== null AND $x !== null AND $y !== null AND $castleId !== null) {
-            $modelBoard = new Application_Model_Board();
-            $castle = $modelBoard->getCastle($castleId);
+            $castle = Application_Model_Board::getCastle($castleId);
             if (empty($castle)) {
                 throw new Exception('Brak zamku o podanym ID!');
                 return false;
@@ -151,8 +150,7 @@ class FightController extends Game_Controller_Action {
         $y = $this->_request->getParam('y');
         $castleId = $this->_request->getParam('cid');
         if ($armyId !== null AND $x !== null AND $y !== null AND $castleId !== null) {
-            $modelBoard = new Application_Model_Board();
-            $castle = $modelBoard->getCastle($castleId);
+            $castle = Application_Model_Board::getCastle($castleId);
             if (empty($castle)) {
                 throw new Exception('Brak zamku o podanym ID!');
                 return false;

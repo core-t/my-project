@@ -41,6 +41,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
        $logger->addWriter($writer);
        Zend_Registry::set('logger', $logger);
     }
-    
+
+    protected function _initSession(){
+        Zend_Session::start();
+    }
+
 }
 

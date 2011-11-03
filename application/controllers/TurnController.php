@@ -68,7 +68,6 @@ class TurnController extends Game_Controller_Action {
         }
         $modelGame->turnActivate($this->_namespace->player['playerId']);
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-        $modelBoard = new Application_Model_Board();
         $castles = array();
         $modelArmy->resetHeroesMovesLeft($this->_namespace->player['playerId']);
         $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
@@ -80,7 +79,7 @@ class TurnController extends Game_Controller_Action {
             $castlesId = $modelCastle->getPlayerCastles($this->_namespace->player['playerId']);
             foreach($castlesId as $id) {
                 $castleId = $id['castleId'];
-                $castles[$castleId] = $modelBoard->getCastle($castleId);
+                $castles[$castleId] = Application_Model_Board::getCastle($castleId);
                 $castle = $castles[$castleId];
                 $income += $castle['income'];
                 $armyId = $modelArmy->getArmyIdFromPosition($castle['position']);
@@ -90,7 +89,7 @@ class TurnController extends Game_Controller_Action {
                 if (!empty($armyId)) {
                     $castleProduction = $modelCastle->getCastleProduction($castleId, $this->_namespace->player['playerId']);
                     $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-                    $unitName = $modelBoard->getUnitName($castleProduction['production']);
+                    $unitName = Application_Model_Board::getUnitName($castleProduction['production']);
                     if($castleProduction['production'] AND
                     $castle['production'][$unitName]['time'] <= $castleProduction['productionTurn']
                     AND $castle['production'][$unitName]['cost'] <= $gold

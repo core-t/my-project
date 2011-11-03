@@ -9,7 +9,7 @@ class Game_Battle {
     private $defender;
 
     public function __construct($attacker, $defender) {
-        $this->_namespace = new Zend_Session_Namespace();
+        $this->_namespace = Game_Namespace::getNamespace();
         if ($defender === null) {
             $defender = $this->getNeutralCastleGarrizon();
         }
@@ -23,7 +23,10 @@ class Game_Battle {
         }
     }
 
-    public function addCastleDefenseModifier($defenseModifier) {
+    public function addCastleDefenseModifier($castleId) {
+        $namespace = Game_Namespace::getNamespace();
+        $modelCastle = new Application_Model_Castle($namespace->gameId);
+        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId);
         if ($defenseModifier > 0) {
             $this->defenseModifier += $defenseModifier;
         }
@@ -151,7 +154,7 @@ class Game_Battle {
         return $this->_result;
     }
 
-    private function getNeutralCastleGarrizon() {
+    public function getNeutralCastleGarrizon() {
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         $turn = $modelGame->getTurn();
         $numberOfSoldiers = ceil($turn['nr'] / 10);

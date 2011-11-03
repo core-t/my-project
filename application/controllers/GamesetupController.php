@@ -48,10 +48,9 @@ class GamesetupController extends Game_Controller_Action {
                     $this->_helper->redirector('index', 'new');
                 }
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-                $modelBoard = new Application_Model_Board();
                 $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-                $startPositions = $modelBoard->getDefaultStartPositions();
+                $startPositions = Application_Model_Board::getDefaultStartPositions();
                 $playerHeroes = $modelHero->getHeroes();
                 $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
                 if(empty($playerHeroes)) {

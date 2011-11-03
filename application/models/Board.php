@@ -2,427 +2,457 @@
 
 class Application_Model_Board {
 
-    private $castles = array();
+    protected static $castles;
+    protected static $_instance = null;
 
-    public function __construct() {
-        $this->castles[0] = array(
-            'name' => 'MARTHOS',
-            'income' => 20,
-            'defensePoints' => 4,
-            'position' => array('x' => 2480, 'y' => 2240),
-            'capital' => true,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Cavalry' => array('time' => '4', 'cost' => '8'),
-                'Pegasi' => array('time' => '7', 'cost' => '16'),
-            )
-        );
-        $this->castles[1] = array(
-            'name' => 'ELVALLIE',
-            'income' => 33,
-            'defensePoints' => 4,
-            'position' => array('x' => 1640, 'y' => 1480),
-            'capital' => true,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Archers' => array('time' => '1', 'cost' => '4'),
-                'Pegasi' => array('time' => '6', 'cost' => '16'),
-            )
-        );
-        $this->castles[2] = array(
-            'name' => 'CHARLING',
-            'income' => 16,
-            'defensePoints' => 1,
-            'position' => array('x' => 1920, 'y' => 1360),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-            )
-        );
-        $this->castles[3] = array(
-            'name' => 'GILDENHOME',
-            'income' => 24,
-            'defensePoints' => 3,
-            'position' => array('x' => 1320, 'y' => 1520),
-            'capital' => false,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Archers' => array('time' => '1', 'cost' => '4'),
-                'Pegasi' => array('time' => '7', 'cost' => '16'),
-            )
-        );
-        $this->castles[4] = array(
-            'name' => 'LOREMARK',
-            'income' => 3,
-            'defensePoints' => 2,
-            'position' => array('x' => 1720, 'y' => 1800),
-            'capital' => false,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Archers' => array('time' => '1', 'cost' => '4'),
-                'Pegasi' => array('time' => '7', 'cost' => '16'),
-            )
-        );
-        $this->castles[5] = array(
-            'name' => 'ARGENTHORN',
-            'income' => 22,
-            'defensePoints' => 2,
-            'position' => array('x' => 1680, 'y' => 1040),
-            'capital' => false,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Archers' => array('time' => '1', 'cost' => '4'),
-                'Pegasi' => array('time' => '7', 'cost' => '16'),
-            )
-        );
-        $this->castles[6] = array(
-            'name' => 'ANGBAR',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 2160, 'y' => 880),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '4', 'cost' => '8'),
-            )
-        );
-        $this->castles[7] = array(
-            'name' => 'SSURI',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 2360, 'y' => 960),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '4', 'cost' => '8'),
-            )
-        );
-        $this->castles[8] = array(
-            'name' => 'TROY',
-            'income' => 13,
-            'defensePoints' => 1,
-            'position' => array('x' => 2240, 'y' => 1080),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '4', 'cost' => '8'),
-            )
-        );
-        $this->castles[9] = array(
-            'name' => 'HEREUTH',
-            'income' => 26,
-            'defensePoints' => 4,
-            'position' => array('x' => 2600, 'y' => 1400),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-            )
-        );
-        $this->castles[10] = array(
-            'name' => 'GLUK',
-            'income' => 17,
-            'defensePoints' => 2,
-            'position' => array('x' => 3360, 'y' => 1680),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Giants' => array('time' => '3', 'cost' => '4'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[11] = array(
-            'name' => 'GORK',
-            'income' => 15,
-            'defensePoints' => 2,
-            'position' => array('x' => 3440, 'y' => 1800),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Giants' => array('time' => '5', 'cost' => '4'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[12] = array(
-            'name' => 'GAROM',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 3480, 'y' => 1080),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[13] = array(
-            'name' => 'BALAD NARAN',
-            'income' => 29,
-            'defensePoints' => 4,
-            'position' => array('x' => 3600, 'y' => 640),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Wolves' => array('time' => '2', 'cost' => '8'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[14] = array(
-            'name' => 'GALIN',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 1640, 'y' => 0),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '8', 'cost' => '10'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[15] = array(
-            'name' => 'KOR',
-            'income' => 30,
-            'defensePoints' => 4,
-            'position' => array('x' => 4000, 'y' => 120),
-            'capital' => true,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Giants' => array('time' => '5', 'cost' => '6'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[16] = array(
-            'name' => 'DETHAL',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 3560, 'y' => 0),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Wolves' => array('time' => '5', 'cost' => '8'),
-            )
-        );
-        $this->castles[17] = array(
-            'name' => 'THURTZ',
-            'income' => 18,
-            'defensePoints' => 2,
-            'position' => array('x' => 3400, 'y' => 80),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[18] = array(
-            'name' => 'DARCLAN',
-            'income' => 23,
-            'defensePoints' => 2,
-            'position' => array('x' => 3120, 'y' => 0),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Wolves' => array('time' => '3', 'cost' => '8'),
-            )
-        );
-        $this->castles[19] = array(
-            'name' => 'ILNYR',
-            'income' => 21,
-            'defensePoints' => 2,
-            'position' => array('x' => 2840, 'y' => 240),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[20] = array(
-            'name' => 'DUINOTH',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 2720, 'y' => 720),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '5', 'cost' => '8'),
-            )
-        );
-        $this->castles[21] = array(
-            'name' => 'KAZRACK',
-            'income' => 21,
-            'defensePoints' => 2,
-            'position' => array('x' => 2320, 'y' => 120),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[22] = array(
-            'name' => 'VERNON',
-            'income' => 24,
-            'defensePoints' => 3,
-            'position' => array('x' => 1920, 'y' => 80),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Heavy Infantry' => array('time' => '3', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[23] = array(
-            'name' => 'HIMELTON',
-            'income' => 14,
-            'defensePoints' => 1,
-            'position' => array('x' => 880, 'y' => 320),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '6', 'cost' => '8'),
-            )
-        );
-        $this->castles[24] = array(
-            'name' => 'STORMHEIM',
-            'income' => 20,
-            'defensePoints' => 4,
-            'position' => array('x' => 760, 'y' => 800),
-            'capital' => true,
-            'production' => array(
-                'Giants' => array('time' => '2', 'cost' => '4'),
-            )
-        );
-        $this->castles[25] = array(
-            'name' => 'OHMSMOUTH',
-            'income' => 24,
-            'defensePoints' => 3,
-            'position' => array('x' => 280, 'y' => 280),
-            'capital' => false,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Navy' => array('time' => '10', 'cost' => '18'),
-            )
-        );
-        $this->castles[26] = array(
-            'name' => 'WELLMORE',
-            'income' => 20,
-            'defensePoints' => 2,
-            'position' => array('x' => 160, 'y' => 640),
-            'capital' => false,
-            'production' => array(
-                'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[27] = array(
-            'name' => 'TASME',
-            'income' => 19,
-            'defensePoints' => 2,
-            'position' => array('x' => 320, 'y' => 1000),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[28] = array(
-            'name' => 'VARDE',
-            'income' => 23,
-            'defensePoints' => 2,
-            'position' => array('x' => 320, 'y' => 1360),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '5', 'cost' => '8'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[29] = array(
-            'name' => 'QUIESCE',
-            'income' => 3,
-            'defensePoints' => 2,
-            'position' => array('x' => 600, 'y' => 1280),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Navy' => array('time' => '11', 'cost' => '20'),
-            )
-        );
-        $this->castles[30] = array(
-            'name' => 'KHORFE',
-            'income' => 26,
-            'defensePoints' => 3,
-            'position' => array('x' => 320, 'y' => 1680),
-            'capital' => false,
-            'production' => array(
-                'Dwarves' => array('time' => '2', 'cost' => '4'),
-                'Griffins' => array('time' => '2', 'cost' => '4'),
-            )
-        );
-        $this->castles[31] = array(
-            'name' => 'ALFAR\'S GAP',
-            'income' => 18,
-            'defensePoints' => 2,
-            'position' => array('x' => 880, 'y' => 2160),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
-                'Cavalry' => array('time' => '5', 'cost' => '8'),
-            )
-        );
-        $this->castles[32] = array(
-            'name' => 'LADOR',
-            'income' => 16,
-            'defensePoints' => 2,
-            'position' => array('x' => 1240, 'y' => 720),
-            'capital' => false,
-            'production' => array(
-                'Light Infantry' => array('time' => '1', 'cost' => '4'),
+    private function __construct() {
+        new Game_Logger('Singleton dupa!!!');
+        self::$castles = array(
+            0 => array(
+                'name' => 'MARTHOS',
+                'income' => 20,
+                'defensePoints' => 4,
+                'position' => array('x' => 2480, 'y' => 2240),
+                'capital' => true,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Cavalry' => array('time' => '4', 'cost' => '8'),
+                    'Pegasi' => array('time' => '7', 'cost' => '16'),
+                )
+            ),
+            1 => array(
+                'name' => 'ELVALLIE',
+                'income' => 33,
+                'defensePoints' => 4,
+                'position' => array('x' => 1640, 'y' => 1480),
+                'capital' => true,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Archers' => array('time' => '1', 'cost' => '4'),
+                    'Pegasi' => array('time' => '6', 'cost' => '16'),
+                )
+            ),
+            2 => array(
+                'name' => 'CHARLING',
+                'income' => 16,
+                'defensePoints' => 1,
+                'position' => array('x' => 1920, 'y' => 1360),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                )
+            ),
+            3 => array(
+                'name' => 'GILDENHOME',
+                'income' => 24,
+                'defensePoints' => 3,
+                'position' => array('x' => 1320, 'y' => 1520),
+                'capital' => false,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Archers' => array('time' => '1', 'cost' => '4'),
+                    'Pegasi' => array('time' => '7', 'cost' => '16'),
+                )
+            ),
+            4 => array(
+                'name' => 'LOREMARK',
+                'income' => 3,
+                'defensePoints' => 2,
+                'position' => array('x' => 1720, 'y' => 1800),
+                'capital' => false,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Archers' => array('time' => '1', 'cost' => '4'),
+                    'Pegasi' => array('time' => '7', 'cost' => '16'),
+                )
+            ),
+            5 => array(
+                'name' => 'ARGENTHORN',
+                'income' => 22,
+                'defensePoints' => 2,
+                'position' => array('x' => 1680, 'y' => 1040),
+                'capital' => false,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Archers' => array('time' => '1', 'cost' => '4'),
+                    'Pegasi' => array('time' => '7', 'cost' => '16'),
+                )
+            ),
+            6 => array(
+                'name' => 'ANGBAR',
+                'income' => 20,
+                'defensePoints' => 2,
+                'position' => array('x' => 2160, 'y' => 880),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '4', 'cost' => '8'),
+                )
+            ),
+            7 => array(
+                'name' => 'SSURI',
+                'income' => 19,
+                'defensePoints' => 2,
+                'position' => array('x' => 2360, 'y' => 960),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '4', 'cost' => '8'),
+                )
+            ),
+            8 => array(
+                'name' => 'TROY',
+                'income' => 13,
+                'defensePoints' => 1,
+                'position' => array('x' => 2240, 'y' => 1080),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '4', 'cost' => '8'),
+                )
+            ),
+            9 => array(
+                'name' => 'HEREUTH',
+                'income' => 26,
+                'defensePoints' => 4,
+                'position' => array('x' => 2600, 'y' => 1400),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                )
+            ),
+            10 => array(
+                'name' => 'GLUK',
+                'income' => 17,
+                'defensePoints' => 2,
+                'position' => array('x' => 3360, 'y' => 1680),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Giants' => array('time' => '3', 'cost' => '4'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            11 => array(
+                'name' => 'GORK',
+                'income' => 15,
+                'defensePoints' => 2,
+                'position' => array('x' => 3440, 'y' => 1800),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Giants' => array('time' => '5', 'cost' => '4'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            12 => array(
+                'name' => 'GAROM',
+                'income' => 20,
+                'defensePoints' => 2,
+                'position' => array('x' => 3480, 'y' => 1080),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            13 => array(
+                'name' => 'BALAD NARAN',
+                'income' => 29,
+                'defensePoints' => 4,
+                'position' => array('x' => 3600, 'y' => 640),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Wolves' => array('time' => '2', 'cost' => '8'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            14 => array(
+                'name' => 'GALIN',
+                'income' => 20,
+                'defensePoints' => 2,
+                'position' => array('x' => 1640, 'y' => 0),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '8', 'cost' => '10'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            15 => array(
+                'name' => 'KOR',
+                'income' => 30,
+                'defensePoints' => 4,
+                'position' => array('x' => 4000, 'y' => 120),
+                'capital' => true,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Giants' => array('time' => '5', 'cost' => '6'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            16 => array(
+                'name' => 'DETHAL',
+                'income' => 20,
+                'defensePoints' => 2,
+                'position' => array('x' => 3560, 'y' => 0),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Wolves' => array('time' => '5', 'cost' => '8'),
+                )
+            ),
+            17 => array(
+                'name' => 'THURTZ',
+                'income' => 18,
+                'defensePoints' => 2,
+                'position' => array('x' => 3400, 'y' => 80),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            18 => array(
+                'name' => 'DARCLAN',
+                'income' => 23,
+                'defensePoints' => 2,
+                'position' => array('x' => 3120, 'y' => 0),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Wolves' => array('time' => '3', 'cost' => '8'),
+                )
+            ),
+            19 => array(
+                'name' => 'ILNYR',
+                'income' => 21,
+                'defensePoints' => 2,
+                'position' => array('x' => 2840, 'y' => 240),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            20 => array(
+                'name' => 'DUINOTH',
+                'income' => 19,
+                'defensePoints' => 2,
+                'position' => array('x' => 2720, 'y' => 720),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '5', 'cost' => '8'),
+                )
+            ),
+            21 => array(
+                'name' => 'KAZRACK',
+                'income' => 21,
+                'defensePoints' => 2,
+                'position' => array('x' => 2320, 'y' => 120),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            22 => array(
+                'name' => 'VERNON',
+                'income' => 24,
+                'defensePoints' => 3,
+                'position' => array('x' => 1920, 'y' => 80),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Heavy Infantry' => array('time' => '3', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            23 => array(
+                'name' => 'HIMELTON',
+                'income' => 14,
+                'defensePoints' => 1,
+                'position' => array('x' => 880, 'y' => 320),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '6', 'cost' => '8'),
+                )
+            ),
+            24 => array(
+                'name' => 'STORMHEIM',
+                'income' => 20,
+                'defensePoints' => 4,
+                'position' => array('x' => 760, 'y' => 800),
+                'capital' => true,
+                'production' => array(
+                    'Giants' => array('time' => '2', 'cost' => '4'),
+                )
+            ),
+            25 => array(
+                'name' => 'OHMSMOUTH',
+                'income' => 24,
+                'defensePoints' => 3,
+                'position' => array('x' => 280, 'y' => 280),
+                'capital' => false,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Navy' => array('time' => '10', 'cost' => '18'),
+                )
+            ),
+            26 => array(
+                'name' => 'WELLMORE',
+                'income' => 20,
+                'defensePoints' => 2,
+                'position' => array('x' => 160, 'y' => 640),
+                'capital' => false,
+                'production' => array(
+                    'Heavy Infantry' => array('time' => '2', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            27 => array(
+                'name' => 'TASME',
+                'income' => 19,
+                'defensePoints' => 2,
+                'position' => array('x' => 320, 'y' => 1000),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            28 => array(
+                'name' => 'VARDE',
+                'income' => 23,
+                'defensePoints' => 2,
+                'position' => array('x' => 320, 'y' => 1360),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '5', 'cost' => '8'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            29 => array(
+                'name' => 'QUIESCE',
+                'income' => 3,
+                'defensePoints' => 2,
+                'position' => array('x' => 600, 'y' => 1280),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Navy' => array('time' => '11', 'cost' => '20'),
+                )
+            ),
+            30 => array(
+                'name' => 'KHORFE',
+                'income' => 26,
+                'defensePoints' => 3,
+                'position' => array('x' => 320, 'y' => 1680),
+                'capital' => false,
+                'production' => array(
+                    'Dwarves' => array('time' => '2', 'cost' => '4'),
+                    'Griffins' => array('time' => '2', 'cost' => '4'),
+                )
+            ),
+            31 => array(
+                'name' => 'ALFAR\'S GAP',
+                'income' => 18,
+                'defensePoints' => 2,
+                'position' => array('x' => 880, 'y' => 2160),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                    'Cavalry' => array('time' => '5', 'cost' => '8'),
+                )
+            ),
+            32 => array(
+                'name' => 'LADOR',
+                'income' => 16,
+                'defensePoints' => 2,
+                'position' => array('x' => 1240, 'y' => 720),
+                'capital' => false,
+                'production' => array(
+                    'Light Infantry' => array('time' => '1', 'cost' => '4'),
+                )
             )
         );
     }
 
-    public function getDefaultStartPositions() {
+    static public function getInstance() {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
+    }
+
+    static public function getDefaultStartPositions() {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
         return array(
             'white' => array(
                 'id' => 0,
-                'position' => $this->castles[0]['position']
+                'position' => self::$castles[0]['position']
             ),
             'green' => array(
                 'id' => 1,
-                'position' => $this->castles[1]['position']
+                'position' => self::$castles[1]['position']
             ),
             'red' => array(
                 'id' => 15,
-                'position' => $this->castles[15]['position']
+                'position' => self::$castles[15]['position']
             ),
             'yellow' => array(
                 'id' => 24,
-                'position' => $this->castles[24]['position']
+                'position' => self::$castles[24]['position']
             )
         );
     }
 
-    public function getCastlesSchema() {
-        return $this->castles;
+    static public function getCastlesSchema() {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$castles;
     }
 
-    public function getCastle($castleId) {
-        return $this->castles[$castleId];
+    static public function getCastle($castleId) {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$castles[$castleId];
     }
 
-    public function getCastlePosition($castleId) {
-        return $this->castles[$castleId]['position'];
+    static public function getCastlePosition($castleId) {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$castles[$castleId]['position'];
     }
 
-    public function getCastleDefense($castleId) {
-        return $this->castles[$castleId]['defensePoints'];
+    static public function getCastleDefense($castleId) {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$castles[$castleId]['defensePoints'];
     }
 
-    public function getCastleOptimalProduction($castleId) {
+    static public function getCastleOptimalProduction($castleId) {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
         $units = array();
-        foreach ($this->castles[$castleId]['production'] as $unitName => $productionUnit) {
+        foreach (self::$castles[$castleId]['production'] as $unitName => $productionUnit) {
             switch ($unitName) {
                 case 'Griffins':
                     $units[1] = $unitName;
@@ -460,8 +490,8 @@ class Application_Model_Board {
         }
     }
 
-    public function getMinProductionTimeUnit($castleId) {
-        $castle = $this->getCastle($castleId);
+    static public function getMinProductionTimeUnit($castleId) {
+        $castle = self::getCastle($castleId);
         $min = 100;
         foreach ($castle['production'] as $key => $val) {
             if ($val['time'] < $min) {
@@ -472,8 +502,8 @@ class Application_Model_Board {
         return $unitName;
     }
 
-    public function isCastle($castleId) {
-        if (isset($this->castles[$castleId])) {
+    static public function isCastle($castleId) {
+        if (isset(self::$castles[$castleId])) {
             return true;
         }
     }
@@ -502,7 +532,7 @@ class Application_Model_Board {
     }
 
     static public function confirmRuinPosition($position) {
-        $ruins = Application_Model_Board::getRuins();
+        $ruins = self::getRuins();
         foreach ($ruins as $ruinId => $ruin) {
             if ($position[0] == $ruin['x'] && $position[1] == $ruin['y']) {
                 return $ruinId;
@@ -547,7 +577,7 @@ class Application_Model_Board {
     }
 
     static public function isTowerAtPosition($x, $y) {
-        $towers = Application_Model_Board::getTowers();
+        $towers = self::getTowers();
         foreach ($towers as $k => $tower) {
             if ($tower['x'] == $x && $tower['y'] == $y) {
                 return true;
@@ -723,7 +753,8 @@ class Application_Model_Board {
         return $fields;
     }
 
-    static public function prepareCastlesAndFields($fields, $razed, $myCastles, $castlesSchema) {
+    static public function prepareCastlesAndFields($fields, $razed, $myCastles) {
+        $castlesSchema = self::getCastlesSchema();
         foreach ($castlesSchema as $castleId => $castleSchema) {
             if (isset($razed[$castleId])) {
                 continue;
@@ -731,26 +762,27 @@ class Application_Model_Board {
             $x = $castleSchema['position']['x'] / 40;
             $y = $castleSchema['position']['y'] / 40;
             if (isset($myCastles[$castleId])) {
-                $fields = Application_Model_Board::changeCasteFields($fields, $x, $y, 'c');
+                $fields = self::changeCasteFields($fields, $x, $y, 'c');
             } else {
                 $hostileCastles[$castleId] = $castleSchema;
-                $fields = Application_Model_Board::changeCasteFields($fields, $x, $y, 'e');
+                $fields = self::changeCasteFields($fields, $x, $y, 'e');
             }
         }
         return array('hostileCastles' => $hostileCastles, 'fields' => $fields);
     }
 
-//    static public function isArmyInCastle($position, $castles, $castlesSchema) {
-//        $aP = array(
-//            'x' => $position[0],
-//            'y' => $position[1]
-//        );
-//        foreach ($castles as $castle) {
-//            if (Application_Model_Board::isCastleFild($aP, $castlesSchema[$castle['castleId']]['position'])) {
-//                return true;
-//            }
-//        }
-//    }
+    static public function isArmyInCastle($position, $castles) {
+        $aP = array(
+            'x' => $position[0],
+            'y' => $position[1]
+        );
+        foreach ($castles as $castle) {
+            if (self::isCastleFild($aP, self::getCastlePosition($castle['castleId']))) {
+                return $castle['castleId'];
+            }
+        }
+        return null;
+    }
 
     static public function getBoardFields() {
         // x*y = 108*68 = 7344
