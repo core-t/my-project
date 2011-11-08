@@ -80,6 +80,22 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
         }
     }
 
+    public function enemiesCastlesExist($playerId) {
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, 'castleId')
+                    ->where('"playerId" != ?', $playerId)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('razed = false');
+            $result = $this->_db->query($select)->fetchAll();
+            if(count($result)){
+                return true;
+            }
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function addCastle($id, $playerId) {
         $data = array(
             'castleId' => $id,

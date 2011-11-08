@@ -50,5 +50,23 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
     }
+
+    public function getFull(){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, $this->_primary)
+                    ->where('"gameId" = ?', $this->_gameId);
+            $result = $this->_db->query($select)->fetchAll();
+            $ruins = Application_Model_Board::getRuins();
+            foreach($result as $row){
+                if(isset($ruins[$row['ruinId']])){
+                    unset($ruins[$row['ruinId']]);
+                }
+            }
+            return $ruins;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
 }
 

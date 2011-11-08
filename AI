@@ -1,0 +1,21 @@
+W ZAMKU
+Czy jest wróg, który ma zasięg na zamek?
+NIE																						TAK
+Czy jest wróg, na którego mam zasięg?																		Czy jest wróg, na którego mam zasięg?
+NIE																		TAK				NIE		TAK
+W armii jest heros																Czy wróg jest silniejszy?	ZOSTAŃ		Czy wrogów, którzy mają zasięg na zamek jest więcej niż tych którzy nie mają zasięgu na zamek?
+NIE														TAK				NIE		TAK				NIE									TAK
+Czy jest jakiś zamek wroga*1											Czy w pobliżu są pełne ruiny	ATAKUJ		ZOSTAŃ				Czy jestem w stanie zaatakować wszystkie jednostki wroga?		ZOSTAŃ
+NIE								TAK						NIE		TAK								NIE				TAK
+Czy jest jakaś wroga armia*2					Czy jest zamek wroga, który jest słabszy	*1		IDŹ DO RUIN							ZOSTAŃ				Czy wróg jest silniejszy?
+NIE		TAK						NIE			TAK																	NIE		TAK
+WYGRAŁEM?	Czy jest armia wroga, która jest słabsza	*2			ATAKUJ																	ATAKUJ		ZOSTAŃ
+		NIE		TAK
+		ZOSTAŃ		ATAKUJ
+
+POZA ZAMKIEM
+Czy w zasięgu jest jakiś mój pusty zamek?
+NIE	TAK
+*1	Czy zamek jest w zasięgu wrogiej armii?
+	NIE	TAK
+	*1	IDŹ DO ZAMKU
