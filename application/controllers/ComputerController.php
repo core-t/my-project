@@ -40,30 +40,30 @@ class ComputerController extends Game_Controller_Action {
 
     private function firstBlock($modelCastle, $enemies, $computer, $army){
         if(!$modelCastle->enemiesCastlesExist($this->playerId)){
-            if(!$enemies){
-                throw new Exception('Wygrałem!?');
-            }else{
-                if($computer->isEnemyStronger($army, $enemy=null, $castleId=null, $modelCastle=null)){
-                    $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                }else{
-                    //atakuj
-                }
-            }
+            $this->secondBlock($modelCastle, $enemies, $computer, $army);
         }else{
             $castle = $computer->getWeakerEnemyCastle($modelCastle->getEnemiesCastles($this->playerId));
             if($castle){
                 //atakuj
             }else{
-                if(!$enemies){
-                    throw new Exception('Wygrałem!?');
-                }else{
-                    if($computer->isEnemyStronger($army, $enemy=null, $castleId=null, $modelCastle=null)){
-                        $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                    }else{
-                        //atakuj
-                    }
-                }
+                $this->secondBlock($modelCastle, $enemies, $computer, $army);
             }
+        }
+    }
+
+    private function secondBlock($modelCastle, $enemies, $computer, $army){
+        if(!$enemies){
+            throw new Exception('Wygrałem!?');
+        }else{
+            $this->thirdBlock($modelCastle, $computer, $army);
+        }
+    }
+
+    private function thirdBlock($modelCastle, $computer, $army){
+        if($computer->isEnemyStronger($army, $enemy=null, $castleId=null, $modelCastle=null)){
+            $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
+        }else{
+            //atakuj
         }
     }
 
@@ -105,7 +105,11 @@ class ComputerController extends Game_Controller_Action {
                 if(!$enemiesInRange){
                     $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                 }else{
+                    if(count($enemiesHaveRange) > count($enemiesInRange)){
+                        $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
+                    }else{
 
+                    }
                 }
             }
         }else{
