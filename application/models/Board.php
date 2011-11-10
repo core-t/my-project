@@ -7,7 +7,7 @@ class Application_Model_Board {
     protected static $_instance = null;
 
     private function __construct() {
-        new Game_Logger('Singleton dupa!!!');
+//         new Game_Logger('Singleton dupa!!!');
         self::$castles = array(
             0 => array(
                 'name' => 'MARTHOS',

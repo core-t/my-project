@@ -47,17 +47,14 @@ class ComputerController extends Game_Controller_Action {
             $castleId = Game_Computer::getWeakerEnemyCastle($castlesAndFields['hostileCastles'], $army, $this->playerId);
             if ($castleId) {
                 $range = Game_Computer::isCastleInRange($castlesAndFields, $castleId, $army);
-                new Game_Logge($range);
+//                 new Game_Logger($range);
                 if ($range['in']) {
                     //atakuj
                     $fightEnemy = Game_Computer::fightEnemy($army, null, $this->playerId, $castleId);
                     $this->endMove($fightEnemy['currentPosition'], $army['armyId'], $fightEnemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
                 } else {
-                    $data = array(
-                        'position' => $range['currentPosition']['x'] . ',' . $range['currentPosition']['y'],
-                        'movesSpend' => $range['currentPosition']['movesSpend']
-                    );
-                    $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
+                    $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
+                    $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                     $this->endMove($range['currentPosition'], $army['armyId'], $range['path']);
                 }
             } else {

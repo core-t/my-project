@@ -4,7 +4,7 @@ class Game_Namespace{
     protected static $_namespace;
     protected static $_instance = null;
     private function __construct() {
-        new Game_Logger('Singleton NAMESPACE dupa!!!');
+//         new Game_Logger('Singleton NAMESPACE dupa!!!');
         self::$_namespace = new Zend_Session_Namespace();
     }
 

@@ -208,5 +208,9 @@ class Game_Computer {
         }
     }
 
+    public function getMyEmptyCastleInMyRange(){
+
+    }
+
 }
 

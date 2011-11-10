@@ -938,10 +938,10 @@ function enemyWalk(res) {
         return null;
     } else {
         wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
-        zoomer.lensSetCenter(res.path[i].x, res.path[i].y);
+        zoomer.lensSetCenter(res.path[i].x*40, res.path[i].y*40);
         $('#army'+res.oldArmyId).animate({
-            left: res.path[i].x + 'px',
-            top: res.path[i].y + 'px'
+            left: (res.path[i].x * 40) + 'px',
+            top: (res.path[i].y * 40) + 'px'
         },300,
         function(){
             if(typeof res.path[i] == 'undefined'){
