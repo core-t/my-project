@@ -9,9 +9,9 @@ Czy jest jakiś zamek wroga*1											Czy w pobliżu są pełne ruiny	ATAKUJ		
 NIE								TAK						NIE		TAK								NIE				TAK
 Czy jest jakaś wroga armia*2					Czy jest zamek wroga, który jest słabszy	*1		IDŹ DO RUIN							ZOSTAŃ				Czy wróg jest silniejszy?
 NIE		TAK						NIE			TAK																	NIE		TAK
-WYGRAŁEM?	Czy jest armia wroga, która jest słabsza	*2			ATAKUJ																	ATAKUJ		ZOSTAŃ
-		NIE		TAK
-		ZOSTAŃ		ATAKUJ
+WYGRAŁEM?	Czy jest armia wroga, która jest słabsza	*2			Czy zamek jest w zasięgu														ATAKUJ		ZOSTAŃ
+		NIE		TAK							NIE		TAK
+		ZOSTAŃ		ATAKUJ							IDŹ DO ZAMKU	ATAKUJ
 
 POZA ZAMKIEM
 Czy w zasięgu jest jakiś mój pusty zamek?

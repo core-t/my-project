@@ -741,7 +741,7 @@ class Application_Model_Board {
     }
 
     static public function isCastleFild($aP, $cP) {
-        if (($aP['x'] >= $cP['x']) && ($aP['x'] < ($cP['x'] + 80)) && ($aP['y'] >= $cP['y']) && ($aP['y'] < ($cP['y'] + 80))) {
+        if (($aP['x'] >= $cP['x']) && ($aP['x'] < ($cP['x'] + 2)) && ($aP['y'] >= $cP['y']) && ($aP['y'] < ($cP['y'] + 2))) {
             return true;
         }
     }
@@ -759,8 +759,9 @@ class Application_Model_Board {
         return $fields;
     }
 
-    static public function restoreField($destX, $destY) {
-        return self::$fields[$destY][$destX];
+    static public function restoreField($fields, $destX, $destY) {
+        $fields[$destY][$destX] = self::$fields[$destY][$destX];
+        return $fields;
     }
 
     static public function prepareCastlesAndFields($fields, $razed, $myCastles) {
@@ -1003,7 +1004,7 @@ class Application_Model_Board {
         ),
         68 => array(
             'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'
-        ))
+        ));
 
         return self::$fields;
     }

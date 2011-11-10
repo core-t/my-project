@@ -6,7 +6,7 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
-//        console.log(result.path);
+       console.log(result);
         removeM();
         if(typeof result.action != 'undefined'){
             switch(result.action){
