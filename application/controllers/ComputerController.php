@@ -169,7 +169,7 @@ class ComputerController extends Game_Controller_Action {
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                         $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
-                        if (!$computer->canAttackAllEnemyHaveRange($enemies, $army, $castlesAndFields)) {
+                        if (!$computer->canAttackAllEnemyHaveRange($enemiesHaveRange, $army, $castlesAndFields)) {
                             $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                             $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {

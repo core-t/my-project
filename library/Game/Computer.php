@@ -139,13 +139,13 @@ class Game_Computer {
             if($in){
                 $currentPosition = array(
                     'x' => $position['x'],
-                    'x' => $position['y'],
+                    'y' => $position['y'],
                     'movesSpend' => 2
                 );
             }else{
                 $currentPosition = array(
                     'x' => $army['x'],
-                    'x' => $army['y'],
+                    'y' => $army['y'],
                     'movesSpend' => 0
                 );
             }
@@ -174,13 +174,13 @@ class Game_Computer {
             if($in){
                 $currentPosition = array(
                     'x' => $enemy['x'],
-                    'x' => $enemy['y'],
+                    'y' => $enemy['y'],
                     'movesSpend' => 2
                 );
             }else{
                 $currentPosition = array(
                     'x' => $army['x'],
-                    'x' => $army['y'],
+                    'y' => $army['y'],
                     'movesSpend' => 0
                 );
             }
