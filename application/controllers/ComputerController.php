@@ -47,15 +47,16 @@ class ComputerController extends Game_Controller_Action {
             $castleId = Game_Computer::getWeakerEnemyCastle($castlesAndFields['hostileCastles'], $army, $this->playerId);
             if ($castleId) {
                 $range = Game_Computer::isCastleInRange($castlesAndFields, $castleId, $army);
-//                 new Game_Logger($range);
+                new Game_Logger($range);
                 if ($range['in']) {
                     //atakuj
                     $fightEnemy = Game_Computer::fightEnemy($army, null, $this->playerId, $castleId);
-                    $this->endMove($fightEnemy['currentPosition'], $army['armyId'], $fightEnemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
+                    $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
+                    $this->endMove($army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
                 } else {
                     $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
                     $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                    $this->endMove($range['currentPosition'], $army['armyId'], $range['path']);
+                    $this->endMove($army['armyId'], $range['currentPosition'], $range['path']);
                 }
             } else {
                 $this->secondBlock($enemies, $army, $castlesAndFields);
@@ -67,21 +68,29 @@ class ComputerController extends Game_Controller_Action {
         if (!$enemies) {
             throw new Exception('Wygrałem!?');
         } else {
-            foreach ($enemies as $enemy) {
-                $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castlesAndFields['castles']);
-                if (Game_Computer::isEnemyStronger($army, $enemy, $castleId)) {
+            foreach ($enemies as $e) {
+                if (Game_Computer::isEnemyStronger($army, $e)) {
                     continue;
                 } else {
+                    $enemy = $e;
                     break;
                 }
             }
             if (isset($enemy)) {
                 //atakuj
-                $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId, $castleId);
-                $this->endMove($fightEnemy['currentPosition'], $army['armyId'], $fightEnemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
+                $range = Game_Computer::isEnemyInRange($castlesAndFields, $enemy, $army);
+                if ($range['in']) {
+                    $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId);
+                    $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
+                    $this->endMove($army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy['battle'], $fightEnemy['victory']);
+                }else{
+                    $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
+                    $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
+                    $this->endMove($army['armyId'], $range['currentPosition'], $range['path']);
+                }
             } else {
                 $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                $this->endMove(array('x' => $army['x'], 'y' => $army['y']), $army['armyId']);
+                $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
             }
         }
     }
@@ -102,7 +111,7 @@ class ComputerController extends Game_Controller_Action {
         if ($myCastleId !== null) {
             $castlePosition = Application_Model_Board::getCastlePosition($myCastleId);
             $enemiesHaveRange = $computer->canEnemyReachThisCastle($castlePosition, $castlesAndFields, $enemies);
-            $enemiesInRange = $computer->getEnemiesInRange($enemies, $army);
+            $enemiesInRange = $computer->getEnemiesInRange($enemies, $army, $castlesAndFields['fields']);
             if (!$enemiesHaveRange) {
                 if (!$enemiesInRange) {
                     if (empty($army['heroes'])) {
@@ -115,46 +124,54 @@ class ComputerController extends Game_Controller_Action {
                         } else {
                             //idź do ruin
                             $data = array(
-                                'position' => $ruin['x'] . ',' . $ruin['y'],
+                                'x' => $ruin['x'],
+                                'y' => $ruin['y'],
                                 'movesSpend' => $ruin['movesSpend']
                             );
                             $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
                             $namespace = Game_Namespace::getNamespace();
                             $modelRuin = new Application_Model_Ruin($namespace->gameId);
-                            $modelRuin->searchRuin($this->modelArmy, $army['heroes'][0]['heroId'], $army['armyId'], $this->playerId);
-                            $this->endMove(array('x' => $ruin['x'], 'y' => $ruin['y']), $army['armyId'], $ruin['path']);
+                            $modelRuin->searchRuin($army['heroes'][0]['heroId'], $army['armyId'], $this->playerId);
+                            $this->endMove($army['armyId'], array('x' => $ruin['x'], 'y' => $ruin['y']), $ruin['path']);
                         }
                     }
                 } else {
-                    foreach ($enemiesInRange as $enemy) {
-                        $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castlesAndFields['castles']);
-                        if (Game_Computer::isEnemyStronger($army, $enemy, $castleId)) {
+                    foreach ($enemiesInRange as $e) {
+                        $castleId = Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
+                        if (Game_Computer::isEnemyStronger($army, $e, $castleId)) {
                             continue;
                         } else {
+                            $enemy = $e;
                             break;
                         }
                     }
                     if (isset($enemy)) {
                         //atakuj
+                        if ($castleId) {
+                            $range = Game_Computer::isCastleInRange($castlesAndFields, $castleId, $army);
+                        }else{
+                            $range = Game_Computer::isEnemyInRange($castlesAndFields, $enemy, $army);
+                        }
                         $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId, $castleId);
-                        $this->endMove($fightEnemy['currentPosition'], $army['armyId'], $fightEnemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
+                        $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
+                        $this->endMove($army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
                     } else {
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                        $this->endMove(array('x' => $army['x'], 'y' => $army['y']), $army['armyId']);
+                        $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
                 }
             } else {
                 if (!$enemiesInRange) {
                     $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                    $this->endMove(array('x' => $army['x'], 'y' => $army['y']), $army['armyId']);
+                    $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                 } else {
                     if (count($enemiesHaveRange) > count($enemiesInRange)) {
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                        $this->endMove(array('x' => $army['x'], 'y' => $army['y']), $army['armyId']);
+                        $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
-                        if (!$computer->canAttackAllEnemyHaveRange()) {
+                        if (!$computer->canAttackAllEnemyHaveRange($enemies, $army, $castlesAndFields)) {
                             $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
-                            $this->endMove(array('x' => $army['x'], 'y' => $army['y']), $army['armyId']);
+                            $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {
                             //atakuj
                         }
@@ -162,32 +179,33 @@ class ComputerController extends Game_Controller_Action {
                 }
             }
         } else {
-            $myEmptyCastle = $computer->getMyEmptyCastleInMyRange();
+            $myEmptyCastle = $computer->getMyEmptyCastleInMyRange($myCastles, $army, $castlesAndFields['fields']);
             if (!$myEmptyCastle) {
                 $this->firstBlock($enemies, $army, $castlesAndFields);
             } else {
-                if (!$computer->isMyCastleInRangeOfEnemy($myEmptyCastle)) {
+                if (!$computer->isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle)) {
                     $this->firstBlock($enemies, $army, $castlesAndFields);
                 } else {
                     //idź do zamku
                     $data = array(
-                        'position' => $myEmptyCastle['position']['x'] . ',' . $myEmptyCastle['position']['y'],
+                        'x' => $myEmptyCastle['x'],
+                        'y' => $myEmptyCastle['y'],
                         'movesSpend' => $army['movesLeft']
                     );
                     $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
-                    $this->endMove($myEmptyCastle['position'], $army['armyId']);
+                    $this->endMove($army['armyId'], $myEmptyCastle['currentPosition'], $myEmptyCastle['path']);
                 }
             }
         }
     }
 
-    private function endMove($position, $oldArmyId, $path = null, $battle = null, $victory = false, $castleId = null) {
+    private function endMove($oldArmyId, $position, $path = null, $battle = null, $victory = false, $castleId = null) {
         $armyId = $this->modelArmy->joinArmiesAtPosition($position, $this->playerId);
-        if ($armyId) {
-            $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
-        } else {
-            $result = array();
+        if (!$armyId) {
+            $armyId = $oldArmyId;
         }
+        $result = $this->modelArmy->getArmyByArmyIdPlayerId($armyId, $this->playerId);
+
         $result['action'] = 'continue';
         $result['oldArmyId'] = $oldArmyId;
         if ($castleId) {

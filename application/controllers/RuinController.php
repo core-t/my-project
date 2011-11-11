@@ -31,8 +31,9 @@ class RuinController extends Game_Controller_Action {
 //                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
                 $modelRuin->addRuin($ruinId);
+                $find = $modelRuin->searchRuin($heroId, $armyId, $this->_namespace->player['playerId']);
                 $response = $modelArmy->getArmyById($armyId);
-                $response['find'] = $modelRuin->searchRuin($modelArmy, $heroId, $armyId, $this->_namespace->player['playerId']);
+                $response['find'] = $find;
                 $response['ruinId'] = $ruinId;
                 $this->view->response = Zend_Json::encode($response);
             } else {

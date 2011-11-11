@@ -170,7 +170,9 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"castleId" = ?', $castleId);
             $result = $this->_db->query($select)->fetchAll();
-            return $result[0]['defenseMod'];
+            if(isset($result[0]['defenseMod'])){
+                return $result[0]['defenseMod'];
+            }
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }

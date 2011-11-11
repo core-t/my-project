@@ -195,6 +195,10 @@ class Game_Astar {
             return 0;
         }
         $this->currentPosition;
+//         $currentPosition = array(
+//             'x' => $this->close[$key]['x'],
+//             'y' => $this->close[$key]['y'],
+//             'movesSpend' => $this->close[$key]['G']);
         while (!empty($this->close[$key]['parent'])) {
 //            throw new Exception(Zend_Debug::dump($this->close));
             if ($this->close[$key]['G'] <= $moves) {
@@ -214,6 +218,9 @@ class Game_Astar {
             'x' => $this->close[$key]['x'],
             'y' => $this->close[$key]['y']);
         $this->path = array_reverse($this->path);
+//         if (!$this->currentPosition) {
+//             $this->currentPosition = $currentPosition;
+//         }
         return $this->path;
     }
 
@@ -221,25 +228,25 @@ class Game_Astar {
         return $this->currentPosition;
     }
 
-    static public function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
-        $previousPath = $oldPath = $path;
-        $oldCurrentPosition = $currentPosition;
-        $rewind = false;
-        while (true) {
-            if (!Application_Model_Board::isCastleFild($currentPosition, $castlePosition)) {
-                $rewind = true;
-                break;
-            } else {
-                $previousPath = $path;
-                $currentPosition = array_pop($path);
-            }
-        }
-        if ($rewind) {
-            return array('path' => $previousPath, 'currentPosition' => $currentPosition);
-        } else {
-            return array('path' => $oldPath, 'currentPosition' => $oldCurrentPosition);
-        }
-    }
+//     static public function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
+//         $previousPath = $oldPath = $path;
+//         $oldCurrentPosition = $currentPosition;
+//         $rewind = false;
+//         while (true) {
+//             if (!Application_Model_Board::isCastleFild($currentPosition, $castlePosition)) {
+//                 $rewind = true;
+//                 break;
+//             } else {
+//                 $previousPath = $path;
+//                 $currentPosition = array_pop($path);
+//             }
+//         }
+//         if ($rewind) {
+//             return array('path' => $previousPath, 'currentPosition' => $currentPosition);
+//         } else {
+//             return array('path' => $oldPath, 'currentPosition' => $oldCurrentPosition);
+//         }
+//     }
 
 }
 
