@@ -70,6 +70,7 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
     }
 
     public function searchRuin($heroId, $armyId, $playerId) {
+        new Game_Logger('HEROID: '.$heroId);
         $namespace = Game_Namespace::getNamespace();
         $modelGame = new Application_Model_Game($namespace->gameId);
         $modelArmy = new Application_Model_Army($namespace->gameId);

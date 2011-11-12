@@ -252,19 +252,15 @@ class Game_Computer {
         }
     }
 
-    public function getNearestRuin($fields, $ruins, $army) {
+    static public function getNearestRuin($fields, $ruins, $army) {
         foreach ($ruins as $ruin) {
-            $aStar = new Game_Astar($army['x'], $army['y']);
-            $h = $aStar->calculateH($ruin['x'], $ruin['y']);
+            $aStar = new Game_Astar($ruin['x'], $ruin['y']);
+            $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
-                $fields = Application_Model_Board::restoreField($fields, $ruin['x'], $ruin['y']);
-                $aStar = new Game_Astar($ruin['x'], $ruin['y']);
                 $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
                 $key = $ruin['x'] . '_' . $ruin['y'];
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
-                $fields = Application_Model_Board::changeArmyField($fields, $ruin['x'], $ruin['y'], 'e');
                 if ($movesToSpend <= $army['movesLeft']) {
-                    $ruin['movesSpend'] = $movesToSpend;
                     $ruin['path'] = $aStar->restorePath($key, $army['movesLeft']);
                     $ruin['currentPosition'] = $aStar->getCurrentPosition();
                     return $ruin;

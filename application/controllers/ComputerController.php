@@ -123,16 +123,12 @@ class ComputerController extends Game_Controller_Action {
                             $this->firstBlock($enemies, $army, $castlesAndFields);
                         } else {
                             //idź do ruin
-                            $data = array(
-                                'x' => $ruin['x'],
-                                'y' => $ruin['y'],
-                                'movesSpend' => $ruin['movesSpend']
-                            );
-                            $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $data);
+                            $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $ruin['currentPosition']);
                             $namespace = Game_Namespace::getNamespace();
                             $modelRuin = new Application_Model_Ruin($namespace->gameId);
+                            $modelRuin->addRuin($ruin['ruinId']);
                             $modelRuin->searchRuin($army['heroes'][0]['heroId'], $army['armyId'], $this->playerId);
-                            $this->endMove($army['armyId'], array('x' => $ruin['x'], 'y' => $ruin['y']), $ruin['path']);
+                            $this->endMove($army['armyId'], $ruin['currentPosition'], $ruin['path']);
                         }
                     }
                 } else {
