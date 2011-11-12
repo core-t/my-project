@@ -411,7 +411,7 @@ function searchRuinsA(){
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
         wsGetRuin(getRuinId(unselectedArmy));
-        ruinUpdate(result.ruinId, 1)
+        ruinUpdate(result.ruinId, 1);
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         switch(result.find[0]){
             case 'gold':

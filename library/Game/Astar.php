@@ -171,6 +171,7 @@ class Game_Astar {
 
     public function restoreFullPath($key) {
         if (!isset($this->close[$key])) {
+            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
             return null;
         }
         while (!empty($this->close[$key]['parent'])) {
@@ -184,6 +185,7 @@ class Game_Astar {
 
     public function getFullPathMovesSpend($key) {
         if (!isset($this->close[$key])) {
+            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
             return null;
         }
         return $this->close[$key]['G'];
@@ -192,6 +194,7 @@ class Game_Astar {
     public function restorePath($key, $moves) {
 //        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
+            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
             return 0;
         }
         $this->currentPosition;

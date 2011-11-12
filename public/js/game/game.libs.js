@@ -906,6 +906,10 @@ function gogo(res,enemyArmies,neutral){
     }else{
         wsArmy(res.oldArmyId);
     }
+    if(typeof res.ruinId != 'undefined'){
+        wsGetRuin(res.ruinId);
+        ruinUpdate(res.ruinId, 1);
+    }
     computerA();
 }
 

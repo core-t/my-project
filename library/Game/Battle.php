@@ -61,8 +61,8 @@ class Game_Battle {
     }
 
     public function getAttacker() {
-        if(!empty($this->attacker['soldiers']) && !empty($this->attacker['heroes'])){
-            new Game_Logger($this->attacker);
+        if(!empty($this->attacker['soldiers']) || !empty($this->attacker['heroes'])){
+//             new Game_Logger($this->attacker);
             return $this->attacker;
         }
     }
