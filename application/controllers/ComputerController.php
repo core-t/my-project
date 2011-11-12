@@ -47,7 +47,7 @@ class ComputerController extends Game_Controller_Action {
         } else {
             new Game_Logger('SĄ ZAMKI WROGA');
             $castleId = Game_Computer::getWeakerEnemyCastle($castlesAndFields['hostileCastles'], $army, $this->playerId);
-            if ($castleId) {
+            if ($castleId !== null) {
                 new Game_Logger('JEST SŁABSZY ZAMEK WROGA');
                 $range = Game_Computer::isCastleInRange($castlesAndFields, $castleId, $army);
 //                 new Game_Logger($range);
@@ -75,12 +75,14 @@ class ComputerController extends Game_Controller_Action {
             throw new Exception('Wygrałem!?');
         } else {
             foreach ($enemies as $e) {
-                if(Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles'])){
+                if (null !== Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles'])) {
                     continue;
                 }
                 if (Game_Computer::isEnemyStronger($army, $e)) {
+                    new Game_Logger('ENEMY SILNIEJSZY - 82');
                     continue;
                 } else {
+                    new Game_Logger('ENEMY SŁABSZY - 85');
                     $enemy = $e;
                     break;
                 }
@@ -94,7 +96,7 @@ class ComputerController extends Game_Controller_Action {
                     $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId);
                     $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
                     $this->endMove($army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy['battle'], $fightEnemy['victory']);
-                }else{
+                } else {
                     new Game_Logger('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
                     $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $range['currentPosition']);
                     $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
@@ -157,8 +159,10 @@ class ComputerController extends Game_Controller_Action {
                     foreach ($enemiesInRange as $e) {
                         $castleId = Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
                         if (Game_Computer::isEnemyStronger($army, $e, $castleId)) {
+                            new Game_Logger('ENEMY SILNIEJSZY - 162');
                             continue;
                         } else {
+                            new Game_Logger('ENEMY SŁABSZY - 165');
                             $enemy = $e;
                             break;
                         }
@@ -166,9 +170,9 @@ class ComputerController extends Game_Controller_Action {
                     if (isset($enemy)) {
                         new Game_Logger('WRÓG JEST SŁABSZY - ATAKUJ!');
                         //atakuj
-                        if ($castleId) {
+                        if ($castleId !== null) {
                             $range = Game_Computer::isCastleInRange($castlesAndFields, $castleId, $army);
-                        }else{
+                        } else {
                             $range = Game_Computer::isEnemyInRange($castlesAndFields, $enemy, $army);
                         }
                         $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId, $castleId);
@@ -193,7 +197,7 @@ class ComputerController extends Game_Controller_Action {
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                         $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
-                        new Game_Logger('WRÓGÓW Z ZASIĘGIEM < WRÓGÓW W ZASIĘGU');
+                        new Game_Logger('WRÓGÓW Z ZASIĘGIEM <= WRÓGÓW W ZASIĘGU');
                         $enemy = Game_Computer::canAttackAllEnemyHaveRange($enemiesHaveRange, $army, $castlesAndFields['hostileCastles']);
                         if (!$enemy) {
                             new Game_Logger('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
@@ -202,9 +206,12 @@ class ComputerController extends Game_Controller_Action {
                         } else {
                             //atakuj
                             new Game_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!');
+                            new Game_Logger($enemy);
+                            $path = $enemy['aStar']->restorePath($enemy['key'], $enemy['movesToSpend']);
+                            $currentPosition = $enemy['aStar']->getCurrentPosition();
                             $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId, $enemy['castleId']);
-                            $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $enemy['currentPosition']);
-                            $this->endMove($army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $enemy['castleId']);
+                            $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $currentPosition);
+                            $this->endMove($army['armyId'], $currentPosition, $path, $fightEnemy['battle'], $fightEnemy['victory'], $enemy['castleId']);
                         }
                     }
                 }

@@ -58,12 +58,12 @@ class Game_Computer {
         return $result;
     }
 
-    static public function isEnemyStronger($army, $enemy, $castleId=null, $max = 10) {
+    static public function isEnemyStronger($army, $enemy, $castleId=null, $max = 20) {
         $namespace = Game_Namespace::getNamespace();
         $modelArmy = new Application_Model_Army($namespace->gameId);
         $modelCastle = new Application_Model_Castle($namespace->gameId);
         $attackerCount = 0;
-        for($i = 0; $i < $max; $i++){
+        for ($i = 0; $i < $max; $i++) {
             $battle = new Game_Battle($army, $enemy);
             if ($castleId) {
                 $battle->addCastleDefenseModifier(Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId));
@@ -76,11 +76,15 @@ class Game_Computer {
                 $attackerCount++;
             }
         }
-        new Game_Logger('attackerCount=>' . $attackerCount);
-        if ($attackerCount > ($max-$attackerCount)) {
+        $border = $max - $attackerCount;
+        new Game_Logger('attackerCount ' . $attackerCount . ' >= ' . $border);
+        if ($attackerCount >= $border) {
+            new Game_Logger('ENEMY SŁABSZY');
             return false;
+        } else {
+            new Game_Logger('ENEMY SILNIEJSZY');
+            return true;
         }
-        return true;
     }
 
     static public function getWeakerEnemyCastle($castles, $army, $playerId) {
@@ -95,17 +99,19 @@ class Game_Computer {
         asort($heuristics, SORT_NUMERIC);
 //         $weaker = array();
         foreach ($heuristics as $castleId => $heuristic) {
-            if($modelCastle->isEnemyCastle($castleId, $playerId)){
+            if ($modelCastle->isEnemyCastle($castleId, $playerId)) {
                 $enemy = $modelArmy->getAllUnitsFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
-            }else{
+            } else {
                 $enemy = Game_Battle::getNeutralCastleGarrizon();
             }
-            if(!self::isEnemyStronger($army, $enemy, $castleId)){
+            if (!self::isEnemyStronger($army, $enemy, $castleId)) {
+                new Game_Logger('ENEMY SŁABSZY - 108');
                 return $castleId;
             }
 //             $weaker[$castleId] = Game_Battle::getCastlePower($castleId, $playerId);
         }
 //         asort($weaker, SORT_NUMERIC);
+        return null;
     }
 
     static public function isCastleInRange($castlesAndFields, $castleId, $army) {
@@ -122,14 +128,14 @@ class Game_Computer {
         }
         $path = $aStar->restorePath($key, $army['movesLeft'] - 2);
         $currentPosition = $aStar->getCurrentPosition();
-        if(!$currentPosition){
-            if($in){
+        if (!$currentPosition) {
+            if ($in) {
                 $currentPosition = array(
                     'x' => $position['x'],
                     'y' => $position['y'],
                     'movesSpend' => 2
                 );
-            }else{
+            } else {
                 $currentPosition = array(
                     'x' => $army['x'],
                     'y' => $army['y'],
@@ -157,14 +163,14 @@ class Game_Computer {
         }
         $path = $aStar->restorePath($key, $army['movesLeft'] - 2);
         $currentPosition = $aStar->getCurrentPosition();
-        if(!$currentPosition){
-            if($in){
+        if (!$currentPosition) {
+            if ($in) {
                 $currentPosition = array(
                     'x' => $enemy['x'],
                     'y' => $enemy['y'],
                     'movesSpend' => 2
                 );
-            }else{
+            } else {
                 $currentPosition = array(
                     'x' => $army['x'],
                     'y' => $army['y'],
@@ -196,6 +202,7 @@ class Game_Computer {
                 if ($movesToSpend && $movesToSpend <= ($enemy['numberOfMoves'] - 2)) {
                     $enemy['aStar'] = $aStar;
                     $enemy['key'] = $castlePosition['x'] . '_' . $castlePosition['y'];
+                    $enemy['movesToSpend'] = $movesToSpend + 2;
                     $enemiesHaveRange[] = $enemy;
                 }
             }
@@ -261,12 +268,12 @@ class Game_Computer {
         }
     }
 
-    static public function getMyEmptyCastleInMyRange($myCastles, $army, $fields){
+    static public function getMyEmptyCastleInMyRange($myCastles, $army, $fields) {
         $namespace = Game_Namespace::getNamespace();
         $modelArmy = new Application_Model_Army($namespace->gameId);
-        foreach($myCastles as $castle){
+        foreach ($myCastles as $castle) {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-            if($modelArmy->getAllUnitsFromCastlePosition($position)){
+            if ($modelArmy->getAllUnitsFromCastlePosition($position)) {
                 continue;
             }
             $aStar = new Game_Astar($army['x'], $army['y']);
@@ -290,8 +297,8 @@ class Game_Computer {
         }
     }
 
-    static public function isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle, $fields){
-        foreach($enemies as $enemy){
+    static public function isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle, $fields) {
+        foreach ($enemies as $enemy) {
             $aStar = new Game_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($myEmptyCastle['x'], $myEmptyCastle['y']);
             if ($h < $enemy['movesLeft']) {
@@ -308,11 +315,12 @@ class Game_Computer {
         }
     }
 
-    static public function canAttackAllEnemyHaveRange($enemies, $army, $castles){
-        foreach($enemies as $enemy){
+    static public function canAttackAllEnemyHaveRange($enemies, $army, $castles) {
+        foreach ($enemies as $enemy) {
             $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castles);
             $enemy['castleId'] = $castleId;
-            if(self::isEnemyStronger($army, $enemy, $castleId)){
+            if (self::isEnemyStronger($army, $enemy, $castleId)) {
+                new Game_Logger('ENEMY SILNIEJSZY - 322');
                 return null;
             }
         }

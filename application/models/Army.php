@@ -199,7 +199,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('destroyed = false');
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $row) {
-                $fields[$row['x']][$row['y']] = 'e';
+                $fields[$row['y']][$row['x']] = 'e';
             }
             return $fields;
         } catch (PDOException $e) {
