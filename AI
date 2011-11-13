@@ -1,21 +1,27 @@
 W ZAMKU
 Czy jest wróg, który ma zasięg na zamek?
-NIE																						TAK
-Czy jest wróg, na którego mam zasięg?																		Czy jest wróg, na którego mam zasięg?
-NIE																		TAK				NIE		TAK
-W armii jest heros																Czy wróg jest silniejszy?	ZOSTAŃ		Czy wrogów, którzy mają zasięg na zamek jest więcej niż tych na których mam zasięg?
-NIE														TAK				NIE		TAK				NIE									TAK
-Czy jest jakiś zamek wroga*1											Czy w pobliżu są pełne ruiny	ATAKUJ		ZOSTAŃ				Czy jestem w stanie zaatakować wszystkie jednostki wroga?		ZOSTAŃ
-NIE								TAK						NIE		TAK								NIE				TAK
-Czy jest jakaś wroga armia*2					Czy jest zamek wroga, który jest słabszy	*1		IDŹ DO RUIN							ZOSTAŃ				Czy wróg jest silniejszy?
-NIE		TAK						NIE			TAK																	NIE		TAK
-WYGRAŁEM?	Czy jest armia wroga, która jest słabsza	*2			Czy zamek jest w zasięgu														ATAKUJ		ZOSTAŃ
-		NIE		TAK							NIE		TAK
-		ZOSTAŃ		ATAKUJ							IDŹ DO ZAMKU	ATAKUJ
+NIE																								TAK
+Czy jest wróg, na którego mam zasięg?																				Czy jest wróg, na którego mam zasięg?
+NIE																				TAK				NIE		TAK
+W armii jest heros*3																		Czy wróg jest silniejszy?	ZOSTAŃ		Czy wrogów, którzy mają zasięg na zamek jest więcej niż tych na których mam zasięg?
+NIE																TAK				NIE		TAK				NIE									TAK
+Czy jest słabsza wroga armia w zasięgu												Czy w pobliżu są pełne ruiny	ATAKUJ		ZOSTAŃ				Czy jestem w stanie zaatakować wszystkie jednostki wroga?		ZOSTAŃ
+NIE							TAK									NIE		TAK								NIE				TAK
+Czu jest moja armia w zasięgu				ATAKUJ									*1		IDŹ DO RUIN							ZOSTAŃ				Czy wróg jest silniejszy?
+NIE				TAK																										NIE		TAK
+Czy jest jakiś zamek wroga*1	DOŁĄCZ DO ARMII																									ATAKUJ		ZOSTAŃ
+NIE								TAK
+Czy jest jakaś wroga armia*2					Czy jest zamek wroga, który jest słabszy
+NIE		TAK						NIE							TAK
+WYGRAŁEM?	Czy jest armia wroga, która jest słabsza	Czu jest moja armia w zasięgu				Czy zamek jest w zasięgu
+		NIE		TAK				NIE			TAK				NIE		TAK
+		ZOSTAŃ		ATAKUJ				*1			DOŁĄCZ DO ARMII			IDŹ DO ZAMKU	ATAKUJ
+
+
 
 POZA ZAMKIEM
 Czy w zasięgu jest jakiś mój pusty zamek?
-NIE	TAK
-*1	Czy zamek jest w zasięgu wrogiej armii?
-	NIE	TAK
-	*1	IDŹ DO ZAMKU
+NIE		TAK
+3*		Czy zamek jest w zasięgu wrogiej armii?
+		NIE		TAK
+		*1		IDŹ DO ZAMKU

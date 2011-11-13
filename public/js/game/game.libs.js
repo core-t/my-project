@@ -944,8 +944,7 @@ function enemyWalk(res) {
                 }else{
                     var enemyArmies = getEnemyCastleGarrison(res.castleId);
                 }
-            }
-            if(typeof res.enemyArmyId != 'undefined'){
+            }else if(typeof res.enemyArmyId != 'undefined'){
                 var enemyArmies = new Array();
                 enemyArmies[0] = getEnemyArmy(res.enemyArmyId);
             }

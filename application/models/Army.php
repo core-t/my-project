@@ -983,5 +983,19 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
+    public function getAllPlayerArmiesExeptOne($armyId, $playerId){
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, array('x', 'y'))
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('"armyId" != ?', $armyId)
+                    ->where('"playerId" = ?', $playerId)
+                    ->where('destroyed = false');
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
 }
 
