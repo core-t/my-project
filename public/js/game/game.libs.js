@@ -913,6 +913,17 @@ function gogo(res,enemyArmies,neutral){
     computerA();
 }
 
+function getEnemyArmy(enemyArmyId){
+    for(color in players) {
+        for(i in players[color].armies) {
+            if(i == 'army'+enemyArmyId){
+                return players[color].armies[i];
+            }
+        }
+    }
+    return null;
+}
+
 function enemyWalk(res) {
     //    console.log(res);
     var i;
@@ -924,7 +935,7 @@ function enemyWalk(res) {
         if(typeof res.battle != 'undefined'){
             var enemyArmies = new Array();
             var neutral = 0;
-            if(res.castleId){
+            if(typeof res.castleId != 'undefined' && res.castleId != null){
                 zoomer.lensSetCenter(castles[res.castleId].position.x*40, castles[res.castleId].position.y*40);
                 if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
                     var enemyArmies = new Array();
@@ -933,6 +944,10 @@ function enemyWalk(res) {
                 }else{
                     var enemyArmies = getEnemyCastleGarrison(res.castleId);
                 }
+            }
+            if(typeof res.enemyArmyId != 'undefined'){
+                var enemyArmies = new Array();
+                enemyArmies[0] = getEnemyArmy(res.enemyArmyId);
             }
             wsBattle(res.battle,oldArmy,enemyArmies);
             battleM(res.battle, oldArmy, enemyArmies, gogo, res, neutral);

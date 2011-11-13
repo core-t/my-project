@@ -11,7 +11,7 @@ class Game_Computer {
             if ($modelCastle->isEnemyCastle($castleId, $playerId)) {
                 $enemy = $modelArmy->getAllUnitsFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
                 $battle = new Game_Battle($army, $enemy);
-                $battle->addCastleDefenseModifier(Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId));
+                $battle->addCastleDefenseModifier($castleId);
                 $battle->fight();
                 $battle->updateArmies();
                 $enemy = $modelArmy->updateAllArmiesFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
@@ -61,7 +61,7 @@ class Game_Computer {
         for ($i = 0; $i < $max; $i++) {
             $battle = new Game_Battle($army, $enemy);
             if ($castleId !== null) {
-                $battle->addCastleDefenseModifier(Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId));
+                $battle->addCastleDefenseModifier($castleId);
             }
             if (isset($enemy['x']) && isset($enemy['y'])) {
                 $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
@@ -72,12 +72,12 @@ class Game_Computer {
             }
         }
         $border = $max - $attackerCount;
-        new Game_Logger('attackerCount ' . $attackerCount . ' >= ' . $border);
+//         new Game_Logger('attackerCount ' . $attackerCount . ' >= ' . $border);
         if ($attackerCount >= $border) {
-            new Game_Logger('ENEMY SŁABSZY');
+//             new Game_Logger('ENEMY SŁABSZY');
             return false;
         } else {
-            new Game_Logger('ENEMY SILNIEJSZY');
+//             new Game_Logger('ENEMY SILNIEJSZY');
             return true;
         }
     }
@@ -100,7 +100,7 @@ class Game_Computer {
                 $enemy = Game_Battle::getNeutralCastleGarrizon();
             }
             if (!self::isEnemyStronger($army, $enemy, $castleId)) {
-                new Game_Logger('ENEMY SŁABSZY - 108');
+//                 new Game_Logger('ENEMY SŁABSZY - 108');
                 return $castleId;
             }
 //             $weaker[$castleId] = Game_Battle::getCastlePower($castleId, $playerId);
@@ -190,9 +190,9 @@ class Game_Computer {
             $h = $aStar->calculateH($enemy['x'], $enemy['y']);
             if ($h < ($enemy['numberOfMoves'])) {
                 $canFlySwim = $modelArmy->getArmyCanFlySwim($enemy);
-                $castlesAndFields['fields'] = Application_Model_Board::restoreField($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y']);
+                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'c');
                 $aStar->start($enemy['x'], $enemy['y'], $castlesAndFields['fields'], $canFlySwim['canFly'], $canFlySwim['canSwim']);
-                $castlesAndFields['fields'] = Application_Model_Board::changeArmyField($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'e');
+                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'e');
                 $movesToSpend = $aStar->getFullPathMovesSpend($castlePosition['x'] . '_' . $castlePosition['y']);
                 if ($movesToSpend && $movesToSpend <= ($enemy['numberOfMoves'] - 2)) {
                     $enemy['aStar'] = $aStar;
@@ -205,7 +205,6 @@ class Game_Computer {
         if (!empty($enemiesHaveRange)) {
             return $enemiesHaveRange;
         } else {
-//             new Game_Logger('BRAK WROGA, KTÓRY MA ZASIĘG NA ZAMEK');
             return false;
         }
     }
@@ -318,7 +317,7 @@ class Game_Computer {
             $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castles);
             $enemy['castleId'] = $castleId;
             if (self::isEnemyStronger($army, $enemy, $castleId)) {
-                new Game_Logger('ENEMY SILNIEJSZY - 322');
+//                 new Game_Logger('ENEMY SILNIEJSZY - 322');
                 return null;
             }
         }

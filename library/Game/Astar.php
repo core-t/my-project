@@ -231,6 +231,15 @@ class Game_Astar {
         return $this->currentPosition;
     }
 
+    public function reversePath(){
+        $this->currentPosition = array(
+            'x' => $this->path[0]['x'],
+            'y' => $this->path[0]['y'],
+            'movesSpend' => $this->close[$this->path[0]['x'] . '_' . $this->path[0]['y']]['G']);
+        $this->path = array_reverse($this->path);
+        return $this->path;
+    }
+
 //     static public function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
 //         $previousPath = $oldPath = $path;
 //         $oldCurrentPosition = $currentPosition;

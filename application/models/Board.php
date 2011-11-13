@@ -770,8 +770,8 @@ class Application_Model_Board {
             if (isset($razed[$castleId])) {
                 continue;
             }
-            $x = $castleSchema['position']['x'] / 40;
-            $y = $castleSchema['position']['y'] / 40;
+            $x = $castleSchema['position']['x'];
+            $y = $castleSchema['position']['y'];
             if (isset($myCastles[$castleId])) {
                 $fields = self::changeCasteFields($fields, $x, $y, 'c');
             } else {

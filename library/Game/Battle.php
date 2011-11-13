@@ -216,8 +216,6 @@ class Game_Battle {
         return $army;
     }
 
-
-
     static public function getCastlePower($castleId, $playerId){
         $namespace = Game_Namespace::getNamespace();
         $modelArmy = new Application_Model_Army($namespace->gameId);

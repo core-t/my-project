@@ -518,7 +518,6 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('x IN (?)', $xs)
                     ->where('y IN (?)', $ys);
             $result = $this->_db->query($select)->fetchAll();
-            new Game_Logger($result);
             return $result;
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
