@@ -776,6 +776,7 @@ class Application_Model_Board {
                 $fields = self::changeCasteFields($fields, $x, $y, 'c');
             } else {
                 $hostileCastles[$castleId] = $castleSchema;
+                $hostileCastles[$castleId]['castleId'] = $castleId;
                 $fields = self::changeCasteFields($fields, $x, $y, 'e');
             }
         }

@@ -501,6 +501,30 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
+    public function areUnitsAtCastlePosition($position) {
+        $xs = array(
+            $position['x'],
+            $position['x'] + 1
+        );
+        $ys = array(
+            $position['y'],
+            $position['y'] + 1
+        );
+        try {
+            $select = $this->_db->select()
+                    ->from($this->_name, $this->_primary)
+                    ->where('"gameId" = ?', $this->_gameId)
+                    ->where('destroyed = false')
+                    ->where('x IN (?)', $xs)
+                    ->where('y IN (?)', $ys);
+            $result = $this->_db->query($select)->fetchAll();
+            new Game_Logger($result);
+            return $result;
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
     public function getAllUnitsFromPosition($position) {
         $ids = '';
         try {

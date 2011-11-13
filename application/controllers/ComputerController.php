@@ -205,13 +205,13 @@ class ComputerController extends Game_Controller_Action {
                             $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {
                             //atakuj
-                            new Game_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!');
-                            new Game_Logger($enemy);
-                            $path = $enemy['aStar']->restorePath($enemy['key'], $enemy['movesToSpend']);
-                            $currentPosition = $enemy['aStar']->getCurrentPosition();
+                            new Game_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
+                            $aStar = $enemy['aStar'];
+                            $path = $aStar->restorePath($enemy['key'], $enemy['movesToSpend']);
+                            $currentPosition = $aStar->getCurrentPosition();
                             $fightEnemy = Game_Computer::fightEnemy($army, $enemy, $this->playerId, $enemy['castleId']);
                             $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $currentPosition);
-                            $this->endMove($army['armyId'], $currentPosition, $path, $fightEnemy['battle'], $fightEnemy['victory'], $enemy['castleId']);
+                            $this->endMove($army['armyId'], $currentPosition, $path, $fightEnemy['battle'], $fightEnemy['victory']);
                         }
                     }
                 }
@@ -251,10 +251,10 @@ class ComputerController extends Game_Controller_Action {
 
         $result['action'] = 'continue';
         $result['oldArmyId'] = $oldArmyId;
-        if ($castleId) {
+        if ($castleId !== null) {
             $result['castleId'] = $castleId;
         }
-        if ($ruinId) {
+        if ($ruinId !== null) {
             $result['ruinId'] = $ruinId;
         }
         if (!empty($path)) {

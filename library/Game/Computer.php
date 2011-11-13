@@ -7,9 +7,7 @@ class Game_Computer {
         $modelArmy = new Application_Model_Army($namespace->gameId);
         $modelCastle = new Application_Model_Castle($namespace->gameId);
         $result = array();
-//         $result['path'] = $range['path'];
-//         $result['currentPosition'] = $range['currentPosition'];
-        if ($castleId) {
+        if ($castleId !== null) {
             if ($modelCastle->isEnemyCastle($castleId, $playerId)) {
                 $enemy = $modelArmy->getAllUnitsFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
                 $battle = new Game_Battle($army, $enemy);
@@ -21,7 +19,6 @@ class Game_Computer {
                     $modelCastle->changeOwner($castleId, $playerId);
                     $result['victory'] = true;
                 } else {
-//                     $result = Game_Astar::rewindPathOutOfCastle($result['path'], $result['currentPosition'], Application_Model_Board::getCastlePosition($castleId));
                     $modelArmy->destroyArmy($army['armyId'], $playerId);
                     $result['victory'] = false;
                 }
@@ -35,7 +32,6 @@ class Game_Computer {
                     $modelCastle->addCastle($castleId, $playerId);
                     $result['victory'] = true;
                 } else {
-//                     $result = Game_Astar::rewindPathOutOfCastle($result['path'], $result['currentPosition'], Application_Model_Board::getCastlePosition($castleId));
                     $modelArmy->destroyArmy($army['armyId'], $playerId);
                     $result['victory'] = false;
                 }
@@ -49,7 +45,6 @@ class Game_Computer {
             if (empty($enemy)) {
                 $result['victory'] = true;
             } else {
-//                 $result = Game_Astar::rewindPathOutOfArmy($result['path'], $result['currentPosition'], $enemy['x'], $enemy['y']);
                 $modelArmy->destroyArmy($army['armyId'], $playerId);
                 $result['victory'] = false;
             }
@@ -65,7 +60,7 @@ class Game_Computer {
         $attackerCount = 0;
         for ($i = 0; $i < $max; $i++) {
             $battle = new Game_Battle($army, $enemy);
-            if ($castleId) {
+            if ($castleId !== null) {
                 $battle->addCastleDefenseModifier(Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId));
             }
             if (isset($enemy['x']) && isset($enemy['y'])) {
@@ -273,7 +268,7 @@ class Game_Computer {
         $modelArmy = new Application_Model_Army($namespace->gameId);
         foreach ($myCastles as $castle) {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-            if ($modelArmy->getAllUnitsFromCastlePosition($position)) {
+            if ($modelArmy->areUnitsAtCastlePosition($position)) {
                 continue;
             }
             $aStar = new Game_Astar($army['x'], $army['y']);
@@ -298,16 +293,19 @@ class Game_Computer {
     }
 
     static public function isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle, $fields) {
+        $namespace = Game_Namespace::getNamespace();
+        $modelArmy = new Application_Model_Army($namespace->gameId);
         foreach ($enemies as $enemy) {
             $aStar = new Game_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($myEmptyCastle['x'], $myEmptyCastle['y']);
-            if ($h < $enemy['movesLeft']) {
+            if ($h < $enemy['numberOfMoves']) {
                 $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'c');
                 $aStar = new Game_Astar($myEmptyCastle['x'], $myEmptyCastle['y']);
-                $aStar->start($enemy['x'], $enemy['y'], $fields, $enemy['canFly'], $enemy['canSwim']);
+                $canFlySwim = $modelArmy->getArmyCanFlySwim($enemy);
+                $aStar->start($enemy['x'], $enemy['y'], $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
                 $key = $myEmptyCastle['x'] . '_' . $myEmptyCastle['y'];
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
-                if ($movesToSpend && $movesToSpend <= $enemy['movesLeft']) {
+                if ($movesToSpend && $movesToSpend <= $enemy['numberOfMoves']) {
                     return true;
                 }
                 $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'e');
