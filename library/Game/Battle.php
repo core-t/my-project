@@ -61,7 +61,7 @@ class Game_Battle {
     }
 
     public function getAttacker() {
-        if(!empty($this->attacker['soldiers']) || !empty($this->attacker['heroes'])){
+        if (!empty($this->attacker['soldiers']) || !empty($this->attacker['heroes'])) {
 //             new Game_Logger($this->attacker);
             return $this->attacker;
         }
@@ -216,26 +216,27 @@ class Game_Battle {
         return $army;
     }
 
-    static public function getCastlePower($castleId, $playerId){
-        $namespace = Game_Namespace::getNamespace();
-        $modelArmy = new Application_Model_Army($namespace->gameId);
-        $modelCastle = new Application_Model_Castle($namespace->gameId);
-        $power = 0;
-        if($modelCastle->isEnemyCastle($castleId, $playerId)){
-            $enemy = $modelArmy->getAllUnitsFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
-            $castleDefenseModifier = self::getCastleDefenseModifier($castleId);
-        }else{
-            $enemy = self::getNeutralCastleGarrizon();
-            $castleDefenseModifier = 0;
-        }
-        $enemy = self::getCombatModifiers($enemy);
-        foreach ($enemy['soldiers'] as $soldier) {
-            $power += $soldier['defensePoints'] + $castleDefenseModifier;
-        }
-        foreach ($enemy['heroes'] as $hero) {
-            $power += $hero['defensePoints'] + $castleDefenseModifier;
-        }
-        return $power;
-    }
+//     static public function getCastlePower($castleId, $playerId) {
+//         $namespace = Game_Namespace::getNamespace();
+//         $modelArmy = new Application_Model_Army($namespace->gameId);
+//         $modelCastle = new Application_Model_Castle($namespace->gameId);
+//         $power = 0;
+//         if ($modelCastle->isEnemyCastle($castleId, $playerId)) {
+//             $enemy = $modelArmy->getAllUnitsFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
+//             $castleDefenseModifier = self::getCastleDefenseModifier($castleId);
+//         } else {
+//             $enemy = self::getNeutralCastleGarrizon();
+//             $castleDefenseModifier = 0;
+//         }
+//         $enemy = self::getCombatModifiers($enemy);
+//         foreach ($enemy['soldiers'] as $soldier) {
+//             $power += $soldier['defensePoints'] + $castleDefenseModifier;
+//         }
+//         foreach ($enemy['heroes'] as $hero) {
+//             $power += $hero['defensePoints'] + $castleDefenseModifier;
+//         }
+//         return $power;
+//     }
+
 }
 
