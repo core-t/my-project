@@ -1,0 +1,4 @@
+RewriteEngine on
+
+RewriteCond %{ENV:REDIRECT_STATUS} =""
+RewriteRule ^(.*)$ /public/$1 [L]

@@ -65,7 +65,7 @@ var jws = {
     //:const:*:JWS_SERVER_PORT:Integer:8787
     //:d:en:Default port number, 8787 for stand-alone un-secured servers, _
     //:d:en:80 for Jetty or Glassfish un-secured servers.
-    JWS_SERVER_PORT: 443,
+    JWS_SERVER_PORT: 8787,
     //:const:*:JWS_SERVER_SSL_PORT:Integer:9797
     //:d:en:Default port number, 9797 for stand-alone SSL secured servers, _
     //:d:en:443 for Jetty or Glassfish SSL secured servers.
@@ -1376,7 +1376,7 @@ function H(){
                 success:false,
                 id:Y
             };
-            
+
             if(M.pv[0]>0){
                 var ae=c(Y);
                 if(ae){
@@ -1390,7 +1390,7 @@ function H(){
                         }else{
                     if(o[af].expressInstall&&A()){
                         var ai={};
-                        
+
                         ai.data=o[af].expressInstall;
                         ai.width=ae.getAttribute("width")||"0";
                         ai.height=ae.getAttribute("height")||"0";
@@ -1401,7 +1401,7 @@ function H(){
                             ai.align=ae.getAttribute("align")
                             }
                             var ah={};
-                        
+
                         var X=ae.getElementsByTagName("param");
                         var ac=X.length;
                         for(var ad=0;ad<ac;ad++){
@@ -1457,7 +1457,7 @@ function A(){
         success:false,
         id:X
     };
-    
+
     var ae=c(X);
     if(ae){
         if(ae.nodeName=="OBJECT"){
@@ -1725,7 +1725,7 @@ return{
     registerObject:function(ab,X,aa,Z){
         if(M.w3&&ab&&X){
             var Y={};
-            
+
             Y.id=ab;
             Y.swfVersion=X;
             Y.expressInstall=aa;
@@ -1751,14 +1751,14 @@ embedSWF:function(ab,ah,ae,ag,Y,aa,Z,ad,af,ac){
         success:false,
         id:ah
     };
-    
+
     if(M.w3&&!(M.wk&&M.wk<312)&&ab&&ah&&ae&&ag&&Y){
         w(ah,false);
         K(function(){
             ae+="";
             ag+="";
             var aj={};
-            
+
             if(af&&typeof af===r){
                 for(var al in af){
                     aj[al]=af[al]
@@ -1768,7 +1768,7 @@ embedSWF:function(ab,ah,ae,ag,Y,aa,Z,ad,af,ac){
         aj.width=ae;
         aj.height=ag;
         var am={};
-        
+
         if(ad&&typeof ad===r){
             for(var ak in ad){
                 am[ak]=ad[ak]
@@ -1936,7 +1936,7 @@ if( swfobject.hasFlashPlayerVersion( "10.0.0" ) ) {
                     log:function(){},
                     error:function(){}
                 };
-            
+
         }
         if(!swfobject.hasFlashPlayerVersion("10.0.0")){
             console.error("Flash Player >= 10.0.0 is required.");
@@ -1952,14 +1952,14 @@ if( swfobject.hasFlashPlayerVersion( "10.0.0" ) ) {
             self.readyState=WebSocket.CONNECTING;
             self.bufferedAmount=0;
             self.__events={};
-            
+
             setTimeout(function(){
                 WebSocket.__addTask(function(){
                     WebSocket.__flash.create(self.__id,url,protocol,proxyHost||null,proxyPort||0,headers||null);
                 });
             },0);
         };
-        
+
         WebSocket.prototype.send=function(data){
             if(this.readyState==WebSocket.CONNECTING){
                 throw "INVALID_STATE_ERR: Web Socket connection has not been established";
@@ -1972,7 +1972,7 @@ if( swfobject.hasFlashPlayerVersion( "10.0.0" ) ) {
                 return false;
             }
         };
-        
+
         WebSocket.prototype.close=function(){
             if(this.readyState==WebSocket.CLOSED||this.readyState==WebSocket.CLOSING){
                 return;
@@ -1980,14 +1980,14 @@ if( swfobject.hasFlashPlayerVersion( "10.0.0" ) ) {
             this.readyState=WebSocket.CLOSING;
             WebSocket.__flash.close(this.__id);
         };
-        
+
         WebSocket.prototype.addEventListener=function(type,listener,useCapture){
             if(!(type in this.__events)){
                 this.__events[type]=[];
             }
             this.__events[type].push(listener);
         };
-        
+
         WebSocket.prototype.removeEventListener=function(type,listener,useCapture){
             if(!(type in this.__events))return;
             var events=this.__events[type];
@@ -1998,7 +1998,7 @@ if( swfobject.hasFlashPlayerVersion( "10.0.0" ) ) {
                 }
             }
             };
-        
+
 WebSocket.prototype.dispatchEvent=function(event){
     var events=this.__events[event.type]||[];
     for(var i=0;i<events.length;++i){
@@ -2037,7 +2037,7 @@ WebSocket.prototype.__createSimpleEvent=function(type){
             bubbles:false,
             cancelable:false
         };
-    
+
 }
 };
 
@@ -2053,7 +2053,7 @@ WebSocket.prototype.__createMessageEvent=function(type,data){
             bubbles:false,
             cancelable:false
         };
-    
+
 }
 };
 
@@ -2422,7 +2422,7 @@ if( !jws.browserSupportsNativeJSON ) {
     // Please refer to http://json.org/js
     if(!this.JSON){
         this.JSON={};
-        
+
 }(function(){
     function f(n){
         return n<10?'0'+n:n;
@@ -2431,11 +2431,11 @@ if( !jws.browserSupportsNativeJSON ) {
         Date.prototype.toJSON=function(key){
             return isFinite(this.valueOf())?this.getUTCFullYear()+'-'+f(this.getUTCMonth()+1)+'-'+f(this.getUTCDate())+'T'+f(this.getUTCHours())+':'+f(this.getUTCMinutes())+':'+f(this.getUTCSeconds())+'Z':null;
         };
-        
+
         String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(key){
             return this.valueOf();
         };
-    
+
 }
 var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={
     '\b':'\\b',
@@ -4616,7 +4616,7 @@ jws.oop.declareClass( "jws", "jWebSocketXMLClient", jws.jWebSocketTokenClient, {
         } catch( ex ) {
         // ignore exception here, lDoc will keep being null
         }
-       
+
 
         function node2obj( aNode, aObj ) {
             var lNode = aNode.firstChild;
