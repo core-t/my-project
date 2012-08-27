@@ -907,7 +907,7 @@ function gogo(res,enemyArmies,neutral){
         wsArmy(res.oldArmyId);
     }
     if(typeof res.ruinId != 'undefined'){
-        wsGetRuin(res.ruinId);
+//        wsGetRuin(res.ruinId);
         ruinUpdate(res.ruinId, 1);
     }
     computerA();
@@ -938,14 +938,12 @@ function enemyWalk(res) {
             if(typeof res.castleId != 'undefined' && res.castleId != null){
                 zoomer.lensSetCenter(castles[res.castleId].position.x*40, castles[res.castleId].position.y*40);
                 if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
-                    var enemyArmies = new Array();
                     enemyArmies[0] = getNeutralCastleGarrison();
                     neutral = 1;
                 }else{
-                    var enemyArmies = getEnemyCastleGarrison(res.castleId);
+                    enemyArmies = getEnemyCastleGarrison(res.castleId);
                 }
             }else if(typeof res.enemyArmyId != 'undefined'){
-                var enemyArmies = new Array();
                 enemyArmies[0] = getEnemyArmy(res.enemyArmyId);
             }
             wsBattle(res.battle,oldArmy,enemyArmies);
@@ -973,6 +971,7 @@ function enemyWalk(res) {
                 enemyWalk(res);
             }
         });
+        return null;
     }
 }
 

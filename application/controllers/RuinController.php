@@ -36,6 +36,13 @@ class RuinController extends Game_Controller_Action {
                 $response['find'] = $find;
                 $response['ruinId'] = $ruinId;
                 $this->view->response = Zend_Json::encode($response);
+
+                $mGame = new Application_Model_Game();
+
+                $mWebSocket = new Application_Model_WebSocket();
+                $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
+                $mWebSocket->publishChannel($this->_namespace->gameId, $mGame->getPlayerColor($this->_namespace->player['playerId']) . '.r.' . $ruinId . '.' . $response['find']);
+                $mWebSocket->close();
             } else {
                 throw new Exception('Brak ruinId');
             }

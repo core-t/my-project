@@ -52,10 +52,10 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
     }
 
     public function getFull() {
+        $select = $this->_db->select()
+                ->from($this->_name, $this->_primary)
+                ->where('"gameId" = ?', $this->_gameId);
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name, $this->_primary)
-                    ->where('"gameId" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             $ruins = Application_Model_Board::getRuins();
             foreach ($result as $row) {
@@ -71,9 +71,9 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
 
     public function searchRuin($heroId, $armyId, $playerId) {
         $namespace = Game_Namespace::getNamespace();
-        $modelGame = new Application_Model_Game($namespace->gameId);
+        $mGame = new Application_Model_Game($namespace->gameId);
         $modelArmy = new Application_Model_Army($namespace->gameId);
-        $turn = $modelGame->getTurn();
+        $turn = $mGame->getTurn();
 
         $random = rand(0, 100);
         if ($random < 10) {//10%
@@ -88,8 +88,8 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
             //kasa
             $gold = rand(50, 150);
             $find = array('gold', $gold);
-            $inGameGold = $modelGame->getPlayerInGameGold($playerId);
-            $modelGame->updatePlayerInGameGold($playerId, $gold + $inGameGold);
+            $inGameGold = $mGame->getPlayerInGameGold($playerId);
+            $mGame->updatePlayerInGameGold($playerId, $gold + $inGameGold);
             $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $playerId);
         } elseif ($random < 85) {//30%
             //jednostki
@@ -150,6 +150,7 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
             $find = array('artefact', $artefactId);
             $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $playerId);
         }
+
         return $find;
     }
 

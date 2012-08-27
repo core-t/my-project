@@ -410,7 +410,7 @@ function searchRuinsA(){
     }
     unselectArmy();
     $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
-        wsGetRuin(getRuinId(unselectedArmy));
+//        wsGetRuin(getRuinId(unselectedArmy));
         ruinUpdate(result.ruinId, 1);
         players[my.color].armies['army'+result.armyId] = new army(result, my.color);
         switch(result.find[0]){
@@ -442,11 +442,11 @@ function searchRuinsA(){
     });
 }
 
-function getRuinA(ruinId){
-    $.getJSON(urlGetRuins+'/rid/'+ruinId, function(result) {
-        ruinUpdate(ruinId, result.empty);
-    });
-}
+//function getRuinA(ruinId){
+//    $.getJSON(urlGetRuins+'/rid/'+ruinId, function(result) {
+//        ruinUpdate(ruinId, result.empty);
+//    });
+//}
 
 function addTowerA(towerId){
     $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color);

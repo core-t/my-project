@@ -21,8 +21,8 @@ class GameController extends Game_Controller_Action {
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');
         }
-        $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        if ($modelGame->isActive()) {
+        $mGame = new Application_Model_Game($this->_namespace->gameId);
+        if ($mGame->isActive()) {
             $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
             $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
             $this->view->headScript()->prependFile('/js/jquery.min.js');
@@ -56,15 +56,17 @@ class GameController extends Game_Controller_Action {
             }
             $this->view->towers = $towers;
 //            $startPositions = Application_Model_Board::getDefaultStartPositions();
-            $players = $modelGame->getPlayersInGameReady();
+            $players = $mGame->getPlayersInGameReady();
             $this->view->players = array();
             $this->view->turn = array();
 
-            $game = $modelGame->getGame();
+            $game = $mGame->getGame();
 
             $mWebSocket = new Application_Model_WebSocket();
             $mWebSocket->createChannel($game);
             $mWebSocket->close();
+
+            $this->_namespace->wsKeys = $mGame->getKeys();
 
             $this->view->game = $game;
             foreach ($players as $player) {
@@ -90,7 +92,7 @@ class GameController extends Game_Controller_Action {
                 $this->view->myTurn = 'false';
             }
 
-            $gameMasterId = $modelGame->getGameMaster();
+            $gameMasterId = $mGame->getGameMaster();
             if ($gameMasterId == $this->_namespace->player['playerId']) {
                 $this->view->myGame = 1;
             } else {

@@ -1,3 +1,42 @@
+Image1= new Image(27,32);
+Image1.src = '../img/game/cursor_attack.png';
+Image2= new Image(14,46);
+Image2.src = '../img/game/cursor_castle.png';
+Image3= new Image(25,26);
+Image3.src = '../img/game/cursor_select.png';
+Image4= new Image(20,20);
+Image4.src = '../img/game/footsteps_e.png';
+Image5= new Image(20,20);
+Image5.src = '../img/game/footsteps_n.png';
+Image6= new Image(20,20);
+Image6.src = '../img/game/footsteps_s.png';
+Image7= new Image(20,20);
+Image7.src = '../img/game/footsteps_w.png';
+Image8= new Image(20,20);
+Image8.src = '../img/game/footsteps_ne.png';
+Image9= new Image(20,20);
+Image9.src = '../img/game/footsteps_nw.png';
+Image10= new Image(20,20);
+Image10.src = '../img/game/footsteps_se.png';
+Image11= new Image(20,20);
+Image11.src = '../img/game/footsteps_sw.png';
+Image12= new Image(33,18);
+Image12.src = '../img/game/cursor_arrow_e.png';
+Image13= new Image(18,34);
+Image13.src = '../img/game/cursor_arrow_n.png';
+Image14= new Image(18,34);
+Image14.src = '../img/game/cursor_arrow_s.png';
+Image15= new Image(33,18);
+Image15.src = '../img/game/cursor_arrow_w.png';
+Image16= new Image(28,28);
+Image16.src = '../img/game/cursor_arrow_ne.png';
+Image17= new Image(28,28);
+Image17.src = '../img/game/cursor_arrow_nw.png';
+Image18= new Image(28,28);
+Image18.src = '../img/game/cursor_arrow_se.png';
+Image19= new Image(28,28);
+Image19.src = '../img/game/cursor_arrow_sw.png';
+
 var newX = 0;
 var newY = 0;
 
@@ -28,6 +67,30 @@ var enemyArmiesPositions = new Array();
 var largeimageloaded = false;
 
 var wait = 0;
+
+var urlMove = '/move/go';
+var urlNextTurn = '/turn/next';
+var urlGetTurn = '/turn/get';
+var urlStartMyTurn = '/turn/start';
+var urlFightEnemyCastle = '/fight/ecastle';
+var urlFightNeutralCastle = '/fight/ncastle';
+var urlFightArmy = '/fight/army';
+var urlAddArmy = '/gameajax/addarmy';
+var urlGetPlayerArmies = '/gameajax/armies';
+var urlJoinArmy = '/gameajax/join';
+var urlSplitArmy = '/gameajax/split';
+var urlDisbandArmy = '/gameajax/disband';
+var urlHeroResurrection = '/gameajax/resurrection';
+var urlSearchRuins = '/ruin/search';
+var urlGetRuins = '/ruin/get';
+var urlSetProduction = '/production/set';
+var urlCastleRaze = '/castle/raze';
+var urlCastleBuild = '/castle/build';
+var urlCastleGet = '/castle/get';
+var urlTowerAdd = '/tower/add';
+var urlTowerGet = '/tower/get';
+var urlComputer = '/computer';
+var urlChatSend = '/chat/send';
 
 $(document).ready(function() {
     terrain();
@@ -126,7 +189,7 @@ function startGame(){
                 }
             }
         }
-//        auth();
+        //        auth();
         showFirstCastle();
         if(!myArmies && !myCastles){
             lostM();

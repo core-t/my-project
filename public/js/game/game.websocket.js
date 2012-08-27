@@ -54,7 +54,9 @@ function login() {
                                 changeEnemyTower(data[2], color);
                                 break;
                             case 'r':
-                                getRuinA(data[2]);
+                                console.log(data[2]);
+                                console.log(data[3]);
+                                ruinUpdate(data[2],data[3]);
                                 break;
                             case 'm':
                                 changeArmyPosition(data[2], data[3], data[4], turn.color);
@@ -112,7 +114,7 @@ function login() {
                     }else{
                         if(!channelSubscribed){
                             channelSubscribed = lWSC.channelSubscribe( channel, lAccessKey);
-//                            setInterval ( 'wsPing()', 10000 );
+                        //                            setInterval ( 'wsPing()', 10000 );
                         }
                     }
                 } else {
@@ -196,9 +198,9 @@ function wsArmy(armyId, center) {
         lWSC.channelPublish(channel,my.color+'.a.'+armyId+'.0');
     }
 }
-function wsGetRuin(ruinId){
-    lWSC.channelPublish(channel,my.color+'.r.'+ruinId);
-}
+//function wsGetRuin(ruinId){
+//    lWSC.channelPublish(channel,my.color+'.r.'+ruinId);
+//}
 function wsBattle(battle,army,armies){
     var data = my.color+'.b.';
     var tmp = '';

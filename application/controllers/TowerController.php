@@ -14,8 +14,8 @@ class TowerController extends Game_Controller_Action {
         $color = $this->_request->getParam('c');
         if ($towerId !== null || empty($color)) {
             $modelTower = new Application_Model_Tower($this->_namespace->gameId);
-            $modelGame = new Application_Model_Game($this->_namespace->gameId);
-            $playerId = $modelGame->getPlayerIdByColor($color);
+            $mGame = new Application_Model_Game($this->_namespace->gameId);
+            $playerId = $mGame->getPlayerIdByColor($color);
             if ($modelTower->towerExists($towerId)) {
                 $modelTower->changeTowerOwner($towerId, $playerId);
             } else {
@@ -23,7 +23,7 @@ class TowerController extends Game_Controller_Action {
             }
 
             $mWebSocket = new Application_Model_WebSocket();
-            $mWebSocket->authorizeChannel($modelGame->getKeys());
+            $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
             $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.T.' . $towerId);
             $mWebSocket->close();
         } else {

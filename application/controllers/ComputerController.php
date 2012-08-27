@@ -298,8 +298,14 @@ class ComputerController extends Game_Controller_Action {
         if ($castleId !== null) {
             $result['castleId'] = $castleId;
         }
+
+        $mWebSocket = new Application_Model_WebSocket();
+        $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
+        $color = $this->_mGame->getPlayerColor($this->_namespace->player['playerId']);
+
         if ($ruinId !== null) {
             $result['ruinId'] = $ruinId;
+            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.r.' . $ruinId . '.' . 1);
         }
         if ($enemyArmyId) {
             $result['enemyArmyId'] = $enemyArmyId;
@@ -313,9 +319,7 @@ class ComputerController extends Game_Controller_Action {
         }
         $this->view->response = Zend_Json::encode($result);
 
-        $mWebSocket = new Application_Model_WebSocket();
-        $mWebSocket->authorizeChannel($this->_mGame->getKeys());
-        $mWebSocket->publishChannel($this->_namespace->gameId, $this->_mGame->getPlayerColor($this->_namespace->player['playerId']) . '.A.' . $this->_mGame->getPlayerColor($this->playerId));
+        $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.A.' . $this->_mGame->getPlayerColor($this->playerId));
         $mWebSocket->close();
     }
 

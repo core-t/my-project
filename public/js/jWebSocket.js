@@ -2154,7 +2154,7 @@ jws.oop.declareClass( "jws", "jWebSocketBaseClient", null, {
 		// is client already connected
 		if( this.isOpened() ) {
 			try {
-                            console.log(aData);
+//                            console.log(aData); bk76
 				this.fConn.send( aData );
 			} catch( lEx ) {
 				// this is never fired !
