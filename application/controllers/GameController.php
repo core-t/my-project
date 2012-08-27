@@ -12,8 +12,8 @@ class GameController extends Game_Controller_Action {
 //        $this->view->headScript()->appendFile('http://jquery-websocket.googlecode.com/files/jquery.websocket-0.0.1.js');
 //         $this->view->headScript()->appendFile('/js/jquery.websocket-0.0.1.js');
 //        $this->view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js');
-        new Application_View_Helper_Logout($this->view, $this->_namespace->player);
-
+        new Application_View_Helper_Logout($this->_namespace->player);
+        new Application_View_Helper_Websocket();
     }
 
     public function indexAction() {
@@ -46,34 +46,40 @@ class GameController extends Game_Controller_Action {
             $neutralTowers = Application_Model_Board::getTowers();
             $playersTowers = $modelTower->getTowers();
             $towers = array();
-            foreach($neutralTowers as $k=>$tower){
+            foreach ($neutralTowers as $k => $tower) {
                 $towers[$k] = $neutralTowers[$k];
-                if(isset($playersTowers[$k])){
+                if (isset($playersTowers[$k])) {
                     $towers[$k]['color'] = $playersTowers[$k];
-                }else{
+                } else {
                     $towers[$k]['color'] = 'neutral';
                 }
             }
             $this->view->towers = $towers;
-            $startPositions = Application_Model_Board::getDefaultStartPositions();
+//            $startPositions = Application_Model_Board::getDefaultStartPositions();
             $players = $modelGame->getPlayersInGameReady();
             $this->view->players = array();
             $this->view->turn = array();
+
             $game = $modelGame->getGame();
-            $this->view->channel = $game['channel'];
+
+            $mWebSocket = new Application_Model_WebSocket();
+            $mWebSocket->createChannel($game);
+            $mWebSocket->close();
+
+            $this->view->game = $game;
             foreach ($players as $player) {
                 $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
                 $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);
                 $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
-                $this->view->players[$player['color']]['computer']  = $player['computer'];
-                $this->view->players[$player['color']]['lost']  = $player['lost'];
+                $this->view->players[$player['color']]['computer'] = $player['computer'];
+                $this->view->players[$player['color']]['lost'] = $player['lost'];
                 if ($game['turnPlayerId'] == $player['playerId']) {
                     $this->view->turn['playerId'] = $player['playerId'];
                     $this->view->turn['color'] = $player['color'];
                     $this->view->turn['nr'] = $game['turnNumber'];
                     $this->_namespace->turn = $this->view->turn;
                 }
-                if($this->_namespace->player['playerId'] == $player['playerId']){
+                if ($this->_namespace->player['playerId'] == $player['playerId']) {
                     $this->view->gold = $player['gold'];
                 }
             }
@@ -83,23 +89,25 @@ class GameController extends Game_Controller_Action {
             } else {
                 $this->view->myTurn = 'false';
             }
+
             $gameMasterId = $modelGame->getGameMaster();
-            if($gameMasterId == $this->_namespace->player['playerId']){
+            if ($gameMasterId == $this->_namespace->player['playerId']) {
                 $this->view->myGame = 1;
-            }else{
+            } else {
                 $this->view->myGame = 0;
             }
+
             $this->view->castlesSchema = array();
             $castlesSchema = Application_Model_Board::getCastlesSchema();
             $razed = $modelCastle->getRazedCastles();
             $this->view->ruins = Application_Model_Board::getRuins();
             $emptyRuins = $modelRuin->getVisited();
-            foreach($emptyRuins as $id=>$ruin){
+            foreach ($emptyRuins as $id => $ruin) {
                 $this->view->ruins[$id]['e'] = 1;
             }
             $this->view->fields = Application_Model_Board::getBoardFields();
-            foreach($castlesSchema as $id=>$castle){
-                if(!isset($razed[$id])){
+            foreach ($castlesSchema as $id => $castle) {
+                if (!isset($razed[$id])) {
                     $this->view->castlesSchema[$id] = $castle;
                 }
             }
@@ -123,7 +131,7 @@ class GameController extends Game_Controller_Action {
 //         $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
 //         $this->_helper->layout->setLayout('game');
 //         $castles = array();
-         $this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();
 //         $str = Application_Model_Board::production();
 //         $model = new Application_Model_Board();
 //         $Schema = $model->getCastlesSchema();

@@ -1,23 +1,21 @@
 <?php echo $this->doctype() ?>
 <html>
-    <head>        
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
+    <head>
         <?php
+        echo $this->headMeta() . "\n";
         echo $this->headTitle() . "\n";
         echo $this->headLink() . "\n";
         echo $this->headScript() . "\n";
-        echo $this->headMeta() . "\n";
         ?>
     </head>
     <body>
         <div id="page">
             <div id="menuTop">
-                <p>Server status: <span id="wsStatus">WebSocket not supported!</span></p>
+                <p>Server status: <span id="wsStatus">WebSocket disconnected</span></p>
                 <?php echo $this->placeholder('logout') ?>
             </div>
             <div id="content">
                 <?php echo $this->placeholder('mainMenu') ?>
-                <?php echo $this->placeholder('webSocket') ?>
                 <?php echo $this->layout()->content ?>
             </div>
         </div>

@@ -976,21 +976,21 @@ function enemyWalk(res) {
     }
 }
 
-function clearPlayerArmiesTrash(){
-    // czyszczenie śmieci
-    $('.army').each( function(){
-        var classList = $(this).attr('class').split(/\s+/);
-        console.log(classList[1]);
-        $.each( classList, function(index, item){
-            if (item === turn.color) {
-                var id = $(this).attr('id');
-                if(typeof players[turn.color].armies[id] == 'undefined'){
-                    $('#'+id).remove();
-                }
-            }
-        });
-    });
-}
+//function clearPlayerArmiesTrash(){
+//    // czyszczenie śmieci
+//    $('.army').each( function(){
+//        var classList = $(this).attr('class').split(/\s+/);
+//        console.log(classList[1]);
+//        $.each( classList, function(index, item){
+//            if (item === turn.color) {
+//                var id = $(this).attr('id');
+//                if(typeof players[turn.color].armies[id] == 'undefined'){
+//                    $('#'+id).remove();
+//                }
+//            }
+//        });
+//    });
+//}
 
 // *** UNITS ***
 

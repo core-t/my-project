@@ -50,7 +50,9 @@
     my.game = <?php echo $this->myGame ?>;
     turn.color = '<?php echo $this->turn['color'] ?>';
     turn.nr = '<?php echo $this->turn['nr'] ?>';
-    var channel = '<?php echo $this->channel ?>';
+    var channel = 'ch<?php echo $this->game['gameId'] ?>';
+    var lAccessKey = '<?php echo $this->game['lAccessKey'] ?>';
+    var lSecretKey = '<?php echo $this->game['lSecretKey'] ?>';
     var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
     var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
     var urlGetTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'get')) ?>';

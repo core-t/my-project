@@ -1,10 +1,8 @@
 <?php
 
-class LoadajaxController extends Game_Controller_Action
-{
+class LoadajaxController extends Game_Controller_Action {
 
-    public function _init()
-    {
+    public function _init() {
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
         if (empty($this->_namespace->gameId)) {
@@ -12,8 +10,7 @@ class LoadajaxController extends Game_Controller_Action
         }
     }
 
-    public function refreshAction()
-    {
+    public function refreshAction() {
         // action body
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         $modelGame->updatePlayerInGame($this->_namespace->player['playerId']);
@@ -21,29 +18,27 @@ class LoadajaxController extends Game_Controller_Action
         $this->view->response = Zend_Json::encode($response);
     }
 
-    public function updateAction()
-    {
+    public function updateAction() {
         // action body
         $color = $this->_request->getParam('color');
-        if(!empty($color)){
+        if (!empty($color)) {
             $modelGame = new Application_Model_Game($this->_namespace->gameId);
             $playerId = $modelGame->getPlayerIdByColor($color);
-            if(!empty($playerId)){
-                if($modelGame->playerIsAlive($playerId)){
+            if (!empty($playerId)) {
+                if ($modelGame->playerIsAlive($playerId)) {
                     $modelGame->updatePlayerInGame($playerId);
                     $response = $modelGame->getPlayersWaitingForGame();
                     $this->view->response = Zend_Json::encode($response);
-                }else{
+                } else {
                     throw new Exception('Player not alive!');
                 }
-            }else{
+            } else {
                 throw new Exception('Brak playerId!');
             }
-        }else{
+        } else {
             throw new Exception('Brak color!');
         }
     }
+
 }
-
-
 

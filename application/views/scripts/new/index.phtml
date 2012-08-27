@@ -16,7 +16,7 @@
     var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'gameId' => null)) ?>';
     var mygames = $('.table table');
     function refresh() {
-        $.getJSON("<?php echo $this->url(array('controller' => 'newajax', 'action' => 'refresh')) ?>", function(result) {
+        $.getJSON("/newajax/refresh", function(result) {
 
             mygames.html('');
             mygames.append(th);

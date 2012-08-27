@@ -131,7 +131,7 @@ function startGame(){
                 }
             }
         }
-        auth();
+//        auth();
         showFirstCastle();
         if(!myArmies && !myCastles){
             lostM();
@@ -142,8 +142,6 @@ function startGame(){
                 turnOff();
             }
         }
-        wsPing();
-        setInterval ( 'wsPing()', 10000 );
         if(my.turn && !players[my.color].turnActive){
             startMyTurnA();
         } else if(my.game && players[turn.color].computer){

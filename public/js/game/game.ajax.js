@@ -22,7 +22,7 @@ function computerA(){
                     }
                     break;
                 case 'end':
-                    wsTurn();
+//                    wsTurn();
                     changeTurn(result.color, result.nr);
                     if(players[result.color].computer){
                         computerA();
@@ -62,10 +62,11 @@ function nextTurnA() {
                 changeTurn(result.color, result.nr);
                 computerA();
             }
-            wsTurn();
+//            wsTurn();
         });
 
     }
+    return null;
 }
 
 function getTurnA() {
@@ -449,16 +450,5 @@ function getRuinA(ruinId){
 }
 
 function addTowerA(towerId){
-    //    if(!my.turn){
-    //        return null;
-    //    }
-    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color, function() {
-        wsAddTower(towerId);
-    });
-}
-
-function getTowerA(towerId){
-    $.getJSON(urlTowerGet+'/tid/'+towerId, function(result) {
-        changeEnemyTower(result.towerId, result.color);
-    });
+    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color);
 }

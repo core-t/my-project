@@ -108,6 +108,7 @@
         <modelFile modelName="Tower"/>
         <modelFile modelName="Map"/>
         <modelFile modelName="Artefact"/>
+        <modelFile modelName="WebSocket"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>

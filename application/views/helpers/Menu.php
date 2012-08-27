@@ -2,30 +2,31 @@
 
 class Application_View_Helper_Menu extends Zend_View_Helper_Abstract {
 
-    public function __construct($view, $params) {
+    public function __construct() {
+        $view = new Zend_View();
         $view->placeholder('mainMenu')->append('
 <div>
     <ul>
         <li>
-            <a href="'.$view->url(array('controller'=>'index', 'action'=>null)).'" class="button">Home</a>
+            <a href="/index" class="button">Home</a>
         </li>
         <li>
-            <a href="'.$view->url(array('controller'=>'new', 'action'=>null)).'" class="button">New game</a>
+            <a href="/new" class="button">New game</a>
         </li>
         <li>
-            <a href="'.$view->url(array('controller'=>'load', 'action'=>null)).'" class="button">Load game</a>
+            <a href="/load" class="button">Load game</a>
         </li>
         <li>
-            <a href="'.$view->url(array('controller'=>'hero', 'action'=>null)).'" class="button">Hero</a>
+            <a href="/hero" class="button">Hero</a>
         </li>
         <li>
-            <a href="'.$view->url(array('controller'=>'stats', 'action'=>null)).'" class="button">Stats</a>
+            <a href="/stats" class="button">Stats</a>
         </li>
         <li>
-            <a href="'.$view->url(array('controller'=>'editor', 'action'=>null)).'" class="button">Map editor</a>
+            <a href="/editor" class="button">Map editor</a>
         </li>
         <!--<li>
-            <a href="'.$view->url(array('controller'=>'market', 'action'=>null)).'" class="button">Market</a>
+            <a href="/market" class="button">Market</a>
         </li>-->
     </ul>
 </div>
