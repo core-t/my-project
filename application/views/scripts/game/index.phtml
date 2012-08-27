@@ -53,11 +53,11 @@
     var channel = 'ch<?php echo $this->game['gameId'] ?>';
     var lAccessKey = '<?php echo $this->game['lAccessKey'] ?>';
     var lSecretKey = '<?php echo $this->game['lSecretKey'] ?>';
-    var urlMove = '<?php echo $this->url(array('controller' => 'move', 'action' => 'go', 'armyId' => null, 'x' => null, 'y' => null)) ?>';
-    var urlNextTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'next')) ?>';
-    var urlGetTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'get')) ?>';
-    var urlStartMyTurn = '<?php echo $this->url(array('controller' => 'turn', 'action' => 'start')) ?>';
-    var urlFightEnemyCastle = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'ecastle')) ?>';
+    var urlMove = '/move/go/armyId';
+    var urlNextTurn = '/turn/action/next';
+    var urlGetTurn = '/turn/get';
+    var urlStartMyTurn = '/turn/action/start';
+    var urlFightEnemyCastle = '/fight/action/ecastle';
     var urlFightNeutralCastle = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'ncastle')) ?>';
     var urlFightArmy = '<?php echo $this->url(array('controller' => 'fight', 'action' => 'army')) ?>';
     var urlAddArmy = '<?php echo $this->url(array('controller' => 'gameajax', 'action' => 'addarmy')) ?>';
@@ -75,6 +75,7 @@
     var urlTowerAdd = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'add')) ?>';
     var urlTowerGet = '<?php echo $this->url(array('controller' => 'tower', 'action' => 'get')) ?>';
     var urlComputer = '<?php echo $this->url(array('controller' => 'computer', 'action' => null)) ?>';
+    var urlChatSend = '/chat/send';
     <?php $this->headScript()->captureEnd() ?>
     var zoomPad = $(".zoomPad");
     var board = $("#board")
@@ -106,8 +107,8 @@
         cursorPosition(e.pageX, e.pageY);
     })
     .mouseleave(function(){$('.path').remove()});
-    $('#send').click(function(){wsChat()});
-    $('#msg').keypress(function(e){if(e.which == 13)wsChat()});
+    $('#send').click(function(){sendChatA()});
+    $('#msg').keypress(function(e){if(e.which == 13)sendChatA()});
     $('.'+my.color+' .color').append('You');
     $('.'+turn.color+' .turn').html('Turn >');
     $('#turnNumber').html(turn.nr);

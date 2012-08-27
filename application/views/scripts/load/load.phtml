@@ -3,6 +3,8 @@
 <p>Number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
 <p>Game: "<?php echo $this->game['gameId'] ?>"</p>
 <p>Game started: "<?php echo substr($this->game['begin'], 0, strpos($this->game['begin'], '.')) ?>"</p>
+<p>Turn number: "<?php echo $this->game['turnNumber'] ?>"</p>
+<p>Game last played: "<?php echo substr($this->game['end'], 0, strpos($this->game['end'], '.')) ?>"</p>
 
 <h2>Players:</h2>
 <table id="playersingame">
@@ -26,6 +28,9 @@ $script = '
     var ready = 0;
     var playerId = ' . (int) $this->player['playerId'] . ';
     var color = "' . $this->player['color'] . '";
+    var gameMasterId = ' . $this->game['gameMasterId'] . ';
+
+
     var channel = "ch' . $this->game['gameId'] . '";
     var lAccessKey = "' . $this->game['lAccessKey'] . '";
     var lSecretKey = "' . $this->game['lSecretKey'] . '";

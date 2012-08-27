@@ -18,8 +18,6 @@ var quitedArmies = new Array();
 
 var zoomer;
 
-var nextArmy;
-
 var cursorDirection;
 
 var documentTitle = document.title;
@@ -37,9 +35,6 @@ $(document).ready(function() {
     login();
     zoomer = new zoom(760, 670);
     setTimeout ( 'connect()', 1500 );
-
-//    $(window).load(function () {
-//    });
 
 });
 
@@ -171,8 +166,8 @@ function updatePlayers(color){
     players[color].active = 2;
 }
 
-function chat(color,msg){
-    var chatWindow = $('#chatWindow div').append('<br/>').append(color+': '+msg);
+function chat(color,msg,time){
+    var chatWindow = $('#chatWindow div').append('<br/>').append(color+' ('+time+'): '+msg);
     var scroll = 120 - chatWindow[0].scrollHeight;
     chatWindow.animate({
         'top':scroll

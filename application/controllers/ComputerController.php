@@ -2,7 +2,7 @@
 
 class ComputerController extends Game_Controller_Action {
 
-    private $modelGame;
+    private $_mGame;
     private $modelArmy;
     private $playerId;
 
@@ -12,21 +12,21 @@ class ComputerController extends Game_Controller_Action {
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');
         }
-        $this->modelGame = new Application_Model_Game($this->_namespace->gameId);
+        $this->_mGame = new Application_Model_Game($this->_namespace->gameId);
         $this->modelArmy = new Application_Model_Army($this->_namespace->gameId);
     }
 
     public function indexAction() {
         // action body
-        if (!$this->modelGame->isGameMaster($this->_namespace->player['playerId'])) {
+        if (!$this->_mGame->isGameMaster($this->_namespace->player['playerId'])) {
             throw new Exception('Nie Twoja gra!');
         }
-        $this->playerId = $this->modelGame->getTurnPlayerId();
+        $this->playerId = $this->_mGame->getTurnPlayerId();
         $modelPlayer = new Application_Model_Player(null, false);
         if (!$modelPlayer->isComputer($this->playerId)) {
             throw new Exception('To nie komputer!');
         }
-        if (!$this->modelGame->playerTurnActive($this->playerId)) {
+        if (!$this->_mGame->playerTurnActive($this->playerId)) {
             $this->startTurn();
         } else {
             $army = $this->modelArmy->getComputerArmyToMove($this->playerId);
@@ -137,12 +137,12 @@ class ComputerController extends Game_Controller_Action {
                 } else {
                     new Game_Logger('BRAK MOJEJ ARMII W ZASIĘGU');
                     $castle = Game_Computer::getMyCastelNearEnemy($enemies, $army, $castlesAndFields['fields'], $myCastles);
-                    if($castle){
+                    if ($castle) {
                         new Game_Logger('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
                         $this->modelArmy->updateArmyPosition($army['armyId'], $this->playerId, $castle['currentPosition']);
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                         $this->endMove($army['armyId'], $castle['currentPosition'], $castle['path']);
-                    }else{
+                    } else {
                         new Game_Logger('NIE MA MOJEGO ZAMKU W POBLIŻU WROGA - ZOSTAŃ');
                         $this->modelArmy->zeroArmyMovesLeft($army['armyId'], $this->playerId);
                         $this->endMove($army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
@@ -312,16 +312,21 @@ class ComputerController extends Game_Controller_Action {
             $result['battle'] = $battle;
         }
         $this->view->response = Zend_Json::encode($result);
+
+        $mWebSocket = new Application_Model_WebSocket();
+        $mWebSocket->authorizeChannel($this->_mGame->getKeys());
+        $mWebSocket->publishChannel($this->_namespace->gameId, $this->_mGame->getPlayerColor($this->_namespace->player['playerId']) . '.A.' . $this->_mGame->getPlayerColor($this->playerId));
+        $mWebSocket->close();
     }
 
     private function endTurn() {
         $youWin = false;
         $response = array();
         $nextPlayer = array(
-            'color' => $this->modelGame->getPlayerColor($this->playerId)
+            'color' => $this->_mGame->getPlayerColor($this->playerId)
         );
         while (empty($response)) {
-            $nextPlayer = $this->modelGame->nextTurn($nextPlayer['color']);
+            $nextPlayer = $this->_mGame->nextTurn($nextPlayer['color']);
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $playerCastlesExists = $modelCastle->playerCastlesExists($nextPlayer['playerId']);
             $playerArmiesExists = $this->modelArmy->playerArmiesExists($nextPlayer['playerId']);
@@ -329,9 +334,9 @@ class ComputerController extends Game_Controller_Action {
                 $response = $nextPlayer;
                 if ($nextPlayer['playerId'] == $this->playerId) {
                     $youWin = true;
-                    $this->modelGame->endGame();
+                    $this->_mGame->endGame();
                 } else {
-                    $nr = $this->modelGame->updateTurnNumber($nextPlayer['playerId']);
+                    $nr = $this->_mGame->updateTurnNumber($nextPlayer['playerId']);
                     if ($nr) {
                         $response['nr'] = $nr;
                     }
@@ -339,7 +344,7 @@ class ComputerController extends Game_Controller_Action {
                 }
                 $response['win'] = $youWin;
             } else {
-                $this->modelGame->setPlayerLostGame($nextPlayer['playerId']);
+                $this->_mGame->setPlayerLostGame($nextPlayer['playerId']);
             }
         }
         $response['action'] = 'end';
@@ -347,14 +352,14 @@ class ComputerController extends Game_Controller_Action {
     }
 
     private function startTurn() {
-        $this->modelGame->turnActivate($this->playerId);
+        $this->_mGame->turnActivate($this->playerId);
         $castles = array();
         $this->modelArmy->resetHeroesMovesLeft($this->playerId);
         $this->modelArmy->resetSoldiersMovesLeft($this->playerId);
-        $gold = $this->modelGame->getPlayerInGameGold($this->playerId);
+        $gold = $this->_mGame->getPlayerInGameGold($this->playerId);
         $income = 0;
         $costs = 0;
-        $turnNumber = $this->modelGame->getTurnNumber();
+        $turnNumber = $this->_mGame->getTurnNumber();
         if ($turnNumber > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->playerId);
@@ -400,7 +405,7 @@ class ComputerController extends Game_Controller_Action {
                     }
                 }
                 $gold = $gold + $income - $costs;
-                $this->modelGame->updatePlayerInGameGold($this->playerId, $gold);
+                $this->_mGame->updatePlayerInGameGold($this->playerId, $gold);
 
                 $this->view->response = Zend_Json::encode(array('action' => 'continue'));
             }

@@ -96,13 +96,13 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getAlivePlayers() {
+        $select = $this->_db->select()
+                ->from(array('a' => 'playersingame'), array('lost', 'color'))
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'playerId'))
+                ->where('ready = true')
+                ->where('color IS NOT NULL')
+                ->where('"' . $this->_primary . '" = ?', $this->_gameId); //throw new Exception($select->__toString());
         try {
-            $select = $this->_db->select()
-                    ->from('playersingame', 'playerId')
-                    ->where('ready = true')
-                    ->where('color IS NOT NULL')
-                    ->where('lost = false')
-                    ->where('"' . $this->_primary . '" = ?', $this->_gameId); //throw new Exception($select->__toString());
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
@@ -160,15 +160,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getPlayerIdByColor($color) {
+        $select = $this->_db->select()
+                ->from('playersingame', 'playerId')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('color = ?', $color);
         try {
-            $select = $this->_db->select()
-                    ->from('playersingame', 'playerId')
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('color = ?', $color);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0]['playerId'])) {
-                return $result[0]['playerId'];
-            }
+            return $this->_db->fetchOne($select);
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
@@ -300,28 +297,33 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getPlayersInGameLoad() {
+        $select = $this->_db->select()
+                ->from(array('a' => 'playersingame'), array('ready', 'color', 'playerId'))
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
+                ->join(array('c' => 'game'), 'a."gameId" = c."gameId"', 'gameMasterId')
+                ->where('a."gameId" = ?', $this->_gameId)
+                ->where('color IS NOT NULL')
+                ->where('"timeout" > (SELECT now() - interval \'10 seconds\') OR computer = true');
         try {
-            $select = $this->_db->select()
-                    ->from(array('a' => 'playersingame'), array('ready', 'color', 'playerId'))
-                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
-                    ->join(array('c' => 'game'), 'a."gameId" = c."gameId"', 'gameMasterId')
-                    ->where('a."gameId" = ?', $this->_gameId)
-                    ->where('color IS NOT NULL')
-                    ->where('"timeout" > (SELECT now() - interval \'10 seconds\') OR computer = true');
-            return $this->_db->query($select)->fetchAll();
+            $array = $this->_db->query($select)->fetchAll();
+            $result = array();
+            foreach ($array as $value) {
+                $result[$value['color']] = $value;
+            }
+            return $result;
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
 
     public function getComputerPlayerId() {
+        $select = $this->_db->select()
+                ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+                ->where('a."gameId" != ?', $this->_gameId)
+                ->where('ready = true')
+                ->where('computer = true'); //throw new Exception($select->__toString());
         try {
-            $select = $this->_db->select()
-                    ->from(array('a' => 'playersingame'), 'min(b."playerId")')
-                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-                    ->where('a."gameId" != ?', $this->_gameId)
-                    ->where('ready = true')
-                    ->where('computer = true'); //throw new Exception($select->__toString());
             $ids = $this->getComputerPlayersIds();
             if ($ids) {
                 $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
@@ -557,7 +559,10 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
                     ->where('"' . $this->_primary . '" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
-            $data['turnNumber'] = $result[0]['turnNumber'];
+            $data = array(
+                'turnNumber' => $result[0]['turnNumber'],
+                'end' => new Zend_Db_Expr('now()')
+            );
         }
         $data['turnPlayerId'] = $playerId;
 

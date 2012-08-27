@@ -6,23 +6,22 @@ function computerA(){
         return null;
     }
     $.getJSON(urlComputer, function(result) {
-       console.log(result);
+        console.log(result);
         removeM();
         if(typeof result.action != 'undefined'){
             switch(result.action){
                 case 'continue':
                     if(typeof result.oldArmyId == 'undefined'){
-                        wsPlayerArmies(turn.color);
+//                        wsPlayerArmies(turn.color);
                         $.when(getPlayerArmiesA(turn.color)).then(computerA());
                     }else if(typeof result.path != 'undefined'){
-//                        waitOn();
+                        //                        waitOn();
                         enemyWalk(result);
                     }else{
                         computerA();
                     }
                     break;
                 case 'end':
-//                    wsTurn();
                     changeTurn(result.color, result.nr);
                     if(players[result.color].computer){
                         computerA();
@@ -62,7 +61,7 @@ function nextTurnA() {
                 changeTurn(result.color, result.nr);
                 computerA();
             }
-//            wsTurn();
+        //            wsTurn();
         });
 
     }
@@ -86,7 +85,7 @@ function startMyTurnA() {
         if(result['gameover']){
             lostM();
         }else{
-            wsPlayerArmies(my.color);
+//            wsPlayerArmies(my.color);
             goldUpdate(result['gold']);
             $('#costs').html(result['costs']);
             $('#income').html(result['income']);
@@ -451,4 +450,22 @@ function getRuinA(ruinId){
 
 function addTowerA(towerId){
     $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color);
+}
+
+function sendChatA(){
+    var msg = $('#msg').val();
+    var dataToBeSent = $('<input type="text" name="m" value="'+msg+'" />').serialize();
+    $.post(urlChatSend+'/c/'+my.color, dataToBeSent, function(result, textStatus) {
+        if(textStatus == 'success'){
+            var d = new Date();
+            var minutes = d.getMinutes();
+            if(minutes.length == 1){
+                minutes = '0'+minutes
+            }
+            var time = d.getHours()+':'+minutes;
+
+            chat(my.color,msg,time);
+            $('#msg').val('');
+        }
+    }, "json");
 }

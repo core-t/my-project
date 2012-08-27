@@ -148,42 +148,42 @@ function wsCastle(castleId) {
 //    lWSC.channelPublish(channel,my.color+'.t');
 //}
 
-function wsChat() {
-    var msg = $('#msg').val();
-    $('#msg').val('');
-    if(msg){
-        chat(my.color,msg);
-        lWSC.channelPublish(channel,my.color+'.C.'+msg);
-    }
-}
+//function wsChat() {
+//    var msg = $('#msg').val();
+//    $('#msg').val('');
+//    if(msg){
+//        chat(my.color,msg);
+//        lWSC.channelPublish(channel,my.color+'.C.'+msg);
+//    }
+//}
 
-function wsPing() {
-    lWSC.channelPublish(channel,my.color+'.p');
-    //    lWSC.channelPublishString(channel,my.color+'.p');
-    for(color in players){
-        if(color == my.color){
-            continue;
-        }
-        if(players[color].computer){
-            if(players[color].lost){
-                $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
-            }
-            continue;
-        }
-        if(players[color].lost){
-            $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
-        }else if(players[color].active){
-            players[color].active--;
-            $('.'+color+' .color').css('background',color+' url(../img/game/smile.png) center center no-repeat');
-        }else{
-            $('.'+color+' .color').css('background',color+' url(../img/game/ajax_wait.gif) center center no-repeat');
-        }
-    }
-}
+//function wsPing() {
+//    lWSC.channelPublish(channel,my.color+'.p');
+//    //    lWSC.channelPublishString(channel,my.color+'.p');
+//    for(color in players){
+//        if(color == my.color){
+//            continue;
+//        }
+//        if(players[color].computer){
+//            if(players[color].lost){
+//                $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
+//            }
+//            continue;
+//        }
+//        if(players[color].lost){
+//            $('.'+color+' .color').css('background',color+' url(../img/game/skull_and_crossbones.png) center center no-repeat');
+//        }else if(players[color].active){
+//            players[color].active--;
+//            $('.'+color+' .color').css('background',color+' url(../img/game/smile.png) center center no-repeat');
+//        }else{
+//            $('.'+color+' .color').css('background',color+' url(../img/game/ajax_wait.gif) center center no-repeat');
+//        }
+//    }
+//}
 
-function wsPlayerArmies(color){
-    lWSC.channelPublish(channel,my.color+'.A.'+color);
-}
+//function wsPlayerArmies(color){
+//    lWSC.channelPublish(channel,my.color+'.A.'+color);
+//}
 
 function wsArmyMove(x, y, armyId) {
     lWSC.channelPublish(channel,my.color+'.m.'+x+'.'+y+'.'+armyId);

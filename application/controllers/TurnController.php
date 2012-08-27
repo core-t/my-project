@@ -64,23 +64,23 @@ class TurnController extends Game_Controller_Action {
     }
 
     public function startAction() {
-        $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        if (!$modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
+        $mGame = new Application_Model_Game($this->_namespace->gameId);
+        if (!$mGame->isPlayerTurn($this->_namespace->player['playerId'])) {
             throw new Exception('To nie jest moja tura.');
             return false;
         }
-        if ($modelGame->playerTurnActive($this->_namespace->player['playerId'])) {
+        if ($mGame->playerTurnActive($this->_namespace->player['playerId'])) {
             throw new Exception('Tura jest już aktywna. Próba ponownego aktywowania tury i wygenerowania produkcji.');
         }
-        $modelGame->turnActivate($this->_namespace->player['playerId']);
+        $mGame->turnActivate($this->_namespace->player['playerId']);
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
         $castles = array();
         $modelArmy->resetHeroesMovesLeft($this->_namespace->player['playerId']);
         $modelArmy->resetSoldiersMovesLeft($this->_namespace->player['playerId']);
-        $gold = $modelGame->getPlayerInGameGold($this->_namespace->player['playerId']);
+        $gold = $mGame->getPlayerInGameGold($this->_namespace->player['playerId']);
         $income = 0;
         $costs = 0;
-        if ($modelGame->getTurnNumber() > 0) {
+        if ($mGame->getTurnNumber() > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->_namespace->player['playerId']);
             foreach ($castlesId as $id) {
@@ -112,7 +112,6 @@ class TurnController extends Game_Controller_Action {
             $this->view->response = Zend_Json::encode(array('gameover' => 1));
         } else {
             $array = array();
-            $resutl = array();
             foreach ($armies as $k => $army) {
                 foreach ($army['soldiers'] as $unit) {
                     $costs += $unit['cost'];
@@ -120,14 +119,22 @@ class TurnController extends Game_Controller_Action {
                 $array['army' . $army['armyId']] = $army;
             }
             $gold = $gold + $income - $costs;
-            $modelGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
-            $resutl['gold'] = $gold;
-            $resutl['costs'] = $costs;
-            $resutl['income'] = $income;
-            $resutl['armies'] = $array;
-            $resutl['castles'] = $castles;
-            $resutl['gameover'] = 0;
+            $mGame->updatePlayerInGameGold($this->_namespace->player['playerId'], $gold);
+            $resutl = array(
+                'gold' => $gold,
+                'costs' => $costs,
+                'income' => $income,
+                'armies' => $array,
+                'castles' => $castles,
+                'gameover' => 0
+            );
             $this->view->response = Zend_Json::encode($resutl);
+
+            $mWebSocket = new Application_Model_WebSocket();
+            $mWebSocket->authorizeChannel($mGame->getKeys());
+            $color = $mGame->getPlayerColor($this->_namespace->player['playerId']);
+            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.A.' . $color);
+            $mWebSocket->close();
         }
     }
 
