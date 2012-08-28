@@ -40,9 +40,6 @@ Image19.src = '../img/game/cursor_arrow_sw.png';
 var newX = 0;
 var newY = 0;
 
-var turn = new Array();
-var my = new Array();
-
 var lock = true;
 
 var selectedArmy = null;
@@ -56,6 +53,8 @@ var skippedArmies = new Array();
 var quitedArmies = new Array();
 
 var zoomer;
+var zoomPad;
+var board;
 
 var cursorDirection;
 
@@ -92,12 +91,97 @@ var urlTowerGet = '/tower/get';
 var urlComputer = '/computer';
 var urlChatSend = '/chat/send';
 
+function prepareButtons(){
+    zoomPad = $(".zoomPad");
+    board = $("#board")
+    .mousedown(function(event) {
+        if(!lock) {
+            switch (event.which) {
+                case 1:
+                    if(selectedArmy) {
+                        moveA(cursorPosition(event.pageX, event.pageY, 1));
+                    }
+                    break;
+                case 2:
+                    alert('Middle mouse button pressed');
+                    break;
+                case 3:
+                    unselectArmy();
+                    break;
+                default:
+                    alert('You have a strange mouse');
+            }
+        }
+    })
+    .mousemove(function(e) {
+        if(!lock) {
+            cursorPosition(e.pageX, e.pageY);
+        }
+    })
+    .mouseleave(function(){
+        $('.path').remove()
+    });
+    $('#send').click(function(){
+        sendChatA()
+    });
+    $('#msg').keypress(function(e){
+        if(e.which == 13)sendChatA()
+    });
+    $('#nextTurn').click(function(){
+        nextTurnM()
+    });
+    $('#nextArmy').click(function(){
+        findNextArmy()
+    });
+    $('#skipArmy').click(function(){
+        skipArmy()
+    });
+    $('#quitArmy').click(function(){
+        quitArmy()
+    });
+    $('#splitArmy').click(function(){
+        if(selectedArmy){
+            splitArmyM()
+        }
+    });
+    $('#armyStatus').click(function(){
+        if(selectedArmy){
+            armyStatusM()
+        }
+    });
+    $('#disbandArmy').click(function(){
+        if(selectedArmy){
+            disbandArmyM()
+        }
+    });
+    $('#searchRuins').click(function(){
+        searchRuinsA()
+    });
+    $('#test').click(function(){
+        test()
+    });
+    $('#nextTurn').addClass('buttonOff');
+    $('#nextArmy').addClass('buttonOff');
+    $('#skipArmy').addClass('buttonOff');
+    $('#quitArmy').addClass('buttonOff');
+    $('#splitArmy').addClass('buttonOff');
+    $('#disbandArmy').addClass('buttonOff');
+    $('#searchRuins').addClass('buttonOff');
+
+    $('.'+my.color+' .color').append('You');
+    $('.'+turn.color+' .turn').html('Turn >');
+    $('#turnNumber').html(turn.nr);
+}
+
 $(document).ready(function() {
+    prepareButtons();
+
     terrain();
     lWSC = new jws.jWebSocketJSONClient();
     login();
     zoomer = new zoom(760, 670);
     setTimeout ( 'connect()', 1500 );
+
 
 });
 

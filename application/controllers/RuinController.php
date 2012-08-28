@@ -12,7 +12,7 @@ class RuinController extends Game_Controller_Action {
 
     public function searchAction() {
         $armyId = $this->_request->getParam('aid');
-        if (!empty($armyId)) {
+        if (Zend_Validate::is($armyId, 'Digits')) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $heroId = $modelArmy->getHeroIdByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
             if (empty($heroId)) {
@@ -20,17 +20,16 @@ class RuinController extends Game_Controller_Action {
             }
             $position = $modelArmy->getArmyPositionByArmyId($armyId, $this->_namespace->player['playerId']);
             $ruinId = Application_Model_Board::confirmRuinPosition($position);
-            if ($ruinId !== null) {
+            if (Zend_Validate::is($ruinId, 'Digits')) {
                 $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
                 if ($modelRuin->ruinExists($ruinId)) {
                     $response = $modelArmy->getArmyById($armyId);
-                    $response['find'] = 'empty';
+                    $response['find'] = array('null', 1);
                     $response['ruinId'] = $ruinId;
                     $this->view->response = Zend_Json::encode($response);
                     return null;
 //                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
-                $modelRuin->addRuin($ruinId);
                 $find = $modelRuin->searchRuin($heroId, $armyId, $this->_namespace->player['playerId']);
                 $response = $modelArmy->getArmyById($armyId);
                 $response['find'] = $find;
@@ -41,7 +40,13 @@ class RuinController extends Game_Controller_Action {
 
                 $mWebSocket = new Application_Model_WebSocket();
                 $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
-                $mWebSocket->publishChannel($this->_namespace->gameId, $mGame->getPlayerColor($this->_namespace->player['playerId']) . '.r.' . $ruinId . '.' . $response['find']);
+                if ($response['find'][0] == 'death') {
+                    $empty = 0;
+                } else {
+                    $modelRuin->addRuin($ruinId);
+                    $empty = 1;
+                }
+                $mWebSocket->publishChannel($this->_namespace->gameId, $mGame->getPlayerColor($this->_namespace->player['playerId']) . '.r.' . $ruinId . '.' . $empty);
                 $mWebSocket->close();
             } else {
                 throw new Exception('Brak ruinId');

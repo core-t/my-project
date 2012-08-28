@@ -558,16 +558,16 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
             $select = $this->_db->select()
                     ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
                     ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
+            $result = $this->_db->fetchRow($select);
             $data = array(
-                'turnNumber' => $result[0]['turnNumber'],
+                'turnNumber' => $result['turnNumber'],
                 'end' => new Zend_Db_Expr('now()')
             );
         }
         $data['turnPlayerId'] = $playerId;
 
         if ($this->updateGame($data) == 1) {
-            if (isset($data['turnNumber'])) {
+            if (isset($data['turnNumber']) && Zend_Validate::is($data['turnNumber'], 'Digits')) {
                 return $data['turnNumber'];
             }
         } else {
@@ -582,15 +582,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getTurn() {
+        $select = $this->_db->select()
+                ->from(array('a' => $this->_name), array('nr' => 'turnNumber'))
+                ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
+                ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
         try {
-            $select = $this->_db->select()
-                    ->from(array('a' => $this->_name), array('nr' => 'turnNumber'))
-                    ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
-                    ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0])) {
-                return $result[0];
-            }
+            return $this->_db->fetchRow($select);
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }

@@ -26,7 +26,20 @@ function login() {
                         delete data[1];
                         switch(event){
                             case 't':
-                                getTurnA();
+                                //                                getTurnA();
+                                console.log(data);
+                                unselectArmy();
+                                if(data[4]){
+                                    lostM();
+                                }else{
+                                    console.log(data[2]);
+                                    console.log(data[3]);
+                                    if(!data[3]){
+                                        unset(data[3]);
+                                    }
+                                    changeTurn(data[2], data[3]);
+                                    computerA();
+                                }
                                 break;
                             case 'p':
                                 updatePlayers(color);

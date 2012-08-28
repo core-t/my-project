@@ -345,6 +345,11 @@ class ComputerController extends Game_Controller_Action {
                         $response['nr'] = $nr;
                     }
                     $modelCastle->raiseAllCastlesProductionTurn($this->playerId);
+                    $mWebSocket = new Application_Model_WebSocket();
+                    $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
+                    $nextTurn = $this->_mGame->getTurn();
+                    $mWebSocket->publishChannel($this->_namespace->gameId, $this->_mGame->getPlayerColor($this->_namespace->player['playerId']) . '.t.' . $nextTurn['color'] . '.' . $nextTurn['nr'] . '.' . $nextTurn['lost']);
+                    $mWebSocket->close();
                 }
                 $response['win'] = $youWin;
             } else {

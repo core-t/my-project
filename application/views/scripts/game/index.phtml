@@ -1,72 +1,22 @@
-<script type="text/javascript">
-    <?php $this->headScript()->captureStart() ?>
-    var fields = <?php echo Zend_Json::encode($this->fields); ?>;
-    var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
-    var units = <?php echo Zend_Json::encode($this->units); ?>;
-    var towers = <?php echo Zend_Json::encode($this->towers); ?>;
-    var artefacts = <?php echo Zend_Json::encode($this->artefacts); ?>;
-    var players = <?php echo Zend_Json::encode($this->players); ?>;
-    var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
-    my.color = '<?php echo $this->color ?>';
-    my.turn = <?php echo $this->myTurn ?>;
-    my.game = <?php echo $this->myGame ?>;
-    turn.color = '<?php echo $this->turn['color'] ?>';
-    turn.nr = '<?php echo $this->turn['nr'] ?>';
-    var channel = 'ch<?php echo $this->game['gameId'] ?>';
-    var lAccessKey = '<?php echo $this->game['lAccessKey'] ?>';
-    var lSecretKey = '<?php echo $this->game['lSecretKey'] ?>';
-    <?php $this->headScript()->captureEnd() ?>
-    var zoomPad = $(".zoomPad");
-    var board = $("#board")
-    .mousedown(function(event) {
-        if(lock) {
-            return null;
-        }
-
-        switch (event.which) {
-            case 1:
-                if(selectedArmy) {
-                    moveA(cursorPosition(event.pageX, event.pageY, 1));
-                }
-                break;
-            case 2:
-                alert('Middle mouse button pressed');
-                break;
-            case 3:
-                unselectArmy();
-                break;
-            default:
-                alert('You have a strange mouse');
-        }
-    })
-    .mousemove(function(e) {
-        if(lock) {
-            return null;
-        }
-        cursorPosition(e.pageX, e.pageY);
-    })
-    .mouseleave(function(){$('.path').remove()});
-    $('#send').click(function(){sendChatA()});
-    $('#msg').keypress(function(e){if(e.which == 13)sendChatA()});
-    $('.'+my.color+' .color').append('You');
-    $('.'+turn.color+' .turn').html('Turn >');
-    $('#turnNumber').html(turn.nr);
-    $('#nextTurn').click(function(){nextTurnM()});
-    $('#nextArmy').click(function(){findNextArmy()});
-    $('#skipArmy').click(function(){skipArmy()});
-    $('#quitArmy').click(function(){quitArmy()});
-    $('#splitArmy').click(function(){if(selectedArmy){splitArmyM()}});
-    $('#armyStatus').click(function(){if(selectedArmy){armyStatusM()}});
-    $('#disbandArmy').click(function(){if(selectedArmy){disbandArmyM()}});
-    $('#searchRuins').click(function(){searchRuinsA()});
-    $('#test').click(function(){test()});
-    $('#nextTurn').addClass('buttonOff');
-    $('#nextArmy').addClass('buttonOff');
-    $('#skipArmy').addClass('buttonOff');
-    $('#quitArmy').addClass('buttonOff');
-    $('#splitArmy').addClass('buttonOff');
-    $('#disbandArmy').addClass('buttonOff');
-    $('#searchRuins').addClass('buttonOff');
+<?php $this->headScript()->captureStart() ?>
+var fields = <?php echo Zend_Json::encode($this->fields); ?>;
+var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
+var units = <?php echo Zend_Json::encode($this->units); ?>;
+var towers = <?php echo Zend_Json::encode($this->towers); ?>;
+var artefacts = <?php echo Zend_Json::encode($this->artefacts); ?>;
+var players = <?php echo Zend_Json::encode($this->players); ?>;
+var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
+var my = new Array();
+my.color = '<?php echo $this->color ?>';
+my.turn = <?php echo $this->myTurn ?>;
+my.game = <?php echo $this->myGame ?>;
+var turn = new Array();
+turn.color = '<?php echo $this->turn['color'] ?>';
+turn.nr = '<?php echo $this->turn['nr'] ?>';
+var channel = 'ch<?php echo $this->game['gameId'] ?>';
+var lAccessKey = '<?php echo $this->game['lAccessKey'] ?>';
+var lSecretKey = '<?php echo $this->game['lSecretKey'] ?>';
+$(document).ready(function() {
     goldUpdate(<?php echo $this->gold ?>);
-
-</script>
+});
+<?php $this->headScript()->captureEnd() ?>

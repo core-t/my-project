@@ -11,18 +11,18 @@ class TurnController extends Game_Controller_Action {
     }
 
     public function nextAction() {
-        $modelGame = new Application_Model_Game($this->_namespace->gameId);
-        if ($modelGame->playerLost($this->_namespace->player['playerId'])) {
+        $mGame = new Application_Model_Game($this->_namespace->gameId);
+        if ($mGame->playerLost($this->_namespace->player['playerId'])) {
             return null;
         }
-        if ($modelGame->isPlayerTurn($this->_namespace->player['playerId'])) {
+        if ($mGame->isPlayerTurn($this->_namespace->player['playerId'])) {
             $youWin = false;
             $response = array();
             $nextPlayer = array(
                 'color' => $this->_namespace->player['color']
             );
             while (empty($response)) {
-                $nextPlayer = $modelGame->nextTurn($nextPlayer['color']);
+                $nextPlayer = $mGame->nextTurn($nextPlayer['color']);
                 $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
                 $playerCastlesExists = $modelCastle->playerCastlesExists($nextPlayer['playerId']);
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
@@ -31,24 +31,24 @@ class TurnController extends Game_Controller_Action {
                     $response = $nextPlayer;
                     if ($nextPlayer['playerId'] == $this->_namespace->player['playerId']) {
                         $youWin = true;
-                        $modelGame->endGame();
+                        $mGame->endGame();
                     } else {
-                        $nr = $modelGame->updateTurnNumber($nextPlayer['playerId']);
+                        $nr = $mGame->updateTurnNumber($nextPlayer['playerId']);
                         if ($nr) {
                             $response['nr'] = $nr;
                         }
                         $modelCastle->raiseAllCastlesProductionTurn($this->_namespace->player['playerId']);
+                        $mWebSocket = new Application_Model_WebSocket();
+                        $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
+                        $nextTurn = $mGame->getTurn();
+                        $mWebSocket->publishChannel($this->_namespace->gameId, $this->_namespace->player['color'] . '.t.' . $nextTurn['color'] . '.' . $nextTurn['nr'] . '.' . $nextTurn['lost']);
+                        $mWebSocket->close();
                     }
                     $response['win'] = $youWin;
                 } else {
-                    $modelGame->setPlayerLostGame($nextPlayer['playerId']);
+                    $mGame->setPlayerLostGame($nextPlayer['playerId']);
                 }
             }
-
-            $mWebSocket = new Application_Model_WebSocket();
-            $mWebSocket->authorizeChannel($modelGame->getKeys());
-            $mWebSocket->publishChannel($this->_namespace->gameId, $this->_namespace->player['color'] . '.t');
-            $mWebSocket->close();
 
             $this->view->response = Zend_Json::encode($response);
         }

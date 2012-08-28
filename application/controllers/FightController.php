@@ -19,8 +19,9 @@ class FightController extends Game_Controller_Action {
         if ($armyId !== null AND $x !== null AND $y !== null AND $enemyId !== null) {
             $modelArmy = new Application_Model_Army($this->_namespace->gameId);
             $army = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
-            if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
-                throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+            $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y']);
+            if ($distance >= 2) {
+                throw new Exception('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2).');
             }
             if (($movesSpend = $this->movesSpend($x, $y, $army)) > $army['movesLeft']) {
                 throw new Exception('Armia ma za mało ruchów do wykonania akcji (' . $movesSpend . '>' . $army['movesLeft'] . ').');
@@ -85,8 +86,9 @@ class FightController extends Game_Controller_Action {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
                 }
-                if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
-                    throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+                $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y']);
+                if ($distance >= 2) {
+                    throw new Exception('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2).');
                 }
                 if (($movesSpend = 2) > $army['movesLeft']) {
                     throw new Exception('Armia ma za mało ruchów do wykonania akcji(' . $movesSpend . '>' . $army['movesLeft'] . ').');
@@ -107,7 +109,7 @@ class FightController extends Game_Controller_Action {
                     if ($res == 1) {
                         $data = array(
                             'x' => $x,
-                            'y'=>$y,
+                            'y' => $y,
                             'movesSpend' => $movesSpend
                         );
                         $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
@@ -151,7 +153,7 @@ class FightController extends Game_Controller_Action {
         $x = $this->_request->getParam('x');
         $y = $this->_request->getParam('y');
         $castleId = $this->_request->getParam('cid');
-        if ($armyId !== null AND $x !== null AND $y !== null AND $castleId !== null) {
+        if (Zend_Validate::is($armyId, 'Digits') && Zend_Validate::is($x, 'Digits') && Zend_Validate::is($y, 'Digits') && Zend_Validate::is($castleId, 'Digits')) {
             $castle = Application_Model_Board::getCastle($castleId);
             if (empty($castle)) {
                 throw new Exception('Brak zamku o podanym ID!');
@@ -164,8 +166,9 @@ class FightController extends Game_Controller_Action {
                     throw new Exception('Brak armii o podanym ID!');
                     return false;
                 }
-                if ($this->calculateArmiesDistance($x, $y, $army['x'], $army['y']) >= 2) {
-                    throw new Exception('Wróg znajduje się za daleko aby można go było atakować.');
+                $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y']);
+                if ($distance >= 2) {
+                    throw new Exception('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2).');
                 }
                 $movesSpend = 2;
                 if ($movesSpend > $army['movesLeft']) {
@@ -228,9 +231,10 @@ class FightController extends Game_Controller_Action {
         $canFly = 1;
         $canSwim = 0;
         $movesRequiredToAttack = 1;
-        foreach ($army['heroes'] as $hero) {
-            $canFly--;
-        }
+        $canFly -= count($army['heroes']);
+//        foreach ($army['heroes'] as $hero) {
+//            $canFly--;
+//        }
         foreach ($army['soldiers'] as $soldier) {
             if ($soldier['canFly']) {
                 $canFly++;
@@ -246,7 +250,6 @@ class FightController extends Game_Controller_Action {
         $terrain = Application_Model_Board::getTerrain($terrainType, $canFly, $canSwim);
         return $terrain[1] + $movesRequiredToAttack;
     }
-
 
 }
 

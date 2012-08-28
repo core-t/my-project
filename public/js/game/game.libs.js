@@ -151,6 +151,7 @@ function castleFields(castleId, type){
 function createNeutralCastle(castleId) {
     castles[castleId].defense = castles[castleId].defensePoints;
     castles[castleId].color = null;
+
     board.append(
         $('<div>')
         .addClass('castle')
