@@ -13,11 +13,11 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
     }
 
     public function ruinExists($ruinId) {
+        $select = $this->_db->select()
+                ->from($this->_name, $this->_primary)
+                ->where('"' . $this->_primary . '" = ?', $ruinId)
+                ->where('"gameId" = ?', $this->_gameId);
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name, $this->_primary)
-                    ->where('"' . $this->_primary . '" = ?', $ruinId)
-                    ->where('"gameId" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             if (isset($result[0][$this->_primary])) {
                 return true;
@@ -42,7 +42,8 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId);
             $result = $this->_db->query($select)->fetchAll();
             $array = array();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 $array[$row['ruinId']] = $row;
             }
             return $array;
@@ -58,7 +59,8 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
         try {
             $result = $this->_db->query($select)->fetchAll();
             $ruins = Application_Model_Board::getRuins();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 if (isset($ruins[$row['ruinId']])) {
                     unset($ruins[$row['ruinId']]);
                 }
@@ -129,7 +131,8 @@ class Application_Model_Ruin extends Game_Db_Table_Abstract {
             $unitId = rand(11, $max1);
             $numerOfUnits = rand($min2, $max2);
             $find = array('alies', $numerOfUnits);
-            for ($i = 0; $i < $numerOfUnits; $i++) {
+            for ($i = 0; $i < $numerOfUnits; $i++)
+            {
                 $modelArmy->addSoldierToArmy($armyId, $unitId, $playerId);
             }
             $modelArmy->zeroHeroMovesLeft($armyId, $heroId, $playerId);

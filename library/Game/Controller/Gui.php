@@ -1,6 +1,6 @@
 <?php
 
-abstract class Game_Controller_Game extends Game_Controller_Action {
+abstract class Game_Controller_Gui extends Game_Controller_Action {
 
     public function init() {
         parent::init();
@@ -11,13 +11,9 @@ abstract class Game_Controller_Game extends Game_Controller_Action {
 
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
         $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
-
         $this->view->Logout($this->_namespace->player);
+        $this->view->MainMenu();
         $this->view->Websocket();
-
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
     }
 
 }

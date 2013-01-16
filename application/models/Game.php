@@ -46,7 +46,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                 ->where('"isOpen" = true')
                 ->order('begin DESC');
         $result = $this->_db->query($select)->fetchAll();
-        foreach ($result as $k => $game) {
+        foreach ($result as $k => $game)
+        {
             $select = $this->_db->select()
                     ->from('playersingame', 'count(*)')
                     ->where('"gameId" = ?', $game['gameId'])
@@ -82,7 +83,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->where('b."playerId" = ?', $playerId)
                     ->order('begin DESC');
             $result = $this->_db->query($select2)->fetchAll();
-            foreach ($result as $k => $game) {
+            foreach ($result as $k => $game)
+            {
                 $select = $this->_db->select()
                         ->from('player', array('firstName', 'lastName'))
                         ->where('"playerId" = ?', $result[$k]['gameMasterId']);
@@ -166,7 +168,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                 ->where('color = ?', $color);
         try {
             return $this->_db->fetchOne($select);
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -218,6 +220,17 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         );
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
+        return $this->_db->update('playersingame', $data, $where);
+    }
+
+    public function updatePlayerInGameWSSUId($playerId, $wssuid) {
+        $data = array(
+            'webSocketServerUserId' => $wssuid
+        );
+        $where = array(
+            $this->_db->quoteInto('"playerId" = ?', $playerId),
+            $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId)
+        );
         return $this->_db->update('playersingame', $data, $where);
     }
 
@@ -284,12 +297,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
 //    }
 
     public function getPlayersInGameReady() {
+        $select = $this->_db->select()
+                ->from(array('a' => 'playersingame'))
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
+                ->where('ready = true')
+                ->where('a."gameId" = ?', $this->_gameId);
         try {
-            $select = $this->_db->select()
-                    ->from(array('a' => 'playersingame'))
-                    ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-                    ->where('ready = true')
-                    ->where('a."gameId" = ?', $this->_gameId);
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
@@ -307,7 +320,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         try {
             $array = $this->_db->query($select)->fetchAll();
             $result = array();
-            foreach ($array as $value) {
+            foreach ($array as $value)
+            {
                 $result[$value['color']] = $value;
             }
             return $result;
@@ -359,7 +373,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                     ->where('ready = true')
                     ->where('computer = true');
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 if ($ids) {
                     $ids .= ',';
                 }
@@ -511,7 +526,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     public function nextTurn($playerColor) {
         $find = false;
         // szukam następnego koloru w dostępnych kolorach
-        foreach ($this->_playerColors as $color) {
+        foreach ($this->_playerColors as $color)
+        {
             if ($playerColor == $color) {
                 $find = true;
                 continue;
@@ -526,7 +542,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         }
         $playersInGame = $this->getPlayersInGameReady();
         // przypisuję playerId do koloru
-        foreach ($playersInGame as $k => $player) {
+        foreach ($playersInGame as $k => $player)
+        {
             if ($player['color'] == $nextPlayerColor) {
                 $nextPlayerId = $player['playerId'];
                 break;
@@ -534,7 +551,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         }
         // jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
         if (!isset($nextPlayerId)) {
-            foreach ($playersInGame as $k => $player) {
+            foreach ($playersInGame as $k => $player)
+            {
                 if ($player['color'] == $this->_playerColors[0]) {
                     if ($player['lost']) {
                         $nextPlayerId = $playersInGame[$k + 1]['playerId'];

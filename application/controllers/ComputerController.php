@@ -1,17 +1,12 @@
 <?php
 
-class ComputerController extends Game_Controller_Action {
+class ComputerController extends Game_Controller_Ajax {
 
     private $_mGame;
     private $modelArmy;
     private $playerId;
 
     public function _init() {
-        /* Initialize action controller here */
-        $this->_helper->layout->disableLayout();
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
         $this->_mGame = new Application_Model_Game($this->_namespace->gameId);
         $this->modelArmy = new Application_Model_Army($this->_namespace->gameId);
     }
@@ -100,7 +95,8 @@ class ComputerController extends Game_Controller_Action {
         if (!$enemies) {
             throw new Exception('Wygrałem!?');
         } else {
-            foreach ($enemies as $e) {
+            foreach ($enemies as $e)
+            {
                 $castleId = Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
                 if (null !== $castleId) {
                     continue;
@@ -201,7 +197,8 @@ class ComputerController extends Game_Controller_Action {
                     $this->ruinBlock($enemies, $army, $castlesAndFields, $myCastles);
                 } else {
                     new Game_Logger('JEST WRÓG W ZASIĘGU');
-                    foreach ($enemiesInRange as $e) {
+                    foreach ($enemiesInRange as $e)
+                    {
                         $castleId = Application_Model_Board::isArmyInCastle($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
                         if (Game_Computer::isEnemyStronger($army, $e, $castleId)) {
                             continue;
@@ -317,7 +314,7 @@ class ComputerController extends Game_Controller_Action {
         if (!empty($battle)) {
             $result['battle'] = $battle;
         }
-        $this->view->response = Zend_Json::encode($result);
+        echo Zend_Json::encode($result);
 
         $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.A.' . $this->_mGame->getPlayerColor($this->playerId));
         $mWebSocket->close();
@@ -329,7 +326,8 @@ class ComputerController extends Game_Controller_Action {
         $nextPlayer = array(
             'color' => $this->_mGame->getPlayerColor($this->playerId)
         );
-        while (empty($response)) {
+        while (empty($response))
+        {
             $nextPlayer = $this->_mGame->nextTurn($nextPlayer['color']);
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $playerCastlesExists = $modelCastle->playerCastlesExists($nextPlayer['playerId']);
@@ -357,7 +355,7 @@ class ComputerController extends Game_Controller_Action {
             }
         }
         $response['action'] = 'end';
-        $this->view->response = Zend_Json::encode($response);
+        echo Zend_Json::encode($response);
     }
 
     private function startTurn() {
@@ -372,7 +370,8 @@ class ComputerController extends Game_Controller_Action {
         if ($turnNumber > 0) {
             $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
             $castlesId = $modelCastle->getPlayerCastles($this->playerId);
-            foreach ($castlesId as $id) {
+            foreach ($castlesId as $id)
+            {
                 $castleId = $id['castleId'];
                 $castles[$castleId] = Application_Model_Board::getCastle($castleId);
                 $castle = $castles[$castleId];
@@ -406,17 +405,19 @@ class ComputerController extends Game_Controller_Action {
             }
             $armies = $this->modelArmy->getPlayerArmies($this->playerId);
             if (empty($castles) && empty($armies)) {
-                $this->view->response = Zend_Json::encode(array('action' => 'gameover'));
+                echo Zend_Json::encode(array('action' => 'gameover'));
             } else {
-                foreach ($armies as $k => $army) {
-                    foreach ($army['soldiers'] as $unit) {
+                foreach ($armies as $k => $army)
+                {
+                    foreach ($army['soldiers'] as $unit)
+                    {
                         $costs += $unit['cost'];
                     }
                 }
                 $gold = $gold + $income - $costs;
                 $this->_mGame->updatePlayerInGameGold($this->playerId, $gold);
 
-                $this->view->response = Zend_Json::encode(array('action' => 'continue'));
+                echo Zend_Json::encode(array('action' => 'continue'));
             }
         }
     }

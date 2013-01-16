@@ -37,7 +37,8 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('razed = true');
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $key => $val) {
+            foreach ($result as $key => $val)
+            {
                 $castles[$val['castleId']] = $val;
             }
             return $castles;
@@ -46,7 +47,7 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
         }
     }
 
-    public function isCastleRazed($castleId){
+    public function isCastleRazed($castleId) {
         try {
             $select = $this->_db->select()
                     ->from($this->_name, 'razed')
@@ -54,7 +55,7 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
                     ->where('"castleId" = ?', $castleId)
                     ->where('razed = true');
             $result = $this->_db->query($select)->fetchAll();
-            if(isset ($result[0]['razed'])){
+            if (isset($result[0]['razed'])) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -71,7 +72,8 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('razed = false');
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $key => $val) {
+            foreach ($result as $key => $val)
+            {
                 $playersCastles[$val['castleId']] = $val;
             }
             return $playersCastles;
@@ -88,7 +90,7 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('razed = false');
             $result = $this->_db->query($select)->fetchAll();
-            if(count($result)){
+            if (count($result)) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -112,15 +114,21 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
     }
 
     public function changeOwner($castleId, $playerId) {
-        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
-        $where[] = $this->_db->quoteInto('"castleId" = ?', $castleId);
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"castleId" = ?', $castleId)
+        );
         $data = array(
             'defenseMod' => new Zend_Db_Expr('"defenseMod" - 1'),
             'playerId' => $playerId,
             'production' => null,
             'productionTurn' => 0,
         );
-        return $this->_db->update($this->_name, $data, $where);
+        try {
+            return $this->_db->update($this->_name, $data, $where);
+        } catch (Exception $e) {
+            throw new Exception($e);
+        }
     }
 
     public function razeCastle($castleId, $playerId) {
@@ -164,16 +172,13 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
     }
 
     public function getCastleDefenseModifier($castleId) {
+        $select = $this->_db->select()
+                ->from($this->_name, 'defenseMod')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('"castleId" = ?', $castleId);
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name, 'defenseMod')
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"castleId" = ?', $castleId);
-            $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0]['defenseMod'])){
-                return $result[0]['defenseMod'];
-            }
-        } catch (PDOException $e) {
+            return $this->_db->fetchOne($select);
+        } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
     }

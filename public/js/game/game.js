@@ -90,6 +90,7 @@ var urlTowerAdd = '/tower/add';
 var urlTowerGet = '/tower/get';
 var urlComputer = '/computer';
 var urlChatSend = '/chat/send';
+var urlWebSocketOpen = '/websocket/open'
 
 function prepareButtons(){
     zoomPad = $(".zoomPad");
@@ -122,10 +123,12 @@ function prepareButtons(){
         $('.path').remove()
     });
     $('#send').click(function(){
-        sendChatA()
+        wsChat();
     });
     $('#msg').keypress(function(e){
-        if(e.which == 13)sendChatA()
+        if(e.which == 13){
+            wsChat();
+        }
     });
     $('#nextTurn').click(function(){
         nextTurnM()
@@ -175,14 +178,9 @@ function prepareButtons(){
 
 $(document).ready(function() {
     prepareButtons();
-
     terrain();
-    lWSC = new jws.jWebSocketJSONClient();
-    login();
     zoomer = new zoom(760, 670);
     setTimeout ( 'connect()', 1500 );
-
-
 });
 
 function turnOn() {
@@ -225,15 +223,24 @@ function changeTurn(color, nr) {
 }
 
 function connect(){
-    if(lWSC.isOpened()){
-        lock = false;
-        startGame();
-    //        startM();
-    }else{
-        login();
-        simpleM('Sorry, server is disconnected.');
-        setTimeout ( 'connect()', 1000 );
-    }
+    //    if(lWSC.isOpened()){
+    var token = {
+        type: "open",
+        gameId: gameId,
+        playerId: my.id,
+        accessKey: lAccessKey
+    };
+
+    ws.send(JSON.stringify(token));
+
+    lock = false;
+    startGame();
+//    //        startM();
+//    }else{
+//        login();
+//        simpleM('Sorry, server is disconnected.');
+//        setTimeout ( 'connect()', 1000 );
+//    }
 }
 
 function startGame(){
@@ -478,3 +485,11 @@ function getColor(color){
     }
 }
 
+function makeTime(){
+    var d = new Date();
+    var minutes = d.getMinutes();
+    if(minutes.length == 1){
+        minutes = '0'+minutes
+    }
+    return d.getHours()+':'+minutes;
+}

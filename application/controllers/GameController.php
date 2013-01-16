@@ -1,33 +1,12 @@
 <?php
 
-class GameController extends Game_Controller_Action {
-
-    public function _init() {
-        /* Initialize action controller here */
-
-
-//        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
-//        $this->view->headScript()->appendFile('http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js');
-//         $this->view->headScript()->appendFile('/js/jquery.json-2.2.min.js');
-//        $this->view->headScript()->appendFile('http://jquery-websocket.googlecode.com/files/jquery.websocket-0.0.1.js');
-//         $this->view->headScript()->appendFile('/js/jquery.websocket-0.0.1.js');
-//        $this->view->headScript()->appendFile('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js');
-        new Application_View_Helper_Logout($this->_namespace->player);
-        new Application_View_Helper_Websocket();
-    }
+class GameController extends Game_Controller_Game {
 
     public function indexAction() {
         // action body
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
         $mGame = new Application_Model_Game($this->_namespace->gameId);
         if ($mGame->isActive()) {
-            $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
             $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
-            $this->view->headScript()->prependFile('/js/jquery.min.js');
-            $this->view->headScript()->appendFile('/js/jWebSocket.js');
-            $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
             $this->view->headScript()->appendFile('/js/game/game.js');
             $this->view->headScript()->appendFile('/js/game/game.libs.js');
             $this->view->headScript()->appendFile('/js/game/game.zoom.js');
@@ -46,7 +25,8 @@ class GameController extends Game_Controller_Action {
             $neutralTowers = Application_Model_Board::getTowers();
             $playersTowers = $modelTower->getTowers();
             $towers = array();
-            foreach ($neutralTowers as $k => $tower) {
+            foreach ($neutralTowers as $k => $tower)
+            {
                 $towers[$k] = $neutralTowers[$k];
                 if (isset($playersTowers[$k])) {
                     $towers[$k]['color'] = $playersTowers[$k];
@@ -62,14 +42,15 @@ class GameController extends Game_Controller_Action {
 
             $game = $mGame->getGame();
 
-            $mWebSocket = new Application_Model_WebSocket();
-            $mWebSocket->createChannel($game);
-            $mWebSocket->close();
+//            $mWebSocket = new Application_Model_WebSocket();
+//            $mWebSocket->createChannel($game);
+//            $mWebSocket->close();
 
             $this->_namespace->wsKeys = $mGame->getKeys();
 
             $this->view->game = $game;
-            foreach ($players as $player) {
+            foreach ($players as $player)
+            {
                 $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
                 $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);
                 $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
@@ -86,6 +67,7 @@ class GameController extends Game_Controller_Action {
                 }
             }
             $this->view->color = $this->_namespace->player['color'];
+            $this->view->id = $this->_namespace->player['playerId'];
             if ($this->view->turn['playerId'] == $this->_namespace->player['playerId']) {
                 $this->view->myTurn = 'true';
             } else {
@@ -104,11 +86,13 @@ class GameController extends Game_Controller_Action {
             $razed = $modelCastle->getRazedCastles();
             $this->view->ruins = Application_Model_Board::getRuins();
             $emptyRuins = $modelRuin->getVisited();
-            foreach ($emptyRuins as $id => $ruin) {
+            foreach ($emptyRuins as $id => $ruin)
+            {
                 $this->view->ruins[$id]['e'] = 1;
             }
             $this->view->fields = Application_Model_Board::getBoardFields();
-            foreach ($castlesSchema as $id => $castle) {
+            foreach ($castlesSchema as $id => $castle)
+            {
                 if (!isset($razed[$id])) {
                     $this->view->castlesSchema[$id] = $castle;
                 }

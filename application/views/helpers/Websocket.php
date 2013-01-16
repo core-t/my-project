@@ -1,32 +1,36 @@
 <?php
 
-class Application_View_Helper_Websocket extends Zend_View_Helper_Abstract {
+class Zend_View_Helper_Websocket extends Zend_View_Helper_Abstract {
 
-    public function __construct() {
+    public function Websocket() {
+
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/swfobject.js');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/web_socket.js');
+
+        $url = Zend_Registry::get('config')->websockets->aSchema . '://' . Zend_Registry::get('config')->websockets->aHost . ':' . Zend_Registry::get('config')->websockets->aPort . Zend_Registry::get('config')->websockets->aContext;
+
         $script = '
-var lWSC = null;
-var channelAuthorized = null;
-var channelCreated = null;
-var channelSubscribed = null;
+        WEB_SOCKET_SWF_LOCATION = "WebSocketMain.swf";
+        WEB_SOCKET_DEBUG = true;
 
-var aSchema = "' . Zend_Registry::get('config')->websockets->aSchema . '";
-var aHost = "' . Zend_Registry::get('config')->websockets->aHost . '";
-var aPort = ' . Zend_Registry::get('config')->websockets->aPort . ';
-var aContext = "/jWebSocket";
-var aServlet = "/jWebSocket";
+        var ws = new WebSocket("' . $url . '");
 
-var channel = "Public";
-var lAccessKey = "access";
-var lSecretKey = "secret";
-$(document).ready(function() {
-    if( jws.browserSupportsWebSockets() ) {
-        lWSC = new jws.jWebSocketJSONClient();
-        var res = login();
-    }
-});
-';
-        $view = new Zend_View();
-        $view->headScript()->appendScript($script);
+        $(document) . ready(function() {
+                            ws.onopen = function() {
+                                        $("#wsStatus") . html("connected");
+                                    };
+                            ws.onmessage = function(e) {
+                                // Receives a message.
+                                // alert(e.data);
+                                console . log(e);
+                            };
+                            ws.onclose = function() {
+                                        $("#wsStatus") . html("connection closed");
+                                    };
+                        });
+        ';
+        $this->view->headScript()->appendScript($script);
     }
 
 }
+

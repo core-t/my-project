@@ -24,7 +24,7 @@ function refresh() {
             if(typeof result[color] == 'undefined') {
                 if(typeof alivePlayers[color] != 'undefined'){
                     if(gameMasterId == alivePlayers[color].playerId){
-                        var gameMaster = '/Game Master/';
+                        gameMaster = '/Game Master/';
                     }
                     if(alivePlayers[color].lost){
                         $('#'+color+'Id div.left').html('Dead '+gameMaster);
@@ -37,7 +37,7 @@ function refresh() {
                     playersReady++;
                 }
                 if(gameMasterId == result[color].playerId){
-                    var gameMaster = '/Game Master/';
+                    gameMaster = '/Game Master/';
                 }
                 $('#'+color+'Id div.left').html(result[color].firstName+' '+result[color].lastName+' '+gameMaster);
             }

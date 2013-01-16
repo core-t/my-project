@@ -1,13 +1,9 @@
 <?php
 
-class ChatController extends Game_Controller_Action {
+class ChatController extends Game_Controller_Ajax {
 
     public function _init() {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
+
     }
 
     public function sendAction() {

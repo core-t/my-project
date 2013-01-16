@@ -8,10 +8,9 @@ class Game_Battle {
     private $attacker;
     private $defender;
 
-    public function __construct($attacker, $defender) {
-        $this->_namespace = Game_Namespace::getNamespace();
+    public function __construct($attacker, $defender, $gameId) {
         if ($defender === null) {
-            $defender = $this->getNeutralCastleGarrizon();
+            $defender = $this->getNeutralCastleGarrizon($gameId);
         }
         $this->defender = $this->getCombatModifiers($defender);
         $this->attacker = $this->getCombatModifiers($attacker);
@@ -23,34 +22,32 @@ class Game_Battle {
         }
     }
 
-    public function addCastleDefenseModifier($castleId) {
-        $namespace = Game_Namespace::getNamespace();
-        $modelCastle = new Application_Model_Castle($namespace->gameId);
-        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId);
+    public function addCastleDefenseModifier($gameId, $castleId, $db = null) {
+        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Application_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
         if ($defenseModifier > 0) {
             $this->defenseModifier += $defenseModifier;
         }
     }
 
-    static public function getCastleDefenseModifier($castleId) {
-        $namespace = Game_Namespace::getNamespace();
-        $modelCastle = new Application_Model_Castle($namespace->gameId);
-        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId);
-        if ($defenseModifier > 0) {
-            return $defenseModifier;
-        } else {
-            return 0;
-        }
-    }
+//    static public function getCastleDefenseModifier($castleId) {
+//        $namespace = Game_Namespace::getNamespace();
+//        $modelCastle = new Application_Model_Castle($namespace->gameId);
+//        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + $modelCastle->getCastleDefenseModifier($castleId);
+//        if ($defenseModifier > 0) {
+//            return $defenseModifier;
+//        } else {
+//            return 0;
+//        }
+//    }
 
-    public function updateArmies() {
-        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-        foreach ($this->_result AS $r) {
+    public function updateArmies($gameId, $db = null) {
+        foreach ($this->_result AS $r)
+        {
             if (isset($r['heroId'])) {
-                $modelArmy->armyRemoveHero($r['heroId']);
+                Application_Model_Database::armyRemoveHero($gameId, $r['heroId'], $db);
             } else {
                 if (strpos($r['soldierId'], 's') === false) {
-                    $modelArmy->destroySoldier($r['soldierId']);
+                    Application_Model_Database::destroySoldier($gameId, $r['soldierId'], $db);
                 }
             }
         }
@@ -70,8 +67,10 @@ class Game_Battle {
     public function fight() {
 //        Zend_Debug::dump($defender);
         $hits = array('attack' => 2, 'defense' => 2);
-        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
-            foreach ($this->defender['soldiers'] as $d => $unitDefending) {
+        foreach ($this->attacker['soldiers'] as $a => $unitAttaking)
+        {
+            foreach ($this->defender['soldiers'] as $d => $unitDefending)
+            {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
@@ -81,8 +80,10 @@ class Game_Battle {
                 }
             }
         }
-        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
-            foreach ($this->defender['heroes'] as $d => $unitDefending) {
+        foreach ($this->attacker['soldiers'] as $a => $unitAttaking)
+        {
+            foreach ($this->defender['heroes'] as $d => $unitDefending)
+            {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
@@ -92,8 +93,10 @@ class Game_Battle {
                 }
             }
         }
-        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
-            foreach ($this->defender['soldiers'] as $d => $unitDefending) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttaking)
+        {
+            foreach ($this->defender['soldiers'] as $d => $unitDefending)
+            {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
@@ -103,8 +106,10 @@ class Game_Battle {
                 }
             }
         }
-        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
-            foreach ($this->defender['heroes'] as $d => $unitDefending) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttaking)
+        {
+            foreach ($this->defender['heroes'] as $d => $unitDefending)
+            {
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
@@ -127,7 +132,8 @@ class Game_Battle {
         }
         $unitAttaking['attackPoints'] += $this->attackModifier;
         $unitDefending['defensePoints'] += $this->defenseModifier;
-        while ($attackHits AND $defenseHits) {
+        while ($attackHits AND $defenseHits)
+        {
             $maxDie = $unitAttaking['attackPoints'] + $unitDefending['defensePoints'];
             $dieAttacking = $this->rollDie($maxDie);
             $dieDefending = $this->rollDie($maxDie);
@@ -168,13 +174,12 @@ class Game_Battle {
         return $this->_result;
     }
 
-    static public function getNeutralCastleGarrizon() {
-        $namespace = Game_Namespace::getNamespace();
-        $modelGame = new Application_Model_Game($namespace->gameId);
-        $turn = $modelGame->getTurn();
+    static public function getNeutralCastleGarrizon($gameId) {
+        $turn = Application_Model_Database::getTurn($gameId);
         $numberOfSoldiers = ceil($turn['nr'] / 10);
         $soldiers = array();
-        for ($i = 1; $i <= $numberOfSoldiers; $i++) {
+        for ($i = 1; $i <= $numberOfSoldiers; $i++)
+        {
             $soldiers[] = array(
                 'defensePoints' => 3,
                 'soldierId' => 's' . $i
@@ -192,14 +197,16 @@ class Game_Battle {
         if (count($army['heroes']) > 0) {
             $heroExists = true;
         }
-        foreach ($army['soldiers'] as $soldier) {
+        foreach ($army['soldiers'] as $soldier)
+        {
             if (isset($soldier['canFly']) && $soldier['canFly']) {
                 $canFly = true;
                 break;
             }
         }
         if ($canFly) {
-            foreach ($army['soldiers'] as $k => $soldier) {
+            foreach ($army['soldiers'] as $k => $soldier)
+            {
                 if ($soldier['canFly']) {
                     continue;
                 }
@@ -208,7 +215,8 @@ class Game_Battle {
             }
         }
         if ($heroExists) {
-            foreach ($army['soldiers'] as $k => $soldier) {
+            foreach ($army['soldiers'] as $k => $soldier)
+            {
                 $army['soldiers'][$k]['attackPoints']++;
                 $army['soldiers'][$k]['defensePoints']++;
             }
@@ -237,6 +245,5 @@ class Game_Battle {
 //         }
 //         return $power;
 //     }
-
 }
 

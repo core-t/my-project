@@ -1,10 +1,9 @@
 <?php
 
-class Application_View_Helper_Menu extends Zend_View_Helper_Abstract {
+class zend_View_Helper_MainMenu extends Zend_View_Helper_Abstract {
 
-    public function __construct() {
-        $view = new Zend_View();
-        $view->placeholder('mainMenu')->append('
+    public function mainMenu() {
+        $this->view->placeholder('mainMenu')->append('
 <div>
     <ul>
         <li>

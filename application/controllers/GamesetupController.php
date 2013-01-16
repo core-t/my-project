@@ -1,34 +1,24 @@
 <?php
 
-class GamesetupController extends Game_Controller_Action {
+class GamesetupController extends Game_Controller_Gui {
 
     public function _init() {
-        /* Initialize action controller here */
-//        $this->view->headScript()->prependFile('https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js');
-        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
-        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jWebSocket.js');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jwsChannelPlugIn.js');
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/index.websocket.js');
     }
 
     public function indexAction() {
-        new Application_View_Helper_Logout($this->_namespace->player);
-        new Application_View_Helper_Menu();
-        new Application_View_Helper_Websocket();
         $this->view->headScript()->appendFile('/js/gamesetup.js');
         $gameId = $this->_request->getParam('gameId');
         if (!empty($gameId)) {
             $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
-            if(isset($this->_namespace->armyId)) {
+            if (isset($this->_namespace->armyId)) {
                 unset($this->_namespace->armyId);
             }
             $modelGame = new Application_Model_Game($gameId);
             $modelGame->updateGameMaster($this->_namespace->player['playerId']);
 //             $playersInGame = $modelGame->getPlayersWaitingForGame();
             $this->view->colors = $modelGame->getAllColors();
-            if($modelGame->isPlayerInGame($this->_namespace->player['playerId'])){
+            if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
                 $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
             }
             $modelGame->joinGame($this->_namespace->player['playerId']);
@@ -44,8 +34,8 @@ class GamesetupController extends Game_Controller_Action {
         if (!empty($this->_namespace->gameId)) {
             if (empty($this->_namespace->armyId)) {
                 $modelGame = new Application_Model_Game($this->_namespace->gameId);
-                if(!$modelGame->isPlayerReady($this->_namespace->player['playerId'])){
-                    $this->_helper->redirector('index', 'new');
+                if (!$modelGame->isPlayerReady($this->_namespace->player['playerId'])) {
+                    $this->_redirec('/new');
                 }
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
@@ -53,15 +43,15 @@ class GamesetupController extends Game_Controller_Action {
                 $startPositions = Application_Model_Board::getDefaultStartPositions();
                 $playerHeroes = $modelHero->getHeroes();
                 $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
-                if(empty($playerHeroes)) {
+                if (empty($playerHeroes)) {
                     $modelHero->createHero();
                     $playerHeroes = $modelHero->getHeroes();
                 }
                 $armyId = $modelArmy->createArmy(
-                        $startPositions[$this->_namespace->player['color']]['position'],
-                        $this->_namespace->player['playerId']);
+                        $startPositions[$this->_namespace->player['color']]['position'], $this->_namespace->player['playerId']);
                 $res = $modelArmy->addHeroToGame($armyId, $playerHeroes[0]['heroId']);
-                switch ($res) {
+                switch ($res)
+                {
                     case 1:
                         $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
                         $this->_namespace->armyId = $armyId;

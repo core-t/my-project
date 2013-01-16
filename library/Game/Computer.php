@@ -13,7 +13,7 @@ class Game_Computer {
                 $battle = new Game_Battle($army, $enemy);
                 $battle->addCastleDefenseModifier($castleId);
                 $battle->fight();
-                $battle->updateArmies();
+                $battle->updateArmies($namespace->gameId);
                 $enemy = $modelArmy->updateAllArmiesFromCastlePosition(Application_Model_Board::getCastlePosition($castleId));
                 if (empty($enemy)) {
                     $modelCastle->changeOwner($castleId, $playerId);
@@ -26,7 +26,7 @@ class Game_Computer {
                 $battle = new Game_Battle($army, null);
                 $enemy = $battle->getNeutralCastleGarrizon();
                 $battle->fight();
-                $battle->updateArmies();
+                $battle->updateArmies(updateArmies);
                 $defender = $battle->getDefender();
                 if (empty($defender['soldiers'])) {
                     $modelCastle->addCastle($castleId, $playerId);
@@ -40,7 +40,7 @@ class Game_Computer {
             $battle = new Game_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
-            $battle->updateArmies();
+            $battle->updateArmies(updateArmies);
             $enemy = $modelArmy->updateAllArmiesFromPosition(array('x' => $enemy['x'], 'y' => $enemy['y']));
             if (empty($enemy)) {
                 $result['victory'] = true;

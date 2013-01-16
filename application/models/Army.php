@@ -48,15 +48,16 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     }
 
     public function getPlayerArmies($playerId) {
+        $select = $this->_db->select()
+                ->from($this->_name)
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('"playerId" = ?', $playerId)
+                ->where('destroyed = false');
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name)
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('"playerId" = ?', $playerId)
-                    ->where('destroyed = false');
             $result = $this->_db->query($select)->fetchAll();
             $array = array();
-            foreach ($result as $k => $army) {
+            foreach ($result as $k => $army)
+            {
                 $array['army' . $army['armyId']] = $army;
                 $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
                 $array['army' . $army['armyId']]['soldiers'] = $this->getArmySoldiers($army['armyId']);
@@ -66,7 +67,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 }
             }
             return $array;
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -101,7 +102,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 $select->where('"' . $this->_primary . '" = ?', $armyId);
             }
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $row) {
+            foreach ($result as $k => $row)
+            {
                 $result[$k]['artefacts'] = $this->getArtefactsByHeroId($row['heroId']);
             }
             return $result;
@@ -150,7 +152,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('destroyed = false')
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0]['armyId'])){
+            if (isset($result[0]['armyId'])) {
                 $result[0]['heroes'] = $this->getArmyHeroes($result[0]['armyId']);
                 $result[0]['soldiers'] = $this->getArmySoldiers($result[0]['armyId']);
                 $result[0]['movesLeft'] = $this->calculateArmyMovesLeft($result[0]['armyId']);
@@ -198,7 +200,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('"playerId" != ?', $playerId)
                     ->where('destroyed = false');
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 $fields[$row['y']][$row['x']] = 'e';
             }
             return $fields;
@@ -270,9 +273,9 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     public function calculateMaxArmyMoves($armyId) {
         $heroMoves = $this->getMaxHeroesMoves($armyId);
         $soldierMoves = $this->getMaxSoldiersMoves($armyId);
-        if($heroMoves > $soldierMoves){
+        if ($heroMoves > $soldierMoves) {
             return $heroMoves;
-        }else{
+        } else {
             return $soldierMoves;
         }
     }
@@ -280,8 +283,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     private function getMaxHeroesMoves($armyId) {
         try {
             $select = $this->_db->select()
-                    ->from(array('a'=>'hero'), 'max("numberOfMoves")')
-                    ->join(array('b'=>'heroesingame'), 'a."heroId" = b."heroId"', '')
+                    ->from(array('a' => 'hero'), 'max("numberOfMoves")')
+                    ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
@@ -294,8 +297,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     private function getMaxSoldiersMoves($armyId) {
         try {
             $select = $this->_db->select()
-                    ->from(array('a'=>'unit'), 'max("numberOfMoves")')
-                    ->join(array('b'=>'soldier'), 'a."unitId" = b."unitId"', '')
+                    ->from(array('a' => 'unit'), 'max("numberOfMoves")')
+                    ->join(array('b' => 'soldier'), 'a."unitId" = b."unitId"', '')
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
@@ -316,7 +319,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 $data2 = array(
                     'movesLeft' => $row['movesLeft'] - $data['movesSpend']
                 );
@@ -329,7 +333,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('"gameId" = ?', $this->_gameId)
                     ->where('"' . $this->_primary . '" = ?', $armyId);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $row) {
+            foreach ($result as $row)
+            {
                 $data2 = array(
                     'movesLeft' => $row['movesLeft'] - $data['movesSpend']
                 );
@@ -355,9 +360,11 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     }
 
     public function updateArmyFull($armyOld, $armyNew) {
-        foreach ($armyOld['soldiers'] as $unitOld) {
+        foreach ($armyOld['soldiers'] as $unitOld)
+        {
             $delete = true;
-            foreach ($armyNew['soldiers'] as $k => $unitNew) {
+            foreach ($armyNew['soldiers'] as $k => $unitNew)
+            {
                 if ($unitOld['soldierId'] == $unitNew['soldierId']) {
                     $delete = false;
                     unset($armyNew['soldiers'][$k]);
@@ -367,9 +374,11 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 $this->destroySoldier($unitOld['soldierId']);
             }
         }
-        foreach ($armyOld['heroes'] as $unitOld) {
+        foreach ($armyOld['heroes'] as $unitOld)
+        {
             $delete = true;
-            foreach ($armyNew['heroes'] as $k => $unitNew) {
+            foreach ($armyNew['heroes'] as $k => $unitNew)
+            {
                 if ($unitOld['heroId'] == $unitNew['heroId']) {
                     $delete = false;
                     unset($armyNew['heroes'][$k]);
@@ -448,7 +457,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('x IN (?)', $xs)
                     ->where('y IN (?)', $ys);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $army) {
+            foreach ($result as $k => $army)
+            {
                 $heroes = $this->getArmyHeroes($army['armyId']);
                 $soldiers = $this->getArmySoldiers($army['armyId']);
                 if (empty($heroes) AND empty($soldiers)) {
@@ -483,7 +493,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('x IN (?)', $xs)
                     ->where('y IN (?)', $ys);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $id) {
+            foreach ($result as $id)
+            {
                 if ($ids) {
                     $ids .= ',';
                 }
@@ -534,7 +545,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('x = (?)', $position['x'])
                     ->where('y = (?)', $position['y']);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $id) {
+            foreach ($result as $id)
+            {
                 if ($ids) {
                     $ids .= ',';
                 }
@@ -561,7 +573,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('x = ?', $position['x'])
                     ->where('y = ?', $position['y']);
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $army) {
+            foreach ($result as $k => $army)
+            {
                 $heroes = $this->getArmyHeroes($army['armyId']);
                 $soldiers = $this->getArmySoldiers($army['armyId']);
                 if (empty($heroes) AND empty($soldiers)) {
@@ -596,7 +609,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     }
 
     public function doProduction($playerId, $castles) {
-        foreach ($castles as $castleId => $castle) {
+        foreach ($castles as $castleId => $castle)
+        {
             $armyId = $this->getArmyIdFromPosition($castle['position']);
             if (!$armyId) {
                 $armyId = $this->createArmy($castle['position'], $playerId);
@@ -668,7 +682,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
             if (count($result) == 1) {// jeśli jest tylko jedna armia na pozycji
                 return $result[0]['armyId'];
             }
-            foreach ($result as $army) {
+            foreach ($result as $army)
+            {
                 $this->heroesUpdateArmyId($army['armyId'], $result[0]['armyId']);
                 $this->soldiersUpdateArmyId($army['armyId'], $result[0]['armyId']);
             }
@@ -793,12 +808,14 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 //         throw new Exception(Zend_Debug::dump($soldiersIds,null,false));
         if ((isset($heroesIds[0]) && !empty($heroesIds[0])) || (isset($soldiersIds) && !empty($soldiersIds))) {
             $newArmyId = $this->createArmy(array('x' => $position['x'], 'y' => $position['y']), $playerId);
-            foreach ($heroesIds as $heroId) {
+            foreach ($heroesIds as $heroId)
+            {
                 if (!empty($heroId)) {
                     $this->heroUpdateArmyId($heroId, $newArmyId);
                 }
             }
-            foreach ($soldiersIds as $soldierId) {
+            foreach ($soldiersIds as $soldierId)
+            {
                 if (!empty($soldierId)) {
                     $this->soldierUpdateArmyId($soldierId, $newArmyId);
                 }
@@ -897,7 +914,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 
     public function getComputerArmyToMove($playerId) {
         $armies = $this->getPlayerArmies($playerId);
-        foreach ($armies as $army) {
+        foreach ($armies as $army)
+        {
             $army['movesLeft'] = $this->calculateArmyMovesLeft($army['armyId']);
             if ($army['movesLeft'] > 0) {
                 return $army;
@@ -918,10 +936,12 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     public function getArmyCanFlySwim($army) {
         $canFly = 0;
         $canSwim = 0;
-        foreach ($army['heroes'] as $hero) {
+        foreach ($army['heroes'] as $hero)
+        {
             $canFly--;
         }
-        foreach ($army['soldiers'] as $soldier) {
+        foreach ($army['soldiers'] as $soldier)
+        {
             if ($soldier['canFly']) {
                 $canFly++;
             } else {
@@ -943,7 +963,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                     ->where('destroyed = false');
             $result = $this->_db->query($select)->fetchAll();
             $array = array();
-            foreach ($result as $k => $army) {
+            foreach ($result as $k => $army)
+            {
                 $array['army' . $army['armyId']] = $army;
                 $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
                 $array['army' . $army['armyId']]['soldiers'] = $this->getArmySoldiers($army['armyId']);
@@ -983,7 +1004,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
-    public function getAllPlayerArmiesExeptOne($armyId, $playerId){
+    public function getAllPlayerArmiesExeptOne($armyId, $playerId) {
         try {
             $select = $this->_db->select()
                     ->from($this->_name, array('x', 'y'))

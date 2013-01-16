@@ -93,7 +93,8 @@ function nextTurnM(){
             .html('Ok')
             .click(function(){
                 removeM();
-                nextTurnA();
+                wsNextTurn();
+//                nextTurnA();
             })
             )
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){

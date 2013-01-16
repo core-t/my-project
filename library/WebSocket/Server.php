@@ -296,7 +296,8 @@ class WebSocket_Server implements WebSocket_Observer {
         if (isset($url['path']) == false)
             $url['path'] = '/';
 
-        $resource = array_pop(preg_split("/\//", $url['path'], 0, PREG_SPLIT_NO_EMPTY));
+        $split = preg_split("/\//", $url['path'], 0, PREG_SPLIT_NO_EMPTY);
+        $resource = array_pop($split);
         $user->parameters = $query;
 
 

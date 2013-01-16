@@ -602,7 +602,7 @@ function unsetParentArmy() {
 
 function handleParentArmy(){
     if(parentArmy){
-        getArmyA(parentArmy.armyId);
+//        getArmyA(parentArmy.armyId);
         wsArmy(parentArmy.armyId);
         unsetParentArmy();
     }
@@ -841,48 +841,95 @@ function quitArmy(){
     }
 }
 
-function walk(res) {
+function walk(data, color) {
     //    console.log(res);
     var i;
-    for(i in res.path) {
+    for(i in data.path) {
         break;
     }
-    if(typeof res.path[i] == 'undefined') {
-        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
-        players[my.color].armies['army'+res.armyId] = new army(res, my.color);
-        newX = players[my.color].armies['army'+res.armyId].x;
-        newY = players[my.color].armies['army'+res.armyId].y;
-        if(res.armyId != unselectedArmy.armyId){
-            wsArmy(unselectedArmy.armyId);
-        }
-        wsArmy(res.armyId);
+    if(typeof data.path[i] == 'undefined') {
+        deleteArmyByPosition(players[color].armies['army'+data.oldArmyId].x, players[color].armies['army'+data.oldArmyId].y, color);
+        players[color].armies['army'+data.armyId] = new army(data, color);
+        newX = players[color].armies['army'+data.armyId].x;
+        newY = players[color].armies['army'+data.armyId].y;
+        //        if(data.armyId != data.oldArmyId){
+        //            wsArmy(unselectedArmy.armyId);
+        //        }
+        //        wsArmy(res.armyId);
+
         handleParentArmy();
-        if(players[my.color].armies['army'+res.armyId].moves){
-            selectArmy(players[my.color].armies['army'+res.armyId]);
-        }else{
-            unselectArmy();
+
+        if(color == my.color){
+            if(players[color].armies['army'+data.armyId].moves){
+                selectArmy(players[color].armies['army'+data.armyId]);
+            }else{
+                unselectArmy();
+            }
+            unlock();
         }
-        unlock();
         return null;
     } else {
-        wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
-        zoomer.lensSetCenter(res.path[i].x*40, res.path[i].y*40);
-        $('#army'+unselectedArmy.armyId).animate({
-            left: (res.path[i].x*40) + 'px',
-            top: (res.path[i].y*40) + 'px'
+//        wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
+        zoomer.lensSetCenter(data.path[i].x*40, data.path[i].y*40);
+        $('#army'+data.oldArmyId).animate({
+            left: (data.path[i].x*40) + 'px',
+            top: (data.path[i].y*40) + 'px'
         },300,
         function(){
-            if(typeof res.path[i] == 'undefined'){
+            if(typeof data.path[i] == 'undefined'){
                 console.log('coś tu niegra');
-                console.log(res);
+                console.log(data);
             }else{
-                searchTower(res.path[i].x, res.path[i].y);
-                delete res.path[i];
-                walk(res);
+                searchTower(data.path[i].x, data.path[i].y);
+                delete data.path[i];
+                walk(data, color);
             }
         });
     }
 }
+
+//function walk(res) {
+//    //    console.log(res);
+//    var i;
+//    for(i in res.path) {
+//        break;
+//    }
+//    if(typeof res.path[i] == 'undefined') {
+//        deleteArmyByPosition(players[my.color].armies['army'+unselectedArmy.armyId].x, players[my.color].armies['army'+unselectedArmy.armyId].y, my.color);
+//        players[my.color].armies['army'+res.armyId] = new army(res, my.color);
+//        newX = players[my.color].armies['army'+res.armyId].x;
+//        newY = players[my.color].armies['army'+res.armyId].y;
+//        if(res.armyId != unselectedArmy.armyId){
+//            wsArmy(unselectedArmy.armyId);
+//        }
+//        wsArmy(res.armyId);
+//        handleParentArmy();
+//        if(players[my.color].armies['army'+res.armyId].moves){
+//            selectArmy(players[my.color].armies['army'+res.armyId]);
+//        }else{
+//            unselectArmy();
+//        }
+//        unlock();
+//        return null;
+//    } else {
+//        wsArmyMove(res.path[i].x, res.path[i].y, unselectedArmy.armyId);
+//        zoomer.lensSetCenter(res.path[i].x*40, res.path[i].y*40);
+//        $('#army'+unselectedArmy.armyId).animate({
+//            left: (res.path[i].x*40) + 'px',
+//            top: (res.path[i].y*40) + 'px'
+//        },300,
+//        function(){
+//            if(typeof res.path[i] == 'undefined'){
+//                console.log('coś tu niegra');
+//                console.log(res);
+//            }else{
+//                searchTower(res.path[i].x, res.path[i].y);
+//                delete res.path[i];
+//                walk(res);
+//            }
+//        });
+//    }
+//}
 
 function gogo(res,enemyArmies,neutral){
     console.log('a');
@@ -891,7 +938,7 @@ function gogo(res,enemyArmies,neutral){
     if(neutral == 0){
         for(i in enemyArmies) {
             wsArmy(enemyArmies[i].armyId);
-            getArmyA(enemyArmies[i].armyId);
+//            getArmyA(enemyArmies[i].armyId);
         }
     }
     if(typeof res.armyId != 'undefined'){
@@ -908,7 +955,7 @@ function gogo(res,enemyArmies,neutral){
         wsArmy(res.oldArmyId);
     }
     if(typeof res.ruinId != 'undefined'){
-//        wsGetRuin(res.ruinId);
+        //        wsGetRuin(res.ruinId);
         ruinUpdate(res.ruinId, 1);
     }
     computerA();

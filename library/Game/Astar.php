@@ -1,23 +1,100 @@
 <?php
 
+/**
+ * A* search algorithm implemantation.
+ */
 class Game_Astar {
 
+    /**
+     * The set of nodes already evaluated.
+     *
+     * @var array
+     */
     private $close = array();
+
+    /**
+     * The set of tentative nodes to be evaluated
+     *
+     * @var array
+     */
     private $open = array();
+
+    /**
+     * Destination x value
+     *
+     * @var int
+     */
     private $destX;
+
+    /**
+     * Destination y value
+     *
+     * @var int
+     */
     private $destY;
+
+    /**
+     * Number of loops
+     *
+     * @var int
+     */
     private $nr = 0;
+
+    /**
+     * Shortest path
+     *
+     * @var array
+     */
     private $path = array();
+
+    /**
+     * All map fields
+     *
+     * @var array
+     */
     private $fields;
+
+    /**
+     * Unit can fly
+     *
+     * @var bool
+     */
     private $canFly;
+
+    /**
+     * Unit can swim
+     *
+     * @var bool
+     */
     private $canSwim;
+
+    /**
+     * Current position on path
+     *
+     * @var array
+     */
     private $currentPosition;
 
+    /**
+     * Constructor
+     *
+     * @param int $destX
+     * @param int $destY
+     */
     public function __construct($destX, $destY) {
         $this->destX = $destX;
         $this->destY = $destY;
     }
 
+    /**
+     * First step
+     *
+     * @param int $srcX
+     * @param int $srcY
+     * @param array
+     * @param bool $canFly
+     * @param bool $canSwim
+     */
     public function start($srcX, $srcY, $fields, $canFly, $canSwim) {
         if ($srcX == $this->destX && $srcY == $this->destY) {
             return null;
@@ -29,6 +106,12 @@ class Game_Astar {
         $this->aStar();
     }
 
+    /**
+     * A* algorithm
+     *
+     * @throws Exception on too many loops
+     * @return bool
+     */
     private function aStar() {
         $this->nr++;
         if ($this->nr > 30000) {
@@ -52,13 +135,24 @@ class Game_Astar {
         $this->aStar();
     }
 
+    /**
+     * Counts open set
+     *
+     * @return int
+     */
     private function isNotEmpty() {
         return count($this->open);
     }
 
+    /**
+     * Finds smallest cost to goal
+     *
+     * @return int
+     */
     private function findSmallestF() {
         $i = 0;
-        foreach ($this->open as $k => $v) {
+        foreach ($this->open as $k => $v)
+        {
             if (!isset($this->open[$i])) {
                 $i = $k;
             }
@@ -69,13 +163,21 @@ class Game_Astar {
         return $i;
     }
 
+    /**
+     * Adds node to open set
+     *
+     * @param int $x
+     * @param int $y
+     */
     private function addOpen($x, $y) {
         $startX = $x - 1;
         $startY = $y - 1;
         $endX = $x + 1;
         $endY = $y + 1;
-        for ($i = $startX; $i <= $endX; $i++) {
-            for ($j = $startY; $j <= $endY; $j++) {
+        for ($i = $startX; $i <= $endX; $i++)
+        {
+            for ($j = $startY; $j <= $endY; $j++)
+            {
                 if ($x == $i && $y == $j) {
                     continue;
                 }
@@ -109,6 +211,13 @@ class Game_Astar {
         }
     }
 
+    /**
+     * Calculates path cost
+     *
+     * @param string $kA
+     * @param int $g
+     * @param string $key
+     */
     private function calculatePath($kA, $g, $key) {
         if ($this->open[$key]['G'] > ($g + $this->close[$kA]['G'])) {
             $this->open[$key]['parent'] = array(
@@ -120,28 +229,48 @@ class Game_Astar {
         }
     }
 
+    /**
+     * Calculates heuristic estimate
+     *
+     * @param int $x
+     * @param int $y
+     * @return int
+     */
     public function calculateH($x, $y) {
         $h = 0;
         $xLengthPoints = abs($x - $this->destX);
         $yLengthPoints = abs($y - $this->destY);
         if ($xLengthPoints < $yLengthPoints) {
-            for ($i = 1; $i <= $xLengthPoints; $i++) {
+            for ($i = 1; $i <= $xLengthPoints; $i++)
+            {
                 $h++;
             }
-            for ($i = 1; $i <= ($yLengthPoints - $xLengthPoints); $i++) {
+            for ($i = 1; $i <= ($yLengthPoints - $xLengthPoints); $i++)
+            {
                 $h++;
             }
         } else {
-            for ($i = 1; $i <= $yLengthPoints; $i++) {
+            for ($i = 1; $i <= $yLengthPoints; $i++)
+            {
                 $h++;
             }
-            for ($i = 1; $i <= ($xLengthPoints - $yLengthPoints); $i++) {
+            for ($i = 1; $i <= ($xLengthPoints - $yLengthPoints); $i++)
+            {
                 $h++;
             }
         }
         return $h;
     }
 
+    /**
+     * 
+     *
+     * @param type $x
+     * @param type $y
+     * @param type $newX
+     * @param type $newY
+     * @return boolean
+     */
     public function isCastleInterior($x, $y, $newX, $newY) {
         if ($x == $newX && $y == $newY) {
             return true;
@@ -157,6 +286,14 @@ class Game_Astar {
         }
     }
 
+    /**
+     *
+     * @param type $x
+     * @param type $y
+     * @param type $g
+     * @param type $parent
+     * @return type
+     */
     private function node($x, $y, $g, $parent) {
         $h = $this->calculateH($x, $y);
         return array(
@@ -169,12 +306,18 @@ class Game_Astar {
         );
     }
 
+    /**
+     *
+     * @param type $key
+     * @return null
+     */
     public function restoreFullPath($key) {
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
+            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
             return null;
         }
-        while (!empty($this->close[$key]['parent'])) {
+        while (!empty($this->close[$key]['parent']))
+        {
             $path[] = array(
                 'x' => $this->close[$key]['x'],
                 'y' => $this->close[$key]['y']);
@@ -183,18 +326,30 @@ class Game_Astar {
         return $path;
     }
 
+    /**
+     *
+     * @param type $key
+     * @return null
+     */
     public function getFullPathMovesSpend($key) {
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
+            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
             return null;
         }
         return $this->close[$key]['G'];
     }
 
+    /**
+     *
+     *
+     * @param string $key
+     * @param type $moves
+     * @return int
+     */
     public function restorePath($key, $moves) {
 //        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: '.$key.' w ścieżce');
+            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
             return 0;
         }
         $this->currentPosition;
@@ -202,7 +357,8 @@ class Game_Astar {
 //             'x' => $this->close[$key]['x'],
 //             'y' => $this->close[$key]['y'],
 //             'movesSpend' => $this->close[$key]['G']);
-        while (!empty($this->close[$key]['parent'])) {
+        while (!empty($this->close[$key]['parent']))
+        {
 //            throw new Exception(Zend_Debug::dump($this->close));
             if ($this->close[$key]['G'] <= $moves) {
                 if (!$this->currentPosition) {
@@ -227,11 +383,21 @@ class Game_Astar {
         return $this->path;
     }
 
+    /**
+     * Getter for currentPosition
+     *
+     * @return array
+     */
     public function getCurrentPosition() {
         return $this->currentPosition;
     }
 
-    public function reversePath(){
+    /**
+     * Reverse path
+     *
+     * @return array
+     */
+    public function reversePath() {
         $this->currentPosition = array(
             'x' => $this->path[0]['x'],
             'y' => $this->path[0]['y'],
@@ -259,6 +425,5 @@ class Game_Astar {
 //             return array('path' => $oldPath, 'currentPosition' => $oldCurrentPosition);
 //         }
 //     }
-
 }
 

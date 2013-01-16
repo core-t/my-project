@@ -26,7 +26,7 @@ class Application_Model_Tower extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
     }
-    
+
     public function changeTowerOwner($towerId, $playerId){
         $data = array(
             'playerId' => $playerId

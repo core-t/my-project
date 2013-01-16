@@ -1,14 +1,6 @@
 <?php
 
-class RuinController extends Game_Controller_Action {
-
-    public function _init() {
-        /* Initialize action controller here */
-        $this->_helper->layout->disableLayout();
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
-    }
+class RuinController extends Game_Controller_Ajax {
 
     public function searchAction() {
         $armyId = $this->_request->getParam('aid');
@@ -26,7 +18,7 @@ class RuinController extends Game_Controller_Action {
                     $response = $modelArmy->getArmyById($armyId);
                     $response['find'] = array('null', 1);
                     $response['ruinId'] = $ruinId;
-                    $this->view->response = Zend_Json::encode($response);
+                    echo Zend_Json::encode($response);
                     return null;
 //                    throw new Exception('Ruiny są już przeszukane. '.$ruinId.' '.$armyId);
                 }
@@ -34,20 +26,8 @@ class RuinController extends Game_Controller_Action {
                 $response = $modelArmy->getArmyById($armyId);
                 $response['find'] = $find;
                 $response['ruinId'] = $ruinId;
-                $this->view->response = Zend_Json::encode($response);
+                echo Zend_Json::encode($response);
 
-                $mGame = new Application_Model_Game();
-
-                $mWebSocket = new Application_Model_WebSocket();
-                $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
-                if ($response['find'][0] == 'death') {
-                    $empty = 0;
-                } else {
-                    $modelRuin->addRuin($ruinId);
-                    $empty = 1;
-                }
-                $mWebSocket->publishChannel($this->_namespace->gameId, $mGame->getPlayerColor($this->_namespace->player['playerId']) . '.r.' . $ruinId . '.' . $empty);
-                $mWebSocket->close();
             } else {
                 throw new Exception('Brak ruinId');
             }
@@ -65,7 +45,7 @@ class RuinController extends Game_Controller_Action {
             } else {
                 $ruin = array('empty' => false);
             }
-            $this->view->response = Zend_Json::encode(array('empty' => true));
+            echo Zend_Json::encode(array('empty' => true));
         } else {
             throw new Exception('Brak "ruinId"!');
         }

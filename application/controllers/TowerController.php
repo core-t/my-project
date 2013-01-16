@@ -1,12 +1,9 @@
 <?php
 
-class TowerController extends Game_Controller_Action {
+class TowerController extends Game_Controller_Ajax {
 
     public function _init() {
-        $this->_helper->layout->disableLayout();
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
+
     }
 
     public function addAction() {
@@ -22,10 +19,10 @@ class TowerController extends Game_Controller_Action {
                 $modelTower->addTower($towerId, $playerId);
             }
 
-            $mWebSocket = new Application_Model_WebSocket();
-            $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
-            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.T.' . $towerId);
-            $mWebSocket->close();
+//            $mWebSocket = new Application_Model_WebSocket();
+//            $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
+//            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.T.' . $towerId);
+//            $mWebSocket->close();
         } else {
             throw new Exception('Brak "towerId"!');
         }
@@ -36,7 +33,7 @@ class TowerController extends Game_Controller_Action {
 //        if ($towerId !== null) {
 //            $modelTower = new Application_Model_Tower($this->_namespace->gameId);
 //            if ($modelTower->towerExists($towerId)) {
-//                $this->view->response = Zend_Json::encode($modelTower->getTower($towerId));
+//                echo Zend_Json::encode($modelTower->getTower($towerId));
 //            } else {
 //                throw new Exception('Nie istnieje!');
 //            }
@@ -44,5 +41,4 @@ class TowerController extends Game_Controller_Action {
 //            throw new Exception('Brak "towerId"!');
 //        }
 //    }
-
 }

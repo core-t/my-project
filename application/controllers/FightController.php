@@ -1,13 +1,9 @@
 <?php
 
-class FightController extends Game_Controller_Action {
+class FightController extends Game_Controller_Ajax {
 
     public function _init() {
-        /* Initialize action controller here */
-        $this->_helper->layout->disableLayout();
-        if (empty($this->_namespace->gameId)) {
-            throw new Exception('Brak "gameId"!');
-        }
+
     }
 
     public function armyAction() {
@@ -39,12 +35,13 @@ class FightController extends Game_Controller_Action {
                     'movesSpend' => $movesSpend
                 );
                 $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
-                switch ($res) {
+                switch ($res)
+                {
                     case 1:
                         $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                         $result['victory'] = true;
                         $result['battle'] = $battle->getResult();
-                        $this->view->response = Zend_Json::encode($result);
+                        echo Zend_Json::encode($result);
                         break;
                     case 0:
                         throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
@@ -60,7 +57,7 @@ class FightController extends Game_Controller_Action {
                 $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
                 $enemy['battle'] = $battle->getResult();
                 $enemy['victory'] = false;
-                $this->view->response = Zend_Json::encode($enemy);
+                echo Zend_Json::encode($enemy);
             }
         } else {
             throw new Exception('Brak "armyId" lub "x" lub "y" lub "$enemyId"!');
@@ -97,7 +94,7 @@ class FightController extends Game_Controller_Action {
                 if ($modelCastle->isEnemyCastle($castleId, $this->_namespace->player['playerId'])) {
                     $enemy = $modelArmy->getAllUnitsFromCastlePosition($castle['position']);
                     $battle = new Game_Battle($army, $enemy);
-                    $battle->addCastleDefenseModifier($castle['defensePoints'] + $modelCastle->getCastleDefenseModifier($castleId));
+                    $battle->addCastleDefenseModifier($castleId);
                     $battle->fight();
                     $battle->updateArmies();
                     $enemy = $modelArmy->updateAllArmiesFromCastlePosition($castle['position']);
@@ -113,12 +110,13 @@ class FightController extends Game_Controller_Action {
                             'movesSpend' => $movesSpend
                         );
                         $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
-                        switch ($res) {
+                        switch ($res)
+                        {
                             case 1:
                                 $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                                 $result['victory'] = true;
                                 $result['battle'] = $battle->getResult();
-                                $this->view->response = Zend_Json::encode($result);
+                                echo Zend_Json::encode($result);
                                 break;
                             case 0:
                                 throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
@@ -137,7 +135,7 @@ class FightController extends Game_Controller_Action {
                     $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
                     $enemy['battle'] = $battle->getResult();
                     $enemy['victory'] = false;
-                    $this->view->response = Zend_Json::encode($enemy);
+                    echo Zend_Json::encode($enemy);
                 }
             } else {
                 throw new Exception('Na podanej pozycji nie ma zamku!');
@@ -189,12 +187,13 @@ class FightController extends Game_Controller_Action {
                             'movesSpend' => $movesSpend
                         );
                         $res = $modelArmy->updateArmyPosition($armyId, $this->_namespace->player['playerId'], $data);
-                        switch ($res) {
+                        switch ($res)
+                        {
                             case 1:
                                 $result = $modelArmy->getArmyByArmyIdPlayerId($armyId, $this->_namespace->player['playerId']);
                                 $result['victory'] = true;
                                 $result['battle'] = $battle->getResult();
-                                $this->view->response = Zend_Json::encode($result);
+                                echo Zend_Json::encode($result);
                                 break;
                             case 0:
                                 throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
@@ -213,7 +212,7 @@ class FightController extends Game_Controller_Action {
                     $modelArmy->destroyArmy($army['armyId'], $this->_namespace->player['playerId']);
                     $defender['battle'] = $battle->getResult();
                     $defender['victory'] = false;
-                    $this->view->response = Zend_Json::encode($defender);
+                    echo Zend_Json::encode($defender);
                 }
             } else {
                 throw new Exception('Na podanej pozycji nie ma zamku!');
@@ -235,7 +234,8 @@ class FightController extends Game_Controller_Action {
 //        foreach ($army['heroes'] as $hero) {
 //            $canFly--;
 //        }
-        foreach ($army['soldiers'] as $soldier) {
+        foreach ($army['soldiers'] as $soldier)
+        {
             if ($soldier['canFly']) {
                 $canFly++;
             } else {
