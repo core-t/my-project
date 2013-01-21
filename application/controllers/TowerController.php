@@ -2,10 +2,6 @@
 
 class TowerController extends Game_Controller_Ajax {
 
-    public function _init() {
-
-    }
-
     public function addAction() {
         $towerId = $this->_request->getParam('tid');
         $color = $this->_request->getParam('c');
@@ -18,11 +14,6 @@ class TowerController extends Game_Controller_Ajax {
             } else {
                 $modelTower->addTower($towerId, $playerId);
             }
-
-//            $mWebSocket = new Application_Model_WebSocket();
-//            $mWebSocket->authorizeChannel($this->_namespace->wsKeys);
-//            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.T.' . $towerId);
-//            $mWebSocket->close();
         } else {
             throw new Exception('Brak "towerId"!');
         }

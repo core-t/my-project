@@ -1,11 +1,14 @@
 <?php echo $this->form; ?>
 
 <?php
-if( $this->active ){
+if ($this->active) {
     echo 'Wciąż jesteś zalogowany w innej przeglądarce!<br>Jakoś zrobie wylogowanie tamtego za potrwierdzeniem.';
 }
 ?>
 <br /><br />
 <div id="view-content">
-    <p><a href="<?php echo $this->url(array('controller'=>'login', 'action'=>'registration')) ?>">Register</a> <a href="http://apps.facebook.com/testcore-t">Facebook</a></p>
+    <p>
+        <a href="<?php echo $this->url(array('controller' => 'login', 'action' => 'registration')) ?>">Register</a>
+        <!--<a href="http://apps.facebook.com/testcore-t">Facebook</a>-->
+    </p>
 </div>

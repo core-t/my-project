@@ -158,7 +158,7 @@ function prepareButtons(){
         }
     });
     $('#searchRuins').click(function(){
-        searchRuinsA()
+        wsSearchRuins()
     });
     $('#test').click(function(){
         test()

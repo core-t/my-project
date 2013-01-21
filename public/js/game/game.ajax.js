@@ -103,129 +103,52 @@ function moveA(movesSpend) {
     if(selectedArmy.moves == 0){
         unselectArmy();
         simpleM('Not enough moves left.');
-        return null;
+        return;
     }
     if(!my.turn){
-        return null;
+        return;
     }
-    //    if(!lWSC.isLoggedIn()){
-    //        alert('Socket disconnected!');
-    //        return null;
-    //    }
     tmpUnselectArmy();
     if(unselectedArmy.x == x && unselectedArmy.y == y) {
-        return null;
+        return;
     }
     setlock();
-    var neutralCastleId = null;
-    var enemyCastleId = null;
     var castleId = isEnemyCastle(x, y);
     if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
         var vectorLength  = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
         if(vectorLength >= 80) {
             unlock();
             unselectEnemyArmy();
-            return null;
+            return;
         }
         if(castleId){
             if(unselectedArmy.moves < (movesSpend + 2)) {
                 simpleM('Not enough moves left.');
                 unlock();
                 unselectEnemyArmy();
-                return null;
+                return;
             }
-            //            var newArmyPosition = checkCastleVectorLength(castleId);
-            //            if(!newArmyPosition){
-            //                unlock();
-            //                return null;
-            //            }
             if(castles[castleId].color){
-                enemyCastleId = castleId;
-            }else{
-                neutralCastleId = castleId;
-            }
-            if(neutralCastleId){
                 wsFightNeutralCastle(unselectedArmy.armyId, x, y, castleId);
-            //                $.getJSON(urlFightNeutralCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/cid/' + castleId, function(result) {
-            //                    var enemyArmies = new Array();
-            //                    enemyArmies[0] = getNeutralCastleGarrison();
-            //                    if(result.victory) {
-            //                        myArmyWin(result);
-            //                        wsCastle(castleId);
-            //                        castleOwner(castleId, my.color);
-            //                    } else {
-            //                        deleteArmy('army' + unselectedArmy.armyId, my.color);
-            //                        wsArmy(unselectedArmy.armyId);
-            //                    }
-            //                    handleParentArmy();
-            //                    wsBattle(result.battle,unselectedArmy, enemyArmies);
-            //                    battleM(result.battle, unselectedArmy, enemyArmies);
-            //                    unlock();
-            //                });
-            } else if(enemyCastleId){
+            }else{
                 wsFightEnemyCastle(unselectedArmy.armyId, x, y, castleId);
-            //                $.getJSON(urlFightEnemyCastle + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/cid/' + castleId, function(result) {
-            //                    var enemyArmies = getEnemyCastleGarrison(castleId);
-            //                    if(result.victory) {
-            //                        myArmyWin(result);
-            //                        for(i in enemyArmies) {
-            //                            deleteArmy('army' + enemyArmies[i].armyId, enemyArmies[i].color);
-            //                            wsArmy(enemyArmies[i].armyId);
-            //                        }
-            //                        wsCastle(castleId);
-            //                        castleOwner(castleId, my.color);
-            //                    } else {
-            //                        for(i in enemyArmies) {
-            //                            wsArmy(enemyArmies[i].armyId);
-            //                        //                            getArmyA(enemyArmies[i].armyId);
-            //                        }
-            //                        deleteArmy('army' + unselectedArmy.armyId, my.color);
-            //                        wsArmy(unselectedArmy.armyId);
-            //                    }
-            //                    handleParentArmy();
-            //                    wsBattle(result.battle,unselectedArmy,enemyArmies);
-            //                    battleM(result.battle, unselectedArmy, enemyArmies);
-            //                    unlock();
-            //                });
             }
         } else if(selectedEnemyArmy) {
             if(unselectedArmy.moves < (getTerrain(selectedEnemyArmy.fieldType, selectedEnemyArmy)[1] + 1)) {
                 simpleM('Not enough moves left.');
                 unlock();
                 unselectEnemyArmy();
-                return null;
+                return;
             }
             wsFightEnemy(unselectedArmy.armyId, x, y, selectedEnemyArmy.armyId);
-//            $.getJSON(urlFightArmy + '/armyId/' + unselectedArmy.armyId + '/x/' + x + '/y/' + y +  '/eid/' + selectedEnemyArmy.armyId, function(result) {
-//                if(result.victory == true) {
-//                    myArmyWin(result);
-//                    deleteArmyByPosition(x, y, selectedEnemyArmy.color);
-//                    wsArmy(selectedEnemyArmy.armyId);
-//                } else {
-//                    deleteArmy('army' + unselectedArmy.armyId, my.color, 1);
-//                    wsArmy(unselectedArmy.armyId);
-//                    //                    getArmyA(selectedEnemyArmy.armyId);
-//                    wsArmy(selectedEnemyArmy.armyId);
-//                }
-//                handleParentArmy();
-//                wsBattle(result.battle,unselectedArmy,{
-//                    0:selectedEnemyArmy
-//                });
-//                battleM(result.battle, unselectedArmy, {
-//                    0:selectedEnemyArmy
-//                });
-//                unselectEnemyArmy();
-//                unlock();
-//            });
         }
     } else {
         if(movesSpend === null) {
             unlock();
-            return null;
+            return;
         }
         wsArmyMove(x, y, unselectedArmy.armyId);
     }
-    return true;
 }
 
 //function getArmyA(armyId, center) {
@@ -254,10 +177,10 @@ function setProductionA(castleId) {
     }
 
     if(!unitId) {
-        return null;
+        return;
     }
     if(castles[castleId].currentProduction == unitId){
-        return null;
+        return;
     }
     $.getJSON(urlSetProduction+'/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
@@ -282,20 +205,20 @@ function setProductionA(castleId) {
 //    });
 //}
 
-function joinArmyA(armyId1, armyId2){
-    $.getJSON(urlJoinArmy+'/aid1/'+armyId1+'/aid2/'+armyId2, function(result) {
-        unsetParentArmy();
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        if(armyId1 != result.armyId){
-            wsArmy(armyId1, false);
-        }
-        if(armyId2 != result.armyId){
-            wsArmy(armyId2, false);
-        }
-        wsArmy(result.armyId, true);
-        removeM();
-    });
-}
+//function joinArmyA(armyId1, armyId2){
+//    $.getJSON(urlJoinArmy+'/aid1/'+armyId1+'/aid2/'+armyId2, function(result) {
+//        unsetParentArmy();
+//        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
+//        if(armyId1 != result.armyId){
+//            wsArmy(armyId1, false);
+//        }
+//        if(armyId2 != result.armyId){
+//            wsArmy(armyId2, false);
+//        }
+//        wsArmy(result.armyId, true);
+//        removeM();
+//    });
+//}
 
 function splitArmyA(armyId){
     var h = '';
@@ -313,55 +236,49 @@ function splitArmyA(armyId){
             s += $(this).val();
         }
     });
-    $.getJSON(urlSplitArmy+'/aid/'+armyId+'/s/'+s+'/h/'+h, function(result) {
-        setParentArmy(players[my.color].armies['army'+armyId]);
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        selectArmy(players[my.color].armies['army'+result.armyId]);
-        wsArmy(selectedArmy.armyId, true);
-        removeM();
-    });
+    wsSplitArmy(armyId, s, h);
 }
 
-function castleBuildDefenseA(){
-    var castleId = $('input[name=defense]:checked').val();
-    if(!castleId) {
-        return null;
-    }
-    $.getJSON(urlCastleBuild+'/cid/'+castleId, function(result) {
-        if(result.castleId == castleId){
-            wsCastle(castleId);
-            castleUpdate(result);
-            castleOwner(result.castleId, result.color);
-            removeM();
-            goldUpdate(result.gold);
-        }
-    });
-}
+//function castleBuildDefenseA(){
+//    var castleId = $('input[name=defense]:checked').val();
+//    if(!castleId) {
+//        return;
+//    }
+//    $.getJSON(urlCastleBuild+'/cid/'+castleId, function(result) {
+//        if(result.castleId == castleId){
+//            wsCastle(castleId);
+//            castleUpdate(result);
+//            castleOwner(result.castleId, result.color);
+//            removeM();
+//            goldUpdate(result.gold);
+//        }
+//    });
+//}
 
-function razeCastleA(){
-    var castleId = $('input[name=raze]:checked').val();
-    if(!castleId) {
-        return null;
-    }
-    $.getJSON(urlCastleRaze+'/cid/'+castleId, function(result) {
-        if(result.castleId == castleId){
-            wsCastle(castleId);
-            castleUpdate(result);
-            castleOwner(result.castleId, result.color);
-            removeM();
-            goldUpdate(result.gold);
-        }
-    });
-}
+//function razeCastleA(){
+//    var castleId = $('input[name=raze]:checked').val();
+//    if(!castleId) {
+//        return null;
+//    }
+//    $.getJSON(urlCastleRaze+'/cid/'+castleId, function(result) {
+//        if(result.castleId == castleId){
+//            wsCastle(castleId);
+//            castleUpdate(result);
+//            castleOwner(result.castleId, result.color);
+//            removeM();
+//            goldUpdate(result.gold);
+//        }
+//    });
+//}
 
-function getCastleA(castleId){
-    $.getJSON(urlCastleGet+'/cid/'+castleId, function(result) {
-        if(result.castleId == castleId){
-            castleUpdate(result);
-            castleOwner(result.castleId, result.color);
-        }
-    });
-}
+//function getCastleA(castleId){
+//    $.getJSON(urlCastleGet+'/cid/'+castleId, function(result) {
+//        if(result.castleId == castleId){
+//            castleUpdate(result);
+//            castleOwner(result.castleId, result.color);
+//        }
+//    });
+//}
 
 function disbandArmyA(){
     if(!my.turn){
@@ -395,48 +312,6 @@ function heroResurrectionA(castleId){
     });
 }
 
-function searchRuinsA(){
-    if(!my.turn){
-        return null;
-    }
-    if(selectedArmy == null){
-        return null;
-    }
-    unselectArmy();
-    $.getJSON(urlSearchRuins+'/aid/'+unselectedArmy.armyId, function(result) {
-        //        wsGetRuin(getRuinId(unselectedArmy));
-        ruinUpdate(result.ruinId, 1);
-        wsRuin(result.ruinId);
-        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-        switch(result.find[0]){
-            case 'gold':
-                var gold = result.find[1] + parseInt($('#gold').html());
-                goldUpdate(gold);
-                simpleM('You have found '+result.find[1]+' gold.');
-                break;
-            case 'death':
-                simpleM('You have found death.');
-                wsArmy(result.armyId);
-                break
-            case 'alies':
-                simpleM(result.find[1]+' alies joined your army.');
-                wsArmy(result.armyId);
-                break
-            case 'null':
-                simpleM('You have found nothing.');
-                break
-            case 'artefact':
-                simpleM('You have found an ancient artefact.');
-                wsArmy(result.armyId, true);
-                break
-            case 'empty':
-                simpleM('Ruins are empty.');
-                break;
-
-        }
-    });
-}
-
 //function getRuinA(ruinId){
 //    $.getJSON(urlGetRuins+'/rid/'+ruinId, function(result) {
 //        ruinUpdate(ruinId, result.empty);
@@ -444,7 +319,7 @@ function searchRuinsA(){
 //}
 
 function addTowerA(towerId){
-    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color);
+    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color)
 }
 
 function webSocketOpen(wssuid){

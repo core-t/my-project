@@ -94,7 +94,7 @@ function nextTurnM(){
             .click(function(){
                 removeM();
                 wsNextTurn();
-//                nextTurnA();
+            //                nextTurnA();
             })
             )
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){
@@ -492,7 +492,7 @@ function castleM(castleId, color){
         };
     }else{
         buttonBuilDefense = $('<div>').addClass('button right').html('Build defense').click(function(){
-            castleBuildDefenseA()
+            wsCastleBuildDefense();
         });
         cssBuilDefense = {};
     }
@@ -539,7 +539,7 @@ function castleM(castleId, color){
                 )
             .append(' income 1000g')
             .append($('<div>').addClass('button right').html('Raze').click(function(){
-                razeCastleA()
+                wsRazeCastle()
             }))
             )
         .append(
