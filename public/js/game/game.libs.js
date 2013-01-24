@@ -122,6 +122,7 @@ function ruinUpdate(ruinId, empty){
     var title;
     var css;
     if(empty){
+        ruins[ruinId].e = 1;
         title = 'Ruins (empty)';
         css = '_empty';
     }else{
@@ -135,7 +136,11 @@ function ruinUpdate(ruinId, empty){
 function getRuinId(a){
     for(i in ruins){
         if(a.x == ruins[i].x && a.y == ruins[i].y){
-            return i;
+            if(typeof ruins[i].e == 'undefined'){
+                console.log(ruins[i]);
+                return i;
+            }
+            return null;
         }
     }
     return null;
@@ -225,12 +230,14 @@ function castleUpdate(data) {
 
 function castleOwner(castleId, color) {
     var castle = $('#castle' + castleId);
+
     if(typeof castles[castleId] != 'undefined' && castles[castleId].razed){
         castle.remove();
         $('#c'+castleId).remove();
         delete castles[castleId];
         return;
     }
+
     if(color == my.color) {
         castleFields(castleId, 'c');
         castle
@@ -261,11 +268,14 @@ function castleOwner(castleId, color) {
             castleCursor(this.id)
         })
     }
+
     castle.removeClass()
     .addClass('castle ' + color)
     .html('')
     .css('background', 'url(../img/game/castle_'+color+'.png) center center no-repeat');
+
     castles[castleId].color = color;
+
     $('#c'+castleId).css('background',getColor(color));
 //    castle.fadeIn(1);
 }
@@ -930,7 +940,7 @@ function walk(data, color) {
 //}
 
 function gogo(res,enemyArmies,neutral){
-    console.log('a');
+    console.log('gogo');
     oldArmy = players[turn.color].armies['army'+res.oldArmyId];
     deleteArmyByPosition(oldArmy.x, oldArmy.y, turn.color);
     if(neutral == 0){
@@ -956,7 +966,7 @@ function gogo(res,enemyArmies,neutral){
         //        wsGetRuin(res.ruinId);
         ruinUpdate(res.ruinId, 1);
     }
-    computerA();
+    wsComputer();
 }
 
 function getEnemyArmy(enemyArmyId){

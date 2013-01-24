@@ -294,7 +294,7 @@ function startGame(){
         if(my.turn && !players[my.color].turnActive){
             startMyTurnA();
         } else if(my.game && players[turn.color].computer){
-            computerA();
+            wsComputer();
         }
     //    for(y in fields) {
     //        for(x in fields[y]) {

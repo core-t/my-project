@@ -23,6 +23,9 @@ class Game_Battle {
     }
 
     public function addCastleDefenseModifier($gameId, $castleId, $db = null) {
+        if (!$db) {
+            Application_Model_Database::getDb();
+        }
         $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Application_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
         if ($defenseModifier > 0) {
             $this->defenseModifier += $defenseModifier;

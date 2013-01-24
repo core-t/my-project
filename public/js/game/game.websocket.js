@@ -10,6 +10,33 @@ $(document).ready(function() {
                     walk(edata.data, edata.color);
                     break;
 
+                case 'computer':
+                    console.log(edata);
+                    removeM();
+
+                    if(typeof edata.data.oldArmyId == 'undefined'){
+                        //                        wsPlayerArmies(turn.color);
+                        //                        $.when(getPlayerArmiesA(turn.color)).then(computerA());
+                        $.when(wsPlayerArmies(turn.color)).then(wsComputer());
+                    }else if(typeof edata.data.path != 'undefined'){
+                        //                        waitOn();
+                        enemyWalk(edata.data);
+                    }else{
+                        wsComputer();
+                    }
+                    break;
+
+                case 'computerEnd':
+                    changeTurn(edata.data.color, edata.data.nr);
+                    if(players[edata.data.color].computer){
+                        wsComputer();
+                    }
+                    break;
+
+                case 'computerGameover':
+                    wsComputer();
+                    break;
+
                 case 'army':
                     if(typeof edata.data.armyId != 'undefined') {
                         if(typeof players[edata.data.color].armies['army' + edata.data.armyId] != 'undefined'){
@@ -71,8 +98,26 @@ $(document).ready(function() {
 
                 case 'joinArmy':
                     unsetParentArmy();
+                    zoomer.lensSetCenter(edata.data.army.x*40, edata.data.army.y*40);
                     players[edata.color].armies['army'+edata.data.army.armyId] = new army(edata.data.army, edata.color);
                     removeM();
+                    break;
+
+                case 'disbandArmy':
+                    if(typeof edata.data.armyId != 'undefined'){
+                        removeM();
+                        zoomer.lensSetCenter(edata.data.x*40, edata.data.y*40);
+                        deleteArmy('army' + edata.data.armyId, edata.color);
+                    }
+                    break;
+
+                case 'heroResurrection':
+                    removeM();
+                    zoomer.lensSetCenter(edata.data.army.x*40, edata.data.army.y*40);
+                    players[edata.color].armies['army'+edata.data.army.armyId] = new army(edata.data.army, edata.color);
+                    if(my.color==turn.color){
+                        goldUpdate(edata.data.gold);
+                    }
                     break;
 
                 case 'open':
@@ -95,7 +140,7 @@ $(document).ready(function() {
                         //                            unset(data[3]);
                         //                        }
                         changeTurn(edata.data['color'], edata.data['nr']);
-                        computerA();
+                        wsComputer();
                     }
                     break;
 
@@ -309,7 +354,25 @@ function wsArmy(armyId, center) {
     ws.send(JSON.stringify(token));
 }
 
-function wsSplitArmy(armyId, s, h) {
+function wsSplitArmy(armyId) {
+    if(!my.turn){
+        return;
+    }
+    var h = '';
+    var s = '';
+    $('.message input[type="checkbox"]:checked').each(function() {
+        if($(this).attr('name') == 'heroId'){
+            if(h){
+                h += ',';
+            }
+            h += $(this).val();
+        }else{
+            if(s){
+                s += ',';
+            }
+            s += $(this).val();
+        }
+    });
     var token = {
         type: 'splitArmy',
         gameId: gameId,
@@ -320,6 +383,51 @@ function wsSplitArmy(armyId, s, h) {
             armyId:armyId,
             s:s,
             h:h
+        }
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsDisbandArmy() {
+    if(!my.turn){
+        return;
+    }
+    if(selectedArmy == null){
+        return;
+    }
+    unselectArmy();
+
+    var token = {
+        type: 'disbandArmy',
+        gameId: gameId,
+        playerId: my.id,
+        color: my.color,
+        accessKey: lAccessKey,
+        data: {
+            armyId:unselectArmy.armyId,
+            x:unselectArmy.x,
+            y:unselectArmy.y
+        }
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsHeroResurrection(castleId) {
+    if(!my.turn){
+        return;
+    }
+    unselectArmy();
+
+    var token = {
+        type: 'heroResurrection',
+        gameId: gameId,
+        playerId: my.id,
+        color: my.color,
+        accessKey: lAccessKey,
+        data: {
+            castleId:castleId
         }
     };
 
@@ -340,19 +448,6 @@ function wsJoinArmy(armyId1, armyId2){
     };
 
     ws.send(JSON.stringify(token));
-
-//    $.getJSON(urlJoinArmy+'/aid1/'+armyId1+'/aid2/'+armyId2, function(result) {
-//        unsetParentArmy();
-//        players[my.color].armies['army'+result.armyId] = new army(result, my.color);
-//        if(armyId1 != result.armyId){
-//            wsArmy(armyId1, false);
-//        }
-//        if(armyId2 != result.armyId){
-//            wsArmy(armyId2, false);
-//        }
-//        wsArmy(result.armyId, true);
-//        removeM();
-//    });
 }
 
 function wsFightNeutralCastle(armyId, x, y, castleId){
@@ -409,21 +504,6 @@ function wsFightEnemy(armyId, x, y, enemyArmyId){
     ws.send(JSON.stringify(token));
 }
 
-function wsRuin(armyId){
-    var token = {
-        type: 'ruin',
-        gameId: gameId,
-        playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
-        data: {
-            armyId:armyId
-        }
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
 function wsSearchRuins(){
     if(!my.turn){
         return;
@@ -432,9 +512,38 @@ function wsSearchRuins(){
         return;
     }
     unselectArmy();
-    wsRuin(unselectedArmy.armyId);
+    var token = {
+        type: 'ruin',
+        gameId: gameId,
+        playerId: my.id,
+        color: my.color,
+        accessKey: lAccessKey,
+        data: {
+            armyId:unselectedArmy.armyId
+        }
+    };
+
+    ws.send(JSON.stringify(token));
 }
 
+function wsComputer(){
+    if(!my.game){
+        return
+    }
+    if(!players[turn.color].computer){
+        return;
+    }
+
+    var token = {
+        type: 'computer',
+        gameId: gameId,
+        playerId: my.id,
+        color: my.color,
+        accessKey: lAccessKey
+    };
+
+    ws.send(JSON.stringify(token));
+}
 //function wsBattle(battle,army,armies){
 //    var data = my.color+'.b.';
 //    var tmp = '';

@@ -225,7 +225,7 @@ function splitArmyM(a){
             .append(
                 $('<div>').addClass('right')
                 .append($('<a>').addClass('button submit').html('Select units').click(function(){
-                    splitArmyA(selectedArmy.armyId)
+                    wsSplitArmy(selectedArmy.armyId)
                 }))
                 )
             )
@@ -462,7 +462,7 @@ function castleM(castleId, color){
             };
         }else{
             buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection').click(function(){
-                heroResurrectionA(castleId)
+                wsHeroResurrection(castleId)
             });
             cssResurestion = {};
         }
