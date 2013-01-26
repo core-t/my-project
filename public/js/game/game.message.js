@@ -126,10 +126,10 @@ function simpleM(message){
 
 function disbandArmyM(){
     if(typeof selectedArmy == 'undefined'){
-        return null;
+        return;
     }
     if(!my.turn){
-        return null;
+        return;
     }
     removeM();
     mElement().after(
@@ -141,7 +141,7 @@ function disbandArmyM(){
             .addClass('button go')
             .html('Disband')
             .click(function(){
-                disbandArmyA()
+                wsDisbandArmy()
             })
             )
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){
@@ -153,7 +153,7 @@ function disbandArmyM(){
 
 function splitArmyM(a){
     if(typeof selectedArmy == 'undefined'){
-        return null;
+        return;
     }
     removeM();
     var army = $('<div>').addClass('split');
@@ -240,7 +240,7 @@ function splitArmyM(a){
 
 function armyStatusM(){
     if(typeof selectedArmy == 'undefined'){
-        return null;
+        return;
     }
     removeM();
     var army = $('<div>').addClass('status');
@@ -356,13 +356,13 @@ function armyStatusM(){
 
 function castleM(castleId, color){
     if(lock){
-        return null;
+        return;
     }
     if(!my.turn){
-        return null;
+        return;
     }
     if(selectedArmy) {
-        return null;
+        return;
     }
     removeM();
     var time = '';
@@ -553,23 +553,23 @@ function castleM(castleId, color){
 
 }
 
-function battleM(battle, a, def, clb, r, n) {
+function battleM(battle, attackerArmy, defenderArmies, attackerColor, defenderColor, clb, r, n) {
     removeM();
     var attack = $('<div>').addClass('battle attack');
-    for(i in a.soldiers) {
-        var img = a.soldiers[i].name.replace(' ', '_').toLowerCase();
+    for(i in attackerArmy.soldiers) {
+        var img = attackerArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
         attack.append(
             $('<img>').attr({
-                'src':'/img/game/' + img + '_' + a.color + '.png',
-                'id':'unit'+a.soldiers[i].soldierId
+                'src':'/img/game/' + img + '_' + attackerColor + '.png',
+                'id':'unit'+attackerArmy.soldiers[i].soldierId
             })
             );
     }
-    for(i in a.heroes) {
+    for(i in attackerArmy.heroes) {
         attack.append(
             $('<img>').attr({
-                'src':'/img/game/hero_' + a.color + '.png',
-                'id':'hero'+a.heroes[i].heroId
+                'src':'/img/game/hero_' + attackerColor + '.png',
+                'id':'hero'+attackerArmy.heroes[i].heroId
             })
             );
     }
@@ -581,54 +581,64 @@ function battleM(battle, a, def, clb, r, n) {
         .append($('<p>').html('VS').addClass('center'))
         );
     var h = 0;
-    for(j in def) {
-        var d = def[j];
+    for(j in defenderArmies) {
+        var defenderArmy = defenderArmies[j];
         h++;
         var defense = $('<div>').addClass('battle defense');
-        for(i in d.soldiers) {
-            var img = d.soldiers[i].name.replace(' ', '_').toLowerCase();
+        for(i in defenderArmy.soldiers) {
+            img = defenderArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
             defense.append(
                 $('<img>').attr({
-                    'src':'/img/game/' + img + '_' + d.color + '.png',
-                    'id':'unit'+d.soldiers[i].soldierId
+                    'src':'/img/game/' + img + '_' + defenderColor + '.png',
+                    'id':'unit'+defenderArmy.soldiers[i].soldierId
                 })
                 );
         }
-        for(i in d.heroes) {
+        for(i in defenderArmy.heroes) {
             defense.append(
                 $('<img>').attr({
-                    'src':'/img/game/hero_' + d.color + '.png',
-                    'id':'hero'+d.heroes[i].heroId
+                    'src':'/img/game/hero_' + defenderColor + '.png',
+                    'id':'hero'+defenderArmy.heroes[i].heroId
                 })
                 );
         }
         $('.message').append(defense);
     }
+
     if(h == 0) {
         $('.message').append($('<div>').addClass('battle defense'));
     }
+
     var height = 62 + 31 + 14 + h * 31;
+
     $('.message')
     .append($('<div>').addClass('button go').html('OK').click(function(){
         removeM()
     }))
     .css('min-height',height+'px');
+
+    console.log('battle:');
+    console.log(battle);
+
     if(battle){
         $('.message').fadeIn(100, function(){
-            killM(battle, clb, r, def, n);
+            killM(battle, clb, r, defenderArmies, n);
         })
     }
 }
 
 function killM(b, clb, r, e, n){
+    console.log('killM');
+    console.log(clb);
     for(i in b) {
         break;
     }
+    console.log(b[i]);
     if(typeof b[i] == 'undefined') {
         if(typeof clb != 'undefined'){
             clb(r, e, n);
         }
-        return null;
+        return;
     }
     if(typeof b[i].soldierId != 'undefined') {
         $('#unit'+b[i].soldierId).fadeOut(1500, function(){

@@ -20,13 +20,16 @@ class Application_Model_Move {
             return;
         }
         $res = Application_Model_Database::updateArmyPosition($gameId, $armyId, $playerId, $currentPosition);
-        $newArmyId = Application_Model_Database::joinArmiesAtPosition($gameId, $currentPosition, $playerId);
         switch ($res)
         {
             case 1:
+                $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $currentPosition, $playerId);
+                $newArmyId = $armiesIds[0]['armyId'];
+                unset($armiesIds[0]);
                 $result = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $newArmyId, $playerId);
                 $result['path'] = $this->path;
                 $result['oldArmyId'] = $armyId;
+                $result['deletedIds'] = $armiesIds;
                 return $result;
                 break;
             case 0:
@@ -70,7 +73,7 @@ class Application_Model_Move {
         $aStar = new Game_Astar($destX, $destY);
         try {
             $aStar->start($army['x'], $army['y'], $this->fields, $this->canFly, $this->canSwim);
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             echo($e);
             return;
         }

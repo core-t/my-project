@@ -46,10 +46,16 @@ class WofHandler extends WebSocket_UriHandler {
         print_r('ZAPYTANIE ');
         print_r($dataIn);
 
+        $db = Application_Model_Database::getDb();
+//        if (!Application_Model_Database::isPlayerTurn($dataIn['gameId'], $dataIn['playerId'], $db)) {
+//            echo('Nie Twoja tura.');
+//            return;
+//        }
+
         switch ($dataIn['type'])
         {
             case 'move':
-                $this->move($dataIn);
+                $this->move($dataIn, $db);
                 break;
 
             case 'chat':
@@ -62,7 +68,6 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "armyId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
                 $army = Application_Model_Database::getArmyById($dataIn['gameId'], $parentArmyId, $db);
                 $army['color'] = Application_Model_Database::getPlayerColor($dataIn['gameId'], $army['playerId'], $db);
                 $army['center'] = $dataIn['data']['center'];
@@ -84,7 +89,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "color"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $playerId = Application_Model_Database::getPlayerIdByColor($dataIn['gameId'], $color, $db);
                 if (empty($playerId)) {
                     echo('Brak $playerId!');
@@ -110,7 +115,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "armyId", "s" lub "h"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $childArmyId = Application_Model_Database::splitArmy($dataIn['gameId'], $h, $s, $parentArmyId, $dataIn['playerId'], $db);
                 if (empty($childArmyId)) {
                     echo('Brak "childArmyId"');
@@ -119,7 +124,7 @@ class WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'parentArmyId' => $parentArmyId,
+                        'parentArmy' => Application_Model_Database::getArmyById($dataIn['gameId'], $parentArmyId, $db),
                         'childArmy' => Application_Model_Database::getArmyById($dataIn['gameId'], $childArmyId, $db),
                     ),
                     'playerId' => $dataIn['playerId'],
@@ -139,14 +144,16 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "armyId1" i "armyId2"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $position1 = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId1, $dataIn['playerId'], $db);
                 $position2 = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId2, $dataIn['playerId'], $db);
                 if (empty($position1['x']) || empty($position1['y']) || ($position1['x'] != $position2['x']) || ($position1['y'] != $position2['y'])) {
                     echo('Armie nie są na tej samej pozycji!');
                     return;
                 }
-                $armyId = Application_Model_Database::joinArmiesAtPosition($dataIn['gameId'], $position1, $dataIn['playerId'], $db);
+                $armiesIds = Application_Model_Database::joinArmiesAtPosition($dataIn['gameId'], $position1, $dataIn['playerId'], $db);
+                $armyId = $armiesIds[0]['armyId'];
+                unset($armiesIds[0]);
                 if (empty($armyId)) {
                     echo('Brak "armyId"!');
                     return;
@@ -155,6 +162,7 @@ class WofHandler extends WebSocket_UriHandler {
                     'type' => $dataIn['type'],
                     'data' => array(
                         'army' => Application_Model_Database::getArmyById($dataIn['gameId'], $armyId, $db),
+                        'deletedIds' => $armiesIds
                     ),
                     'playerId' => $dataIn['playerId'],
                     'color' => $dataIn['color']
@@ -167,11 +175,11 @@ class WofHandler extends WebSocket_UriHandler {
 
             case 'disbandArmy':
                 $armyId = $dataIn['data']['armyId'];
-                if (!empty($armyId)) {
+                if (empty($armyId)) {
                     echo('Brak "armyId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $destroyArmyResponse = Application_Model_Database::destroyArmy($dataIn['gameId'], $armyId, $dataIn['playerId'], $db);
                 if (!$destroyArmyResponse) {
                     echo('Nie mogę usunąć armii!');
@@ -196,11 +204,11 @@ class WofHandler extends WebSocket_UriHandler {
 
             case 'heroResurrection':
                 $castleId = $dataIn['data']['castleId'];
-                if ($castleId != null) {
+                if ($castleId == null) {
                     echo('Brak "castleId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 if (!Application_Model_Database::isPlayerCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db)) {
                     echo('To nie jest Twój zamek! ' . $castleId);
                     return;
@@ -248,7 +256,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "armyId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $heroId = Application_Model_Database::getHeroIdByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
                 if (empty($heroId)) {
                     echo('Brak heroId. Tylko Hero może przeszukiwać ruiny!');
@@ -328,7 +336,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Na podanej pozycji nie ma zamku!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
                 if (empty($army)) {
                     echo('Brak armii o podanym ID!');
@@ -357,41 +365,31 @@ class WofHandler extends WebSocket_UriHandler {
                             'y' => $y,
                             'movesSpend' => $movesSpend
                         );
-                        $res = Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                        switch ($res)
-                        {
-                            case 1:
-                                $response = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
-                                $response['victory'] = true;
-                                break;
-                            case 0:
-                                echo('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                                break;
-                            case null:
-                                echo('Zapytanie zwróciło błąd');
-                                break;
-                            default:
-                                echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                                break;
-                        }
+                        Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
+                        $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
+                        $victory = true;
                     } else {
                         echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.' . $res);
                     }
                 } else {
                     Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-                    $response = $defender;
-                    $response['victory'] = false;
+                    $victory = false;
+                    $attacker = array(
+                        'armyId' => $parentArmyId
+                    );
                 }
-                $response['castleId'] = $castleId;
-                $response['battle'] = $battle->getResult();
-                $response['x'] = $x;
-                $response['y'] = $y;
 
                 $token = array(
                     'type' => $dataIn['type'],
                     'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color'],
-                    'data' => $response
+                    'attackerColor' => $dataIn['color'],
+                    'attackerArmy' => $attacker,
+                    'defenderArmy' => $defender,
+                    'battle' => $battle->getResult(),
+                    'victory' => $victory,
+                    'x' => $x,
+                    'y' => $y,
+                    'castleId' => $castleId
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -417,7 +415,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Na podanej pozycji nie ma zamku!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
                 if (empty($army)) {
                     echo('Brak armii o podanym ID!');
@@ -437,7 +435,8 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('To nie jest zamek wroga.');
                     return;
                 }
-                $battle = new Game_Battle($army, Application_Model_Database::getAllUnitsFromCastlePosition($dataIn['gameId'], $castle['position'], $db), $dataIn['gameId']);
+                $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($dataIn['gameId'], $castle['position'], $db);
+                $battle = new Game_Battle($army, $enemy, $dataIn['gameId']);
                 $battle->addCastleDefenseModifier($dataIn['gameId'], $castleId, $db);
                 $battle->fight();
                 $battle->updateArmies($dataIn['gameId'], $db);
@@ -453,48 +452,38 @@ class WofHandler extends WebSocket_UriHandler {
                         'y' => $y,
                         'movesSpend' => $movesSpend
                     );
-                    $updateArmyPositionResult = Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                    switch ($updateArmyPositionResult)
+                    Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
+                    $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
+                    $victory = true;
+                    foreach ($enemy['ids']as $id)
                     {
-                        case 1:
-                            $response = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
-                            $response['victory'] = true;
-                            break;
-                        case 0:
-                            echo('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                            break;
-                        case null:
-                            echo('Zapytanie zwróciło błąd');
-                            break;
-                        default:
-                            echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                            echo $res;
-                            break;
+                        $defender[]['armyId'] = $id;
                     }
                 } else {
                     Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-                    $response = $defender;
-                    $response['victory'] = false;
+                    $victory = false;
+                    $attacker = array(
+                        'armyId' => $parentArmyId
+                    );
                 }
-                $response['battle'] = $battle->getResult();
-                $response['castleId'] = $castleId;
-                $response['x'] = $x;
-                $response['y'] = $y;
 
                 $token = array(
                     'type' => $dataIn['type'],
                     'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color'],
-                    'data' => $response
+                    'attackerColor' => $dataIn['color'],
+                    'attackerArmy' => $attacker,
+                    'defenderColor' => Application_Model_Database::getColorByArmyId($dataIn['gameId'], $defender[0]['armyId'], $db),
+                    'defenderArmy' => $defender,
+                    'battle' => $battle->getResult(),
+                    'victory' => $victory,
+                    'x' => $x,
+                    'y' => $y,
+                    'castleId' => $castleId
                 );
-
-
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
-
-
                 break;
 
             case 'fightEnemy':
@@ -506,11 +495,12 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "armyId" lub "x" lub "y" lub "$enemyId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
                 $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y']);
                 if ($distance >= 2) {
                     echo('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2).');
+                    $this->move($dataIn, $db);
                     return;
                 }
                 $movesSpend = $this->movesSpend($x, $y, $army);
@@ -520,8 +510,7 @@ class WofHandler extends WebSocket_UriHandler {
                 }
                 $enemy = Application_Model_Database::getAllUnitsFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
                 $battle = new Game_Battle($army, $enemy, $dataIn['gameId']);
-                $battle->addTowerDefenseModifier($x, $y);
-                $battle->fight();
+                $battle->addTowerDefenseModifier($x, $y)->fight();
                 $battle->updateArmies($dataIn['gameId'], $db);
                 $defender = Application_Model_Database::updateAllArmiesFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
                 if (empty($defender)) {
@@ -530,58 +519,31 @@ class WofHandler extends WebSocket_UriHandler {
                         'y' => $y,
                         'movesSpend' => $movesSpend
                     );
-                    $updateArmyPositionResult = Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                    switch ($updateArmyPositionResult)
-                    {
-                        case 1:
-                            $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
-
-                            $token = array(
-                                'type' => $dataIn['type'],
-                                'playerId' => $dataIn['playerId'],
-                                'color' => $dataIn['color'],
-                                'data' => array(
-                                    'army' => $attacker,
-                                    'enemyArmy' => null,
-                                    'battle' => $battle->getResult(),
-                                    'victory' => true
-                                )
-                            );
-
-                            $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                            $this->sendToChannel($token, $users);
-                            break;
-                        case 0:
-                            echo('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                            break;
-                        case null:
-                            echo('Zapytanie zwróciło błąd');
-                            break;
-                        default:
-                            echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                            break;
-                    }
+                    Application_Model_Database::updateArmyPosition($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $movesAndPosition, $db);
+                    $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $parentArmyId, $dataIn['playerId'], $db);
+                    $victory = true;
+                    $defender[]['armyId'] = $enemyId;
                 } else {
                     Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-
-                    $token = array(
-                        'type' => $dataIn['type'],
-                        'playerId' => $dataIn['playerId'],
-                        'color' => $dataIn['color'],
-                        'data' => array(
-                            'army' => null,
-                            'enemyArmy' => $defender,
-                            'battle' => $battle->getResult(),
-                            'victory' => false,
-                        )
-                    );
-
-                    $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                    $this->sendToChannel($token, $users);
+                    $victory = false;
                 }
 
+                $token = array(
+                    'type' => $dataIn['type'],
+                    'playerId' => $dataIn['playerId'],
+                    'attackerColor' => $dataIn['color'],
+                    'attackerArmy' => $attacker,
+                    'defenderColor' => Application_Model_Database::getColorByArmyId($dataIn['gameId'], $enemyId, $db),
+                    'defenderArmy' => $defender,
+                    'battle' => $battle->getResult(),
+                    'victory' => $victory,
+                    'x' => $x,
+                    'y' => $y
+                );
+
+                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+
+                $this->sendToChannel($token, $users);
                 break;
 
             case 'razeCastle':
@@ -590,7 +552,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "castleId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 $razeCastleResult = Application_Model_Database::razeCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
                 switch ($razeCastleResult)
                 {
@@ -629,7 +591,7 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('Brak "castleId"!');
                     return;
                 }
-                $db = Application_Model_Database::getDb();
+
                 if (!Application_Model_Database::isPlayerCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db)) {
                     echo('Nie Twój zamek.');
                     break;
@@ -681,7 +643,7 @@ class WofHandler extends WebSocket_UriHandler {
                 break;
 
             case 'computer':
-                $db = Application_Model_Database::getDb();
+
                 if (!Application_Model_Database::isGameMaster($dataIn['gameId'], $dataIn['playerId'], $db)) {
                     echo('Nie Twoja gra!');
                     return;
@@ -772,12 +734,7 @@ class WofHandler extends WebSocket_UriHandler {
         $this->sendToChannel($token, $users);
     }
 
-    private function move($data) {
-        $db = Application_Model_Database::getDb();
-        if (!Application_Model_Database::isPlayerTurn($data['gameId'], $data['playerId'], $db)) {
-            echo('Nie Twoja tura.');
-            return;
-        }
+    private function move($data, $db) {
         if (isset($data['data']['armyId'])) {
             $armyId = $data['data']['armyId'];
         }
@@ -791,7 +748,7 @@ class WofHandler extends WebSocket_UriHandler {
 
             $mMove = new Application_Model_Move();
             $token = array(
-                'type' => $data['type'],
+                'type' => 'move',
                 'data' => $mMove->go($data['gameId'], $armyId, $x, $y, $data['playerId']),
                 'playerId' => $data['playerId'],
                 'color' => $data['color']
@@ -808,20 +765,20 @@ class WofHandler extends WebSocket_UriHandler {
 
     private function calculateArmiesDistance($dX, $dY, $aX, $aY, $castleId = null) {
         echo '$dX,$dY=' . $dX . ',' . $dY . ' $aX,$aY=' . $aX . ',' . $aY;
-        $distance = sqrt(pow($dX - $aX, 2) + pow($aY - $dY, 2));
+        $distance = sqrt(pow($aX - $dX, 2) + pow($aY - $dY, 2));
         var_dump($distance);
-        if ($castleId) {
-            $tmp = sqrt(pow($dX + 1 - $aX, 2) + pow($aY - $dY, 2));
+        if ($castleId !== null) {
+            $tmp = sqrt(pow($aX - $dX + 1, 2) + pow($aY - $dY, 2));
             var_dump($tmp);
             if ($tmp < $distance) {
                 $distance = $tmp;
             }
-            $tmp = sqrt(pow($dX - $aX, 2) + pow($aY - $dY + 1, 2));
+            $tmp = sqrt(pow($aX - $dX, 2) + pow($aY - $dY + 1, 2));
             var_dump($tmp);
             if ($tmp < $distance) {
                 $distance = $tmp;
             }
-            $tmp = sqrt(pow($dX + 1 - $aX, 2) + pow($aY - $dY + 1, 2));
+            $tmp = sqrt(pow($aX - $dX + 1, 2) + pow($aY - $dY + 1, 2));
             var_dump($tmp);
             if ($tmp < $distance) {
                 $distance = $tmp;

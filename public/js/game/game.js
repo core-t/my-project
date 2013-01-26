@@ -67,29 +67,29 @@ var largeimageloaded = false;
 
 var wait = 0;
 
-var urlMove = '/move/go';
-var urlNextTurn = '/turn/next';
+//var urlMove = '/move/go';
+//var urlNextTurn = '/turn/next';
 var urlGetTurn = '/turn/get';
 var urlStartMyTurn = '/turn/start';
-var urlFightEnemyCastle = '/fight/ecastle';
-var urlFightNeutralCastle = '/fight/ncastle';
-var urlFightArmy = '/fight/army';
-var urlAddArmy = '/gameajax/addarmy';
-var urlGetPlayerArmies = '/gameajax/armies';
-var urlJoinArmy = '/gameajax/join';
-var urlSplitArmy = '/gameajax/split';
-var urlDisbandArmy = '/gameajax/disband';
-var urlHeroResurrection = '/gameajax/resurrection';
-var urlSearchRuins = '/ruin/search';
-var urlGetRuins = '/ruin/get';
+//var urlFightEnemyCastle = '/fight/ecastle';
+//var urlFightNeutralCastle = '/fight/ncastle';
+//var urlFightArmy = '/fight/army';
+//var urlAddArmy = '/gameajax/addarmy';
+//var urlGetPlayerArmies = '/gameajax/armies';
+//var urlJoinArmy = '/gameajax/join';
+//var urlSplitArmy = '/gameajax/split';
+//var urlDisbandArmy = '/gameajax/disband';
+//var urlHeroResurrection = '/gameajax/resurrection';
+//var urlSearchRuins = '/ruin/search';
+//var urlGetRuins = '/ruin/get';
 var urlSetProduction = '/production/set';
-var urlCastleRaze = '/castle/raze';
-var urlCastleBuild = '/castle/build';
-var urlCastleGet = '/castle/get';
+//var urlCastleRaze = '/castle/raze';
+//var urlCastleBuild = '/castle/build';
+//var urlCastleGet = '/castle/get';
 var urlTowerAdd = '/tower/add';
-var urlTowerGet = '/tower/get';
-var urlComputer = '/computer';
-var urlChatSend = '/chat/send';
+//var urlTowerGet = '/tower/get';
+//var urlComputer = '/computer';
+//var urlChatSend = '/chat/send';
 var urlWebSocketOpen = '/websocket/open'
 
 function prepareButtons(){
@@ -342,15 +342,6 @@ function unlock(){
         $('#nextArmy').removeClass('buttonOff');
     }
 }
-
-//function waitOn(){
-//    wait = 1;
-//}
-//
-//function waitOff(){
-//    wait = 0;
-//    console.log('b');
-//}
 
 function titleBlink(msg) {
     if(timeoutId){

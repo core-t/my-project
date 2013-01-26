@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Database extends Zend_Db_Table_Abstract {
+class Application_Model_Database {
 
     static public function getDb() {
         return new Zend_Db_Adapter_Pdo_Pgsql(array(
@@ -9,6 +9,35 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
                     'password' => Zend_Registry::get('config')->resources->db->params->password,
                     'dbname' => Zend_Registry::get('config')->resources->db->params->dbname
                 ));
+    }
+
+    static public function update($name, $data, $where, $db = null) {
+        $updateResult = $db->update($name, $data, $where);
+        switch ($updateResult)
+        {
+            case 1:
+                return $updateResult;
+                break;
+            case 0:
+                echo('
+Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane
+');
+                print_r(debug_backtrace(0, 2));
+                break;
+            case null:
+                echo('
+Zapytanie zwróciło błąd
+');
+                print_r(debug_backtrace(0, 2));
+                break;
+            default:
+                echo('
+Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
+');
+                print_r(debug_backtrace(0, 2));
+                print_r($updateResult);
+                break;
+        }
     }
 
     static public function isPlayerCastle($gameId, $castleId, $playerId, $db = null) {
@@ -64,18 +93,22 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
                 ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            if (count($result) == 1) {// jeśli jest tylko jedna armia na pozycji
-                return $result[0]['armyId'];
+            if (!isset($result[0]['armyId'])) {
+                echo 'Brak armii na pozycji';
+                return;
             }
-            foreach ($result as $army)
-            {
-                self::heroesUpdateArmyId($gameId, $army['armyId'], $result[0]['armyId']);
-                self::soldiersUpdateArmyId($gameId, $army['armyId'], $result[0]['armyId']);
+            $firstArmyId = $result[0]['armyId'];
+            $count = count($result);
+            if ($count > 1) {
+                for ($i = 1; $i < $count; $i++)
+                {
+                    self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+                    self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+                }
             }
-            if (isset($result[0]['armyId'])) {
-                return $result[0]['armyId'];
-            }
+            return $result;
         } catch (Exception $e) {
+            echo $e;
             echo($select->__toString());
         }
     }
@@ -92,7 +125,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            return self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo $e;
         }
@@ -110,7 +143,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('soldier', $data, $where);
+            return self::update('soldier', $data, $where, $db);
         } catch (Exception $e) {
             echo $e;
         }
@@ -147,7 +180,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
                 $db->quoteInto('"gameId" = ?', $gameId)
             );
             try {
-                $db->update('heroesingame', $data2, $where1);
+                self::update('heroesingame', $data2, $where1, $db);
             } catch (Exception $e) {
                 echo($e);
             }
@@ -173,7 +206,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $where1 = $db->quoteInto('"soldierId" = ?', $row['soldierId']);
 
             try {
-                $db->update('soldier', $data2, $where1);
+                self::update('soldier', $data2, $where1, $db);
             } catch (Exception $e) {
                 echo($e);
             }
@@ -185,7 +218,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"playerId" = ?', $playerId)
         );
         try {
-            return $db->update('army', $data1, $where);
+            return self::update('army', $data1, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -508,7 +541,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"playerId" = ?', $playerId)
         );
         try {
-            return $db->update('army', $data, $where);
+            return self::update('army', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -645,12 +678,14 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             if ($ids) {
                 return array(
                     'heroes' => self::getArmyHeroes($gameId, $ids, true, $db),
-                    'soldiers' => self::getArmySoldiers($gameId, $ids, true, $db)
+                    'soldiers' => self::getArmySoldiers($gameId, $ids, true, $db),
+                    'ids' => explode(',', $ids)
                 );
             } else {
                 return array(
                     'heroes' => array(),
-                    'soldiers' => array()
+                    'soldiers' => array(),
+                    'ids' => array()
                 );
             }
         } catch (Exception $e) {
@@ -713,7 +748,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'productionTurn' => 0,
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -731,7 +766,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId),
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            return self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -752,7 +787,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'productionTurn' => 0,
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo $e;
         }
@@ -784,7 +819,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"playerId" = ?', $playerId)
         );
         try {
-            return $db->update('playersingame', $data, $where);
+            return self::update('playersingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -819,7 +854,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1026,7 +1061,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            return self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1184,7 +1219,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            return self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1202,7 +1237,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('soldier', $data, $where);
+            return self::update('soldier', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1315,7 +1350,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            return self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1442,14 +1477,14 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"playerId" = ?', $playerId)
         );
         try {
-            $db->update('playersingame', $data, $where);
+            self::update('playersingame', $data, $where, $db);
             $data['turnActive'] = 'false';
             $where = array(
                 $db->quoteInto('"gameId" = ?', $gameId),
                 $db->quoteInto('"turnActive" = ?', 'true'),
                 $db->quoteInto('"playerId" != ?', $playerId)
             );
-            $db->update('playersingame', $data, $where);
+            self::update('playersingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1471,7 +1506,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('heroesingame', $data, $where);
+            self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1497,7 +1532,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            return $db->update('soldier', $data, $where);
+            return self::update('soldier', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1586,7 +1621,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'productionTurn' => 0
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1605,7 +1640,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'productionTurn' => 0
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1643,8 +1678,8 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
-            $db->update('soldier', $data, $where);
-            $db->update('heroesingame', $data, $where);
+            self::update('soldier', $data, $where, $db);
+            self::update('heroesingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1777,7 +1812,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db = self::getDb();
         }
         $find = false;
-        // szukam następnego koloru w dostępnych kolorach
+// szukam następnego koloru w dostępnych kolorach
         foreach (self::$playerColors as $color)
         {
             if ($playerColor == $color) {
@@ -1794,7 +1829,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             return;
         }
         $playersInGame = self::getPlayersInGameReady($gameId, $db);
-        // przypisuję playerId do koloru
+// przypisuję playerId do koloru
         foreach ($playersInGame as $k => $player)
         {
             if ($player['color'] == $nextPlayerColor) {
@@ -1802,7 +1837,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
                 break;
             }
         }
-        // jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
+// jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
         if (!isset($nextPlayerId)) {
             foreach ($playersInGame as $k => $player)
             {
@@ -1894,7 +1929,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
         }
         $where = $db->quoteInto('"gameId" = ?', $gameId);
         try {
-            return $db->update('game', $data, $where);
+            return self::update('game', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1942,7 +1977,7 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
         );
         try {
-            return $db->update('castle', $data, $where);
+            return self::update('castle', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
         }
@@ -1958,9 +1993,30 @@ class Application_Model_Database extends Zend_Db_Table_Abstract {
             $db->quoteInto('"playerId" = ?', $playerId)
         );
         try {
-            $db->update('playersingame', $data, $where);
+            self::update('playersingame', $data, $where, $db);
         } catch (Exception $e) {
             echo($e);
+        }
+    }
+
+    static public function getColorByArmyId($gameId, $armyId, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $select = $db->select()
+                ->from('army', 'playerId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"armyId" = ?', $armyId);
+        try {
+            $playerId = $db->fetchOne($select);
+            if ($playerId) {
+                return self::getPlayerColor($gameId, $playerId, $db);
+            } else {
+                print_r(debug_backtrace(0, 2));
+            }
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
         }
     }
 

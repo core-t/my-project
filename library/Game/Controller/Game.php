@@ -10,7 +10,7 @@ abstract class Game_Controller_Game extends Game_Controller_Action {
         }
 
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
-        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.min.js');
+        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.js');
 
         $this->view->Logout($this->_namespace->player);
         $this->view->Websocket();

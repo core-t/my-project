@@ -249,7 +249,8 @@ class Application_Model_Computer {
     }
 
     static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $battle = null, $victory = false, $castleId = null, $ruinId = null, $enemyArmyId = null) {
-        $armyId = Application_Model_Database::joinArmiesAtPosition($gameId, $position, $playerId, $db);
+        $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $position, $playerId, $db);
+        $armyId = $armiesIds[0]['armyId'];
         if (!$armyId) {
             $armyId = $oldArmyId;
         }
