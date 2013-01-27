@@ -664,10 +664,6 @@ function unselectEnemyArmy() {
 }
 
 function deleteArmy(armyId, color, quiet) {
-    console.log('deleteArmy');
-    console.log(armyId);
-    console.log(color);
-    console.log(quiet);
     if(quiet) {
         if(typeof players[color].armies[armyId] != 'undefined') {
             armyFields(players[color].armies[armyId]);
@@ -835,7 +831,7 @@ function quitArmy(){
     }
 }
 
-function walk(data, color) {
+function walk(data, color, deletedIds) {
     //    console.log(res);
     var i;
     for(i in data.path) {
@@ -855,6 +851,15 @@ function walk(data, color) {
             unlock();
         }
 
+        if(typeof deletedIds == 'undefined'){
+            console.log('?');
+            return;
+        }
+        for(i in deletedIds){
+            deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
+        }
+
+
         return;
     } else {
         zoomer.lensSetCenter(data.path[i].x*40, data.path[i].y*40);
@@ -869,7 +874,7 @@ function walk(data, color) {
             }else{
                 searchTower(data.path[i].x, data.path[i].y);
                 delete data.path[i];
-                walk(data, color);
+                walk(data, color, deletedIds);
             }
         });
     }

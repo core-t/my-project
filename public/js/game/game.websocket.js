@@ -1,6 +1,7 @@
 $(document).ready(function() {
     ws.onmessage = function(e) {
         var r=$.parseJSON( e.data );
+        function clb(){};
 
         if(typeof r['type'] != 'undefined'){
 
@@ -12,13 +13,80 @@ $(document).ready(function() {
                         console.log('?');
                         return;
                     }
-                    $.when(walk(r.data, r.color)).then(function(){
-                        if(typeof r.data.deletedIds == 'undefined'){
-                            console.log('?');
-                            return;
+                    walk(r.data, r.color, r.data.deletedIds);
+                    break;
+
+                case 'fightNeutralCastle':
+                    zoomer.lensSetCenter(r.x*40, r.y*40);
+
+                    battleM(r.battle, r.attackerColor, r.defenderColor, clb);
+
+                    if(r.victory) {
+                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+                        if(r.attackerColor==my.color){
+                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
                         }
-                        for(i in r.data.deletedIds){
-                            deleteArmy('army'+r.data.deletedIds[i]['armyId'], r.color);
+                        castleOwner(r.castleId, r.attackerColor);
+                    } else {
+                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
+                    }
+
+                    if(r.attackerColor==my.color){
+                        unlock();
+                    }
+                    break;
+
+                case 'fightEnemyCastle':
+                    zoomer.lensSetCenter(r.x*40, r.y*40);
+
+                    battleM(r.battle, r.attackerColor, r.defenderColor, clb);
+
+                    if(r.victory) {
+                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+                        if(r.attackerColor==my.color){
+                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                        }
+                        for(i in r.defenderArmy) {
+                            deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
+                        }
+                        castleOwner(r.castleId, r.attackerColor);
+                    } else {
+                        for(i in r.defenderArmy){
+                            players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
+                        }
+                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
+                    }
+
+                    if(r.attackerColor==my.color){
+                        unlock();
+                    }
+                    break;
+
+                case 'fightEnemy':
+                    zoomer.lensSetCenter(r.x*40, r.y*40);
+
+                    $.when(battleM(r.battle, r.attackerColor, r.defenderColor, clb)).then(function(){
+                        if(r.victory) {
+                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+                            if(r.attackerColor==my.color){
+                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                            }
+                            for(i in r.defenderArmy) {
+                                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
+                            }
+                        } else {
+                            for(i in r.defenderArmy){
+                                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
+                            }
+                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
+                        }
+
+                        if(r.attackerColor==my.color){
+                            unselectEnemyArmy();
+                            unlock();
                         }
                     });
                     break;
@@ -157,79 +225,6 @@ $(document).ready(function() {
                         //                        }
                         changeTurn(r.data['color'], r.data['nr']);
                         wsComputer();
-                    }
-                    break;
-
-                case 'fightNeutralCastle':
-                    var enemyArmies = {
-                        0: getNeutralCastleGarrison()
-                    };
-
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    if(r.victory) {
-                        players[r.color].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.color);
-                        if(r.color==my.color){
-                            newX = players[r.color].armies['army'+r.attackerArmy.armyId].x;
-                            newY = players[r.color].armies['army'+r.attackerArmy.armyId].y;
-                        }
-                        castleOwner(r.castleId, r.color);
-                    } else {
-                        deleteArmy('army' + r.attackerArmy.armyId, r.color);
-                    }
-                    battleM(r.battle, players[r.color].armies['army'+r.attackerArmy.armyId], enemyArmies);
-                    if(r.color==my.color){
-                        unlock();
-                    }
-                    break;
-
-                case 'fightEnemyCastle':
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    if(r.victory) {
-                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                        if(r.attackerColor==my.color){
-                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-                        }
-                        for(i in r.defenderArmy) {
-                            deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-                        }
-                        castleOwner(r.castleId, r.attackerColor);
-                    } else {
-                        for(i in r.defenderArmy){
-                            players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-                        }
-                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                    }
-                    battleM(r.battle, r.attackerArmy, r.defenderArmy, r.attackerColor, r.defenderColor);
-                    if(r.attackerColor==my.color){
-                        unlock();
-                    }
-                    break;
-
-                case 'fightEnemy':
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    if(r.victory) {
-                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                        if(r.attackerColor==my.color){
-                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-                        }
-                        for(i in r.defenderArmy) {
-                            deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-                        }
-                    } else {
-                        for(i in r.defenderArmy){
-                            players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-                        }
-                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                    }
-                    battleM(r.battle, r.attackerArmy, r.defenderArmy, r.attackerColor, r.defenderColor);
-                    if(r.attackerColor==my.color){
-                        unselectEnemyArmy();
-                        unlock();
                     }
                     break;
 

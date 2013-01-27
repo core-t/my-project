@@ -22,21 +22,27 @@ class Application_Model_Database {
                 echo('
 Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane
 ');
-                print_r(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(0, 2));
                 break;
             case null:
                 echo('
 Zapytanie zwróciło błąd
 ');
-                print_r(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(0, 2));
                 break;
             default:
                 echo('
 Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
 ');
-                print_r(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(0, 2));
                 print_r($updateResult);
                 break;
+        }
+    }
+
+    static public function debug($debug) {
+        if (true) {
+            print_r($debug[1]);
         }
     }
 
@@ -953,7 +959,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 self::addRuin($gameId, $ruinId, $db);
             } else {
                 $find = array('death', 1);
-                self::armyRemoveHero($heroId);
+                self::armyRemoveHero($gameId, $heroId, $db);
             }
         } elseif ($random < 55) {//45%
 //kasa
@@ -2007,6 +2013,27 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 ->from('army', 'playerId')
                 ->where('"gameId" = ?', $gameId)
                 ->where('"armyId" = ?', $armyId);
+        try {
+            $playerId = $db->fetchOne($select);
+            if ($playerId) {
+                return self::getPlayerColor($gameId, $playerId, $db);
+            } else {
+                print_r(debug_backtrace(0, 2));
+            }
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getColorByCastleId($gameId, $castleId, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $select = $db->select()
+                ->from('castle', 'playerId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"castleId" = ?', $castleId);
         try {
             $playerId = $db->fetchOne($select);
             if ($playerId) {
