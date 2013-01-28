@@ -224,17 +224,7 @@ function changeTurn(color, nr) {
 
 function connect(){
     //    if(lWSC.isOpened()){
-    var token = {
-        type: "open",
-        gameId: gameId,
-        playerId: my.id,
-        accessKey: lAccessKey
-    };
-
-    ws.send(JSON.stringify(token));
-
-    lock = false;
-    startGame();
+    wsOpen();
 //    //        startM();
 //    }else{
 //        login();
@@ -246,70 +236,72 @@ function connect(){
 function startGame(){
     if(!largeimageloaded){
         setTimeout ( 'startGame()', 1000 );
-    }else{
-        var myArmies = false;
-        var myCastles = false;
-        for(i in castles) {
-            new createNeutralCastle(i);
-        }
-        for(i in ruins) {
-            new ruinCreate(i);
-        }
-        for(i in towers) {
-            new towerCreate(i);
-        }
-        for(color in players) {
-            players[color].active = 0;
-            $('.'+color +' .color').addClass(color +'bg');
-            if(players[color].computer){
-                $('.'+color+' .color').css('background',color+' url(../img/game/computer.png) center center no-repeat');
-            }
-            //            console.log(players[color]);
-            for(i in players[color].armies) {
-                players[color].armies[i] = new army(players[color].armies[i], color);
-                if(color == my.color){
-                    myArmies = true;
-                }
-            }
-            for(i in players[color].castles) {
-                updateCastleDefense(i, players[color].castles[i].defenseMod);
-                castleOwner(i, color);
-                if(color == my.color){
-                    myCastles = true;
-                    setMyCastleProduction(i);
-                }
-            }
-        }
-        //        auth();
-        showFirstCastle();
-        if(!myArmies && !myCastles){
-            lostM();
-        }else{
-            if(my.turn){
-                turnOn();
-            }else{
-                turnOff();
-            }
-        }
-        if(my.turn && !players[my.color].turnActive){
-            startMyTurnA();
-        } else if(my.game && players[turn.color].computer){
-            wsComputer();
-        }
-    //    for(y in fields) {
-    //        for(x in fields[y]) {
-    //            board.append(
-    //                $('<div>')
-    //                .html(fields[y][x])
-    //                .addClass('field')
-    //                .css({
-    //                    left:(x*40)+'px',
-    //                    top:(y*40)+'px'
-    //                })
-    //            );
-    //        }
-    //    }
+        return;
     }
+    var myArmies = false;
+    var myCastles = false;
+    for(i in castles) {
+        new createNeutralCastle(i);
+    }
+    for(i in ruins) {
+        new ruinCreate(i);
+    }
+    for(i in towers) {
+        new towerCreate(i);
+    }
+    for(color in players) {
+        players[color].active = 0;
+        $('.'+color +' .color').addClass(color +'bg');
+        if(players[color].computer){
+            $('.'+color+' .color').css('background',color+' url(../img/game/computer.png) center center no-repeat');
+        }
+        //            console.log(players[color]);
+        for(i in players[color].armies) {
+            players[color].armies[i] = new army(players[color].armies[i], color);
+            if(color == my.color){
+                myArmies = true;
+            }
+        }
+        for(i in players[color].castles) {
+            updateCastleDefense(i, players[color].castles[i].defenseMod);
+            castleOwner(i, color);
+            if(color == my.color){
+                myCastles = true;
+                setMyCastleProduction(i);
+            }
+        }
+    }
+    //        auth();
+    showFirstCastle();
+    if(!myArmies && !myCastles){
+        lostM();
+    }else{
+        if(my.turn){
+            turnOn();
+        }else{
+            turnOff();
+        }
+    }
+
+    if(my.turn && !players[my.color].turnActive){
+        startMyTurnA();
+    } else if(my.game && players[turn.color].computer){
+        setTimeout ( 'wsComputer()', 1000 );
+    }
+//    for(y in fields) {
+//        for(x in fields[y]) {
+//            board.append(
+//                $('<div>')
+//                .html(fields[y][x])
+//                .addClass('field')
+//                .css({
+//                    left:(x*40)+'px',
+//                    top:(y*40)+'px'
+//                })
+//            );
+//        }
+//    }
+
 }
 
 function goldUpdate(gold){

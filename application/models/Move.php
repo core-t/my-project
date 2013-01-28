@@ -24,8 +24,8 @@ class Application_Model_Move {
         {
             case 1:
                 $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $currentPosition, $playerId);
-                $newArmyId = $armiesIds[0]['armyId'];
-                unset($armiesIds[0]);
+                $newArmyId = $armiesIds['armyId'];
+
                 $result = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $newArmyId, $playerId);
                 $result['path'] = $this->path;
                 $result['oldArmyId'] = $armyId;

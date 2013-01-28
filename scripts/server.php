@@ -393,8 +393,8 @@ class WofHandler extends WebSocket_UriHandler {
                     return;
                 }
                 $armiesIds = Application_Model_Database::joinArmiesAtPosition($dataIn['gameId'], $position1, $dataIn['playerId'], $db);
-                $armyId = $armiesIds[0]['armyId'];
-                unset($armiesIds[0]);
+                $armyId = $armiesIds['armyId'];
+
                 if (empty($armyId)) {
                     echo('Brak "armyId"!');
                     return;
@@ -485,10 +485,6 @@ class WofHandler extends WebSocket_UriHandler {
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
-                break;
-
-            case 'tower':
-
                 break;
 
             case 'ruin':
@@ -651,21 +647,31 @@ class WofHandler extends WebSocket_UriHandler {
                     echo('To nie komputer!');
                     return;
                 }
+
                 if (!Application_Model_Database::playerTurnActive($dataIn['gameId'], $playerId, $db)) {
                     $response = Application_Model_Computer::startTurn($dataIn['gameId'], $playerId, $db);
+                    var_dump('a');
                 } else {
+                    var_dump('b');
                     $army = Application_Model_Database::getComputerArmyToMove($dataIn['gameId'], $playerId, $db);
                     if (!empty($army['armyId'])) {
+                        var_dump('c');
                         $response = Application_Model_Computer::moveArmy($dataIn['gameId'], $playerId, $army, $db);
                     } else {
+                        var_dump('d');
                         $response = Application_Model_Computer::endTurn($dataIn['gameId'], $playerId, $db);
                     }
                 }
+
+//                print_r($response);
 
                 switch ($response['action'])
                 {
                     case 'continue':
                         $type = 'computer';
+                        break;
+                    case 'start':
+                        $type = 'computerStart';
                         break;
                     case 'end':
                         $type = 'computerEnd';
@@ -684,7 +690,7 @@ class WofHandler extends WebSocket_UriHandler {
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
-                $this->sendToChannel($token, $users);
+                $this->sendToChannel($token, $users, 1);
 
                 break;
 

@@ -22,19 +22,19 @@ class Application_Model_Database {
                 echo('
 Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane
 ');
-                self::debug(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 break;
             case null:
                 echo('
 Zapytanie zwróciło błąd
 ');
-                self::debug(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 break;
             default:
                 echo('
 Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
 ');
-                self::debug(debug_backtrace(0, 2));
+                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 print_r($updateResult);
                 break;
         }
@@ -101,17 +101,22 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             $result = $db->query($select)->fetchAll();
             if (!isset($result[0]['armyId'])) {
                 echo 'Brak armii na pozycji';
-                return;
+                return array('armyId' => null);
             }
             $firstArmyId = $result[0]['armyId'];
+            unset($result[0]);
             $count = count($result);
             if ($count > 1) {
-                for ($i = 1; $i < $count; $i++)
+                for ($i = 1; $i <= $count; $i++)
                 {
+                    if ($result[$i]['armyId'] == $firstArmyId) {
+                        continue;
+                    }
                     self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
                     self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
                 }
             }
+            $result['armyId'] = $firstArmyId;
             return $result;
         } catch (Exception $e) {
             echo $e;
@@ -1461,10 +1466,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 ->where('"turnActive" = ?', true)
                 ->where('"gameId" = ?', $gameId);
         try {
-            $turnActive = $db->fetchOne($select);
-            if ($turnActive !== null) {
-                return true;
-            }
+            return $db->fetchOne($select);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -2041,6 +2043,18 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             } else {
                 print_r(debug_backtrace(0, 2));
             }
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getUnitIdByName($name, $db = null) {
+        $select = $db->select()
+                ->from('unit', 'unitId')
+                ->where('name = ?', $name);
+        try {
+            return $db->fetchOne($select);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());

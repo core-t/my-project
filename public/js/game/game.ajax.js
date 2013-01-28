@@ -105,6 +105,6 @@ function addTowerA(towerId){
     $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color)
 }
 
-function webSocketOpen(wssuid){
+function webSocketOpenA(wssuid){
     $.getJSON(urlWebSocketOpen+'/wssuid/'+wssuid);
 }

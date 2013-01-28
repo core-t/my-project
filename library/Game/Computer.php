@@ -7,15 +7,16 @@ class Game_Computer {
             $db = self::getDb();
         }
         $result = array();
+
         if ($castleId !== null) {
             if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
                 $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
-                $battle = new Game_Battle($army, $enemy, $gameId);
+                $battle = new Game_Battle($army, $enemy);
                 $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 $battle->fight();
-                $battle->updateArmies($gameId);
-                $enemy = Application_Model_Database::updateAllArmiesFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
-                if (empty($enemy)) {
+                $battle->updateArmies($gameId, $db);
+                $defender = Application_Model_Database::updateAllArmiesFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                if (empty($defender)) {
                     Application_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
                     $result['victory'] = true;
                 } else {
@@ -23,10 +24,10 @@ class Game_Computer {
                     $result['victory'] = false;
                 }
             } else {
-                $battle = new Game_Battle($army, null, $gameId);
-                $enemy = $battle->getNeutralCastleGarrizon($gameId);
+                $enemy = Game_Battle::getNeutralCastleGarrizon($gameId);
+                $battle = new Game_Battle($army, $enemy);
                 $battle->fight();
-                $battle->updateArmies(updateArmies);
+                $battle->updateArmies($gameId, $db);
                 $defender = $battle->getDefender();
                 if (empty($defender['soldiers'])) {
                     Application_Model_Database::addCastle($gameId, $castleId, $playerId, $db);
@@ -37,19 +38,19 @@ class Game_Computer {
                 }
             }
         } else {
-            $battle = new Game_Battle($army, $enemy, $gameId);
+            $battle = new Game_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
-            $battle->updateArmies(updateArmies);
-            $enemy = Application_Model_Database::updateAllArmiesFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
-            if (empty($enemy)) {
+            $battle->updateArmies($gameId, $db);
+            $defender = Application_Model_Database::updateAllArmiesFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
+            if (empty($defender)) {
                 $result['victory'] = true;
             } else {
                 Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
-                $result['victory'] = false;
             }
         }
-        $result['battle'] = $battle->getResult();
+        $result['battle'] = $battle->getResult($army, $enemy);
+        
         return $result;
     }
 
@@ -57,7 +58,7 @@ class Game_Computer {
         $attackerCount = 0;
         for ($i = 0; $i < $max; $i++)
         {
-            $battle = new Game_Battle($army, $enemy, $gameId);
+            $battle = new Game_Battle($army, $enemy);
             if ($castleId !== null) {
                 $battle->addCastleDefenseModifier($gameId, $castleId, $db);
             }
@@ -264,11 +265,11 @@ class Game_Computer {
         }
     }
 
-    static public function getMyEmptyCastleInMyRange($myCastles, $army, $fields) {
+    static public function getMyEmptyCastleInMyRange($gameId, $myCastles, $army, $fields, $db = null) {
         foreach ($myCastles as $castle)
         {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-            if (Application_Model_Database::areUnitsAtCastlePosition($position)) {
+            if (Application_Model_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
                 continue;
             }
             $aStar = new Game_Astar($army['x'], $army['y']);

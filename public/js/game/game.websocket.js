@@ -95,19 +95,25 @@ $(document).ready(function() {
                     console.log(r);
                     removeM();
 
-                    if(typeof r.data.oldArmyId == 'undefined'){
-                        //                        wsPlayerArmies(turn.color);
-                        //                        $.when(getPlayerArmiesA(turn.color)).then(computerA());
-                        $.when(wsPlayerArmies(turn.color)).then(wsComputer());
-                    }else if(typeof r.data.path != 'undefined'){
+                    if(typeof r.data.path != 'undefined'){
                         //                        waitOn();
-                        enemyWalk(r.data);
+                        walk(r.data, r.data.color, r.data.deletedIds);
                     }else{
                         wsComputer();
                     }
                     break;
 
+                case 'computerStart':
+                    console.log(r);
+                    $.when(function(){
+                        for(i in r.data.armies){
+                            players[r.data.color].data.armies[i] = new army(r.data.armies[i], r.data.color);
+                        }
+                    }).then(wsComputer());
+                    break;
+
                 case 'computerEnd':
+                    console.log(r);
                     changeTurn(r.data.color, r.data.nr);
                     if(players[r.data.color].computer){
                         wsComputer();
@@ -115,21 +121,22 @@ $(document).ready(function() {
                     break;
 
                 case 'computerGameover':
+                    console.log(r);
                     wsComputer();
                     break;
 
-                case 'army':
-                    if(typeof r.data.armyId != 'undefined') {
-                        if(typeof players[r.data.color].armies['army' + r.data.armyId] != 'undefined'){
-                            armyFields(players[r.data.color].armies['army' + r.data.armyId]);
-                        }
-                        players[r.data.color].armies['army' + r.data.armyId] = new army(r.data, r.data.color);
-                        if(r.data.center == 1){
-                            removeM();
-                            zoomer.lensSetCenter(players[r.data.color].armies['army' + r.data.armyId].x*40, players[r.data.color].armies['army' + r.data.armyId].y*40);
-                        }
-                    }
-                    break;
+                //                case 'army':
+                //                    if(typeof r.data.armyId != 'undefined') {
+                //                        if(typeof players[r.data.color].armies['army' + r.data.armyId] != 'undefined'){
+                //                            armyFields(players[r.data.color].armies['army' + r.data.armyId]);
+                //                        }
+                //                        players[r.data.color].armies['army' + r.data.armyId] = new army(r.data, r.data.color);
+                //                        if(r.data.center == 1){
+                //                            removeM();
+                //                            zoomer.lensSetCenter(players[r.data.color].armies['army' + r.data.armyId].x*40, players[r.data.color].armies['army' + r.data.armyId].y*40);
+                //                        }
+                //                    }
+                //                    break;
 
                 case 'ruin':
                     zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
@@ -205,7 +212,10 @@ $(document).ready(function() {
                     break;
 
                 case 'open':
-                    webSocketOpen(r.wssuid);
+                    lock = false;
+                    startGame();
+
+                    webSocketOpenA(r.wssuid);
                     break;
 
                 case 'chat':
@@ -563,42 +573,14 @@ function wsComputer(){
 
     ws.send(JSON.stringify(token));
 }
-//function wsBattle(battle,army,armies){
-//    var data = my.color+'.b.';
-//    var tmp = '';
-//    for(i in battle){
-//        if(typeof battle[i].soldierId != 'undefined'){
-//            if(tmp){
-//                tmp += ',';
-//            }
-//            tmp += 's'+battle[i].soldierId;
-//        }
-//        if(typeof battle[i].heroId != 'undefined'){
-//            if(tmp){
-//                tmp += ',';
-//            }
-//            tmp += 'h'+battle[i].heroId;
-//        }
-//    }
-//    data += tmp+'.'+army.color+','+army.armyId;
-//    tmp = '';
-//    if(typeof armies != 'undefined'){
-//        if(typeof armies[0] != 'undefined' && typeof armies[0].color != 'undefined' && armies[0].color == 'neutral'){
-//            tmp = 'n';
-//        }else{
-//            for(i in armies){
-//                if(tmp){
-//                    tmp += '|';
-//                }
-//                tmp += armies[i].armyId;
-//            }
-//            if(tmp){
-//                tmp += ','+armies[i].color;
-//            }
-//        }
-//    }
-//    if(tmp){
-//        data += '.'+tmp;
-//    }
-//    lWSC.channelPublish(channel,data);
-//}
+
+function wsOpen(){
+    var token = {
+        type: "open",
+        gameId: gameId,
+        playerId: my.id,
+        accessKey: lAccessKey
+    };
+
+    ws.send(JSON.stringify(token));
+}
