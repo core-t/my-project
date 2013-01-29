@@ -476,3 +476,15 @@ function makeTime(){
     }
     return d.getHours()+':'+minutes;
 }
+
+function isDigit(val){
+    if(typeof val == 'undefined'){
+        return false;
+    }
+    var intRegex = /^\d+$/;
+    if(intRegex.test(val)){
+        return true;
+    }else{
+        return false;
+    }
+}

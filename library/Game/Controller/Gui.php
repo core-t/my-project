@@ -13,7 +13,7 @@ abstract class Game_Controller_Gui extends Game_Controller_Action {
         $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.js');
         $this->view->Logout($this->_namespace->player);
         $this->view->MainMenu();
-        $this->view->Websocket();
+//        $this->view->Websocket();
     }
 
 }

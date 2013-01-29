@@ -5,11 +5,11 @@ class Application_Model_Move {
     private $canFly = 1;
     private $canSwim = 0;
 
-    public function go($gameId, $armyId, $x, $y, $playerId) {
-        $army = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId);
-        $this->fields = Application_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId);
+    public function go($gameId, $armyId, $x, $y, $playerId, $db = null) {
+        $army = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db);
+        $this->fields = Application_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
 
-        $currentPosition = $this->calculateNewArmyPosition($gameId, $army, $x, $y, $playerId);
+        $currentPosition = $this->calculateNewArmyPosition($gameId, $army, $x, $y, $playerId, $db);
 
         if (!$currentPosition) {
             echo('Nie wykonano ruchu');
@@ -19,32 +19,20 @@ class Application_Model_Move {
             echo('Próba wykonania większej ilości ruchów niż jednostka posiada');
             return;
         }
-        $res = Application_Model_Database::updateArmyPosition($gameId, $armyId, $playerId, $currentPosition);
-        switch ($res)
-        {
-            case 1:
-                $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $currentPosition, $playerId);
-                $newArmyId = $armiesIds['armyId'];
+        Application_Model_Database::updateArmyPosition($gameId, $armyId, $playerId, $currentPosition);
+        $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $currentPosition, $playerId);
+        $newArmyId = $armiesIds['armyId'];
 
-                $result = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $newArmyId, $playerId);
-                $result['path'] = $this->path;
-                $result['oldArmyId'] = $armyId;
-                $result['deletedIds'] = $armiesIds;
-                return $result;
-                break;
-            case 0:
-                echo('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                break;
-            case null:
-                echo('Zapytanie zwróciło błąd');
-                break;
-            default:
-                echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                break;
-        }
+        return array(
+            'attackerColor' => Application_Model_Database::getPlayerColor($gameId, $playerId, $db),
+            'attackerArmy' => Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $newArmyId, $playerId, $db),
+            'path' => $this->path,
+            'oldArmyId' => $armyId,
+            'deletedIds' => $armiesIds['deletedIds'],
+        );
     }
 
-    private function calculateNewArmyPosition($gameId, $army, $destX, $destY, $playerId) {
+    private function calculateNewArmyPosition($gameId, $army, $destX, $destY, $playerId, $db = null) {
         $this->canFly -= count($army['heroes']);
         foreach ($army['soldiers'] as $soldier)
         {
@@ -60,13 +48,13 @@ class Application_Model_Move {
         $castlesSchema = Application_Model_Board::getCastlesSchema();
         foreach ($castlesSchema as $castleId => $castle)
         {
-            if (Application_Model_Database::isCastleRazed($gameId, $castleId)) {
+            if (Application_Model_Database::isCastleRazed($gameId, $castleId, $db)) {
                 continue;
             }
-            if (!Application_Model_Database::isPlayerCastle($gameId, $castleId, $playerId)) {
-                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $castle['position']['x'], $castle['position']['y'], 'e');
-            } else {
+            if (Application_Model_Database::isPlayerCastle($gameId, $castleId, $playerId, $db)) {
                 $this->fields = Application_Model_Board::changeCasteFields($this->fields, $castle['position']['x'], $castle['position']['y'], 'c');
+            } else {
+                $this->fields = Application_Model_Board::changeCasteFields($this->fields, $castle['position']['x'], $castle['position']['y'], 'e');
             }
         }
 

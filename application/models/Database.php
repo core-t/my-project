@@ -58,11 +58,13 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 ->where('"playerId" = ?', $playerId)
                 ->where('"castleId" = ?', $castleId);
         try {
-            $castleId = $db->fetchOne($select);
-            if ($castleId !== null) {
+            $id = $db->fetchOne($select);
+
+            if ($castleId == $id) {
                 return true;
             }
         } catch (Exception $e) {
+            echo($e);
             echo($select->__toString());
         }
     }
@@ -77,11 +79,9 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 ->where('"castleId" = ?', $castleId)
                 ->where('razed = true');
         try {
-            $razed = $db->fetchOne($select);
-            if ($razed) {
-                return true;
-            }
+            return $db->fetchOne($select);
         } catch (Exception $e) {
+            echo($e);
             echo($select->__toString());
         }
     }
@@ -101,23 +101,26 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             $result = $db->query($select)->fetchAll();
             if (!isset($result[0]['armyId'])) {
                 echo 'Brak armii na pozycji';
-                return array('armyId' => null);
+                return array(
+                    'armyId' => null,
+                    'deletedIds' => null,
+                );
             }
             $firstArmyId = $result[0]['armyId'];
             unset($result[0]);
             $count = count($result);
-            if ($count > 1) {
-                for ($i = 1; $i <= $count; $i++)
-                {
-                    if ($result[$i]['armyId'] == $firstArmyId) {
-                        continue;
-                    }
-                    self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
-                    self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+            for ($i = 1; $i <= $count; $i++)
+            {
+                if ($result[$i]['armyId'] == $firstArmyId) {
+                    continue;
                 }
+                self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+                self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
             }
-            $result['armyId'] = $firstArmyId;
-            return $result;
+            return array(
+                'armyId' => $firstArmyId,
+                'deletedIds' => $result
+            );
         } catch (Exception $e) {
             echo $e;
             echo($select->__toString());
@@ -358,20 +361,19 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
     static public function calculateArmyMovesLeft($gameId, $armyId, $db = null) {
         $heroMovesLeft = self::getMinHeroesMovesLeft($gameId, $armyId, $db);
         $soldierMovesLeft = self::getMinSoldiersMovesLeft($gameId, $armyId, $db);
-        if ($soldierMovesLeft AND $heroMovesLeft) {
+
+        if ($soldierMovesLeft && $heroMovesLeft) {
             if ($heroMovesLeft > $soldierMovesLeft) {
-                $movesLeft = $soldierMovesLeft;
+                return $soldierMovesLeft;
             } else {
-                $movesLeft = $heroMovesLeft;
+                return $heroMovesLeft;
             }
-        } elseif ($soldierMovesLeft) {
-            $movesLeft = $soldierMovesLeft;
-        } elseif ($heroMovesLeft) {
-            $movesLeft = $heroMovesLeft;
-        } else {
-            $movesLeft = 0;
+        } elseif ($soldierMovesLeft === null) {
+            return (int) $heroMovesLeft;
+        } elseif ($heroMovesLeft === null) {
+            return (int) $soldierMovesLeft;
         }
-        return $movesLeft;
+        return 0;
     }
 
     static private function getMinHeroesMovesLeft($gameId, $armyId, $db = null) {
@@ -509,7 +511,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getArmyById($gameId, $armyId, $db = null) {
+    static public function getArmyByArmyId($gameId, $armyId, $db = null) {
         if (!$db) {
             $db = self::getDb();
         }
@@ -648,8 +650,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 ->where('"playerId" != ?', $playerId)
                 ->where('"castleId" = ?', $castleId);
         try {
-            $castleId = $db->fetchOne($select);
-            if ($castleId !== null) {
+            $id = $db->fetchOne($select);
+            if ($castleId == $id) {
                 return true;
             }
         } catch (Exception $e) {

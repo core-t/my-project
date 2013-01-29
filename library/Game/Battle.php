@@ -266,8 +266,8 @@ class Game_Battle {
         return $battle;
     }
 
-    static public function getNeutralCastleGarrizon($gameId) {
-        $turn = Application_Model_Database::getTurn($gameId);
+    static public function getNeutralCastleGarrizon($gameId, $db = null) {
+        $turn = Application_Model_Database::getTurn($gameId, $db);
         $numberOfSoldiers = ceil($turn['nr'] / 10);
         $soldiers = array();
         for ($i = 1; $i <= $numberOfSoldiers; $i++)

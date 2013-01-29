@@ -29,9 +29,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function _initLogger() {
-        date_default_timezone_set('Europe/Warsaw');
         $logger = new Zend_Log();
-        $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/log/' . date('Y-m-d') . '.log');
+        $writer = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../log/' . date('Y-m-d') . '.log');
         $logger->addWriter($writer);
         Zend_Registry::set('logger', $logger);
     }

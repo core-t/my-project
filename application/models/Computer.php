@@ -5,7 +5,7 @@ class Application_Model_Computer {
     static private function firstBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db = null) {
         if (!Application_Model_Database::enemiesCastlesExist($gameId, $playerId, $db)) {
             new Game_Logger('BRAK ZAMKÓW WROGA');
-            self::secondBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
+            return self::secondBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
         } else {
             new Game_Logger('SĄ ZAMKI WROGA');
             $castleId = Game_Computer::getWeakerEnemyCastle($gameId, $castlesAndFields['hostileCastles'], $army, $playerId, $db);
@@ -17,7 +17,7 @@ class Application_Model_Computer {
                     new Game_Logger('SŁABSZY ZAMEK WROGA W ZASIĘGU - ATAKUJ!');
                     $fightEnemy = Game_Computer::fightEnemy($gameId, $army, null, $playerId, $castleId, $db);
                     Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $castleRange['currentPosition'], $db);
-                    return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path'], $fightEnemy['battle'], $fightEnemy['victory'], $castleId);
+                    return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path'], $fightEnemy, $castleId);
                 } else {
                     new Game_Logger('SŁABSZY ZAMEK WROGA POZA ZASIĘGIEM');
                     $enemy = Game_Computer::getWeakerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields);
@@ -26,13 +26,13 @@ class Application_Model_Computer {
                         new Game_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
                         $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $enemy['castleId'], $db);
                         Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $enemy['currentPosition'], $db);
-                        return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy['battle'], $fightEnemy['victory'], $enemy['castleId'], null, $enemy['armyId']);
+                        return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId'], null, $enemy['armyId']);
                     } else {
                         new Game_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
                         $enemy = Game_Computer::getStrongerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields);
                         if ($enemy) {
                             new Game_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
-                            $join = Game_Computer::getMyArmyInRange($army, $castlesAndFields['fields']);
+                            $join = Game_Computer::getMyArmyInRange($gameId, $army, $castlesAndFields['fields'], $db);
                             if ($join) {
                                 new Game_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                                 Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $join['currentPosition'], $db);
@@ -54,7 +54,7 @@ class Application_Model_Computer {
                 }
             } else {
                 new Game_Logger('BRAK SŁABSZYCH ZAMKÓW WROGA');
-                self::secondBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
+                return self::secondBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
             }
         }
     }
@@ -84,7 +84,7 @@ class Application_Model_Computer {
                     new Game_Logger('SŁABSZY WRÓG W ZASIĘGU - ATAKUJ!');
                     $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $range['castleId'], $db);
                     Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $range['currentPosition'], $db);
-                    return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy['battle'], $fightEnemy['victory']);
+                    return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy);
                 } else {
                     new Game_Logger('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
                     Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $range['currentPosition'], $db);
@@ -93,7 +93,7 @@ class Application_Model_Computer {
                 }
             } else {
                 new Game_Logger('WRÓG JEST SILNIEJSZY');
-                $join = Game_Computer::getMyArmyInRange($army, $castlesAndFields['fields']);
+                $join = Game_Computer::getMyArmyInRange($gameId, $army, $castlesAndFields['fields'], $db);
                 if ($join) {
                     new Game_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                     Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $join['currentPosition'], $db);
@@ -131,7 +131,6 @@ class Application_Model_Computer {
                 //idź do ruin
                 new Game_Logger('IDŹ DO RUIN');
                 Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $ruin['currentPosition'], $db);
-                Application_Model_Database::addRuin($gameId, $ruin['ruinId'], $db);
                 Application_Model_Database::searchRuin($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $ruin['currentPosition'], $ruin['path'], null, false, null, $ruin['ruinId']);
             }
@@ -231,7 +230,7 @@ class Application_Model_Computer {
                             $currentPosition = $aStar->getCurrentPosition();
                             $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $enemy['castleId'], $db);
                             Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $currentPosition, $db);
-                            return self::endMove($playerId, $db, $gameId, $army['armyId'], $currentPosition, $path, $fightEnemy['battle'], $fightEnemy['victory'], $enemy['castleId'], null, $enemy['armyId']);
+                            return self::endMove($playerId, $db, $gameId, $army['armyId'], $currentPosition, $path, $fightEnemy, $enemy['castleId'], null, $enemy['armyId']);
                         }
                     }
                 }
@@ -241,7 +240,7 @@ class Application_Model_Computer {
 
             $myEmptyCastle = Game_Computer::getMyEmptyCastleInMyRange($gameId, $myCastles, $army, $castlesAndFields['fields'], $db);
             if (!$myEmptyCastle) {
-                new Game_Logger('NIE MA PUSTEGO ZAMKU W ZASIĘGU');
+                new Game_Logger('NIE MA MOJEGO PUSTEGO ZAMKU W ZASIĘGU');
 
                 return self::ruinBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
             } else {
@@ -267,7 +266,7 @@ class Application_Model_Computer {
         }
     }
 
-    static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $battle = null, $victory = false, $castleId = null, $ruinId = null, $enemyArmyId = null) {
+    static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null, $enemyArmyId = null) {
 
         $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $position, $playerId, $db);
         $armyId = $armiesIds['armyId'];
@@ -275,44 +274,31 @@ class Application_Model_Computer {
         if (!$armyId) {
             $armyId = $oldArmyId;
         }
+
         $army = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db);
 
-        $army['action'] = 'continue';
-        $army['oldArmyId'] = $oldArmyId;
-        $army['deletedIds'] = $armiesIds;
-        $army['color'] = Application_Model_Database::getPlayerColor($gameId, $playerId, $db);
-
-        if ($castleId !== null) {
-            $army['castleId'] = $castleId;
-        }
-
-        if ($ruinId !== null) {
-            $army['ruinId'] = $ruinId;
-//            $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.r.' . $ruinId . '.' . 1);
-        }
-
         if ($enemyArmyId) {
-            $army['enemyArmyId'] = $enemyArmyId;
+            $defenderArmy = Application_Model_Database::getArmyByArmyId($gameId, $enemyArmyId, $db);
+        } else {
+            $defenderArmy = null;
         }
 
-        if (!empty($path)) {
-            $army['path'] = $path;
-        }
+//        print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4));
 
-        $army['victory'] = $victory;
-
-        if (!empty($battle)) {
-            $army['battle'] = $battle;
-        }
-
-        var_dump('endMove4');
-
-        print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4));
-
-        return $army;
-
-//        $mWebSocket->publishChannel($this->_namespace->gameId, $color . '.A.' . $this->_mGame->getPlayerColor($this->playerId));
-//        $mWebSocket->close();
+        return array(
+            'defenderColor' => $fightEnemy['defenderColor'],
+            'defenderArmy' => $defenderArmy,
+            'attackerColor' => Application_Model_Database::getPlayerColor($gameId, $playerId, $db),
+            'attackerArmy' => $army,
+            'battle' => $fightEnemy['battle'],
+            'victory' => $fightEnemy['victory'],
+            'path' => $path,
+            'castleId' => $castleId,
+            'ruinId' => $ruinId,
+            'deletedIds' => $armiesIds['deletedIds'],
+            'oldArmyId' => $oldArmyId,
+            'action' => 'continue'
+        );
     }
 
     static public function endTurn($gameId, $playerId, $db = null) {

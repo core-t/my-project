@@ -253,7 +253,8 @@ function castleOwner(castleId, color) {
         .click(function(){
             castleM(castleId, color)
         });
-    } else {
+    }
+    else {
         castleFields(castleId, 'e');
         castle
         .css('z-index', 202)
@@ -387,7 +388,7 @@ function army(obj, color) {
     }
     this.x = obj.x;
     this.y = obj.y;
-    //    deleteArmyByPosition(this.x, this.y, color);
+
     this.flyBonus = 0;
     this.canFly = 1;
     this.canSwim = 0;
@@ -831,24 +832,53 @@ function quitArmy(){
     }
 }
 
-function walk(data, color, deletedIds) {
-    //    console.log(res);
+function computerArmiesUpdate(armies, color){
     var i;
+
+    for(i in armies){
+        break;
+    }
+
+    if(typeof armies[i] == 'undefined') {
+        wsComputer();
+        return;
+    }
+
+    players[color].armies[i] = new army(armies[i], color);
+
+    delete armies[i];
+
+    computerArmiesUpdate(armies, color);
+}
+
+function walk(data, color, deletedIds, computer) {
+    console.log(data);
+    var i;
+
     for(i in data.path) {
         break;
     }
+
     if(typeof data.path[i] == 'undefined') {
-        players[color].armies['army'+data.armyId] = new army(data, color);
-        newX = players[color].armies['army'+data.armyId].x;
-        newY = players[color].armies['army'+data.armyId].y;
+        players[color].armies['army'+data.attackerArmy.armyId] = new army(data.attackerArmy, color);
+        newX = players[color].armies['army'+data.attackerArmy.armyId].x;
+        newY = players[color].armies['army'+data.attackerArmy.armyId].y;
 
         if(color == my.color){
-            if(players[color].armies['army'+data.armyId].moves){
-                selectArmy(players[color].armies['army'+data.armyId]);
+            if(players[color].armies['army'+data.attackerArmy.armyId].moves){
+                selectArmy(players[color].armies['army'+data.attackerArmy.armyId]);
             }else{
                 unselectArmy();
             }
             unlock();
+        }
+
+        if(isDigit(data.ruinId)){
+            ruinUpdate(data.ruinId, 1);
+        }
+
+        if(isDigit(data.castleId)){
+            castleOwner(data.castleId, data.attackerColor);
         }
 
         if(typeof deletedIds == 'undefined'){
@@ -859,6 +889,11 @@ function walk(data, color, deletedIds) {
             deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
         }
 
+        if(typeof data.battle != 'undefined' && data.battle){
+            battleM(data.battle, data.attackerColor, data.defenderColor, wsComputer);
+        }else if(typeof computer != 'undefined'){
+            wsComputer();
+        }
 
         return;
     } else {
@@ -874,41 +909,11 @@ function walk(data, color, deletedIds) {
             }else{
                 searchTower(data.path[i].x, data.path[i].y);
                 delete data.path[i];
-                walk(data, color, deletedIds);
+                walk(data, color, deletedIds, computer);
             }
         });
     }
 }
-
-//function gogo(res,enemyArmies,neutral){
-//    console.log('gogo');
-//    oldArmy = players[turn.color].armies['army'+res.oldArmyId];
-//    deleteArmyByPosition(oldArmy.x, oldArmy.y, turn.color);
-//    if(neutral == 0){
-//        for(i in enemyArmies) {
-//            wsArmy(enemyArmies[i].armyId);
-//        //            getArmyA(enemyArmies[i].armyId);
-//        }
-//    }
-//    if(typeof res.armyId != 'undefined'){
-//        players[turn.color].armies['army'+res.armyId] = new army(res, turn.color);
-//        if(res.armyId != res.oldArmyId){
-//            wsArmy(res.oldArmyId);
-//        }
-//        wsArmy(res.armyId);
-//        if(res.castleId != null && res.victory){
-//            wsCastle(res.castleId);
-//            getCastleA(res.castleId);
-//        }
-//    }else{
-//        wsArmy(res.oldArmyId);
-//    }
-//    if(typeof res.ruinId != 'undefined'){
-//        //        wsGetRuin(res.ruinId);
-//        ruinUpdate(res.ruinId, 1);
-//    }
-//    wsComputer();
-//}
 
 function getEnemyArmy(enemyArmyId){
     for(color in players) {
@@ -920,73 +925,6 @@ function getEnemyArmy(enemyArmyId){
     }
     return null;
 }
-
-//function enemyWalk(res) {
-//    //    console.log(res);
-//    var i;
-//    for(i in res.path) {
-//        break;
-//    }
-//    if(typeof res.path[i] == 'undefined') {
-//        oldArmy = players[turn.color].armies['army'+res.oldArmyId];
-//        if(typeof res.battle != 'undefined'){
-//            var enemyArmies = new Array();
-//            var neutral = 0;
-//            if(typeof res.castleId != 'undefined' && res.castleId != null){
-//                zoomer.lensSetCenter(castles[res.castleId].position.x*40, castles[res.castleId].position.y*40);
-//                if(isNeutralCastle(castles[res.castleId].position.x, castles[res.castleId].position.y)){
-//                    enemyArmies[0] = getNeutralCastleGarrison();
-//                    neutral = 1;
-//                }else{
-//                    enemyArmies = getEnemyCastleGarrison(res.castleId);
-//                }
-//            }else if(typeof res.enemyArmyId != 'undefined'){
-//                enemyArmies[0] = getEnemyArmy(res.enemyArmyId);
-//            }
-//            wsBattle(res.battle,oldArmy,enemyArmies);
-//            battleM(res.battle, oldArmy, enemyArmies, gogo, res, neutral);
-//        }else{
-//            gogo(res,null,1);
-//        }
-//        return null;
-//    } else {
-//        wsArmyMove(res.path[i].x, res.path[i].y, res.oldArmyId);
-//        zoomer.lensSetCenter(res.path[i].x*40, res.path[i].y*40);
-//        $('#army'+res.oldArmyId).animate({
-//            left: (res.path[i].x * 40) + 'px',
-//            top: (res.path[i].y * 40) + 'px'
-//        },300,
-//        function(){
-//            if(typeof res.path[i] == 'undefined'){
-//                console.log('coś tu niegra');
-//                console.log(res);
-//            }else{
-//                var x = res.path[i].x;
-//                var y = res.path[i].y;
-//                res.path.splice(i, 1);
-//                searchTower(x, y);
-//                enemyWalk(res);
-//            }
-//        });
-//        return null;
-//    }
-//}
-
-//function clearPlayerArmiesTrash(){
-//    // czyszczenie śmieci
-//    $('.army').each( function(){
-//        var classList = $(this).attr('class').split(/\s+/);
-//        console.log(classList[1]);
-//        $.each( classList, function(index, item){
-//            if (item === turn.color) {
-//                var id = $(this).attr('id');
-//                if(typeof players[turn.color].armies[id] == 'undefined'){
-//                    $('#'+id).remove();
-//                }
-//            }
-//        });
-//    });
-//}
 
 // *** UNITS ***
 

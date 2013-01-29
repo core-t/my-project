@@ -13,61 +13,63 @@ $(document).ready(function() {
                         console.log('?');
                         return;
                     }
-                    walk(r.data, r.color, r.data.deletedIds);
+                    walk(r.data, r.data.attackerColor, r.data.deletedIds);
                     break;
 
                 case 'fightNeutralCastle':
                     zoomer.lensSetCenter(r.x*40, r.y*40);
 
-                    battleM(r.battle, r.attackerColor, r.defenderColor, clb);
-
-                    if(r.victory) {
-                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                        if(r.attackerColor==my.color){
-                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                    battleM(r.battle, r.attackerColor, r.defenderColor, function(r){
+                        if(r.victory) {
+                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+                            if(r.attackerColor==my.color){
+                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                            }
+                            castleOwner(r.castleId, r.attackerColor);
+                        } else {
+                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
                         }
-                        castleOwner(r.castleId, r.attackerColor);
-                    } else {
-                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                    }
 
-                    if(r.attackerColor==my.color){
-                        unlock();
-                    }
+                        if(r.attackerColor==my.color){
+                            unlock();
+                        }
+
+                    }, r);
+
                     break;
 
                 case 'fightEnemyCastle':
                     zoomer.lensSetCenter(r.x*40, r.y*40);
 
-                    battleM(r.battle, r.attackerColor, r.defenderColor, clb);
+                    battleM(r.battle, r.attackerColor, r.defenderColor, function(r){
+                        if(r.victory) {
+                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+                            if(r.attackerColor==my.color){
+                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                            }
+                            for(i in r.defenderArmy) {
+                                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
+                            }
+                            castleOwner(r.castleId, r.attackerColor);
+                        } else {
+                            for(i in r.defenderArmy){
+                                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
+                            }
+                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
+                        }
 
-                    if(r.victory) {
-                        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
                         if(r.attackerColor==my.color){
-                            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+                            unlock();
                         }
-                        for(i in r.defenderArmy) {
-                            deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-                        }
-                        castleOwner(r.castleId, r.attackerColor);
-                    } else {
-                        for(i in r.defenderArmy){
-                            players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-                        }
-                        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                    }
-
-                    if(r.attackerColor==my.color){
-                        unlock();
-                    }
+                    });
                     break;
 
                 case 'fightEnemy':
                     zoomer.lensSetCenter(r.x*40, r.y*40);
 
-                    $.when(battleM(r.battle, r.attackerColor, r.defenderColor, clb)).then(function(){
+                    battleM(r.battle, r.attackerColor, r.defenderColor, function(){
                         if(r.victory) {
                             players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
                             if(r.attackerColor==my.color){
@@ -95,25 +97,18 @@ $(document).ready(function() {
                     console.log(r);
                     removeM();
 
-                    if(typeof r.data.path != 'undefined'){
-                        //                        waitOn();
-                        walk(r.data, r.data.color, r.data.deletedIds);
+                    if(typeof r.data.path != 'undefined' && r.data.path){
+                        walk(r.data, r.data.attackerColor, r.data.deletedIds, 1);
                     }else{
                         wsComputer();
                     }
                     break;
 
                 case 'computerStart':
-                    console.log(r);
-                    $.when(function(){
-                        for(i in r.data.armies){
-                            players[r.data.color].data.armies[i] = new army(r.data.armies[i], r.data.color);
-                        }
-                    }).then(wsComputer());
+                    computerArmiesUpdate(r.data.armies, r.data.color);
                     break;
 
                 case 'computerEnd':
-                    console.log(r);
                     changeTurn(r.data.color, r.data.nr);
                     if(players[r.data.color].computer){
                         wsComputer();
@@ -124,19 +119,6 @@ $(document).ready(function() {
                     console.log(r);
                     wsComputer();
                     break;
-
-                //                case 'army':
-                //                    if(typeof r.data.armyId != 'undefined') {
-                //                        if(typeof players[r.data.color].armies['army' + r.data.armyId] != 'undefined'){
-                //                            armyFields(players[r.data.color].armies['army' + r.data.armyId]);
-                //                        }
-                //                        players[r.data.color].armies['army' + r.data.armyId] = new army(r.data, r.data.color);
-                //                        if(r.data.center == 1){
-                //                            removeM();
-                //                            zoomer.lensSetCenter(players[r.data.color].armies['army' + r.data.armyId].x*40, players[r.data.color].armies['army' + r.data.armyId].y*40);
-                //                        }
-                //                    }
-                //                    break;
 
                 case 'ruin':
                     zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
@@ -356,28 +338,6 @@ function wsArmyMove(x, y, armyId) {
 
     ws.send(JSON.stringify(token));
 }
-
-//function wsArmy(armyId, center) {
-//    var token = {
-//        type: 'army',
-//        gameId: gameId,
-//        playerId: my.id,
-//        color: my.color,
-//        accessKey: lAccessKey
-//    };
-//    if(center){
-//        token['data']={
-//            armyId: armyId,
-//            center: 1
-//        };
-//    }else{
-//        token['data']={
-//            armyId: armyId,
-//            center: 0
-//        };
-//    }
-//    ws.send(JSON.stringify(token));
-//}
 
 function wsSplitArmy(armyId) {
     if(!my.turn){

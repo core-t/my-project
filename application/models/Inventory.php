@@ -17,9 +17,9 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract {
 
     static public function wsAddArtefact($gameId, $artefactId, $heroId, $db) {
         $data = array(
-            'artefactId' => $artefactId,
-            'gameId' => $gameId,
-            'heroId' => $heroId
+            $db->quoteInto('"artefactId" = ?', $artefactId),
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"heroId" = ?', $heroId)
         );
         try {
             $db->insert('inventory', $data);
@@ -57,9 +57,9 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract {
             'quantity' => new Zend_Db_Expr('quantity + 1')
         );
         $where = array(
-            'artefactId' => $artefactId,
-            'gameId' => $gameId,
-            'heroId' => $heroId
+            $db->quoteInto('"artefactId" = ?', $artefactId),
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"heroId" = ?', $heroId)
         );
         try {
             $db->update('inventory', $data, $where);

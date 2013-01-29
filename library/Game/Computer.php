@@ -6,7 +6,9 @@ class Game_Computer {
         if (!$db) {
             $db = self::getDb();
         }
-        $result = array();
+        $result = array(
+            'victory' => false
+        );
 
         if ($castleId !== null) {
             if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
@@ -21,10 +23,10 @@ class Game_Computer {
                     $result['victory'] = true;
                 } else {
                     Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
-                    $result['victory'] = false;
                 }
+                $result['defenderColor'] = Application_Model_Database::getColorByCastleId($gameId, $castleId, $db);
             } else {
-                $enemy = Game_Battle::getNeutralCastleGarrizon($gameId);
+                $enemy = Game_Battle::getNeutralCastleGarrizon($gameId, $db);
                 $battle = new Game_Battle($army, $enemy);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
@@ -34,8 +36,8 @@ class Game_Computer {
                     $result['victory'] = true;
                 } else {
                     Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
-                    $result['victory'] = false;
                 }
+                $result['defenderColor'] = 'neutral';
             }
         } else {
             $battle = new Game_Battle($army, $enemy);
@@ -48,9 +50,11 @@ class Game_Computer {
             } else {
                 Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
             }
+            $result['defenderColor'] = Application_Model_Database::getColorByArmyId($gameId, $enemy['armyId'], $db);
         }
+
         $result['battle'] = $battle->getResult($army, $enemy);
-        
+
         return $result;
     }
 
@@ -90,12 +94,13 @@ class Game_Computer {
         }
         asort($heuristics, SORT_NUMERIC);
 //         $weaker = array();
-        foreach ($heuristics as $castleId => $heuristic)
+
+        foreach (array_keys($heuristics) as $castleId)
         {
             if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
                 $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
             } else {
-                $enemy = Game_Battle::getNeutralCastleGarrizon($gameId);
+                $enemy = Game_Battle::getNeutralCastleGarrizon($gameId, $db);
             }
             if (!self::isEnemyStronger($gameId, $army, $enemy, $castleId)) {
 //                 new Game_Logger('ENEMY SŁABSZY - 108');

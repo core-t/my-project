@@ -94,7 +94,7 @@ class WofHandler extends WebSocket_UriHandler {
                     return;
                 }
 
-                $enemy = Game_Battle::getNeutralCastleGarrizon($dataIn['gameId']);
+                $enemy = Game_Battle::getNeutralCastleGarrizon($dataIn['gameId'], $db);
 
                 $battle = new Game_Battle($army, $enemy);
                 $battle->fight();
@@ -303,27 +303,6 @@ class WofHandler extends WebSocket_UriHandler {
                 $this->chat($dataIn);
                 break;
 
-//            case 'army':
-//                $attackerArmyId = $dataIn['data']['armyId'];
-//                if (empty($attackerArmyId)) {
-//                    echo('Brak "armyId"!');
-//                    return;
-//                }
-//                $army = Application_Model_Database::getArmyById($dataIn['gameId'], $attackerArmyId, $db);
-//                $army['color'] = Application_Model_Database::getPlayerColor($dataIn['gameId'], $army['playerId'], $db);
-//                $army['center'] = $dataIn['data']['center'];
-//                $token = array(
-//                    'type' => $dataIn['type'],
-//                    'data' => $army,
-//                    'playerId' => $dataIn['playerId'],
-//                    'color' => $dataIn['color']
-//                );
-//
-//                $users = Application_Model_Database::getInGameWSSUIdsExceptMine($dataIn['gameId'], $dataIn['playerId'], $db);
-//
-//                $this->sendToChannel($token, $users);
-//                break;
-
             case 'armies':
                 $color = $dataIn['data']['color'];
                 if (empty($color)) {
@@ -365,8 +344,8 @@ class WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'parentArmy' => Application_Model_Database::getArmyById($dataIn['gameId'], $attackerArmyId, $db),
-                        'childArmy' => Application_Model_Database::getArmyById($dataIn['gameId'], $childArmyId, $db),
+                        'parentArmy' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $attackerArmyId, $db),
+                        'childArmy' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $childArmyId, $db),
                     ),
                     'playerId' => $dataIn['playerId'],
                     'color' => $dataIn['color']
@@ -402,8 +381,8 @@ class WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'army' => Application_Model_Database::getArmyById($dataIn['gameId'], $armyId, $db),
-                        'deletedIds' => $armiesIds
+                        'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armyId, $db),
+                        'deletedIds' => $armiesIds['deletedIds']
                     ),
                     'playerId' => $dataIn['playerId'],
                     'color' => $dataIn['color']
@@ -475,7 +454,7 @@ class WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'army' => Application_Model_Database::getArmyById($dataIn['gameId'], $armyId, $db),
+                        'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armyId, $db),
                         'gold' => $gold
                     ),
                     'playerId' => $dataIn['playerId'],
@@ -527,7 +506,7 @@ class WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'army' => Application_Model_Database::getArmyById($dataIn['gameId'], $attackerArmyId, $db),
+                        'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $attackerArmyId, $db),
                         'ruin' => $ruin,
                         'find' => $find
                     ),
@@ -601,7 +580,7 @@ class WofHandler extends WebSocket_UriHandler {
                 }
 
                 if (!Application_Model_Database::isPlayerCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db)) {
-                    echo('Nie Twój zamek.');
+                    echo('Nie jest Twój zamek.');
                     break;
                 }
                 $gold = Application_Model_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db);
@@ -680,6 +659,7 @@ class WofHandler extends WebSocket_UriHandler {
                         $type = 'computerGameover';
                         break;
                 }
+
 
                 $token = array(
                     'type' => $type,
