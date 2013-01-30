@@ -10,55 +10,81 @@ class Game_Computer {
             'victory' => false
         );
 
-        if ($castleId !== null) {
+        if ($castleId !== null) { //enemy castle
             if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+                $result['defenderColor'] = Application_Model_Database::getColorByCastleId($gameId, $castleId, $db);
                 $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
                 $battle = new Game_Battle($army, $enemy);
                 $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
                 $defender = Application_Model_Database::updateAllArmiesFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+
                 if (empty($defender)) {
-                    Application_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
+                    $result['attackerArmy'] = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     $result['victory'] = true;
+                    foreach ($enemy['ids'] as $id)
+                    {
+                        $defender[]['armyId'] = $id;
+                    }
+                    var_dump('defender:');
+                    print_r($defender);
+                    Application_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
                 } else {
+                    $result['attackerArmy'] = array(
+                        'armyId' => $army['armyId'],
+                        'destroyed' => true
+                    );
                     Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                 }
-                $result['defenderColor'] = Application_Model_Database::getColorByCastleId($gameId, $castleId, $db);
-            } else {
+            } else { //neutral castle
                 $enemy = Game_Battle::getNeutralCastleGarrizon($gameId, $db);
                 $battle = new Game_Battle($army, $enemy);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
                 $defender = $battle->getDefender();
+
                 if (empty($defender['soldiers'])) {
+                    $result['attackerArmy'] = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     Application_Model_Database::addCastle($gameId, $castleId, $playerId, $db);
                     $result['victory'] = true;
                 } else {
+                    $result['attackerArmy'] = array(
+                        'armyId' => $army['armyId'],
+                        'destroyed' => true
+                    );
                     Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                 }
                 $result['defenderColor'] = 'neutral';
             }
-        } else {
+        } else { //enemy army
             $battle = new Game_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
             $battle->updateArmies($gameId, $db);
             $defender = Application_Model_Database::updateAllArmiesFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
+
             if (empty($defender)) {
+                $result['attackerArmy'] = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                 $result['victory'] = true;
+                $defender[0]['armyId'] = $enemy['armyId'];
             } else {
+                $result['attackerArmy'] = array(
+                    'armyId' => $army['armyId'],
+                    'destroyed' => true
+                );
                 Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
             }
             $result['defenderColor'] = Application_Model_Database::getColorByArmyId($gameId, $enemy['armyId'], $db);
         }
 
+        $result['defenderArmy'] = $defender;
         $result['battle'] = $battle->getResult($army, $enemy);
 
         return $result;
     }
 
-    static public function isEnemyStronger($gameId, $army, $enemy, $castleId, $max = 20, $db = null) {
+    static public function isEnemyStronger($gameId, $db, $army, $enemy, $castleId, $max = 20) {
         $attackerCount = 0;
         for ($i = 0; $i < $max; $i++)
         {
@@ -102,7 +128,7 @@ class Game_Computer {
             } else {
                 $enemy = Game_Battle::getNeutralCastleGarrizon($gameId, $db);
             }
-            if (!self::isEnemyStronger($gameId, $army, $enemy, $castleId)) {
+            if (!self::isEnemyStronger($gameId, $db, $army, $enemy, $castleId)) {
 //                 new Game_Logger('ENEMY SŁABSZY - 108');
                 return $castleId;
             }
@@ -149,7 +175,7 @@ class Game_Computer {
     }
 
     static public function isEnemyArmyInRange($castlesAndFields, $enemy, $army) {
-        $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
+        $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
         if ($castleId !== null) {
             $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'c');
         } else {
@@ -318,26 +344,26 @@ class Game_Computer {
         }
     }
 
-    static public function canAttackAllEnemyHaveRange($gameId, $enemies, $army, $castles) {
+    static public function canAttackAllEnemyHaveRange($gameId, $enemies, $army, $castles, $db = null) {
         foreach ($enemies as $enemy)
         {
-            $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castles);
+            $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castles);
             $enemy['castleId'] = $castleId;
-            if (self::isEnemyStronger($gameId, $army, $enemy, $castleId)) {
+            if (self::isEnemyStronger($gameId, $db, $army, $enemy, $castleId)) {
                 return null;
             }
         }
         return $enemy;
     }
 
-    static public function getWeakerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields) {
+    static public function getWeakerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields, $db = null) {
         foreach ($enemies as $enemy)
         {
             $aStar = new Game_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
-                $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
-                if (self::isEnemyStronger($gameId, $army, $enemy, $castleId)) {
+                $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
+                if (self::isEnemyStronger($gameId, $db, $army, $enemy, $castleId)) {
                     continue;
                 }
                 if ($castleId !== null) {
@@ -365,14 +391,14 @@ class Game_Computer {
         return null;
     }
 
-    static public function getStrongerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields) {
+    static public function getStrongerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields, $db) {
         foreach ($enemies as $enemy)
         {
             $aStar = new Game_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
-                $castleId = Application_Model_Board::isArmyInCastle($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
-                if (!self::isEnemyStronger($gameId, $army, $enemy, $castleId)) {
+                $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
+                if (!self::isEnemyStronger($gameId, $db, $army, $enemy, $castleId)) {
                     continue;
                 }
                 if ($castleId !== null) {

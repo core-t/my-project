@@ -36,33 +36,34 @@ function moveA(movesSpend) {
     setlock();
     var castleId = isEnemyCastle(x, y);
     if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
-        var vectorLength = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-        if(vectorLength >= 80) {
-            unlock();
-            unselectEnemyArmy();
-            return;
-        }
-        if(castleId){
-            if(unselectedArmy.moves < (movesSpend + 2)) {
-                simpleM('Not enough moves left.');
-                unlock();
-                unselectEnemyArmy();
-                return;
-            }
-            if(castles[castleId].color){
-                wsFightEnemyCastle(unselectedArmy.armyId, x, y, castleId);
-            }else{
-                wsFightNeutralCastle(unselectedArmy.armyId, x, y, castleId);
-            }
-        } else if(selectedEnemyArmy) {
-            if(unselectedArmy.moves < (getTerrain(selectedEnemyArmy.fieldType, selectedEnemyArmy)[1] + 1)) {
-                simpleM('Not enough moves left.');
-                unlock();
-                unselectEnemyArmy();
-                return;
-            }
-            wsFightEnemy(unselectedArmy.armyId, x, y, selectedEnemyArmy.armyId);
-        }
+        wsFight(unselectedArmy.armyId, x, y);
+    //        var vectorLength = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
+    //        if(vectorLength >= 80) {
+    //            unlock();
+    //            unselectEnemyArmy();
+    //            return;
+    //        }
+    //        if(castleId){
+    //            if(unselectedArmy.moves < (movesSpend + 2)) {
+    //                simpleM('Not enough moves left.');
+    //                unlock();
+    //                unselectEnemyArmy();
+    //                return;
+    //            }
+    //            if(castles[castleId].color){
+    //                wsFightEnemyCastle(unselectedArmy.armyId, x, y, castleId);
+    //            }else{
+    //                wsFightNeutralCastle(unselectedArmy.armyId, x, y, castleId);
+    //            }
+    //        } else if(selectedEnemyArmy) {
+    //            if(unselectedArmy.moves < (getTerrain(selectedEnemyArmy.fieldType, selectedEnemyArmy)[1] + 1)) {
+    //                simpleM('Not enough moves left.');
+    //                unlock();
+    //                unselectEnemyArmy();
+    //                return;
+    //            }
+    //            wsFightEnemy(unselectedArmy.armyId, x, y, selectedEnemyArmy.armyId);
+    //        }
     } else {
         if(movesSpend === null) {
             unlock();

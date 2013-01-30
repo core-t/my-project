@@ -896,9 +896,17 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             if ($ids) {
                 $heroes = self::getArmyHeroes($gameId, $ids, true, $db);
                 $soldiers = self::getArmySoldiers($gameId, $ids, true, $db);
-                return array('heroes' => $heroes, 'soldiers' => $soldiers);
+                return array(
+                    'heroes' => $heroes,
+                    'soldiers' => $soldiers,
+                    'armyId' => $id['armyId']
+                );
             } else {
-                return array('heroes' => null, 'soldiers' => null);
+                return array(
+                    'heroes' => null,
+                    'soldiers' => null,
+                    'armyId' => null
+                );
             }
         } catch (Exception $e) {
             echo($e);
@@ -964,6 +972,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             if ($turn['nr'] <= 7) {
                 $find = array('null', 1);
                 self::addRuin($gameId, $ruinId, $db);
+                self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             } else {
                 $find = array('death', 1);
                 self::armyRemoveHero($gameId, $heroId, $db);

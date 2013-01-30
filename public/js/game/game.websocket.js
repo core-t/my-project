@@ -16,81 +16,14 @@ $(document).ready(function() {
                     walk(r.data, r.data.attackerColor, r.data.deletedIds);
                     break;
 
-                case 'fightNeutralCastle':
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    battleM(r.battle, r.attackerColor, r.defenderColor, function(r){
-                        if(r.victory) {
-                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                            if(r.attackerColor==my.color){
-                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-                            }
-                            castleOwner(r.castleId, r.attackerColor);
-                        } else {
-                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                        }
-
-                        if(r.attackerColor==my.color){
-                            unlock();
-                        }
-
-                    }, r);
-
-                    break;
-
-                case 'fightEnemyCastle':
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    battleM(r.battle, r.attackerColor, r.defenderColor, function(r){
-                        if(r.victory) {
-                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                            if(r.attackerColor==my.color){
-                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-                            }
-                            for(i in r.defenderArmy) {
-                                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-                            }
-                            castleOwner(r.castleId, r.attackerColor);
-                        } else {
-                            for(i in r.defenderArmy){
-                                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-                            }
-                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                        }
-
-                        if(r.attackerColor==my.color){
-                            unlock();
-                        }
-                    });
-                    break;
-
-                case 'fightEnemy':
+                case 'fight':
+                    console.log(r);
                     zoomer.lensSetCenter(r.x*40, r.y*40);
 
                     battleM(r.battle, r.attackerColor, r.defenderColor, function(){
-                        if(r.victory) {
-                            players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-                            if(r.attackerColor==my.color){
-                                newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-                                newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-                            }
-                            for(i in r.defenderArmy) {
-                                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-                            }
-                        } else {
-                            for(i in r.defenderArmy){
-                                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-                            }
-                            deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-                        }
-
-                        if(r.attackerColor==my.color){
-                            unselectEnemyArmy();
-                            unlock();
-                        }
+                        fight(r);
                     });
+
                     break;
 
                 case 'computer':
@@ -121,6 +54,7 @@ $(document).ready(function() {
                     break;
 
                 case 'ruin':
+                    console.log(r);
                     zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
                     players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
                     ruinUpdate(r.data.ruin.ruinId, r.data.ruin.empty);
@@ -433,6 +367,23 @@ function wsJoinArmy(armyId1, armyId2){
         data: {
             armyId1:armyId1,
             armyId2:armyId2
+        }
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsFight(armyId, x, y){
+    var token = {
+        type: 'fight',
+        gameId: gameId,
+        playerId: my.id,
+        color: my.color,
+        accessKey: lAccessKey,
+        data: {
+            armyId:armyId,
+            x:x,
+            y:y
         }
     };
 

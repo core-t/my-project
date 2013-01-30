@@ -177,6 +177,10 @@ function prepareButtons(){
 }
 
 $(document).ready(function() {
+    var aaa = 'aabbcc';
+    test(function(){
+        test2(aaa)
+    });
     prepareButtons();
     terrain();
     zoomer = new zoom(760, 670);
@@ -402,62 +406,80 @@ function showClose(close){
     }
 }
 
-function test(){
-    var all = 0;
-    $('.path').remove();
-    for(y in fields){
-        for(x in fields[y]){
-            if(fields[y][x] == 'e'){
-                var pX = x*40;
-                var pY = y*40;
-                board.append(
-                    $('<div>')
-                    .addClass('path')
-                    .css({
-                        left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':10000
-                    })
-                    .html('e')
-                    );
-            }else if(!fields[y][x]){
-                var pX = x*40;
-                var pY = y*40;
-                board.append(
-                    $('<div>')
-                    .addClass('path')
-                    .css({
-                        left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':10000
-                    })
-                    .html('X')
-                    );
-            }else if(all){
-                var pX = x*40;
-                var pY = y*40;
-                board.append(
-                    $('<div>')
-                    .addClass('path')
-                    .css({
-                        left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':10000
-                    })
-                    .html(fields[y][x])
-                    );
-            }
-        }
-    }
-    console.log('PLAYERS:');
-    for(color in players) {
-        for(i in players[color].armies) {
-            console.log(i);
-        }
-    }
+function test(c){
+    console.log('in test running test3:');
+    test3(c);
+    console.log('in test running param as function:');
+    c('eee');
+    console.log('in test running param as function:');
+    c('jjj');
+//    var all = 0;
+//    $('.path').remove();
+//    for(y in fields){
+//        for(x in fields[y]){
+//            if(fields[y][x] == 'e'){
+//                var pX = x*40;
+//                var pY = y*40;
+//                board.append(
+//                    $('<div>')
+//                    .addClass('path')
+//                    .css({
+//                        left:pX,
+//                        top:pY,
+//                        'text-align':'center',
+//                        'z-index':10000
+//                    })
+//                    .html('e')
+//                    );
+//            }else if(!fields[y][x]){
+//                var pX = x*40;
+//                var pY = y*40;
+//                board.append(
+//                    $('<div>')
+//                    .addClass('path')
+//                    .css({
+//                        left:pX,
+//                        top:pY,
+//                        'text-align':'center',
+//                        'z-index':10000
+//                    })
+//                    .html('X')
+//                    );
+//            }else if(all){
+//                var pX = x*40;
+//                var pY = y*40;
+//                board.append(
+//                    $('<div>')
+//                    .addClass('path')
+//                    .css({
+//                        left:pX,
+//                        top:pY,
+//                        'text-align':'center',
+//                        'z-index':10000
+//                    })
+//                    .html(fields[y][x])
+//                    );
+//            }
+//        }
+//    }
+//    console.log('PLAYERS:');
+//    for(color in players) {
+//        for(i in players[color].armies) {
+//            console.log(i);
+//        }
+//    }
+}
+
+function test2(v){
+    console.log('in test2 value of param:');
+    console.log(v);
+}
+
+function test3(e){
+    console.log('in test3 running test2:');
+    test2(e);
+    console.log('in test3 running param as function:');
+    e();
 }
 
 function getColor(color){
@@ -488,3 +510,11 @@ function isDigit(val){
         return false;
     }
 }
+
+function isTruthful(val){
+    if(typeof val != 'undefined' && val){
+        return true;
+    }
+    return false;
+}
+

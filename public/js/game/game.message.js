@@ -553,7 +553,7 @@ function castleM(castleId, color){
 
 }
 
-function battleM(battle, attackerColor, defenderColor, clb, r) {
+function battleM(battle, attackerColor, defenderColor, clb) {
     removeM();
     var img;
     var newBattle = new Array();
@@ -637,30 +637,31 @@ function battleM(battle, attackerColor, defenderColor, clb, r) {
 
     if(newBattle){
         $('.message').fadeIn(100, function(){
-            killM(newBattle, clb, r);
+            killM(newBattle, clb);
         })
     }
 }
 
-function killM(b, clb, r){
+function killM(b, clb){
     for(i in b) {
         break;
     }
     if(typeof b[i] == 'undefined') {
         if(typeof clb != 'undefined'){
-            clb(r);
+            console.log('running clb');
+            clb();
         }
         return;
     }
     if(typeof b[i].soldierId != 'undefined') {
         $('#unit'+b[i].soldierId).fadeOut(1500, function(){
             delete b[i];
-            killM(b, clb, r);
+            killM(b, clb);
         });
     } else if(typeof b[i].heroId != 'undefined'){
         $('#hero'+b[i].heroId).fadeOut(1500, function(){
             delete b[i];
-            killM(b, clb, r);
+            killM(b, clb);
         });
     } else {
         console.log('zonk');

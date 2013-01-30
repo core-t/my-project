@@ -851,8 +851,38 @@ function computerArmiesUpdate(armies, color){
     computerArmiesUpdate(armies, color);
 }
 
+function fight(r){
+    console.log(r);
+    if(r.victory) {
+        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+        if(r.attackerColor==my.color){
+            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
+        }
+        if(isTruthful(r.defenderArmy)){
+            for(i in r.defenderArmy) {
+                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
+            }
+        }
+        if(isTruthful(r.castleId)){
+            castleOwner(r.castleId, r.attackerColor);
+        }
+    } else {
+        if(isTruthful(r.defenderArmy)){
+            for(i in r.defenderArmy){
+                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
+            }
+        }
+        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
+    }
+
+    if(r.attackerColor==my.color){
+        unselectEnemyArmy();
+        unlock();
+    }
+}
+
 function walk(data, color, deletedIds, computer) {
-    console.log(data);
     var i;
 
     for(i in data.path) {
@@ -860,39 +890,14 @@ function walk(data, color, deletedIds, computer) {
     }
 
     if(typeof data.path[i] == 'undefined') {
-        players[color].armies['army'+data.attackerArmy.armyId] = new army(data.attackerArmy, color);
-        newX = players[color].armies['army'+data.attackerArmy.armyId].x;
-        newY = players[color].armies['army'+data.attackerArmy.armyId].y;
+        console.log(data);
 
-        if(color == my.color){
-            if(players[color].armies['army'+data.attackerArmy.armyId].moves){
-                selectArmy(players[color].armies['army'+data.attackerArmy.armyId]);
-            }else{
-                unselectArmy();
-            }
-            unlock();
-        }
-
-        if(isDigit(data.ruinId)){
-            ruinUpdate(data.ruinId, 1);
-        }
-
-        if(isDigit(data.castleId)){
-            castleOwner(data.castleId, data.attackerColor);
-        }
-
-        if(typeof deletedIds == 'undefined'){
-            console.log('?');
-            return;
-        }
-        for(i in deletedIds){
-            deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
-        }
-
-        if(typeof data.battle != 'undefined' && data.battle){
-            battleM(data.battle, data.attackerColor, data.defenderColor, wsComputer);
-        }else if(typeof computer != 'undefined'){
-            wsComputer();
+        if(isTruthful(data.battle)){
+            battleM(data.battle, data.attackerColor, data.defenderColor, function(){
+                walkEnd(data, color, deletedIds, computer);
+            });
+        }else{
+            walkEnd(data, color, deletedIds, computer);
         }
 
         return;
@@ -912,6 +917,46 @@ function walk(data, color, deletedIds, computer) {
                 walk(data, color, deletedIds, computer);
             }
         });
+    }
+}
+
+function walkEnd(data, color, deletedIds, computer){
+    players[color].armies['army'+data.attackerArmy.armyId] = new army(data.attackerArmy, color);
+    newX = players[color].armies['army'+data.attackerArmy.armyId].x;
+    newY = players[color].armies['army'+data.attackerArmy.armyId].y;
+
+    if(color == my.color){
+        if(players[color].armies['army'+data.attackerArmy.armyId].moves){
+            selectArmy(players[color].armies['army'+data.attackerArmy.armyId]);
+        }else{
+            unselectArmy();
+        }
+        unlock();
+    }
+
+    if(isDigit(data.ruinId)){
+        ruinUpdate(data.ruinId, 1);
+    }
+
+    if(typeof deletedIds == 'undefined'){
+        console.log('?');
+        return;
+    }
+
+    for(i in deletedIds){
+        deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
+    }
+
+    if(isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)){
+        players[data.defenderColor].armies['army'+data.defenderArmy.armyId] = new army(data.defenderArmy, data.defenderColor);
+    }
+
+    if(isDigit(data.castleId) && isTruthful(data.victory)){
+        castleOwner(data.castleId, data.attackerColor);
+    }
+
+    if(typeof computer != 'undefined'){
+        wsComputer();
     }
 }
 
