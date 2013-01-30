@@ -63,6 +63,9 @@ class Game_Battle {
     }
 
     public function getDefender() {
+        if (empty($this->defender['soldiers']) && empty($this->defender['heroes'])) {
+            return null;
+        }
         return $this->defender;
     }
 
@@ -280,7 +283,8 @@ class Game_Battle {
         }
         return array(
             'soldiers' => $soldiers,
-            'heroes' => array()
+            'heroes' => array(),
+            'ids' => array()
         );
     }
 

@@ -899,13 +899,14 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 return array(
                     'heroes' => $heroes,
                     'soldiers' => $soldiers,
-                    'armyId' => $id['armyId']
+                    'ids' => explode(',', $ids)
                 );
             } else {
                 return array(
                     'heroes' => null,
                     'soldiers' => null,
-                    'armyId' => null
+                    'armyId' => null,
+                    'ids' => null
                 );
             }
         } catch (Exception $e) {

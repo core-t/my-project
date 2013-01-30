@@ -109,7 +109,7 @@ class WofHandler extends WebSocket_UriHandler {
                 } else {
                     $enemy = Application_Model_Database::getAllUnitsFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
                     if ($enemy) {
-                        $defenderColor = Application_Model_Database::getColorByArmyId($dataIn['gameId'], $enemy['armyId'], $db);
+                        $defenderColor = Application_Model_Database::getColorByArmyId($dataIn['gameId'], $enemy['ids'][0], $db);
                     }
                 }
 
@@ -129,201 +129,35 @@ class WofHandler extends WebSocket_UriHandler {
                         $defender = Application_Model_Database::updateAllArmiesFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
                     }
 
-                    if (empty($defender['soldiers'])) {
-                        Application_Model_Database::addCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
-                        $movesAndPosition = array(
+                    if (empty($defender)) {
+                        if (Zend_Validate::is($castleId, 'Digits')) {
+                            if ($defenderColor == 'neutral') {
+                                Application_Model_Database::addCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
+                            } else {
+                                Application_Model_Database::changeOwner($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
+                            }
+                        }
+
+                        Application_Model_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], array(
                             'x' => $x,
                             'y' => $y,
-                            'movesSpend' => $movesSpend
-                        );
-                        Application_Model_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $movesAndPosition, $db);
+                            'movesSpend' => $movesSpend), $db);
                         $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
                         $victory = true;
+                        foreach ($enemy['ids'] as $id)
+                        {
+                            $defender[]['armyId'] = $id;
+                        }
                     } else {
                         Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
                         $attacker = array(
                             'armyId' => $attackerArmyId,
                             'destroyed' => true
                         );
+                        if ($defenderColor == 'neutral') {
+                            $defender = null;
+                        }
                     }
-                }
-
-                $token = array(
-                    'type' => 'fight',
-                    'playerId' => $dataIn['playerId'],
-                    'attackerColor' => $dataIn['color'],
-                    'attackerArmy' => $attacker,
-                    'defenderColor' => $defenderColor,
-                    'defenderArmy' => array(),
-                    'battle' => $battle->getResult($army, $enemy),
-                    'victory' => $victory,
-                    'x' => $x,
-                    'y' => $y,
-                    'castleId' => $castleId
-                );
-
-                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                $this->sendToChannel($token, $users, 1);
-                break;
-
-            case 'fightNeutralCastle':
-                $attackerArmyId = $dataIn['data']['armyId'];
-                $x = $dataIn['data']['x'];
-                $y = $dataIn['data']['y'];
-                $castleId = $dataIn['data']['castleId'];
-
-                if (!Zend_Validate::is($attackerArmyId, 'Digits') || !Zend_Validate::is($x, 'Digits') || !Zend_Validate::is($y, 'Digits') || !Zend_Validate::is($castleId, 'Digits')) {
-                    echo('Brak "armyId" lub "x" lub "y" lub "castleId"!');
-                    return;
-                }
-                $castle = Application_Model_Board::getCastle($castleId);
-                if (empty($castle)) {
-                    echo('Brak zamku o podanym ID!');
-                    return;
-                }
-                if (($x < $castle['position']['x']) || ($x >= ($castle['position']['x'] + 2)) || ($y < $castle['position']['y']) || ($y >= ($castle['position']['y'] + 2))) {
-                    echo('Na podanej pozycji nie ma zamku!');
-                    return;
-                }
-
-                $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                if (empty($army)) {
-                    echo('Brak armii o podanym ID!');
-                    return;
-                }
-                $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y'], $castleId);
-                if ($distance >= 2.5) {
-                    echo('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2.5).');
-                    return;
-                }
-                $movesSpend = 2;
-                if ($movesSpend > $army['movesLeft']) {
-                    echo('Armia ma za mało ruchów do wykonania akcji(' . $movesSpend . '>' . $army['movesLeft'] . ').');
-                    return;
-                }
-
-                $enemy = Game_Battle::getNeutralCastleGarrizon($dataIn['gameId'], $db);
-
-                $battle = new Game_Battle($army, $enemy);
-                $battle->fight();
-                $battle->updateArmies($dataIn['gameId'], $db);
-                $defender = $battle->getDefender();
-
-                if (empty($defender['soldiers'])) {
-                    $res = Application_Model_Database::addCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
-                    if ($res == 1) {
-                        $movesAndPosition = array(
-                            'x' => $x,
-                            'y' => $y,
-                            'movesSpend' => $movesSpend
-                        );
-                        Application_Model_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                        $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                        $victory = true;
-                    } else {
-                        echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.' . $res);
-                    }
-                } else {
-                    Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-                    $victory = false;
-                    $attacker = array(
-                        'armyId' => $attackerArmyId,
-                        'destroyed' => true
-                    );
-                }
-
-                $token = array(
-                    'type' => 'fight',
-                    'playerId' => $dataIn['playerId'],
-                    'attackerColor' => $dataIn['color'],
-                    'attackerArmy' => $attacker,
-                    'defenderColor' => 'neutral',
-                    'defenderArmy' => array(),
-                    'battle' => $battle->getResult($army, $enemy),
-                    'victory' => $victory,
-                    'x' => $x,
-                    'y' => $y,
-                    'castleId' => $castleId
-                );
-
-                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                $this->sendToChannel($token, $users, 1);
-                break;
-
-            case 'fightEnemyCastle':
-                $attackerArmyId = $dataIn['data']['armyId'];
-                $x = $dataIn['data']['x'];
-                $y = $dataIn['data']['y'];
-                $castleId = $dataIn['data']['castleId'];
-                if ($attackerArmyId === null || $x === null || $y === null || $castleId === null) {
-                    echo('Brak "armyId" lub "x" lub "y"!');
-                    return;
-                }
-                $castle = Application_Model_Board::getCastle($castleId);
-                if (empty($castle)) {
-                    echo('Brak zamku o podanym ID!');
-                    return;
-                }
-                if (($x < $castle['position']['x']) || ($x >= ($castle['position']['x'] + 2)) || ($y < $castle['position']['y']) || ($y >= ($castle['position']['y'] + 2))) {
-                    echo('Na podanej pozycji nie ma zamku!');
-                    return;
-                }
-
-                $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                if (empty($army)) {
-                    echo('Brak armii o podanym ID!');
-                    return;
-                }
-                $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y'], $castleId);
-                if ($distance >= 2.5) {
-                    echo('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2.5).');
-                    return;
-                }
-                $movesSpend = 2;
-                if ($movesSpend > $army['movesLeft']) {
-                    echo('Armia ma za mało ruchów do wykonania akcji(' . $movesSpend . '>' . $army['movesLeft'] . ').');
-                    return;
-                }
-                if (!Application_Model_Database::isEnemyCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db)) {
-                    echo('To nie jest zamek wroga.');
-                    return;
-                }
-                $defenderColor = Application_Model_Database::getColorByCastleId($dataIn['gameId'], $castleId, $db);
-
-                $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($dataIn['gameId'], $castle['position'], $db);
-                $battle = new Game_Battle($army, $enemy);
-                $battle->addCastleDefenseModifier($dataIn['gameId'], $castleId, $db);
-                $battle->fight();
-                $battle->updateArmies($dataIn['gameId'], $db);
-
-                $defender = Application_Model_Database::updateAllArmiesFromCastlePosition($dataIn['gameId'], $castle['position'], $db);
-                if (empty($defender)) {
-                    $changeOwnerResult = Application_Model_Database::changeOwner($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
-                    if ($changeOwnerResult != 1) {
-                        echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord. ' . $changeOwnerResult);
-                        return;
-                    }
-                    $movesAndPosition = array(
-                        'x' => $x,
-                        'y' => $y,
-                        'movesSpend' => $movesSpend
-                    );
-                    Application_Model_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                    $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                    $victory = true;
-                    foreach ($enemy['ids']as $id)
-                    {
-                        $defender[]['armyId'] = $id;
-                    }
-                } else {
-                    Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-                    $victory = false;
-                    $attacker = array(
-                        'armyId' => $attackerArmyId,
-                        'destroyed' => true
-                    );
                 }
 
                 $token = array(
@@ -338,72 +172,6 @@ class WofHandler extends WebSocket_UriHandler {
                     'x' => $x,
                     'y' => $y,
                     'castleId' => $castleId
-                );
-
-                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                $this->sendToChannel($token, $users, 1);
-                break;
-
-            case 'fightEnemy':
-                $attackerArmyId = $dataIn['data']['armyId'];
-                $x = $dataIn['data']['x'];
-                $y = $dataIn['data']['y'];
-                $enemyId = $dataIn['data']['enemyArmyId'];
-                if ($attackerArmyId === null || $x === null || $y === null || $enemyId === null) {
-                    echo('Brak "armyId" lub "x" lub "y" lub "$enemyId"!');
-                    return;
-                }
-
-                $army = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                $distance = $this->calculateArmiesDistance($x, $y, $army['x'], $army['y']);
-                if ($distance >= 2) {
-                    echo('Wróg znajduje się za daleko aby można go było atakować (' . $distance . '>=2).');
-                    $this->move($dataIn, $db);
-                    return;
-                }
-                $movesSpend = $this->movesSpend($x, $y, $army);
-                if ($movesSpend > $army['movesLeft']) {
-                    echo('Armia ma za mało ruchów do wykonania akcji (' . $movesSpend . '>' . $army['movesLeft'] . ').');
-                    return;
-                }
-                $enemy = Application_Model_Database::getAllUnitsFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
-                $battle = new Game_Battle($army, $enemy);
-                $battle->addTowerDefenseModifier($x, $y);
-                $battle->fight();
-                $battle->updateArmies($dataIn['gameId'], $db);
-
-                $defender = Application_Model_Database::updateAllArmiesFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
-                if (empty($defender)) {
-                    $movesAndPosition = array(
-                        'x' => $x,
-                        'y' => $y,
-                        'movesSpend' => $movesSpend
-                    );
-                    Application_Model_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $movesAndPosition, $db);
-                    $attacker = Application_Model_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
-                    $victory = true;
-                    $defender[0]['armyId'] = $enemyId;
-                } else {
-                    Application_Model_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
-                    $victory = false;
-                    $attacker = array(
-                        'armyId' => $attackerArmyId,
-                        'destroyed' => true
-                    );
-                }
-
-                $token = array(
-                    'type' => 'fight',
-                    'playerId' => $dataIn['playerId'],
-                    'attackerColor' => $dataIn['color'],
-                    'attackerArmy' => $attacker,
-                    'defenderColor' => Application_Model_Database::getColorByArmyId($dataIn['gameId'], $enemyId, $db),
-                    'defenderArmy' => $defender,
-                    'battle' => $battle->getResult($army, $enemy),
-                    'victory' => $victory,
-                    'x' => $x,
-                    'y' => $y
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);

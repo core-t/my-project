@@ -10,8 +10,8 @@ class Game_Computer {
             'victory' => false
         );
 
-        if ($castleId !== null) { //enemy castle
-            if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+        if ($castleId !== null) { // castle
+            if (Application_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
                 $result['defenderColor'] = Application_Model_Database::getColorByCastleId($gameId, $castleId, $db);
                 $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
                 $battle = new Game_Battle($army, $enemy);
@@ -37,7 +37,7 @@ class Game_Computer {
                     );
                     Application_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                 }
-            } else { //neutral castle
+            } else { // neutral castle
                 $enemy = Game_Battle::getNeutralCastleGarrizon($gameId, $db);
                 $battle = new Game_Battle($army, $enemy);
                 $battle->fight();
@@ -57,7 +57,7 @@ class Game_Computer {
                 }
                 $result['defenderColor'] = 'neutral';
             }
-        } else { //enemy army
+        } else { // enemy army
             $battle = new Game_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();

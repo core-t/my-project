@@ -948,7 +948,11 @@ function walkEnd(data, color, deletedIds, computer){
     }
 
     if(isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)){
-        players[data.defenderColor].armies['army'+data.defenderArmy.armyId] = new army(data.defenderArmy, data.defenderColor);
+        if(isTruthful(data.victory)){
+            deleteArmy('army'+data.defenderArmy.armyId, data.defenderColor, 1);
+        }else{
+            players[data.defenderColor].armies['army'+data.defenderArmy.armyId] = new army(data.defenderArmy, data.defenderColor);
+        }
     }
 
     if(isDigit(data.castleId) && isTruthful(data.victory)){

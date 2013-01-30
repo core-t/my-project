@@ -584,7 +584,7 @@ class Application_Model_Board {
 
     static public function isTowerAtPosition($x, $y) {
         $towers = self::getTowers();
-        foreach ($towers as $k => $tower)
+        foreach ($towers as $tower)
         {
             if ($tower['x'] == $x && $tower['y'] == $y) {
                 return true;
@@ -801,6 +801,7 @@ class Application_Model_Board {
                 continue;
             }
             $hostileCastles[$castleId] = $castleSchema;
+            $hostileCastles[$castleId]['castleId'] = $castleId;
         }
         return $hostileCastles;
     }

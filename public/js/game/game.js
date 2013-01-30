@@ -177,10 +177,10 @@ function prepareButtons(){
 }
 
 $(document).ready(function() {
-    var aaa = 'aabbcc';
-    test(function(){
-        test2(aaa)
-    });
+//    var aaa = 'aabbcc';
+//    test(function(){
+//        test2(aaa)
+//    });
     prepareButtons();
     terrain();
     zoomer = new zoom(760, 670);

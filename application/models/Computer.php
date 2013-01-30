@@ -26,7 +26,7 @@ class Application_Model_Computer {
                         new Game_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
                         $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $enemy['castleId'], $db);
                         Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $enemy['currentPosition'], $db);
-                        return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId'], null, $enemy['armyId']);
+                        return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId']);
                     } else {
                         new Game_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
                         $enemy = Game_Computer::getStrongerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields, $db);
@@ -230,7 +230,7 @@ class Application_Model_Computer {
                             $currentPosition = $aStar->getCurrentPosition();
                             $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $enemy['castleId'], $db);
                             Application_Model_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $currentPosition, $db);
-                            return self::endMove($playerId, $db, $gameId, $army['armyId'], $currentPosition, $path, $fightEnemy, $enemy['castleId'], null, $enemy['armyId']);
+                            return self::endMove($playerId, $db, $gameId, $army['armyId'], $currentPosition, $path, $fightEnemy, $enemy['castleId']);
                         }
                     }
                 }
@@ -266,7 +266,7 @@ class Application_Model_Computer {
         }
     }
 
-    static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null, $enemyArmyId = null) {
+    static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null) {
 
         $armiesIds = Application_Model_Database::joinArmiesAtPosition($gameId, $position, $playerId, $db);
         $armyId = $armiesIds['armyId'];
@@ -275,16 +275,12 @@ class Application_Model_Computer {
             $armyId = $oldArmyId;
         }
 
-        if ($enemyArmyId) {
-            $defenderArmy = Application_Model_Database::getArmyByArmyId($gameId, $enemyArmyId, $db);
-        } else {
-            $defenderArmy = null;
-        }
-
         if ($fightEnemy) {
             $attackerArmy = $fightEnemy['attackerArmy'];
+            $defenderArmy = $fightEnemy['defenderArmy'];
         } else {
             $attackerArmy = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db);
+            $defenderArmy = null;
         }
 
 //        print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4));
