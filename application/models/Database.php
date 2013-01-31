@@ -873,7 +873,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllUnitsFromPosition($gameId, $position, $db = null) {
+    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db = null) {
         if (!$db) {
             $db = self::getDb();
         }
@@ -881,6 +881,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         $select = $db->select()
                 ->from('army')
                 ->where('"gameId" = ?', $gameId)
+                ->where('"playerId" != ?', $playerId)
                 ->where('destroyed = false')
                 ->where('x = (?)', $position['x'])
                 ->where('y = (?)', $position['y']);
@@ -1604,6 +1605,26 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 $playersCastles[$val['castleId']] = $val;
             }
             return $playersCastles;
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getAllCastles($gameId, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $castles = array();
+        $select = $db->select()
+                ->from('castle')
+                ->where('"gameId" = ?', $gameId);
+        try {
+            foreach ($db->query($select)->fetchAll() as $val)
+            {
+                $castles[$val['castleId']] = $val;
+            }
+            return $castles;
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());

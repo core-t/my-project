@@ -263,7 +263,7 @@ class Game_Astar {
     }
 
     /**
-     * 
+     *
      *
      * @param type $x
      * @param type $y
@@ -380,6 +380,7 @@ class Game_Astar {
 //         if (!$this->currentPosition) {
 //             $this->currentPosition = $currentPosition;
 //         }
+        unset($this->path[0]);
         return $this->path;
     }
 

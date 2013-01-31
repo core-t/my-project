@@ -7,23 +7,19 @@ $(document).ready(function() {
 
             switch(r.type){
 
-                case 'move':
-                    removeM();
-                    if(typeof r.data == 'undefined' || typeof r.color == 'undefined'){
-                        console.log('?');
-                        return;
-                    }
-                    walk(r.data, r.data.attackerColor, r.data.deletedIds);
+                case 'error':
+                    simpleM(r.msg);
+                    unlock();
                     break;
 
-                case 'fight':
-                    console.log(r);
-                    zoomer.lensSetCenter(r.x*40, r.y*40);
-
-                    battleM(r.battle, r.attackerColor, r.defenderColor, function(){
-                        fight(r);
-                    });
-
+                case 'move':
+                    //                    console.log(r);
+                    removeM();
+                    //                    if(typeof r == 'undefined' || typeof r.color == 'undefined'){
+                    //                        console.log('?');
+                    //                        return;
+                    //                    }
+                    walk(r, r.attackerColor, r.deletedIds);
                     break;
 
                 case 'computer':

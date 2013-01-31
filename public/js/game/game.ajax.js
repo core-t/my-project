@@ -21,12 +21,19 @@ function startMyTurnA() {
 function moveA(movesSpend) {
     var x = newX/40;
     var y = newY/40;
-    if(selectedArmy.moves == 0){
-        unselectArmy();
-        simpleM('Not enough moves left.');
-        return;
-    }
+//    if(selectedArmy.moves == 0){
+//        unselectArmy();
+//        simpleM('Not enough moves left.');
+//        return;
+//    }
+
+//    if(movesSpend === null){
+//        unselectArmy();
+//        return;
+//    }
+
     if(!my.turn){
+        simpleM('It is not your turn.');
         return;
     }
     tmpUnselectArmy();
@@ -34,43 +41,13 @@ function moveA(movesSpend) {
         return;
     }
     setlock();
-    var castleId = isEnemyCastle(x, y);
-    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
-        wsFight(unselectedArmy.armyId, x, y);
-    //        var vectorLength = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-    //        if(vectorLength >= 80) {
-    //            unlock();
-    //            unselectEnemyArmy();
-    //            return;
-    //        }
-    //        if(castleId){
-    //            if(unselectedArmy.moves < (movesSpend + 2)) {
-    //                simpleM('Not enough moves left.');
-    //                unlock();
-    //                unselectEnemyArmy();
-    //                return;
-    //            }
-    //            if(castles[castleId].color){
-    //                wsFightEnemyCastle(unselectedArmy.armyId, x, y, castleId);
-    //            }else{
-    //                wsFightNeutralCastle(unselectedArmy.armyId, x, y, castleId);
-    //            }
-    //        } else if(selectedEnemyArmy) {
-    //            if(unselectedArmy.moves < (getTerrain(selectedEnemyArmy.fieldType, selectedEnemyArmy)[1] + 1)) {
-    //                simpleM('Not enough moves left.');
-    //                unlock();
-    //                unselectEnemyArmy();
-    //                return;
-    //            }
-    //            wsFightEnemy(unselectedArmy.armyId, x, y, selectedEnemyArmy.armyId);
-    //        }
-    } else {
-        if(movesSpend === null) {
-            unlock();
-            return;
-        }
-        wsArmyMove(x, y, unselectedArmy.armyId);
-    }
+    wsArmyMove(x, y, unselectedArmy.armyId);
+//    var castleId = isEnemyCastle(x, y);
+//    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
+//        wsFight(unselectedArmy.armyId, x, y);
+//    } else {
+//        wsArmyMove(x, y, unselectedArmy.armyId);
+//    }
 }
 
 function setProductionA(castleId) {
