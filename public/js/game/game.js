@@ -48,9 +48,11 @@ var parentArmy = null;
 var selectedEnemyArmy = null;
 var nextArmy = null;
 var nextArmySelected = false;
-var armyToJoinId = null;
 var skippedArmies = new Array();
 var quitedArmies = new Array();
+
+var firstCastleId = 1000;
+var castlesPositionToId = new Array();
 
 var zoomer;
 var zoomPad;
@@ -60,8 +62,6 @@ var cursorDirection;
 
 var documentTitle = document.title;
 var timeoutId = null;
-
-var enemyArmiesPositions = new Array();
 
 var largeimageloaded = false;
 
@@ -81,7 +81,7 @@ function prepareButtons(){
             switch (event.which) {
                 case 1:
                     if(selectedArmy) {
-                        moveA(cursorPosition(event.pageX, event.pageY, 1));
+                        wsArmyMove(cursorPosition(event.pageX, event.pageY, 1));
                     }
                     break;
                 case 2:
@@ -221,9 +221,26 @@ function startGame(){
     }
     var myArmies = false;
     var myCastles = false;
+
+    var x;
+    var y;
+
     for(i in castles) {
         new createNeutralCastle(i);
+        x = castles[i].position.x;
+        y = castles[i].position.y;
+        castlesPositionToId[y+'_'+x] = i;
+        x = castles[i].position.x+1;
+        y = castles[i].position.y;
+        castlesPositionToId[y+'_'+x] = i;
+        x = castles[i].position.x;
+        y = castles[i].position.y+1;
+        castlesPositionToId[y+'_'+x] = i;
+        x = castles[i].position.x+1;
+        y = castles[i].position.y+1;
+        castlesPositionToId[y+'_'+x] = i;
     }
+
     for(i in ruins) {
         new ruinCreate(i);
     }
@@ -247,6 +264,9 @@ function startGame(){
             updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
             if(color == my.color){
+                if(firstCastleId > i){
+                    firstCastleId = i;
+                }
                 myCastles = true;
                 setMyCastleProduction(i);
             }

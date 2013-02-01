@@ -18,38 +18,6 @@ function startMyTurnA() {
     });
 }
 
-function moveA(movesSpend) {
-    var x = newX/40;
-    var y = newY/40;
-//    if(selectedArmy.moves == 0){
-//        unselectArmy();
-//        simpleM('Not enough moves left.');
-//        return;
-//    }
-
-//    if(movesSpend === null){
-//        unselectArmy();
-//        return;
-//    }
-
-    if(!my.turn){
-        simpleM('It is not your turn.');
-        return;
-    }
-    tmpUnselectArmy();
-    if(unselectedArmy.x == x && unselectedArmy.y == y) {
-        return;
-    }
-    setlock();
-    wsArmyMove(x, y, unselectedArmy.armyId);
-//    var castleId = isEnemyCastle(x, y);
-//    if(castleId || (selectedEnemyArmy && selectedEnemyArmy.x == x && selectedEnemyArmy.y == y)){
-//        wsFight(unselectedArmy.armyId, x, y);
-//    } else {
-//        wsArmyMove(x, y, unselectedArmy.armyId);
-//    }
-}
-
 function setProductionA(castleId) {
     var unitId
     var production = $('input:radio[name=production]:checked').val();

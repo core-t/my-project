@@ -175,12 +175,12 @@
     padding:1px;
     margin:1px;
     background: #800;
+    color:#ccc;
+}
+#gameMenu .button:hover{
     color:#fff;
 }
-
-#gameMenu .button:hover{
-    line-height:12px;
-    padding:1px;
+#gameMenu .button:active{
     color:#f00;
     text-shadow:-1px -1px 1px #000;
 }
@@ -258,10 +258,12 @@
     left:280px;
     top:50px;
     overflow-x: hidden;
+    border-radius: 3px;
+    box-shadow: 3px 3px 10px #000;
 }
 
 .message h3 {
-    color:#c00000;
+    color:#fff;
     margin:4px;
 }
 

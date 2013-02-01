@@ -336,43 +336,9 @@ function getMyCastleDefenseFromPosition(x, y) {
 }
 
 function showFirstCastle() {
-    var sp = $('.castle.' + turn.color);
+    var sp = $('#castle' + firstCastleId);
     zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
 }
-
-//function checkCastleVectorLength(castleId){
-//    x = newX;
-//    y = newY;
-//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-//    if(vectorLenth < 80) {
-//        return {'x':x, 'y':y};
-//    }
-//    x = castles[castleId].position.x;
-//    y = castles[castleId].position.y;
-//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-//    if(vectorLenth < 80) {
-//        return {'x':x, 'y':y};
-//    }
-//    x = castles[castleId].position.x + 40;
-//    y = castles[castleId].position.y;
-//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-//    if(vectorLenth < 80) {
-//        return {'x':x, 'y':y};
-//    }
-//    x = castles[castleId].position.x;
-//    y = castles[castleId].position.y + 40;
-//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-//    if(vectorLenth < 80) {
-//        return {'x':x, 'y':y};
-//    }
-//    x = castles[castleId].position.x + 40;
-//    y = castles[castleId].position.y + 40;
-//    vectorLenth = getVectorLength(unselectedArmy.x, unselectedArmy.y, x, y);
-//    if(vectorLenth < 80) {
-//        return {'x':x, 'y':y};
-//    }
-//    return null;
-//}
 
 // *** ARMIES ***
 
@@ -447,7 +413,8 @@ function army(obj, color) {
             if(!this.flyBonus){
                 this.flyBonus = 1;
             }
-        }else{
+        }
+        else{
             this.canFly -= 200;
         }
         if(this.soldiers[soldier].canSwim){
@@ -550,10 +517,7 @@ function myArmyClick(obj, e){
         if(my.turn) {
             if(selectedArmy) {
                 if(selectedArmy != players[my.color].armies[obj.id]) { // klikam na siebie
-                    //                    unselectArmy();
-                    //                } else { // klikam na inną jednostkę
-                    armyToJoinId = players[my.color].armies[obj.id].armyId;
-                    moveA(cursorPosition(e.pageX, e.pageY, 1));
+                    wsJoinArmy(players[my.color].armies[obj.id].armyId);
                 }
             } else {
                 unselectArmy();
@@ -633,7 +597,7 @@ function selectArmy(a) {
 function unselectArmy(skipJoin) {
     if(typeof skipJoin == 'undefined' && parentArmy && selectedArmy){
         if(selectedArmy.x == parentArmy.x && selectedArmy.y == parentArmy.y){
-            wsJoinArmy(parentArmy.armyId, selectedArmy.armyId);
+            wsJoinArmy(selectedArmy.armyId);
         }
     }
     //    $('#info').html('');
@@ -1015,9 +979,9 @@ function cursorPosition(x, y, force) {
             var close = new Object();
             var start = new node(startX, startY, destX, destY, 0);
             open[startX+'_'+startY] = start;
-//            for(i in castles){
-//                console.log(castles[i].position);
-//            }
+            if(typeof castlesPositionToId[destY+'_'+destX] != 'undefined'){
+                castleFields(castlesPositionToId[destY+'_'+destX], 'c')
+            }
             aStar(close, open, destX, destY, 1);
             $('#coord').html(destX + ' - ' + destY + ' ' + getTerrain(fields[destY][destX], selectedArmy)[0]);
             return showPath(close, destX+'_'+destY, selectedArmy.moves);

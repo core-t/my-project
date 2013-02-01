@@ -14,7 +14,7 @@ function startM(){
             .html('Start')
             .click(function(){
                 removeM();
-                startGame();
+//                startGame();
             })
             )
         .css('min-height','70px')
@@ -394,9 +394,10 @@ function castleM(castleId, color){
             }
             time = '';
         }
+
         if(units[unitId].canFly){
-            travelBy = 'ground/air';
-        }else if(units[unitId].canSwimm){
+            travelBy = 'ground / air';
+        }else if(units[unitId].canSwim){
             travelBy = 'water';
         }else{
             travelBy = 'ground';
@@ -656,26 +657,15 @@ function killM(b, clb, data){
     if(typeof b[i] == 'undefined') {
         clb();
         if(isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)){
-            console.log('jest defender');
             if(isTruthful(data.victory)){
-                console.log('usuwam defendera');
-                console.log(data);
-                console.log(data.defenderArmy.armyId);
-                console.log(data.defenderColor);
                 for(i in data.defenderArmy){
                     deleteArmy('army'+data.defenderArmy[i].armyId, data.defenderColor, 1);
                 }
             }else{
-                console.log('aktualizuję defendera');
-                console.log(data);
-                console.log(data.defenderArmy.armyId);
-                console.log(data.defenderColor);
                 for(i in data.defenderArmy){
                     players[data.defenderColor].armies['army'+data.defenderArmy[i].armyId] = new army(data.defenderArmy[i], data.defenderColor);
                 }
             }
-        }else{
-            console.log('nie ma defendera');
         }
 
         if(isDigit(data.castleId) && isTruthful(data.victory)){

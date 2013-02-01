@@ -13,7 +13,7 @@ body {
 }
 
 #page {
-    background: transparent url(../img/bg_1.jpg) repeat scroll top left;
+    background: transparent url('../img/bg_1.jpg') repeat scroll top left;
     margin:0 auto;
     width:760px;
     min-height:800px;
@@ -21,13 +21,13 @@ body {
 
 #content{
     padding:0 20px;
-    
+
 }
 
 #menuTop {
     width:760px;
     height:20px;
-    background:transparent url(../img/nav_bg.png) repeat;
+    background:transparent url('../img/nav_bg.png') repeat;
 }
 
 #menuTop p {
@@ -38,12 +38,17 @@ body {
 }
 
 #menuTop a {
-    color:#e00;
+    color:#fff;
     float: right;
     text-decoration: none;
     line-height:20px;
     padding-right:10px;
 }
+
+#menuTop a:hover {
+    color: #000;
+}
+
 
 a {
     color:#ccc;
@@ -56,23 +61,27 @@ a:hover {
 }
 
 .button {
-    padding:3px;
+    padding:3px 6px 3px 6px;
     margin:2px;
     text-align:center;
     cursor:pointer;
     line-height:14px;
     font-weight:bold;
-    color:#aaa;
-    text-shadow: -1px -1px 1px #111; 
+    color:#ccc;
+    text-shadow: -1px -1px 1px #111;
     background:#600;
     border-top:1px solid #555;
     border-left:1px solid #555;
     border-right:1px solid #111;
     border-bottom:1px solid #111;
+    border-radius: 3px;
     display:block;
 }
 
 .button:hover {
+    color:#fff;
+}
+.button:active {
     color:#000;
     text-shadow: none;
     background:#500;

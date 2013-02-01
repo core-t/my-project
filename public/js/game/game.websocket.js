@@ -97,10 +97,13 @@ $(document).ready(function() {
                     break;
 
                 case 'joinArmy':
+                    console.log(r);
                     removeM();
-                    zoomer.lensSetCenter(r.data.army.x*40, r.data.army.y*40);
-                    deleteArmyByPosition(r.data.army.x, r.data.army.y, r.color);
-                    players[r.color].armies['army'+r.data.army.armyId] = new army(r.data.army, r.color);
+                    zoomer.lensSetCenter(r.army.x*40, r.army.y*40);
+                    for(i in r.deletedIds){
+                        deleteArmy('army' + r.deletedIds[i].armyId, r.color);
+                    }
+                    players[r.color].armies['army'+r.army.armyId] = new army(r.army, r.color);
                     break;
 
                 case 'disbandArmy':
@@ -248,13 +251,40 @@ function wsPlayerArmies(color){
     ws.send(JSON.stringify(token));
 }
 
-function wsArmyMove(x, y, armyId) {
+function wsArmyMove(movesSpend) {
+
+    var x = newX/40;
+    var y = newY/40;
+
+    //    if(selectedArmy.moves == 0){
+    //        unselectArmy();
+    //        simpleM('Not enough moves left.');
+    //        return;
+    //    }
+
+    //    if(movesSpend === null){
+    //        unselectArmy();
+    //        return;
+    //    }
+
+    if(!my.turn){
+        simpleM('It is not your turn.');
+        return;
+    }
+
+    tmpUnselectArmy();
+    if(unselectedArmy.x == x && unselectedArmy.y == y) {
+        return;
+    }
+
+    setlock();
+
     var token = {
         type: 'move',
         data:{
             x: x,
             y: y,
-            armyId: armyId
+            armyId: unselectedArmy.armyId
         },
         gameId: gameId,
         playerId: my.id,
@@ -345,7 +375,7 @@ function wsHeroResurrection(castleId) {
     ws.send(JSON.stringify(token));
 }
 
-function wsJoinArmy(armyId1, armyId2){
+function wsJoinArmy(armyId){
     if(!my.turn){
         return;
     }
@@ -357,8 +387,7 @@ function wsJoinArmy(armyId1, armyId2){
         color: my.color,
         accessKey: lAccessKey,
         data: {
-            armyId1:armyId1,
-            armyId2:armyId2
+            armyId:armyId
         }
     };
 

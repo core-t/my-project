@@ -352,21 +352,14 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 break;
 
             case 'joinArmy':
-                $armyId1 = $dataIn['data']['armyId1'];
-                $armyId2 = $dataIn['data']['armyId2'];
-                if (empty($armyId1) || empty($armyId2)) {
+                $armyId = $dataIn['data']['armyId'];
+                if (empty($armyId)) {
                     $this->sendError($user, 'Brak "armyId1" i "armyId2"!');
                     return;
                 }
 
-                $position1 = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId1, $dataIn['playerId'], $db);
-                $position2 = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId2, $dataIn['playerId'], $db);
-                if (empty($position1['x']) || empty($position1['y']) || ($position1['x'] != $position2['x']) || ($position1['y'] != $position2['y'])) {
-                    $this->sendError($user, 'Armie nie są na tej samej pozycji!');
-                    return;
-                }
-                $armiesIds = Application_Model_Database::joinArmiesAtPosition($dataIn['gameId'], $position1, $dataIn['playerId'], $db);
-                $armyId = $armiesIds['armyId'];
+                $position = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId, $dataIn['playerId'], $db);
+                $armiesIds = Application_Model_Database::joinArmiesAtPosition($dataIn['gameId'], $position, $dataIn['playerId'], $db);
 
                 if (empty($armyId)) {
                     $this->sendError($user, 'Brak "armyId"!');
@@ -374,11 +367,8 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 }
                 $token = array(
                     'type' => $dataIn['type'],
-                    'data' => array(
-                        'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armyId, $db),
-                        'deletedIds' => $armiesIds['deletedIds']
-                    ),
-                    'playerId' => $dataIn['playerId'],
+                    'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armiesIds['armyId'], $db),
+                    'deletedIds' => $armiesIds['deletedIds'],
                     'color' => $dataIn['color']
                 );
 
