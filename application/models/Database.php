@@ -917,6 +917,56 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
+    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $ids = '';
+        $select = $db->select()
+                ->from('army')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"playerId" = ?', $playerId)
+                ->where('destroyed = false')
+                ->where('x = (?)', $position['x'])
+                ->where('y = (?)', $position['y']);
+        try {
+            $result = $db->query($select)->fetchAll();
+            foreach ($result as $id)
+            {
+                if ($ids) {
+                    $ids .= ',';
+                }
+                $ids .= $id['armyId'];
+            }
+            if (!$ids) {
+                return;
+            }
+            return self::getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+
+        $select = $db->select()
+                ->from(array('a' => 'soldier'), null)
+                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
+                ->where('"canSwim" = true')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
     static public function updateAllArmiesFromPosition($gameId, $position, $db = null) {
         if (!$db) {
             $db = self::getDb();

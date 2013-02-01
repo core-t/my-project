@@ -117,12 +117,21 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                     }
                 }
 
-                if (!$castleId) {
+                if ($castleId === null) {
                     $enemy = Application_Model_Database::getAllEnemyUnitsFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $dataIn['playerId'], $db);
                     if ($enemy['ids']) { // enemy army
                         $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'c');
+                    } else { // idziemy nie walczymy
+                        if (Application_Model_Database::areMySwimmingUnitsAtPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $dataIn['playerId'], $db)) {
+                            echo 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+                            $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'b');
+                        }
                     }
                 }
+
+                /*
+                 * A* START
+                 */
 
                 $A_Star = new Game_Astar($x, $y);
 
@@ -137,6 +146,10 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                     $this->sendError($user, 'Wystąpił błąd podczas obliczania ścieżki');
                     return;
                 }
+
+                /*
+                 * A* END
+                 */
 
                 if (!$move['currentPosition']) {
                     print_r($move);
@@ -159,7 +172,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 var_dump($movesLeft);
 
                 if ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y) {
-                    if ($castleId) {
+                    if (Zend_Validate::is($castleId, 'Digits')) { // castle
                         if ($movesLeft >= 2) {
                             $fight = true;
                             if ($defenderColor == 'neutral') {
@@ -232,7 +245,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                     $battleResult = $battle->getResult($army, $enemy);
                 } else {
                     if ($rollbackPath) {
-                        if ($castleId) {
+                        if (Zend_Validate::is($castleId, 'Digits')) {
                             if (!$move['currentPosition']['movesSpend']) {
                                 $this->sendError($user, 'Nie wykonano ruchu');
                                 return;

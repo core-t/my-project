@@ -490,7 +490,7 @@ function army(obj, color) {
             if(fields[this.y][this.x] != 'S'){
                 this.fieldType = fields[this.y][this.x];
             }
-            fields[y][x] = 'S';
+            fields[this.y][this.x] = 'S';
         }
     } else { // nie moja armia
         if(fields[this.y][this.x] != 'e'){
@@ -1015,6 +1015,9 @@ function cursorPosition(x, y, force) {
             var close = new Object();
             var start = new node(startX, startY, destX, destY, 0);
             open[startX+'_'+startY] = start;
+//            for(i in castles){
+//                console.log(castles[i].position);
+//            }
             aStar(close, open, destX, destY, 1);
             $('#coord').html(destX + ' - ' + destY + ' ' + getTerrain(fields[destY][destX], selectedArmy)[0]);
             return showPath(close, destX+'_'+destY, selectedArmy.moves);

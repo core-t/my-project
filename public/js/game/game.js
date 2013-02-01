@@ -67,29 +67,10 @@ var largeimageloaded = false;
 
 var wait = 0;
 
-//var urlMove = '/move/go';
-//var urlNextTurn = '/turn/next';
 var urlGetTurn = '/turn/get';
 var urlStartMyTurn = '/turn/start';
-//var urlFightEnemyCastle = '/fight/ecastle';
-//var urlFightNeutralCastle = '/fight/ncastle';
-//var urlFightArmy = '/fight/army';
-//var urlAddArmy = '/gameajax/addarmy';
-//var urlGetPlayerArmies = '/gameajax/armies';
-//var urlJoinArmy = '/gameajax/join';
-//var urlSplitArmy = '/gameajax/split';
-//var urlDisbandArmy = '/gameajax/disband';
-//var urlHeroResurrection = '/gameajax/resurrection';
-//var urlSearchRuins = '/ruin/search';
-//var urlGetRuins = '/ruin/get';
 var urlSetProduction = '/production/set';
-//var urlCastleRaze = '/castle/raze';
-//var urlCastleBuild = '/castle/build';
-//var urlCastleGet = '/castle/get';
 var urlTowerAdd = '/tower/add';
-//var urlTowerGet = '/tower/get';
-//var urlComputer = '/computer';
-//var urlChatSend = '/chat/send';
 var urlWebSocketOpen = '/websocket/open'
 
 function prepareButtons(){
@@ -177,10 +158,6 @@ function prepareButtons(){
 }
 
 $(document).ready(function() {
-//    var aaa = 'aabbcc';
-//    test(function(){
-//        test2(aaa)
-//    });
     prepareButtons();
     terrain();
     zoomer = new zoom(760, 670);
@@ -406,80 +383,65 @@ function showClose(close){
     }
 }
 
-function test(c){
-    console.log('in test running test3:');
-    test3(c);
-    console.log('in test running param as function:');
-    c('eee');
-    console.log('in test running param as function:');
-    c('jjj');
-//    var all = 0;
-//    $('.path').remove();
-//    for(y in fields){
-//        for(x in fields[y]){
-//            if(fields[y][x] == 'e'){
-//                var pX = x*40;
-//                var pY = y*40;
-//                board.append(
-//                    $('<div>')
-//                    .addClass('path')
-//                    .css({
-//                        left:pX,
-//                        top:pY,
-//                        'text-align':'center',
-//                        'z-index':10000
-//                    })
-//                    .html('e')
-//                    );
-//            }else if(!fields[y][x]){
-//                var pX = x*40;
-//                var pY = y*40;
-//                board.append(
-//                    $('<div>')
-//                    .addClass('path')
-//                    .css({
-//                        left:pX,
-//                        top:pY,
-//                        'text-align':'center',
-//                        'z-index':10000
-//                    })
-//                    .html('X')
-//                    );
-//            }else if(all){
-//                var pX = x*40;
-//                var pY = y*40;
-//                board.append(
-//                    $('<div>')
-//                    .addClass('path')
-//                    .css({
-//                        left:pX,
-//                        top:pY,
-//                        'text-align':'center',
-//                        'z-index':10000
-//                    })
-//                    .html(fields[y][x])
-//                    );
-//            }
-//        }
-//    }
+function test(){
+    var all = 1;
+    var pX = null;
+    var pY = null;
+
+    $('.path').remove();
+    for(y in fields){
+        for(x in fields[y]){
+            if(fields[y][x] == 'e'){
+                pX = x*40;
+                pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html('e')
+                    );
+            }else if(!fields[y][x]){
+                pX = x*40;
+                pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html('X')
+                    );
+            }else if(all){
+                pX = x*40;
+                pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('path')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        'text-align':'center',
+                        'z-index':10000
+                    })
+                    .html(fields[y][x])
+                    );
+            }
+        }
+    }
 //    console.log('PLAYERS:');
 //    for(color in players) {
 //        for(i in players[color].armies) {
 //            console.log(i);
 //        }
 //    }
-}
-
-function test2(v){
-    console.log('in test2 value of param:');
-    console.log(v);
-}
-
-function test3(e){
-    console.log('in test3 running test2:');
-    test2(e);
-    console.log('in test3 running param as function:');
-    e();
 }
 
 function getColor(color){
