@@ -553,8 +553,11 @@ function castleM(castleId, color){
 
 }
 
-function battleM(battle, attackerColor, defenderColor, clb) {
+function battleM(data, clb) {
     removeM();
+    var battle = data.battle;
+    var attackerColor = data.attackerColor;
+    var defenderColor = data.defenderColor;
     var img;
     var newBattle = new Array();
     var attack = $('<div>').addClass('battle attack');
@@ -592,7 +595,9 @@ function battleM(battle, attackerColor, defenderColor, clb) {
         .append(attack)
         .append($('<p>').html('VS').addClass('center'))
         );
+
     var defense = $('<div>').addClass('battle defense');
+
     for(i in battle.defense.soldiers) {
         if(battle.defense.soldiers[i].succession){
             newBattle[battle.defense.soldiers[i].succession]={
@@ -607,6 +612,7 @@ function battleM(battle, attackerColor, defenderColor, clb) {
             })
             );
     }
+
     for(i in battle.defense.heroes) {
         if(battle.defense.heroes[i].succession){
             newBattle[battle.defense.heroes[i].succession]={
@@ -620,6 +626,7 @@ function battleM(battle, attackerColor, defenderColor, clb) {
             })
             );
     }
+
     $('.message').append(defense);
 
     var h = 0;
@@ -637,31 +644,56 @@ function battleM(battle, attackerColor, defenderColor, clb) {
 
     if(newBattle){
         $('.message').fadeIn(100, function(){
-            killM(newBattle, clb);
+            killM(newBattle, clb, data);
         })
     }
 }
 
-function killM(b, clb){
+function killM(b, clb, data){
     for(i in b) {
         break;
     }
     if(typeof b[i] == 'undefined') {
-        if(typeof clb != 'undefined'){
-            console.log('running clb');
-            clb();
+        clb();
+        if(isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)){
+            console.log('jest defender');
+            if(isTruthful(data.victory)){
+                console.log('usuwam defendera');
+                console.log(data);
+                console.log(data.defenderArmy.armyId);
+                console.log(data.defenderColor);
+                for(i in data.defenderArmy){
+                    deleteArmy('army'+data.defenderArmy[i].armyId, data.defenderColor, 1);
+                }
+            }else{
+                console.log('aktualizuję defendera');
+                console.log(data);
+                console.log(data.defenderArmy.armyId);
+                console.log(data.defenderColor);
+                for(i in data.defenderArmy){
+                    players[data.defenderColor].armies['army'+data.defenderArmy[i].armyId] = new army(data.defenderArmy[i], data.defenderColor);
+                }
+            }
+        }else{
+            console.log('nie ma defendera');
         }
+
+        if(isDigit(data.castleId) && isTruthful(data.victory)){
+            castleOwner(data.castleId, data.attackerColor);
+        }
+
         return;
     }
+
     if(typeof b[i].soldierId != 'undefined') {
         $('#unit'+b[i].soldierId).fadeOut(1500, function(){
             delete b[i];
-            killM(b, clb);
+            killM(b, clb, data);
         });
     } else if(typeof b[i].heroId != 'undefined'){
         $('#hero'+b[i].heroId).fadeOut(1500, function(){
             delete b[i];
-            killM(b, clb);
+            killM(b, clb, data);
         });
     } else {
         console.log('zonk');

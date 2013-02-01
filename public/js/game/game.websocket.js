@@ -15,10 +15,6 @@ $(document).ready(function() {
                 case 'move':
                     //                    console.log(r);
                     removeM();
-                    //                    if(typeof r == 'undefined' || typeof r.color == 'undefined'){
-                    //                        console.log('?');
-                    //                        return;
-                    //                    }
                     walk(r, r.attackerColor, r.deletedIds);
                     break;
 

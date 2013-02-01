@@ -150,7 +150,7 @@ class Game_Computer {
         } else {
             $in = true;
         }
-        $path = $aStar->restorePath($key, $army['movesLeft'] - 2);
+        $path = $aStar->getPath($key, $army['movesLeft'] - 2);
         $currentPosition = $aStar->getCurrentPosition();
         if (!$currentPosition) {
             if ($in) {
@@ -190,7 +190,7 @@ class Game_Computer {
         } else {
             $in = true;
         }
-        $path = $aStar->restorePath($key, $army['movesLeft'] - 2);
+        $path = $aStar->getPath($key, $army['movesLeft'] - 2);
         $currentPosition = $aStar->getCurrentPosition();
         if (!$currentPosition) {
             if ($in) {
@@ -287,7 +287,7 @@ class Game_Computer {
                 $key = $destX . '_' . $destY;
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
                 if ($movesToSpend && $movesToSpend <= $army['movesLeft']) {
-                    $ruin['path'] = $aStar->restorePath($key, $army['movesLeft']);
+                    $ruin['path'] = $aStar->getPath($key, $army['movesLeft']);
                     $ruin['currentPosition'] = $aStar->getCurrentPosition();
                     $ruin['ruinId'] = $ruinId;
                     return $ruin;
@@ -314,7 +314,7 @@ class Game_Computer {
                 $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'e');
                 if ($movesToSpend && $movesToSpend <= $army['movesLeft']) {
                     $castle['movesSpend'] = $movesToSpend;
-                    $castle['path'] = $aStar->restorePath($key, $army['movesLeft']);
+                    $castle['path'] = $aStar->getPath($key, $army['movesLeft']);
                     $castle['currentPosition'] = $aStar->getCurrentPosition();
                     $castle['x'] = $position['x'];
                     $castle['y'] = $position['y'];
@@ -376,7 +376,7 @@ class Game_Computer {
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
                 if ($movesToSpend && $movesToSpend <= ($army['movesLeft'] - 2)) {
                     $enemy['movesSpend'] = $movesToSpend;
-                    $enemy['path'] = $aStar->restorePath($key, $movesToSpend);
+                    $enemy['path'] = $aStar->getPath($key, $movesToSpend);
                     $enemy['currentPosition'] = $aStar->getCurrentPosition();
                     $enemy['castleId'] = $castleId;
                     return $enemy;
@@ -411,7 +411,7 @@ class Game_Computer {
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
                 if ($movesToSpend && $movesToSpend <= ($army['movesLeft'] - 2)) {
                     $enemy['movesSpend'] = $movesToSpend;
-                    $enemy['path'] = $aStar->restorePath($key, $movesToSpend);
+                    $enemy['path'] = $aStar->getPath($key, $movesToSpend);
                     $enemy['currentPosition'] = $aStar->getCurrentPosition();
                     $enemy['castleId'] = $castleId;
                     return $enemy;
@@ -441,7 +441,7 @@ class Game_Computer {
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
                 if ($movesToSpend && $movesToSpend <= ($army['movesLeft'] - 2)) {
                     $a['movesSpend'] = $movesToSpend;
-                    $a['path'] = $aStar->restorePath($key, $movesToSpend);
+                    $a['path'] = $aStar->getPath($key, $movesToSpend);
                     $a['currentPosition'] = $aStar->getCurrentPosition();
                     return $a;
                 }
@@ -478,7 +478,7 @@ class Game_Computer {
         $position = Application_Model_Board::getCastlePosition($castle['castleId']);
         $aStar = new Game_Astar($position['x'], $position['y']);
         $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
-        $castle['path'] = $aStar->restorePath($position['x'] . '_' . $position['y'], $army['movesLeft']);
+        $castle['path'] = $aStar->getPath($position['x'] . '_' . $position['y'], $army['movesLeft']);
         $castle['currentPosition'] = $aStar->getCurrentPosition();
         if ($castle['currentPosition']) {
             return $castle;

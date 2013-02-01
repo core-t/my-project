@@ -569,7 +569,8 @@ function myArmyMouse(id){
     }
     if(my.turn && !selectedArmy) {
         $('#'+id).css('cursor', 'url(../img/game/cursor_select.png), default');
-    } else {
+    }
+    else {
         $('#'+id).css('cursor', 'default');
     }
 }
@@ -665,13 +666,14 @@ function unselectEnemyArmy() {
 }
 
 function deleteArmy(armyId, color, quiet) {
+    if(typeof players[color].armies[armyId] == 'undefined') {
+        console.log('Brak armi o armyId = '+armyId+' i kolorze ='+color);
+    }
     if(quiet) {
-        if(typeof players[color].armies[armyId] != 'undefined') {
-            armyFields(players[color].armies[armyId]);
-            $('#' + armyId).remove();
-            $('#' + armyId.substr(4)).remove();
-            delete players[color].armies[armyId];
-        }
+        armyFields(players[color].armies[armyId]);
+        $('#' + armyId).remove();
+        $('#' + armyId.substr(4)).remove();
+        delete players[color].armies[armyId];
     } else {
         zoomer.lensSetCenter(players[color].armies[armyId].x*40, players[color].armies[armyId].y*40);
         armyFields(players[color].armies[armyId]);
@@ -679,7 +681,7 @@ function deleteArmy(armyId, color, quiet) {
             $('#' + armyId).remove();
             $('#' + armyId.substr(4)).remove();
             delete players[color].armies[armyId];
-            console.log('usuni\u0119ta ' + armyId + ' - ' + color);
+        //            console.log('usuni\u0119ta ' + armyId + ' - ' + color);
         });
     }
 }
@@ -893,7 +895,7 @@ function walk(data, color, deletedIds, computer) {
         console.log(data);
 
         if(isTruthful(data.battle)){
-            battleM(data.battle, data.attackerColor, data.defenderColor, function(){
+            battleM(data, function(){
                 walkEnd(data, color, deletedIds, computer);
             });
         }else{
@@ -945,18 +947,6 @@ function walkEnd(data, color, deletedIds, computer){
 
     for(i in deletedIds){
         deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
-    }
-
-    if(isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)){
-        if(isTruthful(data.victory)){
-            deleteArmy('army'+data.defenderArmy.armyId, data.defenderColor, 1);
-        }else{
-            players[data.defenderColor].armies['army'+data.defenderArmy.armyId] = new army(data.defenderArmy, data.defenderColor);
-        }
-    }
-
-    if(isDigit(data.castleId) && isTruthful(data.victory)){
-        castleOwner(data.castleId, data.attackerColor);
     }
 
     if(typeof computer != 'undefined'){

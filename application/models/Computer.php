@@ -225,7 +225,7 @@ class Application_Model_Computer {
                             new Game_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
 
                             $aStar = $enemy['aStar'];
-                            $aStar->restorePath($enemy['key'], $enemy['movesToSpend']);
+                            $aStar->getPath($enemy['key'], $enemy['movesToSpend']);
                             $path = $aStar->reversePath();
                             $currentPosition = $aStar->getCurrentPosition();
                             $fightEnemy = Game_Computer::fightEnemy($gameId, $army, $enemy, $playerId, $enemy['castleId'], $db);

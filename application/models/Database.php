@@ -116,6 +116,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 }
                 self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
                 self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+                self::destroyArmy($gameId, $result[$i]['armyId'], $playerId, $db);
             }
             return array(
                 'armyId' => $firstArmyId,

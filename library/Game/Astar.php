@@ -264,30 +264,6 @@ class Game_Astar {
 
     /**
      *
-     *
-     * @param type $x
-     * @param type $y
-     * @param type $newX
-     * @param type $newY
-     * @return boolean
-     */
-    public function isCastleInterior($x, $y, $newX, $newY) {
-        if ($x == $newX && $y == $newY) {
-            return true;
-        }
-        if ($x == $newX && ($y + 1) == $newY) {
-            return true;
-        }
-        if (($x + 1) == $newX && $y == $newY) {
-            return true;
-        }
-        if (($x + 1) == $newX && ($y + 1) == $newY) {
-            return true;
-        }
-    }
-
-    /**
-     *
      * @param type $x
      * @param type $y
      * @param type $g
@@ -346,10 +322,10 @@ class Game_Astar {
      * @param type $moves
      * @return int
      */
-    public function restorePath($key, $moves) {
+    public function getPath($key, $moves) {
 //        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
+            new Game_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key);
             return 0;
         }
         $this->currentPosition;
@@ -407,24 +383,5 @@ class Game_Astar {
         return $this->path;
     }
 
-//     static public function rewindPathOutOfCastle($path, $currentPosition, $castlePosition) {
-//         $previousPath = $oldPath = $path;
-//         $oldCurrentPosition = $currentPosition;
-//         $rewind = false;
-//         while (true) {
-//             if (!Application_Model_Board::isCastleFild($currentPosition, $castlePosition)) {
-//                 $rewind = true;
-//                 break;
-//             } else {
-//                 $previousPath = $path;
-//                 $currentPosition = array_pop($path);
-//             }
-//         }
-//         if ($rewind) {
-//             return array('path' => $previousPath, 'currentPosition' => $currentPosition);
-//         } else {
-//             return array('path' => $oldPath, 'currentPosition' => $oldCurrentPosition);
-//         }
-//     }
 }
 

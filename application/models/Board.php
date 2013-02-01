@@ -763,6 +763,28 @@ class Application_Model_Board {
         return $fields;
     }
 
+    static public function rewindPathOutOfCastle($path, $castleId) {
+        $position = self::getCastlePosition($castleId);
+        $i = count($path);
+
+        for ($i; $i > 0; $i--)
+        {
+            if (self::isCastleFild($path[$i], $position)) {
+                unset($path[$i]);
+            } else {
+                return array(
+                    'path' => $path,
+                    'currentPosition' => $path[$i],
+                );
+            }
+        }
+
+        return array(
+            'path' => $path,
+            'currentPosition' => $path[$i],
+        );
+    }
+
     static public function changeArmyField($fields, $destX, $destY, $type) {
         $fields[$destY][$destX] = $type;
         return $fields;
