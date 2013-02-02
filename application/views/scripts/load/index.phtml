@@ -1,27 +1,37 @@
 <h2>Select which game you want to load</h2>
 <div class="table">
-<table>
-    <th>Game master</th><th>Color</th><th>Turn number</th><th>Max number of players</th><th>Date</th>
-<?php
-if(is_array($this->myGames)) {
-    foreach($this->myGames as $game) {
-        $url = $this->url(array('controller'=>'load', 'action'=>'load', 'gameId'=>$game['gameId']));
-        echo '<tr id="gid'.$game['gameId'].'" onclick="'.$url.'" class="trlink">
-        <td><a href="'.$url.'">'.$game['gameMaster'].'</a></td>
-        <td class="'.$game['color'].'bg"><a href="'.$url.'">'.$game['color'].'</a></td>
-        <td><a href="'.$url.'">'.$game['turnNumber'].'</a></td>
-        <td><a href="'.$url.'">'.$game['numberOfPlayers'].'</a></td>
-        <td><a href="'.$url.'">'.strftime('%F %H:%M:%S', strtotime($game['begin'])).'</a></td>
-        </tr>';
-    }
-}
-?>
-</table>
+    <table>
+        <th>Game master</th><th>Color</th><th>Turn number</th><th>Nr of P</th><th>Players</th><th>Start date</th>
+        <?php
+        if (is_array($this->myGames)) {
+            foreach ($this->myGames as $game)
+            {
+                $url = $this->url(array('controller' => 'load', 'action' => 'load', 'gameId' => $game['gameId']));
+                $gameMaster = $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'];
+                echo '
+    <tr id="gid' . $game['gameId'] . '" onclick="' . $url . '" class="trlink">
+        <td><a href="' . $url . '">' . $gameMaster . '</a></td>
+        <td class="' . $game['color'] . 'bg"><a href="' . $url . '">' . $game['color'] . '</a></td>
+        <td><a href="' . $url . '">' . $game['turnNumber'] . '</a></td>
+        <td><a href="' . $url . '">' . $game['numberOfPlayers'] . '</a></td>
+        <td><a href="' . $url . '">';
+                foreach ($game['players'] as $v)
+                {
+                    echo $v['firstName'] . ' ' . $v['lastName'] . ' /' . $v['color'] . '/<br/>';
+                }
+                echo '</a></td>
+        <td><a href="' . $url . '">' . strftime('%F %H:%M:%S', strtotime($game['begin'])) . '</a></td>
+    </tr>
+    ';
+            }
+        }
+        ?>
+    </table>
 
 </div>
 <ul>
     <li>
-        <a href="<?php echo $this->url(array('controller'=>'index', 'gameId'=>null)) ?>" class="button">< Back</a>
+        <a href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>" class="button">< Back</a>
     </li>
 </ul>
 <script type="text/javascript">
@@ -31,7 +41,7 @@ if(is_array($this->myGames)) {
     .mouseleave(function(){
         $('#'+this.id).css('background','transparent');
     });
-//    .click(function(){
-//        
-//    });
+    //    .click(function(){
+    //
+    //    });
 </script>

@@ -13,29 +13,29 @@ $(document).ready(function() {
                     break;
 
                 case 'move':
-                    //                    console.log(r);
+//                    console.log(r);
                     removeM();
-                    walk(r, r.attackerColor, r.deletedIds);
+                    move(r);
                     break;
 
                 case 'computer':
                     console.log(r);
                     removeM();
 
-                    if(typeof r.data.path != 'undefined' && r.data.path){
-                        walk(r.data, r.data.attackerColor, r.data.deletedIds, 1);
+                    if(typeof r.path != 'undefined' && r.path){
+                         move(r, 1);
                     }else{
                         wsComputer();
                     }
                     break;
 
                 case 'computerStart':
-                    computerArmiesUpdate(r.data.armies, r.data.color);
+                    computerArmiesUpdate(r.armies, r.color);
                     break;
 
                 case 'computerEnd':
-                    changeTurn(r.data.color, r.data.nr);
-                    if(players[r.data.color].computer){
+                    changeTurn(r.color, r.nr);
+                    if(players[r.color].computer){
                         wsComputer();
                     }
                     break;

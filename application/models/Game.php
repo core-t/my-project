@@ -68,28 +68,35 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getMyGames($playerId) {
+
+        $select1 = $this->_db->select()
+                ->from('playersingame', $this->_primary)
+                ->where('ready = true')
+                ->where('lost = false')
+                ->where('"playerId" = ?', $playerId);
+        $select2 = $this->_db->select()
+                ->from(array('a' => $this->_name))
+                ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', array('color'))
+                ->where('"isOpen" = false')
+                ->where('"isActive" = true')
+                ->where('a."gameId" IN ?', $select1)
+                ->where('b."playerId" = ?', $playerId)
+                ->order('begin DESC');
         try {
-            $select1 = $this->_db->select()
-                    ->from('playersingame', $this->_primary)
-                    ->where('ready = true')
-                    ->where('lost = false')
-                    ->where('"playerId" = ?', $playerId);
-            $select2 = $this->_db->select()
-                    ->from(array('a' => $this->_name))
-                    ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', array('color'))
-                    ->where('"isOpen" = false')
-                    ->where('"isActive" = true')
-                    ->where('a."gameId" IN ?', $select1)
-                    ->where('b."playerId" = ?', $playerId)
-                    ->order('begin DESC');
             $result = $this->_db->query($select2)->fetchAll();
-            foreach ($result as $k => $game)
+            foreach (array_keys($result) as $k)
             {
+                $players = array();
+
                 $select = $this->_db->select()
-                        ->from('player', array('firstName', 'lastName'))
-                        ->where('"playerId" = ?', $result[$k]['gameMasterId']);
-                $gameMaster = $this->_db->query($select)->fetchAll();
-                $result[$k]['gameMaster'] = $gameMaster[0]['firstName'] . ' ' . $gameMaster[0]['lastName'];
+                        ->from(array('a' => 'player'), array('firstName', 'lastName', 'playerId'))
+                        ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', array('color'))
+                        ->where('"gameId" = ?', $result[$k]['gameId']);
+                foreach ($this->_db->query($select)->fetchAll() as $v)
+                {
+                    $players[$v['playerId']] = $v;
+                }
+                $result[$k]['players'] = $players;
             }
             return $result;
         } catch (PDOException $e) {

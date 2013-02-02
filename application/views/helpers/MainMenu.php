@@ -21,10 +21,10 @@ class zend_View_Helper_MainMenu extends Zend_View_Helper_Abstract {
         <li>
             <a href="/stats" class="button">Stats</a>
         </li>
-        <li>
+        <!--<li>
             <a href="/editor" class="button">Map editor</a>
         </li>
-        <!--<li>
+        <li>
             <a href="/market" class="button">Market</a>
         </li>-->
     </ul>

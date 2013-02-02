@@ -20,7 +20,7 @@ class Application_Model_Computer {
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path'], $fightEnemy, $castleId);
                 } else {
                     new Game_Logger('SŁABSZY ZAMEK WROGA POZA ZASIĘGIEM');
-                    $enemy = Game_Computer::getWeakerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields, $db);
+                    $enemy = Game_Computer::getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db);
                     if ($enemy) {
                         //atakuj
                         new Game_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
@@ -29,7 +29,7 @@ class Application_Model_Computer {
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId']);
                     } else {
                         new Game_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
-                        $enemy = Game_Computer::getStrongerEnemyArmyInRange($gameId, $enemies, $army, $castlesAndFields, $db);
+                        $enemy = Game_Computer::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db);
                         if ($enemy) {
                             new Game_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
                             $join = Game_Computer::getMyArmyInRange($gameId, $army, $castlesAndFields['fields'], $db);
@@ -69,7 +69,7 @@ class Application_Model_Computer {
                 if (null !== $castleId) {
                     continue;
                 }
-                if (Game_Computer::isEnemyStronger($gameId, $db, $army, $e, $castleId)) {
+                if (Game_Computer::isEnemyStronger($gameId, $playerId, $db, $army, $e, $castleId)) {
                     continue;
                 } else {
                     $enemy = $e;
@@ -170,7 +170,7 @@ class Application_Model_Computer {
                     foreach ($enemiesInRange as $e)
                     {
                         $castleId = Application_Model_Board::isCastleAtPosition($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
-                        if (Game_Computer::isEnemyStronger($gameId, $db, $army, $e, $castleId)) {
+                        if (Game_Computer::isEnemyStronger($gameId, $playerId, $db, $army, $e, $castleId)) {
                             continue;
                         } else {
                             $enemy = $e;
@@ -214,7 +214,7 @@ class Application_Model_Computer {
                     } else {
                         new Game_Logger('WRÓGÓW Z ZASIĘGIEM <= WRÓGÓW W ZASIĘGU');
 
-                        $enemy = Game_Computer::canAttackAllEnemyHaveRange($gameId, $enemiesHaveRange, $army, $castlesAndFields['hostileCastles'], $db);
+                        $enemy = Game_Computer::canAttackAllEnemyHaveRange($gameId, $playerId, $enemiesHaveRange, $army, $castlesAndFields['hostileCastles'], $db);
                         if (!$enemy) {
                             new Game_Logger('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
 
@@ -277,6 +277,8 @@ class Application_Model_Computer {
 
         if ($fightEnemy) {
             $attackerArmy = $fightEnemy['attackerArmy'];
+            $attackerArmy['x'] = $position['x'];
+            $attackerArmy['y'] = $position['y'];
             $defenderArmy = $fightEnemy['defenderArmy'];
         } else {
             $attackerArmy = Application_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db);

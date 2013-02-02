@@ -7,7 +7,7 @@ body {
     background: #000 url(../img/bg_0.jpg) repeat scroll top left;
     font-size: 11px;
     font-family:arial;
-/*    color:#6C6E6D;*/
+    /*    color:#6C6E6D;*/
     color:#878988;
     text-shadow:0 -1px 2px #111;
 }
@@ -47,8 +47,8 @@ body {
 
 #menuTop a:hover {
     color: #000;
+    text-shadow:none;
 }
-
 
 a {
     color:#ccc;
@@ -68,13 +68,13 @@ a:hover {
     line-height:14px;
     font-weight:bold;
     color:#ccc;
-    text-shadow: -1px -1px 1px #111;
+    text-shadow: 1px 1px 5px #111;
     background:#600;
     border-top:1px solid #555;
     border-left:1px solid #555;
     border-right:1px solid #111;
     border-bottom:1px solid #111;
-    border-radius: 3px;
+    border-radius: 10px;
     display:block;
 }
 

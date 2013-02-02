@@ -376,9 +376,9 @@ class Game_Astar {
      */
     public function reversePath() {
         $this->currentPosition = array(
-            'x' => $this->path[0]['x'],
-            'y' => $this->path[0]['y'],
-            'movesSpend' => $this->close[$this->path[0]['x'] . '_' . $this->path[0]['y']]['G']);
+            'x' => $this->path[1]['x'],
+            'y' => $this->path[1]['y'],
+            'movesSpend' => $this->close[$this->path[1]['x'] . '_' . $this->path[1]['y']]['G']);
         $this->path = array_reverse($this->path);
         return $this->path;
     }

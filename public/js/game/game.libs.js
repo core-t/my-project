@@ -848,69 +848,76 @@ function fight(r){
     }
 }
 
-function walk(data, color, deletedIds, computer) {
+function move(r, computer) {
+    if(typeof players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType != 'undefined'){
+        fields[players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y][players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x] = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType;
+    }
+    walk(r, r.attackerColor, r.deletedIds, computer);
+}
+
+function walk(r, computer) {
     var i;
 
-    for(i in data.path) {
+    for(i in r.path) {
         break;
     }
 
-    if(typeof data.path[i] == 'undefined') {
-        console.log(data);
+    if(typeof r.path[i] == 'undefined') {
+        //        console.log(data);
 
-        if(isTruthful(data.battle)){
-            battleM(data, function(){
-                walkEnd(data, color, deletedIds, computer);
+        if(isTruthful(r.battle)){
+            battleM(r, function(){
+                walkEnd(r, r.attackerColor, r.deletedIds, computer);
             });
         }else{
-            walkEnd(data, color, deletedIds, computer);
+            walkEnd(r, r.attackerColor, r.deletedIds, computer);
         }
 
         return;
     } else {
-        zoomer.lensSetCenter(data.path[i].x*40, data.path[i].y*40);
-        $('#army'+data.oldArmyId).animate({
-            left: (data.path[i].x*40) + 'px',
-            top: (data.path[i].y*40) + 'px'
+        zoomer.lensSetCenter(r.path[i].x*40, r.path[i].y*40);
+        $('#army'+r.oldArmyId).animate({
+            left: (r.path[i].x*40) + 'px',
+            top: (r.path[i].y*40) + 'px'
         },300,
         function(){
-            if(typeof data.path[i] == 'undefined'){
+            if(typeof r.path[i] == 'undefined'){
                 console.log('coś tu niegra');
-                console.log(data);
+                console.log(r);
             }else{
-                searchTower(data.path[i].x, data.path[i].y);
-                delete data.path[i];
-                walk(data, color, deletedIds, computer);
+                searchTower(r.path[i].x, r.path[i].y);
+                delete r.path[i];
+                walk(r, r.attackerColor, r.deletedIds, computer);
             }
         });
     }
 }
 
-function walkEnd(data, color, deletedIds, computer){
-    players[color].armies['army'+data.attackerArmy.armyId] = new army(data.attackerArmy, color);
-    newX = players[color].armies['army'+data.attackerArmy.armyId].x;
-    newY = players[color].armies['army'+data.attackerArmy.armyId].y;
+function walkEnd(r, computer){
+    players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
+    newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
+    newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
 
-    if(color == my.color){
-        if(players[color].armies['army'+data.attackerArmy.armyId].moves){
-            selectArmy(players[color].armies['army'+data.attackerArmy.armyId]);
+    if(r.attackerColor == my.color){
+        if(players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
+            selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
         }else{
             unselectArmy();
         }
         unlock();
     }
 
-    if(isDigit(data.ruinId)){
-        ruinUpdate(data.ruinId, 1);
+    if(isDigit(r.ruinId)){
+        ruinUpdate(r.ruinId, 1);
     }
 
-    if(typeof deletedIds == 'undefined'){
+    if(typeof r.deletedIds == 'undefined'){
         console.log('?');
         return;
     }
 
-    for(i in deletedIds){
-        deleteArmy('army'+deletedIds[i]['armyId'], color, 1);
+    for(i in r.deletedIds){
+        deleteArmy('army'+r.deletedIds[i]['armyId'], r.attackerColor, 1);
     }
 
     if(typeof computer != 'undefined'){
