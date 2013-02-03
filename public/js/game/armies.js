@@ -244,6 +244,7 @@ function setParentArmy(army) {
 function selectArmy(a) {
     castlesAddCursorWhenSelectedArmy();
     armiesAddCursorWhenSelectedArmy();
+    myCastlesRemoveCursor();
 
     var index = $.inArray( a.armyId, skippedArmies );
     if(index != -1){
@@ -279,6 +280,7 @@ function unselectArmy(skipJoin) {
 
     castlesAddCursorWhenUnselectedArmy();
     armiesAddCursorWhenUnselectedArmy();
+    myCastlesAddCursor();
 
     //    $('#info').html('');
     $('#name').html('');

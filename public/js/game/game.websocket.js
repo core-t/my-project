@@ -26,7 +26,7 @@ function startWebSocket(){
                     break;
 
                 case 'computer':
-                    console.log(r);
+                    //                    console.log(r);
                     removeM();
 
                     if(typeof r.path != 'undefined' && r.path){
@@ -53,7 +53,7 @@ function startWebSocket(){
                     break;
 
                 case 'ruin':
-//                    console.log(r);
+                    //                    console.log(r);
                     zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
                     players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
                     ruinUpdate(r.data.ruin.ruinId, r.data.ruin.empty);
@@ -104,7 +104,7 @@ function startWebSocket(){
                     break;
 
                 case 'joinArmy':
-                    console.log(r);
+//                    console.log(r);
                     removeM();
                     zoomer.lensSetCenter(r.army.x*40, r.army.y*40);
                     for(i in r.deletedIds){

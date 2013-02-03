@@ -99,7 +99,9 @@ function castleOwner(castleId, color) {
     if(color == my.color) {
         castleFields(castleId, 'c');
         castle
-        .css('z-index', 10)
+        .css({
+            'cursor': 'default'
+        })
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('mouseout')
@@ -107,11 +109,9 @@ function castleOwner(castleId, color) {
         .click(function(){
             castleM(castleId, color)
         });
-    }
-    else {
+    } else {
         castleFields(castleId, 'e');
         castle
-        .css('z-index', 202)
         .unbind('mouseover')
         .unbind('mousemove')
         .unbind('mouseout')
