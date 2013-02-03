@@ -17,19 +17,90 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
 
         $db = Application_Model_Database::getDb();
 
+        if ($dataIn['type'] == 'open') {
+            $token = array(
+                'type' => 'open',
+                'wssuid' => $user->getId()
+            );
+
+            $this->send($user, Zend_Json::encode($token));
+            return;
+        }
+
+        if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
+            $this->sendError($user, 'Brak "gameId" lub "playerId"');
+            return;
+        }
+
+        if (!Application_Model_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
+            $this->sendError($user, 'Brak uprawnień!');
+            return;
+        }
+
+        if ($dataIn['type'] == 'chat') {
+            $token = array(
+                'type' => $dataIn['type'],
+                'msg' => $dataIn['data'],
+                'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
+            );
+
+            $users = Application_Model_Database::getInGameWSSUIdsExceptMine($dataIn['gameId'], $dataIn['playerId']);
+
+            $this->sendToChannel($token, $users);
+            return;
+        } elseif ($dataIn['type'] == 'computer') {
+            if (!Application_Model_Database::isGameMaster($dataIn['gameId'], $dataIn['playerId'], $db)) {
+                $this->sendError($user, 'Nie Twoja gra!');
+                return;
+            }
+            $playerId = Application_Model_Database::getTurnPlayerId($dataIn['gameId'], $db);
+            if (!Application_Model_Database::isComputer($playerId)) {
+                $this->sendError($user, 'To nie komputer!');
+                return;
+            }
+
+            if (!Application_Model_Database::playerTurnActive($dataIn['gameId'], $playerId, $db)) {
+                $token = Application_Model_ComputerMainBlocks::startTurn($dataIn['gameId'], $playerId, $db);
+            } else {
+                $army = Application_Model_Database::getComputerArmyToMove($dataIn['gameId'], $playerId, $db);
+                if (!empty($army['armyId'])) {
+                    $token = Application_Model_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
+                } else {
+                    $token = Application_Model_ComputerMainBlocks::endTurn($dataIn['gameId'], $playerId, $db);
+                }
+            }
+
+            switch ($token['action'])
+            {
+                case 'continue':
+                    $token['type'] = 'computer';
+                    break;
+                case 'start':
+                    $token['type'] = 'computerStart';
+                    break;
+                case 'end':
+                    $token['type'] = 'computerEnd';
+                    break;
+                case 'gameover':
+                    $token['type'] = 'computerGameover';
+                    break;
+            }
+
+            $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+
+            $this->sendToChannel($token, $users);
+
+            return;
+        }
+
+        if (!Application_Model_Database::isPlayerTurn($dataIn['gameId'], $dataIn['playerId'], $db)) {
+            $this->sendError($user, 'Nie Twoja tura.');
+            return;
+        }
+
         switch ($dataIn['type'])
         {
             case 'move':
-                if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
-                    $this->sendError($user, 'Brak "gameId" lub "playerId"');
-                    return;
-                }
-
-                if (!Application_Model_Database::isPlayerTurn($dataIn['gameId'], $dataIn['playerId'], $db)) {
-                    $this->sendError($user, 'Nie Twoja tura.');
-                    return;
-                }
-
                 if (isset($dataIn['data']['armyId'])) {
                     $attackerArmyId = $dataIn['data']['armyId'];
                 }
@@ -272,8 +343,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
 
                 $token = array(
                     'type' => 'move',
-                    'playerId' => $dataIn['playerId'],
-                    'attackerColor' => $dataIn['color'],
+                    'attackerColor' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db),
                     'attackerArmy' => $attacker,
                     'defenderColor' => $defenderColor,
                     'defenderArmy' => $defender,
@@ -292,55 +362,6 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 $this->sendToChannel($token, $users, 1);
                 break;
 
-            case 'computer':
-
-                if (!Application_Model_Database::isGameMaster($dataIn['gameId'], $dataIn['playerId'], $db)) {
-                    echo('Nie Twoja gra!');
-                    return;
-                }
-                $playerId = Application_Model_Database::getTurnPlayerId($dataIn['gameId'], $db);
-                if (!Application_Model_Database::isComputer($playerId)) {
-                    echo('To nie komputer!');
-                    return;
-                }
-
-                if (!Application_Model_Database::playerTurnActive($dataIn['gameId'], $playerId, $db)) {
-                    $token = Application_Model_ComputerMainBlocks::startTurn($dataIn['gameId'], $playerId, $db);
-                } else {
-                    $army = Application_Model_Database::getComputerArmyToMove($dataIn['gameId'], $playerId, $db);
-                    if (!empty($army['armyId'])) {
-                        $token = Application_Model_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
-                    } else {
-                        $token = Application_Model_ComputerMainBlocks::endTurn($dataIn['gameId'], $playerId, $db);
-                    }
-                }
-
-                switch ($token['action'])
-                {
-                    case 'continue':
-                        $token['type'] = 'computer';
-                        break;
-                    case 'start':
-                        $token['type'] = 'computerStart';
-                        break;
-                    case 'end':
-                        $token['type'] = 'computerEnd';
-                        break;
-                    case 'gameover':
-                        $token['type'] = 'computerGameover';
-                        break;
-                }
-
-                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
-
-                $this->sendToChannel($token, $users);
-
-                break;
-
-            case 'chat':
-                $this->chat($dataIn);
-                break;
-
             case 'armies':
                 $color = $dataIn['data']['color'];
                 if (empty($color)) {
@@ -356,8 +377,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => Application_Model_Database::getPlayerArmies($dataIn['gameId'], $playerId),
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $playerId, $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIdsExceptMine($dataIn['gameId'], $dataIn['playerId'], $db);
@@ -385,8 +405,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                         'parentArmy' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $attackerArmyId, $db),
                         'childArmy' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $childArmyId, $db),
                     ),
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -398,7 +417,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
             case 'joinArmy':
                 $armyId = $dataIn['data']['armyId'];
                 if (empty($armyId)) {
-                    $this->sendError($user, 'Brak "armyId1" i "armyId2"!');
+                    $this->sendError($user, 'Brak "armyId"!');
                     return;
                 }
 
@@ -413,7 +432,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                     'type' => $dataIn['type'],
                     'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armiesIds['armyId'], $db),
                     'deletedIds' => $armiesIds['deletedIds'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -441,8 +460,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                         'x' => $dataIn['data']['x'],
                         'y' => $dataIn['data']['y']
                     ),
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -485,8 +503,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                         'army' => Application_Model_Database::getArmyByArmyId($dataIn['gameId'], $armyId, $db),
                         'gold' => $gold
                     ),
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -503,17 +520,17 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
 
                 $heroId = Application_Model_Database::getHeroIdByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
                 if (empty($heroId)) {
-                    echo('Brak heroId. Tylko Hero może przeszukiwać ruiny!');
+                    $this->sendError($user, 'Tylko Hero może przeszukiwać ruiny!');
                     return;
                 }
                 $position = Application_Model_Database::getArmyPositionByArmyId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
                 $ruinId = Application_Model_Board::confirmRuinPosition($position);
                 if (!Zend_Validate::is($ruinId, 'Digits')) {
-                    echo('Brak ruinId na pozycji');
+                    $this->sendError($user, 'Brak ruinId na pozycji');
                     return;
                 }
                 if (Application_Model_Database::ruinExists($dataIn['gameId'], $ruinId, $db)) {
-                    echo('Ruiny są już przeszukane. ' . $ruinId . ' ' . $attackerArmyId);
+                    $this->sendError($user, 'Ruiny są już przeszukane.');
                     return;
                 }
 
@@ -538,8 +555,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                         'ruin' => $ruin,
                         'find' => $find
                     ),
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color']
+                    'color' => Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db)
                 );
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
@@ -549,10 +565,14 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 break;
 
             case 'turn':
+                if (empty($dataIn['color'])) {
+                    $this->sendError($user, 'Brak "color"!');
+                    return;
+                }
+
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => Application_Model_Turn::next($dataIn['gameId'], $dataIn['playerId'], $dataIn['color']),
-                    'playerId' => $dataIn['playerId'],
                     'color' => $dataIn['color']
                 );
 
@@ -564,51 +584,32 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
             case 'razeCastle':
                 $cId = $dataIn['data']['castleId'];
                 if ($cId == null) {
-                    echo('Brak "castleId"!');
+                    $this->sendError($user, 'Brak "castleId"!');
                     return;
                 }
 
-                $razeCastleResult = Application_Model_Database::razeCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db);
-                switch ($razeCastleResult)
-                {
-                    case 1:
-                        $gold = Application_Model_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db) + 1000;
-                        Application_Model_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $gold, $db);
-                        $response = Application_Model_Database::getCastle($dataIn['gameId'], $cId, $db);
-                        $response['color'] = $dataIn['color'];
-                        $response['gold'] = $gold;
-                        $token = array(
-                            'type' => 'castle',
-                            'playerId' => $dataIn['playerId'],
-                            'color' => $dataIn['color'],
-                            'data' => $response
-                        );
+                Application_Model_Database::razeCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db);
+                $gold = Application_Model_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db) + 1000;
+                Application_Model_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $gold, $db);
+                $token = Application_Model_Database::getCastle($dataIn['gameId'], $cId, $db);
+                $token['color'] = Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db);
+                $token['gold'] = $gold;
+                $token['type']='castle';
 
-                        $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
-                        $this->sendToChannel($token, $users);
-                        break;
-                    case 0:
-                        echo('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                        break;
-                    case null:
-                        echo('Zapytanie zwróciło błąd');
-                        break;
-                    default:
-                        echo('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                        break;
-                }
+                $this->sendToChannel($token, $users);
                 break;
 
             case 'castleBuildDefense':
                 $cId = $dataIn['data']['castleId'];
                 if ($cId == null) {
-                    echo('Brak "castleId"!');
+                    $this->sendError($user, 'Brak "castleId"!');
                     return;
                 }
 
                 if (!Application_Model_Database::isPlayerCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db)) {
-                    echo('Nie jest Twój zamek.');
+                    $this->sendError($user, 'To nie jest Twój zamek.');
                     break;
                 }
                 $gold = Application_Model_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db);
@@ -621,30 +622,20 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                     $costs += $i * 100;
                 }
                 if ($gold < $costs) {
-                    echo('Za mało złota!');
+                    $this->sendError($user, 'Za mało złota!');
                     return;
                 }
                 Application_Model_Database::buildDefense($dataIn['gameId'], $cId, $dataIn['playerId'], $db);
-                $response = Application_Model_Database::getCastle($dataIn['gameId'], $cId, $db);
-                $response['defensePoints'] = $defensePoints;
-                $response['color'] = $dataIn['color'];
-                $response['gold'] = $gold - $costs;
-                Application_Model_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $response['gold'], $db);
-
-                $token = array(
-                    'type' => 'castle',
-                    'playerId' => $dataIn['playerId'],
-                    'color' => $dataIn['color'],
-                    'data' => $response
-                );
+                $token = Application_Model_Database::getCastle($dataIn['gameId'], $cId, $db);
+                $token['defensePoints'] = $defensePoints;
+                $token['color'] = Application_Model_Database::getPlayerColor($dataIn['gameId'], $dataIn['playerId'], $db);
+                $token['gold'] = $gold - $costs;
+                $token['type']='castle';
+                Application_Model_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $token['gold'], $db);
 
                 $users = Application_Model_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
-                break;
-
-            case 'open':
-                $this->open($user);
                 break;
         }
     }
@@ -677,74 +668,4 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
         $this->send($user, Zend_Json::encode($token));
     }
 
-    public function open($user) {
-        $token = array(
-            'type' => 'open',
-            'wssuid' => $user->getId()
-        );
-        $re = new WebSocket_Message();
-
-        $re->setData(Zend_Json::encode($token));
-        $user->sendMessage($re);
-    }
-
-    private function chat($data) {
-        $token = array(
-            'type' => $data['type'],
-            'msg' => $data['data'],
-            'playerId' => $data['playerId'],
-            'color' => $data['color']
-        );
-
-        $users = Application_Model_Database::getInGameWSSUIdsExceptMine($data['gameId'], $data['playerId']);
-
-        $this->sendToChannel($token, $users);
-    }
-
-//    private function calculateArmiesDistance($dX, $dY, $aX, $aY, $castleId = null) {
-//        echo '$dX,$dY=' . $dX . ',' . $dY . ' $aX,$aY=' . $aX . ',' . $aY;
-//        $distance = sqrt(pow($aX - $dX, 2) + pow($aY - $dY, 2));
-//        var_dump($distance);
-//        if ($castleId !== null) {
-//            $tmp = sqrt(pow($aX - $dX + 1, 2) + pow($aY - $dY, 2));
-//            var_dump($tmp);
-//            if ($tmp < $distance) {
-//                $distance = $tmp;
-//            }
-//            $tmp = sqrt(pow($aX - $dX, 2) + pow($aY - $dY + 1, 2));
-//            var_dump($tmp);
-//            if ($tmp < $distance) {
-//                $distance = $tmp;
-//            }
-//            $tmp = sqrt(pow($aX - $dX + 1, 2) + pow($aY - $dY + 1, 2));
-//            var_dump($tmp);
-//            if ($tmp < $distance) {
-//                $distance = $tmp;
-//            }
-//            var_dump($distance);
-//        }
-//
-//        return $distance;
-//    }
-//    private function movesSpend($x, $y, $army) {
-//        $canFly = 1;
-//        $canSwim = 0;
-//        $movesRequiredToAttack = 1;
-//        $canFly -= count($army['heroes']);
-//        foreach ($army['soldiers'] as $soldier)
-//        {
-//            if ($soldier['canFly']) {
-//                $canFly++;
-//            } else {
-//                $canFly -= 200;
-//            }
-//            if ($soldier['canSwim']) {
-//                $canSwim++;
-//            }
-//        }
-//        $fields = Application_Model_Board::getBoardFields();
-//        $terrainType = $fields[$y][$x];
-//        $terrain = Application_Model_Board::getTerrain($terrainType, $canFly, $canSwim);
-//        return $terrain[1] + $movesRequiredToAttack;
-//    }
 }

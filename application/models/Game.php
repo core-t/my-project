@@ -21,7 +21,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         $data = array(
             'numberOfPlayers' => $numberOfPlayers,
             'gameMasterId' => $playerId,
-            'lAccessKey' => $this->generateKey(),
             'lSecretKey' => $this->generateKey()
         );
 
@@ -199,7 +198,8 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     public function joinGame($playerId) {
         $data = array(
             'gameId' => $this->_gameId,
-            'playerId' => $playerId
+            'playerId' => $playerId,
+            'accessKey' => $this->generateKey()
         );
         $this->_db->insert('playersingame', $data);
     }
@@ -707,16 +707,9 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
         $this->_db->update('playersingame', $data, $where);
     }
 
-    public function updateAccessKey() {
-        $data = array(
-            'lAccessKey' => $this->generateKey()
-        );
-        $this->updateGame($data);
-    }
-
     public function getKeys() {
         $select = $this->_db->select()
-                ->from($this->_name, array('gameId', 'lAccessKey', 'lSecretKey'))
+                ->from($this->_name, array('gameId', 'lSecretKey'))
                 ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->fetchRow($select);
     }

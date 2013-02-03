@@ -36,7 +36,6 @@ var skippedArmies = new Array();
 var quitedArmies = new Array();
 
 var firstCastleId = 1000;
-var castlesPositionToId = new Array();
 
 var zoomer;
 var zoomPad;

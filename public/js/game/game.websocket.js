@@ -9,7 +9,6 @@ function startWebSocket(){
 
     ws.onmessage = function(e) {
         var r=$.parseJSON( e.data );
-        function clb(){};
 
         if(typeof r['type'] != 'undefined'){
 
@@ -54,7 +53,7 @@ function startWebSocket(){
                     break;
 
                 case 'ruin':
-                    console.log(r);
+//                    console.log(r);
                     zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
                     players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
                     ruinUpdate(r.data.ruin.ruinId, r.data.ruin.empty);
@@ -161,11 +160,11 @@ function startWebSocket(){
                     break;
 
                 case 'castle':
-                    castleUpdate(r.data);
-                    castleOwner(r.data.castleId, r.data.color);
-                    if(r.data.color==my.color){
+                    castleUpdate(r);
+                    castleOwner(r.castleId, r.color);
+                    if(r.color==my.color){
                         removeM();
-                        goldUpdate(r.data.gold);
+                        goldUpdate(r.gold);
                     }
                     break;
 
@@ -201,8 +200,7 @@ function wsCastleBuildDefense(){
         },
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -225,8 +223,7 @@ function wsRazeCastle() {
         },
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -243,7 +240,7 @@ function wsNextTurn() {
         gameId: gameId,
         playerId: my.id,
         color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -265,8 +262,7 @@ function wsChat() {
             data: msg,
             gameId: gameId,
             playerId: my.id,
-            color: my.color,
-            accessKey: lAccessKey
+            accessKey: accessKey
         };
 
         ws.send(JSON.stringify(token));
@@ -286,8 +282,7 @@ function wsPlayerArmies(color){
         },
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -335,8 +330,7 @@ function wsArmyMove(movesSpend) {
         },
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -370,8 +364,7 @@ function wsSplitArmy(armyId) {
         type: 'splitArmy',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
+        accessKey: accessKey,
         data: {
             armyId:armyId,
             s:s,
@@ -400,8 +393,7 @@ function wsDisbandArmy() {
         type: 'disbandArmy',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
+        accessKey: accessKey,
         data: {
             armyId:unselectedArmy.armyId,
             x:unselectedArmy.x,
@@ -428,8 +420,7 @@ function wsHeroResurrection(castleId) {
         type: 'heroResurrection',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
+        accessKey: accessKey,
         data: {
             castleId:castleId
         }
@@ -453,8 +444,7 @@ function wsJoinArmy(armyId){
         type: 'joinArmy',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
+        accessKey: accessKey,
         data: {
             armyId:armyId
         }
@@ -480,8 +470,7 @@ function wsSearchRuins(){
         type: 'ruin',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
+        accessKey: accessKey,
         data: {
             armyId:unselectedArmy.armyId
         }
@@ -507,8 +496,7 @@ function wsComputer(){
         type: 'computer',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -516,10 +504,10 @@ function wsComputer(){
 
 function wsOpen(){
     var token = {
-        type: "open",
+        type: 'open',
         gameId: gameId,
         playerId: my.id,
-        accessKey: lAccessKey
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));

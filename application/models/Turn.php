@@ -1,58 +1,42 @@
 <?php
 
-class Application_Model_Turn extends Application_Model_Database {
+class Application_Model_Turn {
 
     static public function next($gameId, $playerId, $playerColor) {
-        if (self::playerLost($gameId, $playerId)) {
-            return null;
+        if (Application_Model_Database::playerLost($gameId, $playerId)) {
+
+            return;
         }
-        if (self::isPlayerTurn($gameId, $playerId)) {
-            $youWin = false;
-            $response = array();
-            $nextPlayer = array(
-                'color' => $playerColor
-            );
-            while (empty($response))
-            {
-                $nextPlayer = self::nextTurn($gameId, $nextPlayer['color']);
-                $playerCastlesExists = self::playerCastlesExists($gameId, $nextPlayer['playerId']);
-                $playerArmiesExists = self::playerArmiesExists($gameId, $nextPlayer['playerId']);
-                if ($playerCastlesExists || $playerArmiesExists) {
-                    $response = $nextPlayer;
-                    if ($nextPlayer['playerId'] == $playerId) {
-                        $youWin = true;
-                        self::endGame($gameId);
-                    } else {
-                        self::updateTurnNumber($gameId, $nextPlayer['playerId']);
-                        self::raiseAllCastlesProductionTurn($gameId, $playerId);
-                        $nextTurn = self::getTurn($gameId);
-                        $response['lost'] = $nextTurn['lost'];
-                        $response['nr'] = $nextTurn['nr'];
-//                        $mWebSocket->publishChannel($gameId, $playerColor . '.t.' . $nextTurn['color'] . '.' . $nextTurn['nr'] . '.' . $nextTurn['lost']);
-                    }
-                    $response['win'] = $youWin;
+        
+        $youWin = false;
+        $response = array();
+        $nextPlayer = array(
+            'color' => $playerColor
+        );
+        while (empty($response))
+        {
+            $nextPlayer = Application_Model_Database::nextTurn($gameId, $nextPlayer['color']);
+            $playerCastlesExists = Application_Model_Database::playerCastlesExists($gameId, $nextPlayer['playerId']);
+            $playerArmiesExists = Application_Model_Database::playerArmiesExists($gameId, $nextPlayer['playerId']);
+            if ($playerCastlesExists || $playerArmiesExists) {
+                $response = $nextPlayer;
+                if ($nextPlayer['playerId'] == $playerId) {
+                    $youWin = true;
+                    Application_Model_Database::endGame($gameId);
                 } else {
-                    self::setPlayerLostGame($gameId, $nextPlayer['playerId']);
+                    Application_Model_Database::updateTurnNumber($gameId, $nextPlayer['playerId']);
+                    Application_Model_Database::raiseAllCastlesProductionTurn($gameId, $playerId);
+                    $nextTurn = Application_Model_Database::getTurn($gameId);
+                    $response['lost'] = $nextTurn['lost'];
+                    $response['nr'] = $nextTurn['nr'];
                 }
+                $response['win'] = $youWin;
+            } else {
+                Application_Model_Database::setPlayerLostGame($gameId, $nextPlayer['playerId']);
             }
-
-            return $response;
         }
-    }
 
-    static private function playerLost($gameId, $playerId) {
-        $db = parent::getDb();
-        $select = $db->select()
-                ->from('playersingame', 'lost')
-                ->where('"playerId" = ?', $playerId)
-                ->where('lost = ?', true)
-                ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
+        return $response;
     }
 
 }

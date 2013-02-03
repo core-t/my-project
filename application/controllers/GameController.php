@@ -11,6 +11,12 @@ class GameController extends Game_Controller_Game {
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
         $this->view->headScript()->appendFile('/js/game/game.js');
+        $this->view->headScript()->appendFile('/js/game/castles.js');
+        $this->view->headScript()->appendFile('/js/game/armies.js');
+        $this->view->headScript()->appendFile('/js/game/astar.js');
+        $this->view->headScript()->appendFile('/js/game/towers.js');
+        $this->view->headScript()->appendFile('/js/game/ruins.js');
+        $this->view->headScript()->appendFile('/js/game/test.js');
         $this->view->headScript()->appendFile('/js/game/game.libs.js');
         $this->view->headScript()->appendFile('/js/game/game.zoom.js');
         $this->view->headScript()->appendFile('/js/game/game.websocket.js');
@@ -38,18 +44,11 @@ class GameController extends Game_Controller_Game {
             }
         }
         $this->view->towers = $towers;
-//            $startPositions = Application_Model_Board::getDefaultStartPositions();
         $players = $mGame->getPlayersInGameReady();
         $this->view->players = array();
         $this->view->turn = array();
 
         $game = $mGame->getGame();
-
-//            $mWebSocket = new Application_Model_WebSocket();
-//            $mWebSocket->createChannel($game);
-//            $mWebSocket->close();
-
-        $this->_namespace->wsKeys = $mGame->getKeys();
 
         $this->view->game = $game;
         foreach ($players as $player)
@@ -67,6 +66,7 @@ class GameController extends Game_Controller_Game {
             }
             if ($this->_namespace->player['playerId'] == $player['playerId']) {
                 $this->view->gold = $player['gold'];
+                $this->view->accessKey = $player['accessKey'];
             }
         }
         $this->view->color = $this->_namespace->player['color'];

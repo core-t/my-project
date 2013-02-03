@@ -2134,9 +2134,46 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
     }
 
     static public function getUnitIdByName($name, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
         $select = $db->select()
                 ->from('unit', 'unitId')
                 ->where('name = ?', $name);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function playerLost($gameId, $playerId, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $select = $db->select()
+                ->from('playersingame', 'lost')
+                ->where('"playerId" = ?', $playerId)
+                ->where('lost = ?', true)
+                ->where('"gameId" = ?', $gameId);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function checkAccessKey($gameId, $playerId, $accessKey, $db = null) {
+        if (!$db) {
+            $db = self::getDb();
+        }
+        $select = $db->select()
+                ->from('playersingame', 'playerId')
+                ->where('"playerId" = ?', $playerId)
+                ->where('"gameId" = ?', $gameId)
+                ->where('"accessKey" = ?', $accessKey);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {

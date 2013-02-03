@@ -15,8 +15,7 @@ var turn = new Array();
 turn.color = '<?php echo $this->turn['color'] ?>';
 turn.nr = '<?php echo $this->turn['nr'] ?>';
 var gameId = <?php echo $this->game['gameId'] ?>;
-var lAccessKey = '<?php echo $this->game['lAccessKey'] ?>';
-var lSecretKey = '<?php echo $this->game['lSecretKey'] ?>';
+var accessKey = '<?php echo $this->accessKey ?>';
 $(document).ready(function() {
     goldUpdate(<?php echo $this->gold ?>);
 });
