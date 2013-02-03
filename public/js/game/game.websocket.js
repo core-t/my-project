@@ -1,4 +1,12 @@
-$(document).ready(function() {
+function startWebSocket(){
+    ws = new WebSocket(wsURL);
+
+    ws.onopen = function() {
+        wsClosed = false;
+        $("#wsStatus") . html("connected");
+        wsOpen();
+    };
+
     ws.onmessage = function(e) {
         var r=$.parseJSON( e.data );
         function clb(){};
@@ -13,7 +21,7 @@ $(document).ready(function() {
                     break;
 
                 case 'move':
-//                    console.log(r);
+                    //                    console.log(r);
                     removeM();
                     move(r);
                     break;
@@ -23,7 +31,7 @@ $(document).ready(function() {
                     removeM();
 
                     if(typeof r.path != 'undefined' && r.path){
-                         move(r, 1);
+                        move(r, 1);
                     }else{
                         wsComputer();
                     }
@@ -124,7 +132,10 @@ $(document).ready(function() {
 
                 case 'open':
                     lock = false;
-                    startGame();
+                    if(loading){
+                        startGame();
+                        loading = false;
+                    }
 
                     webSocketOpenA(r.wssuid);
                     break;
@@ -165,9 +176,20 @@ $(document).ready(function() {
         }
     };
 
-});
+    ws.onclose = function() {
+        wsClosed = true;
+        $("#wsStatus") . html("connection closed");
+        setTimeout ( 'startWebSocket()', 1000 );
+    };
+
+}
 
 function wsCastleBuildDefense(){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var castleId = $('input[name=defense]:checked').val();
     if(!castleId) {
         return;
@@ -187,6 +209,11 @@ function wsCastleBuildDefense(){
 }
 
 function wsRazeCastle() {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var castleId = $('input[name=raze]:checked').val();
     if(!castleId) {
         return;
@@ -206,6 +233,11 @@ function wsRazeCastle() {
 }
 
 function wsNextTurn() {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var token = {
         type: 'turn',
         gameId: gameId,
@@ -218,6 +250,11 @@ function wsNextTurn() {
 }
 
 function wsChat() {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var msg = $('#msg').val();
     $('#msg').val('');
     if(msg){
@@ -237,6 +274,11 @@ function wsChat() {
 }
 
 function wsPlayerArmies(color){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var token = {
         type: 'armies',
         data:{
@@ -252,27 +294,32 @@ function wsPlayerArmies(color){
 }
 
 function wsArmyMove(movesSpend) {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
 
-    var x = newX/40;
-    var y = newY/40;
+    if(selectedArmy.moves == 0){
+        unselectArmy();
+        simpleM('Not enough moves left.');
+        return;
+    }
 
-    //    if(selectedArmy.moves == 0){
-    //        unselectArmy();
-    //        simpleM('Not enough moves left.');
-    //        return;
-    //    }
-
-    //    if(movesSpend === null){
-    //        unselectArmy();
-    //        return;
-    //    }
+    if(movesSpend === null){
+        unselectArmy();
+        return;
+    }
 
     if(!my.turn){
         simpleM('It is not your turn.');
         return;
     }
 
+    var x = newX/40;
+    var y = newY/40;
+
     tmpUnselectArmy();
+
     if(unselectedArmy.x == x && unselectedArmy.y == y) {
         return;
     }
@@ -296,6 +343,11 @@ function wsArmyMove(movesSpend) {
 }
 
 function wsSplitArmy(armyId) {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     if(!my.turn){
         return;
     }
@@ -331,6 +383,11 @@ function wsSplitArmy(armyId) {
 }
 
 function wsDisbandArmy() {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     if(!my.turn){
         return;
     }
@@ -356,6 +413,12 @@ function wsDisbandArmy() {
 }
 
 function wsHeroResurrection(castleId) {
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+
     if(!my.turn){
         return;
     }
@@ -376,6 +439,12 @@ function wsHeroResurrection(castleId) {
 }
 
 function wsJoinArmy(armyId){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+
     if(!my.turn){
         return;
     }
@@ -394,78 +463,12 @@ function wsJoinArmy(armyId){
     ws.send(JSON.stringify(token));
 }
 
-function wsFight(armyId, x, y){
-    var token = {
-        type: 'fight',
-        gameId: gameId,
-        playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
-        data: {
-            armyId:armyId,
-            x:x,
-            y:y
-        }
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsFightNeutralCastle(armyId, x, y, castleId){
-    var token = {
-        type: 'fightNeutralCastle',
-        gameId: gameId,
-        playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
-        data: {
-            armyId:armyId,
-            x:x,
-            y:y,
-            castleId:castleId
-        }
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsFightEnemyCastle(armyId, x, y, castleId){
-    var token = {
-        type: 'fightEnemyCastle',
-        gameId: gameId,
-        playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
-        data: {
-            armyId:armyId,
-            x:x,
-            y:y,
-            castleId:castleId
-        }
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsFightEnemy(armyId, x, y, enemyArmyId){
-    var token = {
-        type: 'fightEnemy',
-        gameId: gameId,
-        playerId: my.id,
-        color: my.color,
-        accessKey: lAccessKey,
-        data: {
-            armyId:armyId,
-            x:x,
-            y:y,
-            enemyArmyId:enemyArmyId
-        }
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
 function wsSearchRuins(){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     if(!my.turn){
         return;
     }
@@ -488,6 +491,11 @@ function wsSearchRuins(){
 }
 
 function wsComputer(){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     if(!my.game){
         return
     }

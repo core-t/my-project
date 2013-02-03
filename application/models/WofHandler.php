@@ -132,7 +132,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                  * A* START
                  */
 
-                $A_Star = new Game_Astar($x, $y);
+                $A_Star = new Application_Model_Astar($x, $y);
 
                 try {
                     $A_Star->start($army['x'], $army['y'], $fields, $canFly, $canSwim);
@@ -169,7 +169,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                         if ($movesLeft >= 2) {
                             $fight = true;
                             if ($defenderColor == 'neutral') {
-                                $enemy = Game_Battle::getNeutralCastleGarrizon($dataIn['gameId'], $db);
+                                $enemy = Application_Model_Battle::getNeutralCastleGarrizon($dataIn['gameId'], $db);
                             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
                                 $defenderColor = Application_Model_Database::getColorByCastleId($dataIn['gameId'], $castleId, $db);
                                 $enemy = Application_Model_Database::getAllUnitsFromCastlePosition($dataIn['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
@@ -194,7 +194,7 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                  * ------------------------------------ */
 
                 if ($fight) {
-                    $battle = new Game_Battle($army, $enemy);
+                    $battle = new Application_Model_Battle($army, $enemy);
 
                     if (Zend_Validate::is($castleId, 'Digits')) {
                         if ($defenderColor == 'neutral') {
@@ -305,13 +305,13 @@ class Application_Model_WofHandler extends WebSocket_UriHandler {
                 }
 
                 if (!Application_Model_Database::playerTurnActive($dataIn['gameId'], $playerId, $db)) {
-                    $token = Application_Model_Computer::startTurn($dataIn['gameId'], $playerId, $db);
+                    $token = Application_Model_ComputerMainBlocks::startTurn($dataIn['gameId'], $playerId, $db);
                 } else {
                     $army = Application_Model_Database::getComputerArmyToMove($dataIn['gameId'], $playerId, $db);
                     if (!empty($army['armyId'])) {
-                        $token = Application_Model_Computer::moveArmy($dataIn['gameId'], $playerId, $army, $db);
+                        $token = Application_Model_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
                     } else {
-                        $token = Application_Model_Computer::endTurn($dataIn['gameId'], $playerId, $db);
+                        $token = Application_Model_ComputerMainBlocks::endTurn($dataIn['gameId'], $playerId, $db);
                     }
                 }
 

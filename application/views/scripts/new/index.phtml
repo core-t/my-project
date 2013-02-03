@@ -1,11 +1,16 @@
-<h2>Open games:</h2>
+<h1>New game</h1>
+<h2>Create new game:</h2>
+<ul>
+    <li>
+        <a class="button" href="<?php echo $this->url(array('controller' => 'new', 'action' => 'create')) ?>">Create</a>
+    </li>
+</ul>
+
+<h2>Join one of the games listed below:</h2>
 <div class="table"><table></table></div>
 <ul>
     <li>
         <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
-    </li>
-    <li>
-        <a class="button" href="<?php echo $this->url(array('controller' => 'new', 'action' => 'create')) ?>">Create</a>
     </li>
     <li>
         <a class="button" href="javascript:refresh()">Refresh</a>

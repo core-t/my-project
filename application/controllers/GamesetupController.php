@@ -18,10 +18,13 @@ class GamesetupController extends Game_Controller_Gui {
             $modelGame->updateGameMaster($this->_namespace->player['playerId']);
 //             $playersInGame = $modelGame->getPlayersWaitingForGame();
             $this->view->colors = $modelGame->getAllColors();
-            if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
-                $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
+            $this->_request->getParam('gameId');
+            if ($modelGame->getGameMaster() != $this->_namespace->player['playerId']) {
+                if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
+                    $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
+                }
+                $modelGame->joinGame($this->_namespace->player['playerId']);
             }
-            $modelGame->joinGame($this->_namespace->player['playerId']);
             $this->view->game = $modelGame->getGame(); // pobieram informację na temat gry
             $this->_namespace->player['ready'] = $modelGame->isPlayerReady($this->_namespace->player['playerId']);
             $this->view->player = $this->_namespace->player;
@@ -35,7 +38,7 @@ class GamesetupController extends Game_Controller_Gui {
             if (empty($this->_namespace->armyId)) {
                 $modelGame = new Application_Model_Game($this->_namespace->gameId);
                 if (!$modelGame->isPlayerReady($this->_namespace->player['playerId'])) {
-                    $this->_redirec('/new');
+                    $this->_redirect('/new');
                 }
                 $modelArmy = new Application_Model_Army($this->_namespace->gameId);
                 $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);

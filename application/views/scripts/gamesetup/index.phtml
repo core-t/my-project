@@ -1,22 +1,26 @@
-<p>Maximum allowed number of players: "<?php echo $this->game['numberOfPlayers'] ?>"</p>
-<h2>Select your color</h2>
+<h1>New game</h1>
+<p>Maximum number of players: <?php echo $this->game['numberOfPlayers'] ?></p>
+<h2>Players:</h2>
 <table id="playersingame">
-<th>Player name & color</th><th>Action</th><th>Human/AI</th>
-<?php
-for($i = 0; $i < $this->game['numberOfPlayers']; $i++) {
-    echo '<tr id="'.$this->colors[$i].'"><td id="td1"><div class="left"></div><div class="right">'.$this->colors[$i].'</div></td><td id="td2"></td><td class="td3"></td></tr>';
-}
-?>
+    <th>Player name & color</th><th>Select your color</th><th>Human/AI</th>
+    <?php
+    for ($i = 0; $i < $this->game['numberOfPlayers']; $i++)
+    {
+        echo '<tr id="' . $this->colors[$i] . '"><td class="td1"><div class="left"></div><div class="right">' . $this->colors[$i] . '</div></td><td id="td2"></td><td class="td3"></td></tr>';
+    }
+    ?>
 </table>
 
 <ul>
-    <li><a class="button" href="<?php echo $this->url(array('controller' => 'new', 'action' => 'index', 'gameId' => null)) ?>">< Back</a></li>
-    <li><a class="button" href="javascript:refresh()">Refresh</a></li>
     <li id="start"></li>
 </ul>
 
-<!--<h4>Players out</h4>-->
+<h2>The list of people who have not chosen their color:</h2>
 <table id="playersout"></table>
+<ul>
+    <li><a class="button" href="/new">< Back</a></li>
+    <li><a class="button" href="javascript:refresh()">Refresh</a></li>
+</ul>
 
 <script type="text/javascript">
     var urlStart = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'gamestart', 'gameId' => null)); ?>';

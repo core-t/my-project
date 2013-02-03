@@ -13,22 +13,8 @@ class Zend_View_Helper_Websocket extends Zend_View_Helper_Abstract {
         WEB_SOCKET_SWF_LOCATION = "WebSocketMain.swf";
         WEB_SOCKET_DEBUG = true;
 
-        var ws = new WebSocket("' . $url . '");
-
-        $(document) . ready(function() {
-                            ws.onopen = function() {
-                                        $("#wsStatus") . html("connected");
-                                    };
-                            ws.onmessage = function(e) {
-                                // Receives a message.
-                                // alert(e.data);
-                                console . log(e);
-                            };
-                            ws.onclose = function() {
-                                        $("#wsStatus") . html("connection closed");
-                                    };
-                        });
-        ';
+        var wsURL = "' . $url . '";
+';
         $this->view->headScript()->appendScript($script);
     }
 

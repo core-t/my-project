@@ -1,11 +1,11 @@
 *{padding: 0; margin: 0;}
 
 html{
-    background: #000 url(../img/bg_0.jpg) repeat scroll top left;
+    background: #000 url('../img/bg_0.jpg') repeat scroll top left;
 }
 body {
-    background: #000 url(../img/bg_0.jpg) repeat scroll top left;
-    font-size: 11px;
+    background: #000 url('../img/bg_0.jpg') repeat scroll top left;
+    font-size: 12px;
     font-family:arial;
     /*    color:#6C6E6D;*/
     color:#878988;
@@ -20,8 +20,12 @@ body {
 }
 
 #content{
-    padding:0 20px;
+    padding:10px 20px;
 
+}
+
+hr {
+    margin-bottom: 10px;
 }
 
 #menuTop {
@@ -60,7 +64,12 @@ a:hover {
     text-decoration: none;
 }
 
-.button {
+input {
+    border-radius: 10px;
+    padding:3px 6px 3px 6px;
+}
+
+.button, #submit {
     padding:3px 6px 3px 6px;
     margin:2px;
     text-align:center;
@@ -78,10 +87,10 @@ a:hover {
     display:block;
 }
 
-.button:hover {
+.button:hover, #submit:hover {
     color:#fff;
 }
-.button:active {
+.button:active, #submit:active {
     color:#000;
     text-shadow: none;
     background:#500;
@@ -168,7 +177,7 @@ table {
 .table th {
     line-height:20px;
     text-align:center;
-    background:transparent url(../img/bg_0.jpg) repeat;
+    background:transparent url('../img/bg_0.jpg') repeat;
     padding:4px;
 }
 
@@ -177,4 +186,14 @@ table {
     height:20px;
     text-align:center;
     padding:2px;
+}
+
+#content form{
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #000;
+    text-shadow: none;
 }

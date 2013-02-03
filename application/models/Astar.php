@@ -3,7 +3,7 @@
 /**
  * A* search algorithm implemantation.
  */
-class Game_Astar {
+class Application_Model_Astar {
 
     /**
      * The set of nodes already evaluated.

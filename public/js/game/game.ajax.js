@@ -1,5 +1,6 @@
 function startMyTurnA() {
-    $.getJSON(urlStartMyTurn, function(result) {
+    $.getJSON('/turn/start', function(result) {
+        console.log(result);
         if(result['gameover']){
             lostM();
         }else{
@@ -33,7 +34,7 @@ function setProductionA(castleId) {
     if(castles[castleId].currentProduction == unitId){
         return;
     }
-    $.getJSON(urlSetProduction+'/castleId/'+castleId+'/unitId/'+unitId, function(result) {
+    $.getJSON('/production/set/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
             if(unitId == -1){
                 $('#castle'+castleId).html('');
@@ -48,9 +49,9 @@ function setProductionA(castleId) {
 }
 
 function addTowerA(towerId){
-    $.getJSON(urlTowerAdd+'/tid/'+towerId+'/c/'+turn.color)
+    $.getJSON('/tower/add/tid/'+towerId+'/c/'+turn.color)
 }
 
 function webSocketOpenA(wssuid){
-    $.getJSON(urlWebSocketOpen+'/wssuid/'+wssuid);
+    $.getJSON('/websocket/open/wssuid/'+wssuid);
 }

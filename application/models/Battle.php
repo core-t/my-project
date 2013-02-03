@@ -1,6 +1,6 @@
 <?php
 
-class Game_Battle {
+class Application_Model_Battle {
 
     private $_result = array(
         'defense' => array(

@@ -64,12 +64,21 @@ class Application_Model_Player extends Game_Db_Table_Abstract {
         return $this->_db->lastSequenceId($seq);
     }
 
+    public function createComputerPlayer() {
+        $data = array(
+            'firstName' => 'Computer',
+            'lastName' => 'Player',
+            'computer' => 'true'
+        );
+        return $this->createPlayer($data);
+    }
+
     public function getPlayer($playerId) {
         $select = $this->_db->select()
                 ->from($this->_name);
         if ($playerId) {
             $select->where('"' . $this->_primary . '" = ?', $playerId);
-        } elseif($this->fbid) {
+        } elseif ($this->fbid) {
             $select->where('"fbId" = ?', $this->fbid);
         }
         $result = $this->_db->query($select)->fetchAll();
@@ -83,12 +92,11 @@ class Application_Model_Player extends Game_Db_Table_Abstract {
 
     public function isComputer($playerId) {
         $select = $this->_db->select()
-            ->from($this->_name, 'computer')
-            ->where('"' . $this->_primary . '" = ?', $playerId);
+                ->from($this->_name, 'computer')
+                ->where('"' . $this->_primary . '" = ?', $playerId);
         $result = $this->_db->query($select)->fetchAll();
         return $result[0]['computer'];
     }
-
 
 }
 

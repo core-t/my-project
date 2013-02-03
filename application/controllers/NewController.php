@@ -24,6 +24,21 @@ class NewController extends Game_Controller_Gui {
                 $modelGame = new Application_Model_Game ();
                 $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId']);
                 if ($gameId) {
+                    $colors = $modelGame->getAllColors();
+                    $modelGame->joinGame($this->_namespace->player['playerId']);
+                    $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $colors[0]);
+                    for ($i = 1; $i < $this->_request->getParam('numberOfPlayers'); $i++)
+                    {
+                        $playerId = $modelGame->getComputerPlayerId();
+                        if (!$playerId) {
+                            $modelPlayer = new Application_Model_Player(null, false);
+                            $playerId = $modelPlayer->createComputerPlayer();
+                            $modelHero = new Application_Model_Hero($playerId);
+                            $modelHero->createHero();
+                        }
+                        $modelGame->joinGame($playerId);
+                        $modelGame->updatePlayerReady($playerId, $colors[$i]);
+                    }
                     $this->_helper->redirector('index', 'gamesetup', null, array('gameId' => $gameId));
                 }
             }

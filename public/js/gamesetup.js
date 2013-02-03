@@ -1,6 +1,6 @@
 function refresh() {
     $.getJSON(urlRefresh, function(result) {
-//         console.log(result);
+        //        console.log(result);
         if(result.start) {
             top.location = urlRedirectStart;
         }else if(result.kick) {
@@ -11,34 +11,42 @@ function refresh() {
             $('#playersout').html('');
             var playersReady = 0;
             for(i = 0; i < numberOfPlayers; i++) {
-                $('#'+colors[i]+' #td1 div.left').html('');
+                $('#'+colors[i]+' .td1 div.left').html('');
                 $('#'+colors[i]+' #td2').html(
                     $('<a>')
                     .addClass('button')
                     .html('Select')
                     .attr('id',colors[i])
-                );
-                $('#'+colors[i]+' #td2 a').click(function(){playerReady(this.id)});
+                    );
+                $('#'+colors[i]+' #td2 a').click(function(){
+                    playerReady(this.id)
+                });
                 $('#'+colors[i]+' .td3').html('Human');
             }
             for(i in result){
-                if(result[i].computer){
-                    $('#'+colors[i]+' .td3').html('Computer');
-                }
-                if(result[i].ready) {
+                if(result[i].ready && result[i].color) {
                     playersReady++;
-                    $('#'+result[i].color+' #td1 div.left').html(result[i].firstName+' '+result[i].lastName);
+
+                    if(result[i].computer){
+                        $('#'+result[i].color+' .td3').html('Computer');
+                    }
+
+                    $('#'+result[i].color+' .td1 div.left').html(result[i].firstName+' '+result[i].lastName);
                     if(result[i].playerId == playerId){
+                        var html;
                         if(ready) {
-                            var html = 'Unselect';
+                            html = 'Unselect';
                         } else {
-                            var html = 'Select';
+                            html = 'Select';
                         }
                         $('#'+result[i].color+' #td2 a').html(html);
                     }else if(result[i].gameMasterId == playerId){
                         $('#'+result[i].color+' #td2 a')
                         .html('Kick')
-                        .click(function(){kick(this.id)});
+                        .click(function(){
+                            kick(this.id)
+                        });
+
                     }else{
                         $('#'+result[i].color+' #td2').html('');
                     }
@@ -47,16 +55,24 @@ function refresh() {
                     $('#playersout').append('<tr><td># ' + result[i].firstName+' '+result[i].lastName + '</td></tr>');
                 }
             }
-            if(result[i].gameMasterId == playerId) {
-                for(i = 0; i < numberOfPlayers; i++) {
-                    $('#'+colors[i]+' .td3').html(
-                        $('<a>')
-                        .addClass('button')
-                        .html('Human')
-                        .attr('id',colors[i])
-                    );
-                    $('#'+colors[i]+' .td3 a').click(function(){playerHumanAI(this.id)});
-                }
+
+            if(result[0].gameMasterId == playerId) {
+                $('#playersingame .td1').each(function(){
+                    var id = $(this).parent().attr('id');
+                    if(!$('#playersingame #'+id+' .td1 .left').html()){
+                        $('#'+id+' .td3').html(
+                            $('<a>')
+                            .addClass('button')
+                            .html('Set computer')
+                            .attr('id',colors[i])
+                            );
+
+                        $('#'+id+' .td3 a').click(function(){
+                            playerHumanAI(this.id)
+                        });
+                    }
+                });
+
                 $('#start').html($('<a>').addClass('button').html('Start game'));
                 $('#start a').click(function(){
                     if(start){

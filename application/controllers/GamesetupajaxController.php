@@ -2,14 +2,6 @@
 
 class GamesetupajaxController extends Game_Controller_Ajax {
 
-    public function _init() {
-
-    }
-
-    public function indexAction() {
-        // action body
-    }
-
     public function refreshAction() {
         $kick = false;
         $gamestart = false;
@@ -55,12 +47,7 @@ class GamesetupajaxController extends Game_Controller_Ajax {
                     $playerId = $modelGame->getComputerPlayerId();
                     if (!$playerId) {
                         $modelPlayer = new Application_Model_Player(null, false);
-                        $data = array(
-                            'firstName' => 'Computer',
-                            'lastName' => 'Player',
-                            'computer' => 'true'
-                        );
-                        $playerId = $modelPlayer->createPlayer($data);
+                        $playerId = $modelPlayer->createComputerPlayer();
                         $modelHero = new Application_Model_Hero($playerId);
                         $modelHero->createHero();
                     }
