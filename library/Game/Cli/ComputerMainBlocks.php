@@ -303,39 +303,39 @@ class Game_Cli_ComputerMainBlocks {
         );
     }
 
-    static public function endTurn($gameId, $playerId, $db = null) {
-        $youWin = false;
-        $response = array();
-        $nextPlayer = array(
-            'color' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db)
-        );
-        while (empty($response))
-        {
-            $nextPlayer = Game_Cli_Database::nextTurn($gameId, $nextPlayer['color'], $db);
-            $playerCastlesExists = Game_Cli_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
-            $playerArmiesExists = Game_Cli_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
-            if ($playerCastlesExists || $playerArmiesExists) {
-                $response = $nextPlayer;
-                if ($nextPlayer['playerId'] == $playerId) {
-                    $youWin = true;
-                    Game_Cli_Database::endGame($gameId, $db);
-                } else {
-                    $nr = Game_Cli_Database::updateTurnNumber($gameId, $nextPlayer['playerId'], $db);
-                    if ($nr) {
-                        $response['nr'] = $nr;
-                    }
-                    Game_Cli_Database::raiseAllCastlesProductionTurn($gameId, $playerId, $db);
-                }
-                $response['win'] = $youWin;
-            } else {
-                Game_Cli_Database::setPlayerLostGame($gameId, $nextPlayer['playerId'], $db);
-            }
-        }
-        $response['action'] = 'end';
-        unset($response['playerId']);
-
-        return $response;
-    }
+//    static public function endTurn($gameId, $playerId, $db = null) {
+//        $youWin = false;
+//        $response = array();
+//        $nextPlayer = array(
+//            'color' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db)
+//        );
+//        while (empty($response))
+//        {
+//            $nextPlayer = Game_Cli_Database::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
+//            $playerCastlesExists = Game_Cli_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
+//            $playerArmiesExists = Game_Cli_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
+//            if ($playerCastlesExists || $playerArmiesExists) {
+//                $response = $nextPlayer;
+//                if ($nextPlayer['playerId'] == $playerId) {
+//                    $youWin = true;
+//                    Game_Cli_Database::endGame($gameId, $db);
+//                } else {
+//                    $nr = Game_Cli_Database::updateTurnNumber($gameId, $nextPlayer['playerId'], $db);
+//                    if ($nr) {
+//                        $response['nr'] = $nr;
+//                    }
+//                    Game_Cli_Database::raiseAllCastlesProductionTurn($gameId, $playerId, $db);
+//                }
+//                $response['win'] = $youWin;
+//            } else {
+//                Game_Cli_Database::setPlayerLostGame($gameId, $nextPlayer['playerId'], $db);
+//            }
+//        }
+//        $response['action'] = 'end';
+//        unset($response['playerId']);
+//
+//        return $response;
+//    }
 
     static public function startTurn($gameId, $playerId, $db = null) {
         Game_Cli_Database::turnActivate($gameId, $playerId, $db);

@@ -8,7 +8,6 @@ class Game_Cli_Turn {
             return;
         }
 
-        $youWin = false;
         $response = array();
         $nextPlayer = array(
             'color' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db)
@@ -16,27 +15,26 @@ class Game_Cli_Turn {
 
         while (empty($response))
         {
-            $nextPlayer = Game_Cli_Database::nextTurn($gameId, $nextPlayer['color'], $db);
+            $nextPlayer = Game_Cli_Database::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
             $playerCastlesExists = Game_Cli_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
             $playerArmiesExists = Game_Cli_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
             if ($playerCastlesExists || $playerArmiesExists) {
-                $response = $nextPlayer;
-                if ($nextPlayer['playerId'] == $playerId) {
-                    $youWin = true;
-                    Game_Cli_Database::endGame($gameId, $db);
-                } else {
+                $response['color'] = $nextPlayer['color'];
+
+                if ($nextPlayer['playerId'] == $playerId) { // następny gracz to ten sam gracz, który zainicjował zmianę tury
+                    $response['win'] = true;
+                    Game_Cli_Database::endGame($gameId, $db); // koniec gry
+                } else { // zmieniam turę
                     Game_Cli_Database::updateTurnNumber($gameId, $nextPlayer['playerId'], $db);
                     Game_Cli_Database::raiseAllCastlesProductionTurn($gameId, $playerId, $db);
-                    $nextTurn = Game_Cli_Database::getTurn($gameId, $db);
-                    $response['lost'] = $nextTurn['lost'];
-                    $response['nr'] = $nextTurn['nr'];
+                    $turn = Game_Cli_Database::getTurn($gameId, $db);
+                    $response['lost'] = $turn['lost'];
+                    $response['nr'] = $turn['nr'];
                 }
-                $response['win'] = $youWin;
             } else {
                 Game_Cli_Database::setPlayerLostGame($gameId, $nextPlayer['playerId']);
             }
         }
-        unset($response['playerId']);
 
         return $response;
     }

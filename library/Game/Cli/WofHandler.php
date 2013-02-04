@@ -66,7 +66,7 @@ class Game_Cli_WofHandler extends WebSocket_UriHandler {
                 if (!empty($army['armyId'])) {
                     $token = Game_Cli_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
                 } else {
-                    $token = Game_Cli_ComputerMainBlocks::endTurn($dataIn['gameId'], $playerId, $db);
+                    $token = Game_Cli_Turn::next($dataIn['gameId'], $playerId, $db);
                 }
             }
 
@@ -79,7 +79,7 @@ class Game_Cli_WofHandler extends WebSocket_UriHandler {
                     $token['type'] = 'computerStart';
                     break;
                 case 'end':
-                    $token['type'] = 'computerEnd';
+                    $token['type'] = 'nextTurn';
                     break;
                 case 'gameover':
                     $token['type'] = 'computerGameover';

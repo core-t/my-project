@@ -1903,29 +1903,36 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
 
     static $playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
-    static public function nextTurn($gameId, $playerColor, $db = null) {
+    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db = null) {
         if (!$db) {
             $db = self::getDb();
         }
         $find = false;
-// szukam następnego koloru w dostępnych kolorach
+
+        /* szukam następnego koloru w dostępnych kolorach */
         foreach (self::$playerColors as $color)
         {
+            /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
             if ($playerColor == $color) {
                 $find = true;
                 continue;
             }
+
+            /* to jest przewinięty kolor gracza */
             if ($find) {
                 $nextPlayerColor = $color;
                 break;
             }
         }
+
         if (!isset($nextPlayerColor)) {
-            echo('Nie znalazłem koloru gracza');
+            echo('Błąd! Nie znalazłem koloru gracza');
             return;
         }
+
         $playersInGame = self::getPlayersInGameReady($gameId, $db);
-// przypisuję playerId do koloru
+
+        /* przypisuję playerId do koloru */
         foreach ($playersInGame as $k => $player)
         {
             if ($player['color'] == $nextPlayerColor) {
@@ -1933,7 +1940,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 break;
             }
         }
-// jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
+
+        /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
         if (!isset($nextPlayerId)) {
             foreach ($playersInGame as $k => $player)
             {
@@ -1949,11 +1957,16 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 }
             }
         }
+
         if (!isset($nextPlayerId)) {
-            echo('Nie znalazłem gracza');
+            echo('Błąd! Nie znalazłem gracza');
             return;
         }
-        return array('playerId' => $nextPlayerId, 'color' => $nextPlayerColor);
+
+        return array(
+            'playerId' => $nextPlayerId,
+            'color' => $nextPlayerColor
+        );
     }
 
     static public function getPlayersInGameReady($gameId, $db = null) {

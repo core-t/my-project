@@ -40,16 +40,42 @@ function startWebSocket(){
                     computerArmiesUpdate(r.armies, r.color);
                     break;
 
-                case 'computerEnd':
-                    changeTurn(r.color, r.nr);
-                    if(players[r.color].computer){
+                case 'computerGameover':
+                    console.log(r);
+                    wsComputer();
+                    break;
+
+                case 'nextTurn':
+                    console.log(r);
+                    unselectArmy();
+                    if(typeof r.lost != 'undefined'){
+                        lostM();
+                    }else if(typeof r.win != 'undefined'){
+                        winM();
+                    }else{
+                        changeTurn(r.color, r.nr);
                         wsComputer();
                     }
                     break;
 
-                case 'computerGameover':
+                case 'startTurn':
                     console.log(r);
-                    wsComputer();
+                    if(typeof r.gameover != 'undefined'){
+                        lostM();
+                    }else{
+                        for(i in r.armies) {
+                            players[r.color].armies[i] = new army(r.armies[i], r.color);
+                        }
+                        for(i in r.castles){
+                            updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
+                        }
+                        if(r.color==my.color){
+                            goldUpdate(r.gold);
+                            $('#costs').html(r.costs);
+                            $('#income').html(r.income);
+                            unlock();
+                        }
+                    }
                     break;
 
                 case 'ruin':
@@ -84,11 +110,11 @@ function startWebSocket(){
                     }
                     break;
 
-                case 'armies':
-                    for(i in r.data){
-                        players[r.color].armies[i] = new army(r.data[i], r.color);
-                    }
-                    break;
+                //                case 'armies':
+                //                    for(i in r.data){
+                //                        players[r.color].armies[i] = new army(r.data[i], r.color);
+                //                    }
+                //                    break;
 
                 case 'splitArmy':
                     removeM();
@@ -144,38 +170,6 @@ function startWebSocket(){
                         titleBlink('Incoming chat!');
                         chat(r.color,r.msg,makeTime());
                     }
-                    break;
-
-                case 'nextTurn':
-                    console.log(r);
-                    unselectArmy();
-                    if(r.lost){
-                        lostM();
-                    }else{
-                        changeTurn(r.color, r.nr);
-                        wsComputer();
-                    }
-                    break;
-
-                case 'startTurn':
-                    console.log(r);
-                    if(typeof r.gameover != 'undefined'){
-                        lostM();
-                    }else{
-                        for(i in r.armies) {
-                            players[r.color].armies[i] = new army(r.armies[i], r.color);
-                        }
-                        for(i in r.castles){
-                            updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
-                        }
-                        if(r.color==my.color){
-                            goldUpdate(r.gold);
-                            $('#costs').html(r.costs);
-                            $('#income').html(r.income);
-                            unlock();
-                        }
-                    }
-
                     break;
 
                 case 'castle':
