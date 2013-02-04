@@ -104,7 +104,7 @@ function startWebSocket(){
                     break;
 
                 case 'joinArmy':
-//                    console.log(r);
+                    //                    console.log(r);
                     removeM();
                     zoomer.lensSetCenter(r.army.x*40, r.army.y*40);
                     for(i in r.deletedIds){
@@ -146,17 +146,36 @@ function startWebSocket(){
                     }
                     break;
 
-                case 'turn':
+                case 'nextTurn':
+                    console.log(r);
                     unselectArmy();
-                    if(r.data['lost']){
+                    if(r.lost){
                         lostM();
                     }else{
-                        //                        if(!data[3]){
-                        //                            unset(data[3]);
-                        //                        }
-                        changeTurn(r.data['color'], r.data['nr']);
+                        changeTurn(r.color, r.nr);
                         wsComputer();
                     }
+                    break;
+
+                case 'startTurn':
+                    console.log(r);
+                    if(typeof r.gameover != 'undefined'){
+                        lostM();
+                    }else{
+                        for(i in r.armies) {
+                            players[r.color].armies[i] = new army(r.armies[i], r.color);
+                        }
+                        for(i in r.castles){
+                            updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
+                        }
+                        if(r.color==my.color){
+                            goldUpdate(r.gold);
+                            $('#costs').html(r.costs);
+                            $('#income').html(r.income);
+                            unlock();
+                        }
+                    }
+
                     break;
 
                 case 'castle':
@@ -236,10 +255,25 @@ function wsNextTurn() {
     }
 
     var token = {
-        type: 'turn',
+        type: 'nextTurn',
         gameId: gameId,
         playerId: my.id,
-        color: my.color,
+        accessKey: accessKey
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsStartMyTurn(){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+    var token = {
+        type: 'startTurn',
+        gameId: gameId,
+        playerId: my.id,
         accessKey: accessKey
     };
 
@@ -269,24 +303,24 @@ function wsChat() {
     }
 }
 
-function wsPlayerArmies(color){
-    if(wsClosed){
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'armies',
-        data:{
-            color:color
-        },
-        gameId: gameId,
-        playerId: my.id,
-        accessKey: accessKey
-    };
-
-    ws.send(JSON.stringify(token));
-}
+//function wsPlayerArmies(color){
+//    if(wsClosed){
+//        simpleM('Sorry, server is disconnected.');
+//        return;
+//    }
+//
+//    var token = {
+//        type: 'armies',
+//        data:{
+//            color:color
+//        },
+//        gameId: gameId,
+//        playerId: my.id,
+//        accessKey: accessKey
+//    };
+//
+//    ws.send(JSON.stringify(token));
+//}
 
 function wsArmyMove(movesSpend) {
     if(wsClosed){
@@ -504,10 +538,7 @@ function wsComputer(){
 
 function wsOpen(){
     var token = {
-        type: 'open',
-        gameId: gameId,
-        playerId: my.id,
-        accessKey: accessKey
+        type: 'open'
     };
 
     ws.send(JSON.stringify(token));

@@ -13,7 +13,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     }
 
     protected function _initView() {
-        $view = new Zend_View();
+        $this->bootstrap('layout');
+        $layout = $this->getResource('layout');
+        $view = $layout->getView();
+
+        $view->addHelperPath(APPLICATION_PATH . '/../library/Coret/View/Helper/');
+
         $view->doctype('XHTML1_STRICT');
 
         // Set the initial title and separator:
@@ -42,6 +47,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     protected function _initConfig() {
         $config = new Zend_Config($this->getOptions());
         Zend_Registry::set('config', $config);
+    }
+
+    protected function _initRouter() {
+        if (PHP_SAPI == 'cli') {
+            $this->bootstrap('FrontController');
+            $front = $this->getResource('FrontController');
+            $front->setParam('disableOutputBuffering', true);
+            $front->setRouter(new Game_Router_Cli());
+            $front->setRequest(new Zend_Controller_Request_Simple());
+        }
     }
 
 }

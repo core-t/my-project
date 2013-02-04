@@ -1,22 +1,15 @@
 <?php
 
-date_default_timezone_set('Europe/Warsaw');
-defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(__DIR__ . '/../application'));
-set_include_path('../library');
-require_once 'Zend/Loader/Autoloader.php';
-$loader = Zend_Loader_Autoloader::getInstance();
-$loader->registerNamespace('Custom_');
-
-defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'production');
-
-// initialize Zend_Application
+defined('APPLICATION_PATH')
+        || define('APPLICATION_PATH', realpath(__DIR__ . '/../application'));
+defined('APPLICATION_ENV')
+        || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
+require_once 'Zend/Application.php';
 $application = new Zend_Application(
                 APPLICATION_ENV,
                 APPLICATION_PATH . '/configs/application.ini'
 );
-
-$config = new Zend_Config($application->getBootstrap()->getOptions());
-Zend_Registry::set('config', $config);
+$application->getBootstrap()->bootstrap(array('date', 'config', 'router'));
 
 declare(ticks = 1);
 
@@ -32,10 +25,10 @@ interface IWebSocketServerObserver {
 }
 
 /**
- * Demo socket server. Implements the basic eventlisteners and attaches a resource handler for /echo/ urls.
+ * WOF socket server.
  *
  *
- * @author Chris
+ * @author Bartosz Krzeszewski
  *
  */
 class WofSocketServer implements IWebSocketServerObserver {
@@ -47,7 +40,7 @@ class WofSocketServer implements IWebSocketServerObserver {
         $this->server = new WebSocket_Server('tcp://' . Zend_Registry::get('config')->websockets->aHost . ':' . Zend_Registry::get('config')->websockets->aPort, 'superdupersecretkey');
         $this->server->addObserver($this);
 
-        $this->server->addUriHandler('wof', new Application_Model_WofHandler());
+        $this->server->addUriHandler('wof', new Game_Cli_WofHandler());
     }
 
     public function onConnect(IWebSocketConnection $user) {

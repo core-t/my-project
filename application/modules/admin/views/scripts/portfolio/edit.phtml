@@ -1,0 +1,109 @@
+<?php
+$this->addHelperPath(APPLICATION_PATH . '/../library/Coret/View/Helper/', 'Coret_View_Helper');
+echo $this->jqueryUpload('1.0.2');
+echo $this->pageTitle($this->title);
+?>
+<fieldset>
+    <legend>Formularz - zmiana danych</legend>
+
+    <?php echo $this->form; ?>
+
+</fieldset>
+<fieldset>
+    <legend>Formularz - galeria</legend>
+    <?php echo $this->formGaleria; ?>
+    <div>
+        <div id="add" class="button left">Dodaj kolejny</div>
+        <div id="del" class="button left">Usuń ostatni</div>
+    </div>
+</fieldset>
+<script type="text/javascript">
+    $().ready(function(){
+<?php if ($this->img): ?>
+            var imgSrc = '<?php echo $this->img; ?>';
+<?php endif; ?>
+        var urlAdd = '<?php echo $this->url(array('controller' => 'ajax', 'action' => 'addImage')); ?>';
+        var urlDel = '<?php echo $this->url(array('controller' => 'ajax', 'action' => 'delImage')); ?>';
+        var id = <?php echo $this->id; ?>;
+        var imgId = "";
+
+        $('#image').after('<img src="/upload/'+imgSrc+'" />');
+
+        $('.form2 input[type=file]').each(function() {
+            imgId = $(this).attr('id');
+            imgId = imgId.substring(5);
+            $(this).change(function() {
+                imgId = $(this).attr('id');
+                imgId = imgId.substring(5);
+
+                $(this).upload(urlAdd+'/image/'+imgId, function(res) {
+                    afterUpload($(this), imgId, res, id);
+                }, 'json');
+            });
+            if($(this).attr('class')){
+                $(this).after('<img id="image'+imgId+'" src="/upload/small_portfolio_'+id+'_'+imgId+'.'+$(this).attr('class')+'" />');
+            }
+        });
+
+        $('#add').click(function(){
+            $('.form2 input[type=file]').each(function() {
+                imgId = $($(this)).attr('id');
+            });
+
+            imgId = imgId.substring(5);
+
+            var last = $('#image'+imgId).parent();
+
+            var nextId = parseInt(imgId)+1;
+            var input = '<dt id="image'+nextId+'-label"><label for="image'+nextId+'" class="optional">Obrazek '+nextId+'*:</label></dt><dd><input type="file" name="image'+nextId+'" id="image'+nextId+'"></dd>';
+
+            $(last).after(input);
+
+            $('#image'+nextId).change(function() {
+
+                $(this).upload(urlAdd+'/image/'+nextId, function(res) {
+                    afterUpload($(this), nextId, res, id);
+                }, 'json');
+            });
+
+        });
+        
+        $('#del').click(function(){
+            $.ajax({url:urlDel}).done(function(res){
+//                if(typeof res.status !== 'undefined'){
+//                    if(res.status == 'ok'){
+                        $('.form2 input[type=file]').each(function() {
+                            imgId = $($(this)).attr('id');
+                        });
+
+                        imgId = imgId.substring(5);
+
+                        var a = $('dt#image'+imgId+'-label');
+                        console.log(a);
+                        var b = $('dt#image'+imgId+'-label').next();
+                        console.log(b);
+                        b.remove();
+                        a.remove();
+//                    }
+//                }
+            });
+        });
+    });
+
+    function afterUpload(t, imgId, res, id){
+        if(typeof res.type !== 'undefined'){
+            imgId = t.attr('id');
+            imgId = imgId.substring(5);
+            var image = $('img#image'+imgId);
+            // there is already image
+            if(image.length){
+                var d = new Date();
+                image.attr('src','/upload/small_portfolio_'+id+'_'+imgId+'.'+res.type+'?'+d.getTime());
+            }
+            // there wasn't image before
+            else{
+                t.after('<img id="image'+imgId+'" src="/upload/small_portfolio_'+id+'_'+imgId+'.'+res.type+'" />');
+            }
+        }
+    }
+</script>

@@ -1,24 +1,3 @@
-function startMyTurnA() {
-    $.getJSON('/turn/start', function(result) {
-        console.log(result);
-        if(result['gameover']){
-            lostM();
-        }else{
-            wsPlayerArmies(my.color);
-            goldUpdate(result['gold']);
-            $('#costs').html(result['costs']);
-            $('#income').html(result['income']);
-            for(i in result['armies']) {
-                players[my.color].armies[i] = new army(result['armies'][i], my.color);
-            }
-            for(i in result.castles){
-                updateCastleCurrentProductionTurn(i, result.castles[i].productionTurn);
-            }
-            unlock();
-        }
-    });
-}
-
 function setProductionA(castleId) {
     var unitId
     var production = $('input:radio[name=production]:checked').val();

@@ -38,7 +38,7 @@ function changeTurn(color, nr) {
     $('#turnNumber').html(turn.nr);
     if(turn.color == my.color) {
         turnOn();
-        startMyTurnA();
+        wsStartMyTurn();
         return 0;
     } else {
         turnOff();
@@ -111,7 +111,7 @@ function startGame(){
             turnOff();
         }
         if(my.turn && !players[my.color].turnActive){
-            startMyTurnA();
+            wsStartMyTurn();
         } else if(my.game && players[turn.color].computer){
             setTimeout ( 'wsComputer()', 1000 );
         }
