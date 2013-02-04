@@ -48,10 +48,10 @@ function startWebSocket(){
                 case 'nextTurn':
                     console.log(r);
                     unselectArmy();
-                    if(typeof r.lost != 'undefined'){
-                        lostM();
+                    if(r.lost){
+                        lostM(r.color);
                     }else if(typeof r.win != 'undefined'){
-                        winM();
+                        winM(color);
                     }else{
                         changeTurn(r.color, r.nr);
                         wsComputer();
@@ -61,20 +61,19 @@ function startWebSocket(){
                 case 'startTurn':
                     console.log(r);
                     if(typeof r.gameover != 'undefined'){
-                        lostM();
-                    }else{
-                        for(i in r.armies) {
-                            players[r.color].armies[i] = new army(r.armies[i], r.color);
-                        }
-                        for(i in r.castles){
-                            updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
-                        }
-                        if(r.color==my.color){
-                            goldUpdate(r.gold);
-                            $('#costs').html(r.costs);
-                            $('#income').html(r.income);
-                            unlock();
-                        }
+                        lostM(r.color);
+                    }else if(r.color==my.color){
+                        goldUpdate(r.gold);
+                        $('#costs').html(r.costs);
+                        $('#income').html(r.income);
+                        unlock();
+                    }
+
+                    for(i in r.armies) {
+                        players[r.color].armies[i] = new army(r.armies[i], r.color);
+                    }
+                    for(i in r.castles){
+                        updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
                     }
                     break;
 

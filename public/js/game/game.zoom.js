@@ -121,7 +121,8 @@ function zoom(zoomWidth, zoomHeight) {
         };
         return $obj;
     };
-/*========================================================,
+
+    /*========================================================,
 |   Lens
 |---------------------------------------------------------:
 |   Lens over the image
@@ -137,13 +138,13 @@ function zoom(zoomWidth, zoomHeight) {
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
         };
         this.setcenter = function (x, y) {
-//            console.log(el);
-//            console.log(x);
-//            console.log(y);
+            //            console.log(el);
+            //            console.log(x);
+            //            console.log(y);
             this.node.top = (parseInt(y) - 340)/20;
-//            console.log(this.node.top);
+            //            console.log(this.node.top);
             this.node.left = (parseInt(x) - 380)/20;
-//            console.log(this.node.left);
+            //            console.log(this.node.left);
             if(this.node.top > 103){
                 this.node.top = 103;
             }else if(this.node.top < -1){
@@ -215,7 +216,7 @@ function zoom(zoomWidth, zoomHeight) {
         };
         return this;
     };
-/*========================================================,
+    /*========================================================,
 |   LargeImage
 |---------------------------------------------------------:
 |   The large detailed image
@@ -246,12 +247,16 @@ function zoom(zoomWidth, zoomHeight) {
             //setting lens dimensions;
             lens.setdimensions();
             lens.show();
-//             lens.setcenter(settings.zoomPupX, settings.zoomPupY);
+            //             lens.setcenter(settings.zoomPupX, settings.zoomPupY);
             largeimageloaded = true;
         };
         this.setposition = function () {
             var left = -el.scale.x * (lens.getoffset().left - smallimage.bleft + 1);
             var top = -el.scale.y * (lens.getoffset().top - smallimage.btop + 1);
+            //            this.node.animate({
+            //                left: left + 'px',
+            //                top: top + 'px'
+            //            },300);
             this.node.css({
                 'left': left + 'px',
                 'top': top + 'px'

@@ -67,6 +67,7 @@ class Game_Cli_WofHandler extends WebSocket_UriHandler {
                     $token = Game_Cli_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
                 } else {
                     $token = Game_Cli_Turn::next($dataIn['gameId'], $playerId, $db);
+                    $token['action'] = 'end';
                 }
             }
 

@@ -74,7 +74,7 @@ class Game_Cli_Turn {
                             AND $castle['production'][$unitName]['cost'] <= $gold
                     ) {
                         if (Game_Cli_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
-                            Game_Cli_Database::addSoldierToArmy($gameId, $armyId, $castleProduction['production'], $playerId, $db);
+                            Game_Cli_Database::addSoldierToArmy($gameId, $armyId, $castleProduction['production'], $db);
                         }
                     }
                 }

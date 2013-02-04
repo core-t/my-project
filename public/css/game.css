@@ -1,7 +1,8 @@
 #game {
     width:760px;
     height:800px;
-    background: transparent url(../img/bg_1.jpg) repeat scroll top left;
+    background: transparent url('../img/bg_1.jpg') repeat scroll top left;
+    font-size: 11px;
 }
 
 #board {
@@ -27,12 +28,12 @@
     opacity: 0.6;
     border:1px solid #f00;
     z-index:1000;
-    cursor: move;
     top: 0;
     left: 0;
     position: inherit;
     width:38px;
     height:34px;
+    cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
 
 #map {
@@ -41,6 +42,7 @@
     left: 0px;
     border-right:1px solid #444;
     border-bottom:1px solid #444;
+    cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
 .zoomWindow{
     position:relative;
@@ -69,6 +71,7 @@
     height:4px;
     position:absolute;
     background:#aaa;
+    cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
 
 .ruin {
@@ -93,14 +96,15 @@
     position:absolute;
     width:40px;
     height:40px;
-    /*    display:none;*/
     border:none;
+    border-radius:3px;
     z-index: 1000;
 }
 .a{
     width:2px;
     height:2px;
     position:absolute;
+    cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
 .unit {
     margin-top:10px;
@@ -109,13 +113,16 @@
 
 .path {
     position:inherit;
-    width:40px;
-    height:40px;
+    width:34px;
+    height:34px;
+    margin:1px;
+    padding: 2px;
     border:none;
+    border-radius: 3px;
     z-index:201;
-    padding-left:2px;
+    /*padding-left:2px;*/
     color:white;
-    text-shadow:#000 1px 1px 3px;
+    text-shadow:none;
     background:#000;
     opacity:0.66;
 }
@@ -249,21 +256,23 @@
 
 
 .message {
-    width: 260px;
+    width: 321px;
     min-height: 225px;
     border:1px solid #555;
     z-index:7000;
-    background: #444;
+    /*background: #444;*/
+    background: transparent url('../img/bg_1.jpg') repeat scroll top left;
     position:relative;
     left:280px;
     top:50px;
     overflow-x: hidden;
-    border-radius: 3px;
-    box-shadow: 3px 3px 10px #000;
+    border-radius: 10px;
+    box-shadow: 5px 5px 20px #000;
+    text-shadow: 2px 2px 0 #000;
 }
 
 .message h3 {
-    color:#fff;
+    color:yellow;
     margin:4px;
 }
 
@@ -279,13 +288,15 @@
 }
 
 .message .production {
-    background: #CECECE;
+    background: #CECEb0;
+    /*text-shadow:2px 2px 0 #ddd;*/
     text-shadow:none;
+    color: #000;
+    margin-left: 1px;
 }
 
 .message .production .unit {
     margin:2px;
-    width:125px;
     text-align:center;
     border:1px solid #c0c0c0;
 }
@@ -299,7 +310,7 @@
 .message .production .unit div.attributes {
     float:left;
     padding:1px;
-    width:88px;
+    width:124px;
 }
 
 .message .production .unit div p {
@@ -314,6 +325,11 @@
 .message .production .unit p {
     clear:both;
     height:18px;
+}
+
+.message .production label {
+    line-height: 20px;
+    color: #006500;
 }
 
 .message .cancel {
@@ -464,7 +480,7 @@
 }
 
 #chatBox{
-
+    text-transform: none;
 }
 
 #chatBox #chatWindow{

@@ -98,12 +98,11 @@ function startGame(){
     showFirstCastle();
 
     if(!enemyArmies && !enemyCastles){
-        console.log('aaa');
-        winM();
         turnOff();
+        winM(my.color);
     }else if(!myArmies && !myCastles){
-        lostM();
         turnOff();
+        lostM(my.color);
     }else{
         if(my.turn){
             turnOn();
@@ -139,6 +138,7 @@ function setlock(){
     lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
+    $('body').css('cursor','wait');
 }
 
 function unlock(){

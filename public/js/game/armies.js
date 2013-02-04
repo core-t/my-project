@@ -254,7 +254,9 @@ function selectArmy(a) {
     if(index != -1){
         quitedArmies.splice(index,1);
     }
-    $('#army' + a.armyId).css('border','1px solid #ccc');
+    $('#army' + a.armyId).css({
+        'box-shadow':'0 0 10px #fff'
+    });
     $('#name').html(a.name);
     $('#moves').html(a.moves);
     $('#attack').html(a.attack);
@@ -293,7 +295,7 @@ function unselectArmy(skipJoin) {
 function tmpUnselectArmy() {
     if(selectedArmy) {
         unselectedArmy = selectedArmy;
-        $('#army' + selectedArmy.armyId).css('border','none');
+        $('#army' + selectedArmy.armyId).css('box-shadow','none');
         board.css('cursor', 'default');
     }
     selectedArmy = null;
@@ -531,13 +533,14 @@ function fight(r){
 }
 
 function move(r, computer) {
+    zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
     if(typeof players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType != 'undefined'){
         fields[players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y][players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x] = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType;
     }
-    walk(r, r.attackerColor, r.deletedIds, computer);
+    walk(r, null, computer);
 }
 
-function walk(r, computer) {
+function walk(r, xy, computer) {
     var i;
 
     for(i in r.path) {
@@ -546,6 +549,8 @@ function walk(r, computer) {
 
     if(typeof r.path[i] == 'undefined') {
         //        console.log(data);
+
+        zoomer.lensSetCenter(xy.x*40, xy.y*40);
 
         if(isTruthful(r.battle)){
             battleM(r, function(){
@@ -557,7 +562,7 @@ function walk(r, computer) {
 
         return;
     } else {
-        zoomer.lensSetCenter(r.path[i].x*40, r.path[i].y*40);
+        //        zoomer.lensSetCenter(r.path[i].x*40, r.path[i].y*40);
         $('#army'+r.oldArmyId).animate({
             left: (r.path[i].x*40) + 'px',
             top: (r.path[i].y*40) + 'px'
@@ -568,8 +573,9 @@ function walk(r, computer) {
                 console.log(r);
             }else{
                 searchTower(r.path[i].x, r.path[i].y);
+                xy = r.path[i];
                 delete r.path[i];
-                walk(r, r.attackerColor, r.deletedIds, computer);
+                walk(r, xy, r.attackerColor, r.deletedIds, computer);
             }
         });
     }

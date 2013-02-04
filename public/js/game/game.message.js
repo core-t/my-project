@@ -14,19 +14,29 @@ function startM(){
             .html('Start')
             .click(function(){
                 removeM();
-//                startGame();
+            //                startGame();
             })
             )
         .css('min-height','70px')
         );
 }
 
-function lostM(){
+function lostM(color){
     removeM();
+
+    var msg;
+
+    if(color == my.color){
+        msg =  '<br/>GAME OVER<br/><br/>You lose!';
+
+    }else{
+        msg =  color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
+    }
+
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html('You lose.'))
+        .append($('<h3>').addClass('center').html(msg))
         .append($('<div>')
             .addClass('button go')
             .html('Ok')
@@ -41,12 +51,22 @@ function lostM(){
         );
 }
 
-function winM(){
+function winM(color){
     removeM();
+
+    var msg;
+
+    if(color == my.color){
+        msg =  '<br/>GAME OVER<br/><br/>You won!';
+
+    }else{
+        msg =  color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
+    }
+
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html('You win.'))
+        .append($('<h3>').addClass('center').html(msg))
         .append($('<div>')
             .addClass('button go')
             .html('Ok')
@@ -63,6 +83,10 @@ function winM(){
 
 function turnM(){
     removeM();
+    if(my.turn && turn.nr == 1){
+        castleM(firstCastleId, my.color);
+    }
+
     mElement().after(
         $('<div>')
         .addClass('message')
@@ -247,14 +271,17 @@ function armyStatusM(){
     var numberOfUnits = 0;
     var bonusTower = 0;
     var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
+    var attackPoints;
+    var defensePoints;
+
     if(isTowerAtPosition(selectedArmy.x, selectedArmy.y)){
         bonusTower = 1;
     }
     for(i in selectedArmy.soldiers) {
         numberOfUnits++;
         var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
-        var attackPoints = $('<p>').html(selectedArmy.soldiers[i].attackPoints).css('color','#da8');
-        var defensePoints = $('<p>').html(selectedArmy.soldiers[i].defensePoints).css('color','#da8');
+        attackPoints = $('<p>').html(selectedArmy.soldiers[i].attackPoints).css('color','#da8');
+        defensePoints = $('<p>').html(selectedArmy.soldiers[i].defensePoints).css('color','#da8');
         if(selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly){
             attackPoints.append($('<span>').html(' +1').css('color','#d00000'));
             defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
@@ -297,8 +324,8 @@ function armyStatusM(){
     }
     for(i in selectedArmy.heroes) {
         numberOfUnits++;
-        var attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color','#da8');
-        var defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color','#da8');
+        attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color','#da8');
+        defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color','#da8');
         if(bonusTower){
             defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
         }
@@ -670,6 +697,9 @@ function killM(b, clb, data){
 
         if(isDigit(data.castleId) && isTruthful(data.victory)){
             castleOwner(data.castleId, data.attackerColor);
+            if(my.color == data.attackerColor){
+                castleM(data.castleId, data.attackerColor);
+            }
         }
 
         return;

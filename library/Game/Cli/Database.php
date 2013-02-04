@@ -346,7 +346,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
 
         $select = $db->select()
                 ->from(array('a' => 'soldier'))
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('unitId', 'name', 'numberOfMoves', 'attackPoints', 'defensePoints', 'canFly', 'canSwim'))
+                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('unitId', 'name', 'numberOfMoves', 'attackPoints', 'defensePoints', 'canFly', 'canSwim', 'cost'))
                 ->where('"gameId" = ?', $gameId)
                 ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
         if ($in) {

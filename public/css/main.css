@@ -1,15 +1,22 @@
 *{padding: 0; margin: 0;}
-
+@font-face {
+    font-family: "Deutsch";
+    src: url('../Deutsch.ttf') format("truetype");
+}
 html{
     background: #000 url('../img/bg_0.jpg') repeat scroll top left;
 }
 body {
     background: #000 url('../img/bg_0.jpg') repeat scroll top left;
     font-size: 12px;
-    font-family:arial;
+    /*font-family: "NewRocker Regular", Verdana, Tahoma;*/
+    /*font-family: "Kingthings Spikeless", Verdana, Tahoma;*/
+    font-family: "Deutsch", Verdana, Tahoma;
+    letter-spacing:1px;
     /*    color:#6C6E6D;*/
     color:#878988;
-    text-shadow:0 -1px 2px #111;
+    text-shadow:2px 2px 0 #000;
+    text-transform:uppercase;
 }
 
 #page {
@@ -70,20 +77,20 @@ input {
 }
 
 .button, #submit {
-    padding:3px 6px 3px 6px;
+    padding:2px 14px 0px 14px;
     margin:2px;
     text-align:center;
     cursor:pointer;
     line-height:14px;
     font-weight:bold;
     color:#ccc;
-    text-shadow: 1px 1px 5px #111;
+    text-shadow: 2px 2px 0px #111;
     background:#600;
     border-top:1px solid #555;
     border-left:1px solid #555;
     border-right:1px solid #111;
     border-bottom:1px solid #111;
-    border-radius: 10px;
+    border-radius: 8px;
     display:block;
 }
 
@@ -135,6 +142,7 @@ h1{
 h2{
     margin-top: 10px;
     color:#999;
+    text-transform: none;
 }
 h3{
     color:#aaa;
@@ -159,6 +167,9 @@ h3{
 .yellowbg{
     background:yellow;
     text-shadow:none;
+}
+.yellowbg a{
+    color: #000;
 }
 
 .redbg{
@@ -196,4 +207,9 @@ table {
     margin-bottom: 20px;
     color: #000;
     text-shadow: none;
+}
+
+#logout{
+    text-transform: none;
+    font-size: 16px;
 }
