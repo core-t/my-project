@@ -198,9 +198,11 @@ function myArmyMouse(id){
         return;
     }
     if(my.turn && !selectedArmy) {
+        $('#'+id+' *').css('cursor', 'url(../img/game/cursor_select.png), default');
         $('#'+id).css('cursor', 'url(../img/game/cursor_select.png), default');
     }
     else {
+        $('#'+id+' *').css('cursor', 'default');
         $('#'+id).css('cursor', 'default');
     }
 }
@@ -255,7 +257,8 @@ function selectArmy(a) {
         quitedArmies.splice(index,1);
     }
     $('#army' + a.armyId).css({
-        'box-shadow':'0 0 10px #fff'
+        'box-shadow':'0 0 10px #fff',
+        'border':'1px solid #fff'
     });
     $('#name').html(a.name);
     $('#moves').html(a.moves);
@@ -295,7 +298,10 @@ function unselectArmy(skipJoin) {
 function tmpUnselectArmy() {
     if(selectedArmy) {
         unselectedArmy = selectedArmy;
-        $('#army' + selectedArmy.armyId).css('box-shadow','none');
+        $('#army' + selectedArmy.armyId).css({
+            'box-shadow':'none',
+            'border':'none'
+        });
         board.css('cursor', 'default');
     }
     selectedArmy = null;
@@ -499,37 +505,6 @@ function computerArmiesUpdate(armies, color){
     delete armies[i];
 
     computerArmiesUpdate(armies, color);
-}
-
-function fight(r){
-    console.log(r);
-    if(r.victory) {
-        players[r.attackerColor].armies['army'+r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-        if(r.attackerColor==my.color){
-            newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
-            newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
-        }
-        if(isTruthful(r.defenderArmy)){
-            for(i in r.defenderArmy) {
-                deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor);
-            }
-        }
-        if(isTruthful(r.castleId)){
-            castleOwner(r.castleId, r.attackerColor);
-        }
-    } else {
-        if(isTruthful(r.defenderArmy)){
-            for(i in r.defenderArmy){
-                players[r.defenderColor].armies['army'+r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
-            }
-        }
-        deleteArmy('army' + r.attackerArmy.armyId, r.attackerColor);
-    }
-
-    if(r.attackerColor==my.color){
-        unselectEnemyArmy();
-        unlock();
-    }
 }
 
 function move(r, computer) {

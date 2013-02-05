@@ -6,7 +6,7 @@ $(document)[0].oncontextmenu = function() {
 // *** OTHER ***
 
 function turnOn() {
-    myCastlesAddCursor();
+    makeMyCursorUnlock();
     skippedArmies = new Array();
     my.turn = true;
     $('#nextTurn').removeClass('buttonOff');
@@ -17,11 +17,11 @@ function turnOn() {
 }
 
 function turnOff() {
-    myCastlesRemoveCursor();
     my.turn = false;
     unselectArmy();
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
+    makeMyCursorLock();
 }
 
 function changeTurn(color, nr) {
@@ -138,15 +138,23 @@ function setlock(){
     lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
-    $('body').css('cursor','wait');
 }
 
 function unlock(){
-    lock = false;
     if(my.turn){
+        lock = false;
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');
     }
+}
+
+function makeMyCursorUnlock(){
+    $('body *').css('cursor','url(../img/game/cursor.png), auto');
+    myCastlesAddCursor();
+}
+
+function makeMyCursorLock(){
+    $('body *').css('cursor','url(../img/game/cursor_hourglass.png), wait');
 }
 
 function titleBlink(msg) {
