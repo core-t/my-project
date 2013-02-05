@@ -2,25 +2,6 @@ function mElement(){
     return $('.terrain');
 }
 
-function startM(){
-    removeM();
-    mElement().after(
-        $('<div>')
-        .addClass('message')
-        .append($('<h3>').addClass('center').html('Press "Start" when ready.'))
-        .append(
-            $('<div>')
-            .addClass('button go')
-            .html('Start')
-            .click(function(){
-                removeM();
-            //                startGame();
-            })
-            )
-        .css('min-height','70px')
-        );
-}
-
 function lostM(color){
     removeM();
 
@@ -582,7 +563,6 @@ function castleM(castleId, color){
 }
 
 function battleM(data, clb) {
-    removeM();
     var battle = data.battle;
     var attackerColor = data.attackerColor;
     var defenderColor = data.defenderColor;
@@ -621,7 +601,7 @@ function battleM(data, clb) {
         .addClass('message')
         .css('display','none')
         .append(attack)
-        .append($('<p>').html('VS').addClass('center'))
+        .append($('<p id="vs">').html('VS').addClass('center'))
         );
 
     var defense = $('<div>').addClass('battle defense');
@@ -665,11 +645,18 @@ function battleM(data, clb) {
     var height = 62 + 31 + 14 + h * 31;
 
     $('.message')
-    .append($('<div>').addClass('button go').html('OK').click(function(){
-        removeM()
-    }))
+    .append($('<div id="battleOk">').addClass('button go').html('OK'))
     .css('min-height',height+'px');
 
+    if(my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)){
+        $('#battleOk').click(function(){
+            castleM(data.castleId, data.attackerColor);
+        });
+    }else{
+        $('#battleOk').click(function(){
+            removeM();
+        });
+    }
     if(newBattle){
         $('.message').fadeIn(100, function(){
             killM(newBattle, clb, data);
@@ -697,10 +684,6 @@ function killM(b, clb, data){
 
         if(isDigit(data.castleId) && isTruthful(data.victory)){
             castleOwner(data.castleId, data.attackerColor);
-            if(my.color == data.attackerColor){
-                console.log('castleM');
-                castleM(data.castleId, data.attackerColor);
-            }
         }
 
         return;
@@ -723,7 +706,7 @@ function killM(b, clb, data){
 
 function removeM(){
     if(typeof $('.message') != 'undefined') {
-        console.log('removeM');
+//        console.log('removeM');
         $('.message').remove();
     }
 }

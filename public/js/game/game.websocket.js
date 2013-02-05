@@ -21,14 +21,11 @@ function startWebSocket(){
 
                 case 'move':
                     //                    console.log(r);
-                    removeM();
                     move(r);
                     break;
 
                 case 'computer':
                     //                    console.log(r);
-                    removeM();
-
                     if(typeof r.path != 'undefined' && r.path){
                         move(r, 1);
                     }else{
@@ -46,7 +43,7 @@ function startWebSocket(){
                     break;
 
                 case 'nextTurn':
-                    console.log(r);
+//                    console.log(r);
                     unselectArmy();
                     if(r.lost){
                         lostM(r.color);
@@ -59,7 +56,7 @@ function startWebSocket(){
                     break;
 
                 case 'startTurn':
-                    console.log(r);
+//                    console.log(r);
                     if(typeof r.gameover != 'undefined'){
                         lostM(r.color);
                     }else if(r.color==my.color){
@@ -139,7 +136,7 @@ function startWebSocket(){
                     break;
 
                 case 'disbandArmy':
-                    if(typeof r.data.armyId != 'undefined'){
+                    if(typeof r.data.armyId != 'undefined' && r.color != 'undefined'){
                         removeM();
                         deleteArmy('army' + r.data.armyId, r.color);
                     }

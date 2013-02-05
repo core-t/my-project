@@ -315,10 +315,6 @@ function tmpUnselectArmy() {
     removeM();
 }
 
-function unselectEnemyArmy() {
-    selectedEnemyArmy = null;
-}
-
 function deleteArmy(armyId, color, quiet) {
     if(typeof players[color].armies[armyId] == 'undefined') {
         console.log('Brak armi o armyId = '+armyId+' i kolorze ='+color);
@@ -337,14 +333,6 @@ function deleteArmy(armyId, color, quiet) {
             delete players[color].armies[armyId];
         //            console.log('usuni\u0119ta ' + armyId + ' - ' + color);
         });
-    }
-}
-
-function deleteArmyByPosition(x, y, color) {
-    for(i in players[color].armies) {
-        if(players[color].armies[i].x == x && players[color].armies[i].y == y) {
-            deleteArmy(i, color, true);
-        }
     }
 }
 
@@ -368,48 +356,6 @@ function armyFields(a){
     }else{
         fields[a.y][a.x] = a.fieldType;
     }
-}
-
-function changeArmyPosition(x, y, armyId, color) {
-    if(typeof players[color].armies['army'+armyId] != 'undefined') {
-        removeM();
-        zoomer.lensSetCenter(x*40, y*40);
-        $('#army' + armyId).animate({
-            left: (x*40) + 'px',
-            top: (y*40) + 'px'
-        },300);
-    }else{
-        console.log('Army undefined');
-    }
-}
-
-function getEnemyCastleGarrison(castleId) {
-    var pos = castles[castleId].position;
-    var armies = new Array();
-    for(color in players) {
-        if(color == turn.color) {
-            continue;
-        }
-        for(i in players[color].armies) {
-            var a = players[color].armies[i];
-            if((a.x >= pos.x) && (a.x <= (pos.x + 1)) && (a.y >= pos.y) && (a.y <= (pos.y + 1))) {
-                armies[i] = a;
-            }
-        }
-    }
-    return armies;
-}
-
-function getNeutralCastleGarrison(){
-    var numberOfSoldiers = Math.ceil(turn.nr/10);
-    var string = '';
-    for(i = 1; i <= numberOfSoldiers; i++){
-        if(string){
-            string += ',';
-        }
-        string += '{"soldierId":"s'+i+'","name":"light infantry"}';
-    }
-    return jQuery.parseJSON('{"color":"neutral","heroes":[],"soldiers":['+string+']}');
 }
 
 function findNextArmy() {
@@ -508,6 +454,7 @@ function computerArmiesUpdate(armies, color){
 }
 
 function move(r, computer) {
+    removeM();
     zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
     if(typeof players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType != 'undefined'){
         fields[players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y][players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x] = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType;
@@ -564,8 +511,6 @@ function walkEnd(r, computer){
     if(r.attackerColor == my.color){
         if(!r.castleId && players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
             selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
-        }else{
-            unselectArmy();
         }
         unlock();
     }
