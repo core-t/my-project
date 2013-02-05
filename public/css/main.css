@@ -14,7 +14,8 @@ body {
     font-family: "Deutsch", Verdana, Tahoma;
     letter-spacing:1px;
     /*    color:#6C6E6D;*/
-    color:#878988;
+    /*color:#878988;*/
+    color:#878967;
     text-shadow:2px 2px 0 #000;
     text-transform:uppercase;
 }
@@ -100,7 +101,8 @@ input {
 .button:active, #submit:active {
     color:#000;
     text-shadow: none;
-    background:#500;
+    /*background:#500;*/
+    background:#fff;
     border-top:1px solid #111;
     border-left:1px solid #111;
     border-right:1px solid #555;

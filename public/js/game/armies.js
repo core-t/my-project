@@ -202,8 +202,8 @@ function myArmyMouse(id){
         $('#'+id).css('cursor', 'url(../img/game/cursor_select.png), default');
     }
     else {
-        $('#'+id+' *').css('cursor', 'default');
-        $('#'+id).css('cursor', 'default');
+        $('#'+id+' *').css('cursor', 'url(../img/game/cursor.png), default');
+        $('#'+id).css('cursor', 'url(../img/game/cursor.png), default');
     }
 }
 
@@ -212,7 +212,7 @@ function armiesAddCursorWhenSelectedArmy(){
 }
 
 function armiesAddCursorWhenUnselectedArmy(){
-    $('.army:not(.'+my.color+')').css('cursor','default');
+    $('.army:not(.'+my.color+')').css('cursor','url(../img/game/cursor.png), default');
 }
 
 function enemyArmyMouse(army){
@@ -302,7 +302,7 @@ function tmpUnselectArmy() {
             'box-shadow':'none',
             'border':'none'
         });
-        board.css('cursor', 'default');
+        board.css('cursor', 'url(../img/game/cursor.png), default');
     }
     selectedArmy = null;
     $('.path').remove();
@@ -562,7 +562,7 @@ function walkEnd(r, computer){
     newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
 
     if(r.attackerColor == my.color){
-        if(players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
+        if(!r.castleId && players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
             selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
         }else{
             unselectArmy();

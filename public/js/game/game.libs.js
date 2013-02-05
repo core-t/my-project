@@ -138,6 +138,7 @@ function setlock(){
     lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
+    makeMyCursorLock();
 }
 
 function unlock(){
@@ -145,11 +146,16 @@ function unlock(){
         lock = false;
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');
+        makeMyCursorUnlock();
     }
 }
 
 function makeMyCursorUnlock(){
     $('body *').css('cursor','url(../img/game/cursor.png), auto');
+    $('.zoomPup').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
+    $('#map').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
+    $('.c').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
+    $('.a').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
     myCastlesAddCursor();
 }
 

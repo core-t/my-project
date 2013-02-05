@@ -698,6 +698,7 @@ function killM(b, clb, data){
         if(isDigit(data.castleId) && isTruthful(data.victory)){
             castleOwner(data.castleId, data.attackerColor);
             if(my.color == data.attackerColor){
+                console.log('castleM');
                 castleM(data.castleId, data.attackerColor);
             }
         }
@@ -722,6 +723,7 @@ function killM(b, clb, data){
 
 function removeM(){
     if(typeof $('.message') != 'undefined') {
+        console.log('removeM');
         $('.message').remove();
     }
 }

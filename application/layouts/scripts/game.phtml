@@ -12,6 +12,7 @@
     <body>
         <div id="page">
             <div id="menuTop">
+                <div class="left" id="turnNumberLayout">Turn number: <span id="turnNumber"></span></div>
                 <?php echo $this->placeholder('logout') ?>
                 <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
             </div>
@@ -23,7 +24,7 @@
                 <div id="gameMenu">
                     <div class="gameMenu one">
                         <div id="turnBox">
-                            <div class="left">Turn number: <span id="turnNumber"></span></div>
+
                             <div class="right"><a id="nextTurn" class="button">Next turn >></a></div>
                         </div>
                         <div id="playersLabel">Players</div>

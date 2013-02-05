@@ -61,7 +61,7 @@ function castlesAddCursorWhenSelectedArmy(){
 }
 
 function castlesAddCursorWhenUnselectedArmy(){
-    $('.castle:not(.'+my.color+')').css('cursor','default');
+    $('.castle:not(.'+my.color+')').css('cursor','url(../img/game/cursor.png), default');
 }
 
 function myCastlesAddCursor(){
@@ -69,7 +69,7 @@ function myCastlesAddCursor(){
 }
 
 function myCastlesRemoveCursor(){
-    $('.castle.'+my.color).css('cursor', 'default');
+    $('.castle.'+my.color).css('cursor', 'url(../img/game/cursor.png), default');
 }
 
 function castleUpdate(data) {
@@ -100,7 +100,7 @@ function castleOwner(castleId, color) {
         castleFields(castleId, 'c');
         castle
         .css({
-            'cursor': 'default'
+            'cursor': 'url(../img/game/cursor.png), default'
         })
         .unbind('mouseover')
         .unbind('mousemove')

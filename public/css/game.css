@@ -13,8 +13,6 @@
 
 .zoomPad{
     float:left;
-    /*    width:218px;*/
-    /*    height:138px;*/
     position:relative;
     left:0;
     top:139px;
@@ -60,11 +58,10 @@
     position:absolute;
     width:80px;
     height:80px;
-    background: url(../img/game/castle_neutral.png) center center no-repeat;
+    background: url('../img/game/castle_neutral.png') center center no-repeat;
     border:none;
     cursor: crosshair;
     z-index: 202;
-    /*    display:none;*/
 }
 .c{
     width:4px;
@@ -261,7 +258,7 @@
     border:1px solid #555;
     z-index:7000;
     /*background: #444;*/
-    background: transparent url('../img/bg_1.jpg') repeat scroll top left;
+    /*background: transparent url('../img/bg_1.jpg') repeat scroll top left;*/
     position:relative;
     left:280px;
     top:50px;
@@ -269,6 +266,7 @@
     border-radius: 10px;
     box-shadow: 5px 5px 20px #000;
     text-shadow: 2px 2px 0 #000;
+    padding: 10px;
 }
 
 .message h3 {
@@ -289,16 +287,22 @@
 
 .message .production {
     background: #CECEb0;
-    /*text-shadow:2px 2px 0 #ddd;*/
     text-shadow:none;
     color: #000;
     margin-left: 1px;
+    border-radius: 4px;
+    padding: 2px;
 }
 
 .message .production .unit {
     margin:2px;
     text-align:center;
     border:1px solid #c0c0c0;
+    width: 158px;
+}
+
+.message .production input[type="radio"] {
+    margin: 5px;
 }
 
 .message .production .unit div {
@@ -562,4 +566,9 @@
     text-shadow: #000 1px 1px 3px;
     top:0px;
     left:220px;
+}
+
+#turnNumberLayout {
+    line-height: 20px;
+    padding-left: 5px;
 }
