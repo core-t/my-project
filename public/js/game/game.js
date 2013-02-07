@@ -64,27 +64,34 @@ var wsClosed = true;
 var loading = true;
 
 var messageLeft;
+var documentWidth;
+var documentHeigh;
 
 $(document).ready(function() {
-    var width = $(document).width();
-    var height = $(document).height() - 165;
-    $('.zoomWindow').css('height',height+'px');
+    documentWidth = $(document).width();
+    documentHeigh = $(document).height() - 20;
+    $('.zoomWindow').css('height',documentHeigh+'px');
 
-    messageLeft = width / 2 - 160;
+    messageLeft = documentWidth / 2 - 160;
 
-    var left = width - 252;
-    var top = height - 153;
+    var left = documentWidth - 252;
+    var top = documentHeigh - 153;
     $('#chatBox').css({
         'left':left+'px',
         'top':top+'px'
     });
+    var goldBoxLeft = left/2;
+    $('#goldBox').css({
+        'left':goldBoxLeft+'px'
+    });
+    $('#playersBox').css({
+        'left':left+'px'
+    });
     $('#armyBox').css({
         'left':left+'px'
     });
-
     prepareButtons();
-    terrain();
-    zoomer = new zoom(width, height);
+    zoomer = new zoom(documentWidth, documentHeigh);
     startWebSocket();
 });
 

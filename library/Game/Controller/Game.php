@@ -14,6 +14,7 @@ abstract class Game_Controller_Game extends Game_Controller_Action {
 
         $this->view->Logout($this->_namespace->player);
         $this->view->Websocket();
+        $this->view->googleAnalytics();
 
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');

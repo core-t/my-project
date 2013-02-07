@@ -29,12 +29,12 @@ function changeTurn(color, nr) {
         console.log('Turn "color" not set');
         return false;
     }
-    $('.'+turn.color+' .turn').html('');
+    $('#turn').css('background','none');
     turn.color = color;
     if(typeof nr != 'undefined'){
         turn.nr = nr;
     }
-    $('.'+turn.color+' .turn').html('Turn >');
+    $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
     $('#turnNumber').html(turn.nr);
     if(turn.color == my.color) {
         turnOn();
@@ -69,7 +69,9 @@ function startGame(){
         players[color].active = 0;
         $('.'+color +' .color').addClass(color +'bg');
         if(players[color].computer){
-            $('.'+color+' .color').css('background',color+' url(../img/game/computer.png) center center no-repeat');
+            $('.'+color+' .color .type').css('background','url(../img/game/computer.png) center center no-repeat');
+        }else{
+            $('.'+color+' .color .type').css('background','url(../img/game/human.png) center center no-repeat');
         }
         //            console.log(players[color]);
         for(i in players[color].armies) {
@@ -180,18 +182,6 @@ function titleBlink(msg) {
         window.onmousemove = null;
     };
 }
-
-function terrain(){
-    board.after(
-        $('<div>')
-        .addClass('terrain')
-        .append(' Terrain: ')
-        .append(
-            $('<span>').attr('id','coord')
-            )
-        );
-}
-
 
 function getColor(color){
     if(color == 'green'){
@@ -308,7 +298,7 @@ function prepareButtons(){
     $('#disbandArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
 
-    $('.'+my.color+' .color').append('You');
-    $('.'+turn.color+' .turn').html('Turn >');
+//    $('.'+my.color+' .color').append('You');
+    $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
     $('#turnNumber').html(turn.nr);
 }

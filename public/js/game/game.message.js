@@ -1,5 +1,5 @@
 function mElement(){
-    return $('.terrain');
+    return $('#terrain');
 }
 
 function lostM(color){
@@ -344,11 +344,13 @@ function armyStatusM(){
 
             );
     }
-    var height = numberOfUnits * 56 + 26;
-    if(height > 561){
-        height = 561;
+    var height = $('.message').height();
+    if(height > documentHeigh-100){
+        height = documentHeigh-100;
+        console.log(height);
         overflow = 'auto';
     }else{
+        console.log(height);
         overflow = 'hidden';
     }
     mElement().after(
@@ -359,6 +361,7 @@ function armyStatusM(){
             removeM()
         }))
         .css({
+            'height':height+'px',
             'left':messageLeft+'px',
             'overflow':overflow
         })
