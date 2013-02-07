@@ -63,10 +63,28 @@ var ws;
 var wsClosed = true;
 var loading = true;
 
+var messageLeft;
+
 $(document).ready(function() {
+    var width = $(document).width();
+    var height = $(document).height() - 165;
+    $('.zoomWindow').css('height',height+'px');
+
+    messageLeft = width / 2 - 160;
+
+    var left = width - 252;
+    var top = height - 153;
+    $('#chatBox').css({
+        'left':left+'px',
+        'top':top+'px'
+    });
+    $('#armyBox').css({
+        'left':left+'px'
+    });
+
     prepareButtons();
     terrain();
-    zoomer = new zoom(760, 670);
+    zoomer = new zoom(width, height);
     startWebSocket();
 });
 

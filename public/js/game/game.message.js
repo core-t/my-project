@@ -27,7 +27,7 @@ function lostM(color){
             })
             )
         .css({
-            'min-height':'70px'
+            'left':messageLeft+'px'
         })
         );
 }
@@ -57,8 +57,9 @@ function winM(color){
             })
             )
         .css({
-            'min-height':'70px'
+            'left':messageLeft+'px'
         })
+
         );
 }
 
@@ -81,7 +82,7 @@ function turnM(){
             })
             )
         .css({
-            'min-height':'70px'
+            'left':messageLeft+'px'
         })
         );
 }
@@ -106,7 +107,7 @@ function nextTurnM(){
             removeM()
         }))
         .css({
-            'min-height':'70px'
+            'left':messageLeft+'px'
         })
         );
 }
@@ -125,7 +126,9 @@ function simpleM(message){
                 removeM();
             })
             )
-        .css('min-height','70px')
+        .css({
+            'left':messageLeft+'px'
+        })
         );
 }
 
@@ -152,7 +155,9 @@ function disbandArmyM(){
         .append($('<div>').addClass('button cancel').html('Cancel').click(function(){
             removeM()
         }))
-        .css('min-height','70px')
+        .css({
+            'left':messageLeft+'px'
+        })
         );
 }
 
@@ -235,6 +240,7 @@ function splitArmyM(a){
                 )
             )
         .css({
+            'left':messageLeft+'px',
             'overflow-y':overflow
         })
         );
@@ -353,6 +359,7 @@ function armyStatusM(){
             removeM()
         }))
         .css({
+            'left':messageLeft+'px',
             'overflow':overflow
         })
         );
@@ -507,6 +514,9 @@ function castleM(castleId, color){
     mElement().after(
         $('<div>')
         .addClass('message')
+        .css({
+            'left':messageLeft+'px'
+        })
         .append(capital)
         .append($('<h3>').append(castles[castleId].name))
         .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
@@ -596,7 +606,10 @@ function battleM(data, clb) {
     mElement().after(
         $('<div>')
         .addClass('message')
-        .css('display','none')
+        .css({
+            'left':messageLeft+'px',
+            'display':'none'
+        })
         .append(attack)
         .append($('<p id="vs">').html('VS').addClass('center'))
         );

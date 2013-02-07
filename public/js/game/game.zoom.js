@@ -134,17 +134,21 @@ function zoom(zoomWidth, zoomHeight) {
         this.setdimensions = function () {
             this.node.w = (parseInt((settings.zoomWidth) / el.scale.x) > smallimage.w ) ? smallimage.w : (parseInt(settings.zoomWidth / el.scale.x));
             this.node.h = (parseInt((settings.zoomHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(settings.zoomHeight / el.scale.y));
+            this.node.css({
+                'width':this.node.w,
+                'height':this.node.h
+            });
             this.node.top = (smallimage.oh - this.node.h - 2) / 2;
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
         };
         this.setcenter = function (x, y) {
             //            console.log(el);
-            //            console.log(x);
-            //            console.log(y);
-            this.node.top = (parseInt(y) - 340)/20;
-            //            console.log(this.node.top);
-            this.node.left = (parseInt(x) - 380)/20;
-            //            console.log(this.node.left);
+//            console.log(x);
+//            console.log(y);
+            this.node.top = (parseInt(y) - settings.zoomHeight/2)/20;
+            console.log(this.node.top);
+            this.node.left = (parseInt(x) - settings.zoomWidth/2)/20;
+            console.log(this.node.left);
             if(this.node.top > 103){
                 this.node.top = 103;
             }else if(this.node.top < -1){
