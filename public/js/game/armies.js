@@ -209,10 +209,12 @@ function myArmyMouse(id){
 
 function armiesAddCursorWhenSelectedArmy(){
     $('.army:not(.'+my.color+')').css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+    $('.army:not(.'+my.color+') img').css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
 }
 
 function armiesAddCursorWhenUnselectedArmy(){
     $('.army:not(.'+my.color+')').css('cursor','url(../img/game/cursor.png), default');
+    $('.army:not(.'+my.color+') img').css('cursor','url(../img/game/cursor.png), default');
 }
 
 function enemyArmyMouse(army){
@@ -455,7 +457,12 @@ function computerArmiesUpdate(armies, color){
 
 function move(r, computer) {
     removeM();
-    zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
+    if(typeof r.path[1] == 'undefined'){
+        zoomer.lensSetCenter(r.attackerArmy.x*40, r.attackerArmy.y*40);
+    }else{
+        zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
+    }
+
     if(typeof players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType != 'undefined'){
         fields[players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y][players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x] = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType;
     }
@@ -471,8 +478,9 @@ function walk(r, xy, computer) {
 
     if(typeof r.path[i] == 'undefined') {
         //        console.log(data);
-
-        zoomer.lensSetCenter(xy.x*40, xy.y*40);
+        if(xy){
+            zoomer.lensSetCenter(xy.x*40, xy.y*40);
+        }
 
         if(isTruthful(r.battle)){
             battleM(r, function(){
@@ -510,9 +518,11 @@ function walkEnd(r, computer){
 
     if(r.attackerColor == my.color){
         if(!r.castleId && players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
+            unlock();
             selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
+        }else{
+            unlock();
         }
-        unlock();
     }
 
     if(isDigit(r.ruinId)){

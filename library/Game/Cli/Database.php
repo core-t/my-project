@@ -290,7 +290,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
     }
 
     static private function armyArray() {
-        return array('armyId', 'destroyed', 'x', 'y');
+        return array('armyId', 'destroyed', 'x', 'y', 'playerId');
     }
 
     static private function getArmyHeroes($gameId, $armyId, $in = false, $db = null) {
@@ -536,8 +536,10 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
             if (empty($result['heroes']) && empty($result['soldiers'])) {
                 $result['destroyed'] = true;
                 self::destroyArmy($gameId, $result['armyId'], $result['playerId'], $db);
+                unset($result['playerId']);
                 return $result;
             } else {
+                unset($result['playerId']);
                 $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $result['armyId'], $db);
                 return $result;
             }
@@ -740,6 +742,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                     self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
                     unset($result[$k]);
                 } else {
+                    unset($result[$k]['playerId']);
                     $result[$k]['heroes'] = $heroes;
                     $result[$k]['soldiers'] = $soldiers;
                 }
@@ -991,6 +994,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                     self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
                     unset($result[$k]);
                 } else {
+                    unset($result[$k]['playerId']);
                     $result[$k]['heroes'] = $heroes;
                     $result[$k]['soldiers'] = $soldiers;
                 }

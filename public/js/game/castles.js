@@ -100,7 +100,7 @@ function castleOwner(castleId, color) {
         castleFields(castleId, 'c');
         castle
         .css({
-            'cursor': 'url(../img/game/cursor.png), default'
+            'cursor': 'url(../img/game/cursor_castle.png), default'
         })
         .unbind('mouseover')
         .unbind('mousemove')

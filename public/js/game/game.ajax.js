@@ -1,6 +1,11 @@
 function setProductionA(castleId) {
+    console.log(castleId);
+
     var unitId
     var production = $('input:radio[name=production]:checked').val();
+
+    console.log(production);
+
     if(production == 'stop'){
         unitId = -1;
     }else{
@@ -8,9 +13,11 @@ function setProductionA(castleId) {
     }
 
     if(!unitId) {
+        console.log('Brak unitId!');
         return;
     }
     if(castles[castleId].currentProduction == unitId){
+        console.log('Current production');
         return;
     }
     $.getJSON('/production/set/castleId/'+castleId+'/unitId/'+unitId, function(result) {
@@ -20,7 +27,7 @@ function setProductionA(castleId) {
             }else{
                 $('#castle'+castleId).html($('<img>').attr('src','../img/game/castle_production.png').css('float','right'));
             }
-            $('.message').remove();
+            removeM();
             castles[castleId].currentProduction = unitId;
             castles[castleId].currentProductionTurn = 0;
         }

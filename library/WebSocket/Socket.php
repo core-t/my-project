@@ -56,7 +56,7 @@ class WebSocket_Socket {
     public function establishConnection($data) {
         $this->_connection = WebSocket_ConnectionFactory::fromSocketData($this, $data);
 
-        if ($this->_connection instanceof WebSocketConnectionFlash)
+        if ($this->_connection instanceof WebSocket_ConnectionFlash)
             return;
 
         foreach ($this->_observers as $observer) {
@@ -99,7 +99,7 @@ class WebSocket_Socket {
         return $this->_lastChanged;
     }
 
-    public function onFlashXMLRequest(WebSocketConnectionFlash $connection) {
+    public function onFlashXMLRequest(WebSocket_ConnectionFlash $connection) {
         foreach ($this->_observers as $observer) {
             $observer->onFlashXMLRequest($connection);
         }

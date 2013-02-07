@@ -70,7 +70,7 @@ function searchTower(x, y){
 function changeTower(x, y, towerId){
     if(fields[y][x] != 'e'){
         if(towers[towerId].color != turn.color){
-            if(turn.color==my.color){
+            if(turn.color==my.color || (my.game && players[turn.color].computer)){
                 addTowerA(towerId);
             }
             towers[towerId].color = turn.color;

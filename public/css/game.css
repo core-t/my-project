@@ -1,6 +1,11 @@
+#page {
+    background: none;
+    margin:0;
+    width:auto;
+}
+
 #game {
-    width:760px;
-    height:800px;
+    /*height:800px;*/
     background: transparent url('../img/bg_1.jpg') repeat scroll top left;
     font-size: 11px;
 }
@@ -49,7 +54,7 @@
     background:#000;
     display:block;
     overflow:hidden;
-    width: 760px;
+    /*width: 760px;*/
     height: 660px;
     clear:both;
 }
@@ -145,8 +150,7 @@
 }
 
 #gameMenu {
-    /*    float:right;*/
-    /*    height:130px;*/
+        height:145px;
 }
 
 #gameMenu span{
@@ -257,8 +261,7 @@
     min-height: 225px;
     border:1px solid #555;
     z-index:7000;
-    /*background: #444;*/
-    /*background: transparent url('../img/bg_1.jpg') repeat scroll top left;*/
+    background: transparent url('../img/game/message_bg.png');
     position:relative;
     left:280px;
     top:50px;
@@ -349,12 +352,12 @@
 }
 
 .message .split div.row{
-    background:#555;
     clear:both;
     height:31px;
-    border-left:1px solid #444;
-    border-right:1px solid #444;
-    border-top:1px solid #444;
+    margin: 1px;
+    padding: 3px;
+    border:1px solid #222;
+    border-radius: 3px;
 }
 
 .message .split div.row div{
@@ -395,12 +398,12 @@
 }
 
 .message .status div.row{
-    background:#555;
     clear:both;
-    height:55px;
-    border-left:1px solid #444;
-    border-right:1px solid #444;
-    border-top:1px solid #444;
+    height:52px;
+    margin: 1px;
+    padding: 3px;
+    border:1px solid #222;
+    border-radius: 3px;
 }
 
 .message .status div.row div{

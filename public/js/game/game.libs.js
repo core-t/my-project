@@ -11,7 +11,7 @@ function turnOn() {
     my.turn = true;
     $('#nextTurn').removeClass('buttonOff');
     $('#nextArmy').removeClass('buttonOff');
-    //    showFirstCastle();
+    showFirstCastle();
     turnM();
     titleBlink('Your turn!');
 }

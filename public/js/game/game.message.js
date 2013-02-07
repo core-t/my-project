@@ -235,8 +235,6 @@ function splitArmyM(a){
                 )
             )
         .css({
-            'min-height':height+'px',
-            'height':height+'px',
             'overflow-y':overflow
         })
         );
@@ -355,8 +353,6 @@ function armyStatusM(){
             removeM()
         }))
         .css({
-            'min-height':height+'px',
-            'height':height+'px',
             'overflow':overflow
         })
         );
@@ -382,6 +378,9 @@ function castleM(castleId, color){
     var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
     var j = 0;
     var td = new Array();
+
+    console.log(castles[castleId]);
+
     for(unitName in castles[castleId].production){
         var img = unitName.replace(' ', '_').toLowerCase();
         var unitId = getUnitId(unitName);
@@ -505,11 +504,9 @@ function castleM(castleId, color){
         });
         cssBuilDefense = {};
     }
-    var height = 62 + k*54 + 96;
     mElement().after(
         $('<div>')
         .addClass('message')
-        .css('min-height',height+'px')
         .append(capital)
         .append($('<h3>').append(castles[castleId].name))
         .append($('<h5>').append('Position: '+castles[castleId].position['x']+' East - '+castles[castleId].position['y']+' South'))
@@ -637,16 +634,9 @@ function battleM(data, clb) {
 
     $('.message').append(defense);
 
-    var h = 0;
-    if(h == 0) {
-        $('.message').append($('<div>').addClass('battle defense'));
-    }
+    $('.message').append($('<div>').addClass('battle defense'));
 
-    var height = 62 + 31 + 14 + h * 31;
-
-    $('.message')
-    .append($('<div id="battleOk">').addClass('button go').html('OK'))
-    .css('min-height',height+'px');
+    $('.message').append($('<div id="battleOk">').addClass('button go').html('OK'));
 
     if(my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)){
         $('#battleOk').click(function(){
@@ -706,7 +696,7 @@ function killM(b, clb, data){
 
 function removeM(){
     if(typeof $('.message') != 'undefined') {
-//        console.log('removeM');
+        //        console.log('removeM');
         $('.message').remove();
     }
 }

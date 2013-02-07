@@ -4,6 +4,10 @@ Image2= new Image(14,46);
 Image2.src = '../img/game/cursor_castle.png';
 Image3= new Image(25,26);
 Image3.src = '../img/game/cursor_select.png';
+Image4= new Image(9,20);
+Image4.src = '../img/game/cursor.png';
+
+
 Image12= new Image(33,18);
 Image12.src = '../img/game/cursor_arrow_e.png';
 Image13= new Image(18,34);

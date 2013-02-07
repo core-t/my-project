@@ -89,7 +89,7 @@ class Game_Cli_WofHandler extends WebSocket_UriHandler {
 
             $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
-            $this->sendToChannel($token, $users);
+            $this->sendToChannel($token, $users, 1);
 
             return;
         }
@@ -362,29 +362,6 @@ class Game_Cli_WofHandler extends WebSocket_UriHandler {
 
                 $this->sendToChannel($token, $users, 1);
                 break;
-
-//            case 'armies':
-//                $color = $dataIn['data']['color'];
-//                if (empty($color)) {
-//                    $this->sendError($user, 'Brak "color"!');
-//                    return;
-//                }
-//
-//                $playerId = Game_Cli_Database::getPlayerIdByColor($dataIn['gameId'], $color, $db);
-//                if (empty($playerId)) {
-//                    $this->sendError($user, 'Brak $playerId!');
-//                    return;
-//                }
-//                $token = array(
-//                    'type' => $dataIn['type'],
-//                    'data' => Game_Cli_Database::getPlayerArmies($dataIn['gameId'], $playerId),
-//                    'color' => Game_Cli_Database::getPlayerColor($dataIn['gameId'], $playerId, $db)
-//                );
-//
-//                $users = Game_Cli_Database::getInGameWSSUIdsExceptMine($dataIn['gameId'], $dataIn['playerId'], $db);
-//
-//                $this->sendToChannel($token, $users);
-//                break;
 
             case 'splitArmy':
                 $attackerArmyId = $dataIn['data']['armyId'];

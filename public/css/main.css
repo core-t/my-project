@@ -37,7 +37,7 @@ hr {
 }
 
 #menuTop {
-    width:760px;
+    /*width:760px;*/
     height:20px;
     background:transparent url('../img/nav_bg.png') repeat;
 }
