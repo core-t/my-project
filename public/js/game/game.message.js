@@ -209,13 +209,14 @@ function splitArmyM(a){
             })))
             );
     }
-    var height = numberOfUnits * 31 + 38;
-    if(height > 561){
-        height = 561;
-        overflow = 'scroll';
+    var height = numberOfUnits * 39;
+    if(height > documentHeigh-100){
+        height = documentHeigh-100;
+        overflow = 'auto';
     }else{
         overflow = 'hidden';
     }
+
     mElement().after(
         $('<div>')
         .addClass('message')
@@ -240,6 +241,7 @@ function splitArmyM(a){
                 )
             )
         .css({
+            'height':height+'px',
             'left':messageLeft+'px',
             'overflow-y':overflow
         })
@@ -344,13 +346,11 @@ function armyStatusM(){
 
             );
     }
-    var height = $('.message').height();
+    var height = numberOfUnits*60;
     if(height > documentHeigh-100){
         height = documentHeigh-100;
-        console.log(height);
         overflow = 'auto';
     }else{
-        console.log(height);
         overflow = 'hidden';
     }
     mElement().after(
