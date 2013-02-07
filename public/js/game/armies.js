@@ -267,6 +267,7 @@ function selectArmy(a) {
     $('#attack').html(a.attack);
     $('#defense').html(a.defense);
     $('#splitArmy').removeClass('buttonOff');
+    $('#unselectArmy').removeClass('buttonOff');
     $('#armyStatus').removeClass('buttonOff');
     $('#disbandArmy').removeClass('buttonOff');
     $('#skipArmy').removeClass('buttonOff');
@@ -309,6 +310,7 @@ function tmpUnselectArmy() {
     selectedArmy = null;
     $('.path').remove();
     $('#splitArmy').addClass('buttonOff');
+    $('#unselectArmy').addClass('buttonOff');
     $('#armyStatus').addClass('buttonOff');
     $('#skipArmy').addClass('buttonOff');
     $('#quitArmy').addClass('buttonOff');

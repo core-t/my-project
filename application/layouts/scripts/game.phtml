@@ -19,9 +19,11 @@
             <div id="game">
                 <!-- ZOOM WINDOW -->
                 <div class="zoomWindow">
-                    <div class="zoomPad">
-                        <div class="zoomPup"></div>
-                        <img id="map" src="/img/game/board.png" width="218px">
+                    <div class="zoomPadLayout">
+                        <div class="zoomPad">
+                            <div class="zoomPup"></div>
+                            <img id="map" src="/img/game/board.png" width="218px">
+                        </div>
                     </div>
                     <div id="terrain"> Terrain: <span id="coord" class="yellow"></span></div>
                     <div id="goldBox">
@@ -101,7 +103,10 @@
                                     <a id="skipArmy" class="button buttonOff">Skip in this turn</a>
                                 </div>
                                 <div class="left armyButton">
-                                    <a id="nextArmy" class="button buttonOff">Next army >></a>
+                                    <a id="unselectArmy" class="button buttonOff">Unselect army</a>
+                                </div>
+                                <div class="left armyButton">
+                                    <a id="nextArmy" class="button buttonOff">Find next army >></a>
                                 </div>
                             </div>
                         </div>

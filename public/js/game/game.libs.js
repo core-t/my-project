@@ -284,6 +284,11 @@ function prepareButtons(){
             disbandArmyM()
         }
     });
+    $('#unselectArmy').click(function(){
+        if(selectedArmy){
+            unselectArmy();
+        }
+    });
     $('#searchRuins').click(function(){
         wsSearchRuins()
     });
@@ -298,7 +303,7 @@ function prepareButtons(){
     $('#disbandArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
 
-//    $('.'+my.color+' .color').append('You');
+    //    $('.'+my.color+' .color').append('You');
     $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
     $('#turnNumber').html(turn.nr);
 }

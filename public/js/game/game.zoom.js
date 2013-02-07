@@ -154,8 +154,8 @@ function zoom(zoomWidth, zoomHeight) {
             }else if(this.node.top < -1){
                 this.node.top = -1;
             }
-            if(this.node.left > 179){
-                this.node.left = 179;
+            if(this.node.left > 134){
+                this.node.left = 134;
             }else if(this.node.left < -1){
                 this.node.left = -1;
             }
