@@ -647,6 +647,7 @@
 }
 
 #turnNumberLayout {
+    height: 20px;
     line-height: 20px;
     padding-left: 5px;
 }

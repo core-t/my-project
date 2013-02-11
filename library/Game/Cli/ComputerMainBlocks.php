@@ -290,7 +290,7 @@ class Game_Cli_ComputerMainBlocks {
         return array(
             'defenderColor' => $fightEnemy['defenderColor'],
             'defenderArmy' => $defenderArmy,
-            'attackerColor' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db),
+            'attackerColor' => Game_Cli_Database::getColorByPlayerId($gameId, $playerId, $db),
             'attackerArmy' => $attackerArmy,
             'battle' => $fightEnemy['battle'],
             'victory' => $fightEnemy['victory'],
@@ -378,7 +378,7 @@ class Game_Cli_ComputerMainBlocks {
                 if (Game_Cli_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
                     $armyId = Game_Cli_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
                     if (!$armyId) {
-                        $armyId = Game_Cli_Database::createArmy($gameId, $castle['position'], $playerId, $db);
+                        $armyId = Game_Cli_Database::createArmy($gameId, $db, $castle['position'], $playerId);
                     }
                     Game_Cli_Database::addSoldierToArmy($gameId, $armyId, $castleProduction['production'], $db);
                 }
@@ -403,7 +403,7 @@ class Game_Cli_ComputerMainBlocks {
             $gold = $gold + $income - $costs;
             Game_Cli_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
             $action = 'start';
-            $color = Game_Cli_Database::getPlayerColor($gameId, $playerId, $db);
+            $color = Game_Cli_Database::getColorByPlayerId($gameId, $playerId, $db);
         }
 
         return array(

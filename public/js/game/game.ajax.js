@@ -37,7 +37,3 @@ function setProductionA(castleId) {
 function addTowerA(towerId){
     $.getJSON('/tower/add/tid/'+towerId+'/c/'+turn.color)
 }
-
-function webSocketOpenA(wssuid){
-    $.getJSON('/websocket/open/wssuid/'+wssuid);
-}

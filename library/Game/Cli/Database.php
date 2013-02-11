@@ -11,7 +11,7 @@ class Game_Cli_Database {
                 ));
     }
 
-    static public function update($name, $data, $where, $db = null) {
+    static public function update($name, $data, $where, $db) {
         $updateResult = $db->update($name, $data, $where);
         switch ($updateResult)
         {
@@ -46,10 +46,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isPlayerCastle($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isPlayerCastle($gameId, $castleId, $playerId, $db) {
+
 
         $select = $db->select()
                 ->from('castle', 'castleId')
@@ -69,10 +67,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isCastleRazed($gameId, $castleId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isCastleRazed($gameId, $castleId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'razed')
                 ->where('"gameId" = ?', $gameId)
@@ -86,10 +82,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function joinArmiesAtPosition($gameId, $position, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function joinArmiesAtPosition($gameId, $position, $playerId, $db) {
+
         $select = $db->select()
                 ->from('army', 'armyId')
                 ->where('"gameId" = ?', $gameId)
@@ -128,10 +122,9 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function heroesUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function heroesUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
+
+
         $data = array(
             'armyId' => $newArmyId
         );
@@ -146,10 +139,9 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function soldiersUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function soldiersUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
+
+
         $data = array(
             'armyId' => $newArmyId
         );
@@ -164,14 +156,12 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function updateArmyPosition($gameId, $armyId, $playerId, $data, $db = null) {
+    static public function updateArmyPosition($gameId, $armyId, $playerId, $data, $db) {
         $data1 = array(
             'x' => $data['x'],
             'y' => $data['y'],
         );
-        if (!$db) {
-            $db = self::getDb();
-        }
+
 
         $select1 = $db->select()
                 ->from('heroesingame', array('movesLeft', 'heroId'))
@@ -239,11 +229,11 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db = null) {
+    static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db) {
         $fields = Application_Model_Board::getBoardFields();
-        if (!$db) {
-            $db = self::getDb();
-        }
+
+
+
 
         $select = $db->select()
                 ->from('army', array('x', 'y'))
@@ -264,10 +254,10 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db) {
+
+
+
 
         $select = $db->select()
                 ->from('army', self::armyArray())
@@ -278,8 +268,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         try {
             $result = $db->fetchRow($select);
             if (isset($result['armyId'])) {
-                $result['heroes'] = self::getArmyHeroes($gameId, $armyId, $db);
-                $result['soldiers'] = self::getArmySoldiers($gameId, $armyId, $db);
+                $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
+                $result['soldiers'] = self::getArmySoldiers($gameId, $armyId, false, $db);
                 $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
                 return $result;
             }
@@ -293,11 +283,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         return array('armyId', 'destroyed', 'x', 'y', 'playerId');
     }
 
-    static private function getArmyHeroes($gameId, $armyId, $in = false, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static private function getArmyHeroes($gameId, $armyId, $in, $db) {
         $select = $db->select()
                 ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
@@ -321,10 +307,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function getArtefactsByHeroId($gameId, $heroId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function getArtefactsByHeroId($gameId, $heroId, $db) {
+
 
         $select = $db->select()
                 ->from(array('a' => 'inventory'))
@@ -339,11 +323,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function getArmySoldiers($gameId, $armyId, $in = false, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static private function getArmySoldiers($gameId, $armyId, $in, $db) {
         $select = $db->select()
                 ->from(array('a' => 'soldier'))
                 ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('unitId', 'name', 'numberOfMoves', 'attackPoints', 'defensePoints', 'canFly', 'canSwim', 'cost'))
@@ -363,7 +343,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function calculateArmyMovesLeft($gameId, $armyId, $db = null) {
+    static public function calculateArmyMovesLeft($gameId, $armyId, $db) {
         $heroMovesLeft = self::getMinHeroesMovesLeft($gameId, $armyId, $db);
         $soldierMovesLeft = self::getMinSoldiersMovesLeft($gameId, $armyId, $db);
 
@@ -381,11 +361,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         return 0;
     }
 
-    static private function getMinHeroesMovesLeft($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static private function getMinHeroesMovesLeft($gameId, $armyId, $db) {
         $select = $db->select()
                 ->from('heroesingame', 'min("movesLeft")')
                 ->where('"gameId" = ?', $gameId)
@@ -398,11 +374,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function getMinSoldiersMovesLeft($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static private function getMinSoldiersMovesLeft($gameId, $armyId, $db) {
         $select = $db->select()
                 ->from('soldier', 'min("movesLeft")')
                 ->where('"gameId" = ?', $gameId)
@@ -415,12 +387,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db = null) {
-
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db) {
         $select = $db->select()
                 ->from('playersingame', 'webSocketServerUserId')
                 ->where('"gameId" = ?', $gameId)
@@ -434,12 +401,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getInGameWSSUIds($gameId, $db = null) {
-
-        if (!$db) {
-            $db = self::getDb();
-        }
-
+    static public function getInGameWSSUIds($gameId, $db) {
         $select = $db->select()
                 ->from('playersingame', 'webSocketServerUserId')
                 ->where('"gameId" = ?', $gameId);
@@ -452,10 +414,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isPlayerTurn($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isPlayerTurn($gameId, $playerId, $db) {
+
 
         $select = $db->select()
                 ->from('game', array('turnPlayerId'))
@@ -469,10 +429,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getPlayerIdByColor($gameId, $color, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getPlayerIdByColor($gameId, $color, $db) {
+
 
         $select = $db->select()
                 ->from('playersingame', 'playerId')
@@ -486,10 +444,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getPlayerArmies($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getPlayerArmies($gameId, $playerId, $db) {
+
 
         $select = $db->select()
                 ->from('army', self::armyArray())
@@ -516,10 +472,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getArmyByArmyId($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getArmyByArmyId($gameId, $armyId, $db) {
+
         $select = $db->select()
                 ->from('army', self::armyArray())
                 ->where('"gameId" = ?', $gameId)
@@ -548,10 +502,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function destroyArmy($gameId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function destroyArmy($gameId, $armyId, $playerId, $db) {
+
         $data = array(
             'destroyed' => 'true'
         );
@@ -567,10 +519,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function ruinExists($gameId, $ruinId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function ruinExists($gameId, $ruinId, $db) {
+
         $select = $db->select()
                 ->from('ruin', 'ruinId')
                 ->where('"ruinId" = ?', $ruinId)
@@ -583,10 +533,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getPlayerColor($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getColorByPlayerId($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('playersingame', 'color')
                 ->where('"gameId" = ?', $gameId)
@@ -599,10 +547,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function addCastle($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function addCastle($gameId, $castleId, $playerId, $db) {
+
         $data = array(
             'castleId' => $castleId,
             'playerId' => $playerId,
@@ -615,10 +561,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getCastleDefenseModifier($gameId, $castleId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getCastleDefenseModifier($gameId, $castleId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'defenseMod')
                 ->where('"gameId" = ?', $gameId)
@@ -630,10 +574,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getTurn($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getTurn($gameId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'game'), array('nr' => 'turnNumber'))
                 ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
@@ -646,10 +588,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isEnemyCastle($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isEnemyCastle($gameId, $castleId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'castleId')
                 ->where('razed = false')
@@ -667,10 +607,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllUnitsFromCastlePosition($gameId, $position, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getAllUnitsFromCastlePosition($gameId, $position, $db) {
+
         $xs = array(
             $position['x'],
             $position['x'] + 1
@@ -714,10 +652,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function updateAllArmiesFromCastlePosition($gameId, $position, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function updateAllArmiesFromCastlePosition($gameId, $position, $db) {
+
         $xs = array(
             $position['x'],
             $position['x'] + 1
@@ -754,10 +690,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function changeOwner($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function changeOwner($gameId, $castleId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId)
@@ -775,10 +709,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function armyRemoveHero($gameId, $heroId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function armyRemoveHero($gameId, $heroId, $db) {
+
         $data = array(
             'armyId' => null
         );
@@ -793,10 +725,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function razeCastle($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function razeCastle($gameId, $castleId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId),
@@ -814,10 +744,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getPlayerInGameGold($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getPlayerInGameGold($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('playersingame', 'gold')
                 ->where('"playerId" = ?', $playerId)
@@ -830,10 +758,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function updatePlayerInGameGold($gameId, $playerId, $gold, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function updatePlayerInGameGold($gameId, $playerId, $gold, $db) {
+
         $data['gold'] = $gold;
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -846,10 +772,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getCastle($gameId, $castleId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getCastle($gameId, $castleId, $db) {
+
         $select = $db->select()
                 ->from('castle')
                 ->where('"gameId" = ?', $gameId)
@@ -862,10 +786,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function buildDefense($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function buildDefense($gameId, $castleId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId),
@@ -881,10 +803,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db) {
+
         $ids = '';
         $select = $db->select()
                 ->from('army', 'armyId')
@@ -924,10 +844,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db) {
+
         $ids = '';
         $select = $db->select()
                 ->from('army', 'armyId')
@@ -956,10 +874,6 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
     }
 
     static public function getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db) {
-        if (!$db) {
-            $db = self::getDb();
-        }
-
         $select = $db->select()
                 ->from(array('a' => 'soldier'), null)
                 ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
@@ -974,10 +888,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function updateAllArmiesFromPosition($gameId, $position, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function updateAllArmiesFromPosition($gameId, $position, $db) {
+
         $select = $db->select()
                 ->from('army', self::armyArray())
                 ->where('"gameId" = ?', $gameId)
@@ -1006,10 +918,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function destroySoldier($gameId, $soldierId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function destroySoldier($gameId, $soldierId, $db) {
+
         $where = array(
             $db->quoteInto('"soldierId" = ?', $soldierId),
             $db->quoteInto('"gameId" = ?', $gameId)
@@ -1021,10 +931,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function searchRuin($gameId, $ruinId, $heroId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function searchRuin($gameId, $ruinId, $heroId, $armyId, $playerId, $db) {
+
         $turn = self::getTurn($gameId, $db);
 
         $random = rand(0, 100);
@@ -1112,10 +1020,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         return $find;
     }
 
-    static public function addRuin($gameId, $ruinId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function addRuin($gameId, $ruinId, $db) {
+
         $data = array(
             'ruinId' => $ruinId,
             'gameId' => $gameId
@@ -1127,10 +1033,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db) {
+
         if ($heroId != self::getHeroIdByPlayerId($gameId, $playerId, $db)) {
             echo('HeroId jest inny');
             return;
@@ -1150,10 +1054,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getHeroIdByPlayerId($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getHeroIdByPlayerId($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'hero'), 'heroId')
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
@@ -1167,10 +1069,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function addSoldierToArmy($gameId, $armyId, $unitId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function addSoldierToArmy($gameId, $armyId, $unitId, $db) {
+
         $select = $db->select()
                 ->from('unit', 'numberOfMoves')
                 ->where('"unitId" = ?', $unitId);
@@ -1187,10 +1087,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getHeroIdByArmyIdPlayerId($gameId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getHeroIdByArmyIdPlayerId($gameId, $armyId, $playerId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'hero'), 'heroId')
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
@@ -1205,10 +1103,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('army', array('x', 'y'))
                 ->where('"gameId" = ?', $gameId)
@@ -1223,16 +1119,14 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function splitArmy($gameId, $h, $s, $parentArmyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function splitArmy($gameId, $h, $s, $parentArmyId, $playerId, $db) {
+
         $position = self::getArmyPositionByArmyId($gameId, $parentArmyId, $playerId, $db);
         $heroesIds = explode(',', $h);
         $soldiersIds = explode(',', $s);
 
         if ((isset($heroesIds[0]) && !empty($heroesIds[0])) || (isset($soldiersIds) && !empty($soldiersIds))) {
-            $newArmyId = self::createArmy($gameId, array('x' => $position['x'], 'y' => $position['y']), $playerId, 0, $db);
+            $newArmyId = self::createArmy($gameId, $db, array('x' => $position['x'], 'y' => $position['y']), $playerId);
             foreach ($heroesIds as $heroId)
             {
                 if (!empty($heroId)) {
@@ -1249,10 +1143,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function createArmy($gameId, $position, $playerId, $sleep = 0, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function createArmy($gameId, $db, $position, $playerId, $sleep = 0) {
+
         $armyId = self::getNewArmyId($gameId, $db);
         $data = array(
             'armyId' => $armyId,
@@ -1270,15 +1162,13 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
                 return;
             }
             sleep(rand(0, $sleep));
-            $armyId = self::createArmy($gameId, $position, $playerId, $sleep + 1, $db);
+            $armyId = self::createArmy($gameId, $db, $position, $playerId, $sleep + 1);
         }
         return $armyId;
     }
 
-    static private function getNewArmyId($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function getNewArmyId($gameId, $db) {
+
         $select = $db->select()
                 ->from('army', 'max("armyId")')
                 ->where('"gameId" = ?', $gameId);
@@ -1290,10 +1180,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function heroUpdateArmyId($gameId, $heroId, $newArmyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function heroUpdateArmyId($gameId, $heroId, $newArmyId, $db) {
+
         $data = array(
             'armyId' => $newArmyId
         );
@@ -1308,10 +1196,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db) {
+
         $data = array(
             'armyId' => $newArmyId
         );
@@ -1326,10 +1212,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isHeroInGame($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isHeroInGame($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'hero'), 'heroId')
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
@@ -1346,10 +1230,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function connectHero($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function connectHero($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('hero', 'heroId')
                 ->where('"playerId" = ?', $playerId);
@@ -1367,10 +1249,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getDeadHeroId($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getDeadHeroId($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'hero'), 'heroId')
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', 'armyId')
@@ -1388,21 +1268,17 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
     }
 
     static public function heroResurection($gameId, $heroId, $position, $playerId, $db) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+
         $armyId = self::getArmyIdFromPosition($gameId, $position, $db);
         if (!$armyId) {
-            $armyId = self::createArmy($gameId, $position, $playerId, 0, $db);
+            $armyId = self::createArmy($gameId, $db, $position, $playerId);
         }
         self::addHeroToArmy($gameId, $armyId, $heroId, 0, $db);
         return $armyId;
     }
 
-    static public function getArmyIdFromPosition($gameId, $position, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getArmyIdFromPosition($gameId, $position, $db) {
+
         $select = $db->select()
                 ->from('army', 'armyId')
                 ->where('"gameId" = ?', $gameId)
@@ -1420,10 +1296,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function addHeroToArmy($gameId, $armyId, $heroId, $movesLeft, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function addHeroToArmy($gameId, $armyId, $heroId, $movesLeft, $db) {
+
         $data = array(
             'armyId' => $armyId,
             'movesLeft' => $movesLeft
@@ -1439,7 +1313,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function areUnitsAtCastlePosition($gameId, $position, $db = null) {
+    static public function areUnitsAtCastlePosition($gameId, $position, $db) {
         $xs = array(
             $position['x'],
             $position['x'] + 1
@@ -1462,10 +1336,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isGameMaster($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isGameMaster($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('game', array('gameMasterId'))
                 ->where('"gameId" = ?', $gameId)
@@ -1480,10 +1352,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllPlayerArmiesExeptOne($gameId, $armyId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getAllPlayerArmiesExeptOne($gameId, $armyId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('army', array('x', 'y'))
                 ->where('"gameId" = ?', $gameId)
@@ -1498,10 +1368,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getTurnPlayerId($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getTurnPlayerId($gameId, $db) {
+
         $select = $db->select()
                 ->from('game', 'turnPlayerId')
                 ->where('"gameId" = ?', $gameId);
@@ -1513,10 +1381,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function isComputer($playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function isComputer($playerId, $db) {
         $select = $db->select()
                 ->from('player', 'computer')
                 ->where('"playerId" = ?', $playerId);
@@ -1528,10 +1393,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function playerTurnActive($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function playerTurnActive($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('playersingame', 'turnActive')
                 ->where('"playerId" = ?', $playerId)
@@ -1545,10 +1408,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function turnActivate($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function turnActivate($gameId, $playerId, $db) {
+
         $data = array(
             'turnActive' => 'true'
         );
@@ -1570,10 +1431,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function resetHeroesMovesLeft($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function resetHeroesMovesLeft($gameId, $playerId, $db) {
+
         $heroId = self::getHeroIdByPlayerId($gameId, $playerId, $db);
         $select = $db->select()
                 ->from('hero', 'numberOfMoves')
@@ -1592,10 +1451,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function resetSoldiersMovesLeft($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function resetSoldiersMovesLeft($gameId, $playerId, $db) {
+
         $select1 = $db->select()
                 ->from('unit', 'numberOfMoves')
                 ->where('soldier."unitId" = unit."unitId"');
@@ -1618,10 +1475,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getComputerArmyToMove($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getComputerArmyToMove($gameId, $playerId, $db) {
+
         $armies = self::getPlayerArmies($gameId, $playerId, $db);
         foreach ($armies as $army)
         {
@@ -1632,10 +1487,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getTurnNumber($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getTurnNumber($gameId, $db) {
+
         $select = $db->select()
                 ->from('game', 'turnNumber')
                 ->where('"gameId" = ?', $gameId);
@@ -1647,10 +1500,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getPlayerCastles($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getPlayerCastles($gameId, $playerId, $db) {
+
         $playersCastles = array();
         $select = $db->select()
                 ->from('castle')
@@ -1670,10 +1521,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllCastles($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getAllCastles($gameId, $db) {
+
         $castles = array();
         $select = $db->select()
                 ->from('castle')
@@ -1690,10 +1539,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getCastleProduction($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getCastleProduction($gameId, $castleId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('castle', array('production', 'productionTurn'))
                 ->where('"gameId" = ?', $gameId)
@@ -1707,10 +1554,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId),
@@ -1727,10 +1572,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function resetProductionTurn($gameId, $castleId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function resetProductionTurn($gameId, $castleId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId),
@@ -1746,10 +1589,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function enemiesCastlesExist($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function enemiesCastlesExist($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'castleId')
                 ->where('"playerId" != ?', $playerId)
@@ -1766,10 +1607,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function zeroArmyMovesLeft($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function zeroArmyMovesLeft($gameId, $armyId, $db) {
+
         $data = array(
             'movesLeft' => 0
         );
@@ -1785,10 +1624,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getFull($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getFull($gameId, $db) {
+
         $select = $db->select()
                 ->from('ruin', 'ruinId')
                 ->where('"gameId" = ?', $gameId);
@@ -1808,10 +1645,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getRazedCastles($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getRazedCastles($gameId, $db) {
+
         $castles = array();
         $select = $db->select()
                 ->from('castle')
@@ -1830,10 +1665,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getAllEnemiesArmies($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getAllEnemiesArmies($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('army', self::armyArray())
                 ->where('"gameId" = ?', $gameId)
@@ -1861,7 +1694,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function calculateMaxArmyMoves($gameId, $armyId, $db = null) {
+    static public function calculateMaxArmyMoves($gameId, $armyId, $db) {
         $heroMoves = self::getMaxHeroesMoves($gameId, $armyId, $db);
         $soldierMoves = self::getMaxSoldiersMoves($gameId, $armyId, $db);
         if ($heroMoves > $soldierMoves) {
@@ -1871,10 +1704,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function getMaxHeroesMoves($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function getMaxHeroesMoves($gameId, $armyId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'hero'), 'max("numberOfMoves")')
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
@@ -1888,10 +1719,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static private function getMaxSoldiersMoves($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static private function getMaxSoldiersMoves($gameId, $armyId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'unit'), 'max("numberOfMoves")')
                 ->join(array('b' => 'soldier'), 'a."unitId" = b."unitId"', '')
@@ -1907,10 +1736,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
 
     static $playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
-    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db) {
+
         $find = false;
 
         /* szukam następnego koloru w dostępnych kolorach */
@@ -1973,14 +1800,12 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         );
     }
 
-    static public function getPlayersInGameReady($gameId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getPlayersInGameReady($gameId, $db) {
+
         $select = $db->select()
                 ->from(array('a' => 'playersingame'))
                 ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-                ->where('ready = true')
+                ->where('color is not null')
                 ->where('a."gameId" = ?', $gameId);
         try {
             return $db->query($select)->fetchAll();
@@ -1990,10 +1815,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function playerCastlesExists($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function playerCastlesExists($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'castleId')
                 ->where('"playerId" = ?', $playerId)
@@ -2010,10 +1833,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function playerArmiesExists($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function playerArmiesExists($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('army', 'armyId')
                 ->where('"gameId" = ?', $gameId)
@@ -2030,16 +1851,14 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function endGame($gameId, $db = null) {
+    static public function endGame($gameId, $db) {
         $data['isActive'] = 'false';
 
         self::updateGame($gameId, $data, $db);
     }
 
-    static public function updateGame($gameId, $data, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function updateGame($gameId, $data, $db) {
+
         $where = $db->quoteInto('"gameId" = ?', $gameId);
         try {
             return self::update('game', $data, $where, $db);
@@ -2048,10 +1867,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function updateTurnNumber($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function updateTurnNumber($gameId, $playerId, $db) {
+
         if (self::isGameMaster($gameId, $playerId, $db)) {
             $select = $db->select()
                     ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
@@ -2078,10 +1895,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function raiseAllCastlesProductionTurn($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function raiseAllCastlesProductionTurn($gameId, $playerId, $db) {
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
@@ -2096,10 +1911,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function setPlayerLostGame($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function setPlayerLostGame($gameId, $playerId, $db) {
+
         $data['lost'] = 'true';
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -2112,10 +1925,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getColorByArmyId($gameId, $armyId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getColorByArmyId($gameId, $armyId, $db) {
+
         $select = $db->select()
                 ->from('army', 'playerId')
                 ->where('"gameId" = ?', $gameId)
@@ -2123,7 +1934,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         try {
             $playerId = $db->fetchOne($select);
             if ($playerId) {
-                return self::getPlayerColor($gameId, $playerId, $db);
+                return self::getColorByPlayerId($gameId, $playerId, $db);
             } else {
                 print_r(debug_backtrace(0, 2));
             }
@@ -2133,10 +1944,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getColorByCastleId($gameId, $castleId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getColorByCastleId($gameId, $castleId, $db) {
+
         $select = $db->select()
                 ->from('castle', 'playerId')
                 ->where('"gameId" = ?', $gameId)
@@ -2144,7 +1953,7 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         try {
             $playerId = $db->fetchOne($select);
             if ($playerId) {
-                return self::getPlayerColor($gameId, $playerId, $db);
+                return self::getColorByPlayerId($gameId, $playerId, $db);
             } else {
                 print_r(debug_backtrace(0, 2));
             }
@@ -2154,10 +1963,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function getUnitIdByName($name, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getUnitIdByName($name, $db) {
+
         $select = $db->select()
                 ->from('unit', 'unitId')
                 ->where('name = ?', $name);
@@ -2169,10 +1976,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function playerLost($gameId, $playerId, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function playerLost($gameId, $playerId, $db) {
+
         $select = $db->select()
                 ->from('playersingame', 'lost')
                 ->where('"playerId" = ?', $playerId)
@@ -2186,10 +1991,8 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         }
     }
 
-    static public function checkAccessKey($gameId, $playerId, $accessKey, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function checkAccessKey($gameId, $playerId, $accessKey, $db) {
+
         $select = $db->select()
                 ->from('playersingame', 'playerId')
                 ->where('"playerId" = ?', $playerId)
@@ -2200,6 +2003,259 @@ Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+        }
+    }
+
+    static public function updatePlayerInGameWSSUId($gameId, $playerId, $wssuid, $db) {
+
+        $data = array(
+            'webSocketServerUserId' => $wssuid
+        );
+        $where = array(
+            $db->quoteInto('"playerId" = ?', $playerId),
+            $db->quoteInto('"gameId" = ?', $gameId)
+        );
+        try {
+            return self::update('playersingame', $data, $where, $db);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function getPlayersWaitingForGame($gameId, $db) {
+
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), array('color', 'playerId'))
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
+                ->where('a."gameId" = ?', $gameId)
+                ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getGameMasterId($gameId, $db) {
+        $select = $db->select()
+                ->from('game', 'gameMasterId')
+                ->where('"gameId" = ?', $gameId);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function isColorInGame($gameId, $color, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+                ->where('"gameId" = ?', $gameId)
+                ->where('color = ?', $color)
+                ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getComputerPlayerId($gameId, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+                ->where('"gameId" != ?', $gameId)
+                ->where('color IS NOT NULL')
+                ->where('computer = true');
+        $ids = self::getComputerPlayersIds($gameId, $db);
+        if ($ids) {
+            $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
+        }
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getComputerPlayersIds($gameId, $db) {
+        $ids = '';
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), 'playerId')
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+                ->where('a."gameId" = ?', $gameId)
+                ->where('color IS NOT NULL')
+                ->where('computer = true');
+        try {
+            foreach ($db->query($select)->fetchAll() as $row)
+            {
+                if ($ids) {
+                    $ids .= ',';
+                }
+                $ids .= $row['playerId'];
+            }
+            return $ids;
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function createPlayer($data, $db) {
+        try {
+            $db->insert('player', $data);
+            $seq = $db->quoteIdentifier('player_playerId_seq');
+            return $db->lastSequenceId($seq);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function createComputerPlayer($db) {
+        $data = array(
+            'firstName' => 'Computer',
+            'lastName' => 'Player',
+            'computer' => 'true'
+        );
+        return self::createPlayer($data, $db);
+    }
+
+    static public function createHero($playerId, $db) {
+        $data = array(
+            'playerId' => $playerId
+        );
+        try {
+            $db->insert('hero', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function joinGame($gameId, $playerId, $db) {
+        $data = array(
+            'gameId' => $gameId,
+            'playerId' => $playerId,
+            'accessKey' => self::generateKey()
+        );
+        try {
+            $db->insert('playersingame', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function updatePlayerReady($gameId, $playerId, $color, $db) {
+        if ($color && self::getColorByPlayerId($gameId, $playerId, $db) == $color) {
+            $data['color'] = null;
+        } else {
+            $data['color'] = $color;
+        }
+
+        $where = array(
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"playerId" = ?', $playerId)
+        );
+
+        self::update('playersingame', $data, $where, $db);
+    }
+
+    static public function disconnectFromGame($gameId, $playerId, $db) {
+        $where = array(
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"playerId" = ?', $playerId)
+        );
+        try {
+            $db->delete('playersingame', $where);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static private function generateKey() {
+        return md5(rand(0, time()));
+    }
+
+    static public function isPlayerInGame($gameId, $playerId, $db) {
+        $select = $db->select()
+                ->from('playersingame', 'gameId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"playerId" = ?', $playerId);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function disconnectNotActive($gameId, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), 'playerId')
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', '')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"webSocketServerUserId" IS NULL')
+                ->where('computer = false');
+        $where = array(
+            $db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString()))
+        );
+        try {
+            $db->delete('playersingame', $where);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function startGame($gameId, $db) {
+        $data = array(
+            'turnPlayerId' => self::getPlayerIdByColor($gameId, 'white', $db),
+            'isOpen' => 'false'
+        );
+        self::updateGame($gameId, $data, $db);
+    }
+
+    static public function getComputerPlayers($gameId, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), array('color', 'playerId'))
+                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
+                ->where('a."gameId" = ?', $gameId)
+                ->where('color IS NOT NULL')
+                ->where('computer = true');
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function getHeroes($playerId, $db) {
+        $select = $db->select()
+                ->from('hero')
+                ->where('"playerId" = ?', $playerId);
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function addHeroToGame($gameId, $armyId, $heroId, $db) {
+        $data = array(
+            'heroId' => $heroId,
+            'armyId' => $armyId,
+            'gameId' => $gameId,
+            'movesLeft' => 16
+        );
+        try {
+            return $db->insert('heroesingame', $data);
+        } catch (Exception $e) {
+            echo($e);
         }
     }
 

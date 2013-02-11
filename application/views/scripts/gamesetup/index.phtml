@@ -1,12 +1,12 @@
 <h1>New game</h1>
-<p>Maximum number of players: <?php echo $this->game['numberOfPlayers'] ?></p>
+<p>Maximum number of players: <?php echo $this->numberOfPlayers ?></p>
 <h2>Players:</h2>
 <table id="playersingame">
     <th>Player name & color</th><th>Select your color</th><th>Human/AI</th>
     <?php
-    for ($i = 0; $i < $this->game['numberOfPlayers']; $i++)
+    for ($i = 0; $i < $this->numberOfPlayers; $i++)
     {
-        echo '<tr id="' . $this->colors[$i] . '"><td class="td1"><div class="left"></div><div class="right">' . $this->colors[$i] . '</div></td><td id="td2"></td><td class="td3"></td></tr>';
+        echo '<tr id="' . $this->colors[$i] . '"><td class="td1"><div class="left"></div><div class="right">' . $this->colors[$i] . '</div></td><td class="td2"></td><td class="td3"></td></tr>';
     }
     ?>
 </table>
@@ -23,17 +23,11 @@
 </ul>
 
 <script type="text/javascript">
-    var urlStart = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'gamestart', 'gameId' => null)); ?>';
-    var urlRedirectStart = '<?php echo $this->url(array('controller' => 'gamesetup', 'action' => 'start', 'gameId' => null)); ?>';
-    var urlRedirectKick = '<?php echo $this->url(array('controller' => 'new', 'action' => 'index', 'gameId' => null)); ?>';
-    var urlReady = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'ready', 'gameId' => null)) ?>';
-    var urlKick = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'kick', 'gameId' => null)) ?>';
-    var urlHumanAI = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'humanai', 'gameId' => null)) ?>';
-    var urlRefresh = '<?php echo $this->url(array('controller' => 'gamesetupajax', 'action' => 'refresh', 'gameId' => null)) ?>';
-    var numberOfPlayers = <?php echo (int) $this->game['numberOfPlayers'] ?>;
-    var ready = '<?php echo $this->player['ready'] ?>';
+    var numberOfPlayers = <?php echo (int) $this->numberOfPlayers ?>;
     var colors = <?php echo Zend_Json::encode($this->colors) ?>;
+
+    var gameId = <?php echo (int) $this->gameId ?>;
     var playerId = <?php echo (int) $this->player['playerId'] ?>;
-    var start = 0;
-    var gameMaster = 0;
+    var accessKey = '<?php echo  $this->accessKey ?>';
+
 </script>

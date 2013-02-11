@@ -10,7 +10,7 @@ class Game_Cli_Turn {
 
         $response = array();
         $nextPlayer = array(
-            'color' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db)
+            'color' => Game_Cli_Database::getColorByPlayerId($gameId, $playerId, $db)
         );
 
         while (empty($response))
@@ -63,7 +63,7 @@ class Game_Cli_Turn {
                 $income += $castle['income'];
                 $armyId = Game_Cli_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
                 if (!$armyId) {
-                    $armyId = Game_Cli_Database::createArmy($gameId, $castle['position'], $playerId, $db);
+                    $armyId = Game_Cli_Database::createArmy($gameId, $db, $castle['position'], $playerId);
                 }
                 if (!empty($armyId)) {
                     $castleProduction = Game_Cli_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
@@ -102,7 +102,7 @@ class Game_Cli_Turn {
                 'income' => $income,
                 'armies' => $array,
                 'castles' => $castles,
-                'color' => Game_Cli_Database::getPlayerColor($gameId, $playerId, $db)
+                'color' => Game_Cli_Database::getColorByPlayerId($gameId, $playerId, $db)
             );
         }
     }

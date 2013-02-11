@@ -209,7 +209,7 @@ function splitArmyM(a){
             })))
             );
     }
-    var height = numberOfUnits * 39;
+    var height = numberOfUnits * 39 + 40;
     if(height > documentHeigh-100){
         height = documentHeigh-100;
         overflow = 'auto';

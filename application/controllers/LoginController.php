@@ -6,6 +6,7 @@ class LoginController extends Zend_Controller_Action {
         /* Initialize action controller here */
         $this->_namespace = Game_Namespace::getNamespace(); // default namespace
         $this->_helper->layout->setLayout('login');
+        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
     }
 
     public function indexAction() {
@@ -13,7 +14,6 @@ class LoginController extends Zend_Controller_Action {
         $form = new Application_Form_Auth();
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                $login = $this->_request->getParam('login');
                 $modelPlayer = new Application_Model_Player(null, false);
                 $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
                 if ($playerId) {
@@ -32,7 +32,7 @@ class LoginController extends Zend_Controller_Action {
     public function logoutAction() {
         // action body
         Zend_Session::destroy(true);
-        $this->_helper->redirector('index', 'login');
+        $this->_redirect('/login');
     }
 
     public function registrationAction() {

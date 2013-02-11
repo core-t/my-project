@@ -59,10 +59,6 @@ var myCastles = false;
 var enemyArmies = false;
 var enemyCastles = false;
 
-var ws;
-var wsClosed = true;
-var loading = true;
-
 var messageLeft;
 var documentWidth;
 var documentHeigh;

@@ -1,5 +1,5 @@
 function startWebSocket(){
-    ws = new WebSocket(wsURL);
+    ws = new WebSocket(wsURL+'/game');
 
     ws.onopen = function() {
         wsClosed = false;
@@ -106,12 +106,6 @@ function startWebSocket(){
                     }
                     break;
 
-                //                case 'armies':
-                //                    for(i in r.data){
-                //                        players[r.color].armies[i] = new army(r.data[i], r.color);
-                //                    }
-                //                    break;
-
                 case 'splitArmy':
                     removeM();
                     players[r.color].armies['army'+r.data.parentArmy.armyId] = new army(r.data.parentArmy, r.color);
@@ -157,8 +151,6 @@ function startWebSocket(){
                         startGame();
                         loading = false;
                     }
-
-                    webSocketOpenA(r.wssuid);
                     break;
 
                 case 'chat':
@@ -509,7 +501,10 @@ function wsChat() {
 
 function wsOpen(){
     var token = {
-        type: 'open'
+        type: 'open',
+        gameId: gameId,
+        playerId: my.id,
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));

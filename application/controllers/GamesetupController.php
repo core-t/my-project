@@ -4,74 +4,81 @@ class GamesetupController extends Game_Controller_Gui {
 
     public function _init() {
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
+        $this->view->Websocket();
     }
 
     public function indexAction() {
         $this->view->headScript()->appendFile('/js/gamesetup.js');
         $gameId = $this->_request->getParam('gameId');
-        if (!empty($gameId)) {
-            $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
-            if (isset($this->_namespace->armyId)) {
-                unset($this->_namespace->armyId);
-            }
-            $modelGame = new Application_Model_Game($gameId);
-            $modelGame->updateGameMaster($this->_namespace->player['playerId']);
-//             $playersInGame = $modelGame->getPlayersWaitingForGame();
-            $this->view->colors = $modelGame->getAllColors();
-            $this->_request->getParam('gameId');
-            if ($modelGame->getGameMaster() != $this->_namespace->player['playerId']) {
-                if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
-                    $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
-                }
-                $modelGame->joinGame($this->_namespace->player['playerId']);
-            }
-            $this->view->game = $modelGame->getGame(); // pobieram informację na temat gry
-            $this->_namespace->player['ready'] = $modelGame->isPlayerReady($this->_namespace->player['playerId']);
-            $this->view->player = $this->_namespace->player;
-        } else {
+        if (empty($gameId)) {
             throw new Exception('Brak gameId!');
         }
+        if (isset($this->_namespace->armyId)) {
+            unset($this->_namespace->armyId);
+        }
+
+        $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
+
+        $modelGame = new Application_Model_Game($gameId);
+        $modelGame->updateGameMaster($this->_namespace->player['playerId']);
+
+        if ($modelGame->getGameMasterId() != $this->_namespace->player['playerId']) {
+            if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
+                $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
+            }
+            $modelGame->joinGame($this->_namespace->player['playerId']);
+        } elseif (!$modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
+            $modelGame->joinGame($this->_namespace->player['playerId']);
+        }
+
+        $this->view->colors = $modelGame->getAllColors();
+        $this->view->numberOfPlayers = $modelGame->getNumberOfPlayers();
+        $this->view->accessKey = $modelGame->getAccessKey($this->_namespace->player['playerId']);
+        $this->view->gameId = $gameId;
+        $this->view->player = $this->_namespace->player;
+        print_r($this->view->game);
     }
 
     public function startAction() {
-        if (!empty($this->_namespace->gameId)) {
-            if (empty($this->_namespace->armyId)) {
-                $modelGame = new Application_Model_Game($this->_namespace->gameId);
-                if (!$modelGame->isPlayerReady($this->_namespace->player['playerId'])) {
-                    $this->_redirect('/new');
-                }
-                $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-                $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
-                $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-                $startPositions = Application_Model_Board::getDefaultStartPositions();
-                $playerHeroes = $modelHero->getHeroes();
-                $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
-                if (empty($playerHeroes)) {
-                    $modelHero->createHero();
-                    $playerHeroes = $modelHero->getHeroes();
-                }
-                $armyId = $modelArmy->createArmy(
-                        $startPositions[$this->_namespace->player['color']]['position'], $this->_namespace->player['playerId']);
-                $res = $modelArmy->addHeroToGame($armyId, $playerHeroes[0]['heroId']);
-                switch ($res)
-                {
-                    case 1:
-                        $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
-                        $this->_namespace->armyId = $armyId;
-                        break;
-                    case 0:
-                        throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
-                        break;
-                    case null:
-                        throw new Exception('Zapytanie zwróciło błąd');
-                        break;
-                    default:
-                        throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
-                        break;
-                }
-            }
-        } else {
+        if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak gameId!');
+        }
+        if ($this->_namespace->armyId) {
+            throw new Exception('Jest już armyId!');
+        }
+        $modelGame = new Application_Model_Game($this->_namespace->gameId);
+        if (!$modelGame->isPlayerReady($this->_namespace->player['playerId'])) {
+            $this->_redirect('/new');
+        }
+
+        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
+        $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
+        $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
+        $startPositions = Application_Model_Board::getDefaultStartPositions();
+        $playerHeroes = $modelHero->getHeroes();
+        $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
+        if (empty($playerHeroes)) {
+            $modelHero->createHero();
+            $playerHeroes = $modelHero->getHeroes();
+        }
+        $armyId = $modelArmy->createArmy(
+                $startPositions[$this->_namespace->player['color']]['position'], $this->_namespace->player['playerId']);
+        $res = $modelArmy->addHeroToGame($armyId, $playerHeroes[0]['heroId']);
+        switch ($res)
+        {
+            case 1:
+                $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
+                $this->_namespace->armyId = $armyId;
+                break;
+            case 0:
+                throw new Exception('Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane');
+                break;
+            case null:
+                throw new Exception('Zapytanie zwróciło błąd');
+                break;
+            default:
+                throw new Exception('Nieznany błąd. Możliwe, że został zaktualizowany więcej niż jeden rekord.');
+                break;
         }
     }
 

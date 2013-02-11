@@ -77,7 +77,7 @@ class GameController extends Game_Controller_Game {
             $this->view->myTurn = 'false';
         }
 
-        $gameMasterId = $mGame->getGameMaster();
+        $gameMasterId = $mGame->getGameMasterId();
         if ($gameMasterId == $this->_namespace->player['playerId']) {
             $this->view->myGame = 1;
         } else {

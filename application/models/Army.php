@@ -416,27 +416,27 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
     }
 
     public function allArmiesReady() {
+        $select = $this->_db->select()
+                ->from($this->_name, 'count(*) as number')
+                ->where('"gameId" = ?', $this->_gameId);
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name, 'count(*) as number')
-                    ->where('"gameId" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0]['number'])) {
-                $numberOfArmies = $result[0]['number'];
-                $select = $this->_db->select()
-                        ->from('playersingame', 'count(*) as number')
-                        ->where('ready = true')
-                        ->where('"gameId" = ?', $this->_gameId)
-                        ->where('"timeout" > (SELECT now() - interval \'60 seconds\')');
-                $result = $this->_db->query($select)->fetchAll();
-                if (isset($result[0]['number'])) {
-                    if ($numberOfArmies >= $result[0]['number']) {
-                        return true;
-                    }
-                }
-            }
-        } catch (PDOException $e) {
+            $numberOfArmies = $this->_db->fetchOne($select);
+        } catch (Exception $e) {
             throw new Exception($select->__toString());
+        }
+
+        $select = $this->_db->select()
+                ->from('playersingame', 'count(*) as number')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('color IS NOT NULL');
+        try {
+            $numberOfPlayers = $this->_db->fetchOne($select);
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+
+        if ($numberOfArmies >= $numberOfPlayers) {
+            return true;
         }
     }
 

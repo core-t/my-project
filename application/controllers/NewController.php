@@ -2,18 +2,13 @@
 
 class NewController extends Game_Controller_Gui {
 
-    public function _init() {
-
-    }
-
     public function indexAction() {
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
-        $modelGame = new Application_Model_Game();
-        $this->view->openGames = $modelGame->getOpen();
         if ($this->_namespace->gameId) {
-//             $modelGame->disconnectFromGame($this->_namespace->gameId, $this->_namespace->player['playerId']);
             unset($this->_namespace->gameId);
         }
+        $modelGame = new Application_Model_Game();
+        $this->view->openGames = $modelGame->getOpen();
         $this->view->player = $this->_namespace->player;
     }
 
