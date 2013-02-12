@@ -41,6 +41,14 @@ function test(){
     var pX = null;
     var pY = null;
 
+    for(y in fieldsOryginal){
+        for(x in fieldsOryginal[y]){
+            if(fieldsOryginal[y][x] == 'e'){
+                console.log(y+' '+x);
+            }
+        }
+    }
+
     $('.path').remove();
     for(y in fields){
         for(x in fields[y]){
@@ -54,39 +62,40 @@ function test(){
                         left:pX,
                         top:pY,
                         'text-align':'center',
-                        'z-index':10000
+                        'z-index':100
                     })
                     .html('e')
                     );
-            }else if(!fields[y][x]){
-                pX = x*40;
-                pY = y*40;
-                board.append(
-                    $('<div>')
-                    .addClass('path')
-                    .css({
-                        left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':10000
-                    })
-                    .html('X')
-                    );
-            }else if(all){
-                pX = x*40;
-                pY = y*40;
-                board.append(
-                    $('<div>')
-                    .addClass('path')
-                    .css({
-                        left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':10000
-                    })
-                    .html(fields[y][x])
-                    );
             }
+        //            else if(!fields[y][x]){
+        //                pX = x*40;
+        //                pY = y*40;
+        //                board.append(
+        //                    $('<div>')
+        //                    .addClass('path')
+        //                    .css({
+        //                        left:pX,
+        //                        top:pY,
+        //                        'text-align':'center',
+        //                        'z-index':10000
+        //                    })
+        //                    .html('X')
+        //                    );
+        //            }else if(all){
+        //                pX = x*40;
+        //                pY = y*40;
+        //                board.append(
+        //                    $('<div>')
+        //                    .addClass('path')
+        //                    .css({
+        //                        left:pX,
+        //                        top:pY,
+        //                        'text-align':'center',
+        //                        'z-index':10000
+        //                    })
+        //                    .html(fields[y][x])
+        //                    );
+        //            }
         }
     }
 //    console.log('PLAYERS:');

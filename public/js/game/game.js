@@ -28,6 +28,8 @@ Image19.src = '../img/game/cursor_arrow_sw.png';
 var newX = 0;
 var newY = 0;
 
+var fields = new Array();
+
 var lock = true;
 
 var selectedArmy = null;
@@ -86,6 +88,8 @@ $(document).ready(function() {
     $('#armyBox').css({
         'left':left+'px'
     });
+
+    fieldsCopy();
     prepareButtons();
     zoomer = new zoom(documentWidth, documentHeigh);
     startWebSocket();

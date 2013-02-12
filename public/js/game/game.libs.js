@@ -307,3 +307,12 @@ function prepareButtons(){
     $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
     $('#turnNumber').html(turn.nr);
 }
+
+function fieldsCopy(){
+    for(y in fieldsOryginal){
+        fields[y] = new Array();
+        for(x in fieldsOryginal[y]){
+            fields[y][x] = fieldsOryginal[y][x];
+        }
+    }
+}

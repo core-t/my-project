@@ -126,9 +126,9 @@ function army(obj, color) {
             fields[this.y][this.x] = 'S';
         }
     } else { // nie moja armia
-        if(fields[this.y][this.x] != 'e'){
-            this.fieldType = fields[this.y][this.x];
-        }
+        //        if(fields[this.y][this.x] != 'e'){
+        //            this.fieldType = fields[this.y][this.x];
+        //        }
         fields[this.y][this.x] = 'e';
         enemyArmyMouse(this);
     }
@@ -462,12 +462,14 @@ function move(r, computer) {
     if(typeof r.path[1] == 'undefined'){
         zoomer.lensSetCenter(r.attackerArmy.x*40, r.attackerArmy.y*40);
     }else{
+        var a = players[r.attackerColor].armies['army'+r.attackerArmy.armyId];
+        console.log(a);
+        console.log(fields[a.y][a.x]);
+        fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
         zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
     }
 
-    if(typeof players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType != 'undefined'){
-        fields[players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y][players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x] = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].fieldType;
-    }
+
     walk(r, null, computer);
 }
 

@@ -22,7 +22,9 @@ class GameController extends Game_Controller_Game {
         $this->view->headScript()->appendFile('/js/game/game.websocket.js');
         $this->view->headScript()->appendFile('/js/game/game.ajax.js');
         $this->view->headScript()->appendFile('/js/game/game.message.js');
+
         $this->_helper->layout->setLayout('game');
+
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
         $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
@@ -93,7 +95,7 @@ class GameController extends Game_Controller_Game {
         {
             $this->view->ruins[$id]['e'] = 1;
         }
-        $this->view->fields = Application_Model_Board::getBoardFields();
+        $this->view->fields = Zend_Json::encode(Application_Model_Board::getBoardFields());
         foreach ($castlesSchema as $id => $castle)
         {
             if (!isset($razed[$id])) {
