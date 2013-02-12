@@ -32,7 +32,7 @@ class Game_Cli_Turn {
                     $response['nr'] = $turn['nr'];
                 }
             } else {
-                Game_Cli_Database::setPlayerLostGame($gameId, $nextPlayer['playerId']);
+                Game_Cli_Database::setPlayerLostGame($gameId, $nextPlayer['playerId'], $db);
             }
         }
 

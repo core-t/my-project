@@ -14,6 +14,7 @@ function turnOn() {
     showFirstCastle();
     turnM();
     titleBlink('Your turn!');
+    test();
 }
 
 function turnOff() {
@@ -34,7 +35,7 @@ function changeTurn(color, nr) {
     if(typeof nr != 'undefined'){
         turn.nr = nr;
     }
-    $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
+    $('#turn').css('background', color);
     $('#turnNumber').html(turn.nr);
     if(turn.color == my.color) {
         turnOn();
@@ -51,9 +52,6 @@ function startGame(){
         setTimeout ( 'startGame()', 1000 );
         return;
     }
-
-    var x;
-    var y;
 
     for(i in castles) {
         new createNeutralCastle(i);
@@ -73,7 +71,7 @@ function startGame(){
         }else{
             $('.'+color+' .color .type').css('background','url(../img/game/human.png) center center no-repeat');
         }
-        //            console.log(players[color]);
+
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
             if(color == my.color){
@@ -82,6 +80,11 @@ function startGame(){
                 enemyArmies = true;
             }
         }
+
+        if(players[color].armies == ""){
+            $('.nr.'+color).html('<img src="/img/game/skull_and_crossbones.png" />');
+        }
+
         for(i in players[color].castles) {
             updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
@@ -304,7 +307,7 @@ function prepareButtons(){
     $('#searchRuins').addClass('buttonOff');
 
     //    $('.'+my.color+' .color').append('You');
-    $('#turn').css('background','url(../img/game/turn_'+turn.color+'.png)');
+    $('#turn').css('background',turn.color);
     $('#turnNumber').html(turn.nr);
 }
 

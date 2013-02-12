@@ -12,8 +12,8 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
 
         $dataIn = Zend_Json::decode($msg->getData());
-        print_r('ZAPYTANIE ');
-        print_r($dataIn);
+//        print_r('ZAPYTANIE ');
+//        print_r($dataIn);
 
         $db = Game_Cli_Database::getDb();
 
@@ -83,7 +83,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     break;
             }
 
-            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db), 1);
+            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db));
             return;
         }
 
@@ -129,7 +129,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                $canFly = -count($army['heroes']);
+                $canFly = -count($army['heroes'])+1;
                 $canSwim = 0;
 
                 foreach ($army['soldiers'] as $soldier)
@@ -217,7 +217,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
 
                 if (!$move['currentPosition']) {
                     print_r($move);
-                    $this->sendError($user, 'Nie wykonano ruchu');
+                    $this->sendError($user, 'Za mało punktów ruchu aby wykonać akcję');
                     return;
                 }
 
@@ -353,7 +353,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
 
                 $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
-                $this->sendToChannel($token, $users, 1);
+                $this->sendToChannel($token, $users);
                 break;
 
             case 'splitArmy':
@@ -531,7 +531,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
 
                 $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
 
-                $this->sendToChannel($token, $users, 1);
+                $this->sendToChannel($token, $users);
 
                 break;
 

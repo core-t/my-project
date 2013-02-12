@@ -49,7 +49,7 @@ function test(){
         }
     }
 
-    $('.path').remove();
+    $('.field').remove();
     for(y in fields){
         for(x in fields[y]){
             if(fields[y][x] == 'e'){
@@ -57,15 +57,11 @@ function test(){
                 pY = y*40;
                 board.append(
                     $('<div>')
-                    .addClass('path')
+                    .addClass('field')
                     .css({
                         left:pX,
-                        top:pY,
-                        'text-align':'center',
-                        'z-index':100
-                    })
-                    .html('e')
-                    );
+                        top:pY
+                    }));
             }
         //            else if(!fields[y][x]){
         //                pX = x*40;

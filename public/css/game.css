@@ -34,7 +34,7 @@
 .zoomPadLayout{
     position:absolute;
     cursor: default;
-    z-index:10000;
+    z-index:21000;
     background: transparent url('../img/game/message_bg.png');
     border-bottom-right-radius: 10px;
     border:1px solid #555;
@@ -47,13 +47,13 @@
 }
 .zoomPup{
     background-color: #FFF;
-    opacity: 0.6;
+    opacity: 0.25;
     border:1px solid #fff;
-    z-index:1000;
     top: 0;
     left: 0;
     position: absolute;
     cursor: url('../img/game/lupa.png') 13 13, crosshair;
+    z-index:21001;
 }
 
 #map {
@@ -81,7 +81,7 @@
     background: url('../img/game/castle_neutral.png') center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 202;
+    z-index: 2202;
 }
 .c{
     width:4px;
@@ -98,7 +98,7 @@
     background: url(../img/game/ruin.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 200;
+    z-index: 2200;
 }
 .tower {
     position:absolute;
@@ -107,7 +107,7 @@
     background: url(../img/game/tower_neutral.png) center center no-repeat;
     border:none;
     cursor: crosshair;
-    z-index: 200;
+    z-index: 2200;
 }
 .army {
     position:absolute;
@@ -115,7 +115,7 @@
     height:40px;
     border:none;
     border-radius:3px;
-    z-index: 1000;
+    z-index: 10000;
 }
 .a{
     width:2px;
@@ -136,8 +136,7 @@
     padding: 2px;
     border:none;
     border-radius: 3px;
-    z-index:201;
-    /*padding-left:2px;*/
+    z-index:2201;
     color:white;
     text-shadow:none;
     background:#000;
@@ -153,15 +152,16 @@
 }
 
 .field {
-    width:38px;
-    height:38px;
-    position:inherit;
-    border:1px solid white;
-    color:yellow;
-    font-size:10px;
-    text-align:center;
-    line-height:38px;
-    z-index:7000;
+    position:absolute;
+    width:34px;
+    height:34px;
+    margin:1px;
+    padding: 2px;
+    border:none;
+    z-index:1700;
+    color:#000;
+    background:yellow;
+    opacity:0.33;
 }
 
 #gameMenu {
@@ -222,7 +222,7 @@
 #playersBox{
     position:absolute;
     color:white;
-    z-index:7000;
+    z-index:27000;
     top: 0px;
     background: transparent url('../img/game/message_bg.png');
     border-bottom-left-radius: 10px;
@@ -286,16 +286,15 @@
 }
 
 #turn{
-    width: 20px;
-    height: 20px;
+    width: 80px;
+    height: 80px;
     background: #000;
-    border-radius: 10px;
+    border-radius: 40px;
     position: absolute;
-    top: 133px;
-    left: 112px;
-    z-index: 8000;
+    top: 102px;
+    left: 83px;
+    z-index: 28000;
 }
-
 
 #armyButtonsBox{
     /*    height:69px;*/
@@ -314,7 +313,7 @@
     width: 321px;
     min-height: 70px;
     border:1px solid #555;
-    z-index:7000;
+    z-index:27000;
     background: transparent url('../img/game/message_bg.png');
     position:absolute;
     top:50px;
@@ -542,7 +541,7 @@
 #chatBox{
     text-transform: none;
     position: absolute;
-    z-index: 7000;
+    z-index: 27000;
     background: transparent url('../img/game/message_bg.png');
     width: 252px;
     border-top-left-radius: 10px;
@@ -595,7 +594,7 @@
 #goldBox{
     position: absolute;
     color: #fff;
-    z-index: 7000;
+    z-index: 27000;
     top: 3px;
 }
 
@@ -604,7 +603,7 @@
     height:14px;
 }
 
-.yellow{
+.font-yellow{
     color:yellow;
 }
 
@@ -615,7 +614,7 @@
 #armyBox{
     position: absolute;
     color: #fff;
-    z-index: 7000;
+    z-index: 27000;
     top: 316px;
     background: transparent url('../img/game/message_bg.png');
     border-top-left-radius: 10px;
@@ -641,7 +640,7 @@
 #terrain {
     position:absolute;
     color:white;
-    z-index:7000;
+    z-index:27000;
     left:240px;
     top: 3px;
 }

@@ -12,7 +12,7 @@
     <body>
         <div id="page">
             <div id="menuTop">
-                <div class="left" id="turnNumberLayout">Turn number: <span id="turnNumber" class="yellow"></span></div>
+                <div class="left" id="turnNumberLayout">Turn number: <span id="turnNumber" class="font-yellow"></span></div>
                 <?php echo $this->placeholder('logout') ?>
                 <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
             </div>
@@ -25,27 +25,27 @@
                             <img id="map" src="/img/game/board.png" width="218px">
                         </div>
                     </div>
-                    <div id="terrain"> Terrain: <span id="coord" class="yellow"></span></div>
+                    <div id="terrain"> Terrain: <span id="coord" class="font-yellow"></span></div>
                     <div id="goldBox">
                         <div class="left">
                             <div>Income</div>
-                            <div class="text-right yellow" id="income">0</div>
+                            <div class="text-right font-yellow" id="income">0</div>
                         </div>
                         <div class="left">
                             <div>Costs</div>
-                            <div class="text-right yellow" id="costs">0</div>
+                            <div class="text-right font-yellow" id="costs">0</div>
                         </div>
                         <div class="left">
                             <div>Treasure</div>
-                            <div class="text-right yellow" id="gold">0</div>
+                            <div class="text-right font-yellow" id="gold">0</div>
                         </div>
                     </div>
                     <div id="playersBox">
                         <div id="turn"></div>
-                        <div id="first" class="nr">1</div>
-                        <div id="second" class="nr">2</div>
-                        <div id="third" class="nr">3</div>
-                        <div id="fourth" class="nr">4</div>
+                        <div id="first" class="nr white">1</div>
+                        <div id="second" class="nr yellow">2</div>
+                        <div id="third" class="nr green">3</div>
+                        <div id="fourth" class="nr red">4</div>
                         <div id="playersLabel">Players</div>
                         <div class="playersBox">
                             <div class="left white">
@@ -76,11 +76,11 @@
                         </div>
                     </div>
                     <div id="armyBox">
-                        <div id="nameBox">Name: <span id="name" class="yellow"></span></div>
+                        <div id="nameBox">Name: <span id="name" class="font-yellow"></span></div>
                         <div id="attrBox">
-                            <div class="left">Moves: <span id="moves" class="yellow"></span></div>
-                            <div class="left">Attack: <span id="attack" class="yellow"></span></div>
-                            <div class="left">Defense: <span id="defense" class="yellow"></span></div>
+                            <div class="left">Moves: <span id="moves" class="font-yellow"></span></div>
+                            <div class="left">Attack: <span id="attack" class="font-yellow"></span></div>
+                            <div class="left">Defense: <span id="defense" class="font-yellow"></span></div>
                         </div>
                         <div id="armyButtonsBox">
                             <div class="armyButtons">

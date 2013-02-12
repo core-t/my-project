@@ -48,9 +48,9 @@ function createNeutralCastle(castleId) {
 }
 
 function castleOnMouse(id, type){
-    if(lock) {
-        return;
-    }
+//    if(lock) {
+//        return;
+//    }
     if(my.turn && selectedArmy) {
         castleFields(id.substring(6), type);
     }
@@ -167,15 +167,6 @@ function isEnemyCastle(x, y) {
         var pos = castles[castleId].position;
         if((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
             return castleId;
-        }
-    }
-    return false;
-}
-
-function isNeutralCastle(x, y) {
-    for(castleId in castles) {
-        if(castles[castleId].position.x == x && castles[castleId].position.y == y && castles[castleId].color == null){
-            return true;
         }
     }
     return false;

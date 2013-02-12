@@ -5,11 +5,12 @@ function mElement(){
 function lostM(color){
     removeM();
 
+    $('.nr.'+color).html('<img src="/img/game/skull_and_crossbones.png" />');
+
     var msg;
 
     if(color == my.color){
         msg =  '<br/>GAME OVER<br/><br/>You lose!';
-
     }else{
         msg =  color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
     }
@@ -346,7 +347,7 @@ function armyStatusM(){
 
             );
     }
-    var height = numberOfUnits*60;
+    var height = numberOfUnits*60+40;
     if(height > documentHeigh-100){
         height = documentHeigh-100;
         overflow = 'auto';

@@ -16,10 +16,7 @@ function setProductionA(castleId) {
         console.log('Brak unitId!');
         return;
     }
-    if(castles[castleId].currentProduction == unitId){
-        console.log('Current production');
-        return;
-    }
+
     $.getJSON('/production/set/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
             if(unitId == -1){

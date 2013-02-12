@@ -352,14 +352,18 @@ function armyFields(a){
         console.log('X error');
         return;
     }
-    if(typeof a.fieldType == 'undefined'){
-        return;
-    }
+
+    console.log(a);
+    console.log(fields[a.y][a.x]);
+
     if(isEnemyCastle(a.x, a.y) !== false){
         fields[a.y][a.x] = 'e';
     }else{
-        fields[a.y][a.x] = a.fieldType;
+        fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
     }
+
+    console.log(fields[a.y][a.x]);
+
 }
 
 function findNextArmy() {
@@ -462,10 +466,7 @@ function move(r, computer) {
     if(typeof r.path[1] == 'undefined'){
         zoomer.lensSetCenter(r.attackerArmy.x*40, r.attackerArmy.y*40);
     }else{
-        var a = players[r.attackerColor].armies['army'+r.attackerArmy.armyId];
-        console.log(a);
-        console.log(fields[a.y][a.x]);
-        fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
+        armyFields(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
         zoomer.lensSetCenter(r.path[1].x*40, r.path[1].y*40);
     }
 
