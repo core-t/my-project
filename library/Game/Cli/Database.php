@@ -75,7 +75,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     }
 
     static public function joinArmiesAtPosition($gameId, $position, $playerId, $db) {
-
         $select = $db->select()
                 ->from('army', 'armyId')
                 ->where('"gameId" = ?', $gameId)

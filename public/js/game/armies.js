@@ -353,8 +353,8 @@ function armyFields(a){
         return;
     }
 
-    console.log(a);
-    console.log(fields[a.y][a.x]);
+//    console.log(a);
+//    console.log(fields[a.y][a.x]);
 
     if(isEnemyCastle(a.x, a.y) !== false){
         fields[a.y][a.x] = 'e';
@@ -362,7 +362,7 @@ function armyFields(a){
         fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
     }
 
-    console.log(fields[a.y][a.x]);
+//    console.log(fields[a.y][a.x]);
 
 }
 

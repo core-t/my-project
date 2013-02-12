@@ -10,24 +10,27 @@
 class Game_Cli_GameHandler extends Game_Cli_WofHandler {
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
-
+//        print_r($user->parameters);
         $dataIn = Zend_Json::decode($msg->getData());
 //        print_r('ZAPYTANIE ');
 //        print_r($dataIn);
 
         $db = Game_Cli_Database::getDb();
 
-        if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
-            $this->sendError($user, 'Brak "gameId" lub "playerId"');
-            return;
-        }
-
-        if (!Game_Cli_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
-            $this->sendError($user, 'Brak uprawnień!');
-            return;
-        }
-
         if ($dataIn['type'] == 'open') {
+            if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
+                $this->sendError($user, 'Brak "gameId" lub "playerId"');
+                return;
+            }
+            if (!Game_Cli_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
+                $this->sendError($user, 'Brak uprawnień!');
+                return;
+            }
+
+            $user->parameters = array(
+                'gameId' => $dataIn['gameId'],
+                'playerId' => $dataIn['playerId']
+            );
             Game_Cli_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
             $token = array(
                 'type' => 'open'
@@ -35,34 +38,44 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
 
             $this->send($user, Zend_Json::encode($token));
             return;
-        } elseif ($dataIn['type'] == 'chat') {
+        }
+
+        if (!Zend_Validate::is($user->parameters['gameId'], 'Digits') || !Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
+            $this->sendError($user, 'Brak "gameId" lub "playerId". Brak autoryzacji.');
+            return;
+        }
+
+
+        if ($dataIn['type'] == 'chat') {
             $token = array(
                 'type' => $dataIn['type'],
                 'msg' => $dataIn['data'],
-                'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
             );
 
-            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIdsExceptMine($dataIn['gameId'], $dataIn['playerId'], $db));
+            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIdsExceptMine($user->parameters['gameId'], $user->parameters['playerId'], $db));
             return;
-        } elseif ($dataIn['type'] == 'computer') {
-            if (!Game_Cli_Database::isGameMaster($dataIn['gameId'], $dataIn['playerId'], $db)) {
+        }
+
+        if ($dataIn['type'] == 'computer') {
+            if (!Game_Cli_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
                 $this->sendError($user, 'Nie Twoja gra!');
                 return;
             }
-            $playerId = Game_Cli_Database::getTurnPlayerId($dataIn['gameId'], $db);
+            $playerId = Game_Cli_Database::getTurnPlayerId($user->parameters['gameId'], $db);
             if (!Game_Cli_Database::isComputer($playerId, $db)) {
                 $this->sendError($user, 'To nie komputer!');
                 return;
             }
 
-            if (!Game_Cli_Database::playerTurnActive($dataIn['gameId'], $playerId, $db)) {
-                $token = Game_Cli_ComputerMainBlocks::startTurn($dataIn['gameId'], $playerId, $db);
+            if (!Game_Cli_Database::playerTurnActive($user->parameters['gameId'], $playerId, $db)) {
+                $token = Game_Cli_ComputerMainBlocks::startTurn($user->parameters['gameId'], $playerId, $db);
             } else {
-                $army = Game_Cli_Database::getComputerArmyToMove($dataIn['gameId'], $playerId, $db);
+                $army = Game_Cli_Database::getComputerArmyToMove($user->parameters['gameId'], $playerId, $db);
                 if (!empty($army['armyId'])) {
-                    $token = Game_Cli_ComputerMainBlocks::moveArmy($dataIn['gameId'], $playerId, $army, $db);
+                    $token = Game_Cli_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, $army, $db);
                 } else {
-                    $token = Game_Cli_Turn::next($dataIn['gameId'], $playerId, $db);
+                    $token = Game_Cli_Turn::next($user->parameters['gameId'], $playerId, $db);
                     $token['action'] = 'end';
                 }
             }
@@ -83,11 +96,11 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     break;
             }
 
-            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db));
+            $this->sendToChannel($token, Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
             return;
         }
 
-        if (!Game_Cli_Database::isPlayerTurn($dataIn['gameId'], $dataIn['playerId'], $db)) {
+        if (!Game_Cli_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
             $this->sendError($user, 'Nie Twoja tura.');
             return;
         }
@@ -122,14 +135,14 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                 $castleId = null;
                 $rollbackPath = null;
 
-                $army = Game_Cli_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
+                $army = Game_Cli_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
 
                 if (empty($army)) {
                     $this->sendError($user, 'Brak armii o podanym ID!');
                     return;
                 }
 
-                $canFly = -count($army['heroes'])+1;
+                $canFly = -count($army['heroes']) + 1;
                 $canSwim = 0;
 
                 foreach ($army['soldiers'] as $soldier)
@@ -144,9 +157,9 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     }
                 }
 
-                $fields = Game_Cli_Database::getEnemyArmiesFieldsPositions($dataIn['gameId'], $dataIn['playerId'], $db);
+                $fields = Game_Cli_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $castlesSchema = Application_Model_Board::getCastlesSchema();
-                $allCastles = Game_Cli_Database::getAllCastles($dataIn['gameId'], $db);
+                $allCastles = Game_Cli_Database::getAllCastles($user->parameters['gameId'], $db);
 
                 $aP = array(
                     'x' => $x,
@@ -170,7 +183,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                         continue;
                     }
 
-                    if ($dataIn['playerId'] == $allCastles[$cId]['playerId']) { // my castle
+                    if ($user->parameters['playerId'] == $allCastles[$cId]['playerId']) { // my castle
                         $fields = Application_Model_Board::changeCasteFields($fields, $castle['position']['x'], $castle['position']['y'], 'c');
                     } else { // enemy castle
                         if (Application_Model_Board::isCastleFild($aP, Application_Model_Board::getCastlePosition($cId))) { // trakuję zamek wroga jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
@@ -183,11 +196,11 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                 }
 
                 if ($castleId === null) {
-                    $enemy = Game_Cli_Database::getAllEnemyUnitsFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $dataIn['playerId'], $db);
+                    $enemy = Game_Cli_Database::getAllEnemyUnitsFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db);
                     if ($enemy['ids']) { // enemy army
                         $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'c');
                     } else { // idziemy nie walczymy
-                        if (Game_Cli_Database::areMySwimmingUnitsAtPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $dataIn['playerId'], $db)) {
+                        if (Game_Cli_Database::areMySwimmingUnitsAtPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db)) {
                             $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'b');
                         }
                     }
@@ -234,10 +247,10 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                         if ($movesLeft >= 2) {
                             $fight = true;
                             if ($defenderColor == 'neutral') {
-                                $enemy = Game_Cli_Battle::getNeutralCastleGarrizon($dataIn['gameId'], $db);
+                                $enemy = Game_Cli_Battle::getNeutralCastleGarrizon($user->parameters['gameId'], $db);
                             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
-                                $defenderColor = Game_Cli_Database::getColorByCastleId($dataIn['gameId'], $castleId, $db);
-                                $enemy = Game_Cli_Database::getAllUnitsFromCastlePosition($dataIn['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
+                                $defenderColor = Game_Cli_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
+                                $enemy = Game_Cli_Database::getAllUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
                             }
                         } else {
                             $rollbackPath = true;
@@ -245,7 +258,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     } elseif ($enemy['ids']) { // enemy army
                         if ($movesLeft >= 2) {
                             $fight = true;
-                            $defenderColor = Game_Cli_Database::getColorByArmyId($dataIn['gameId'], $enemy['ids'][0], $db);
+                            $defenderColor = Game_Cli_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
                         } else {
                             $rollbackPath = true;
                         }
@@ -264,40 +277,40 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     if (Zend_Validate::is($castleId, 'Digits')) {
                         if ($defenderColor == 'neutral') {
                             $battle->fight();
-                            $battle->updateArmies($dataIn['gameId'], $db);
+                            $battle->updateArmies($user->parameters['gameId'], $db);
                             $defender = $battle->getDefender();
                         } else {
-                            $battle->addCastleDefenseModifier($dataIn['gameId'], $castleId, $db);
+                            $battle->addCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
                             $battle->fight();
-                            $battle->updateArmies($dataIn['gameId'], $db);
+                            $battle->updateArmies($user->parameters['gameId'], $db);
                             $castle = Application_Model_Board::getCastle($castleId);
-                            $defender = Game_Cli_Database::updateAllArmiesFromCastlePosition($dataIn['gameId'], $castle['position'], $db);
+                            $defender = Game_Cli_Database::updateAllArmiesFromCastlePosition($user->parameters['gameId'], $castle['position'], $db);
                         }
                     } else {
                         $battle->addTowerDefenseModifier($x, $y);
                         $battle->fight();
-                        $battle->updateArmies($dataIn['gameId'], $db);
-                        $defender = Game_Cli_Database::updateAllArmiesFromPosition($dataIn['gameId'], array('x' => $x, 'y' => $y), $db);
+                        $battle->updateArmies($user->parameters['gameId'], $db);
+                        $defender = Game_Cli_Database::updateAllArmiesFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $db);
                     }
 
                     if (empty($defender)) {
                         if (Zend_Validate::is($castleId, 'Digits')) {
                             if ($defenderColor == 'neutral') {
-                                Game_Cli_Database::addCastle($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
+                                Game_Cli_Database::addCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
                             } else {
-                                Game_Cli_Database::changeOwner($dataIn['gameId'], $castleId, $dataIn['playerId'], $db);
+                                Game_Cli_Database::changeOwner($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
                             }
                         }
                         $move['currentPosition']['movesSpend'] += 2;
-                        Game_Cli_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $move['currentPosition'], $db);
-                        $attacker = Game_Cli_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
+                        Game_Cli_Database::updateArmyPosition($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $move['currentPosition'], $db);
+                        $attacker = Game_Cli_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                         $victory = true;
                         foreach ($enemy['ids'] as $id)
                         {
                             $defender[]['armyId'] = $id;
                         }
                     } else {
-                        Game_Cli_Database::destroyArmy($dataIn['gameId'], $army['armyId'], $dataIn['playerId'], $db);
+                        Game_Cli_Database::destroyArmy($user->parameters['gameId'], $army['armyId'], $user->parameters['playerId'], $db);
                         $attacker = array(
                             'armyId' => $attackerArmyId,
                             'destroyed' => true
@@ -328,16 +341,16 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                             $move['currentPosition']['y'] = $move['path'][$count]['y'];
                         }
                     }
-                    Game_Cli_Database::updateArmyPosition($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $move['currentPosition'], $db);
-                    $armiesIds = Game_Cli_Database::joinArmiesAtPosition($dataIn['gameId'], $move['currentPosition'], $dataIn['playerId'], $db);
+                    Game_Cli_Database::updateArmyPosition($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $move['currentPosition'], $db);
+                    $armiesIds = Game_Cli_Database::joinArmiesAtPosition($user->parameters['gameId'], $move['currentPosition'], $user->parameters['playerId'], $db);
                     $newArmyId = $armiesIds['armyId'];
-                    $attacker = Game_Cli_Database::getArmyByArmyIdPlayerId($dataIn['gameId'], $newArmyId, $dataIn['playerId'], $db);
+                    $attacker = Game_Cli_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $newArmyId, $user->parameters['playerId'], $db);
                     $deletedIds = $armiesIds['deletedIds'];
                 }
 
                 $token = array(
                     'type' => 'move',
-                    'attackerColor' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db),
+                    'attackerColor' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db),
                     'attackerArmy' => $attacker,
                     'defenderColor' => $defenderColor,
                     'defenderArmy' => $defender,
@@ -351,7 +364,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     'deletedIds' => $deletedIds,
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -365,7 +378,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                $childArmyId = Game_Cli_Database::splitArmy($dataIn['gameId'], $h, $s, $attackerArmyId, $dataIn['playerId'], $db);
+                $childArmyId = Game_Cli_Database::splitArmy($user->parameters['gameId'], $h, $s, $attackerArmyId, $user->parameters['playerId'], $db);
                 if (empty($childArmyId)) {
                     $this->sendError($user, 'Brak "childArmyId"');
                     return;
@@ -373,13 +386,13 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'parentArmy' => Game_Cli_Database::getArmyByArmyId($dataIn['gameId'], $attackerArmyId, $db),
-                        'childArmy' => Game_Cli_Database::getArmyByArmyId($dataIn['gameId'], $childArmyId, $db),
+                        'parentArmy' => Game_Cli_Database::getArmyByArmyId($user->parameters['gameId'], $attackerArmyId, $db),
+                        'childArmy' => Game_Cli_Database::getArmyByArmyId($user->parameters['gameId'], $childArmyId, $db),
                     ),
-                    'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                    'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
 
@@ -392,8 +405,8 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                $position = Game_Cli_Database::getArmyPositionByArmyId($dataIn['gameId'], $armyId, $dataIn['playerId'], $db);
-                $armiesIds = Game_Cli_Database::joinArmiesAtPosition($dataIn['gameId'], $position, $dataIn['playerId'], $db);
+                $position = Game_Cli_Database::getArmyPositionByArmyId($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+                $armiesIds = Game_Cli_Database::joinArmiesAtPosition($user->parameters['gameId'], $position, $user->parameters['playerId'], $db);
 
                 if (empty($armyId)) {
                     $this->sendError($user, 'Brak "armyId"!');
@@ -401,12 +414,12 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                 }
                 $token = array(
                     'type' => $dataIn['type'],
-                    'army' => Game_Cli_Database::getArmyByArmyId($dataIn['gameId'], $armiesIds['armyId'], $db),
+                    'army' => Game_Cli_Database::getArmyByArmyId($user->parameters['gameId'], $armiesIds['armyId'], $db),
                     'deletedIds' => $armiesIds['deletedIds'],
-                    'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                    'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -418,7 +431,7 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                $destroyArmyResponse = Game_Cli_Database::destroyArmy($dataIn['gameId'], $armyId, $dataIn['playerId'], $db);
+                $destroyArmyResponse = Game_Cli_Database::destroyArmy($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
                 if (!$destroyArmyResponse) {
                     $this->sendError($user, 'Nie mogę usunąć armii!');
                     return;
@@ -431,10 +444,10 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                         'x' => $dataIn['data']['x'],
                         'y' => $dataIn['data']['y']
                     ),
-                    'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                    'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -446,38 +459,38 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                if (!Game_Cli_Database::isPlayerCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db)) {
+                if (!Game_Cli_Database::isPlayerCastle($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db)) {
                     $this->sendError($user, 'To nie jest Twój zamek! ' . $cId);
                     return;
                 }
-                if (!Game_Cli_Database::isHeroInGame($dataIn['gameId'], $dataIn['playerId'], $db)) {
-                    Game_Cli_Database::connectHero($dataIn['gameId'], $dataIn['playerId'], $db);
+                if (!Game_Cli_Database::isHeroInGame($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+                    Game_Cli_Database::connectHero($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 }
-                $heroId = Game_Cli_Database::getDeadHeroId($dataIn['gameId'], $dataIn['playerId'], $db);
+                $heroId = Game_Cli_Database::getDeadHeroId($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 if (!$heroId) {
                     $this->sendError($user, 'Twój heros żyje! ' . $heroId);
                     return;
                 }
-                $gold = Game_Cli_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db);
+                $gold = Game_Cli_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 if ($gold < 100) {
                     $this->sendError($user, 'Za mało złota!');
                     return;
                 }
                 $position = Application_Model_Board::getCastlePosition($cId);
-                $armyId = Game_Cli_Database::heroResurection($dataIn['gameId'], $heroId, $position, $dataIn['playerId'], $db);
+                $armyId = Game_Cli_Database::heroResurection($user->parameters['gameId'], $heroId, $position, $user->parameters['playerId'], $db);
                 $gold -= 100;
-                Game_Cli_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $gold, $db);
+                Game_Cli_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $gold, $db);
 
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'army' => Game_Cli_Database::getArmyByArmyId($dataIn['gameId'], $armyId, $db),
+                        'army' => Game_Cli_Database::getArmyByArmyId($user->parameters['gameId'], $armyId, $db),
                         'gold' => $gold
                     ),
-                    'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                    'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -489,25 +502,25 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                $heroId = Game_Cli_Database::getHeroIdByArmyIdPlayerId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
+                $heroId = Game_Cli_Database::getHeroIdByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                 if (empty($heroId)) {
                     $this->sendError($user, 'Tylko Hero może przeszukiwać ruiny!');
                     return;
                 }
-                $position = Game_Cli_Database::getArmyPositionByArmyId($dataIn['gameId'], $attackerArmyId, $dataIn['playerId'], $db);
+                $position = Game_Cli_Database::getArmyPositionByArmyId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                 $ruinId = Application_Model_Board::confirmRuinPosition($position);
                 if (!Zend_Validate::is($ruinId, 'Digits')) {
                     $this->sendError($user, 'Brak ruinId na pozycji');
                     return;
                 }
-                if (Game_Cli_Database::ruinExists($dataIn['gameId'], $ruinId, $db)) {
+                if (Game_Cli_Database::ruinExists($user->parameters['gameId'], $ruinId, $db)) {
                     $this->sendError($user, 'Ruiny są już przeszukane.');
                     return;
                 }
 
-                $find = Game_Cli_Database::searchRuin($dataIn['gameId'], $ruinId, $heroId, $attackerArmyId, $dataIn['playerId'], $db);
+                $find = Game_Cli_Database::searchRuin($user->parameters['gameId'], $ruinId, $heroId, $attackerArmyId, $user->parameters['playerId'], $db);
 
-                if (Game_Cli_Database::ruinExists($dataIn['gameId'], $ruinId, $db)) {
+                if (Game_Cli_Database::ruinExists($user->parameters['gameId'], $ruinId, $db)) {
                     $ruin = array(
                         'ruinId' => $ruinId,
                         'empty' => 1
@@ -522,33 +535,33 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                 $token = array(
                     'type' => $dataIn['type'],
                     'data' => array(
-                        'army' => Game_Cli_Database::getArmyByArmyId($dataIn['gameId'], $attackerArmyId, $db),
+                        'army' => Game_Cli_Database::getArmyByArmyId($user->parameters['gameId'], $attackerArmyId, $db),
                         'ruin' => $ruin,
                         'find' => $find
                     ),
-                    'color' => Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db)
+                    'color' => Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
                 );
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
 
                 break;
 
             case 'nextTurn':
-                $token = Game_Cli_Turn::next($dataIn['gameId'], $dataIn['playerId'], $db);
+                $token = Game_Cli_Turn::next($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
 
             case 'startTurn':
-                $token = Game_Cli_Turn::start($dataIn['gameId'], $dataIn['playerId'], $db);
+                $token = Game_Cli_Turn::start($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -560,15 +573,15 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                Game_Cli_Database::razeCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db);
-                $gold = Game_Cli_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db) + 1000;
-                Game_Cli_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $gold, $db);
-                $token = Game_Cli_Database::getCastle($dataIn['gameId'], $cId, $db);
-                $token['color'] = Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db);
+                Game_Cli_Database::razeCastle($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db);
+                $gold = Game_Cli_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db) + 1000;
+                Game_Cli_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $gold, $db);
+                $token = Game_Cli_Database::getCastle($user->parameters['gameId'], $cId, $db);
+                $token['color'] = Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['gold'] = $gold;
                 $token['type'] = 'castle';
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
@@ -580,12 +593,12 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     return;
                 }
 
-                if (!Game_Cli_Database::isPlayerCastle($dataIn['gameId'], $cId, $dataIn['playerId'], $db)) {
+                if (!Game_Cli_Database::isPlayerCastle($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db)) {
                     $this->sendError($user, 'To nie jest Twój zamek.');
                     break;
                 }
-                $gold = Game_Cli_Database::getPlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $db);
-                $defenseModifier = Game_Cli_Database::getCastleDefenseModifier($dataIn['gameId'], $cId, $db);
+                $gold = Game_Cli_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
+                $defenseModifier = Game_Cli_Database::getCastleDefenseModifier($user->parameters['gameId'], $cId, $db);
                 $defensePoints = Application_Model_Board::getCastleDefense($cId);
                 $defense = $defenseModifier + $defensePoints;
                 $costs = 0;
@@ -597,15 +610,15 @@ class Game_Cli_GameHandler extends Game_Cli_WofHandler {
                     $this->sendError($user, 'Za mało złota!');
                     return;
                 }
-                Game_Cli_Database::buildDefense($dataIn['gameId'], $cId, $dataIn['playerId'], $db);
-                $token = Game_Cli_Database::getCastle($dataIn['gameId'], $cId, $db);
+                Game_Cli_Database::buildDefense($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db);
+                $token = Game_Cli_Database::getCastle($user->parameters['gameId'], $cId, $db);
                 $token['defensePoints'] = $defensePoints;
-                $token['color'] = Game_Cli_Database::getColorByPlayerId($dataIn['gameId'], $dataIn['playerId'], $db);
+                $token['color'] = Game_Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['gold'] = $gold - $costs;
                 $token['type'] = 'castle';
-                Game_Cli_Database::updatePlayerInGameGold($dataIn['gameId'], $dataIn['playerId'], $token['gold'], $db);
+                Game_Cli_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $token['gold'], $db);
 
-                $users = Game_Cli_Database::getInGameWSSUIds($dataIn['gameId'], $db);
+                $users = Game_Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
                 break;
