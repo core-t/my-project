@@ -1,6 +1,6 @@
 <?php
 
-class Game_Cli_Battle {
+class Cli_Battle {
 
     private $_result = array(
         'defense' => array(
@@ -31,9 +31,9 @@ class Game_Cli_Battle {
 
     public function addCastleDefenseModifier($gameId, $castleId, $db = null) {
         if (!$db) {
-            Game_Cli_Database::getDb();
+            Cli_Database::getDb();
         }
-        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Game_Cli_Database::getCastleDefenseModifier($gameId, $castleId, $db);
+        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Cli_Database::getCastleDefenseModifier($gameId, $castleId, $db);
         if ($defenseModifier > 0) {
             $this->defenseModifier += $defenseModifier;
         }
@@ -49,7 +49,7 @@ class Game_Cli_Battle {
     private function updateHeroes($heroes, $gameId, $db) {
         foreach ($heroes as $v)
         {
-            Game_Cli_Database::armyRemoveHero($gameId, $v['heroId'], $db);
+            Cli_Database::armyRemoveHero($gameId, $v['heroId'], $db);
         }
     }
 
@@ -57,7 +57,7 @@ class Game_Cli_Battle {
         foreach ($soldiers as $v)
         {
             if (strpos($v['soldierId'], 's') === false) {
-                Game_Cli_Database::destroySoldier($gameId, $v['soldierId'], $db);
+                Cli_Database::destroySoldier($gameId, $v['soldierId'], $db);
             }
         }
     }
@@ -270,7 +270,7 @@ class Game_Cli_Battle {
     }
 
     static public function getNeutralCastleGarrizon($gameId, $db = null) {
-        $turn = Game_Cli_Database::getTurn($gameId, $db);
+        $turn = Cli_Database::getTurn($gameId, $db);
         $numberOfSoldiers = ceil($turn['nr'] / 10);
         $soldiers = array();
         for ($i = 1; $i <= $numberOfSoldiers; $i++)

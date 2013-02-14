@@ -266,7 +266,7 @@ class WebSocket_Server implements WebSocket_Observer {
      * @param IWebSocketMessage $msg
      */
     protected function dispatchMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
-        $this->debug("dispatchMessage");
+//        $this->debug("dispatchMessage");
 
         if (array_key_exists($this->_connections[$user], $this->uriHandlers)) {
             $this->uriHandlers[$this->_connections[$user]]->onMessage($user, $msg);

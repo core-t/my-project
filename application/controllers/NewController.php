@@ -3,7 +3,7 @@
 class NewController extends Game_Controller_Gui {
 
     public function indexAction() {
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css?v=' . Zend_Registry::get('config')->version);
         if ($this->_namespace->gameId) {
             unset($this->_namespace->gameId);
         }

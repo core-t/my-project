@@ -645,10 +645,14 @@
     top: 3px;
 }
 
-#turnNumberLayout {
-    height: 20px;
-    line-height: 20px;
-    padding-left: 5px;
+#turnNumber {
+    font-size: 30px;
+    line-height: 86px;
+    color: #000;
+    text-shadow: none;
+    text-align: center;
+    /*width: 80px;*/
+    display: block;
 }
 
 #nextTurn {

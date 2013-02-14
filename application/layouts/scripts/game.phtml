@@ -1,20 +1,19 @@
 <?php echo $this->doctype() ?>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <?php
+        echo $this->headMeta() . "\n";
         echo $this->headTitle() . "\n";
         echo $this->headLink() . "\n";
         echo $this->headScript() . "\n";
-        echo $this->headMeta() . "\n";
         ?>
     </head>
     <body>
         <div id="page">
             <div id="menuTop">
-                <div class="left" id="turnNumberLayout">Turn number: <span id="turnNumber" class="font-yellow"></span></div>
+                <?php echo $this->placeholder('version') ?>
                 <?php echo $this->placeholder('logout') ?>
-                <a href="<?php echo $this->url(array('controller' => 'index', 'action' => 'index')); ?>">Quit game</a>
+                <a href="/index">Quit game</a>
             </div>
             <div id="game">
                 <!-- ZOOM WINDOW -->
@@ -41,7 +40,7 @@
                         </div>
                     </div>
                     <div id="playersBox">
-                        <div id="turn"></div>
+                        <div id="turn"><span id="turnNumber"></span></div>
                         <div id="first" class="nr white">1</div>
                         <div id="second" class="nr yellow">2</div>
                         <div id="third" class="nr green">3</div>

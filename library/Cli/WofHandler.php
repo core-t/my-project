@@ -5,7 +5,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Game_Cli_WofHandler extends WebSocket_UriHandler {
+class Cli_WofHandler extends WebSocket_UriHandler {
 
     public function sendToChannel($token, $users, $debug = null) {
         if ($debug) {

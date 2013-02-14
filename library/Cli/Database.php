@@ -1,6 +1,6 @@
 <?php
 
-class Game_Cli_Database {
+class Cli_Database {
 
     static public function getDb() {
         return new Zend_Db_Adapter_Pdo_Pgsql(array(
@@ -978,10 +978,10 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
 //artefakt
             $artefactId = rand(5, 34);
 
-            if (Application_Model_Inventory::wsItemExists($gameId, $artefactId, $heroId, $db)) {
-                Application_Model_Inventory::wsIncreaseItemQuantity($gameId, $artefactId, $heroId, $db);
+            if (Cli_Inventory::itemExists($gameId, $artefactId, $heroId, $db)) {
+                Cli_Inventory::increaseItemQuantity($gameId, $artefactId, $heroId, $db);
             } else {
-                Application_Model_Inventory::wsAddArtefact($gameId, $artefactId, $heroId, $db);
+                Cli_Inventory::addArtefact($gameId, $artefactId, $heroId, $db);
             }
             $find = array('artefact', $artefactId);
             self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
@@ -2148,12 +2148,45 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 ->where('"webSocketServerUserId" IS NULL')
                 ->where('computer = false');
         $where = array(
-            $db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString()))
+            $db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString())),
+            $db->quoteInto('"gameId" = ?', $gameId)
         );
         try {
             $db->delete('playersingame', $where);
         } catch (Exception $e) {
             echo($e);
+        }
+    }
+
+    static public function disconnectFromGame($gameId, $playerId, $db) {
+        $where = array(
+            $db->quoteInto('"playerId" = ?', $playerId),
+            $db->quoteInto('"gameId" = ?', $gameId)
+        );
+        try {
+            $db->delete('playersingame', $where);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    static public function findNewGameMaster($gameId, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'playersingame'), 'playerId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"webSocketServerUserId" IS NOT NULL');
+        try {
+            $gameMasterId = $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+            return;
+        }
+        if ($gameMasterId) {
+            $data = array(
+                'gameMasterId' => $gameMasterId
+            );
+            self::updateGame($gameId, $data, $db);
         }
     }
 
@@ -2203,6 +2236,32 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return $db->insert('heroesingame', $data);
         } catch (Exception $e) {
             echo($e);
+        }
+    }
+
+    static public function isGameStarted($gameId, $db) {
+        $select = $db->select()
+                ->from('game', 'gameId')
+                ->where('"isOpen" = false')
+                ->where('"gameId" = ?', $gameId);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function isPlayerInGame($gameId, $playerId, $db) {
+        $select = $db->select()
+                ->from('playersingame', 'gameId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"playerId" = ?', $playerId);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
         }
     }
 

@@ -98,9 +98,6 @@ function wsRegister(){
 function wsChange(color){
     var token = {
         type: 'change',
-        gameId:gameId,
-        playerId:playerId,
-        accessKey:accessKey,
         color:color
     };
 
@@ -110,9 +107,6 @@ function wsChange(color){
 function wsComputer(color){
     var token = {
         type: 'computer',
-        gameId:gameId,
-        playerId:playerId,
-        accessKey:accessKey,
         color:color
     };
 
@@ -169,10 +163,7 @@ function prepareStartButton(gameMasterId, playersReady){
 
 function wsStart(){
     var token = {
-        type: 'start',
-        gameId:gameId,
-        playerId:playerId,
-        accessKey:accessKey
+        type: 'start'
     };
 
     ws.send(JSON.stringify(token));

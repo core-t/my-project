@@ -7,7 +7,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Game_Cli_WofSocketServer implements IWebSocketServerObserver {
+class Cli_WofSocketServer implements IWebSocketServerObserver {
 
     protected $debug = true;
     protected $server;
@@ -16,12 +16,12 @@ class Game_Cli_WofSocketServer implements IWebSocketServerObserver {
         $this->server = new WebSocket_Server('tcp://' . Zend_Registry::get('config')->websockets->aHost . ':' . Zend_Registry::get('config')->websockets->aPort, 'superdupersecretkey');
         $this->server->addObserver($this);
 
-        $this->server->addUriHandler('game', new Game_Cli_GameHandler());
-        $this->server->addUriHandler('public', new Game_Cli_PublicHandler());
+        $this->server->addUriHandler('game', new Cli_GameHandler());
+        $this->server->addUriHandler('public', new Cli_PublicHandler());
     }
 
     public function onConnect(IWebSocketConnection $user) {
-        $this->say("[DEMO] {$user->getId()} connected");
+//        $this->say("[DEMO] {$user->getId()} connected");
     }
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
@@ -29,7 +29,7 @@ class Game_Cli_WofSocketServer implements IWebSocketServerObserver {
     }
 
     public function onDisconnect(IWebSocketConnection $user) {
-        $this->say("[DEMO] {$user->getId()} disconnected");
+//        $this->say("[DEMO] {$user->getId()} disconnected");
     }
 
     public function onAdminMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {

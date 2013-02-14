@@ -9,19 +9,19 @@ class GameController extends Game_Controller_Game {
 //            throw new Exception('Game initialization error');
 //        }
 
-        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css');
-        $this->view->headScript()->appendFile('/js/game/game.js');
-        $this->view->headScript()->appendFile('/js/game/castles.js');
-        $this->view->headScript()->appendFile('/js/game/armies.js');
-        $this->view->headScript()->appendFile('/js/game/astar.js');
-        $this->view->headScript()->appendFile('/js/game/towers.js');
-        $this->view->headScript()->appendFile('/js/game/ruins.js');
-        $this->view->headScript()->appendFile('/js/game/test.js');
-        $this->view->headScript()->appendFile('/js/game/game.libs.js');
-        $this->view->headScript()->appendFile('/js/game/game.zoom.js');
-        $this->view->headScript()->appendFile('/js/game/game.websocket.js');
-        $this->view->headScript()->appendFile('/js/game/game.ajax.js');
-        $this->view->headScript()->appendFile('/js/game/game.message.js');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/castles.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/armies.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/astar.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/towers.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/ruins.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/test.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.libs.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.zoom.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.websocket.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.ajax.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/game.message.js?v=' . Zend_Registry::get('config')->version);
 
         $this->_helper->layout->setLayout('game');
 

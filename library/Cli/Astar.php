@@ -3,7 +3,7 @@
 /**
  * A* search algorithm implemantation.
  */
-class Game_Cli_Astar {
+class Cli_Astar {
 
     /**
      * The set of nodes already evaluated.
@@ -289,7 +289,7 @@ class Game_Cli_Astar {
      */
     public function restoreFullPath($key) {
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
+            new Cli_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
             return null;
         }
         while (!empty($this->close[$key]['parent']))
@@ -309,7 +309,7 @@ class Game_Cli_Astar {
      */
     public function getFullPathMovesSpend($key) {
         if (!isset($this->close[$key])) {
-            new Game_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
+            new Cli_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
             return null;
         }
         return $this->close[$key]['G'];
@@ -325,7 +325,7 @@ class Game_Cli_Astar {
     public function getPath($key, $moves) {
 //        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
-            new Game_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key);
+            new Cli_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key);
             return 0;
         }
         $this->currentPosition;

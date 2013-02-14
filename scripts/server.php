@@ -9,7 +9,7 @@ $application = new Zend_Application(
                 APPLICATION_ENV,
                 APPLICATION_PATH . '/configs/application.ini'
 );
-$application->getBootstrap()->bootstrap(array('date', 'config', 'router'));
+$application->getBootstrap()->bootstrap(array('date', 'config'));
 
 declare(ticks = 1);
 
@@ -26,7 +26,7 @@ interface IWebSocketServerObserver {
 
 
 // Start server
-$server = new Game_Cli_WofSocketServer();
+$server = new Cli_WofSocketServer();
 $server->run();
 
 exit;

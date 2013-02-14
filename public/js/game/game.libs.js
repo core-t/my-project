@@ -14,7 +14,7 @@ function turnOn() {
     showFirstCastle();
     turnM();
     titleBlink('Your turn!');
-    test();
+//    test();
 }
 
 function turnOff() {

@@ -19,14 +19,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
         $view->addHelperPath(APPLICATION_PATH . '/../library/Coret/View/Helper/');
 
-        $view->doctype('XHTML1_STRICT');
+        $view->doctype('XHTML1_TRANSITIONAL');
 
         // Set the initial title and separator:
         $view->headTitle('Wars of Fate')->setSeparator(' :: ');
 
-        $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')->appendHttpEquiv('Content-Language', 'pl-PL');
+        $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8');
         $view->headMeta()->appendName('keywords', '');
-        $view->headMeta()->appendName('description', '');
+        $view->headMeta()->appendName('description', 'This is a multiplayer strategic game');
         $view->headMeta()->appendName('author', 'Bartosz Krzeszewski');
         $view->headMeta()->appendName('date', '2011');
         $view->headMeta()->appendName('copyright', 'Bartosz Krzeszewski 2011');
