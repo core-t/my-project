@@ -127,8 +127,10 @@ class Cli_PublicHandler extends Cli_WofHandler {
     }
 
     public function onDisconnect(IWebSocketConnection $user) {
+        if (!isset($user->parameters['gameId']) || !isset($user->parameters['playerId'])) {
+            return;
+        }
         if (!Zend_Validate::is($user->parameters['gameId'], 'Digits') || !Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
-//            $this->sendError($user, 'Brak "gameId" lub "playerId". Brak autoryzacji.');
             return;
         }
         $db = Cli_Database::getDb();

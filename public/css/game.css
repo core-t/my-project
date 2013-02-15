@@ -15,8 +15,8 @@
 
 #game {
     /*height:800px;*/
-    background: transparent url('../img/bg_1.jpg') repeat scroll top left;
-    font-size: 11px;
+    /*background: transparent url('../img/bg_1.jpg') repeat scroll top left;*/
+    font-size: 14px;
 }
 
 #board {
@@ -325,7 +325,7 @@
 }
 
 .message h3 {
-    color:yellow;
+    color:orange;
     margin:4px;
 }
 
@@ -345,15 +345,20 @@
     text-shadow:none;
     color: #000;
     margin-left: 1px;
+    margin-bottom: 5px;
     border-radius: 4px;
     padding: 2px;
+    width: auto;
 }
 
 .message .production .unit {
     margin:2px;
     text-align:center;
-    border:1px solid #c0c0c0;
     width: 158px;
+}
+
+.message .production #blank{
+    border: none;
 }
 
 .message .production input[type="radio"] {
@@ -601,10 +606,6 @@
 #goldBox div div{
     width:56px;
     height:14px;
-}
-
-.font-yellow{
-    color:yellow;
 }
 
 #nameBox{

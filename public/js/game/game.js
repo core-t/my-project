@@ -67,7 +67,7 @@ var documentHeigh;
 
 $(document).ready(function() {
     documentWidth = $(document).width();
-    documentHeigh = $(document).height() - 20;
+    documentHeigh = $(document).height() - 21;
     $('.zoomWindow').css('height',documentHeigh+'px');
 
     messageLeft = documentWidth / 2 - 160;

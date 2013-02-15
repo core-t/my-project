@@ -1,7 +1,7 @@
 <h2>Select which game you want to load</h2>
 <div class="table">
     <table>
-        <th>Game master</th><th>Color</th><th>Turn number</th><th>Nr of P</th><th>Players</th><th>Start date</th>
+        <th>Game master</th><th>Color</th><th>Turn number</th><th>Number of Players</th><th>Players</th><th>Start date</th>
         <?php
         if (is_array($this->myGames)) {
             foreach ($this->myGames as $game)
@@ -31,7 +31,7 @@
 </div>
 <ul>
     <li>
-        <a href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>" class="button">< Back</a>
+        <a href="/" class="button">&laquo; Back</a>
     </li>
 </ul>
 <script type="text/javascript">

@@ -6,7 +6,6 @@ class Application_Form_Creategame extends Zend_Form {
 
         /* Form Elements & Other Definitions Here ... */
         $this->setMethod('post');
-        $this->setAction('/new/create');
 
         $this->addElement('select', 'numberOfPlayers',
         array(

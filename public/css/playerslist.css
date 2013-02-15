@@ -2,8 +2,7 @@
 #playersingame td {
     line-height:26px;
     min-width: 100px;
-    background: #444;
-    border:1px solid #555;
+    height: 62px;
     padding:2px;
     text-align: center;
 }
@@ -15,7 +14,7 @@
     color:#333;
 }
 #playersingame tr td div.left {
-    min-width: 427px;
+    min-width: 350px;
 }
 #playersingame tr td div.right {
     text-shadow:none;
@@ -25,18 +24,22 @@
 }
 #playersingame tr#green td div.right {
     background: #0f0;
+    border-radius: 5px;
 }
 
 #playersingame tr#white td div.right {
     background: #fff;
+    border-radius: 5px;
 }
 
 #playersingame tr#red td div.right {
     background: #f00;
+    border-radius: 5px;
 }
 
 #playersingame tr#yellow td div.right {
     background: yellow;
+    border-radius: 5px;
 }
 
 #playersout td {

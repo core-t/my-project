@@ -69,7 +69,7 @@ function startGame(){
         if(players[color].computer){
             $('.'+color+' .color .type').css('background','url(../img/game/computer.png) center center no-repeat');
         }else{
-            $('.'+color+' .color .type').css('background','url(../img/game/human.png) center center no-repeat');
+            $('.'+color+' .color .type').css('background','url(../img/game/hero_'+color+'.png) center center no-repeat');
         }
 
         for(i in players[color].armies) {

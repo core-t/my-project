@@ -7,25 +7,23 @@ class LoginController extends Zend_Controller_Action {
         $this->_namespace = Game_Namespace::getNamespace(); // default namespace
         $this->_helper->layout->setLayout('login');
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/login.css');
     }
 
     public function indexAction() {
         // action body
-        $form = new Application_Form_Auth();
+        $this->view->form = new Application_Form_Auth();
         if ($this->_request->isPost()) {
-            if ($form->isValid($this->_request->getPost())) {
+            if ($this->view->form->isValid($this->_request->getPost())) {
                 $modelPlayer = new Application_Model_Player(null, false);
                 $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
                 if ($playerId) {
                     $this->_namespace->player = $modelPlayer->getPlayer($playerId);
                     $this->_helper->redirector('index', 'index');
                 } else {
-                    $this->view->form = $form;
                     $this->view->form->setDescription('Incorrect login or password!');
                 }
             }
-        } else {
-            $this->view->form = $form;
         }
     }
 

@@ -463,7 +463,14 @@ function castleM(castleId, color){
                 )
             .append(' Stop production')
             )
-        );
+        .append(
+            $('<td id="blank">')
+            .append($('<div>').addClass('button submit').html('Apply').click(function(){
+                setProductionA(castleId)
+            })
+            ))
+        )
+    ;
     var resurrectionElement;
     var resurrection = true;
     for(armyId in players[my.color].armies){
@@ -527,12 +534,6 @@ function castleM(castleId, color){
         .append($('<h5>').append('Defense: '+castles[castleId].defense))
         .append($('<h5>').append('Income: '+castles[castleId].income+' gold/turn'))
         .append(table)
-        .append(
-            $('<p>')
-            .append($('<div>').addClass('button submit').html('Set production').click(function(){
-                setProductionA(castleId)
-            }))
-            )
         .append(
             $('<p>')
             .addClass('h')

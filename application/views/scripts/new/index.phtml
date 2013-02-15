@@ -1,16 +1,12 @@
 <h1>New game</h1>
 <h2>Create new game:</h2>
-<ul>
-    <li>
-        <a class="button" href="<?php echo $this->url(array('controller' => 'new', 'action' => 'create')) ?>">Create</a>
-    </li>
-</ul>
+<?php echo $this->form; ?>
 
 <h2>Join one of the games listed below:</h2>
 <div class="table"><table></table></div>
 <ul>
     <li>
-        <a class="button" href="<?php echo $this->url(array('controller' => 'index', 'gameId' => null)) ?>">< Back</a>
+        <a class="button" href="/">&laquo; Back</a>
     </li>
     <li>
         <a class="button" href="javascript:refresh()">Refresh</a>
@@ -18,7 +14,6 @@
 </ul>
 <script type="text/javascript">
     var th = '<th>Game master</th><th>Current number of players</th><th>Max number of players</th><th>Date</th>';
-    var url = '<?php echo $this->url(array('controller' => 'gamesetup', 'gameId' => null)) ?>';
     var mygames = $('.table table');
     function refresh() {
         $.getJSON("/newajax/refresh", function(result) {
@@ -44,7 +39,7 @@
         });
     }
     function makeUrl(event){
-        top.location = url + '/index/gameId/' + event.data.gameId;
+        top.location = '/gamesetup/index/gameId/' + event.data.gameId;
     }
     refresh();
     setInterval ( 'refresh()', 5000 );
