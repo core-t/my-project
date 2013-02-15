@@ -38,9 +38,5 @@ class NewController extends Game_Controller_Gui {
         $this->view->player = $this->_namespace->player;
     }
 
-    public function createAction() {
-
-    }
-
 }
 

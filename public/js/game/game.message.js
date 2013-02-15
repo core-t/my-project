@@ -18,7 +18,8 @@ function lostM(color){
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html(msg))
+        .addClass('center')
+        .append($('<h3>').html(msg))
         .append($('<div>')
             .addClass('button go')
             .html('Ok')
@@ -41,14 +42,16 @@ function winM(color){
     if(color == my.color){
         msg =  '<br/>GAME OVER<br/><br/>You won!';
 
-    }else{
+    }
+    else{
         msg =  color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
     }
 
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html(msg))
+        .addClass('center')
+        .append($('<h3>').html(msg))
         .append($('<div>')
             .addClass('button go')
             .html('Ok')
@@ -73,7 +76,8 @@ function turnM(){
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html('Your turn.'))
+        .addClass('center')
+        .append($('<h3>').html('Your turn.'))
         .append($('<div>')
             .addClass('button go')
             .html('Ok')
@@ -93,7 +97,8 @@ function nextTurnM(){
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html('Next turn. Are you sure?'))
+        .addClass('center')
+        .append($('<h3>').html('Next turn. Are you sure?'))
         .append(
             $('<div>')
             .addClass('button go')
@@ -118,7 +123,8 @@ function simpleM(message){
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html(message))
+        .addClass('center')
+        .append($('<h3>').html(message))
         .append(
             $('<div>')
             .addClass('button go')
@@ -144,7 +150,8 @@ function disbandArmyM(){
     mElement().after(
         $('<div>')
         .addClass('message')
-        .append($('<h3>').addClass('center').html('Are you sure?'))
+        .addClass('center')
+        .append($('<h3>').html('Are you sure?'))
         .append(
             $('<div>')
             .addClass('button go')
@@ -170,7 +177,7 @@ function splitArmyM(a){
     var army = $('<div>').addClass('split');
     var numberOfUnits = 0;
     for(i in selectedArmy.soldiers) {
-        var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+        var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
         numberOfUnits++;
         army.append(
             $('<div>')
@@ -225,8 +232,7 @@ function splitArmyM(a){
         .append(
             $('<div>')
             .css({
-                'height':'28px',
-                'padding':'0 2px'
+                'margin-top':'15px'
             })
             .append(
                 $('<div>').addClass('left')
@@ -245,9 +251,7 @@ function splitArmyM(a){
             'height':height+'px',
             'left':messageLeft+'px',
             'overflow-y':overflow
-        })
-        );
-
+        }));
 }
 
 function armyStatusM(){
@@ -267,7 +271,7 @@ function armyStatusM(){
     }
     for(i in selectedArmy.soldiers) {
         numberOfUnits++;
-        var img = selectedArmy.soldiers[i].name.replace(' ', '_').toLowerCase();
+        var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
         attackPoints = $('<p>').html(selectedArmy.soldiers[i].attackPoints).css('color','#da8');
         defensePoints = $('<p>').html(selectedArmy.soldiers[i].defensePoints).css('color','#da8');
         if(selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly){
@@ -357,10 +361,19 @@ function armyStatusM(){
     mElement().after(
         $('<div>')
         .addClass('message')
+        .addClass('center')
         .append(army)
-        .append($('<div>').addClass('button cancel').html('Ok').click(function(){
-            removeM()
-        }))
+        .append($('<div>')
+            .css({
+                'margin-top':'15px'
+            })
+            .append($('<div>')
+                .addClass('button cancel')
+                .html('Ok')
+                .click(function(){
+                    removeM()
+                }))
+            )
         .css({
             'height':height+'px',
             'left':messageLeft+'px',
@@ -650,11 +663,11 @@ function battleM(data, clb) {
             );
     }
 
-    $('.message').append(defense);
-
-    $('.message').append($('<div>').addClass('battle defense'));
-
-    $('.message').append($('<div id="battleOk">').addClass('button go').html('OK'));
+    $('.message')
+    .addClass('center')
+    .append(defense)
+    .append($('<div>').addClass('battle defense'))
+    .append($('<div id="battleOk">').addClass('button go').html('OK'));
 
     if(my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)){
         $('#battleOk').click(function(){

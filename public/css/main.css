@@ -98,8 +98,9 @@ input {
     border-left:1px solid #555;
     border-right:1px solid #111;
     border-bottom:1px solid #111;
-    border-radius: 8px;
+    border-radius: 9px;
     display:inline-block;
+    box-shadow: 0 0 1px #000;
 }
 
 .button:hover, #submit:hover {

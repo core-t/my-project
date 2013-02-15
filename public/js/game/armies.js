@@ -43,28 +43,28 @@ function army(obj, color) {
     this.soldiers = obj.soldiers;
     for(soldier in this.soldiers) {
         if(typeof attack  == 'undefined') {
-            var attack = this.soldiers[soldier].attackPoints;
+            var attack = units[this.soldiers[soldier].unitId].attackPoints;
             this.soldierKey = soldier;
         }
-        if(this.soldiers[soldier].attackPoints > attack) {
-            attack = this.soldiers[soldier].attackPoints;
+        if(units[this.soldiers[soldier].unitId].attackPoints > attack) {
+            attack = units[this.soldiers[soldier].unitId].attackPoints;
             this.soldierKey = soldier;
         }
         if(typeof defense == 'undefined') {
-            var defense = this.soldiers[soldier].defensePoints;
+            var defense = units[this.soldiers[soldier].unitId].defensePoints;
         }
-        if(this.soldiers[soldier].defensePoints > defense) {
-            defense = this.soldiers[soldier].defensePoints;
-            if(defense > this.soldiers[this.soldierKey].defensePoints){
+        if(units[this.soldiers[soldier].unitId].defensePoints > defense) {
+            defense = units[this.soldiers[soldier].unitId].defensePoints;
+            if(defense > units[this.soldiers[this.soldierKey].unitId].defensePoints){
                 this.soldierKey = soldier;
             }
         }
         if(typeof moves == 'undefined') {
-            var moves = this.soldiers[soldier].numberOfMoves;
+            var moves = units[this.soldiers[soldier].unitId].numberOfMoves;
         }
-        if(this.soldiers[soldier].numberOfMoves > moves) {
-            moves = this.soldiers[soldier].numberOfMoves;
-            if(moves > this.soldiers[this.soldierKey].numberOfMoves){
+        if(units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
+            moves = units[this.soldiers[soldier].unitId].numberOfMoves;
+            if(moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves){
                 this.soldierKey = soldier;
             }
         }
@@ -74,7 +74,7 @@ function army(obj, color) {
         if(this.soldiers[soldier].movesLeft < this.moves) {
             this.moves = this.soldiers[soldier].movesLeft;
         }
-        if(this.soldiers[soldier].canFly){
+        if(units[this.soldiers[soldier].unitId].canFly){
             this.canFly++;
             if(!this.flyBonus){
                 this.flyBonus = 1;
@@ -83,7 +83,7 @@ function army(obj, color) {
         else{
             this.canFly -= 200;
         }
-        if(this.soldiers[soldier].canSwim){
+        if(units[this.soldiers[soldier].unitId].canSwim){
             this.canSwim++;
         }
         numberOfSoldiers++;
@@ -97,8 +97,8 @@ function army(obj, color) {
         this.img = 'hero';
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
-    } else if(typeof this.soldiers[this.soldierKey] != 'undefined') {
-        this.name = this.soldiers[this.soldierKey].name;
+    } else if(typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
+        this.name = units[this.soldiers[this.soldierKey].unitId].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
         this.attack = attack;
         this.defense = defense;

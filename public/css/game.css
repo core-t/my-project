@@ -508,7 +508,7 @@
 
 .message .go {
     margin:20px auto;
-    width:50px;
+    min-width:50px;
 }
 
 .message .battle {
