@@ -81,7 +81,7 @@ function startGame(){
             }
         }
 
-        if(players[color].armies == ""){
+        if(players[color].armies == "" && players[color].castles == ""){
             $('.nr.'+color).html('<img src="/img/game/skull_and_crossbones.png" />');
         }
 
@@ -270,7 +270,7 @@ function prepareButtons(){
         skipArmy()
     });
     $('#quitArmy').click(function(){
-        quitArmy()
+        fortifyArmy()
     });
     $('#splitArmy').click(function(){
         if(selectedArmy){

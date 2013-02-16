@@ -10,10 +10,10 @@
 class Cli_GameHandler extends Cli_WofHandler {
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
-//        print_r($user->parameters);
+
         $dataIn = Zend_Json::decode($msg->getData());
-//        print_r('ZAPYTANIE ');
-//        print_r($dataIn);
+        print_r('ZAPYTANIE ');
+        print_r($dataIn);
 
         $db = Cli_Database::getDb();
 
@@ -108,20 +108,27 @@ class Cli_GameHandler extends Cli_WofHandler {
         switch ($dataIn['type'])
         {
             case 'move':
-                if (isset($dataIn['data']['armyId'])) {
-                    $attackerArmyId = $dataIn['data']['armyId'];
+                if (!isset($dataIn['data']['armyId'])) {
+                    $this->sendError($user, 'Brak "armyId"!');
+                    return;
                 }
 
-                if (isset($dataIn['data']['x'])) {
-                    $x = $dataIn['data']['x'];
+                if (!isset($dataIn['data']['x'])) {
+                    $this->sendError($user, 'Brak "x"!');
+                    return;
                 }
 
-                if (isset($dataIn['data']['y'])) {
-                    $y = $dataIn['data']['y'];
+                if (!isset($dataIn['data']['y'])) {
+                    $this->sendError($user, 'Brak "y"!');
+                    return;
                 }
+
+                $attackerArmyId = $dataIn['data']['armyId'];
+                $x = $dataIn['data']['x'];
+                $y = $dataIn['data']['y'];
 
                 if (!Zend_Validate::is($attackerArmyId, 'Digits') || !Zend_Validate::is($x, 'Digits') || !Zend_Validate::is($y, 'Digits')) {
-                    $this->sendError($user, 'Brak "armyId" lub "x" lub "y" lub "castleId"!');
+                    $this->sendError($user, 'Niepoprawny format danych ("armyId", "x", "y")!');
                     return;
                 }
 
@@ -138,7 +145,7 @@ class Cli_GameHandler extends Cli_WofHandler {
                 $army = Cli_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
 
                 if (empty($army)) {
-                    $this->sendError($user, 'Brak armii o podanym ID!');
+                    $this->sendError($user, 'Brak armii o podanym ID! Odświerz przeglądarkę.');
                     return;
                 }
 
@@ -229,7 +236,6 @@ class Cli_GameHandler extends Cli_WofHandler {
                  */
 
                 if (!$move['currentPosition']) {
-                    print_r($move);
                     $this->sendError($user, 'Za mało punktów ruchu aby wykonać akcję');
                     return;
                 }
@@ -422,6 +428,16 @@ class Cli_GameHandler extends Cli_WofHandler {
                 $users = Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
 
                 $this->sendToChannel($token, $users);
+                break;
+
+            case 'fortifyArmy':
+                $armyId = $dataIn['armyId'];
+                if (empty($armyId)) {
+                    $this->sendError($user, 'Brak "armyId"!');
+                    return;
+                }
+
+                Cli_Database::fortifyArmy($user->parameters['gameId'], $user->parameters['playerId'], $armyId, $db);
                 break;
 
             case 'disbandArmy':

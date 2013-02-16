@@ -48,7 +48,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 
     public function getPlayerArmies($playerId) {
         $select = $this->_db->select()
-                ->from($this->_name)
+                ->from($this->_name, array('armyId', 'fortified', 'x', 'y'))
                 ->where('"gameId" = ?', $this->_gameId)
                 ->where('"playerId" = ?', $playerId)
                 ->where('destroyed = false');
@@ -139,6 +139,31 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
             'movesLeft' => 16
         );
         return $this->_db->insert('heroesingame', $data);
+    }
+
+    public function allArmiesReady() {
+        $select = $this->_db->select()
+                ->from($this->_name, 'count(*) as number')
+                ->where('"gameId" = ?', $this->_gameId);
+        try {
+            $numberOfArmies = $this->_db->fetchOne($select);
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+
+        $select = $this->_db->select()
+                ->from('playersingame', 'count(*) as number')
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('color IS NOT NULL');
+        try {
+            $numberOfPlayers = $this->_db->fetchOne($select);
+        } catch (Exception $e) {
+            throw new Exception($select->__toString());
+        }
+
+        if ($numberOfArmies >= $numberOfPlayers) {
+            return true;
+        }
     }
 
 }

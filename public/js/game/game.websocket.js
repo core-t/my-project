@@ -43,7 +43,7 @@ function startWebSocket(){
                     break;
 
                 case 'nextTurn':
-//                    console.log(r);
+                    //                    console.log(r);
                     unselectArmy();
                     if(r.lost){
                         lostM(r.color);
@@ -56,7 +56,7 @@ function startWebSocket(){
                     break;
 
                 case 'startTurn':
-//                    console.log(r);
+                    //                    console.log(r);
                     if(typeof r.gameover != 'undefined'){
                         lostM(r.color);
                     }else if(r.color==my.color){
@@ -395,6 +395,15 @@ function wsJoinArmy(armyId){
         data: {
             armyId:armyId
         }
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsFortifyArmy(armyId){
+    var token = {
+        type: 'fortifyArmy',
+        armyId:armyId
     };
 
     ws.send(JSON.stringify(token));

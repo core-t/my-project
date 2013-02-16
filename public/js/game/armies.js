@@ -9,6 +9,7 @@ function showFirstArmy(color){
 }
 
 function army(obj, color) {
+    console.log(obj);
     $('#army'+obj.armyId).remove();
     $('#'+obj.armyId).remove();
     if(obj.destroyed){
@@ -17,6 +18,9 @@ function army(obj, color) {
             delete players[color].armies[obj.armyId];
         }
         return;
+    }
+    if(obj.fortified){
+        quitedArmies.push(obj.armyId);
     }
     this.x = obj.x;
     this.y = obj.y;
@@ -428,7 +432,7 @@ function skipArmy(){
     }
 }
 
-function quitArmy(){
+function fortifyArmy(){
     if(!my.turn){
         return;
     }
@@ -436,6 +440,7 @@ function quitArmy(){
         return;
     }
     if(selectedArmy){
+        wsFortifyArmy(selectedArmy.armyId);
         quitedArmies.push(selectedArmy.armyId);
         unselectArmy();
         findNextArmy();

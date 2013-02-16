@@ -12,7 +12,12 @@ class Cli_Database {
     }
 
     static public function update($name, $data, $where, $db, $quiet = false) {
-        $updateResult = $db->update($name, $data, $where);
+        try {
+            $updateResult = $db->update($name, $data, $where);
+        } catch (Exception $e) {
+            echo($e);
+            return;
+        }
         switch ($updateResult)
         {
             case 1:
@@ -75,6 +80,16 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     }
 
     static public function joinArmiesAtPosition($gameId, $position, $playerId, $db) {
+        if (!isset($position['x'])) {
+            echo('
+Brak x');
+            return;
+        }
+        if (!isset($position['y'])) {
+            echo('
+Brak y');
+            return;
+        }
         $select = $db->select()
                 ->from('army', 'armyId')
                 ->where('"gameId" = ?', $gameId)
@@ -85,7 +100,9 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         try {
             $result = $db->query($select)->fetchAll();
             if (!isset($result[0]['armyId'])) {
-                echo 'Brak armii na pozycji';
+                echo '
+(joinArmiesAtPosition) Brak armii na pozycji: ';
+                print_r($position);
                 return array(
                     'armyId' => null,
                     'deletedIds' => null,
@@ -121,11 +138,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"armyId" = ?', $oldArmyId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('heroesingame', $data, $where, $db, true);
-        } catch (Exception $e) {
-            echo $e;
-        }
+        return self::update('heroesingame', $data, $where, $db, true);
     }
 
     static private function soldiersUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
@@ -136,17 +149,15 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"armyId" = ?', $oldArmyId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('soldier', $data, $where, $db, true);
-        } catch (Exception $e) {
-            echo $e;
-        }
+
+        return self::update('soldier', $data, $where, $db, true);
     }
 
     static public function updateArmyPosition($gameId, $armyId, $playerId, $data, $db) {
         $data1 = array(
             'x' => $data['x'],
             'y' => $data['y'],
+            'fortified' => 'false'
         );
 
         $select1 = $db->select()
@@ -170,11 +181,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 $db->quoteInto('"heroId" = ?', $row['heroId']),
                 $db->quoteInto('"gameId" = ?', $gameId)
             );
-            try {
-                self::update('heroesingame', $data2, $where1, $db);
-            } catch (Exception $e) {
-                echo($e);
-            }
+            self::update('heroesingame', $data2, $where1, $db);
         }
 
         $select2 = $db->select()
@@ -196,11 +203,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             );
             $where1 = $db->quoteInto('"soldierId" = ?', $row['soldierId']);
 
-            try {
-                self::update('soldier', $data2, $where1, $db);
-            } catch (Exception $e) {
-                echo($e);
-            }
+            self::update('soldier', $data2, $where1, $db);
         }
 
         $where = array(
@@ -208,11 +211,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        try {
-            return self::update('army', $data1, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('army', $data1, $where, $db);
     }
 
     static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db) {
@@ -258,7 +257,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     }
 
     static private function armyArray() {
-        return array('armyId', 'destroyed', 'x', 'y', 'playerId');
+        return array('armyId', 'destroyed', 'fortified', 'x', 'y', 'playerId');
     }
 
     static private function getArmyHeroes($gameId, $armyId, $in, $db) {
@@ -481,11 +480,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        try {
-            return self::update('army', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('army', $data, $where, $db);
     }
 
     static public function ruinExists($gameId, $ruinId, $db) {
@@ -673,11 +668,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             'production' => null,
             'productionTurn' => 0,
         );
-        try {
-            return self::update('castle', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('castle', $data, $where, $db);
     }
 
     static public function armyRemoveHero($gameId, $heroId, $db) {
@@ -689,11 +680,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId),
         );
-        try {
-            return self::update('heroesingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('heroesingame', $data, $where, $db);
     }
 
     static public function razeCastle($gameId, $castleId, $playerId, $db) {
@@ -708,11 +695,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             'production' => null,
             'productionTurn' => 0,
         );
-        try {
-            return self::update('castle', $data, $where, $db);
-        } catch (Exception $e) {
-            echo $e;
-        }
+        return self::update('castle', $data, $where, $db);
     }
 
     static public function getPlayerInGameGold($gameId, $playerId, $db) {
@@ -736,11 +719,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        try {
-            return self::update('playersingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('playersingame', $data, $where, $db);
     }
 
     static public function getCastle($gameId, $castleId, $db) {
@@ -767,11 +746,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         $data = array(
             'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
         );
-        try {
-            return self::update('castle', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('castle', $data, $where, $db);
     }
 
     static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db) {
@@ -860,7 +835,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     }
 
     static public function updateAllArmiesFromPosition($gameId, $position, $db) {
-
         $select = $db->select()
                 ->from('army', self::armyArray())
                 ->where('"gameId" = ?', $gameId)
@@ -1018,11 +992,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('heroesingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('heroesingame', $data, $where, $db);
     }
 
     static public function getHeroIdByPlayerId($gameId, $playerId, $db) {
@@ -1075,7 +1045,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     }
 
     static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db) {
-
         $select = $db->select()
                 ->from('army', array('x', 'y'))
                 ->where('"gameId" = ?', $gameId)
@@ -1160,11 +1129,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('heroesingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('heroesingame', $data, $where, $db);
     }
 
     static private function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db) {
@@ -1176,11 +1141,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"soldierId" = ?', $soldierId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('soldier', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('soldier', $data, $where, $db);
     }
 
     static public function isHeroInGame($gameId, $playerId, $db) {
@@ -1277,11 +1238,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('heroesingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('heroesingame', $data, $where, $db);
     }
 
     static public function areUnitsAtCastlePosition($gameId, $position, $db) {
@@ -1388,22 +1345,14 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        try {
-            self::update('playersingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        self::update('playersingame', $data, $where, $db);
         $data['turnActive'] = 'false';
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"turnActive" = ?', 'true'),
             $db->quoteInto('"playerId" != ?', $playerId)
         );
-        try {
-            self::update('playersingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        self::update('playersingame', $data, $where, $db);
     }
 
     static public function resetHeroesMovesLeft($gameId, $playerId, $db) {
@@ -1419,11 +1368,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            self::update('heroesingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        self::update('heroesingame', $data, $where, $db);
     }
 
     static public function resetSoldiersMovesLeft($gameId, $playerId, $db) {
@@ -1442,11 +1387,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"armyId" IN (?)', $select2),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('soldier', $data, $where, $db, true);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('soldier', $data, $where, $db, true);
     }
 
     static public function getComputerArmyToMove($gameId, $playerId, $db) {
@@ -1539,11 +1480,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             'production' => $unitId,
             'productionTurn' => 0
         );
-        try {
-            return self::update('castle', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('castle', $data, $where, $db);
     }
 
     static public function resetProductionTurn($gameId, $castleId, $playerId, $db) {
@@ -1556,11 +1493,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         $data = array(
             'productionTurn' => 0
         );
-        try {
-            return self::update('castle', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('castle', $data, $where, $db);
     }
 
     static public function enemiesCastlesExist($gameId, $playerId, $db) {
@@ -1589,12 +1522,8 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"armyId" = ?', $armyId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            self::update('soldier', $data, $where, $db, true);
-            self::update('heroesingame', $data, $where, $db, true);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        self::update('soldier', $data, $where, $db, true);
+        self::update('heroesingame', $data, $where, $db, true);
     }
 
     static public function getFull($gameId, $db) {
@@ -1833,11 +1762,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     static public function updateGame($gameId, $data, $db) {
 
         $where = $db->quoteInto('"gameId" = ?', $gameId);
-        try {
-            return self::update('game', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('game', $data, $where, $db);
     }
 
     static public function updateTurnNumber($gameId, $playerId, $db) {
@@ -1876,11 +1801,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         $data = array(
             'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
         );
-        try {
-            return self::update('castle', $data, $where, $db, true);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('castle', $data, $where, $db, true);
     }
 
     static public function setPlayerLostGame($gameId, $playerId, $db) {
@@ -1890,11 +1811,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        try {
-            self::update('playersingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        self::update('playersingame', $data, $where, $db);
     }
 
     static public function getColorByArmyId($gameId, $armyId, $db) {
@@ -1987,11 +1904,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $db->quoteInto('"playerId" = ?', $playerId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
-        try {
-            return self::update('playersingame', $data, $where, $db);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return self::update('playersingame', $data, $where, $db);
     }
 
     static public function getPlayersWaitingForGame($gameId, $db) {
@@ -2263,6 +2176,18 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             echo($e);
             echo($select->__toString());
         }
+    }
+
+    static public function fortifyArmy($gameId, $playerId, $armyId, $db) {
+        $data = array(
+            'fortified' => true
+        );
+        $where = array(
+            $db->quoteInto('"armyId" = ?', $armyId),
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"playerId" = ?', $playerId),
+        );
+        return self::update('army', $data, $where, $db);
     }
 
 }

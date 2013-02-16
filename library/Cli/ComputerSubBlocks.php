@@ -27,8 +27,11 @@ class Cli_ComputerSubBlocks {
                     {
                         $defender[]['armyId'] = $id;
                     }
-                    var_dump('defender:');
+                    echo('
+Castle defender: ');
                     print_r($defender);
+                    echo('
+castleId: ' . $castleId);
                     Cli_Database::changeOwner($gameId, $castleId, $playerId, $db);
                 } else {
                     $result['attackerArmy'] = array(
@@ -54,7 +57,7 @@ class Cli_ComputerSubBlocks {
                         'destroyed' => true
                     );
                     Cli_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
-                    $defender=null;
+                    $defender = null;
                 }
                 $result['defenderColor'] = 'neutral';
             }
