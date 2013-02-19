@@ -17,6 +17,7 @@ class GameController extends Game_Controller_Game {
         $this->view->headScript()->appendFile('/js/game/towers.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/ruins.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/test.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/chat.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/game.libs.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/game.zoom.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/game.websocket.js?v=' . Zend_Registry::get('config')->version);
@@ -25,16 +26,18 @@ class GameController extends Game_Controller_Game {
 
         $this->_helper->layout->setLayout('game');
 
-        $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-        $modelArmy = new Application_Model_Army($this->_namespace->gameId);
-        $modelRuin = new Application_Model_Ruin($this->_namespace->gameId);
-        $modelTower = new Application_Model_Tower($this->_namespace->gameId);
-        $modelUnit = new Application_Model_Unit();
-        $modelArtefact = new Application_Model_Artefact();
-        $this->view->artefacts = $modelArtefact->getArtefacts();
-        $this->view->units = $modelUnit->getUnits();
+        $mCastle = new Application_Model_Castle($this->_namespace->gameId);
+        $mArmy = new Application_Model_Army($this->_namespace->gameId);
+        $mRuin = new Application_Model_Ruin($this->_namespace->gameId);
+        $mTower = new Application_Model_Tower($this->_namespace->gameId);
+        $mUnit = new Application_Model_Unit();
+        $mArtefact = new Application_Model_Artefact();
+        $mChat = new Application_Model_Chat($this->_namespace->gameId);
+
+        $this->view->artefacts = $mArtefact->getArtefacts();
+        $this->view->units = $mUnit->getUnits();
         $neutralTowers = Application_Model_Board::getTowers();
-        $playersTowers = $modelTower->getTowers();
+        $playersTowers = $mTower->getTowers();
         $towers = array();
         foreach (array_keys($neutralTowers) as $k)
         {
@@ -45,18 +48,22 @@ class GameController extends Game_Controller_Game {
                 $towers[$k]['color'] = 'neutral';
             }
         }
+
         $this->view->towers = $towers;
+
         $players = $mGame->getPlayersInGameReady();
+
         $this->view->players = array();
         $this->view->turn = array();
+        $colors = array();
 
         $game = $mGame->getGame();
 
-        $this->view->game = $game;
         foreach ($players as $player)
         {
-            $this->view->players[$player['color']]['armies'] = $modelArmy->getPlayerArmies($player['playerId']);
-            $this->view->players[$player['color']]['castles'] = $modelCastle->getPlayerCastles($player['playerId']);
+            $colors[$player['playerId']] = $player['color'];
+            $this->view->players[$player['color']]['armies'] = $mArmy->getPlayerArmies($player['playerId']);
+            $this->view->players[$player['color']]['castles'] = $mCastle->getPlayerCastles($player['playerId']);
             $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
             $this->view->players[$player['color']]['computer'] = $player['computer'];
             $this->view->players[$player['color']]['lost'] = $player['lost'];
@@ -88,10 +95,10 @@ class GameController extends Game_Controller_Game {
 
         $this->view->castlesSchema = array();
         $castlesSchema = Application_Model_Board::getCastlesSchema();
-        $razed = $modelCastle->getRazedCastles();
+        $razed = $mCastle->getRazedCastles();
         $this->view->ruins = Application_Model_Board::getRuins();
-        $emptyRuins = $modelRuin->getVisited();
-        foreach ($emptyRuins as $id => $ruin)
+        $emptyRuins = $mRuin->getVisited();
+        foreach (array_keys($emptyRuins) as $id)
         {
             $this->view->ruins[$id]['e'] = 1;
         }
@@ -102,6 +109,13 @@ class GameController extends Game_Controller_Game {
                 $this->view->castlesSchema[$id] = $castle;
             }
         }
+
+        $this->view->chatHistory = $mChat->getChatHistory();
+        foreach ($this->view->chatHistory as $k => $v)
+        {
+            $this->view->chatHistory[$k]['color'] = $colors[$v['playerId']];
+        }
+        $this->view->gameId = $this->_namespace->gameId;
     }
 
     public function boardAction() {

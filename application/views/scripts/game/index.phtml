@@ -6,6 +6,8 @@ var towers = <?php echo Zend_Json::encode($this->towers); ?>;
 var artefacts = <?php echo Zend_Json::encode($this->artefacts); ?>;
 var players = <?php echo Zend_Json::encode($this->players); ?>;
 var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
+var chatHistory = <?php echo Zend_Json::encode($this->chatHistory); ?>;
+
 var my = new Array();
 my.color = '<?php echo $this->color ?>';
 my.id = '<?php echo $this->id ?>';
@@ -14,7 +16,7 @@ my.game = <?php echo $this->myGame ?>;
 var turn = new Array();
 turn.color = '<?php echo $this->turn['color'] ?>';
 turn.nr = '<?php echo $this->turn['nr'] ?>';
-var gameId = <?php echo $this->game['gameId'] ?>;
+var gameId = <?php echo $this->gameId ?>;
 var accessKey = '<?php echo $this->accessKey ?>';
 $(document).ready(function() {
     goldUpdate(<?php echo $this->gold ?>);

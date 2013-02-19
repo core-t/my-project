@@ -9,24 +9,33 @@ $application = new Zend_Application(
                 APPLICATION_ENV,
                 APPLICATION_PATH . '/configs/application.ini'
 );
-$application->getBootstrap()->bootstrap(array('date', 'config'));
+
+//// bootstrap and retrieve the frontController resource
+//$front = $application->getBootstrap()
+//        ->bootstrap('frontController')
+//        ->getResource('frontController');
+//
+////Which part of the app we want to use?
+//$module = 'cli'; //or other module
+//$controller = null;
+//$action = null;
+//$options = array();
+//
+////create the request
+//$request = new Zend_Controller_Request_Simple($action, $controller, $module, $options);
+//
+//// set front controller options to make everything operational from CLI
+//$front->setRequest($request)
+//        ->setResponse(new Zend_Controller_Response_Cli())
+//        ->setRouter(new Game_Router_Cli())
+//        ->throwExceptions(true);
+
+$application->getBootstrap()->bootstrap(array('date', 'config', 'modules', 'frontController'));
 
 declare(ticks = 1);
 
-interface IWebSocketServerObserver {
-
-    public function onConnect(IWebSocketConnection $user);
-
-    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg);
-
-    public function onDisconnect(IWebSocketConnection $user);
-
-    public function onAdminMessage(IWebSocketConnection $user, IWebSocketMessage $msg);
-}
-
-
 // Start server
-$server = new Cli_WofSocketServer();
+$server = new Cli_Model_WofSocketServer();
 $server->run();
 
 exit;

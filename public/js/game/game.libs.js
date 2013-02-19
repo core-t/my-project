@@ -120,6 +120,8 @@ function startGame(){
             setTimeout ( 'wsComputer()', 1000 );
         }
     }
+
+    renderChatHistory();
 }
 
 function goldUpdate(gold){
@@ -128,15 +130,6 @@ function goldUpdate(gold){
 
 function updatePlayers(color){
     players[color].active = 2;
-}
-
-function chat(color,msg,time){
-    var chatWindow = $('#chatWindow div').append('<br/>').append(color+' ('+time+'): '+msg);
-    var scroll = 120 - chatWindow[0].scrollHeight;
-    chatWindow.animate({
-        'top':scroll
-    },100);
-    $('#msg').focus();
 }
 
 function setlock(){
@@ -201,6 +194,26 @@ function makeTime(){
         minutes = '0'+minutes
     }
     return d.getHours()+':'+minutes;
+}
+
+function getISODateTime(d){
+    // padding function
+    var s = function(a,b){
+        return(1e15+a+"").slice(-b)
+        };
+
+    // default date parameter
+    if (typeof d === 'undefined'){
+        d = new Date();
+    };
+
+    // return ISO datetime
+    return d.getFullYear() + '-' +
+    s(d.getMonth()+1,2) + '-' +
+    s(d.getDate(),2) + ' ' +
+    s(d.getHours(),2) + ':' +
+    s(d.getMinutes(),2) + ':' +
+    s(d.getSeconds(),2);
 }
 
 function isDigit(val){

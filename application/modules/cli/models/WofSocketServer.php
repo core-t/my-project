@@ -1,5 +1,16 @@
 <?php
 
+interface IWebSocketServerObserver {
+
+    public function onConnect(IWebSocketConnection $user);
+
+    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg);
+
+    public function onDisconnect(IWebSocketConnection $user);
+
+    public function onAdminMessage(IWebSocketConnection $user, IWebSocketMessage $msg);
+}
+
 /**
  * WOF socket server.
  *
@@ -7,7 +18,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_WofSocketServer implements IWebSocketServerObserver {
+class Cli_Model_WofSocketServer implements IWebSocketServerObserver {
 
     protected $debug = true;
     protected $server;
