@@ -92,7 +92,12 @@ function army(obj, color) {
         }
         numberOfSoldiers++;
     }
-    if(typeof this.heroes[this.heroKey] != 'undefined') {
+    if(this.canSwim){
+        this.name = units[6].name;
+        this.img = this.name.replace(' ', '_').toLowerCase();
+        this.attack = units[6].attackPoints;
+        this.defense = units[6].defensePoints;
+    }else if(typeof this.heroes[this.heroKey] != 'undefined') {
         if(this.heroes[this.heroKey].name){
             this.name = this.heroes[this.heroKey].name;
         }else{
@@ -124,15 +129,14 @@ function army(obj, color) {
             myArmyMouse(this.id)
         });
         if(this.canSwim){
-            if(fields[this.y][this.x] != 'S'){
-                this.fieldType = fields[this.y][this.x];
+//            if(fields[this.y][this.x] != 'S'){
+//                this.fieldType = fields[this.y][this.x];
+//            }
+            if(!isMyCastle(this.x, this.y)){
+                fields[this.y][this.x] = 'S';
             }
-            fields[this.y][this.x] = 'S';
         }
     } else { // nie moja armia
-        //        if(fields[this.y][this.x] != 'e'){
-        //            this.fieldType = fields[this.y][this.x];
-        //        }
         fields[this.y][this.x] = 'e';
         enemyArmyMouse(this);
     }
@@ -346,6 +350,9 @@ function deleteArmy(armyId, color, quiet) {
 
 function armyFields(a){
     if(a.color == my.color){
+        if(fields[a.y][a.x] == 'S'){
+            fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
+        }
         return;
     }
     if(typeof fields[a.y] == 'undefined'){

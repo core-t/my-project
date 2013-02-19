@@ -52,7 +52,7 @@ function test(){
     $('.field').remove();
     for(y in fields){
         for(x in fields[y]){
-            if(fields[y][x] == 'e'){
+            if(fields[y][x] == 'S'){
                 pX = x*40;
                 pY = y*40;
                 board.append(
@@ -61,6 +61,17 @@ function test(){
                     .css({
                         left:pX,
                         top:pY
+                    }));
+            }else if(fields[y][x] == 'c'){
+                pX = x*40;
+                pY = y*40;
+                board.append(
+                    $('<div>')
+                    .addClass('field')
+                    .css({
+                        left:pX,
+                        top:pY,
+                        background:'red'
                     }));
             }
         //            else if(!fields[y][x]){

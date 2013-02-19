@@ -172,6 +172,19 @@ function isEnemyCastle(x, y) {
     return false;
 }
 
+function isMyCastle(x, y) {
+    for(castleId in castles) {
+        if(castles[castleId].color != my.color) {
+            continue;
+        }
+        var pos = castles[castleId].position;
+        if((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
+            return castleId;
+        }
+    }
+    return false;
+}
+
 function getMyCastleDefenseFromPosition(x, y) {
     for(castleId in castles) {
         if(castles[castleId].color == my.color) {

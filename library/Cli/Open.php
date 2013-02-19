@@ -2,6 +2,8 @@
 
 class Cli_Open {
 
+    private $_parameters = array();
+
     public function __construct($dataIn, $user, $db, $gameHandler) {
         if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
             $gameHandler->sendError($user, 'Brak "gameId" lub "playerId"');
@@ -20,10 +22,14 @@ class Cli_Open {
 
         $gameHandler->send($user, Zend_Json::encode($token));
 
-        return array(
+        $this->_parameters = array(
             'gameId' => $dataIn['gameId'],
             'playerId' => $dataIn['playerId']
         );
+    }
+
+    public function getParameters() {
+        return $this->_parameters;
     }
 
 }
