@@ -19,17 +19,4 @@ class TowerController extends Game_Controller_Ajax {
         }
     }
 
-//    public function getAction() {
-//        $towerId = $this->_request->getParam('tid');
-//        if ($towerId !== null) {
-//            $modelTower = new Application_Model_Tower($this->_namespace->gameId);
-//            if ($modelTower->towerExists($towerId)) {
-//                echo Zend_Json::encode($modelTower->getTower($towerId));
-//            } else {
-//                throw new Exception('Nie istnieje!');
-//            }
-//        } else {
-//            throw new Exception('Brak "towerId"!');
-//        }
-//    }
 }

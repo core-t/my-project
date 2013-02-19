@@ -200,12 +200,14 @@ function getISODateTime(d){
     // padding function
     var s = function(a,b){
         return(1e15+a+"").slice(-b)
-        };
+    };
 
     // default date parameter
     if (typeof d === 'undefined'){
         d = new Date();
-    };
+    }else{
+        d = new Date(d);
+    }
 
     // return ISO datetime
     return d.getFullYear() + '-' +
