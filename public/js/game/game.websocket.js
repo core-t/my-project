@@ -221,9 +221,7 @@ function wsCastleBuildDefense(){
     }
     var token = {
         type: 'castleBuildDefense',
-        data: {
-            castleId:castleId
-        }
+        castleId:castleId
     };
 
     ws.send(JSON.stringify(token));
@@ -241,9 +239,7 @@ function wsRazeCastle() {
     }
     var token = {
         type: 'razeCastle',
-        data: {
-            castleId:castleId
-        }
+        castleId:castleId
     };
 
     ws.send(JSON.stringify(token));
@@ -462,7 +458,7 @@ function wsChat() {
 
         var token = {
             type: 'chat',
-            data: msg
+            msg: msg
         };
 
         ws.send(JSON.stringify(token));

@@ -851,7 +851,6 @@ Brak y');
     }
 
     static public function getCastle($gameId, $castleId, $db) {
-
         $select = $db->select()
                 ->from('castle')
                 ->where('"gameId" = ?', $gameId)
@@ -2303,6 +2302,19 @@ Brak y');
             $db->quoteInto('"playerId" = ?', $playerId),
         );
         return self::update('army', $data, $where, $db, true);
+    }
+
+    static public function insertChatMessage($gameId, $playerId, $message, $db) {
+        $data = array(
+            'message' => $message,
+            'playerId' => $playerId,
+            'gameId' => $gameId
+        );
+        try {
+            return $db->insert('chat', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
     }
 
 }

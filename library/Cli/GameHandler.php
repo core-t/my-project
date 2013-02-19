@@ -18,25 +18,7 @@ class Cli_GameHandler extends Cli_WofHandler {
         $db = Cli_Database::getDb();
 
         if ($dataIn['type'] == 'open') {
-            if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
-                $this->sendError($user, 'Brak "gameId" lub "playerId"');
-                return;
-            }
-            if (!Cli_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
-                $this->sendError($user, 'Brak uprawnień!');
-                return;
-            }
-
-            $user->parameters = array(
-                'gameId' => $dataIn['gameId'],
-                'playerId' => $dataIn['playerId']
-            );
-            Cli_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
-            $token = array(
-                'type' => 'open'
-            );
-
-            $this->send($user, Zend_Json::encode($token));
+            $user->parameters = new Cli_Open($dataIn, $user, $db, $this);
             return;
         }
 
@@ -47,56 +29,12 @@ class Cli_GameHandler extends Cli_WofHandler {
 
 
         if ($dataIn['type'] == 'chat') {
-            $token = array(
-                'type' => $dataIn['type'],
-                'msg' => $dataIn['data'],
-                'color' => Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
-            );
-
-            $this->sendToChannel($token, Cli_Database::getInGameWSSUIdsExceptMine($user->parameters['gameId'], $user->parameters['playerId'], $db));
+            new Cli_Chat($dataIn['msg'], $user, $db, $this);
             return;
         }
 
         if ($dataIn['type'] == 'computer') {
-            if (!Cli_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
-                $this->sendError($user, 'Nie Twoja gra!');
-                return;
-            }
-            $playerId = Cli_Database::getTurnPlayerId($user->parameters['gameId'], $db);
-            if (!Cli_Database::isComputer($playerId, $db)) {
-                $this->sendError($user, 'To nie komputer!');
-                return;
-            }
-
-            if (!Cli_Database::playerTurnActive($user->parameters['gameId'], $playerId, $db)) {
-                $token = Cli_ComputerMainBlocks::startTurn($user->parameters['gameId'], $playerId, $db);
-            } else {
-                $army = Cli_Database::getComputerArmyToMove($user->parameters['gameId'], $playerId, $db);
-                if (!empty($army['armyId'])) {
-                    $token = Cli_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, $army, $db);
-                } else {
-                    $token = Cli_Turn::next($user->parameters['gameId'], $playerId, $db);
-                    $token['action'] = 'end';
-                }
-            }
-
-            switch ($token['action'])
-            {
-                case 'continue':
-                    $token['type'] = 'computer';
-                    break;
-                case 'start':
-                    $token['type'] = 'computerStart';
-                    break;
-                case 'end':
-                    $token['type'] = 'nextTurn';
-                    break;
-                case 'gameover':
-                    $token['type'] = 'computerGameover';
-                    break;
-            }
-
-            $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+            new Cli_Computer($user, $db, $this);
             return;
         }
 
@@ -160,9 +98,7 @@ class Cli_GameHandler extends Cli_WofHandler {
                 $token = Cli_Turn::next($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $users = Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
-
-                $this->sendToChannel($token, $users);
+                $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
                 break;
 
             case 'startTurn':
@@ -173,56 +109,11 @@ class Cli_GameHandler extends Cli_WofHandler {
                 break;
 
             case 'razeCastle':
-                $cId = $dataIn['data']['castleId'];
-                if ($cId == null) {
-                    $this->sendError($user, 'Brak "castleId"!');
-                    return;
-                }
-
-                Cli_Database::razeCastle($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db);
-                $gold = Cli_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db) + 1000;
-                Cli_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $gold, $db);
-                $token = Cli_Database::getCastle($user->parameters['gameId'], $cId, $db);
-                $token['color'] = Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db);
-                $token['gold'] = $gold;
-                $token['type'] = 'castle';
-
-                $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                new Cli_CastleRaze($dataIn['castleId'], $user, $db, $this);
                 break;
 
             case 'castleBuildDefense':
-                $cId = $dataIn['data']['castleId'];
-                if ($cId == null) {
-                    $this->sendError($user, 'Brak "castleId"!');
-                    return;
-                }
-
-                if (!Cli_Database::isPlayerCastle($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db)) {
-                    $this->sendError($user, 'To nie jest Twój zamek.');
-                    break;
-                }
-                $gold = Cli_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
-                $defenseModifier = Cli_Database::getCastleDefenseModifier($user->parameters['gameId'], $cId, $db);
-                $defensePoints = Application_Model_Board::getCastleDefense($cId);
-                $defense = $defenseModifier + $defensePoints;
-                $costs = 0;
-                for ($i = 1; $i <= $defense; $i++)
-                {
-                    $costs += $i * 100;
-                }
-                if ($gold < $costs) {
-                    $this->sendError($user, 'Za mało złota!');
-                    return;
-                }
-                Cli_Database::buildDefense($user->parameters['gameId'], $cId, $user->parameters['playerId'], $db);
-                $token = Cli_Database::getCastle($user->parameters['gameId'], $cId, $db);
-                $token['defensePoints'] = $defensePoints;
-                $token['color'] = Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db);
-                $token['gold'] = $gold - $costs;
-                $token['type'] = 'castle';
-                Cli_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $token['gold'], $db);
-
-                $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                new Cli_CastleBuildDefense($dataIn['castleId'], $user, $db, $gameHandler);
                 break;
         }
     }
