@@ -321,6 +321,7 @@ function wsSplitArmy(armyId) {
     }
     var h = '';
     var s = '';
+
     $('.message input[type="checkbox"]:checked').each(function() {
         if($(this).attr('name') == 'heroId'){
             if(h){
@@ -334,6 +335,7 @@ function wsSplitArmy(armyId) {
             s += $(this).val();
         }
     });
+    
     var token = {
         type: 'splitArmy',
         data: {
@@ -394,6 +396,11 @@ function wsJoinArmy(armyId){
 }
 
 function wsFortifyArmy(armyId){
+    if(wsClosed){
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
     var token = {
         type: 'fortifyArmy',
         armyId:armyId
@@ -452,9 +459,9 @@ function wsChat() {
     }
 
     var msg = $('#msg').val();
-    $('#msg').val('');
+
     if(msg){
-        chat(my.color,msg,makeTime());
+        $('#msg').val('');
 
         var token = {
             type: 'chat',

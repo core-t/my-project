@@ -25,10 +25,10 @@ function createNeutralCastle(castleId) {
             top: (castles[castleId].position.y*40) + 'px'
         })
         .mouseover(function(){
-            castleOnMouse(this.id,'c');
+            castleOnMouse(this.id,'g');
         })
         .mousemove(function(){
-            castleOnMouse(this.id,'c')
+            castleOnMouse(this.id,'g')
         })
         .mouseout(function(){
             castleOnMouse(this.id,'e')
@@ -48,12 +48,7 @@ function createNeutralCastle(castleId) {
 }
 
 function castleOnMouse(id, type){
-//    if(lock) {
-//        return;
-//    }
-    if(my.turn && selectedArmy) {
-        castleFields(id.substring(6), type);
-    }
+    castleFields(id.substring(6), type);
 }
 
 function castlesAddCursorWhenSelectedArmy(){
@@ -117,10 +112,10 @@ function castleOwner(castleId, color) {
         .unbind('mouseout')
         .unbind('click')
         .mouseover(function() {
-            castleOnMouse(this.id,'c');
+            castleOnMouse(this.id,'g');
         })
         .mousemove(function() {
-            castleOnMouse(this.id,'c')
+            castleOnMouse(this.id,'g')
         })
         .mouseout(function(){
             castleOnMouse(this.id,'e');

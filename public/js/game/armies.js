@@ -129,9 +129,9 @@ function army(obj, color) {
             myArmyMouse(this.id)
         });
         if(this.canSwim){
-//            if(fields[this.y][this.x] != 'S'){
-//                this.fieldType = fields[this.y][this.x];
-//            }
+            //            if(fields[this.y][this.x] != 'S'){
+            //                this.fieldType = fields[this.y][this.x];
+            //            }
             if(!isMyCastle(this.x, this.y)){
                 fields[this.y][this.x] = 'S';
             }
@@ -226,13 +226,18 @@ function armiesAddCursorWhenUnselectedArmy(){
 }
 
 function enemyArmyMouse(army){
-    army.element.mouseover(function() {
+    army.element
+    .mouseover(function() {
         if(lock) {
             return;
         }
         if(my.turn && selectedArmy) {
             selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-            fields[army.y][army.x] = 'c';
+            var castleId = isEnemyCastle(army.x, army.y);
+            if(castleId !== null){
+                castleFields(castleId, 'g');
+            }
+            fields[army.y][army.x] = 'g';
         }
     })
     .mousemove(function() {
@@ -241,10 +246,18 @@ function enemyArmyMouse(army){
         }
         if(my.turn && selectedArmy) {
             selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-            fields[army.y][army.x] = 'c';
+            var castleId = isEnemyCastle(army.x, army.y);
+            if(castleId !== null){
+                castleFields(castleId, 'g');
+            }
+            fields[army.y][army.x] = 'g';
         }
     })
     .mouseout(function(){
+        var castleId = isEnemyCastle(army.x, army.y);
+        if(castleId !== null){
+            castleFields(castleId, 'e');
+        }
         fields[army.y][army.x] = 'e';
     });
 }

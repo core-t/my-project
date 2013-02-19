@@ -55,27 +55,27 @@ class Cli_SearchRuin {
 
     static public function search($gameId, $ruinId, $heroId, $armyId, $playerId, $db) {
 
-        $turn = self::getTurn($gameId, $db);
+        $turn = Cli_Database::getTurn($gameId, $db);
 
         $random = rand(0, 100);
         if ($random < 10) {//10%
 //śmierć
             if ($turn['nr'] <= 7) {
                 $find = array('null', 1);
-                self::addRuin($gameId, $ruinId, $db);
-                self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+                Cli_Database::addRuin($gameId, $ruinId, $db);
+                Cli_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             } else {
                 $find = array('death', 1);
-                self::armyRemoveHero($gameId, $heroId, $db);
+                Cli_Database::armyRemoveHero($gameId, $heroId, $db);
             }
         } elseif ($random < 55) {//45%
 //kasa
             $gold = rand(50, 150);
             $find = array('gold', $gold);
-            $inGameGold = self::getPlayerInGameGold($gameId, $playerId, $db);
-            self::updatePlayerInGameGold($gameId, $playerId, $gold + $inGameGold, $db);
-            self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            self::addRuin($gameId, $ruinId, $db);
+            $inGameGold = Cli_Database::getPlayerInGameGold($gameId, $playerId, $db);
+            Cli_Database::updatePlayerInGameGold($gameId, $playerId, $gold + $inGameGold, $db);
+            Cli_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            Cli_Database::addRuin($gameId, $ruinId, $db);
         } elseif ($random < 85) {//30%
 //jednostki
             if ($turn['nr'] <= 7) {
@@ -116,15 +116,15 @@ class Cli_SearchRuin {
             $find = array('alies', $numerOfUnits);
             for ($i = 0; $i < $numerOfUnits; $i++)
             {
-                self::addSoldierToArmy($gameId, $armyId, $unitId, $db);
+                Cli_Database::addSoldierToArmy($gameId, $armyId, $unitId, $db);
             }
-            self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            self::addRuin($gameId, $ruinId, $db);
+            Cli_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            Cli_Database::addRuin($gameId, $ruinId, $db);
         } elseif ($random < 95) {//10%
 //nic
             $find = array('null', 1);
-            self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            self::addRuin($gameId, $ruinId, $db);
+            Cli_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            Cli_Database::addRuin($gameId, $ruinId, $db);
         } else {//5%
 //artefakt
             $artefactId = rand(5, 34);
@@ -135,8 +135,8 @@ class Cli_SearchRuin {
                 Cli_Inventory::addArtefact($gameId, $artefactId, $heroId, $db);
             }
             $find = array('artefact', $artefactId);
-            self::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            self::addRuin($gameId, $ruinId, $db);
+            Cli_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            Cli_Database::addRuin($gameId, $ruinId, $db);
         }
 
         return $find;

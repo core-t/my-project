@@ -14,7 +14,6 @@ class Application_Model_Chat extends Game_Db_Table_Abstract {
         $data = array(
             'playerId' => $playerId,
             'gameId' => $gameId,
-            'date' => new Zend_Db_Expr('now()'),
             'message' => $msg
         );
 
@@ -22,7 +21,7 @@ class Application_Model_Chat extends Game_Db_Table_Abstract {
     }
 
     public function getChat() {
-        
+
     }
 
 }

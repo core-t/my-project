@@ -272,8 +272,8 @@ function armyStatusM(){
     for(i in selectedArmy.soldiers) {
         numberOfUnits++;
         var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
-        attackPoints = $('<p>').html(selectedArmy.soldiers[i].attackPoints).css('color','#da8');
-        defensePoints = $('<p>').html(selectedArmy.soldiers[i].defensePoints).css('color','#da8');
+        attackPoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].attackPoints).css('color','#da8');
+        defensePoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].defensePoints).css('color','#da8');
         if(selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly){
             attackPoints.append($('<span>').html(' +1').css('color','#d00000'));
             defensePoints.append($('<span>').html(' +1').css('color','#d00000'));
@@ -308,7 +308,7 @@ function armyStatusM(){
             .append(
                 $('<div>').addClass('left')
                 .append($('<p>').html(selectedArmy.soldiers[i].movesLeft).css('color','#da8'))
-                .append($('<p>').html(selectedArmy.soldiers[i].numberOfMoves).css('color','#da8'))
+                .append($('<p>').html(units[selectedArmy.soldiers[i].unitId].numberOfMoves).css('color','#da8'))
                 .append(attackPoints)
                 .append(defensePoints)
                 )
