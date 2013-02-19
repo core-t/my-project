@@ -86,3 +86,13 @@ function changeEnemyTower(towerId, color){
     towers[towerId].color = color;
     $('#tower' + towerId).css('background','url(../img/game/tower_'+color+'.png) center center no-repeat');
 }
+
+function countPlayerTowers(color){
+    var count = 0;
+    for(i in towers){
+        if(towers[i].color == color){
+            count++;
+        }
+    }
+    return count;
+}

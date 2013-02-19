@@ -32,6 +32,9 @@ var fields = new Array();
 
 var lock = true;
 
+var costs = 0;
+var income = 0;
+
 var selectedArmy = null;
 var unselectedArmy = null;
 var parentArmy = null;
@@ -47,14 +50,12 @@ var zoomer;
 var zoomPad;
 var board;
 
-var cursorDirection;
+//var cursorDirection;
 
 var documentTitle = document.title;
 var timeoutId = null;
 
 var largeimageloaded = false;
-
-//var wait = 0;
 
 var myArmies = false;
 var myCastles = false;

@@ -1,6 +1,6 @@
 <?php
 
-class Cli_Open {
+class Cli_Model_Open {
 
     private $_parameters = array();
 
@@ -9,12 +9,12 @@ class Cli_Open {
             $gameHandler->sendError($user, 'Brak "gameId" lub "playerId"');
             return;
         }
-        if (!Cli_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
+        if (!Cli_Model_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
             $gameHandler->sendError($user, 'Brak uprawnień!');
             return;
         }
 
-        Cli_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
+        Cli_Model_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
 
         $token = array(
             'type' => 'open'

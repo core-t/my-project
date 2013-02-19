@@ -1,6 +1,6 @@
 <?php
 
-class Cli_Inventory {
+class Cli_Model_Inventory {
 
     static public function addArtefact($gameId, $artefactId, $heroId, $db) {
         $data = array(

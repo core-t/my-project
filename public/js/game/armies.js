@@ -9,7 +9,7 @@ function showFirstArmy(color){
 }
 
 function army(obj, color) {
-    console.log(obj);
+//    console.log(obj);
     $('#army'+obj.armyId).remove();
     $('#'+obj.armyId).remove();
     if(obj.destroyed){

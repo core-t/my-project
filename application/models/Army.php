@@ -108,7 +108,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 
     private function getArmySoldiers($armyId) {
         $select = $this->_db->select()
-                ->from(array('a' => 'soldier'), 'movesLeft')
+                ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId'))
                 ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'unitId')
                 ->where('"gameId" = ?', $this->_gameId)
                 ->where('"' . $this->_primary . '" = ?', $armyId)

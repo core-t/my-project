@@ -75,6 +75,9 @@ function startGame(){
         for(i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
             if(color == my.color){
+                for(s in players[color].armies[i].soldiers){
+                    costs += units[players[color].armies[i].soldiers[s].unitId].cost;
+                }
                 myArmies = true;
             }else{
                 enemyArmies = true;
@@ -89,6 +92,7 @@ function startGame(){
             updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
             if(color == my.color){
+                income += castles[i].income;
                 if(firstCastleId > i){
                     firstCastleId = i;
                 }
@@ -122,10 +126,21 @@ function startGame(){
     }
 
     renderChatHistory();
+    costsUpdate(costs);
+    income += countPlayerTowers(my.color)*5;
+    incomeUpdate(income);
 }
 
 function goldUpdate(gold){
     $('#gold').html(gold);
+}
+
+function costsUpdate(gold){
+    $('#costs').html(gold);
+}
+
+function incomeUpdate(gold){
+    $('#income').html(gold);
 }
 
 function updatePlayers(color){

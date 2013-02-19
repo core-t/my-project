@@ -5,7 +5,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_WofHandler extends WebSocket_UriHandler {
+class Cli_Model_WofHandler extends WebSocket_UriHandler {
 
     public function sendToChannel($token, $users, $debug = null) {
         if ($debug || Zend_Registry::get('config')->phpSettings->display_startup_errors) {

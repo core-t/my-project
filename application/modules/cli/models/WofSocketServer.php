@@ -27,8 +27,8 @@ class Cli_Model_WofSocketServer implements IWebSocketServerObserver {
         $this->server = new WebSocket_Server('tcp://' . Zend_Registry::get('config')->websockets->aHost . ':' . Zend_Registry::get('config')->websockets->aPort, 'superdupersecretkey');
         $this->server->addObserver($this);
 
-        $this->server->addUriHandler('game', new Cli_GameHandler());
-        $this->server->addUriHandler('public', new Cli_PublicHandler());
+        $this->server->addUriHandler('game', new Cli_Model_GameHandler());
+        $this->server->addUriHandler('public', new Cli_Model_PublicHandler());
     }
 
     public function onConnect(IWebSocketConnection $user) {

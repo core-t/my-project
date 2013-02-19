@@ -1,6 +1,6 @@
 <?php
 
-class Cli_ComputerSubBlocks {
+class Cli_Model_ComputerSubBlocks {
 
     static public function fightEnemy($gameId, $army, $enemy, $playerId, $castleId, $db = null) {
         if (!$db) {
@@ -11,17 +11,17 @@ class Cli_ComputerSubBlocks {
         );
 
         if ($castleId !== null) { // castle
-            if (Cli_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
-                $result['defenderColor'] = Cli_Database::getColorByCastleId($gameId, $castleId, $db);
-                $enemy = Cli_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
-                $battle = new Cli_Battle($army, $enemy);
+            if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
+                $result['defenderColor'] = Cli_Model_Database::getColorByCastleId($gameId, $castleId, $db);
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
-                $defender = Cli_Database::getDefenderFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $defender = Cli_Model_Database::getDefenderFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
 
                 if (empty($defender)) {
-                    $result['attackerArmy'] = Cli_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
+                    $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     $result['victory'] = true;
                     foreach ($enemy['ids'] as $id)
                     {
@@ -32,44 +32,44 @@ Castle defender: ');
                     print_r($defender);
                     echo('
 castleId: ' . $castleId);
-                    Cli_Database::changeOwner($gameId, $castleId, $playerId, $db);
+                    Cli_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
                 } else {
                     $result['attackerArmy'] = array(
                         'armyId' => $army['armyId'],
                         'destroyed' => true
                     );
-                    Cli_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
+                    Cli_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                 }
             } else { // neutral castle
-                $enemy = Cli_Battle::getNeutralCastleGarrizon($gameId, $db);
-                $battle = new Cli_Battle($army, $enemy);
+                $enemy = Cli_Model_Battle::getNeutralCastleGarrizon($gameId, $db);
+                $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
                 $defender = $battle->getDefender();
 
                 if (empty($defender['soldiers'])) {
-                    $result['attackerArmy'] = Cli_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
-                    Cli_Database::addCastle($gameId, $castleId, $playerId, $db);
+                    $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
+                    Cli_Model_Database::addCastle($gameId, $castleId, $playerId, $db);
                     $result['victory'] = true;
                 } else {
                     $result['attackerArmy'] = array(
                         'armyId' => $army['armyId'],
                         'destroyed' => true
                     );
-                    Cli_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
+                    Cli_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                     $defender = null;
                 }
                 $result['defenderColor'] = 'neutral';
             }
         } else { // enemy army
-            $battle = new Cli_Battle($army, $enemy);
+            $battle = new Cli_Model_Battle($army, $enemy);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
             $battle->updateArmies($gameId, $db);
-            $defender = Cli_Database::getDefenderFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
+            $defender = Cli_Model_Database::getDefenderFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
 
             if (empty($defender)) {
-                $result['attackerArmy'] = Cli_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
+                $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                 $result['victory'] = true;
                 $defender[0]['armyId'] = $enemy['armyId'];
             } else {
@@ -77,9 +77,9 @@ castleId: ' . $castleId);
                     'armyId' => $army['armyId'],
                     'destroyed' => true
                 );
-                Cli_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
+                Cli_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
             }
-            $result['defenderColor'] = Cli_Database::getColorByArmyId($gameId, $enemy['armyId'], $db);
+            $result['defenderColor'] = Cli_Model_Database::getColorByArmyId($gameId, $enemy['armyId'], $db);
         }
 
         $result['defenderArmy'] = $defender;
@@ -93,9 +93,9 @@ castleId: ' . $castleId);
         $attackerCourage = 2;
         for ($i = 0; $i < $max; $i++)
         {
-            $battle = new Cli_Battle($army, $enemy);
+            $battle = new Cli_Model_Battle($army, $enemy);
             if ($castleId !== null) {
-                if (Cli_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+                if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
                     $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 }
             }
@@ -126,7 +126,7 @@ castleId: ' . $castleId);
         $heuristics = array();
         foreach ($castles as $castleId => $castle)
         {
-            $aStar = new Cli_Astar($castle['position']['x'], $castle['position']['y']);
+            $aStar = new Cli_Model_Astar($castle['position']['x'], $castle['position']['y']);
             $heuristics[$castleId] = $aStar->calculateH($army['x'], $army['y']);
         }
         asort($heuristics, SORT_NUMERIC);
@@ -134,10 +134,10 @@ castleId: ' . $castleId);
 
         foreach (array_keys($heuristics) as $castleId)
         {
-            if (Cli_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
-                $enemy = Cli_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+            if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
             } else {
-                $enemy = Cli_Battle::getNeutralCastleGarrizon($gameId, $db);
+                $enemy = Cli_Model_Battle::getNeutralCastleGarrizon($gameId, $db);
             }
             if (!self::isEnemyStronger($gameId, $playerId, $db, $army, $enemy, $castleId)) {
 //                 new Game_Logger('ENEMY SŁABSZY - 108');
@@ -152,7 +152,7 @@ castleId: ' . $castleId);
     static public function isEnemyCastleInRange($castlesAndFields, $castleId, $army) {
         $position = Application_Model_Board::getCastlePosition($castleId);
         $fields = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $position['x'], $position['y'], 'c');
-        $aStar = new Cli_Astar($position['x'], $position['y']);
+        $aStar = new Cli_Model_Astar($position['x'], $position['y']);
         $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
         $key = $position['x'] . '_' . $position['y'];
         $movesToSpend = $aStar->getFullPathMovesSpend($key);
@@ -192,7 +192,7 @@ castleId: ' . $castleId);
         } else {
             $castlesAndFields['fields'] = Application_Model_Board::restoreField($castlesAndFields['fields'], $enemy['x'], $enemy['y']);
         }
-        $aStar = new Cli_Astar($enemy['x'], $enemy['y']);
+        $aStar = new Cli_Model_Astar($enemy['x'], $enemy['y']);
         $aStar->start($army['x'], $army['y'], $castlesAndFields['fields'], $army['canFly'], $army['canSwim']);
         $key = $enemy['x'] . '_' . $enemy['y'];
         $movesToSpend = $aStar->getFullPathMovesSpend($key);
@@ -230,7 +230,7 @@ castleId: ' . $castleId);
         $enemiesHaveRange = array();
         foreach ($enemies as $enemy)
         {
-            $aStar = new Cli_Astar($castlePosition['x'], $castlePosition['y']);
+            $aStar = new Cli_Model_Astar($castlePosition['x'], $castlePosition['y']);
             $h = $aStar->calculateH($enemy['x'], $enemy['y']);
             if ($h < ($enemy['numberOfMoves'])) {
                 $canFlySwim = self::getArmyCanFlySwim($enemy);
@@ -259,13 +259,13 @@ castleId: ' . $castleId);
         $srcY = $army['y'];
         foreach ($enemies as $enemy)
         {
-            $aStar = new Cli_Astar($army['x'], $army['y']);
+            $aStar = new Cli_Model_Astar($army['x'], $army['y']);
             $h = $aStar->calculateH($enemy['x'], $enemy['y']);
             if ($h < $army['movesLeft']) {
                 $destX = $enemy['x'];
                 $destY = $enemy['y'];
                 $fields = Application_Model_Board::restoreField($fields, $destX, $destY);
-                $aStar = new Cli_Astar($destX, $destY);
+                $aStar = new Cli_Model_Astar($destX, $destY);
                 $aStar->start($srcX, $srcY, $fields, $army['canFly'], $army['canSwim']);
                 $movesToSpend = $aStar->getFullPathMovesSpend($destX . '_' . $destY);
                 $fields = Application_Model_Board::changeArmyField($fields, $destX, $destY, 'e');
@@ -291,7 +291,7 @@ castleId: ' . $castleId);
         {
             $destX = $ruin['x'];
             $destY = $ruin['y'];
-            $aStar = new Cli_Astar($destX, $destY);
+            $aStar = new Cli_Model_Astar($destX, $destY);
             $h = $aStar->calculateH($srcX, $srcY);
             if ($h < $army['movesLeft']) {
                 $aStar->start($srcX, $srcY, $fields, $army['canFly'], $army['canSwim']);
@@ -311,14 +311,14 @@ castleId: ' . $castleId);
         foreach ($myCastles as $castle)
         {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-            if (Cli_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
+            if (Cli_Model_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
                 continue;
             }
-            $aStar = new Cli_Astar($army['x'], $army['y']);
+            $aStar = new Cli_Model_Astar($army['x'], $army['y']);
             $h = $aStar->calculateH($position['x'], $position['y']);
             if ($h < $army['movesLeft']) {
                 $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'c');
-                $aStar = new Cli_Astar($position['x'], $position['y']);
+                $aStar = new Cli_Model_Astar($position['x'], $position['y']);
                 $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
                 $key = $position['x'] . '_' . $position['y'];
                 $movesToSpend = $aStar->getFullPathMovesSpend($key);
@@ -338,11 +338,11 @@ castleId: ' . $castleId);
     static public function isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle, $fields) {
         foreach ($enemies as $enemy)
         {
-            $aStar = new Cli_Astar($enemy['x'], $enemy['y']);
+            $aStar = new Cli_Model_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($myEmptyCastle['x'], $myEmptyCastle['y']);
             if ($h < $enemy['numberOfMoves']) {
                 $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'c');
-                $aStar = new Cli_Astar($myEmptyCastle['x'], $myEmptyCastle['y']);
+                $aStar = new Cli_Model_Astar($myEmptyCastle['x'], $myEmptyCastle['y']);
                 $canFlySwim = self::getArmyCanFlySwim($enemy);
                 $aStar->start($enemy['x'], $enemy['y'], $fields, $canFlySwim['canFly'], $canFlySwim['canSwim']);
                 $key = $myEmptyCastle['x'] . '_' . $myEmptyCastle['y'];
@@ -370,7 +370,7 @@ castleId: ' . $castleId);
     static public function getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db = null) {
         foreach ($enemies as $enemy)
         {
-            $aStar = new Cli_Astar($enemy['x'], $enemy['y']);
+            $aStar = new Cli_Model_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
                 $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
@@ -405,7 +405,7 @@ castleId: ' . $castleId);
     static public function getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db) {
         foreach ($enemies as $enemy)
         {
-            $aStar = new Cli_Astar($enemy['x'], $enemy['y']);
+            $aStar = new Cli_Model_Astar($enemy['x'], $enemy['y']);
             $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
                 $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
@@ -441,10 +441,10 @@ castleId: ' . $castleId);
         if (!$db) {
             $db = self::getDb();
         }
-        $myArmies = Cli_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $playerId, $db);
+        $myArmies = Cli_Model_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $playerId, $db);
         foreach ($myArmies as $a)
         {
-            $aStar = new Cli_Astar($a['x'], $a['y']);
+            $aStar = new Cli_Model_Astar($a['x'], $a['y']);
             $h = $aStar->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
                 $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
@@ -465,7 +465,7 @@ castleId: ' . $castleId);
         $heuristics = array();
         foreach ($enemies as $k => $enemy)
         {
-            $aStar = new Cli_Astar($enemy['x'], $enemy['y']);
+            $aStar = new Cli_Model_Astar($enemy['x'], $enemy['y']);
             $heuristics[$k] = $aStar->calculateH($army['x'], $army['y']);
         }
         if (empty($heuristics)) {
@@ -477,7 +477,7 @@ castleId: ' . $castleId);
         foreach ($myCastles as $j => $castle)
         {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-            $aStar = new Cli_Astar($enemies[$k]['x'], $enemies[$k]['y']);
+            $aStar = new Cli_Model_Astar($enemies[$k]['x'], $enemies[$k]['y']);
             $heuristics[$j] = $aStar->calculateH($position['x'], $position['y']);
         }
         if (empty($heuristics)) {
@@ -487,7 +487,7 @@ castleId: ' . $castleId);
         $k = key($heuristics);
         $castle = $myCastles[$k];
         $position = Application_Model_Board::getCastlePosition($castle['castleId']);
-        $aStar = new Cli_Astar($position['x'], $position['y']);
+        $aStar = new Cli_Model_Astar($position['x'], $position['y']);
         $aStar->start($army['x'], $army['y'], $fields, $army['canFly'], $army['canSwim']);
         $castle['path'] = $aStar->getPath($position['x'] . '_' . $position['y'], $army['movesLeft']);
         $castle['currentPosition'] = $aStar->getCurrentPosition();

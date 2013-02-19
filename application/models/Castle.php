@@ -65,21 +65,23 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
 
     public function getPlayerCastles($playerId) {
         $playersCastles = array();
+        $select = $this->_db->select()
+                ->from($this->_name, array('production', 'productionTurn', 'defenseMod', 'castleId'))
+                ->where('"playerId" = ?', $playerId)
+                ->where('"gameId" = ?', $this->_gameId)
+                ->where('razed = false');
         try {
-            $select = $this->_db->select()
-                    ->from($this->_name)
-                    ->where('"playerId" = ?', $playerId)
-                    ->where('"gameId" = ?', $this->_gameId)
-                    ->where('razed = false');
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $key => $val)
-            {
-                $playersCastles[$val['castleId']] = $val;
-            }
-            return $playersCastles;
         } catch (PDOException $e) {
-            throw new Exception($select->__toString());
+            throw new Exception($e . $select->__toString());
         }
+
+        foreach ($result as $val)
+        {
+            $playersCastles[$val['castleId']] = $val;
+            unset($playersCastles[$val['castleId']]['castleId']);
+        }
+        return $playersCastles;
     }
 
     public function enemiesCastlesExist($playerId) {

@@ -1,6 +1,6 @@
 <?php
 
-class Cli_Database {
+class Cli_Model_Database {
 
     static public function getDb() {
         return new Zend_Db_Adapter_Pdo_Pgsql(array(

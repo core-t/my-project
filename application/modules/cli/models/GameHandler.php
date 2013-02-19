@@ -7,7 +7,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_GameHandler extends Cli_WofHandler {
+class Cli_Model_GameHandler extends Cli_Model_WofHandler {
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
 
@@ -15,10 +15,10 @@ class Cli_GameHandler extends Cli_WofHandler {
         print_r('ZAPYTANIE ');
         print_r($dataIn);
 
-        $db = Cli_Database::getDb();
+        $db = Cli_Model_Database::getDb();
 
         if ($dataIn['type'] == 'open') {
-            $open = new Cli_Open($dataIn, $user, $db, $this);
+            $open = new Cli_Model_Open($dataIn, $user, $db, $this);
             $user->parameters = $open->getParameters();
             return;
         }
@@ -30,16 +30,16 @@ class Cli_GameHandler extends Cli_WofHandler {
 
 
         if ($dataIn['type'] == 'chat') {
-            new Cli_Chat($dataIn['msg'], $user, $db, $this);
+            new Cli_Model_Chat($dataIn['msg'], $user, $db, $this);
             return;
         }
 
         if ($dataIn['type'] == 'computer') {
-            new Cli_Computer($user, $db, $this);
+            new Cli_Model_Computer($user, $db, $this);
             return;
         }
 
-        if (!Cli_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+        if (!Cli_Model_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
             $this->sendError($user, 'Nie Twoja tura.');
             return;
         }
@@ -62,15 +62,15 @@ class Cli_GameHandler extends Cli_WofHandler {
                     return;
                 }
 
-                new Cli_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
+                new Cli_Model_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
                 break;
 
             case 'splitArmy':
-                new Cli_SplitArmy($dataIn['data']['armyId'], $dataIn['data']['s'], $dataIn['data']['h'], $user, $db, $this);
+                new Cli_Model_SplitArmy($dataIn['data']['armyId'], $dataIn['data']['s'], $dataIn['data']['h'], $user, $db, $this);
                 break;
 
             case 'joinArmy':
-                new Cli_JoinArmy($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_JoinArmy($dataIn['data']['armyId'], $user, $db, $this);
                 break;
 
             case 'fortifyArmy':
@@ -80,49 +80,49 @@ class Cli_GameHandler extends Cli_WofHandler {
                     return;
                 }
 
-                Cli_Database::fortifyArmy($user->parameters['gameId'], $user->parameters['playerId'], $armyId, $db);
+                Cli_Model_Database::fortifyArmy($user->parameters['gameId'], $user->parameters['playerId'], $armyId, $db);
                 break;
 
             case 'disbandArmy':
-                new Cli_DisbandArmy($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_DisbandArmy($dataIn['data']['armyId'], $user, $db, $this);
                 break;
 
             case 'heroResurrection':
-                new Cli_HeroResurrection($dataIn['data']['castleId'], $user, $db, $this);
+                new Cli_Model_HeroResurrection($dataIn['data']['castleId'], $user, $db, $this);
                 break;
 
             case 'ruin':
-                new Cli_SearchRuin($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_SearchRuin($dataIn['data']['armyId'], $user, $db, $this);
                 break;
 
             case 'nextTurn':
-                $token = Cli_Turn::next($user->parameters['gameId'], $user->parameters['playerId'], $db);
+                $token = Cli_Model_Turn::next($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
                 break;
 
             case 'startTurn':
-                $token = Cli_Turn::start($user->parameters['gameId'], $user->parameters['playerId'], $db);
+                $token = Cli_Model_Turn::start($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $this->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
                 break;
 
             case 'razeCastle':
-                new Cli_CastleRaze($dataIn['castleId'], $user, $db, $this);
+                new Cli_Model_CastleRaze($dataIn['castleId'], $user, $db, $this);
                 break;
 
             case 'castleBuildDefense':
-                new Cli_CastleBuildDefense($dataIn['castleId'], $user, $db, $gameHandler);
+                new Cli_Model_CastleBuildDefense($dataIn['castleId'], $user, $db, $gameHandler);
                 break;
         }
     }
 
     public function onDisconnect(IWebSocketConnection $user) {
         if (Zend_Validate::is($user->parameters['gameId'], 'Digits') || Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
-            $db = Cli_Database::getDb();
-            Cli_Database::updatePlayerInGameWSSUId($user->parameters['gameId'], $user->parameters['playerId'], null, $db);
+            $db = Cli_Model_Database::getDb();
+            Cli_Model_Database::updatePlayerInGameWSSUId($user->parameters['gameId'], $user->parameters['playerId'], null, $db);
 //            Game_Cli_Database::disconnectFromGame($user->parameters['gameId'], $user->parameters['playerId'], $db);
 //            $this->update($user->parameters['gameId'], $db);
         }

@@ -176,6 +176,7 @@ function splitArmyM(a){
     removeM();
     var army = $('<div>').addClass('split');
     var numberOfUnits = 0;
+    console.log(selectedArmy.soldiers);
     for(i in selectedArmy.soldiers) {
         var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
         numberOfUnits++;

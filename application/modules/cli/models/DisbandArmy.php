@@ -1,6 +1,6 @@
 <?php
 
-class Cli_DisbandArmy {
+class Cli_Model_DisbandArmy {
 
     public function __construct($armyId, $user, $db, $gameHandler) {
         if (empty($armyId)) {
@@ -8,7 +8,7 @@ class Cli_DisbandArmy {
             return;
         }
 
-        $destroyArmyResponse = Cli_Database::destroyArmy($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+        $destroyArmyResponse = Cli_Model_Database::destroyArmy($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
 
         if (!$destroyArmyResponse) {
             $gameHandler->sendError($user, 'Nie mogę usunąć armii!');
@@ -18,10 +18,10 @@ class Cli_DisbandArmy {
         $token = array(
             'type' => 'disbandArmy',
             'armyId' => $armyId,
-            'color' => Cli_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
+            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
         );
 
-        $gameHandler->sendToChannel($token, Cli_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+        $gameHandler->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
     }
 
 }
