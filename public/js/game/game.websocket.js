@@ -76,21 +76,21 @@ function startWebSocket(){
 
                 case 'ruin':
                     //                    console.log(r);
-                    zoomer.lensSetCenter(players[r.color].armies['army' + r.data.army.armyId].x*40, players[r.color].armies['army' + r.data.army.armyId].y*40);
-                    players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
-                    ruinUpdate(r.data.ruin.ruinId, r.data.ruin.empty);
+                    zoomer.lensSetCenter(players[r.color].armies['army' + r.army.armyId].x*40, players[r.color].armies['army' + r.army.armyId].y*40);
+                    players[r.color].armies['army' + r.army.armyId] = new army(r.army, r.color);
+                    ruinUpdate(r.ruin.ruinId, r.ruin.empty);
                     if(my.color==r.color){
-                        switch(r.data.find[0]){
+                        switch(r.find[0]){
                             case 'gold':
-                                var gold = r.data.find[1] + parseInt($('#gold').html());
+                                var gold = r.find[1] + parseInt($('#gold').html());
                                 goldUpdate(gold);
-                                simpleM('You have found '+r.data.find[1]+' gold.');
+                                simpleM('You have found '+r.find[1]+' gold.');
                                 break;
                             case 'death':
                                 simpleM('You have found death.');
                                 break
                             case 'alies':
-                                simpleM(r.data.find[1]+' alies joined your army.');
+                                simpleM(r.find[1]+' alies joined your army.');
                                 break
                             case 'null':
                                 simpleM('You have found nothing.');
@@ -108,14 +108,13 @@ function startWebSocket(){
 
                 case 'splitArmy':
                     removeM();
-                    players[r.color].armies['army'+r.data.parentArmy.armyId] = new army(r.data.parentArmy, r.color);
-                    setParentArmy(players[r.color].armies['army'+r.data.parentArmy.armyId]);
-                    players[r.color].armies['army'+r.data.childArmy.armyId] = new army(r.data.childArmy, r.color);
+                    players[r.color].armies['army'+r.parentArmy.armyId] = new army(r.parentArmy, r.color);
+                    setParentArmy(players[r.color].armies['army'+r.parentArmy.armyId]);
+                    players[r.color].armies['army'+r.childArmy.armyId] = new army(r.childArmy, r.color);
                     if(my.color==turn.color){
-                        selectArmy(players[r.color].armies['army'+r.data.childArmy.armyId]);
-                    }
-                    else{
-                        zoomer.lensSetCenter(r.data.parentArmy.x*40, r.data.parentArmy.y*40);
+                        selectArmy(players[r.color].armies['army'+r.childArmy.armyId]);
+                    }else{
+                        zoomer.lensSetCenter(r.parentArmy.x*40, r.parentArmy.y*40);
                     }
                     break;
 
@@ -130,9 +129,9 @@ function startWebSocket(){
                     break;
 
                 case 'disbandArmy':
-                    if(typeof r.data.armyId != 'undefined' && r.color != 'undefined'){
+                    if(typeof r.armyId != 'undefined' && r.color != 'undefined'){
                         removeM();
-                        deleteArmy('army' + r.data.armyId, r.color);
+                        deleteArmy('army' + r.armyId, r.color);
                     }
                     break;
 
@@ -307,11 +306,9 @@ function wsArmyMove(movesSpend) {
 
     var token = {
         type: 'move',
-        data:{
-            x: x,
-            y: y,
-            armyId: unselectedArmy.armyId
-        }
+        x: x,
+        y: y,
+        armyId: unselectedArmy.armyId
     };
 
     ws.send(JSON.stringify(token));

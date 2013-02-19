@@ -8,7 +8,7 @@
 class Cli_WofHandler extends WebSocket_UriHandler {
 
     public function sendToChannel($token, $users, $debug = null) {
-        if ($debug) {
+        if ($debug || Zend_Registry::get('config')->phpSettings->display_startup_errors) {
             print_r('ODPOWIEDŹ ');
             print_r($token);
         }

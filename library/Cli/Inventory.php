@@ -1,6 +1,6 @@
 <?php
 
-class Cli_Inventory extends Game_Db_Table_Abstract {
+class Cli_Inventory {
 
     static public function addArtefact($gameId, $artefactId, $heroId, $db) {
         $data = array(

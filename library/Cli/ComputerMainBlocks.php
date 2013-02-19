@@ -32,7 +32,7 @@ class Cli_ComputerMainBlocks {
                         $enemy = Cli_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db);
                         if ($enemy) {
                             new Cli_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
-                            $join = Cli_ComputerSubBlocks::getMyArmyInRange($gameId, $army, $castlesAndFields['fields'], $db);
+                            $join = Cli_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $army, $castlesAndFields['fields'], $db);
                             if ($join) {
                                 new Cli_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                                 Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $join['currentPosition'], $db);
@@ -40,14 +40,14 @@ class Cli_ComputerMainBlocks {
                             } else {
                                 new Cli_Logger('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ DO ZAMKU!');
                                 Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $castleRange['currentPosition'], $db);
-                                Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                                Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                             }
                         } else {
                             new Cli_Logger('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ DO ZAMKU!');
 
                             Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $castleRange['currentPosition'], $db);
-                            Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                            Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                         }
                     }
@@ -88,12 +88,12 @@ class Cli_ComputerMainBlocks {
                 } else {
                     new Cli_Logger('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
                     Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $range['currentPosition'], $db);
-                    Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                    Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path']);
                 }
             } else {
                 new Cli_Logger('WRÓG JEST SILNIEJSZY');
-                $join = Cli_ComputerSubBlocks::getMyArmyInRange($gameId, $army, $castlesAndFields['fields'], $db);
+                $join = Cli_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $army, $castlesAndFields['fields'], $db);
                 if ($join) {
                     new Cli_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                     Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $join['currentPosition'], $db);
@@ -104,11 +104,11 @@ class Cli_ComputerMainBlocks {
                     if ($castle) {
                         new Cli_Logger('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
                         Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $castle['currentPosition'], $db);
-                        Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                        Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $castle['currentPosition'], $castle['path']);
                     } else {
                         new Cli_Logger('NIE MA MOJEGO ZAMKU W POBLIŻU WROGA - ZOSTAŃ');
-                        Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                        Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
                 }
@@ -123,7 +123,7 @@ class Cli_ComputerMainBlocks {
         } else {
             new Cli_Logger('JEST HEROS');
             new Cli_Logger($army['heroes'], 'HEROS:');
-            $ruin = Cli_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Database::getFull($gameId, $db), $army);
+            $ruin = Cli_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Database::getFullRuins($gameId, $db), $army);
             if (!$ruin) {
                 new Cli_Logger('BRAK RUIN');
                 return self::firstBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
@@ -131,7 +131,7 @@ class Cli_ComputerMainBlocks {
                 //idź do ruin
                 new Cli_Logger('IDŹ DO RUIN');
                 Cli_Database::updateArmyPosition($gameId, $army['armyId'], $playerId, $ruin['currentPosition'], $db);
-                Cli_Database::searchRuin($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
+                Cli_SearchRuin::search($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $ruin['currentPosition'], $ruin['path'], null, null, $ruin['ruinId']);
             }
         }
@@ -191,7 +191,7 @@ class Cli_ComputerMainBlocks {
                     } else {
                         new Cli_Logger('WRÓG JEST SILNIEJSZY - ZOSTAŃ!');
 
-                        Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                        Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
                 }
@@ -201,7 +201,7 @@ class Cli_ComputerMainBlocks {
                 if (!$enemiesInRange) {
                     new Cli_Logger('BRAK WROGA W ZASIĘGU - ZOSTAŃ!');
 
-                    Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                    Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                 } else {
                     new Cli_Logger('JEST WRÓG W ZASIĘGU');
@@ -209,7 +209,7 @@ class Cli_ComputerMainBlocks {
                     if (count($enemiesHaveRange) > count($enemiesInRange)) {
                         new Cli_Logger('WRÓGÓW Z ZASIĘGIEM > WRÓGÓW W ZASIĘGU - ZOSTAŃ!');
 
-                        Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                        Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
                         new Cli_Logger('WRÓGÓW Z ZASIĘGIEM <= WRÓGÓW W ZASIĘGU');
@@ -218,7 +218,7 @@ class Cli_ComputerMainBlocks {
                         if (!$enemy) {
                             new Cli_Logger('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
 
-                            Cli_Database::zeroArmyMovesLeft($gameId, $army['armyId'], $db);
+                            Cli_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {
                             //atakuj
@@ -305,12 +305,12 @@ class Cli_ComputerMainBlocks {
 
     static public function startTurn($gameId, $playerId, $db = null) {
         Cli_Database::turnActivate($gameId, $playerId, $db);
+        Cli_Database::unfortifyComputerArmies($gameId, $playerId, $db);
         Cli_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
         Cli_Database::resetSoldiersMovesLeft($gameId, $playerId, $db);
 
         $gold = Cli_Database::getPlayerInGameGold($gameId, $playerId, $db);
         $income = 0;
-        $costs = 0;
         $castles = array();
         $color = null;
         $turnNumber = Cli_Database::getTurnNumber($gameId, $db);
@@ -320,7 +320,7 @@ class Cli_ComputerMainBlocks {
             return;
         }
 
-        $castlesId = Cli_Database::getPlayerCastles($gameId, $playerId, $db);
+        $castlesId = Cli_Database::getPlayerCastlesIds($gameId, $playerId, $db);
         foreach ($castlesId as $id)
         {
             $castleId = $id['castleId'];
@@ -359,14 +359,8 @@ class Cli_ComputerMainBlocks {
         if (empty($castles) && empty($armies)) {
             $action = 'gameover';
         } else {
-            foreach ($armies as $army)
-            {
-                foreach ($army['soldiers'] as $unit)
-                {
-                    $costs += $unit['cost'];
-                }
-            }
-            $gold = $gold + $income - $costs;
+            $income += Cli_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
+            $gold = $gold + $income - Cli_Database::calculateCostsOfSoldiers($gameId, $playerId, $db);
             Cli_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
             $action = 'start';
             $color = Cli_Database::getColorByPlayerId($gameId, $playerId, $db);

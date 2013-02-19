@@ -67,7 +67,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
     }
 
     public function getMyGames($playerId) {
-
         $select1 = $this->_db->select()
                 ->from('playersingame', $this->_primary)
                 ->where('color is not null')
@@ -83,24 +82,29 @@ class Application_Model_Game extends Game_Db_Table_Abstract {
                 ->order('begin DESC');
         try {
             $result = $this->_db->query($select2)->fetchAll();
-            foreach (array_keys($result) as $k)
-            {
-                $players = array();
+        } catch (PDOException $e) {
+            throw new Exception($select2->__toString());
+        }
+        foreach (array_keys($result) as $k)
+        {
+            $players = array();
 
-                $select = $this->_db->select()
-                        ->from(array('a' => 'player'), array('firstName', 'lastName', 'playerId'))
-                        ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', array('color'))
-                        ->where('"gameId" = ?', $result[$k]['gameId']);
+            $select = $this->_db->select()
+                    ->from(array('a' => 'player'), array('firstName', 'lastName', 'playerId'))
+                    ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', array('color'))
+                    ->where('"gameId" = ?', $result[$k]['gameId'])
+                    ->where('color is not null');
+            try {
                 foreach ($this->_db->query($select)->fetchAll() as $v)
                 {
                     $players[$v['playerId']] = $v;
                 }
-                $result[$k]['players'] = $players;
+            } catch (PDOException $e) {
+                throw new Exception($select->__toString());
             }
-            return $result;
-        } catch (PDOException $e) {
-            throw new Exception($select2->__toString());
+            $result[$k]['players'] = $players;
         }
+        return $result;
     }
 
     public function playerIsAlive($playerId) {

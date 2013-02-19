@@ -1,15 +1,5 @@
 *{padding: 0; margin: 0;}
 @font-face {
-    font-family: "Deutsch";
-    src: url('../Deutsch.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "Van Helsing";
-    src: url('../Van Helsing.ttf') format("truetype");
-}
-
-@font-face {
     font-family: "Alpine";
     src: url('../Alpine.ttf') format("truetype");
 }
@@ -229,13 +219,22 @@ td {
     padding-left: 5px;
 }
 
+.font-white{
+    color: white;
+}
+.font-green{
+    color: green;
+}
 .font-yellow{
     color:yellow;
 }
-
+.font-red{
+    color: red;
+}
 .font-orange{
     color:orange;
 }
+
 
 .errors{
     color:orange;

@@ -495,12 +495,12 @@ function castleM(castleId, color){
         var buttonResurestion;
         var cssResurestion;
         if($('#gold').html() < 100){
-            buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection');
+            buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
             cssResurestion = {
                 'color':'#d00000'
             };
         }else{
-            buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection').click(function(){
+            buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function(){
                 wsHeroResurrection(castleId)
             });
             cssResurestion = {};
@@ -515,7 +515,6 @@ function castleM(castleId, color){
                 value:castleId
             })
             )
-        .append(' cost 100g')
         .append(buttonResurestion);
     }
     var buttonBuilDefense;
@@ -525,15 +524,11 @@ function castleM(castleId, color){
         costBuilDefense += i*100;
     }
     if($('#gold').html() < costBuilDefense){
-        buttonBuilDefense = $('<div>').addClass('button right buttonOff').html('Build defense');
-        cssBuilDefense = {
-            'color':'#d00000'
-        };
+        buttonBuilDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost '+costBuilDefense+'g)');
     }else{
-        buttonBuilDefense = $('<div>').addClass('button right').html('Build defense').click(function(){
+        buttonBuilDefense = $('<div>').addClass('button right').html('Build defense (cost '+costBuilDefense+'g)').click(function(){
             wsCastleBuildDefense();
         });
-        cssBuilDefense = {};
     }
     mElement().after(
         $('<div>')
@@ -550,7 +545,6 @@ function castleM(castleId, color){
         .append(
             $('<p>')
             .addClass('h')
-            .css(cssBuilDefense)
             .append(
                 $('<input>').attr({
                     type:'checkbox',
@@ -558,7 +552,6 @@ function castleM(castleId, color){
                     value:castleId
                 })
                 )
-            .append(' cost '+costBuilDefense+'g')
             .append(buttonBuilDefense)
             )
         .append(
@@ -571,8 +564,7 @@ function castleM(castleId, color){
                     value:castleId
                 })
                 )
-            .append(' income 1000g')
-            .append($('<div>').addClass('button right').html('Raze').click(function(){
+            .append($('<div>').addClass('button right').html('Raze (income 1000g)').click(function(){
                 wsRazeCastle()
             }))
             )

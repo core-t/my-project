@@ -13,12 +13,12 @@ class Cli_ComputerSubBlocks {
         if ($castleId !== null) { // castle
             if (Cli_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
                 $result['defenderColor'] = Cli_Database::getColorByCastleId($gameId, $castleId, $db);
-                $enemy = Cli_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
                 $battle = new Cli_Battle($army, $enemy);
                 $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
-                $defender = Cli_Database::updateAllArmiesFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $defender = Cli_Database::getDefenderFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
 
                 if (empty($defender)) {
                     $result['attackerArmy'] = Cli_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
@@ -66,7 +66,7 @@ castleId: ' . $castleId);
             $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
             $battle->updateArmies($gameId, $db);
-            $defender = Cli_Database::updateAllArmiesFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
+            $defender = Cli_Database::getDefenderFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
 
             if (empty($defender)) {
                 $result['attackerArmy'] = Cli_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
@@ -135,7 +135,7 @@ castleId: ' . $castleId);
         foreach (array_keys($heuristics) as $castleId)
         {
             if (Cli_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
-                $enemy = Cli_Database::getAllUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
             } else {
                 $enemy = Cli_Battle::getNeutralCastleGarrizon($gameId, $db);
             }
@@ -437,11 +437,11 @@ castleId: ' . $castleId);
         return null;
     }
 
-    static public function getMyArmyInRange($gameId, $army, $fields, $db = null) {
+    static public function getMyArmyInRange($gameId, $playerId, $army, $fields, $db = null) {
         if (!$db) {
             $db = self::getDb();
         }
-        $myArmies = Cli_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $army['playerId'], $db);
+        $myArmies = Cli_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $playerId, $db);
         foreach ($myArmies as $a)
         {
             $aStar = new Cli_Astar($a['x'], $a['y']);

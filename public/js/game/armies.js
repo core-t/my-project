@@ -145,7 +145,7 @@ function army(obj, color) {
     .addClass(color)
     .attr({
         id: 'army' + obj.armyId,
-        title: obj.armyId + ' ' + color + ' army'
+        title: this.name
     }).css({
         background: 'url(../img/game/flag_' + color + '_'+numberOfUnits+'.png) top left no-repeat',
         left:       (this.x*40) + 'px',
@@ -357,8 +357,8 @@ function armyFields(a){
         return;
     }
 
-//    console.log(a);
-//    console.log(fields[a.y][a.x]);
+    //    console.log(a);
+    //    console.log(fields[a.y][a.x]);
 
     if(isEnemyCastle(a.x, a.y) !== false){
         fields[a.y][a.x] = 'e';
@@ -526,15 +526,6 @@ function walkEnd(r, computer){
     newX = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].x;
     newY = players[r.attackerColor].armies['army'+r.attackerArmy.armyId].y;
 
-    if(r.attackerColor == my.color){
-        if(!r.castleId && players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
-            unlock();
-            selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
-        }else{
-            unlock();
-        }
-    }
-
     if(isDigit(r.ruinId)){
         ruinUpdate(r.ruinId, 1);
     }
@@ -550,6 +541,15 @@ function walkEnd(r, computer){
 
     if(typeof computer != 'undefined'){
         wsComputer();
+    }
+
+    if(r.attackerColor == my.color){
+        if(!r.castleId && players[r.attackerColor].armies['army'+r.attackerArmy.armyId].moves){
+            unlock();
+            selectArmy(players[r.attackerColor].armies['army'+r.attackerArmy.armyId]);
+        }else{
+            unlock();
+        }
     }
 }
 
