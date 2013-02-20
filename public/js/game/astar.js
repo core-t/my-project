@@ -1,6 +1,20 @@
 
 // *** A* ***
 
+var terrain = {
+    'b':'Bridge',
+    'c':'Castle',
+    'e':'Enemy',
+    'f':'Forest',
+    'g':'Grassland',
+    'm':'Hills',
+    'M':'Mountains',
+    'r':'Road',
+    's':'Swamp',
+    'S':'Ship',
+    'w':'Water'
+}
+
 function cursorPosition(x, y, force) {
     if(selectedArmy) {
         var offset = $('.zoomWindow').offset();
@@ -21,7 +35,7 @@ function cursorPosition(x, y, force) {
             var start = new node(startX, startY, destX, destY, 0);
             open[startX+'_'+startY] = start;
             aStar(close, open, destX, destY, 1);
-            $('#coord').html(destX + ' - ' + destY + ' ' + getTerrain(fields[destY][destX], selectedArmy)[0]);
+            $('#coord').html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
             return showPath(close, destX+'_'+destY, selectedArmy.moves);
         }
     }
@@ -34,112 +48,6 @@ function setCursorArrow(dir){
         cursorDirection = dir;
     //         console.log(cursorDirection);
     }
-}
-
-function getTerrain(type, a) {
-    var text;
-    var moves;
-    switch(type) {
-        case 'b':
-            text = 'Bridge';
-            if(a.canSwim){
-                moves = 1;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 1;
-            }
-            break;
-        case 'c':
-            text = 'Castle';
-            moves = 0;
-            break;
-        case 'e':
-            text = 'Enemy';
-            moves = null;
-            break;
-        case 'f':
-            text = 'Forest';
-            if(a.canSwim){
-                moves = 100;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 3;
-            }
-            break;
-        case 'g':
-            text = 'Grassland';
-            if(a.canSwim){
-                moves = 100;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 2;
-            }
-            break;
-        case 'm':
-            text = 'Hills';
-            if(a.canSwim){
-                moves = 200;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 5;
-            }
-            break;
-        case 'M':
-            text = 'Mountains';
-            if(a.canSwim){
-                moves = 1000;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 100;
-            }
-            break;
-        case 'r':
-            text = 'Road';
-            if(a.canSwim){
-                moves = 100;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 1;
-            }
-            break;
-        case 's':
-            text = 'Swamp';
-            if(a.canSwim){
-                moves = 100;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 4;
-            }
-            break;
-        case 'S':
-            text = 'Ship';
-            moves = 1;
-            break;
-        case 'w':
-            text = 'Water';
-            if(a.canSwim){
-                moves = 1;
-            }else if(a.canFly > 0){
-                moves = 2;
-            }else{
-                moves = 100;
-            }
-            break;
-        default:
-            console.log('error');
-            console.log(type);
-    }
-    return {
-        0:text,
-        1:moves
-    };
 }
 
 function showPath(close, key, moves){
@@ -254,7 +162,7 @@ function addOpen(x, y, close, open, destX, destY){
             if(type == 'e'){
                 continue;
             }
-            var g = getTerrain(type, selectedArmy)[1];
+            var g = selectedArmy.terrainCosts[type];
             if (g > 5) {
                 continue;
             }

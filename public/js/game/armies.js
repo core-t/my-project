@@ -8,8 +8,17 @@ function showFirstArmy(color){
     zoomer.lensSetCenter(30, 30);
 }
 
+function countArmyTerrainCost(a){
+    if(a.soldiers.length){
+
+    }
+    if(a.soldiers.length){
+
+    }
+}
+
 function army(obj, color) {
-//    console.log(obj);
+    //    console.log(obj);
     $('#army'+obj.armyId).remove();
     $('#'+obj.armyId).remove();
     if(obj.destroyed){
@@ -43,41 +52,58 @@ function army(obj, color) {
         }
         this.canFly--;
         numberOfHeroes++;
+        this.modMovesForest = 3;
+        this.modMovesSwamp = 4;
+        this.modMovesHills = 5;
     }
     this.soldiers = obj.soldiers;
+
     for(soldier in this.soldiers) {
-        if(typeof attack  == 'undefined') {
+        numberOfSoldiers++;
+        if(numberOfSoldiers == 1){
+            if(numberOfHeroes == 0){
+                this.modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
+                this.modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
+                this.modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
+                this.moves = this.soldiers[soldier].movesLeft;
+            }
             var attack = units[this.soldiers[soldier].unitId].attackPoints;
-            this.soldierKey = soldier;
-        }
-        if(units[this.soldiers[soldier].unitId].attackPoints > attack) {
-            attack = units[this.soldiers[soldier].unitId].attackPoints;
-            this.soldierKey = soldier;
-        }
-        if(typeof defense == 'undefined') {
             var defense = units[this.soldiers[soldier].unitId].defensePoints;
-        }
-        if(units[this.soldiers[soldier].unitId].defensePoints > defense) {
-            defense = units[this.soldiers[soldier].unitId].defensePoints;
-            if(defense > units[this.soldiers[this.soldierKey].unitId].defensePoints){
-                this.soldierKey = soldier;
-            }
-        }
-        if(typeof moves == 'undefined') {
             var moves = units[this.soldiers[soldier].unitId].numberOfMoves;
-        }
-        if(units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
-            moves = units[this.soldiers[soldier].unitId].numberOfMoves;
-            if(moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves){
+            this.soldierKey = soldier;
+        }else{
+            if(units[this.soldiers[soldier].unitId].modMovesForest > this.modMovesForest){
+                this.modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
+            }
+            if(units[this.soldiers[soldier].unitId].modMovesSwamp > this.modMovesSwamp){
+                this.modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
+            }
+            if(units[this.soldiers[soldier].unitId].modMovesHills > this.modMovesHills){
+                this.modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
+            }
+
+            if(units[this.soldiers[soldier].unitId].attackPoints > attack) {
+                attack = units[this.soldiers[soldier].unitId].attackPoints;
                 this.soldierKey = soldier;
             }
+            if(units[this.soldiers[soldier].unitId].defensePoints > defense) {
+                defense = units[this.soldiers[soldier].unitId].defensePoints;
+                if(defense > units[this.soldiers[this.soldierKey].unitId].defensePoints){
+                    this.soldierKey = soldier;
+                }
+            }
+            if(units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
+                moves = units[this.soldiers[soldier].unitId].numberOfMoves;
+                if(moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves){
+                    this.soldierKey = soldier;
+                }
+            }
+
+            if(this.soldiers[soldier].movesLeft < this.moves) {
+                this.moves = this.soldiers[soldier].movesLeft;
+            }
         }
-        if(typeof this.moves == 'undefined') {
-            this.moves = this.soldiers[soldier].movesLeft;
-        }
-        if(this.soldiers[soldier].movesLeft < this.moves) {
-            this.moves = this.soldiers[soldier].movesLeft;
-        }
+
         if(units[this.soldiers[soldier].unitId].canFly){
             this.canFly++;
             if(!this.flyBonus){
@@ -90,8 +116,52 @@ function army(obj, color) {
         if(units[this.soldiers[soldier].unitId].canSwim){
             this.canSwim++;
         }
-        numberOfSoldiers++;
     }
+
+    if(this.canSwim){
+        this.terrainCosts = {
+            'b':1,
+            'c':0,
+            'e':null,
+            'f':300,
+            'g':200,
+            'm':500,
+            'M':1000,
+            'r':100,
+            's':400,
+            'S':1,
+            'w':1
+        };
+    }else if(this.canFly > 0){
+        this.terrainCosts = {
+            'b':2,
+            'c':0,
+            'e':null,
+            'f':2,
+            'g':2,
+            'm':2,
+            'M':2,
+            'r':2,
+            's':2,
+            'S':2,
+            'w':2
+        };
+    }else{
+        this.terrainCosts = {
+            'b':1,
+            'c':0,
+            'e':null,
+            'f':this.modMovesForest,
+            'g':2,
+            'm':this.modMovesHills,
+            'M':1000,
+            'r':1,
+            's':this.modMovesSwamp,
+            'S':1,
+            'w':100
+        };
+    }
+
     if(this.canSwim){
         this.name = units[6].name;
         this.img = this.name.replace(' ', '_').toLowerCase();
