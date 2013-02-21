@@ -176,7 +176,7 @@ function splitArmyM(a){
     removeM();
     var army = $('<div>').addClass('split');
     var numberOfUnits = 0;
-    console.log(selectedArmy.soldiers);
+
     for(i in selectedArmy.soldiers) {
         var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
         numberOfUnits++;
@@ -584,11 +584,9 @@ function battleM(data, clb) {
     var battle = data.battle;
     var attackerColor = data.attackerColor;
     var defenderColor = data.defenderColor;
-    var img;
     var newBattle = new Array();
     var attack = $('<div>').addClass('battle attack');
     for(i in battle.attack.soldiers) {
-        img = battle.attack.soldiers[i].name.replace(' ', '_').toLowerCase();
         if(battle.attack.soldiers[i].succession){
             newBattle[battle.attack.soldiers[i].succession]={
                 'soldierId':battle.attack.soldiers[i].soldierId
@@ -596,7 +594,7 @@ function battleM(data, clb) {
         }
         attack.append(
             $('<img>').attr({
-                'src':'/img/game/' + img + '_' + attackerColor + '.png',
+                'src':getUnitImage(battle.attack.soldiers[i].unitId, attackerColor),
                 'id':'unit'+battle.attack.soldiers[i].soldierId
             })
             );
@@ -633,10 +631,9 @@ function battleM(data, clb) {
                 'soldierId':battle.defense.soldiers[i].soldierId
             };
         }
-        img = battle.defense.soldiers[i].name.replace(' ', '_').toLowerCase();
         defense.append(
             $('<img>').attr({
-                'src':'/img/game/' + img + '_' + defenderColor + '.png',
+                'src':getUnitImage(battle.defense.soldiers[i].unitId, defenderColor),
                 'id':'unit'+battle.defense.soldiers[i].soldierId
             })
             );

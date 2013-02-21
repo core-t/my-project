@@ -9,6 +9,12 @@
  */
 class Cli_Model_GameHandler extends Cli_Model_WofHandler {
 
+    public function __construct() {
+        parent::__construct();
+        $db = Cli_Model_Database::getDb();
+        Zend_Registry::set('units', Cli_Model_Database::getUnits($db));
+    }
+
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
 
         $dataIn = Zend_Json::decode($msg->getData());

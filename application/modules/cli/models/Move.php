@@ -23,21 +23,9 @@ class Cli_Model_Move {
         if (empty($army)) {
             $gameHandler->sendError($user, 'Brak armii o podanym ID! Odświerz przeglądarkę.');
             return;
-        }
-
-        $canFly = -count($army['heroes']) + 1;
-        $canSwim = 0;
-
-        foreach ($army['soldiers'] as $soldier)
-        {
-            if ($soldier['canFly']) {
-                $canFly++;
-            } else {
-                $canFly -= 200;
-            }
-            if ($soldier['canSwim']) {
-                $canSwim++;
-            }
+        } else {
+            $mArmy = new Cli_Model_Army($army);
+            $army = $mArmy->getArmy();
         }
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
@@ -93,10 +81,9 @@ class Cli_Model_Move {
          * A* START
          */
 
-        $A_Star = new Cli_Model_Astar($x, $y);
 
         try {
-            $A_Star->start($army['x'], $army['y'], $fields, $canFly, $canSwim);
+            $A_Star = new Cli_Model_Astar($army, $x, $y, $fields);
             $move = array(
                 'path' => $A_Star->getPath($x . '_' . $y, $army['movesLeft']),
                 'currentPosition' => $A_Star->getCurrentPosition(),
@@ -117,7 +104,9 @@ class Cli_Model_Move {
         }
 
         if ($move['currentPosition']['movesSpend'] > $army['movesLeft']) {
-            $gameHandler->sendError($user, 'Próba wykonania większej ilości ruchów niż jednostka posiada');
+            $msg = 'Próba wykonania większej ilości ruchów niż jednostka posiada';
+            echo($msg);
+            $gameHandler->sendError($user, $msg);
             return;
         }
 
@@ -183,8 +172,7 @@ class Cli_Model_Move {
                         Cli_Model_Database::changeOwner($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
                     }
                 }
-                $move['currentPosition']['movesSpend'] += 2;
-                Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $move['currentPosition'], $db);
+                Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db, true);
                 $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                 $victory = true;
                 foreach ($enemy['ids'] as $id)
@@ -223,7 +211,7 @@ class Cli_Model_Move {
                     $move['currentPosition']['y'] = $move['path'][$count]['y'];
                 }
             }
-            Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $move['currentPosition'], $db);
+            Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db);
             $armiesIds = Cli_Model_Database::joinArmiesAtPosition($user->parameters['gameId'], $move['currentPosition'], $user->parameters['playerId'], $db);
             $newArmyId = $armiesIds['armyId'];
             $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $newArmyId, $user->parameters['playerId'], $db);

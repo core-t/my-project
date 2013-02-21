@@ -99,7 +99,7 @@ function army(obj, color) {
                 }
             }
 
-            if(this.soldiers[soldier].movesLeft < this.moves) {
+            if(!this.canSwim && this.soldiers[soldier].movesLeft < this.moves) {
                 this.moves = this.soldiers[soldier].movesLeft;
             }
         }
@@ -115,6 +115,7 @@ function army(obj, color) {
         }
         if(units[this.soldiers[soldier].unitId].canSwim){
             this.canSwim++;
+            this.moves = this.soldiers[soldier].movesLeft;
         }
     }
 
@@ -158,7 +159,7 @@ function army(obj, color) {
             'r':1,
             's':this.modMovesSwamp,
             'S':1,
-            'w':100
+            'w':50
         };
     }
 
@@ -681,4 +682,8 @@ function getUnitId(name) {
         default:
             return null;
     }
+}
+
+function getUnitImage(unitId, color){
+    return '/img/game/' + units[unitId].name.replace(' ', '_').toLowerCase() + '_' + color + '.png'
 }

@@ -78,11 +78,14 @@ class Cli_Model_Battle {
 
     public function fight() {
 //        Zend_Debug::dump($defender);
+        $units = Zend_Registry::get('units');
         $hits = array('attack' => 2, 'defense' => 2);
         foreach ($this->attacker['soldiers'] as $a => $unitAttaking)
         {
+            $unitAttaking['attackPoints'] = $units[$unitAttaking['unitId']]['attackPoints'];
             foreach ($this->defender['soldiers'] as $d => $unitDefending)
             {
+                $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
@@ -94,8 +97,10 @@ class Cli_Model_Battle {
         }
         foreach ($this->attacker['soldiers'] as $a => $unitAttaking)
         {
+            $unitAttaking['attackPoints'] = $units[$unitAttaking['unitId']]['attackPoints'];
             foreach ($this->defender['heroes'] as $d => $unitDefending)
             {
+                $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
                 $hits = $this->combat($unitAttaking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
@@ -233,7 +238,7 @@ class Cli_Model_Battle {
             $battle['defense']['soldiers'][] = array(
                 'soldierId' => $unit['soldierId'],
                 'succession' => $succession,
-                'name' => $unit['name'],
+                'unitId' => $unit['unitId'],
             );
         }
         foreach ($army['heroes'] as $unit)
@@ -262,7 +267,7 @@ class Cli_Model_Battle {
             $battle['attack']['soldiers'][] = array(
                 'soldierId' => $unit['soldierId'],
                 'succession' => $succession,
-                'name' => $unit['name'],
+                'unitId' => $unit['unitId'],
             );
         }
 

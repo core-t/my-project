@@ -20,6 +20,8 @@ class Cli_Model_Computer {
         } else {
             $army = Cli_Model_Database::getComputerArmyToMove($user->parameters['gameId'], $playerId, $db);
             if (!empty($army['armyId'])) {
+                $mArmy = new Cli_Model_Army($army);
+                $army = $mArmy->getArmy();
                 $token = Cli_Model_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, $army, $db);
             } else {
                 $token = Cli_Model_Turn::next($user->parameters['gameId'], $playerId, $db);

@@ -3,7 +3,7 @@
 /**
  * A* search algorithm implemantation.
  */
-class Cli_Model_Astar {
+class Cli_Model_Astar extends Cli_Model_Heuristics {
 
     /**
      * The set of nodes already evaluated.
@@ -18,20 +18,6 @@ class Cli_Model_Astar {
      * @var array
      */
     private $open = array();
-
-    /**
-     * Destination x value
-     *
-     * @var int
-     */
-    private $destX;
-
-    /**
-     * Destination y value
-     *
-     * @var int
-     */
-    private $destY;
 
     /**
      * Number of loops
@@ -53,20 +39,8 @@ class Cli_Model_Astar {
      * @var array
      */
     private $fields;
-
-    /**
-     * Unit can fly
-     *
-     * @var bool
-     */
-    private $canFly;
-
-    /**
-     * Unit can swim
-     *
-     * @var bool
-     */
-    private $canSwim;
+    private $terrainCosts;
+    private $movesLeft;
 
     /**
      * Current position on path
@@ -80,29 +54,18 @@ class Cli_Model_Astar {
      *
      * @param int $destX
      * @param int $destY
+     * @param array $fields
      */
-    public function __construct($destX, $destY) {
-        $this->destX = $destX;
-        $this->destY = $destY;
-    }
-
-    /**
-     * First step
-     *
-     * @param int $srcX
-     * @param int $srcY
-     * @param array
-     * @param bool $canFly
-     * @param bool $canSwim
-     */
-    public function start($srcX, $srcY, $fields, $canFly, $canSwim) {
-        if ($srcX == $this->destX && $srcY == $this->destY) {
+    public function __construct($army, $destX, $destY, $fields) {
+        parent::__construct($destX, $destY);
+        if ($army['x'] == $this->destX && $army['y'] == $this->destY) {
             return null;
         }
         $this->fields = $fields;
-        $this->canFly = $canFly;
-        $this->canSwim = $canSwim;
-        $this->open[$srcX . '_' . $srcY] = $this->node($srcX, $srcY, 0, null);
+        $this->terrainCosts = $army['terrainCosts'];
+        $this->movesLeft = $army['movesLeft'];
+
+        $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null);
         $this->aStar();
     }
 
@@ -181,22 +144,35 @@ class Cli_Model_Astar {
                 if ($x == $i && $y == $j) {
                     continue;
                 }
+
                 $key = $i . '_' . $j;
+
                 if (isset($this->close[$key]) && $this->close[$key]['x'] == $i && $this->close[$key]['y'] == $j) {
                     continue;
                 }
+
+                // jeśli na mapie nie ma tego pola to pomiń to pole
                 if (!isset($this->fields[$j][$i])) {
                     continue;
                 }
+
                 $type = $this->fields[$j][$i];
+
+                // jeżeli na polu znajduje się wróg to pomiń to pole
                 if ($type == 'e') {
                     continue;
                 }
-                $terrain = Application_Model_Board::getTerrain($type, $this->canFly, $this->canSwim);
-                $g = $terrain[1];
-                if ($g > 5) {
+
+//                $terrain = Application_Model_Board::getTerrain($type, $this->canFly, $this->canSwim);
+//                $g = $terrain[1];
+
+                $g = $this->terrainCosts[$type];
+
+                // jeżeli koszt ruchu większy od pozostałych puktów ruchu to pomiń to pole
+                if ($g > $this->movesLeft) {
                     continue;
                 }
+
                 if (isset($this->open[$key])) {
                     $this->calculatePath($x . '_' . $y, $g, $key);
                 } else {
@@ -227,39 +203,6 @@ class Cli_Model_Astar {
             $this->open[$key]['G'] = $g + $this->close[$kA]['G'];
             $this->open[$key]['F'] = $this->open[$key]['G'] + $this->open[$key]['H'];
         }
-    }
-
-    /**
-     * Calculates heuristic estimate
-     *
-     * @param int $x
-     * @param int $y
-     * @return int
-     */
-    public function calculateH($x, $y) {
-        $h = 0;
-        $xLengthPoints = abs($x - $this->destX);
-        $yLengthPoints = abs($y - $this->destY);
-        if ($xLengthPoints < $yLengthPoints) {
-            for ($i = 1; $i <= $xLengthPoints; $i++)
-            {
-                $h++;
-            }
-            for ($i = 1; $i <= ($yLengthPoints - $xLengthPoints); $i++)
-            {
-                $h++;
-            }
-        } else {
-            for ($i = 1; $i <= $yLengthPoints; $i++)
-            {
-                $h++;
-            }
-            for ($i = 1; $i <= ($xLengthPoints - $yLengthPoints); $i++)
-            {
-                $h++;
-            }
-        }
-        return $h;
     }
 
     /**

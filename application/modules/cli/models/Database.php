@@ -155,65 +155,99 @@ Brak y');
         return self::update('soldier', $data, $where, $db, true);
     }
 
-    static public function updateArmyPosition($gameId, $armyId, $playerId, $data, $db) {
-        $data1 = array(
-            'x' => $data['x'],
-            'y' => $data['y'],
-            'fortified' => 'false'
-        );
-
-        $select1 = $db->select()
+    static public function updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db, $fight = false) {
+        $units = Zend_Registry::get('units');
+        $selectHeroes = $db->select()
                 ->from('heroesingame', array('movesLeft', 'heroId'))
                 ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+                ->where('"armyId" = ?', $army['armyId']);
         try {
-            $result1 = $db->query($select1)->fetchAll();
+            $heroes = $db->query($selectHeroes)->fetchAll();
         } catch (Exception $e) {
             echo($e);
-            echo($select1->__toString());
+            echo($selectHeroes->__toString());
             return;
         }
 
-        foreach ($result1 as $row)
+        $terrainCosts = Cli_Model_Army::getTerrainCosts();
+
+        foreach ($heroes as $hero)
         {
+            $movesSpend = 0;
+            if ($army['canFly']) {
+                $type = 'flying';
+            } elseif ($army['canSwim']) {
+                $type = 'swimming';
+            } else {
+                $type = 'walking';
+            }
+            foreach ($path as $step)
+            {
+                $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
+            }
+            if ($fight) {
+                $movesSpend += 2;
+            }
             $data2 = array(
-                'movesLeft' => $row['movesLeft'] - $data['movesSpend']
+                'movesLeft' => $hero['movesLeft'] - $movesSpend
             );
             $where1 = array(
-                $db->quoteInto('"heroId" = ?', $row['heroId']),
+                $db->quoteInto('"heroId" = ?', $hero['heroId']),
                 $db->quoteInto('"gameId" = ?', $gameId)
             );
             self::update('heroesingame', $data2, $where1, $db);
         }
 
-        $select2 = $db->select()
-                ->from('soldier', array('movesLeft', 'soldierId'))
+        $selectSoldiers = $db->select()
+                ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
                 ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+                ->where('"armyId" = ?', $army['armyId']);
         try {
-            $result2 = $db->query($select2)->fetchAll();
+            $soldiers = $db->query($selectSoldiers)->fetchAll();
         } catch (Exception $e) {
             echo($e);
-            echo($select2->__toString());
+            echo($selectSoldiers->__toString());
             return;
         }
 
-        foreach ($result2 as $row)
+        foreach ($soldiers as $soldier)
         {
+            $movesSpend = 0;
+            if ($army['canSwim'] && $units[$soldier['unitId']]['canSwim']) {
+                $type = 'ship';
+            } elseif ($army['canSwim'] && !$units[$soldier['unitId']]['canSwim']) {
+                $type = 'swimming';
+            } elseif ($army['canFly'] > 0 && $units[$soldier['unitId']]['canFly']) {
+                $type = 'flying';
+            } else {
+                $type = 'walking';
+                $terrainCosts[$type]['f'] = $units[$soldier['unitId']]['modMovesForest'];
+                $terrainCosts[$type]['m'] = $units[$soldier['unitId']]['modMovesHills'];
+                $terrainCosts[$type]['s'] = $units[$soldier['unitId']]['modMovesSwamp'];
+            }
+            foreach ($path as $step)
+            {
+                $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
+            }
+            if ($fight) {
+                $movesSpend += 2;
+            }
             $data2 = array(
-                'movesLeft' => $row['movesLeft'] - $data['movesSpend']
+                'movesLeft' => $soldier['movesLeft'] - $movesSpend
             );
-            $where1 = $db->quoteInto('"soldierId" = ?', $row['soldierId']);
+            $where1 = $db->quoteInto('"soldierId" = ?', $soldier['soldierId']);
 
             self::update('soldier', $data2, $where1, $db);
         }
 
+        $data = end($path);
+        $data ['fortified'] = 'false';
         $where = array(
-            $db->quoteInto('"armyId" = ?', $armyId),
+            $db->quoteInto('"armyId" = ?', $army['armyId']),
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
-        return self::update('army', $data1, $where, $db);
+        return self::update('army', $data, $where, $db);
     }
 
     static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db) {
@@ -255,10 +289,12 @@ Brak y');
 
         if (isset($result['armyId'])) {
             $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
-            $result['soldiers'] = self::getArmySoldiersForBattle($gameId, $armyId, $db);
+            $result['soldiers'] = self::getArmySoldiersForBattleAndWalk($gameId, $armyId, $db);
             $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
-            return $result;
         }
+
+
+        return $result;
     }
 
     static public function getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db) {
@@ -355,6 +391,21 @@ Brak y');
                 ->where('"armyId" IN (?)', $ids)
                 ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static private function getArmySoldiersForBattleAndWalk($gameId, $ids, $db) {
+        $select = $db->select()
+                ->from(array('a' => 'soldier'), 'soldierId')
+                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'unitId')
+                ->where('"gameId" = ?', $gameId)
+                ->where('"armyId" IN (?)', $ids)
+                ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'b.unitId'));
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -2315,6 +2366,25 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
         }
+    }
+
+    static public function getUnits(Zend_Db_Adapter_Pdo_Pgsql $db) {
+        $select = $db->select()
+                ->from('unit')
+                ->order('unitId');
+        try {
+            $results = $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+            return;
+        }
+        $units = array();
+        foreach ($results as $unit)
+        {
+            $units[$unit['unitId']] = $unit;
+        }
+        return $units;
     }
 
 }
