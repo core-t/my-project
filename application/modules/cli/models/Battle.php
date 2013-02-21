@@ -283,7 +283,7 @@ class Cli_Model_Battle {
             $soldiers[] = array(
                 'defensePoints' => 3,
                 'soldierId' => 's' . $i,
-                'name' => 'Light Infantry'
+                'unitId' => 1
             );
         }
         return array(

@@ -1156,7 +1156,6 @@ Brak y');
                 ->where('"playerId" = ?', $playerId)
                 ->where('"armyId" = ?', $armyId)
                 ->where('a."heroId" = ?', $heroId);
-        echo $select->__toString();
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1174,7 +1173,6 @@ Brak y');
                 ->where('a."armyId" = ?', $armyId)
                 ->where('"soldierId" = ?', $soldierId)
                 ->where('destroyed = false');
-        echo $select->__toString();
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
