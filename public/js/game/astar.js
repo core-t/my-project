@@ -159,11 +159,13 @@ function addOpen(x, y, close, open, destX, destY){
                 continue;
             }
             var type = fields[j][i];
+//            console.log(type);
             if(type == 'e'){
                 continue;
             }
             var g = selectedArmy.terrainCosts[type];
-            if (g > 5) {
+//            console.log(g);
+            if (g > selectedArmy.moves) {
                 continue;
             }
             if(typeof open[key] != 'undefined'){

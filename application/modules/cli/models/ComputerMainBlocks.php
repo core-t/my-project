@@ -119,7 +119,7 @@ class Cli_Model_ComputerMainBlocks {
             return self::firstBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
         } else {
             new Cli_Model_Logger('JEST HEROS');
-            new Cli_Model_Logger($army['heroes'], 'HEROS:');
+//            new Cli_Model_Logger($army['heroes'], 'HEROS:');
             $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Model_Database::getFullRuins($gameId, $db), $army);
             if (!$ruin) {
                 new Cli_Model_Logger('BRAK RUIN');
@@ -129,6 +129,7 @@ class Cli_Model_ComputerMainBlocks {
                 new Cli_Model_Logger('IDŹ DO RUIN');
                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $ruin['path'], $castlesAndFields['fields'], $army, $db);
                 Cli_Model_SearchRuin::search($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
+                Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $ruin['currentPosition'], $ruin['path'], null, null, $ruin['ruinId']);
             }
         }

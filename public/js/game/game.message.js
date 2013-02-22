@@ -404,8 +404,6 @@ function castleM(castleId, color){
     var j = 0;
     var td = new Array();
 
-    console.log(castles[castleId]);
-
     for(unitName in castles[castleId].production){
         var img = unitName.replace(' ', '_').toLowerCase();
         var unitId = getUnitId(unitName);

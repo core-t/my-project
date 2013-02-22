@@ -41,13 +41,14 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
     private $fields;
     private $terrainCosts;
     private $movesLeft;
+    private $limit;
 
     /**
      * Current position on path
      *
      * @var array
      */
-    private $currentPosition;
+    private $currentPosition = array();
 
     /**
      * Constructor
@@ -56,11 +57,12 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param int $destY
      * @param array $fields
      */
-    public function __construct($army, $destX, $destY, $fields) {
-        parent::__construct($destX, $destY);
-        if ($army['x'] == $this->destX && $army['y'] == $this->destY) {
-            return null;
+    public function __construct($army, $destX, $destY, $fields, $limit = null) {
+        if ($army['x'] == $destX && $army['y'] == $destY) {
+            return;
         }
+        parent::__construct($destX, $destY);
+        $this->limit = $limit;
         $this->fields = $fields;
         $this->terrainCosts = $army['terrainCosts'];
         $this->movesLeft = $army['movesLeft'];
@@ -114,8 +116,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      */
     private function findSmallestF() {
         $i = 0;
-        foreach ($this->open as $k => $v)
-        {
+        foreach (array_keys($this->open) as $k) {
             if (!isset($this->open[$i])) {
                 $i = $k;
             }
@@ -127,7 +128,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
     }
 
     /**
-     * Adds node to open set
+     * Adds nodes which are around $x,$y to the open set
      *
      * @param int $x
      * @param int $y
@@ -137,10 +138,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
         $startY = $y - 1;
         $endX = $x + 1;
         $endY = $y + 1;
-        for ($i = $startX; $i <= $endX; $i++)
-        {
-            for ($j = $startY; $j <= $endY; $j++)
-            {
+        for ($i = $startX; $i <= $endX; $i++) {
+            for ($j = $startY; $j <= $endY; $j++) {
                 if ($x == $i && $y == $j) {
                     continue;
                 }
@@ -163,9 +162,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
                     continue;
                 }
 
-//                $terrain = Application_Model_Board::getTerrain($type, $this->canFly, $this->canSwim);
-//                $g = $terrain[1];
-
                 $g = $this->terrainCosts[$type];
 
                 // jeżeli koszt ruchu większy od pozostałych puktów ruchu to pomiń to pole
@@ -176,11 +172,15 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
                 if (isset($this->open[$key])) {
                     $this->calculatePath($x . '_' . $y, $g, $key);
                 } else {
+                    $g += $this->close[$x . '_' . $y]['G'];
+                    // pomiń jeśli koszt ścieżki jest większy od pozostałych ruchów
+                    if ($this->limit && $g > $this->movesLeft) {
+                        continue;
+                    }
                     $parent = array(
                         'x' => $x,
                         'y' => $y
                     );
-                    $g += $this->close[$x . '_' . $y]['G'];
                     $this->open[$key] = $this->node($i, $j, $g, $parent);
                 }
             }
@@ -230,30 +230,9 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param type $key
      * @return null
      */
-    public function restoreFullPath($key) {
+    public function getMovesSpendForFullPath($key) {
         if (!isset($this->close[$key])) {
-            new Cli_Model_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
-            return null;
-        }
-        while (!empty($this->close[$key]['parent']))
-        {
-            $path[] = array(
-                'x' => $this->close[$key]['x'],
-                'y' => $this->close[$key]['y']);
-        }
-        $path = array_reverse($path);
-        return $path;
-    }
-
-    /**
-     *
-     * @param type $key
-     * @return null
-     */
-    public function getFullPathMovesSpend($key) {
-        if (!isset($this->close[$key])) {
-            new Cli_Model_Logger('Nie ma takiego klucza: ' . $key . ' w ścieżce');
-            return null;
+            return 0;
         }
         return $this->close[$key]['G'];
     }
@@ -266,19 +245,11 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @return int
      */
     public function getPath($key, $moves) {
-//        throw new Exception(Zend_Debug::dump($this->close));
         if (!isset($this->close[$key])) {
-            new Cli_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key);
-            return 0;
+            new Cli_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
+            return;
         }
-        $this->currentPosition;
-//         $currentPosition = array(
-//             'x' => $this->close[$key]['x'],
-//             'y' => $this->close[$key]['y'],
-//             'movesSpend' => $this->close[$key]['G']);
-        while (!empty($this->close[$key]['parent']))
-        {
-//            throw new Exception(Zend_Debug::dump($this->close));
+        while (!empty($this->close[$key]['parent'])) {
             if ($this->close[$key]['G'] <= $moves) {
                 if (!$this->currentPosition) {
                     $this->currentPosition = array(
@@ -296,9 +267,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
             'x' => $this->close[$key]['x'],
             'y' => $this->close[$key]['y']);
         $this->path = array_reverse($this->path);
-//         if (!$this->currentPosition) {
-//             $this->currentPosition = $currentPosition;
-//         }
         unset($this->path[0]);
         return $this->path;
     }

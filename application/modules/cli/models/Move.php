@@ -144,6 +144,8 @@ class Cli_Model_Move {
 
         if ($fight) {
             $battle = new Cli_Model_Battle($army, $enemy);
+//            $battle->setCombatAttackModifiers($army);
+            $battle->setCombatDefenseModifiers($enemy);
 
             if (Zend_Validate::is($castleId, 'Digits')) {
                 if ($defenderColor == 'neutral') {

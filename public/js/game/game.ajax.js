@@ -1,10 +1,6 @@
 function setProductionA(castleId) {
-    console.log(castleId);
-
     var unitId
     var production = $('input:radio[name=production]:checked').val();
-
-    console.log(production);
 
     if(production == 'stop'){
         unitId = -1;

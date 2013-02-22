@@ -20,8 +20,7 @@ class Cli_Model_Database {
             echo($e);
             return;
         }
-        switch ($updateResult)
-        {
+        switch ($updateResult) {
             case 1:
                 return $updateResult;
                 break;
@@ -101,35 +100,35 @@ Brak y');
                 ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            if (!isset($result[0]['armyId'])) {
-                echo '
-(joinArmiesAtPosition) Brak armii na pozycji: ';
-                print_r($position);
-                return array(
-                    'armyId' => null,
-                    'deletedIds' => null,
-                );
-            }
-            $firstArmyId = $result[0]['armyId'];
-            unset($result[0]);
-            $count = count($result);
-            for ($i = 1; $i <= $count; $i++)
-            {
-                if ($result[$i]['armyId'] == $firstArmyId) {
-                    continue;
-                }
-                self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
-                self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
-                self::destroyArmy($gameId, $result[$i]['armyId'], $playerId, $db);
-            }
-            return array(
-                'armyId' => $firstArmyId,
-                'deletedIds' => $result
-            );
         } catch (Exception $e) {
-            echo $e;
+            echo($e);
             echo($select->__toString());
         }
+        if (!isset($result[0]['armyId'])) {
+            echo '
+(joinArmiesAtPosition) Brak armii na pozycji: ';
+            self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+            print_r($position);
+            return array(
+                'armyId' => null,
+                'deletedIds' => null,
+            );
+        }
+        $firstArmyId = $result[0]['armyId'];
+        unset($result[0]);
+        $count = count($result);
+        for ($i = 1; $i <= $count; $i++) {
+            if ($result[$i]['armyId'] == $firstArmyId) {
+                continue;
+            }
+            self::heroesUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+            self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
+            self::destroyArmy($gameId, $result[$i]['armyId'], $playerId, $db);
+        }
+        return array(
+            'armyId' => $firstArmyId,
+            'deletedIds' => $result
+        );
     }
 
     static private function heroesUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
@@ -171,8 +170,7 @@ Brak y');
 
         $terrainCosts = Cli_Model_Army::getTerrainCosts();
 
-        foreach ($heroes as $hero)
-        {
+        foreach ($heroes as $hero) {
             $movesSpend = 0;
             if ($army['canFly']) {
                 $type = 'flying';
@@ -181,8 +179,7 @@ Brak y');
             } else {
                 $type = 'walking';
             }
-            foreach ($path as $step)
-            {
+            foreach ($path as $step) {
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
             }
             if ($fight) {
@@ -210,8 +207,7 @@ Brak y');
             return;
         }
 
-        foreach ($soldiers as $soldier)
-        {
+        foreach ($soldiers as $soldier) {
             $movesSpend = 0;
             if ($army['canSwim'] && $units[$soldier['unitId']]['canSwim']) {
                 $type = 'ship';
@@ -225,8 +221,7 @@ Brak y');
                 $terrainCosts[$type]['m'] = $units[$soldier['unitId']]['modMovesHills'];
                 $terrainCosts[$type]['s'] = $units[$soldier['unitId']]['modMovesSwamp'];
             }
-            foreach ($path as $step)
-            {
+            foreach ($path as $step) {
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
             }
             if ($fight) {
@@ -260,8 +255,7 @@ Brak y');
                 ->where('destroyed = false');
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $row)
-            {
+            foreach ($result as $row) {
                 $fields[$row['y']][$row['x']] = 'e';
             }
             return $fields;
@@ -283,7 +277,7 @@ Brak y');
             $result = $db->fetchRow($select);
         } catch (Exception $e) {
             echo($e);
-            echo $select->__toString();
+            echo($select->__toString());
             return;
         }
 
@@ -314,7 +308,7 @@ Brak y');
             }
         } catch (Exception $e) {
             echo($e);
-            echo $select->__toString();
+            echo($select->__toString());
         }
     }
 
@@ -338,8 +332,7 @@ Brak y');
             return;
         }
 
-        foreach ($result as $k => $row)
-        {
+        foreach ($result as $k => $row) {
             $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
         }
         return $result;
@@ -358,8 +351,7 @@ Brak y');
         }
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $k => $row)
-            {
+            foreach ($result as $k => $row) {
                 $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
             }
             return $result;
@@ -482,8 +474,7 @@ Brak y');
 
         $costs = 0;
 
-        foreach ($soldiers as $unit)
-        {
+        foreach ($soldiers as $unit) {
             $costs += $unit['cost'];
         }
 
@@ -582,7 +573,7 @@ Brak y');
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
-            echo $e;
+            echo($e);
             echo($select->__toString());
         }
     }
@@ -597,15 +588,14 @@ Brak y');
         try {
             $result = $db->query($select)->fetchAll();
         } catch (Exception $e) {
-            echo $e;
+            echo($e);
             echo($select->__toString());
             return;
         }
 
         $armies = array();
 
-        foreach ($result as $army)
-        {
+        foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;
             $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
             $armies['army' . $army['armyId']]['soldiers'] = self::getArmySoldiersForWalk($gameId, $army['armyId'], $db);
@@ -627,7 +617,7 @@ Brak y');
         try {
             $result = $db->fetchRow($select);
         } catch (Exception $e) {
-            echo $e;
+            echo($e);
             echo($select->__toString());
         }
 
@@ -771,8 +761,7 @@ Brak y');
             echo($e);
             echo($select->__toString());
         }
-        foreach ($result as $id)
-        {
+        foreach ($result as $id) {
             $ids[] = $id['armyId'];
         }
         if ($ids) {
@@ -808,8 +797,7 @@ Brak y');
                 ->where('y IN (?)', $ys);
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $k => $army)
-            {
+            foreach ($result as $k => $army) {
                 $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
                 $soldiers = self::getArmySoldiers($gameId, $army['armyId'], $db);
                 if (empty($heroes) AND empty($soldiers)) {
@@ -946,8 +934,7 @@ Brak y');
 
         $ids = array();
 
-        foreach ($result as $id)
-        {
+        foreach ($result as $id) {
             $ids[] = $id['armyId'];
         }
 
@@ -980,8 +967,7 @@ Brak y');
                 ->where('y = (?)', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $id)
-            {
+            foreach ($result as $id) {
                 if ($ids) {
                     $ids .= ',';
                 }
@@ -1021,8 +1007,7 @@ Brak y');
                 ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $k => $army)
-            {
+            foreach ($result as $k => $army) {
                 $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
                 $soldiers = self::getArmySoldiers($gameId, $army['armyId'], $db);
                 if (empty($heroes) && empty($soldiers)) {
@@ -1465,8 +1450,7 @@ Brak y');
             return;
         }
 
-        foreach ($heroesingame as $hero)
-        {
+        foreach ($heroesingame as $hero) {
             if ($hero['movesLeft'] > 2) {
                 $hero['movesLeft'] = 2;
             }
@@ -1474,15 +1458,9 @@ Brak y');
                     ->from('hero', new Zend_Db_Expr('"numberOfMoves" + ' . $hero['movesLeft']))
                     ->where('"playerId" = ?', $playerId)
                     ->where('"heroId" = ?', $hero['heroId']);
-            echo '
-                ' . $select->__toString() . '
-                ';
             $data = array(
                 'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
             );
-//            $data = array(
-//                'movesLeft' => $select
-//            );
             $where = array(
                 $db->quoteInto('"heroId" = ?', $hero['heroId']),
                 $db->quoteInto('"gameId" = ?', $gameId)
@@ -1492,13 +1470,15 @@ Brak y');
     }
 
     static public function resetSoldiersMovesLeft($gameId, $playerId, $db) {
-        $select = $db->select()
-                ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId', 'unitId'))
-                ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
+        $subSelect = $db->select()
+                ->from('army', 'armyId')
                 ->where('"playerId" = ?', $playerId)
                 ->where('destroyed = false')
-                ->where('a."gameId" = ?', $gameId);
-
+                ->where('"gameId" = ?', $gameId);
+        $select = $db->select()
+                ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
+                ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
+                ->where('"gameId" = ?', $gameId);
         try {
             $soldiers = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1507,8 +1487,7 @@ Brak y');
             return;
         }
 
-        foreach ($soldiers as $soldier)
-        {
+        foreach ($soldiers as $soldier) {
             if ($soldier['movesLeft'] > 2) {
                 $soldier['movesLeft'] = 2;
             }
@@ -1537,13 +1516,12 @@ Brak y');
         try {
             $result = $db->query($select)->fetchAll();
         } catch (Exception $e) {
-            echo $e;
+            echo($e);
             echo($select->__toString());
             return;
         }
 
-        foreach ($result as $army)
-        {
+        foreach ($result as $army) {
             $army['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
             $army['soldiers'] = self::getArmySoldiersForBattle($gameId, $army['armyId'], $db);
             if (empty($army['heroes']) AND empty($army['soldiers'])) {
@@ -1576,8 +1554,7 @@ Brak y');
                 ->where('razed = false');
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $val)
-            {
+            foreach ($result as $val) {
                 $playersCastles[$val['castleId']] = $val;
             }
             return $playersCastles;
@@ -1608,8 +1585,7 @@ Brak y');
                 ->from('castle')
                 ->where('"gameId" = ?', $gameId);
         try {
-            foreach ($db->query($select)->fetchAll() as $val)
-            {
+            foreach ($db->query($select)->fetchAll() as $val) {
                 $castles[$val['castleId']] = $val;
             }
             return $castles;
@@ -1686,8 +1662,7 @@ Brak y');
         try {
             $result = $db->query($select)->fetchAll();
             $ruins = Application_Model_Board::getRuins();
-            foreach ($result as $row)
-            {
+            foreach ($result as $row) {
                 if (isset($ruins[$row['ruinId']])) {
                     unset($ruins[$row['ruinId']]);
                 }
@@ -1708,8 +1683,7 @@ Brak y');
                 ->where('razed = true');
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $val)
-            {
+            foreach ($result as $val) {
                 $castles[$val['castleId']] = $val;
             }
             return $castles;
@@ -1729,8 +1703,7 @@ Brak y');
         try {
             $result = $db->query($select)->fetchAll();
             $armies = array();
-            foreach ($result as $k => $army)
-            {
+            foreach ($result as $k => $army) {
                 $armies['army' . $army['armyId']] = $army;
                 $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
                 $armies['army' . $army['armyId']]['soldiers'] = self::getArmySoldiersForBattle($gameId, $army['armyId'], $db);
@@ -1738,7 +1711,7 @@ Brak y');
                     self::destroyArmy($gameId, $armies['army' . $army['armyId']]['armyId'], $playerId, $db);
                     unset($armies['army' . $army['armyId']]);
                 } else {
-                    $armies['army' . $army['armyId']]['numberOfMoves'] = self::calculateMaxArmyMoves($gameId, $army['armyId'], $db);
+                    $armies['army' . $army['armyId']]['movesLeft'] = self::calculateMaxArmyMoves($gameId, $army['armyId'], $db);
                 }
             }
             return $armies;
@@ -1793,8 +1766,7 @@ Brak y');
         $find = false;
 
         /* szukam następnego koloru w dostępnych kolorach */
-        foreach (self::$playerColors as $color)
-        {
+        foreach (self::$playerColors as $color) {
             /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
             if ($playerColor == $color) {
                 $find = true;
@@ -1816,8 +1788,7 @@ Brak y');
         $playersInGame = self::getPlayersInGameReady($gameId, $db);
 
         /* przypisuję playerId do koloru */
-        foreach ($playersInGame as $k => $player)
-        {
+        foreach ($playersInGame as $k => $player) {
             if ($player['color'] == $nextPlayerColor) {
                 $nextPlayerId = $player['playerId'];
                 break;
@@ -1826,8 +1797,7 @@ Brak y');
 
         /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
         if (!isset($nextPlayerId)) {
-            foreach ($playersInGame as $k => $player)
-            {
+            foreach ($playersInGame as $k => $player) {
                 if ($player['color'] == self::$playerColors[0]) {
                     if ($player['lost']) {
                         $nextPlayerId = $playersInGame[$k + 1]['playerId'];
@@ -2129,8 +2099,7 @@ Brak y');
                 ->where('color IS NOT NULL')
                 ->where('computer = true');
         try {
-            foreach ($db->query($select)->fetchAll() as $row)
-            {
+            foreach ($db->query($select)->fetchAll() as $row) {
                 if ($ids) {
                     $ids .= ',';
                 }
@@ -2378,8 +2347,7 @@ Brak y');
             return;
         }
         $units = array();
-        foreach ($results as $unit)
-        {
+        foreach ($results as $unit) {
             $units[$unit['unitId']] = $unit;
         }
         return $units;

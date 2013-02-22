@@ -41,6 +41,10 @@ function army(obj, color) {
     var numberOfUnits = 0;
     var numberOfHeroes = 0;
     var numberOfSoldiers = 0;
+    var modMovesForest = 3;
+    var modMovesSwamp = 4;
+    var modMovesHills = 5;
+
     for(hero in this.heroes) {
         this.heroKey = hero;
         if(typeof this.moves == 'undefined') {
@@ -52,9 +56,9 @@ function army(obj, color) {
         }
         this.canFly--;
         numberOfHeroes++;
-        this.modMovesForest = 3;
-        this.modMovesSwamp = 4;
-        this.modMovesHills = 5;
+        modMovesForest = 3;
+        modMovesSwamp = 4;
+        modMovesHills = 5;
     }
     this.soldiers = obj.soldiers;
 
@@ -62,24 +66,24 @@ function army(obj, color) {
         numberOfSoldiers++;
         if(numberOfSoldiers == 1){
             if(numberOfHeroes == 0){
-                this.modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
-                this.modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
-                this.modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
-                this.moves = this.soldiers[soldier].movesLeft;
+                modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
+                modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
+                modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
             }
+            this.moves = this.soldiers[soldier].movesLeft;
             var attack = units[this.soldiers[soldier].unitId].attackPoints;
             var defense = units[this.soldiers[soldier].unitId].defensePoints;
             var moves = units[this.soldiers[soldier].unitId].numberOfMoves;
             this.soldierKey = soldier;
         }else{
-            if(units[this.soldiers[soldier].unitId].modMovesForest > this.modMovesForest){
-                this.modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
+            if(units[this.soldiers[soldier].unitId].modMovesForest > modMovesForest){
+                modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
             }
-            if(units[this.soldiers[soldier].unitId].modMovesSwamp > this.modMovesSwamp){
-                this.modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
+            if(units[this.soldiers[soldier].unitId].modMovesSwamp > modMovesSwamp){
+                modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
             }
-            if(units[this.soldiers[soldier].unitId].modMovesHills > this.modMovesHills){
-                this.modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
+            if(units[this.soldiers[soldier].unitId].modMovesHills > modMovesHills){
+                modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
             }
 
             if(units[this.soldiers[soldier].unitId].attackPoints > attack) {
@@ -152,12 +156,12 @@ function army(obj, color) {
             'b':1,
             'c':0,
             'e':null,
-            'f':this.modMovesForest,
+            'f':modMovesForest,
             'g':2,
-            'm':this.modMovesHills,
+            'm':modMovesHills,
             'M':1000,
             'r':1,
-            's':this.modMovesSwamp,
+            's':modMovesSwamp,
             'S':1,
             'w':50
         };

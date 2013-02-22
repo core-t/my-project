@@ -8,24 +8,35 @@ class Cli_Model_Army {
         $units = Zend_Registry::get('units');
 
         $this->army = $army;
-        $this->army['modMovesForest'] = 3;
-        $this->army['modMovesSwamp'] = 4;
-        $this->army['modMovesHills'] = 5;
-        $this->army['canFly'] = -count($army['heroes']) + 1;
+        $this->army['defenseModifier'] = 0;
+        $this->army['attackModifier'] = 0;
+
+        $numberOfHeroes = count($army['heroes']);
+        if ($numberOfHeroes) {
+            $this->army['defenseModifier']++;
+            $this->army['attackModifier']++;
+            $modMovesForest = 3;
+            $modMovesSwamp = 4;
+            $modMovesHills = 5;
+        } else {
+            $modMovesForest = 0;
+            $modMovesSwamp = 0;
+            $modMovesHills = 0;
+        }
+        $this->army['canFly'] = -$numberOfHeroes + 1;
         $this->army['canSwim'] = 0;
 
-        foreach ($army['soldiers'] as $soldier)
-        {
+        foreach ($army['soldiers'] as $soldier) {
             $unit = $units[$soldier['unitId']];
 
-            if ($unit['modMovesForest'] > $this->army['modMovesForest']) {
-                $this->army['modMovesForest'] = $unit['modMovesForest'];
+            if ($unit['modMovesForest'] > $modMovesForest) {
+                $modMovesForest = $unit['modMovesForest'];
             }
-            if ($unit['modMovesSwamp'] > $this->army['modMovesSwamp']) {
-                $this->army['modMovesSwamp'] = $unit['modMovesSwamp'];
+            if ($unit['modMovesSwamp'] > $modMovesSwamp) {
+                $modMovesSwamp = $unit['modMovesSwamp'];
             }
-            if ($unit['modMovesHills'] > $this->army['modMovesHills']) {
-                $this->army['modMovesHills'] = $unit['modMovesHills'];
+            if ($unit['modMovesHills'] > $modMovesHills) {
+                $modMovesHills = $unit['modMovesHills'];
             }
 
             if ($unit['canFly']) {
@@ -43,9 +54,13 @@ class Cli_Model_Army {
         if ($this->army['canSwim']) {
             $this->army['terrainCosts'] = $terrainCosts['swimming'];
         } elseif ($this->army['canFly'] > 0) {
+            $this->army['attackModifier']++;
             $this->army['terrainCosts'] = $terrainCosts['flying'];
         } else {
             $this->army['terrainCosts'] = $terrainCosts['walking'];
+            $this->army['terrainCosts']['f'] = $modMovesForest;
+            $this->army['terrainCosts']['s'] = $modMovesSwamp;
+            $this->army['terrainCosts']['m'] = $modMovesHills;
         }
     }
 
@@ -58,6 +73,7 @@ class Cli_Model_Army {
             'flying' => array(
                 'b' => 2,
                 'c' => 0,
+                'e' => null,
                 'f' => 2,
                 'g' => 2,
                 'm' => 2,
@@ -70,6 +86,7 @@ class Cli_Model_Army {
             'swimming' => array(
                 'b' => 0,
                 'c' => 0,
+                'e' => null,
                 'f' => 300,
                 'g' => 200,
                 'm' => 500,
@@ -82,6 +99,7 @@ class Cli_Model_Army {
             'ship' => array(
                 'b' => 1,
                 'c' => 0,
+                'e' => null,
                 'f' => 300,
                 'g' => 200,
                 'm' => 500,
@@ -94,6 +112,7 @@ class Cli_Model_Army {
             'walking' => array(
                 'b' => 1,
                 'c' => 0,
+                'e' => null,
                 'f' => 3,
                 'g' => 2,
                 'm' => 5,
