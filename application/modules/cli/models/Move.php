@@ -85,7 +85,7 @@ class Cli_Model_Move
 
         try {
             $A_Star = new Cli_Model_Astar($army, $x, $y, $fields);
-            $mArmy->calculateMovesSpend($A_Star->getPath($x . '_' . $y));
+            $move = $mArmy->calculateMovesSpend($A_Star->getPath($x . '_' . $y));
 
             print_r($move);
             exit;
@@ -104,7 +104,7 @@ class Cli_Model_Move
             return;
         }
 
-        if ($move['currentPosition']['movesSpend'] > $army['movesLeft']) {
+        if ($move['movesSpend'] > $army['movesLeft']) {
             $msg = 'Próba wykonania większej ilości ruchów niż jednostka posiada';
             echo($msg);
             $gameHandler->sendError($user, $msg);
@@ -112,7 +112,7 @@ class Cli_Model_Move
         }
 
         $fight = false;
-        $movesLeft = $army['movesLeft'] - $move['currentPosition']['movesSpend'];
+        $movesLeft = $army['movesLeft'] - $move['movesSpend'];
 
         if ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y) {
             if (Zend_Validate::is($castleId, 'Digits')) { // castle
@@ -195,16 +195,16 @@ class Cli_Model_Move
         } else {
             if ($rollbackPath) {
                 if (Zend_Validate::is($castleId, 'Digits')) {
-                    if (!$move['currentPosition']['movesSpend']) {
+                    if (!$move['movesSpend']) {
                         $gameHandler->sendError($user, 'Nie wykonano ruchu');
                         return;
                     }
                     $newMove = Application_Model_Board::rewindPathOutOfCastle($move['path'], $castleId);
-                    $newMove['currentPosition']['movesSpend'] = $move['currentPosition']['movesSpend'];
+                    $newMove['movesSpend'] = $move['movesSpend'];
                     $move = $newMove;
                 } else {
                     array_pop($move['path']);
-                    if (!$move['currentPosition']['movesSpend']) {
+                    if (!$move['movesSpend']) {
                         $gameHandler->sendError($user, 'Nie wykonano ruchu');
                         return;
                     }

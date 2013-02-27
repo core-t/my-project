@@ -4,10 +4,11 @@ class Cli_Model_Army
 {
 
     private $army;
+    private $units;
 
     public function __construct($army)
     {
-        $units = Zend_Registry::get('units');
+        $this->units = Zend_Registry::get('units');
 
         $this->army = $army;
         $this->army['defenseModifier'] = 0;
@@ -29,7 +30,7 @@ class Cli_Model_Army
         $this->army['canSwim'] = 0;
 
         foreach ($army['soldiers'] as $soldier) {
-            $unit = $units[$soldier['unitId']];
+            $unit = $this->units[$soldier['unitId']];
 
             if ($unit['modMovesForest'] > $modMovesForest) {
                 $modMovesForest = $unit['modMovesForest'];
@@ -133,14 +134,58 @@ class Cli_Model_Army
     {
         $soldiersMovesLeft = array();
         $heroesMovesLeft = array();
+        $realPath = array();
+        $stop = false;
+        $movesSpend = 0;
 
         for ($i = 0; $i < count($path); $i++) {
+            $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
+
             foreach ($this->army['soldiers'] as $soldier) {
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
+
+                if ($path[$i]['tt'] == 'f' || $path[$i]['tt'] == 's' || $path[$i]['tt'] == 'm') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']][$path[$i]['tt']];
+                } else {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                }
+
+                if ($soldiersMovesLeft[$soldier['soldierId']] <= 0) {
+                    break;
+                }
             }
+
+            foreach ($this->army['heroes'] as $hero) {
+                if (!isset($heroesMovesLeft[$hero['heroId']])) {
+                    $heroesMovesLeft[$hero['heroId']] = $hero['movesLeft'];
+                }
+
+                $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+
+                if ($heroesMovesLeft[$hero['heroId']] <= 0) {
+                    break;
+                }
+            }
+
+            if ($stop) {
+                break;
+            }
+
+            $realPath[] = array(
+                'x' => $path[$i]['x'],
+                'y' => $path[$i]['y']
+            );
+
+            $movesSpend += $defaultMoveCost;
         }
+
+        return array(
+            'path' => $realPath,
+            'movesSpend' => $movesSpend,
+            'currentPosition' => end($realPath)
+        );
     }
 
 }
