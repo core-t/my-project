@@ -131,7 +131,16 @@ class Cli_Model_Army
 
     public function calculateMovesSpend($path)
     {
+        $soldiersMovesLeft = array();
+        $heroesMovesLeft = array();
 
+        for ($i = 0; $i < count($path); $i++) {
+            foreach ($this->army['soldiers'] as $soldier) {
+                if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
+                    $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
+                }
+            }
+        }
     }
 
 }
