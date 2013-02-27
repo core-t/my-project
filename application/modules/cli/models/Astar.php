@@ -69,7 +69,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         $this->terrainCosts = $army['terrainCosts'];
         $this->movesLeft = $army['movesLeft'];
 
-        $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null);
+        $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null, 'c');
         $this->aStar();
     }
 
@@ -283,21 +283,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
             throw new Exception('There is no path specified!');
         }
     }
-
-//    /**
-//     * Reverse path
-//     *
-//     * @return array
-//     */
-//    public function reversePath()
-//    {
-//        $this->currentPosition = array(
-//            'x' => $this->path[1]['x'],
-//            'y' => $this->path[1]['y'],
-//            'movesSpend' => $this->close[$this->path[1]['x'] . '_' . $this->path[1]['y']]['G']);
-//        $this->path = array_reverse($this->path);
-//        return $this->path;
-//    }
 
 }
 

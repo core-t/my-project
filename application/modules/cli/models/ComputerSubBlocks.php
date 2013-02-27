@@ -116,16 +116,9 @@ castleId: ' . $castleId);
             }
         }
         $border = $max - $attackerWinsCount - $attackerCourage;
-//         new Game_Logger('attackerCount ' . $attackerCount . ' >= ' . $border);
         if ($attackerWinsCount >= $border) {
-//            var_dump($attackerWinsCount . '=>' . $border);
-//            var_dump('ENEMY SŁABSZY');
-//             new Game_Logger('ENEMY SŁABSZY');
             return false;
         } else {
-//            var_dump($attackerWinsCount . '<' . $border);
-//            var_dump('ENEMY SILNIEJSZY');
-//             new Game_Logger('ENEMY SILNIEJSZY');
             return true;
         }
     }
@@ -273,7 +266,8 @@ castleId: ' . $castleId);
         }
     }
 
-    static public function getEnemiesInRange($enemies, $army, $fields) {
+    static public function getEnemiesInRange($enemies, $mArmy, $fields) {
+        $army = $mArmy->getArmy();
         $enemiesInRange = array();
         foreach ($enemies as $enemy) {
             $mHeuristics = new Cli_Model_Heuristics($army['x'], $army['y']);
@@ -306,7 +300,8 @@ castleId: ' . $castleId);
         }
     }
 
-    static public function getNearestRuin($fields, $ruins, $army) {
+    static public function getNearestRuin($fields, $ruins, $mArmy) {
+        $army = $mArmy->getArmy();
         foreach ($ruins as $ruinId => $ruin) {
             $destX = $ruin['x'];
             $destY = $ruin['y'];
@@ -332,7 +327,8 @@ castleId: ' . $castleId);
         }
     }
 
-    static public function getMyEmptyCastleInMyRange($gameId, $myCastles, $army, $fields, $db) {
+    static public function getMyEmptyCastleInMyRange($gameId, $myCastles, $mArmy, $fields, $db) {
+        $army = $mArmy->getArmy();
         foreach ($myCastles as $castle) {
             $position = Application_Model_Board::getCastlePosition($castle['castleId']);
             if (Cli_Model_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
@@ -400,7 +396,8 @@ castleId: ' . $castleId);
         return $enemy;
     }
 
-    static public function getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db) {
+    static public function getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db) {
+        $army = $mArmy->getArmy();
         foreach ($enemies as $enemy) {
             $mHeuristics = new Cli_Model_Heuristics($enemy['x'], $enemy['y']);
             $h = $mHeuristics->calculateH($army['x'], $army['y']);
@@ -439,7 +436,8 @@ castleId: ' . $castleId);
         return null;
     }
 
-    static public function getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db) {
+    static public function getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db) {
+        $army = $mArmy->getArmy();
         foreach ($enemies as $enemy) {
             $mHeuristics = new Cli_Model_Heuristics($enemy['x'], $enemy['y']);
             $h = $mHeuristics->calculateH($army['x'], $army['y']);
@@ -478,10 +476,8 @@ castleId: ' . $castleId);
         return null;
     }
 
-    static public function getMyArmyInRange($gameId, $playerId, $army, $fields, $db = null) {
-        if (!$db) {
-            $db = self::getDb();
-        }
+    static public function getMyArmyInRange($gameId, $playerId, $mArmy, $fields, $db) {
+        $army = $mArmy->getArmy();
         $myArmies = Cli_Model_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $playerId, $db);
         foreach ($myArmies as $a) {
             $mHeuristics = new Cli_Model_Heuristics($a['x'], $a['y']);
@@ -498,7 +494,7 @@ castleId: ' . $castleId);
                 $movesToSpend = $aStar->getMovesSpendForFullPath($key);
                 if ($movesToSpend && $movesToSpend <= ($army['movesLeft'] - 2)) {
                     $a['movesSpend'] = $movesToSpend;
-                    $a['path'] = $aStar->getPath($key, $movesToSpend);
+                    $a['path'] = $aStar->getPath($key);
                     $a['currentPosition'] = $aStar->getCurrentPosition();
                     return $a;
                 }
@@ -507,7 +503,8 @@ castleId: ' . $castleId);
         return null;
     }
 
-    static public function getMyCastelNearEnemy($enemies, $army, $fields, $myCastles) {
+    static public function getMyCastelNearEnemy($enemies, $mArmy, $fields, $myCastles) {
+        $army = $mArmy->getArmy();
         $heuristics = array();
         foreach ($enemies as $k => $enemy) {
             $mHeuristics = new Cli_Model_Heuristics($enemy['x'], $enemy['y']);
@@ -545,23 +542,6 @@ castleId: ' . $castleId);
         } else {
             return null;
         }
-    }
-
-    static public function getArmyCanFlySwim($army) {
-        $canFly = -count($army['heroes']);
-        $canSwim = 0;
-
-        foreach ($army['soldiers'] as $soldier) {
-            if ($soldier['canFly']) {
-                $canFly++;
-            } else {
-                $canFly -= 200;
-            }
-            if ($soldier['canSwim']) {
-                $canSwim++;
-            }
-        }
-        return array('canFly' => $canFly, 'canSwim' => $canSwim);
     }
 
 }

@@ -86,9 +86,6 @@ class Cli_Model_Move
         try {
             $A_Star = new Cli_Model_Astar($army, $x, $y, $fields);
             $move = $mArmy->calculateMovesSpend($A_Star->getPath($x . '_' . $y));
-
-            print_r($move);
-            exit;
         } catch (Exception $e) {
             echo($e);
             $gameHandler->sendError($user, 'Wystąpił błąd podczas obliczania ścieżki');

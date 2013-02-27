@@ -135,13 +135,11 @@ class Cli_Model_ComputerMainBlocks {
         }
     }
 
-    static public function moveArmy($gameId, $playerId, $army, $db) {
+    static public function moveArmy($gameId, $playerId, $mArmy, $db) {
+        $army = $mArmy->getArmy();
         new Cli_Model_Logger('');
         new Cli_Model_Logger($army['armyId'], 'armyId:');
 
-        $canFlySwim = Cli_Model_ComputerSubBlocks::getArmyCanFlySwim($army);
-        $army['canFly'] = $canFlySwim['canFly'];
-        $army['canSwim'] = $canFlySwim['canSwim'];
         $myCastles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
         $myCastleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $myCastles);
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
@@ -154,7 +152,7 @@ class Cli_Model_ComputerMainBlocks {
 
             $castlePosition = Application_Model_Board::getCastlePosition($myCastleId);
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::canEnemyReachThisCastle($castlePosition, $castlesAndFields, $enemies);
-            $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $army, $castlesAndFields['fields']);
+            $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);
             if (!$enemiesHaveRange) {
                 new Cli_Model_Logger('BRAK WROGA Z ZASIĘGIEM');
 
