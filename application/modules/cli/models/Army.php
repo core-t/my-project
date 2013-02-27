@@ -1,10 +1,12 @@
 <?php
 
-class Cli_Model_Army {
+class Cli_Model_Army
+{
 
     private $army;
 
-    public function __construct($army) {
+    public function __construct($army)
+    {
         $units = Zend_Registry::get('units');
 
         $this->army = $army;
@@ -64,11 +66,13 @@ class Cli_Model_Army {
         }
     }
 
-    public function getArmy() {
+    public function getArmy()
+    {
         return $this->army;
     }
 
-    static public function getTerrainCosts() {
+    static public function getTerrainCosts()
+    {
         return array(
             'flying' => array(
                 'b' => 2,
@@ -123,6 +127,11 @@ class Cli_Model_Army {
                 'w' => 50
             )
         );
+    }
+
+    public function calculateMovesSpend($path)
+    {
+
     }
 
 }

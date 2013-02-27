@@ -1,6 +1,7 @@
 <?php
 
-class Cli_Model_Battle {
+class Cli_Model_Battle
+{
 
     private $_result = array(
         'defense' => array(
@@ -16,12 +17,14 @@ class Cli_Model_Battle {
     private $defender;
     private $succession = 0;
 
-    public function __construct($attacker, $defender) {
+    public function __construct($attacker, $defender)
+    {
         $this->defender = $defender;
         $this->attacker = $attacker;
     }
 
-    public function addTowerDefenseModifier($x, $y) {
+    public function addTowerDefenseModifier($x, $y)
+    {
         if (Application_Model_Board::isTowerAtPosition($x, $y)) {
             if (isset($this->defender['defenseModifier'])) {
                 $this->defender['defenseModifier'] += 1;
@@ -31,7 +34,8 @@ class Cli_Model_Battle {
         }
     }
 
-    public function addCastleDefenseModifier($gameId, $castleId, $db) {
+    public function addCastleDefenseModifier($gameId, $castleId, $db)
+    {
         $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Cli_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
         if ($defenseModifier > 0) {
             if (isset($this->defender['defenseModifier'])) {
@@ -44,20 +48,23 @@ class Cli_Model_Battle {
         }
     }
 
-    public function updateArmies($gameId, $db) {
+    public function updateArmies($gameId, $db)
+    {
         $this->updateHeroes($this->_result['defense']['heroes'], $gameId, $db);
         $this->updateSoldiers($this->_result['defense']['soldiers'], $gameId, $db);
         $this->updateHeroes($this->_result['attack']['heroes'], $gameId, $db);
         $this->updateSoldiers($this->_result['attack']['soldiers'], $gameId, $db);
     }
 
-    private function updateHeroes($heroes, $gameId, $db) {
+    private function updateHeroes($heroes, $gameId, $db)
+    {
         foreach ($heroes as $v) {
             Cli_Model_Database::armyRemoveHero($gameId, $v['heroId'], $db);
         }
     }
 
-    private function updateSoldiers($soldiers, $gameId, $db) {
+    private function updateSoldiers($soldiers, $gameId, $db)
+    {
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {
                 Cli_Model_Database::destroySoldier($gameId, $v['soldierId'], $db);
@@ -65,20 +72,23 @@ class Cli_Model_Battle {
         }
     }
 
-    public function getDefender() {
+    public function getDefender()
+    {
         if (empty($this->defender['soldiers']) && empty($this->defender['heroes'])) {
             return null;
         }
         return $this->defender;
     }
 
-    public function getAttacker() {
+    public function getAttacker()
+    {
         if (!empty($this->attacker['soldiers']) || !empty($this->attacker['heroes'])) {
             return $this->attacker;
         }
     }
 
-    public function fight() {
+    public function fight()
+    {
         $units = Zend_Registry::get('units');
         $hits = array('attack' => 2, 'defense' => 2);
         foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
@@ -131,7 +141,8 @@ class Cli_Model_Battle {
         }
     }
 
-    private function combat($unitAttacking, $unitDefending, $hits) {
+    private function combat($unitAttacking, $unitDefending, $hits)
+    {
         $attackHits = $hits['attack'];
         $defenseHits = $hits['defense'];
 
@@ -146,7 +157,7 @@ class Cli_Model_Battle {
         $unitAttacking['attackPoints'] += $this->attacker['attackModifier'];
         // do usunięcia !!!!!!!!!!!!!!!!!
         if (!isset($this->defender['defenseModifier'])) {
-            Cli_Model_Database::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
         }
         $unitDefending['defensePoints'] += $this->defender['defenseModifier'];
 
@@ -193,11 +204,13 @@ class Cli_Model_Battle {
         return array('attack' => $attackHits, 'defense' => $defenseHits);
     }
 
-    private function rollDie($maxDie) {
+    private function rollDie($maxDie)
+    {
         return rand(1, $maxDie);
     }
 
-    public function getResult($army, $enemy) {
+    public function getResult($army, $enemy)
+    {
         $battle = array(
             'defense' => array(
                 'heroes' => array(),
@@ -262,7 +275,8 @@ class Cli_Model_Battle {
         return $battle;
     }
 
-    static public function getNeutralCastleGarrizon($gameId, $db) {
+    static public function getNeutralCastleGarrizon($gameId, $db)
+    {
         $turn = Cli_Model_Database::getTurn($gameId, $db);
         $numberOfSoldiers = ceil($turn['nr'] / 10);
         $soldiers = array();
@@ -293,7 +307,8 @@ class Cli_Model_Battle {
 //        }
 //    }
 
-    public function setCombatDefenseModifiers($army) {
+    public function setCombatDefenseModifiers($army)
+    {
         if ($army['heroes']) {
             if (isset($this->defender['defenseModifier'])) {
                 $this->defender['defenseModifier']++;

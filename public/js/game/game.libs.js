@@ -1,4 +1,4 @@
-$(document)[0].oncontextmenu = function() {
+$(document)[0].oncontextmenu = function () {
     return false;
 } // usuwa menu kontekstowe spod prawego przycisku
 
@@ -26,18 +26,18 @@ function turnOff() {
 }
 
 function changeTurn(color, nr) {
-    if(!color) {
+    if (!color) {
         console.log('Turn "color" not set');
         return false;
     }
-    $('#turn').css('background','none');
+    $('#turn').css('background', 'none');
     turn.color = color;
-    if(typeof nr != 'undefined'){
+    if (typeof nr != 'undefined') {
         turn.nr = nr;
     }
     $('#turn').css('background', color);
     $('#turnNumber').html(turn.nr);
-    if(turn.color == my.color) {
+    if (turn.color == my.color) {
         turnOn();
         wsStartMyTurn();
         return 0;
@@ -47,58 +47,58 @@ function changeTurn(color, nr) {
     }
 }
 
-function startGame(){
-    if(!largeimageloaded){
-        setTimeout ( 'startGame()', 1000 );
+function startGame() {
+    if (!largeimageloaded) {
+        setTimeout('startGame()', 1000);
         return;
     }
 
-    for(i in castles) {
+    for (i in castles) {
         new createNeutralCastle(i);
     }
 
-    for(i in ruins) {
+    for (i in ruins) {
         new ruinCreate(i);
     }
-    for(i in towers) {
+    for (i in towers) {
         new towerCreate(i);
     }
-    for(color in players) {
+    for (color in players) {
         players[color].active = 0;
-        $('.'+color +' .color').addClass(color +'bg');
-        if(players[color].computer){
-            $('.'+color+' .color .type').css('background','url(../img/game/computer.png) center center no-repeat');
-        }else{
-            $('.'+color+' .color .type').css('background','url(../img/game/hero_'+color+'.png) center center no-repeat');
+        $('.' + color + ' .color').addClass(color + 'bg');
+        if (players[color].computer) {
+            $('.' + color + ' .color .type').css('background', 'url(../img/game/computer.png) center center no-repeat');
+        } else {
+            $('.' + color + ' .color .type').css('background', 'url(../img/game/hero_' + color + '.png) center center no-repeat');
         }
 
-        for(i in players[color].armies) {
+        for (i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
-            if(color == my.color){
-                for(s in players[color].armies[i].soldiers){
+            if (color == my.color) {
+                for (s in players[color].armies[i].soldiers) {
                     costs += units[players[color].armies[i].soldiers[s].unitId].cost;
                 }
                 myArmies = true;
-            }else{
+            } else {
                 enemyArmies = true;
             }
         }
 
-        if(players[color].armies == "" && players[color].castles == ""){
-            $('.nr.'+color).html('<img src="/img/game/skull_and_crossbones.png" />');
+        if (players[color].armies == "" && players[color].castles == "") {
+            $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
         }
 
-        for(i in players[color].castles) {
+        for (i in players[color].castles) {
             updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
-            if(color == my.color){
+            if (color == my.color) {
                 income += castles[i].income;
-                if(firstCastleId > i){
+                if (firstCastleId > i) {
                     firstCastleId = i;
                 }
                 myCastles = true;
                 setMyCastleProduction(i);
-            }else{
+            } else {
                 enemyCastles = true;
             }
         }
@@ -106,56 +106,56 @@ function startGame(){
 
     showFirstCastle();
 
-    if(!enemyArmies && !enemyCastles){
+    if (!enemyArmies && !enemyCastles) {
         turnOff();
         winM(my.color);
-    }else if(!myArmies && !myCastles){
+    } else if (!myArmies && !myCastles) {
         turnOff();
         lostM(my.color);
-    }else{
-        if(my.turn){
+    } else {
+        if (my.turn) {
             turnOn();
-        }else{
+        } else {
             turnOff();
         }
-        if(my.turn && !players[my.color].turnActive){
+        if (my.turn && !players[my.color].turnActive) {
             wsStartMyTurn();
-        } else if(my.game && players[turn.color].computer){
-            setTimeout ( 'wsComputer()', 1000 );
+        } else if (my.game && players[turn.color].computer) {
+            setTimeout('wsComputer()', 1000);
         }
     }
 
     renderChatHistory();
     costsUpdate(costs);
-    income += countPlayerTowers(my.color)*5;
+    income += countPlayerTowers(my.color) * 5;
     incomeUpdate(income);
 }
 
-function goldUpdate(gold){
+function goldUpdate(gold) {
     $('#gold').html(gold);
 }
 
-function costsUpdate(gold){
+function costsUpdate(gold) {
     $('#costs').html(gold);
 }
 
-function incomeUpdate(gold){
+function incomeUpdate(gold) {
     $('#income').html(gold);
 }
 
-function updatePlayers(color){
+function updatePlayers(color) {
     players[color].active = 2;
 }
 
-function setlock(){
+function setlock() {
     lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
     makeMyCursorLock();
 }
 
-function unlock(){
-    if(my.turn){
+function unlock() {
+    if (my.turn) {
         lock = false;
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');
@@ -163,169 +163,181 @@ function unlock(){
     }
 }
 
-function makeMyCursorUnlock(){
-    $('body *').css('cursor','url(../img/game/cursor.png), auto');
-    $('.zoomPup').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
-    $('#map').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
-    $('.c').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
-    $('.a').css('cursor','url(../img/game/lupa.png) 13 13, crosshair');
+function makeMyCursorUnlock() {
+    $('body *').css('cursor', 'url(../img/game/cursor.png), auto');
+    $('.zoomPup').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('#map').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('.c').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
     myCastlesAddCursor();
 }
 
-function makeMyCursorLock(){
-    $('body *').css('cursor','url(../img/game/cursor_hourglass.png), wait');
+function makeMyCursorLock() {
+    $('body *').css('cursor', 'url(../img/game/cursor_hourglass.png), wait');
 }
 
 function titleBlink(msg) {
-    if(timeoutId){
+    if (timeoutId) {
         clearInterval(timeoutId);
     }
-    timeoutId = setInterval(function() {
-        if(document.title == msg){
+    timeoutId = setInterval(function () {
+        if (document.title == msg) {
             document.title = '...';
-        }else{
+        } else {
             document.title = msg;
         }
     });
-    window.onmousemove = function() {
+    window.onmousemove = function () {
         clearInterval(timeoutId);
         document.title = documentTitle;
         window.onmousemove = null;
     };
 }
 
-function getColor(color){
-    if(color == 'green'){
+function getColor(color) {
+    if (color == 'green') {
         return '#00db00';
-    }else{
+    } else {
         return color;
     }
 }
 
-function makeTime(){
+function makeTime() {
     var d = new Date();
     var minutes = d.getMinutes();
-    if(minutes.length == 1){
-        minutes = '0'+minutes
+    if (minutes.length == 1) {
+        minutes = '0' + minutes
     }
-    return d.getHours()+':'+minutes;
+    return d.getHours() + ':' + minutes;
 }
 
-function getISODateTime(d){
+function getISODateTime(d) {
     // padding function
-    var s = function(a,b){
-        return(1e15+a+"").slice(-b)
+    var s = function (a, b) {
+        return(1e15 + a + "").slice(-b)
     };
 
     // default date parameter
-    if (typeof d === 'undefined'){
+    if (typeof d === 'undefined') {
         d = new Date();
-    }else{
+    } else {
         d = new Date(d);
     }
 
     // return ISO datetime
     return d.getFullYear() + '-' +
-    s(d.getMonth()+1,2) + '-' +
-    s(d.getDate(),2) + ' ' +
-    s(d.getHours(),2) + ':' +
-    s(d.getMinutes(),2) + ':' +
-    s(d.getSeconds(),2);
+        s(d.getMonth() + 1, 2) + '-' +
+        s(d.getDate(), 2) + ' ' +
+        s(d.getHours(), 2) + ':' +
+        s(d.getMinutes(), 2) + ':' +
+        s(d.getSeconds(), 2);
 }
 
-function isDigit(val){
-    if(typeof val == 'undefined'){
+function isDigit(val) {
+    if (typeof val == 'undefined') {
         return false;
     }
     var intRegex = /^\d+$/;
-    if(intRegex.test(val)){
+    if (intRegex.test(val)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
-function isTruthful(val){
-    if(typeof val != 'undefined' && val){
+function isTruthful(val) {
+    if (typeof val != 'undefined' && val) {
         return true;
     }
     return false;
 }
 
-function prepareButtons(){
+function isSet(val) {
+    if (typeof val == 'undefined') {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function notSet(val) {
+    return !isSet(val);
+}
+
+function prepareButtons() {
     zoomPad = $(".zoomPad");
     board = $("#board")
-    .mousedown(function(event) {
-        if(!lock) {
-            switch (event.which) {
-                case 1:
-                    if(selectedArmy) {
-                        wsArmyMove(cursorPosition(event.pageX, event.pageY, 1));
-                    }
-                    break;
-                case 2:
-                    alert('Middle mouse button pressed');
-                    break;
-                case 3:
-                    unselectArmy();
-                    break;
-                default:
-                    alert('You have a strange mouse');
+        .mousedown(function (event) {
+            if (!lock) {
+                switch (event.which) {
+                    case 1:
+                        if (selectedArmy) {
+                            wsArmyMove(cursorPosition(event.pageX, event.pageY, 1));
+                        }
+                        break;
+                    case 2:
+                        alert('Middle mouse button pressed');
+                        break;
+                    case 3:
+                        unselectArmy();
+                        break;
+                    default:
+                        alert('You have a strange mouse');
+                }
             }
-        }
-    })
-    .mousemove(function(e) {
-        if(!lock) {
-            cursorPosition(e.pageX, e.pageY);
-        }
-    })
-    .mouseleave(function(){
-        $('.path').remove()
-    });
-    $('#send').click(function(){
+        })
+        .mousemove(function (e) {
+            if (!lock) {
+                cursorPosition(e.pageX, e.pageY);
+            }
+        })
+        .mouseleave(function () {
+            $('.path').remove()
+        });
+    $('#send').click(function () {
         wsChat();
     });
-    $('#msg').keypress(function(e){
-        if(e.which == 13){
+    $('#msg').keypress(function (e) {
+        if (e.which == 13) {
             wsChat();
         }
     });
-    $('#nextTurn').click(function(){
+    $('#nextTurn').click(function () {
         nextTurnM()
     });
-    $('#nextArmy').click(function(){
+    $('#nextArmy').click(function () {
         findNextArmy()
     });
-    $('#skipArmy').click(function(){
+    $('#skipArmy').click(function () {
         skipArmy()
     });
-    $('#quitArmy').click(function(){
+    $('#quitArmy').click(function () {
         fortifyArmy()
     });
-    $('#splitArmy').click(function(){
-        if(selectedArmy){
+    $('#splitArmy').click(function () {
+        if (selectedArmy) {
             splitArmyM()
         }
     });
-    $('#armyStatus').click(function(){
-        if(selectedArmy){
+    $('#armyStatus').click(function () {
+        if (selectedArmy) {
             armyStatusM()
         }
     });
-    $('#disbandArmy').click(function(){
-        if(selectedArmy){
+    $('#disbandArmy').click(function () {
+        if (selectedArmy) {
             disbandArmyM()
         }
     });
-    $('#unselectArmy').click(function(){
-        if(selectedArmy){
+    $('#unselectArmy').click(function () {
+        if (selectedArmy) {
             unselectArmy();
         }
     });
-    $('#searchRuins').click(function(){
+    $('#searchRuins').click(function () {
         wsSearchRuins()
     });
-    $('#test').click(function(){
+    $('#test').click(function () {
         test()
     });
     $('#nextTurn').addClass('buttonOff');
@@ -337,15 +349,26 @@ function prepareButtons(){
     $('#searchRuins').addClass('buttonOff');
 
     //    $('.'+my.color+' .color').append('You');
-    $('#turn').css('background',turn.color);
+    $('#turn').css('background', turn.color);
     $('#turnNumber').html(turn.nr);
 }
 
-function fieldsCopy(){
-    for(y in fieldsOryginal){
+function fieldsCopy() {
+    for (y in fieldsOryginal) {
         fields[y] = new Array();
-        for(x in fieldsOryginal[y]){
+        for (x in fieldsOryginal[y]) {
             fields[y][x] = fieldsOryginal[y][x];
         }
+    }
+}
+
+function unitsReformat() {
+    for (i in units) {
+        if (i == 0) {
+            continue;
+        }
+        units[i]['f'] = units[i].modMovesForest;
+        units[i]['s'] = units[i].modMovesSwamp;
+        units[i]['m'] = units[i].modMovesHills;
     }
 }

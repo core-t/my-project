@@ -91,6 +91,7 @@ $(document).ready(function() {
     });
 
     fieldsCopy();
+    unitsReformat();
     prepareButtons();
     zoomer = new zoom(documentWidth, documentHeigh);
     startWebSocket();

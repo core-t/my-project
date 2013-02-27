@@ -32,14 +32,14 @@ class Cli_Model_Database {
                 echo('
 Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane
 ');
-                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 break;
 
             case null:
                 echo('
 Zapytanie zwróciło błąd
 ');
-                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 break;
 
             default:
@@ -49,15 +49,9 @@ Zapytanie zwróciło błąd
                 echo('
 Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
 ');
-                self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 print_r($updateResult);
                 break;
-        }
-    }
-
-    static public function debug($debug) {
-        if (true) {
-            print_r($debug[1]);
         }
     }
 
@@ -107,7 +101,7 @@ Brak y');
         if (!isset($result[0]['armyId'])) {
             echo '
 (joinArmiesAtPosition) Brak armii na pozycji: ';
-            self::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
             print_r($position);
             return array(
                 'armyId' => null,
@@ -155,6 +149,9 @@ Brak y');
     }
 
     static public function updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db, $fight = false) {
+        if (!$path) {
+            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+        }
         $units = Zend_Registry::get('units');
         $selectHeroes = $db->select()
                 ->from('heroesingame', array('movesLeft', 'heroId'))

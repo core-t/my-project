@@ -3,7 +3,8 @@
 /**
  * A* search algorithm implemantation.
  */
-class Cli_Model_Astar extends Cli_Model_Heuristics {
+class Cli_Model_Astar extends Cli_Model_Heuristics
+{
 
     /**
      * The set of nodes already evaluated.
@@ -57,7 +58,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param int $destY
      * @param array $fields
      */
-    public function __construct($army, $destX, $destY, $fields, $limit = null) {
+    public function __construct($army, $destX, $destY, $fields, $limit = null)
+    {
         if ($army['x'] == $destX && $army['y'] == $destY) {
             return;
         }
@@ -77,7 +79,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @throws Exception on too many loops
      * @return bool
      */
-    private function aStar() {
+    private function aStar()
+    {
         $this->nr++;
         if ($this->nr > 30000) {
             $this->nr--;
@@ -105,7 +108,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      *
      * @return int
      */
-    private function isNotEmpty() {
+    private function isNotEmpty()
+    {
         return count($this->open);
     }
 
@@ -114,7 +118,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      *
      * @return int
      */
-    private function findSmallestF() {
+    private function findSmallestF()
+    {
         $i = 0;
         foreach (array_keys($this->open) as $k) {
             if (!isset($this->open[$i])) {
@@ -133,7 +138,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param int $x
      * @param int $y
      */
-    private function addOpen($x, $y) {
+    private function addOpen($x, $y)
+    {
         $startX = $x - 1;
         $startY = $y - 1;
         $endX = $x + 1;
@@ -155,14 +161,14 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
                     continue;
                 }
 
-                $type = $this->fields[$j][$i];
+                $terrainType = $this->fields[$j][$i];
 
                 // jeżeli na polu znajduje się wróg to pomiń to pole
-                if ($type == 'e') {
+                if ($terrainType == 'e') {
                     continue;
                 }
 
-                $g = $this->terrainCosts[$type];
+                $g = $this->terrainCosts[$terrainType];
 
                 // jeżeli koszt ruchu większy od pozostałych puktów ruchu to pomiń to pole
                 if ($g > $this->movesLeft) {
@@ -181,7 +187,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
                         'x' => $x,
                         'y' => $y
                     );
-                    $this->open[$key] = $this->node($i, $j, $g, $parent);
+                    $this->open[$key] = $this->node($i, $j, $g, $parent, $terrainType);
                 }
             }
         }
@@ -194,7 +200,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param int $g
      * @param string $key
      */
-    private function calculatePath($kA, $g, $key) {
+    private function calculatePath($kA, $g, $key)
+    {
         if ($this->open[$key]['G'] > ($g + $this->close[$kA]['G'])) {
             $this->open[$key]['parent'] = array(
                 'x' => $this->close[$kA]['x'],
@@ -213,7 +220,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param type $parent
      * @return type
      */
-    private function node($x, $y, $g, $parent) {
+    private function node($x, $y, $g, $parent, $terrainType)
+    {
         $h = $this->calculateH($x, $y);
         return array(
             'x' => $x,
@@ -221,7 +229,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
             'G' => $g,
             'H' => $h,
             'F' => $h + $g,
-            'parent' => $parent
+            'parent' => $parent,
+            'tt' => $terrainType
         );
     }
 
@@ -230,7 +239,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param type $key
      * @return null
      */
-    public function getMovesSpendForFullPath($key) {
+    public function getMovesSpendForFullPath($key)
+    {
         if (!isset($this->close[$key])) {
             return 0;
         }
@@ -244,31 +254,19 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      * @param type $moves
      * @return int
      */
-    public function getPath($key, $moves) {
+    public function getPath($key)
+    {
         if (!isset($this->close[$key])) {
             new Cli_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
             return;
         }
+        $path = array();
         while (!empty($this->close[$key]['parent'])) {
-            if ($this->close[$key]['G'] <= $moves) {
-                if (!$this->currentPosition) {
-                    $this->currentPosition = array(
-                        'x' => $this->close[$key]['x'],
-                        'y' => $this->close[$key]['y'],
-                        'movesSpend' => $this->close[$key]['G']);
-                }
-                $this->path[] = array(
-                    'x' => $this->close[$key]['x'],
-                    'y' => $this->close[$key]['y']);
-            }
+            $path[] = $this->close[$key];
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
-        $this->path[] = array(
-            'x' => $this->close[$key]['x'],
-            'y' => $this->close[$key]['y']);
-        $this->path = array_reverse($this->path);
-        unset($this->path[0]);
-        return $this->path;
+        $path = array_reverse($path);
+        return $path;
     }
 
     /**
@@ -276,23 +274,30 @@ class Cli_Model_Astar extends Cli_Model_Heuristics {
      *
      * @return array
      */
-    public function getCurrentPosition() {
-        return $this->currentPosition;
+    public function getCurrentPosition($path)
+    {
+        $pathLength = count($path);
+        if ($pathLength) {
+            return $path[$pathLength - 1];
+        } else {
+            throw new Exception('There is no path specified!');
+        }
     }
 
-    /**
-     * Reverse path
-     *
-     * @return array
-     */
-    public function reversePath() {
-        $this->currentPosition = array(
-            'x' => $this->path[1]['x'],
-            'y' => $this->path[1]['y'],
-            'movesSpend' => $this->close[$this->path[1]['x'] . '_' . $this->path[1]['y']]['G']);
-        $this->path = array_reverse($this->path);
-        return $this->path;
-    }
+//    /**
+//     * Reverse path
+//     *
+//     * @return array
+//     */
+//    public function reversePath()
+//    {
+//        $this->currentPosition = array(
+//            'x' => $this->path[1]['x'],
+//            'y' => $this->path[1]['y'],
+//            'movesSpend' => $this->close[$this->path[1]['x'] . '_' . $this->path[1]['y']]['G']);
+//        $this->path = array_reverse($this->path);
+//        return $this->path;
+//    }
 
 }
 

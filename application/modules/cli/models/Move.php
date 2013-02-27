@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_Move {
+class Cli_Model_Move
+{
 
-    public function __construct($attackerArmyId, $x, $y, $user, $db, $gameHandler) {
+    public function __construct($attackerArmyId, $x, $y, $user, $db, $gameHandler)
+    {
         if (!Zend_Validate::is($attackerArmyId, 'Digits') || !Zend_Validate::is($x, 'Digits') || !Zend_Validate::is($y, 'Digits')) {
             $gameHandler->sendError($user, 'Niepoprawny format danych ("armyId", "x", "y")!');
             return;
@@ -37,8 +39,7 @@ class Cli_Model_Move {
             'y' => $y
         );
 
-        foreach ($castlesSchema as $cId => $castle)
-        {
+        foreach ($castlesSchema as $cId => $castle) {
             if (!isset($allCastles[$cId])) { // castle is neutral
                 if (Application_Model_Board::isCastleFild($aP, Application_Model_Board::getCastlePosition($cId))) { // trakuję neutralny zamek jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
                     $fields = Application_Model_Board::changeCasteFields($fields, $castle['position']['x'], $castle['position']['y'], 'c');
@@ -84,10 +85,10 @@ class Cli_Model_Move {
 
         try {
             $A_Star = new Cli_Model_Astar($army, $x, $y, $fields);
-            $move = array(
-                'path' => $A_Star->getPath($x . '_' . $y, $army['movesLeft']),
-                'currentPosition' => $A_Star->getCurrentPosition(),
-            );
+            $mArmy->calculateMovesSpend($A_Star->getPath($x . '_' . $y));
+
+            print_r($move);
+            exit;
         } catch (Exception $e) {
             echo($e);
             $gameHandler->sendError($user, 'Wystąpił błąd podczas obliczania ścieżki');
@@ -177,8 +178,7 @@ class Cli_Model_Move {
                 Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db, true);
                 $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                 $victory = true;
-                foreach ($enemy['ids'] as $id)
-                {
+                foreach ($enemy['ids'] as $id) {
                     $defender[]['armyId'] = $id;
                 }
             } else {

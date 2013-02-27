@@ -8,15 +8,6 @@ function showFirstArmy(color){
     zoomer.lensSetCenter(30, 30);
 }
 
-function countArmyTerrainCost(a){
-    if(a.soldiers.length){
-
-    }
-    if(a.soldiers.length){
-
-    }
-}
-
 function army(obj, color) {
     //    console.log(obj);
     $('#army'+obj.armyId).remove();
@@ -604,7 +595,7 @@ function walk(r, xy, computer) {
         },300,
         function(){
             if(typeof r.path[i] == 'undefined'){
-                console.log('coś tu niegra');
+                console.log('coś tu nie gra');
                 console.log(r);
             }else{
                 searchTower(r.path[i].x, r.path[i].y);

@@ -16,4 +16,10 @@ class Cli_Model_Logger {
         $logger->info($output);
     }
 
+    static public function debug($debug) {
+        if (true) {
+            print_r($debug[1]);
+        }
+    }
+
 }
