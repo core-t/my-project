@@ -46,7 +46,6 @@ class Cli_Model_ComputerMainBlocks
                             }
                         } else {
                             new Cli_Model_Logger('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ DO ZAMKU!');
-
                             Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
                             Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);

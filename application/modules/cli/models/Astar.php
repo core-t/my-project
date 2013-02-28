@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A* search algorithm implemantation.
+ * A* search algorithm implementation.
  */
 class Cli_Model_Astar extends Cli_Model_Heuristics
 {
@@ -28,13 +28,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     private $nr = 0;
 
     /**
-     * Shortest path
-     *
-     * @var array
-     */
-    private $path = array();
-
-    /**
      * All map fields
      *
      * @var array
@@ -44,12 +37,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     private $movesLeft;
     private $limit;
 
-    /**
-     * Current position on path
-     *
-     * @var array
-     */
-    private $currentPosition = array();
 
     /**
      * Constructor
@@ -170,8 +157,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
 
                 $g = $this->terrainCosts[$terrainType];
 
-                // jeżeli koszt ruchu większy od pozostałych puktów ruchu to pomiń to pole
-                if ($g > $this->movesLeft) {
+                // jeżeli koszt ruchu większy od 99 to pomiń to pole
+                if ($g > 99) {
                     continue;
                 }
 
@@ -236,19 +223,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
 
     /**
      *
-     * @param type $key
-     * @return null
-     */
-    public function getMovesSpendForFullPath($key)
-    {
-        if (!isset($this->close[$key])) {
-            return 0;
-        }
-        return $this->close[$key]['G'];
-    }
-
-    /**
-     *
      *
      * @param string $key
      * @param type $moves
@@ -268,21 +242,6 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         $path = array_reverse($path);
         return $path;
     }
-
-//    /**
-//     * Getter for currentPosition
-//     *
-//     * @return array
-//     */
-//    public function getCurrentPosition($path)
-//    {
-//        $pathLength = count($path);
-//        if ($pathLength) {
-//            return $path[$pathLength - 1];
-//        } else {
-//            throw new Exception('There is no path specified!');
-//        }
-//    }
 
 }
 

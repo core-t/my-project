@@ -273,16 +273,16 @@ function wsArmyMove(movesSpend) {
         return;
     }
 
-    if (selectedArmy.moves == 0) {
-        unselectArmy();
-        simpleM('Not enough moves left.');
-        return;
-    }
-
-//    if (movesSpend === null) {
+//    if (selectedArmy.moves == 0) {
 //        unselectArmy();
+//        simpleM('Not enough moves left.');
 //        return;
 //    }
+//
+////    if (movesSpend === null) {
+////        unselectArmy();
+////        return;
+////    }
 
     if (!my.turn) {
         simpleM('It is not your turn.');

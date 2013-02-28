@@ -171,41 +171,7 @@ castleId: ' . $castleId);
             $move['in'] = true;
         } else {
             $move['in'] = false;
-            $move['currentPosition'] = array(
-                'x' => $army['x'],
-                'y' => $army['y']
-            );
-            $move['path'] = array();
         }
-//        $key = $position['x'] . '_' . $position['y'];
-//        $movesToSpend = $aStar->getMovesSpendForFullPath($key);
-//        if ($movesToSpend && $movesToSpend > ($army['movesLeft'] - 2)) {
-//            $in = false;
-//        } else {
-//            $in = true;
-//        }
-//        $path = $aStar->getPath($key, $army['movesLeft'] - 2);
-//        $currentPosition = $aStar->getCurrentPosition();
-//        if (!$currentPosition) {
-//            if ($in) {
-//                $currentPosition = array(
-//                    'x' => $position['x'],
-//                    'y' => $position['y'],
-//                    'movesSpend' => 2
-//                );
-//            } else {
-//                $currentPosition = array(
-//                    'x' => $army['x'],
-//                    'y' => $army['y'],
-//                    'movesSpend' => 0
-//                );
-//            }
-//        }
-//        return array(
-//            'path' => $path,
-//            'currentPosition' => $currentPosition,
-//            'in' => $in
-//        );
         return $move;
     }
 
@@ -227,35 +193,10 @@ castleId: ' . $castleId);
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($enemy['x'] . '_' . $enemy['y']));
         if ($move['currentPosition']['x'] == $enemy['x'] && $move['currentPosition']['y'] == $enemy['y']) {
-//            $key = $enemy['x'] . '_' . $enemy['y'];
-//            $movesToSpend = $aStar->getMovesSpendForFullPath($key);
-//            if ($movesToSpend && $movesToSpend > ($army['movesLeft'] - 2)) {
             $move['in'] = true;
         } else {
             $move['in'] = false;
-            $move['currentPosition'] = array(
-                'x' => $army['x'],
-                'y' => $army['y']
-            );
-            $move['path'] = array();
         }
-//        $path = $aStar->getPath($key, $army['movesLeft'] - 2);
-//        $currentPosition = $aStar->getCurrentPosition();
-//        if (!$currentPosition) {
-//            if ($in) {
-//                $currentPosition = array(
-//                    'x' => $enemy['x'],
-//                    'y' => $enemy['y'],
-//                    'movesSpend' => 2
-//                );
-//            } else {
-//                $currentPosition = array(
-//                    'x' => $army['x'],
-//                    'y' => $army['y'],
-//                    'movesSpend' => 0
-//                );
-//            }
-//        }
         return $move;
     }
 

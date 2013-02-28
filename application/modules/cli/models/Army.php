@@ -79,6 +79,7 @@ class Cli_Model_Army
                 'b' => 2,
                 'c' => 0,
                 'e' => null,
+                'E' => 2,
                 'f' => 2,
                 'g' => 2,
                 'm' => 2,
@@ -92,6 +93,7 @@ class Cli_Model_Army
                 'b' => 0,
                 'c' => 0,
                 'e' => null,
+                'E' => 2,
                 'f' => 300,
                 'g' => 200,
                 'm' => 500,
@@ -105,6 +107,7 @@ class Cli_Model_Army
                 'b' => 1,
                 'c' => 0,
                 'e' => null,
+                'E' => 2,
                 'f' => 300,
                 'g' => 200,
                 'm' => 500,
@@ -118,6 +121,7 @@ class Cli_Model_Army
                 'b' => 1,
                 'c' => 0,
                 'e' => null,
+                'E' => 2,
                 'f' => 3,
                 'g' => 2,
                 'm' => 5,
@@ -136,16 +140,13 @@ class Cli_Model_Army
         $heroesMovesLeft = array();
         $realPath = array();
         $stop = false;
+        $skip = false;
         $movesSpend = 0;
 
         for ($i = 0; $i < count($path); $i++) {
             $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
 
             foreach ($this->army['soldiers'] as $soldier) {
-//                if (!isset($soldier['movesLeft'])) {
-//                    Cli_Model_Logger::debug(debug_backtrace());
-//                    exit;
-//                }
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
@@ -156,13 +157,13 @@ class Cli_Model_Army
                     $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
                 } elseif ($path[$i]['tt'] == 'm') {
                     $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
-                } elseif ($path[$i]['tt'] == 'e') {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= 2;
                 } else {
                     $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
 
-                print_r($soldiersMovesLeft);
+                if ($soldiersMovesLeft[$soldier['soldierId']] < 0) {
+                    $skip = true;
+                }
 
                 if ($soldiersMovesLeft[$soldier['soldierId']] <= 0) {
                     $stop = true;
@@ -175,16 +176,20 @@ class Cli_Model_Army
                     $heroesMovesLeft[$hero['heroId']] = $hero['movesLeft'];
                 }
 
-                if ($path[$i]['tt'] == 'e') {
-                    $heroesMovesLeft[$hero['heroId']] -= 2;
-                } else {
-                    $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+                $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+
+                if ($heroesMovesLeft[$hero['heroId']] < 0) {
+                    $skip = true;
                 }
 
-                if ($heroesMovesLeft[$hero['heroId']] <= 0) {
+                if ($heroesMovesLeft[$hero['heroId']] = 0) {
                     $stop = true;
                     break;
                 }
+            }
+
+            if ($skip) {
+                break;
             }
 
             $realPath[] = array(
