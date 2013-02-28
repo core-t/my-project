@@ -269,20 +269,20 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         return $path;
     }
 
-    /**
-     * Getter for currentPosition
-     *
-     * @return array
-     */
-    public function getCurrentPosition($path)
-    {
-        $pathLength = count($path);
-        if ($pathLength) {
-            return $path[$pathLength - 1];
-        } else {
-            throw new Exception('There is no path specified!');
-        }
-    }
+//    /**
+//     * Getter for currentPosition
+//     *
+//     * @return array
+//     */
+//    public function getCurrentPosition($path)
+//    {
+//        $pathLength = count($path);
+//        if ($pathLength) {
+//            return $path[$pathLength - 1];
+//        } else {
+//            throw new Exception('There is no path specified!');
+//        }
+//    }
 
 }
 
