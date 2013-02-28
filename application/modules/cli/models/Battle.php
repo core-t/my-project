@@ -130,11 +130,10 @@ class Cli_Model_Battle
         }
 
         $unitAttacking['attackPoints'] += $this->attacker['attackModifier'];
-        // do usunięcia !!!!!!!!!!!!!!!!!
-        if (!isset($this->defender['defenseModifier'])) {
-            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+
+        if (isset($this->defender['defenseModifier'])) {
+            $unitDefending['defensePoints'] += $this->defender['defenseModifier'];
         }
-        $unitDefending['defensePoints'] += $this->defender['defenseModifier'];
 
         while ($attackHits AND $defenseHits) {
             $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];

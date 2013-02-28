@@ -5,9 +5,6 @@ class Cli_Model_ComputerSubBlocks
 
     static public function fightEnemy($gameId, $army, $path, $fields, $enemy, $playerId, $castleId, $db)
     {
-        if (!$db) {
-            $db = self::getDb();
-        }
         $result = array(
             'victory' => false
         );
@@ -130,21 +127,20 @@ castleId: ' . $castleId);
             $heuristics[$castleId] = $mHeuristics->calculateH($army['x'], $army['y']);
         }
         asort($heuristics, SORT_NUMERIC);
-//         $weaker = array();
 
         foreach (array_keys($heuristics) as $castleId) {
+            $position = Application_Model_Board::getCastlePosition($castleId);
             if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
-                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $position, $db);
             } else {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($gameId, $db);
             }
+            $enemy = array_merge($enemy, $position);
+
             if (!self::isEnemyStronger($gameId, $playerId, $db, $army, $enemy, $castleId)) {
-//                 new Game_Logger('ENEMY SŁABSZY - 108');
                 return $castleId;
             }
-//             $weaker[$castleId] = Game_Battle::getCastlePower($castleId, $playerId);
         }
-//         asort($weaker, SORT_NUMERIC);
         return null;
     }
 
@@ -383,9 +379,8 @@ castleId: ' . $castleId);
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($enemy['x'] . '_' . $enemy['y']));
                 if ($move['currentPosition']['x'] == $enemy['x'] && $move['currentPosition']['y'] == $enemy['y']) {
-                    array_merge($enemy, $move);
                     $enemy['castleId'] = $castleId;
-                    return $enemy;
+                    return array_merge($enemy, $move);
                 }
 
                 if ($castleId !== null) {
@@ -454,8 +449,7 @@ castleId: ' . $castleId);
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($a['x'] . '_' . $a['y']));
                 if ($move['currentPosition']['x'] == $a['x'] && $move['currentPosition']['y'] == $a['y']) {
-                    array_merge($a, $move);
-                    return $a;
+                    return array_merge($a, $move);
                 }
             }
         }
@@ -497,8 +491,7 @@ castleId: ' . $castleId);
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
         if ($move['currentPosition'] == $position) {
-            array_merge($castle, $move);
-            return $castle;
+            return array_merge($castle, $move);
         } else {
             return null;
         }

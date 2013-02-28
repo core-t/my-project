@@ -33,7 +33,7 @@ class Cli_Model_ComputerMainBlocks
                         $enemy = Cli_Model_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
                         if ($enemy) {
                             new Cli_Model_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
-                            $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $army, $castlesAndFields['fields'], $db);
+                            $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
                             if ($join) {
                                 new Cli_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
@@ -93,14 +93,14 @@ class Cli_Model_ComputerMainBlocks
                 }
             } else {
                 new Cli_Model_Logger('WRÓG JEST SILNIEJSZY');
-                $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $army, $castlesAndFields['fields'], $db);
+                $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
                 if ($join) {
                     new Cli_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                 } else {
                     new Cli_Model_Logger('BRAK MOJEJ ARMII W ZASIĘGU');
-                    $castle = Cli_Model_ComputerSubBlocks::getMyCastleNearEnemy($enemies, $army, $castlesAndFields['fields'], $myCastles);
+                    $castle = Cli_Model_ComputerSubBlocks::getMyCastleNearEnemy($enemies, $mArmy, $castlesAndFields['fields'], $myCastles);
                     if ($castle) {
                         new Cli_Model_Logger('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
                         Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castle['path'], $castlesAndFields['fields'], $army, $db);

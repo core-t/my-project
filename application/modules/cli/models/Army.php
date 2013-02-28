@@ -226,6 +226,10 @@ class Cli_Model_Army
 
     static public function addTowerDefenseModifier($army)
     {
+        if(!isset($army['x'])){
+            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            exit;
+        }
         if (Application_Model_Board::isTowerAtPosition($army['x'], $army['y'])) {
             if (isset($army['defenseModifier'])) {
                 $army['defenseModifier']++;
