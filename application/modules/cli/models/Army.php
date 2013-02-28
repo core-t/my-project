@@ -142,17 +142,28 @@ class Cli_Model_Army
             $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
 
             foreach ($this->army['soldiers'] as $soldier) {
+//                if (!isset($soldier['movesLeft'])) {
+//                    Cli_Model_Logger::debug(debug_backtrace());
+//                    exit;
+//                }
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
 
-                if ($path[$i]['tt'] == 'f' || $path[$i]['tt'] == 's' || $path[$i]['tt'] == 'm') {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']][$path[$i]['tt']];
+                if ($path[$i]['tt'] == 'f') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
+                } elseif ($path[$i]['tt'] == 's') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
+                } elseif ($path[$i]['tt'] == 'm') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
+                } elseif ($path[$i]['tt'] == 'e') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= 2;
                 } else {
                     $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
 
                 if ($soldiersMovesLeft[$soldier['soldierId']] <= 0) {
+                    $stop = true;
                     break;
                 }
             }
@@ -162,9 +173,14 @@ class Cli_Model_Army
                     $heroesMovesLeft[$hero['heroId']] = $hero['movesLeft'];
                 }
 
-                $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+                if ($path[$i]['tt'] == 'e') {
+                    $heroesMovesLeft[$hero['heroId']] -= 2;
+                } else {
+                    $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+                }
 
                 if ($heroesMovesLeft[$hero['heroId']] <= 0) {
+                    $stop = true;
                     break;
                 }
             }

@@ -155,6 +155,7 @@ castleId: ' . $castleId);
     static public function isEnemyCastleInRange($castlesAndFields, $castleId, $mArmy)
     {
         $army = $mArmy->getArmy();
+        print_r($army);
         $position = Application_Model_Board::getCastlePosition($castleId);
         $fields = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $position['x'], $position['y'], 'c');
         try {
@@ -165,6 +166,7 @@ castleId: ' . $castleId);
         }
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
+        print_r($move);
         if ($move['currentPosition']['x'] == $position['x'] && $move['currentPosition']['y'] == $position['y']) {
             $move['in'] = true;
         } else {
@@ -343,6 +345,7 @@ castleId: ' . $castleId);
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($ruin['x'] . '_' . $ruin['y']));
                 if ($move['currentPosition']['x'] == $ruin['x'] && $move['currentPosition']['y'] == $ruin['y']) {
+                    $ruin['ruinId'] = $ruinId;
                     return array_merge($ruin, $move);
                 }
             }

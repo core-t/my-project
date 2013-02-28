@@ -22,7 +22,7 @@ class Cli_Model_ComputerMainBlocks
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path'], $fightEnemy, $castleId);
                 } else {
                     new Cli_Model_Logger('SŁABSZY ZAMEK WROGA POZA ZASIĘGIEM');
-                    $enemy = Cli_Model_ComputerSubBlocks::getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db);
+                    $enemy = Cli_Model_ComputerSubBlocks::getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
                     if ($enemy) {
                         //atakuj
                         new Cli_Model_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
@@ -30,7 +30,7 @@ class Cli_Model_ComputerMainBlocks
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId']);
                     } else {
                         new Cli_Model_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
-                        $enemy = Cli_Model_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $army, $castlesAndFields, $db);
+                        $enemy = Cli_Model_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
                         if ($enemy) {
                             new Cli_Model_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
                             $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $army, $castlesAndFields['fields'], $db);
@@ -126,7 +126,7 @@ class Cli_Model_ComputerMainBlocks
         } else {
             new Cli_Model_Logger('JEST HEROS');
 //            new Cli_Model_Logger($army['heroes'], 'HEROS:');
-            $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Model_Database::getFullRuins($gameId, $db), $army);
+            $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Model_Database::getFullRuins($gameId, $db), $mArmy);
             if (!$ruin) {
                 new Cli_Model_Logger('BRAK RUIN');
                 return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
@@ -166,7 +166,7 @@ class Cli_Model_ComputerMainBlocks
                 if (!$enemiesInRange) {
                     new Cli_Model_Logger('BRAK WROGA W ZASIĘGU');
 
-                    return self::ruinBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
+                    return self::ruinBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
                 } else {
                     new Cli_Model_Logger('JEST WRÓG W ZASIĘGU');
 
@@ -238,11 +238,11 @@ class Cli_Model_ComputerMainBlocks
         } else {
             new Cli_Model_Logger('POZA ZAMKIEM');
 
-            $myEmptyCastle = Cli_Model_ComputerSubBlocks::getMyEmptyCastleInMyRange($gameId, $myCastles, $army, $castlesAndFields['fields'], $db);
+            $myEmptyCastle = Cli_Model_ComputerSubBlocks::getMyEmptyCastleInMyRange($gameId, $myCastles, $mArmy, $castlesAndFields['fields'], $db);
             if (!$myEmptyCastle) {
                 new Cli_Model_Logger('NIE MA MOJEGO PUSTEGO ZAMKU W ZASIĘGU');
 
-                return self::ruinBlock($gameId, $playerId, $enemies, $army, $castlesAndFields, $myCastles, $db);
+                return self::ruinBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
             } else {
                 new Cli_Model_Logger('JEST MÓJ PUSTY ZAMEK W ZASIĘGU');
 
