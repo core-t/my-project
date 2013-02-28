@@ -162,6 +162,8 @@ class Cli_Model_Army
                     $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
 
+                print_r($soldiersMovesLeft);
+
                 if ($soldiersMovesLeft[$soldier['soldierId']] <= 0) {
                     $stop = true;
                     break;
@@ -185,16 +187,17 @@ class Cli_Model_Army
                 }
             }
 
-            if ($stop) {
-                break;
-            }
-
             $realPath[] = array(
                 'x' => $path[$i]['x'],
                 'y' => $path[$i]['y']
             );
 
             $movesSpend += $defaultMoveCost;
+
+            if ($stop) {
+                break;
+            }
+
         }
 
         return array(
