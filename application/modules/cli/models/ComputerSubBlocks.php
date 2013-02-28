@@ -155,9 +155,8 @@ castleId: ' . $castleId);
     static public function isEnemyCastleInRange($castlesAndFields, $castleId, $mArmy)
     {
         $army = $mArmy->getArmy();
-        print_r($army);
         $position = Application_Model_Board::getCastlePosition($castleId);
-        $fields = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $position['x'], $position['y'], 'c');
+        $fields = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $position['x'], $position['y'], 'E');
         try {
             $aStar = new Cli_Model_Astar($army, $position['x'], $position['y'], $fields);
         } catch (Exception $e) {
@@ -166,7 +165,6 @@ castleId: ' . $castleId);
         }
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
-        print_r($move);
         if ($move['currentPosition']['x'] == $position['x'] && $move['currentPosition']['y'] == $position['y']) {
             $move['in'] = true;
         } else {
@@ -180,7 +178,7 @@ castleId: ' . $castleId);
         $army = $mArmy->getArmy();
         $castleId = Application_Model_Board::isCastleAtPosition($enemy['x'], $enemy['y'], $castlesAndFields['hostileCastles']);
         if ($castleId !== null) {
-            $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'c');
+            $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'E');
         } else {
             $castlesAndFields['fields'] = Application_Model_Board::restoreField($castlesAndFields['fields'], $enemy['x'], $enemy['y']);
         }
@@ -209,7 +207,7 @@ castleId: ' . $castleId);
             if ($h < ($enemy['movesLeft'])) {
                 $mArmy = new Cli_Model_Army($enemy);
                 $enemy = $mArmy->getArmy();
-                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'c');
+                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'E');
                 try {
                     $aStar = new Cli_Model_Astar($enemy, $castlePosition['x'], $castlePosition['y'], $castlesAndFields['fields']);
                 } catch (Exception $e) {
@@ -217,12 +215,10 @@ castleId: ' . $castleId);
                     return;
                 }
 
-//                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'e');
+                $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'e');
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($castlePosition['x'] . '_' . $castlePosition['y']));
                 if ($move['currentPosition']['x'] == $castlePosition['x'] && $move['currentPosition']['y'] == $castlePosition['y']) {
-//                $movesToSpend = $aStar->getMovesSpendForFullPath($castlePosition['x'] . '_' . $castlePosition['y']);
-//                if ($movesToSpend && $movesToSpend <= ($enemy['movesLeft'] - 2)) {
 //                    $enemy['aStar'] = $aStar;
 //                    $enemy['key'] = $castlePosition['x'] . '_' . $castlePosition['y'];
 //                    $enemy['movesToSpend'] = $movesToSpend + 2;
@@ -253,7 +249,8 @@ castleId: ' . $castleId);
                     return;
                 }
 
-//                $fields = Application_Model_Board::changeArmyField($fields, $destX, $destY, 'e');
+                $fields = Application_Model_Board::changeArmyField($fields, $enemy['x'], $enemy['y'], 'e');
+
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($enemy['x'] . '_' . $enemy['y']));
                 if ($move['currentPosition']['x'] == $enemy['x'] && $move['currentPosition']['y'] == $enemy['y']) {
 //                    $enemy['aStar'] = $aStar;
@@ -304,7 +301,7 @@ castleId: ' . $castleId);
             $mHeuristics = new Cli_Model_Heuristics($army['x'], $army['y']);
             $h = $mHeuristics->calculateH($position['x'], $position['y']);
             if ($h < $army['movesLeft']) {
-                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'c');
+                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'E');
                 try {
                     $aStar = new Cli_Model_Astar($army, $position['x'], $position['y'], $fields);
                 } catch (Exception $e) {
@@ -313,7 +310,6 @@ castleId: ' . $castleId);
                 }
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
-//                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'e');
                 if ($move['currentPosition']['x'] == $position['x'] && $move['currentPosition']['y'] == $position['y']) {
 //                    $castle['movesSpend'] = $movesToSpend;
 //                    $castle['path'] = $aStar->getPath($key, $army['movesLeft']);
@@ -322,6 +318,8 @@ castleId: ' . $castleId);
                     $castle['y'] = $position['y'];
                     return array_merge($castle, $move);
                 }
+
+                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'e');
             }
         }
     }
@@ -332,7 +330,7 @@ castleId: ' . $castleId);
             $mHeuristics = new Cli_Model_Heuristics($enemy['x'], $enemy['y']);
             $h = $mHeuristics->calculateH($myEmptyCastle['x'], $myEmptyCastle['y']);
             if ($h < $enemy['movesLeft']) {
-                $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'c');
+                $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'E');
                 $mArmy = new Cli_Model_Army($enemy);
                 $enemy = $mArmy->getArmy();
                 try {
@@ -346,6 +344,7 @@ castleId: ' . $castleId);
                 if ($move['currentPosition']['x'] == $myEmptyCastle['x'] && $move['currentPosition']['y'] == $myEmptyCastle['y']) {
                     return true;
                 }
+
                 $fields = Application_Model_Board::changeCasteFields($fields, $myEmptyCastle['x'], $myEmptyCastle['y'], 'e');
             }
         }
@@ -375,7 +374,7 @@ castleId: ' . $castleId);
                     continue;
                 }
                 if ($castleId !== null) {
-                    $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'c');
+                    $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'E');
                 } else {
                     $castlesAndFields['fields'] = Application_Model_Board::restoreField($castlesAndFields['fields'], $enemy['x'], $enemy['y']);
                 }
@@ -415,7 +414,7 @@ castleId: ' . $castleId);
                     continue;
                 }
                 if ($castleId !== null) {
-                    $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'c');
+                    $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $enemy['x'], $enemy['y'], 'E');
                 } else {
                     $castlesAndFields['fields'] = Application_Model_Board::restoreField($castlesAndFields['fields'], $enemy['x'], $enemy['y']);
                 }
