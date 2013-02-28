@@ -212,4 +212,43 @@ class Cli_Model_Army
         );
     }
 
+    static public function setCombatDefenseModifiers($army)
+    {
+        if ($army['heroes']) {
+            if (isset($army['defenseModifier'])) {
+                $army['defenseModifier']++;
+            } else {
+                $army['defenseModifier'] = 1;
+            }
+        }
+        return $army;
+    }
+
+    static public function addTowerDefenseModifier($army)
+    {
+        if (Application_Model_Board::isTowerAtPosition($army['x'], $army['y'])) {
+            if (isset($army['defenseModifier'])) {
+                $army['defenseModifier']++;
+            } else {
+                $army['defenseModifier'] = 1;
+            }
+        }
+        return $army;
+    }
+
+    static public function addCastleDefenseModifier($army, $gameId, $castleId, $db)
+    {
+        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Cli_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
+        if ($defenseModifier > 0) {
+            if (isset($army['defenseModifier'])) {
+                $army['defenseModifier'] += $defenseModifier;
+            } else {
+                $army['defenseModifier'] = $defenseModifier;
+            }
+        } else {
+            echo 'error! !';
+        }
+        return $army;
+    }
+
 }

@@ -109,28 +109,22 @@ class Cli_Model_Move
 //        }
 
         $fight = false;
-        $movesLeft = $army['movesLeft'] - $move['movesSpend'];
 
         if ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y) {
             if (Zend_Validate::is($castleId, 'Digits')) { // castle
-//                if ($movesLeft >= 2) {
-                    $fight = true;
-                    if ($defenderColor == 'neutral') {
-                        $enemy = Cli_Model_Battle::getNeutralCastleGarrizon($user->parameters['gameId'], $db);
-                    } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
-                        $defenderColor = Cli_Model_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
-                        $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
-                    }
-//                } else {
-//                    $rollbackPath = true;
-//                }
+                $fight = true;
+                if ($defenderColor == 'neutral') {
+                    $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
+                } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
+                    $defenderColor = Cli_Model_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
+                    $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
+                    $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
+                }
             } elseif ($enemy['ids']) { // enemy army
-//                if ($movesLeft >= 2) {
-                    $fight = true;
-                    $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
-//                } else {
-//                    $rollbackPath = true;
-//                }
+                $fight = true;
+                $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
+                $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
+                $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
             }
         }
 
@@ -142,25 +136,17 @@ class Cli_Model_Move
 
         if ($fight) {
             $battle = new Cli_Model_Battle($army, $enemy);
-//            $battle->setCombatAttackModifiers($army);
-            $battle->setCombatDefenseModifiers($enemy);
+            $battle->fight();
+            $battle->updateArmies($user->parameters['gameId'], $db);
 
             if (Zend_Validate::is($castleId, 'Digits')) {
                 if ($defenderColor == 'neutral') {
-                    $battle->fight();
-                    $battle->updateArmies($user->parameters['gameId'], $db);
                     $defender = $battle->getDefender();
                 } else {
-                    $battle->addCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
-                    $battle->fight();
-                    $battle->updateArmies($user->parameters['gameId'], $db);
                     $castle = Application_Model_Board::getCastle($castleId);
                     $defender = Cli_Model_Database::getDefenderFromCastlePosition($user->parameters['gameId'], $castle['position'], $db);
                 }
             } else {
-                $battle->addTowerDefenseModifier($x, $y);
-                $battle->fight();
-                $battle->updateArmies($user->parameters['gameId'], $db);
                 $defender = Cli_Model_Database::getDefenderFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $db);
             }
 
@@ -190,26 +176,6 @@ class Cli_Model_Move
             }
             $battleResult = $battle->getResult($army, $enemy);
         } else {
-//            if ($rollbackPath) {
-//                if (Zend_Validate::is($castleId, 'Digits')) {
-//                    if (!$move['movesSpend']) {
-//                        $gameHandler->sendError($user, 'Nie wykonano ruchu');
-//                        return;
-//                    }
-//                    $newMove = Application_Model_Board::rewindPathOutOfCastle($move['path'], $castleId);
-//                    $newMove['movesSpend'] = $move['movesSpend'];
-//                    $move = $newMove;
-//                } else {
-//                    array_pop($move['path']);
-//                    if (!$move['movesSpend']) {
-//                        $gameHandler->sendError($user, 'Nie wykonano ruchu');
-//                        return;
-//                    }
-//                    $count = count($move['path']);
-//                    $move['currentPosition']['x'] = $move['path'][$count]['x'];
-//                    $move['currentPosition']['y'] = $move['path'][$count]['y'];
-//                }
-//            }
             Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db);
             $armiesIds = Cli_Model_Database::joinArmiesAtPosition($user->parameters['gameId'], $move['currentPosition'], $user->parameters['playerId'], $db);
             $newArmyId = $armiesIds['armyId'];

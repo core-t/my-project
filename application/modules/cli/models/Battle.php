@@ -23,31 +23,6 @@ class Cli_Model_Battle
         $this->attacker = $attacker;
     }
 
-    public function addTowerDefenseModifier($x, $y)
-    {
-        if (Application_Model_Board::isTowerAtPosition($x, $y)) {
-            if (isset($this->defender['defenseModifier'])) {
-                $this->defender['defenseModifier'] += 1;
-            } else {
-                $this->defender['defenseModifier'] = 1;
-            }
-        }
-    }
-
-    public function addCastleDefenseModifier($gameId, $castleId, $db)
-    {
-        $defenseModifier = Application_Model_Board::getCastleDefense($castleId) + Cli_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
-        if ($defenseModifier > 0) {
-            if (isset($this->defender['defenseModifier'])) {
-                $this->defender['defenseModifier'] += $defenseModifier;
-            } else {
-                $this->defender['defenseModifier'] = $defenseModifier;
-            }
-        } else {
-            echo 'error! !';
-        }
-    }
-
     public function updateArmies($gameId, $db)
     {
         $this->updateHeroes($this->_result['defense']['heroes'], $gameId, $db);
@@ -91,11 +66,11 @@ class Cli_Model_Battle
     {
         $units = Zend_Registry::get('units');
         $hits = array('attack' => 2, 'defense' => 2);
-        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
-            $unitAttaking['attackPoints'] = $units[$unitAttaking['unitId']]['attackPoints'];
+        foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $units[$unitAttacking['unitId']]['attackPoints'];
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
                 $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
-                $hits = $this->combat($unitAttaking, $unitDefending, $hits);
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
                 } else {
@@ -104,10 +79,10 @@ class Cli_Model_Battle
                 }
             }
         }
-        foreach ($this->attacker['soldiers'] as $a => $unitAttaking) {
-            $unitAttaking['attackPoints'] = $units[$unitAttaking['unitId']]['attackPoints'];
+        foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $units[$unitAttacking['unitId']]['attackPoints'];
             foreach ($this->defender['heroes'] as $d => $unitDefending) {
-                $hits = $this->combat($unitAttaking, $unitDefending, $hits);
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
                 } else {
@@ -116,10 +91,10 @@ class Cli_Model_Battle
                 }
             }
         }
-        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
                 $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
-                $hits = $this->combat($unitAttaking, $unitDefending, $hits);
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
                 } else {
@@ -128,9 +103,9 @@ class Cli_Model_Battle
                 }
             }
         }
-        foreach ($this->attacker['heroes'] as $a => $unitAttaking) {
+        foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
             foreach ($this->defender['heroes'] as $d => $unitDefending) {
-                $hits = $this->combat($unitAttaking, $unitDefending, $hits);
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
                 } else {
@@ -275,7 +250,7 @@ class Cli_Model_Battle
         return $battle;
     }
 
-    static public function getNeutralCastleGarrizon($gameId, $db)
+    static public function getNeutralCastleGarrison($gameId, $db)
     {
         $turn = Cli_Model_Database::getTurn($gameId, $db);
         $numberOfSoldiers = ceil($turn['nr'] / 10);
@@ -306,19 +281,6 @@ class Cli_Model_Battle
 //            $this->attackModifier++;
 //        }
 //    }
-
-    public function setCombatDefenseModifiers($army)
-    {
-        if ($army['heroes']) {
-            if (isset($this->defender['defenseModifier'])) {
-                $this->defender['defenseModifier']++;
-                echo 'Czy to możliwe?';
-                exit;
-            } else {
-                $this->defender['defenseModifier'] = 1;
-            }
-        }
-    }
 
 }
 

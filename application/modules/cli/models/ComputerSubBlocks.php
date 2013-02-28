@@ -16,10 +16,8 @@ class Cli_Model_ComputerSubBlocks
             if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
                 $result['defenderColor'] = Cli_Model_Database::getColorByCastleId($gameId, $castleId, $db);
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
                 $battle = new Cli_Model_Battle($army, $enemy);
-//                $battle->setCombatAttackModifiers($army);
-//                $battle->setCombatDefenseModifiers($enemy);
-                $battle->addCastleDefenseModifier($gameId, $castleId, $db);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
                 $defender = Cli_Model_Database::getDefenderFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
@@ -45,7 +43,7 @@ castleId: ' . $castleId);
                     Cli_Model_Database::destroyArmy($gameId, $army['armyId'], $playerId, $db);
                 }
             } else { // neutral castle
-                $enemy = Cli_Model_Battle::getNeutralCastleGarrizon($gameId, $db);
+                $enemy = Cli_Model_Battle::getNeutralCastleGarrison($gameId, $db);
                 $battle = new Cli_Model_Battle($army, $enemy);
 //                $battle->setCombatAttackModifiers($army);
                 $battle->fight();
@@ -68,10 +66,9 @@ castleId: ' . $castleId);
                 $result['defenderColor'] = 'neutral';
             }
         } else { // enemy army
+            $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
+            $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
             $battle = new Cli_Model_Battle($army, $enemy);
-//            $battle->setCombatAttackModifiers($army);
-//            $battle->setCombatDefenseModifiers($enemy);
-            $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
             $battle->fight();
             $battle->updateArmies($gameId, $db);
             $defender = Cli_Model_Database::getDefenderFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
@@ -101,23 +98,22 @@ castleId: ' . $castleId);
     {
         $attackerWinsCount = 0;
         $attackerCourage = 2;
+
+        $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
+        if ($castleId !== null && Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+            $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
+        } else {
+            $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
+        }
+
         for ($i = 0; $i < $max; $i++) {
             $battle = new Cli_Model_Battle($army, $enemy);
-//            $battle->setCombatAttackModifiers($army);
-            if ($castleId !== null) {
-                if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
-                    $battle->addCastleDefenseModifier($gameId, $castleId, $db);
-                }
-            }
-            if (isset($enemy['x']) && isset($enemy['y'])) {
-//                $battle->setCombatDefenseModifiers($enemy);
-                $battle->addTowerDefenseModifier($enemy['x'], $enemy['y']);
-            }
             $battle->fight();
             if ($battle->getAttacker()) {
                 $attackerWinsCount++;
             }
         }
+
         $border = $max - $attackerWinsCount - $attackerCourage;
         if ($attackerWinsCount >= $border) {
             return false;
@@ -140,7 +136,7 @@ castleId: ' . $castleId);
             if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
             } else {
-                $enemy = Cli_Model_Battle::getNeutralCastleGarrizon($gameId, $db);
+                $enemy = Cli_Model_Battle::getNeutralCastleGarrison($gameId, $db);
             }
             if (!self::isEnemyStronger($gameId, $playerId, $db, $army, $enemy, $castleId)) {
 //                 new Game_Logger('ENEMY SŁABSZY - 108');
