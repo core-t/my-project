@@ -110,24 +110,22 @@ class Cli_Model_Move
 
         $fight = false;
 
-        if ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y) {
-            if (Zend_Validate::is($castleId, 'Digits')) { // castle
-                $fight = true;
-                if ($defenderColor == 'neutral') {
-                    $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
-                } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
-                    $defenderColor = Cli_Model_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
-                    $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
-                    $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
-                }
-            } elseif ($enemy['ids']) { // enemy army
-                $fight = true;
-                $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
-                $enemy['x'] = $x;
-                $enemy['y'] = $y;
-                $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
-                $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
+        if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleFild($move['currentPosition'], Application_Model_Board::getCastlePosition($castleId))) { // castle
+            $fight = true;
+            if ($defenderColor == 'neutral') {
+                $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
+            } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
+                $defenderColor = Cli_Model_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
+        } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $enemy['ids']) { // enemy army
+            $fight = true;
+            $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
+            $enemy['x'] = $x;
+            $enemy['y'] = $y;
+            $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
+            $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
         }
 
         /* ------------------------------------
