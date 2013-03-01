@@ -141,7 +141,6 @@ class Cli_Model_Army
         $realPath = array();
         $stop = false;
         $skip = false;
-        $movesSpend = 0;
 
         for ($i = 0; $i < count($path); $i++) {
             $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
@@ -182,7 +181,7 @@ class Cli_Model_Army
                     $skip = true;
                 }
 
-                if ($heroesMovesLeft[$hero['heroId']] = 0) {
+                if ($heroesMovesLeft[$hero['heroId']] <= 0) {
                     $stop = true;
                     break;
                 }
@@ -197,8 +196,6 @@ class Cli_Model_Army
                 'y' => $path[$i]['y']
             );
 
-            $movesSpend += $defaultMoveCost;
-
             if ($stop) {
                 break;
             }
@@ -207,7 +204,6 @@ class Cli_Model_Army
 
         return array(
             'path' => $realPath,
-            'movesSpend' => $movesSpend,
             'currentPosition' => end($realPath)
         );
     }
@@ -226,7 +222,7 @@ class Cli_Model_Army
 
     static public function addTowerDefenseModifier($army)
     {
-        if(!isset($army['x'])){
+        if (!isset($army['x'])) {
             Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
             exit;
         }
