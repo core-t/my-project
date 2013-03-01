@@ -251,4 +251,10 @@ class Cli_Model_Army
         return $army;
     }
 
+    static public function armyArray($columnName = '')
+    {
+        return array('armyId', 'destroyed', 'fortified', 'x', 'y', $columnName);
+    }
+
+
 }

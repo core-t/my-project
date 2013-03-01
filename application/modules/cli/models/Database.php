@@ -1,19 +1,22 @@
 <?php
 
-class Cli_Model_Database {
+class Cli_Model_Database
+{
 
-    static public function getDb() {
+    static public function getDb()
+    {
         return new Zend_Db_Adapter_Pdo_Pgsql(array(
-                    'host' => Zend_Registry::get('config')->resources->db->params->host,
-                    'username' => Zend_Registry::get('config')->resources->db->params->username,
-                    'password' => Zend_Registry::get('config')->resources->db->params->password,
-                    'dbname' => Zend_Registry::get('config')->resources->db->params->dbname
-                ));
+            'host' => Zend_Registry::get('config')->resources->db->params->host,
+            'username' => Zend_Registry::get('config')->resources->db->params->username,
+            'password' => Zend_Registry::get('config')->resources->db->params->password,
+            'dbname' => Zend_Registry::get('config')->resources->db->params->dbname
+        ));
     }
 
     static $playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
-    static public function update($name, $data, $where, $db, $quiet = false) {
+    static public function update($name, $data, $where, $db, $quiet = false)
+    {
         try {
             $updateResult = $db->update($name, $data, $where);
         } catch (Exception $e) {
@@ -55,13 +58,14 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function isPlayerCastle($gameId, $castleId, $playerId, $db) {
+    static public function isPlayerCastle($gameId, $castleId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('castle', 'castleId')
-                ->where('razed = false')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"castleId" = ?', $castleId);
+            ->from('castle', 'castleId')
+            ->where('razed = false')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"castleId" = ?', $castleId);
         try {
             $id = $db->fetchOne($select);
 
@@ -74,7 +78,8 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function joinArmiesAtPosition($gameId, $position, $playerId, $db) {
+    static public function joinArmiesAtPosition($gameId, $position, $playerId, $db)
+    {
         if (!isset($position['x'])) {
             echo('
 Brak x');
@@ -86,12 +91,12 @@ Brak y');
             return;
         }
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('x = ?', $position['x'])
-                ->where('y = ?', $position['y']);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('x = ?', $position['x'])
+            ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -125,7 +130,8 @@ Brak y');
         );
     }
 
-    static private function heroesUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
+    static private function heroesUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db)
+    {
         $data = array(
             'armyId' => $newArmyId
         );
@@ -136,7 +142,8 @@ Brak y');
         return self::update('heroesingame', $data, $where, $db, true);
     }
 
-    static private function soldiersUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db) {
+    static private function soldiersUpdateArmyId($gameId, $oldArmyId, $newArmyId, $db)
+    {
         $data = array(
             'armyId' => $newArmyId
         );
@@ -148,15 +155,14 @@ Brak y');
         return self::update('soldier', $data, $where, $db, true);
     }
 
-    static public function updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db, $fight = false) {
-        if (!$path) {
-            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
-        }
+    static public function updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db)
+    {
         $units = Zend_Registry::get('units');
+
         $selectHeroes = $db->select()
-                ->from('heroesingame', array('movesLeft', 'heroId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $army['armyId']);
+            ->from('heroesingame', array('movesLeft', 'heroId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $army['armyId']);
         try {
             $heroes = $db->query($selectHeroes)->fetchAll();
         } catch (Exception $e) {
@@ -169,19 +175,18 @@ Brak y');
 
         foreach ($heroes as $hero) {
             $movesSpend = 0;
-            if ($army['canFly']) {
+            if ($army['canFly'] > 0) {
                 $type = 'flying';
             } elseif ($army['canSwim']) {
                 $type = 'swimming';
             } else {
                 $type = 'walking';
             }
+
             foreach ($path as $step) {
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
             }
-            if ($fight) {
-                $movesSpend += 2;
-            }
+
             $data2 = array(
                 'movesLeft' => $hero['movesLeft'] - $movesSpend
             );
@@ -189,13 +194,14 @@ Brak y');
                 $db->quoteInto('"heroId" = ?', $hero['heroId']),
                 $db->quoteInto('"gameId" = ?', $gameId)
             );
+
             self::update('heroesingame', $data2, $where1, $db);
         }
 
         $selectSoldiers = $db->select()
-                ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $army['armyId']);
+            ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $army['armyId']);
         try {
             $soldiers = $db->query($selectSoldiers)->fetchAll();
         } catch (Exception $e) {
@@ -210,7 +216,7 @@ Brak y');
                 $type = 'ship';
             } elseif ($army['canSwim'] && !$units[$soldier['unitId']]['canSwim']) {
                 $type = 'swimming';
-            } elseif ($army['canFly'] > 0 && $units[$soldier['unitId']]['canFly']) {
+            } elseif ($army['canFly'] > 0) {
                 $type = 'flying';
             } else {
                 $type = 'walking';
@@ -220,9 +226,6 @@ Brak y');
             }
             foreach ($path as $step) {
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
-            }
-            if ($fight) {
-                $movesSpend += 2;
             }
             $data2 = array(
                 'movesLeft' => $soldier['movesLeft'] - $movesSpend
@@ -242,14 +245,15 @@ Brak y');
         return self::update('army', $data, $where, $db);
     }
 
-    static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db) {
+    static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db)
+    {
         $fields = Application_Model_Board::getBoardFields();
 
         $select = $db->select()
-                ->from('army', array('x', 'y'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" != ?', $playerId)
-                ->where('destroyed = false');
+            ->from('army', array('x', 'y'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('destroyed = false');
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $row) {
@@ -262,13 +266,14 @@ Brak y');
         }
     }
 
-    static public function getArmy($gameId, $armyId, $playerId, $db) {
+    static public function getArmy($gameId, $armyId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray())
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('"armyId" = ?', $armyId);
+            ->from('army', Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('"armyId" = ?', $armyId);
 
         try {
             $result = $db->fetchRow($select);
@@ -288,13 +293,14 @@ Brak y');
         return $result;
     }
 
-    static public function getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db) {
+    static public function getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray())
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('"armyId" = ?', $armyId);
+            ->from('army', Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('"armyId" = ?', $armyId);
         try {
             $result = $db->fetchRow($select);
             if (isset($result['armyId'])) {
@@ -309,17 +315,14 @@ Brak y');
         }
     }
 
-    static private function armyArray($columnName = '') {
-        return array('armyId', 'destroyed', 'fortified', 'x', 'y', $columnName);
-    }
-
-    static private function getArmyHeroesForBattle($gameId, $ids, $db) {
+    static private function getArmyHeroesForBattle($gameId, $ids, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'hero'), array('attackPoints', 'defensePoints', 'name', 'heroId'))
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" IN (?)', $ids)
-                ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
+            ->from(array('a' => 'hero'), array('attackPoints', 'defensePoints', 'name', 'heroId'))
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" IN (?)', $ids)
+            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
 
         try {
             $result = $db->query($select)->fetchAll();
@@ -335,12 +338,13 @@ Brak y');
         return $result;
     }
 
-    static private function getArmyHeroes($gameId, $armyId, $in, $db) {
+    static private function getArmyHeroes($gameId, $armyId, $in, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
-                ->where('"gameId" = ?', $gameId)
-                ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
+            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
+            ->where('"gameId" = ?', $gameId)
+            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
         if ($in) {
             $select->where('"armyId" IN (?)', new Zend_Db_Expr($armyId));
         } else {
@@ -358,12 +362,13 @@ Brak y');
         }
     }
 
-    static private function getArtefactsByHeroId($gameId, $heroId, $db) {
+    static private function getArtefactsByHeroId($gameId, $heroId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'inventory'), 'artefactId')
-                ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"', '')
-                ->where('"heroId" = ?', $heroId)
-                ->where('"gameId" = ?', $gameId);
+            ->from(array('a' => 'inventory'), 'artefactId')
+            ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"', '')
+            ->where('"heroId" = ?', $heroId)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -372,29 +377,14 @@ Brak y');
         }
     }
 
-    static private function getArmySoldiersForBattle($gameId, $ids, $db) {
+    static private function getArmySoldiersForBattle($gameId, $ids, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'soldier'), 'soldierId')
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" IN (?)', $ids)
-                ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
-
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static private function getArmySoldiersForWalk($gameId, $ids, $db) {
-        $select = $db->select()
-                ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId', 'unitId'))
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array(''))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" IN (?)', $ids)
-                ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
+            ->from(array('a' => 'soldier'), 'soldierId')
+            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" IN (?)', $ids)
+            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
         try {
             return $db->query($select)->fetchAll();
@@ -404,11 +394,14 @@ Brak y');
         }
     }
 
-    static private function getArmySoldiers($gameId, $armyId, $db) {
+    static private function getArmySoldiersForWalk($gameId, $ids, $db)
+    {
         $select = $db->select()
-                ->from('soldier', 'unitId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId', 'unitId'))
+            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array(''))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" IN (?)', $ids)
+            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
         try {
             return $db->query($select)->fetchAll();
@@ -418,11 +411,27 @@ Brak y');
         }
     }
 
-    static public function calculateIncomeFromTowers($gameId, $playerId, $db) {
+    static private function getArmySoldiers($gameId, $armyId, $db)
+    {
         $select = $db->select()
-                ->from('tower', 'towerId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" IN (?)', $playerId);
+            ->from('soldier', 'unitId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
+
+        try {
+            return $db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
+    static public function calculateIncomeFromTowers($gameId, $playerId, $db)
+    {
+        $select = $db->select()
+            ->from('tower', 'towerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" IN (?)', $playerId);
         try {
             $towers = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -433,18 +442,19 @@ Brak y');
         return count($towers) * 5;
     }
 
-    static public function calculateCostsOfSoldiers($gameId, $playerId, $db) {
+    static public function calculateCostsOfSoldiers($gameId, $playerId, $db)
+    {
         $select1 = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false');
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false');
 
         $select = $db->select()
-                ->from(array('a' => 'soldier'), '')
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'cost')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" IN (?)', new Zend_Db_Expr($select1));
+            ->from(array('a' => 'soldier'), '')
+            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'cost')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" IN (?)', new Zend_Db_Expr($select1));
 
         try {
             $soldiers = $db->query($select)->fetchAll();
@@ -463,7 +473,8 @@ Brak y');
         return $costs;
     }
 
-    static public function calculateArmyMovesLeft($gameId, $armyId, $db) {
+    static public function calculateArmyMovesLeft($gameId, $armyId, $db)
+    {
         $heroMovesLeft = self::getMinHeroesMovesLeft($gameId, $armyId, $db);
         $soldierMovesLeft = self::getMinSoldiersMovesLeft($gameId, $armyId, $db);
 
@@ -474,18 +485,19 @@ Brak y');
                 return $heroMovesLeft;
             }
         } elseif ($soldierMovesLeft === null) {
-            return (int) $heroMovesLeft;
+            return (int)$heroMovesLeft;
         } elseif ($heroMovesLeft === null) {
-            return (int) $soldierMovesLeft;
+            return (int)$soldierMovesLeft;
         }
         return 0;
     }
 
-    static private function getMinHeroesMovesLeft($gameId, $armyId, $db) {
+    static private function getMinHeroesMovesLeft($gameId, $armyId, $db)
+    {
         $select = $db->select()
-                ->from('heroesingame', 'min("movesLeft")')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from('heroesingame', 'min("movesLeft")')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -494,11 +506,12 @@ Brak y');
         }
     }
 
-    static private function getMinSoldiersMovesLeft($gameId, $armyId, $db) {
+    static private function getMinSoldiersMovesLeft($gameId, $armyId, $db)
+    {
         $select = $db->select()
-                ->from('soldier', 'min("movesLeft")')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from('soldier', 'min("movesLeft")')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -507,11 +520,12 @@ Brak y');
         }
     }
 
-    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db) {
+    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('playersingame', 'webSocketServerUserId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" != ?', $playerId);
+            ->from('playersingame', 'webSocketServerUserId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" != ?', $playerId);
 
         try {
             return $db->query($select)->fetchAll();
@@ -521,10 +535,11 @@ Brak y');
         }
     }
 
-    static public function getInGameWSSUIds($gameId, $db) {
+    static public function getInGameWSSUIds($gameId, $db)
+    {
         $select = $db->select()
-                ->from('playersingame', 'webSocketServerUserId')
-                ->where('"gameId" = ?', $gameId);
+            ->from('playersingame', 'webSocketServerUserId')
+            ->where('"gameId" = ?', $gameId);
 
         try {
             return $db->query($select)->fetchAll();
@@ -534,11 +549,12 @@ Brak y');
         }
     }
 
-    static public function isPlayerTurn($gameId, $playerId, $db) {
+    static public function isPlayerTurn($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('game', array('turnPlayerId'))
-                ->where('"turnPlayerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId);
+            ->from('game', array('turnPlayerId'))
+            ->where('"turnPlayerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -547,11 +563,12 @@ Brak y');
         }
     }
 
-    static public function getPlayerIdByColor($gameId, $color, $db) {
+    static public function getPlayerIdByColor($gameId, $color, $db)
+    {
         $select = $db->select()
-                ->from('playersingame', 'playerId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('color = ?', $color);
+            ->from('playersingame', 'playerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('color = ?', $color);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -560,12 +577,13 @@ Brak y');
         }
     }
 
-    static public function getPlayerArmies($gameId, $playerId, $db) {
+    static public function getPlayerArmies($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray())
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false');
+            ->from('army', Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false');
 
         try {
             $result = $db->query($select)->fetchAll();
@@ -590,11 +608,12 @@ Brak y');
         return $armies;
     }
 
-    static public function getArmyByArmyId($gameId, $armyId, $db) {
+    static public function getArmyByArmyId($gameId, $armyId, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray('playerId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from('army', Cli_Model_Army::armyArray('playerId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
 
         try {
             $result = $db->fetchRow($select);
@@ -624,7 +643,8 @@ Brak y');
         }
     }
 
-    static public function destroyArmy($gameId, $armyId, $playerId, $db) {
+    static public function destroyArmy($gameId, $armyId, $playerId, $db)
+    {
         $data = array(
             'destroyed' => 'true'
         );
@@ -636,11 +656,12 @@ Brak y');
         return self::update('army', $data, $where, $db);
     }
 
-    static public function ruinExists($gameId, $ruinId, $db) {
+    static public function ruinExists($gameId, $ruinId, $db)
+    {
         $select = $db->select()
-                ->from('ruin', 'ruinId')
-                ->where('"ruinId" = ?', $ruinId)
-                ->where('"gameId" = ?', $gameId);
+            ->from('ruin', 'ruinId')
+            ->where('"ruinId" = ?', $ruinId)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -649,11 +670,12 @@ Brak y');
         }
     }
 
-    static public function getColorByPlayerId($gameId, $playerId, $db) {
+    static public function getColorByPlayerId($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('playersingame', 'color')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId);
+            ->from('playersingame', 'color')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -662,7 +684,8 @@ Brak y');
         }
     }
 
-    static public function addCastle($gameId, $castleId, $playerId, $db) {
+    static public function addCastle($gameId, $castleId, $playerId, $db)
+    {
         $data = array(
             'castleId' => $castleId,
             'playerId' => $playerId,
@@ -675,11 +698,12 @@ Brak y');
         }
     }
 
-    static public function getCastleDefenseModifier($gameId, $castleId, $db) {
+    static public function getCastleDefenseModifier($gameId, $castleId, $db)
+    {
         $select = $db->select()
-                ->from('castle', 'defenseMod')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"castleId" = ?', $castleId);
+            ->from('castle', 'defenseMod')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"castleId" = ?', $castleId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -688,11 +712,12 @@ Brak y');
         }
     }
 
-    static public function getTurn($gameId, $db) {
+    static public function getTurn($gameId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'game'), array('nr' => 'turnNumber'))
-                ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
-                ->where('a."gameId" = ?', $gameId);
+            ->from(array('a' => 'game'), array('nr' => 'turnNumber'))
+            ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
+            ->where('a."gameId" = ?', $gameId);
         try {
             return $db->fetchRow($select);
         } catch (Exception $e) {
@@ -701,14 +726,15 @@ Brak y');
         }
     }
 
-    static public function isEnemyCastle($gameId, $castleId, $playerId, $db) {
+    static public function isEnemyCastle($gameId, $castleId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('castle', 'castleId')
-                ->where('razed = false')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" != ?', $playerId)
-                ->where('"castleId" = ?', $castleId);
+            ->from('castle', 'castleId')
+            ->where('razed = false')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('"castleId" = ?', $castleId);
         try {
             $id = $db->fetchOne($select);
             if ($castleId == $id) {
@@ -720,7 +746,8 @@ Brak y');
         }
     }
 
-    static public function getAllEnemyUnitsFromCastlePosition($gameId, $position, $db) {
+    static public function getAllEnemyUnitsFromCastlePosition($gameId, $position, $db)
+    {
 
         $xs = array(
             $position['x'],
@@ -732,11 +759,11 @@ Brak y');
         );
         $ids = array();
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('x IN (?)', $xs)
-                ->where('y IN (?)', $ys);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('x IN (?)', $xs)
+            ->where('y IN (?)', $ys);
         try {
             $result = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -761,7 +788,8 @@ Brak y');
         }
     }
 
-    static public function getDefenderFromCastlePosition($gameId, $position, $db) {
+    static public function getDefenderFromCastlePosition($gameId, $position, $db)
+    {
 
         $xs = array(
             $position['x'],
@@ -772,11 +800,11 @@ Brak y');
             $position['y'] + 1
         );
         $select = $db->select()
-                ->from('army', self::armyArray('playerId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('x IN (?)', $xs)
-                ->where('y IN (?)', $ys);
+            ->from('army', Cli_Model_Army::armyArray('playerId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('x IN (?)', $xs)
+            ->where('y IN (?)', $ys);
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $k => $army) {
@@ -798,7 +826,8 @@ Brak y');
         }
     }
 
-    static public function changeOwner($gameId, $castleId, $playerId, $db) {
+    static public function changeOwner($gameId, $castleId, $playerId, $db)
+    {
         $defenseMod = self::getCastleDefenseModifier($gameId, $castleId, $db);
         $defense = Application_Model_Board::getCastleDefense($castleId) + $defenseMod;
         var_dump($defenseMod);
@@ -820,7 +849,8 @@ Brak y');
         return self::update('castle', $data, $where, $db);
     }
 
-    static public function armyRemoveHero($gameId, $heroId, $db) {
+    static public function armyRemoveHero($gameId, $heroId, $db)
+    {
 
         $data = array(
             'armyId' => null
@@ -832,7 +862,8 @@ Brak y');
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function razeCastle($gameId, $castleId, $playerId, $db) {
+    static public function razeCastle($gameId, $castleId, $playerId, $db)
+    {
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -847,12 +878,13 @@ Brak y');
         return self::update('castle', $data, $where, $db);
     }
 
-    static public function getPlayerInGameGold($gameId, $playerId, $db) {
+    static public function getPlayerInGameGold($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('playersingame', 'gold')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId);
+            ->from('playersingame', 'gold')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -861,7 +893,8 @@ Brak y');
         }
     }
 
-    static public function updatePlayerInGameGold($gameId, $playerId, $gold, $db) {
+    static public function updatePlayerInGameGold($gameId, $playerId, $gold, $db)
+    {
 
         $data['gold'] = $gold;
         $where = array(
@@ -871,11 +904,12 @@ Brak y');
         return self::update('playersingame', $data, $where, $db);
     }
 
-    static public function getCastle($gameId, $castleId, $db) {
+    static public function getCastle($gameId, $castleId, $db)
+    {
         $select = $db->select()
-                ->from('castle')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"castleId" = ?', $castleId);
+            ->from('castle')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"castleId" = ?', $castleId);
         try {
             return $db->fetchRow($select);
         } catch (Exception $e) {
@@ -884,7 +918,8 @@ Brak y');
         }
     }
 
-    static public function buildDefense($gameId, $castleId, $playerId, $db) {
+    static public function buildDefense($gameId, $castleId, $playerId, $db)
+    {
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -897,14 +932,15 @@ Brak y');
         return self::update('castle', $data, $where, $db);
     }
 
-    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db) {
+    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" != ?', $playerId)
-                ->where('destroyed = false')
-                ->where('x = (?)', $position['x'])
-                ->where('y = (?)', $position['y']);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('destroyed = false')
+            ->where('x = (?)', $position['x'])
+            ->where('y = (?)', $position['y']);
 
         try {
             $result = $db->query($select)->fetchAll();
@@ -937,16 +973,17 @@ Brak y');
         }
     }
 
-    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db) {
+    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db)
+    {
 
         $ids = '';
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('x = (?)', $position['x'])
-                ->where('y = (?)', $position['y']);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('x = (?)', $position['x'])
+            ->where('y = (?)', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $id) {
@@ -965,13 +1002,14 @@ Brak y');
         }
     }
 
-    static public function getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db) {
+    static public function getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'soldier'), null)
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
-                ->where('"canSwim" = true')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
+            ->from(array('a' => 'soldier'), null)
+            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
+            ->where('"canSwim" = true')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -980,13 +1018,14 @@ Brak y');
         }
     }
 
-    static public function getDefenderFromPosition($gameId, $position, $db) {
+    static public function getDefenderFromPosition($gameId, $position, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray('playerId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('x = ?', $position['x'])
-                ->where('y = ?', $position['y']);
+            ->from('army', Cli_Model_Army::armyArray('playerId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('x = ?', $position['x'])
+            ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $k => $army) {
@@ -1008,7 +1047,8 @@ Brak y');
         }
     }
 
-    static public function destroySoldier($gameId, $soldierId, $db) {
+    static public function destroySoldier($gameId, $soldierId, $db)
+    {
 
         $where = array(
             $db->quoteInto('"soldierId" = ?', $soldierId),
@@ -1021,7 +1061,8 @@ Brak y');
         }
     }
 
-    static public function addRuin($gameId, $ruinId, $db) {
+    static public function addRuin($gameId, $ruinId, $db)
+    {
 
         $data = array(
             'ruinId' => $ruinId,
@@ -1034,7 +1075,8 @@ Brak y');
         }
     }
 
-    static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db) {
+    static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db)
+    {
 
         if ($heroId != self::getHeroIdByPlayerId($gameId, $playerId, $db)) {
             echo('HeroId jest inny');
@@ -1051,13 +1093,14 @@ Brak y');
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function getHeroIdByPlayerId($gameId, $playerId, $db) {
+    static public function getHeroIdByPlayerId($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'heroId')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId);
+            ->from(array('a' => 'hero'), 'heroId')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1066,11 +1109,12 @@ Brak y');
         }
     }
 
-    static public function addSoldierToArmy($gameId, $armyId, $unitId, $db) {
+    static public function addSoldierToArmy($gameId, $armyId, $unitId, $db)
+    {
 
         $select = $db->select()
-                ->from('unit', 'numberOfMoves')
-                ->where('"unitId" = ?', $unitId);
+            ->from('unit', 'numberOfMoves')
+            ->where('"unitId" = ?', $unitId);
         $data = array(
             'armyId' => $armyId,
             'gameId' => $gameId,
@@ -1084,14 +1128,15 @@ Brak y');
         }
     }
 
-    static public function getHeroIdByArmyIdPlayerId($gameId, $armyId, $playerId, $db) {
+    static public function getHeroIdByArmyIdPlayerId($gameId, $armyId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'heroId')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"armyId" = ?', $armyId);
+            ->from(array('a' => 'hero'), 'heroId')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1100,13 +1145,14 @@ Brak y');
         }
     }
 
-    static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db) {
+    static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', array('x', 'y'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('"armyId" = ?', $armyId);
+            ->from('army', array('x', 'y'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchRow($select);
         } catch (Exception $e) {
@@ -1115,14 +1161,15 @@ Brak y');
         }
     }
 
-    static public function isHeroInArmy($gameId, $armyId, $playerId, $heroId, $db) {
+    static public function isHeroInArmy($gameId, $armyId, $playerId, $heroId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'heroId')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('"armyId" = ?', $armyId)
-                ->where('a."heroId" = ?', $heroId);
+            ->from(array('a' => 'hero'), 'heroId')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"armyId" = ?', $armyId)
+            ->where('a."heroId" = ?', $heroId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1131,15 +1178,16 @@ Brak y');
         }
     }
 
-    static public function isSoldierInArmy($gameId, $armyId, $playerId, $soldierId, $db) {
+    static public function isSoldierInArmy($gameId, $armyId, $playerId, $soldierId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'soldier'), 'soldierId')
-                ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
-                ->where('a."gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('a."armyId" = ?', $armyId)
-                ->where('"soldierId" = ?', $soldierId)
-                ->where('destroyed = false');
+            ->from(array('a' => 'soldier'), 'soldierId')
+            ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
+            ->where('a."gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('a."armyId" = ?', $armyId)
+            ->where('"soldierId" = ?', $soldierId)
+            ->where('destroyed = false');
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1148,7 +1196,8 @@ Brak y');
         }
     }
 
-    static public function createArmy($gameId, $db, $position, $playerId, $sleep = 0) {
+    static public function createArmy($gameId, $db, $position, $playerId, $sleep = 0)
+    {
 
         $armyId = self::getNewArmyId($gameId, $db);
         $data = array(
@@ -1172,11 +1221,12 @@ Brak y');
         return $armyId;
     }
 
-    static private function getNewArmyId($gameId, $db) {
+    static private function getNewArmyId($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from('army', 'max("armyId")')
-                ->where('"gameId" = ?', $gameId);
+            ->from('army', 'max("armyId")')
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select) + 1;
         } catch (Exception $e) {
@@ -1185,7 +1235,8 @@ Brak y');
         }
     }
 
-    static public function heroUpdateArmyId($gameId, $heroId, $newArmyId, $db) {
+    static public function heroUpdateArmyId($gameId, $heroId, $newArmyId, $db)
+    {
         $data = array(
             'armyId' => $newArmyId
         );
@@ -1196,7 +1247,8 @@ Brak y');
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db) {
+    static public function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db)
+    {
         $data = array(
             'armyId' => $newArmyId
         );
@@ -1207,12 +1259,13 @@ Brak y');
         return self::update('soldier', $data, $where, $db);
     }
 
-    static public function isHeroInGame($gameId, $playerId, $db) {
+    static public function isHeroInGame($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'heroId')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId);
+            ->from(array('a' => 'hero'), 'heroId')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
         try {
             $heroId = $db->fetchOne($select);
             if ($heroId !== null) {
@@ -1224,11 +1277,12 @@ Brak y');
         }
     }
 
-    static public function connectHero($gameId, $playerId, $db) {
+    static public function connectHero($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('hero', 'heroId')
-                ->where('"playerId" = ?', $playerId);
+            ->from('hero', 'heroId')
+            ->where('"playerId" = ?', $playerId);
         try {
             $heroId = $db->fetchOne($select);
             $data = array(
@@ -1243,13 +1297,14 @@ Brak y');
         }
     }
 
-    static public function getDeadHeroId($gameId, $playerId, $db) {
+    static public function getDeadHeroId($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'heroId')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId);
+            ->from(array('a' => 'hero'), 'heroId')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
         try {
             $result = $db->fetchRow($select);
             if (!isset($result['armyId'])) {
@@ -1261,7 +1316,8 @@ Brak y');
         }
     }
 
-    static public function heroResurection($gameId, $heroId, $position, $playerId, $db) {
+    static public function heroResurection($gameId, $heroId, $position, $playerId, $db)
+    {
 
         $armyId = self::getArmyIdFromPosition($gameId, $position, $db);
         if (!$armyId) {
@@ -1271,14 +1327,15 @@ Brak y');
         return $armyId;
     }
 
-    static public function getArmyIdFromPosition($gameId, $position, $db) {
+    static public function getArmyIdFromPosition($gameId, $position, $db)
+    {
 
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('x = ?', $position['x'])
-                ->where('y = ?', $position['y']);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('x = ?', $position['x'])
+            ->where('y = ?', $position['y']);
         try {
             $result = $db->fetchRow($select);
             if (isset($result['armyId'])) {
@@ -1290,7 +1347,8 @@ Brak y');
         }
     }
 
-    static public function addHeroToArmy($gameId, $armyId, $heroId, $movesLeft, $db) {
+    static public function addHeroToArmy($gameId, $armyId, $heroId, $movesLeft, $db)
+    {
 
         $data = array(
             'armyId' => $armyId,
@@ -1303,7 +1361,8 @@ Brak y');
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function areUnitsAtCastlePosition($gameId, $position, $db) {
+    static public function areUnitsAtCastlePosition($gameId, $position, $db)
+    {
         $xs = array(
             $position['x'],
             $position['x'] + 1
@@ -1313,11 +1372,11 @@ Brak y');
             $position['y'] + 1
         );
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('x IN (?)', $xs)
-                ->where('y IN (?)', $ys);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('x IN (?)', $xs)
+            ->where('y IN (?)', $ys);
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1326,12 +1385,13 @@ Brak y');
         }
     }
 
-    static public function isGameMaster($gameId, $playerId, $db) {
+    static public function isGameMaster($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('game', array('gameMasterId'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"gameMasterId" = ?', $playerId);
+            ->from('game', array('gameMasterId'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"gameMasterId" = ?', $playerId);
         try {
             $gameMasterId = $db->fetchOne($select);
             if ($playerId == $gameMasterId) {
@@ -1342,14 +1402,15 @@ Brak y');
         }
     }
 
-    static public function getAllPlayerArmiesExeptOne($gameId, $armyId, $playerId, $db) {
+    static public function getAllPlayerArmiesExeptOne($gameId, $armyId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('army', array('x', 'y'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" != ?', $armyId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false');
+            ->from('army', array('x', 'y'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" != ?', $armyId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false');
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1358,11 +1419,12 @@ Brak y');
         }
     }
 
-    static public function getTurnPlayerId($gameId, $db) {
+    static public function getTurnPlayerId($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from('game', 'turnPlayerId')
-                ->where('"gameId" = ?', $gameId);
+            ->from('game', 'turnPlayerId')
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1371,10 +1433,11 @@ Brak y');
         }
     }
 
-    static public function isComputer($playerId, $db) {
+    static public function isComputer($playerId, $db)
+    {
         $select = $db->select()
-                ->from('player', 'computer')
-                ->where('"playerId" = ?', $playerId);
+            ->from('player', 'computer')
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1383,13 +1446,14 @@ Brak y');
         }
     }
 
-    static public function playerTurnActive($gameId, $playerId, $db) {
+    static public function playerTurnActive($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('playersingame', 'turnActive')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"turnActive" = ?', true)
-                ->where('"gameId" = ?', $gameId);
+            ->from('playersingame', 'turnActive')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"turnActive" = ?', true)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1398,7 +1462,8 @@ Brak y');
         }
     }
 
-    static public function turnActivate($gameId, $playerId, $db) {
+    static public function turnActivate($gameId, $playerId, $db)
+    {
 
         $data = array(
             'turnActive' => 'true'
@@ -1417,12 +1482,13 @@ Brak y');
         self::update('playersingame', $data, $where, $db);
     }
 
-    static public function resetHeroesMovesLeft($gameId, $playerId, $db) {
+    static public function resetHeroesMovesLeft($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'heroesingame'), array('movesLeft', 'heroId'))
-                ->join(array('b' => 'hero'), 'a."heroId"=b."heroId"', '')
-                ->where('"playerId" = ?', $playerId)
-                ->where('a."gameId" = ?', $gameId);
+            ->from(array('a' => 'heroesingame'), array('movesLeft', 'heroId'))
+            ->join(array('b' => 'hero'), 'a."heroId"=b."heroId"', '')
+            ->where('"playerId" = ?', $playerId)
+            ->where('a."gameId" = ?', $gameId);
 
         try {
             $heroesingame = $db->query($select)->fetchAll();
@@ -1437,9 +1503,9 @@ Brak y');
                 $hero['movesLeft'] = 2;
             }
             $select = $db->select()
-                    ->from('hero', new Zend_Db_Expr('"numberOfMoves" + ' . $hero['movesLeft']))
-                    ->where('"playerId" = ?', $playerId)
-                    ->where('"heroId" = ?', $hero['heroId']);
+                ->from('hero', new Zend_Db_Expr('"numberOfMoves" + ' . $hero['movesLeft']))
+                ->where('"playerId" = ?', $playerId)
+                ->where('"heroId" = ?', $hero['heroId']);
             $data = array(
                 'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
             );
@@ -1451,16 +1517,17 @@ Brak y');
         }
     }
 
-    static public function resetSoldiersMovesLeft($gameId, $playerId, $db) {
+    static public function resetSoldiersMovesLeft($gameId, $playerId, $db)
+    {
         $subSelect = $db->select()
-                ->from('army', 'armyId')
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('"gameId" = ?', $gameId);
+            ->from('army', 'armyId')
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('"gameId" = ?', $gameId);
         $select = $db->select()
-                ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
-                ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
-                ->where('"gameId" = ?', $gameId);
+            ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
+            ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
+            ->where('"gameId" = ?', $gameId);
         try {
             $soldiers = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1474,8 +1541,8 @@ Brak y');
                 $soldier['movesLeft'] = 2;
             }
             $select = $db->select()
-                    ->from('unit', new Zend_Db_Expr('"numberOfMoves" + ' . $soldier['movesLeft']))
-                    ->where('"unitId" = ?', $soldier['unitId']);
+                ->from('unit', new Zend_Db_Expr('"numberOfMoves" + ' . $soldier['movesLeft']))
+                ->where('"unitId" = ?', $soldier['unitId']);
             $data = array(
                 'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
             );
@@ -1487,13 +1554,14 @@ Brak y');
         }
     }
 
-    static public function getComputerArmyToMove($gameId, $playerId, $db) {
+    static public function getComputerArmyToMove($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('army', self::armyArray())
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false')
-                ->where('fortified = false');
+            ->from('army', Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('fortified = false');
 
         try {
             $result = $db->query($select)->fetchAll();
@@ -1514,11 +1582,12 @@ Brak y');
         }
     }
 
-    static public function getTurnNumber($gameId, $db) {
+    static public function getTurnNumber($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from('game', 'turnNumber')
-                ->where('"gameId" = ?', $gameId);
+            ->from('game', 'turnNumber')
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1527,13 +1596,14 @@ Brak y');
         }
     }
 
-    static public function getPlayerCastles($gameId, $playerId, $db) {
+    static public function getPlayerCastles($gameId, $playerId, $db)
+    {
         $playersCastles = array();
         $select = $db->select()
-                ->from('castle', array('castleId', 'production', 'productionTurn', 'defenseMod'))
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId)
-                ->where('razed = false');
+            ->from('castle', array('castleId', 'production', 'productionTurn', 'defenseMod'))
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('razed = false');
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $val) {
@@ -1546,12 +1616,13 @@ Brak y');
         }
     }
 
-    static public function getPlayerCastlesIds($gameId, $playerId, $db) {
+    static public function getPlayerCastlesIds($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('castle', 'castleId')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId)
-                ->where('razed = false');
+            ->from('castle', 'castleId')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('razed = false');
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1560,12 +1631,13 @@ Brak y');
         }
     }
 
-    static public function getAllCastles($gameId, $db) {
+    static public function getAllCastles($gameId, $db)
+    {
 
         $castles = array();
         $select = $db->select()
-                ->from('castle')
-                ->where('"gameId" = ?', $gameId);
+            ->from('castle')
+            ->where('"gameId" = ?', $gameId);
         try {
             foreach ($db->query($select)->fetchAll() as $val) {
                 $castles[$val['castleId']] = $val;
@@ -1577,12 +1649,13 @@ Brak y');
         }
     }
 
-    static public function getCastleProduction($gameId, $castleId, $playerId, $db) {
+    static public function getCastleProduction($gameId, $castleId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('castle', array('production', 'productionTurn'))
-                ->where('"gameId" = ?', $gameId)
-                ->where('"castleId" = ?', $castleId)
-                ->where('"playerId" = ?', $playerId);
+            ->from('castle', array('production', 'productionTurn'))
+            ->where('"gameId" = ?', $gameId)
+            ->where('"castleId" = ?', $castleId)
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchRow($select);
         } catch (Exception $e) {
@@ -1591,7 +1664,8 @@ Brak y');
         }
     }
 
-    static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db) {
+    static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db)
+    {
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -1605,7 +1679,8 @@ Brak y');
         return self::update('castle', $data, $where, $db);
     }
 
-    static public function resetProductionTurn($gameId, $castleId, $playerId, $db) {
+    static public function resetProductionTurn($gameId, $castleId, $playerId, $db)
+    {
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -1618,13 +1693,14 @@ Brak y');
         return self::update('castle', $data, $where, $db);
     }
 
-    static public function enemiesCastlesExist($gameId, $playerId, $db) {
+    static public function enemiesCastlesExist($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('castle', 'castleId')
-                ->where('"playerId" != ?', $playerId)
-                ->where('"gameId" = ?', $gameId)
-                ->where('razed = false');
+            ->from('castle', 'castleId')
+            ->where('"playerId" != ?', $playerId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('razed = false');
         try {
             $result = $db->query($select)->fetchAll();
             if (count($result)) {
@@ -1636,11 +1712,12 @@ Brak y');
         }
     }
 
-    static public function getFullRuins($gameId, $db) {
+    static public function getFullRuins($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from('ruin', 'ruinId')
-                ->where('"gameId" = ?', $gameId);
+            ->from('ruin', 'ruinId')
+            ->where('"gameId" = ?', $gameId);
         try {
             $result = $db->query($select)->fetchAll();
             $ruins = Application_Model_Board::getRuins();
@@ -1656,13 +1733,14 @@ Brak y');
         }
     }
 
-    static public function getRazedCastles($gameId, $db) {
+    static public function getRazedCastles($gameId, $db)
+    {
 
         $castles = array();
         $select = $db->select()
-                ->from('castle')
-                ->where('"gameId" = ?', $gameId)
-                ->where('razed = true');
+            ->from('castle')
+            ->where('"gameId" = ?', $gameId)
+            ->where('razed = true');
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $val) {
@@ -1675,13 +1753,14 @@ Brak y');
         }
     }
 
-    static public function getAllEnemiesArmies($gameId, $playerId, $db) {
+    static public function getAllEnemiesArmies($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('army', self::armyArray())
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" != ?', $playerId)
-                ->where('destroyed = false');
+            ->from('army', Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('destroyed = false');
         try {
             $result = $db->query($select)->fetchAll();
             $armies = array();
@@ -1703,7 +1782,8 @@ Brak y');
         }
     }
 
-    static public function calculateMaxArmyMoves($gameId, $armyId, $db) {
+    static public function calculateMaxArmyMoves($gameId, $armyId, $db)
+    {
         $heroMoves = self::getMaxHeroesMoves($gameId, $armyId, $db);
         $soldierMoves = self::getMaxSoldiersMoves($gameId, $armyId, $db);
         if ($heroMoves > $soldierMoves) {
@@ -1713,13 +1793,14 @@ Brak y');
         }
     }
 
-    static private function getMaxHeroesMoves($gameId, $armyId, $db) {
+    static private function getMaxHeroesMoves($gameId, $armyId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'hero'), 'max("numberOfMoves")')
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from(array('a' => 'hero'), 'max("numberOfMoves")')
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1728,13 +1809,14 @@ Brak y');
         }
     }
 
-    static private function getMaxSoldiersMoves($gameId, $armyId, $db) {
+    static private function getMaxSoldiersMoves($gameId, $armyId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'unit'), 'max("numberOfMoves")')
-                ->join(array('b' => 'soldier'), 'a."unitId" = b."unitId"', '')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from(array('a' => 'unit'), 'max("numberOfMoves")')
+            ->join(array('b' => 'soldier'), 'a."unitId" = b."unitId"', '')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1743,7 +1825,8 @@ Brak y');
         }
     }
 
-    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db) {
+    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db)
+    {
 
         $find = false;
 
@@ -1804,13 +1887,14 @@ Brak y');
         );
     }
 
-    static public function getPlayersInGameReady($gameId, $db) {
+    static public function getPlayersInGameReady($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'playersingame'))
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-                ->where('color is not null')
-                ->where('a."gameId" = ?', $gameId);
+            ->from(array('a' => 'playersingame'))
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
+            ->where('color is not null')
+            ->where('a."gameId" = ?', $gameId);
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -1819,13 +1903,14 @@ Brak y');
         }
     }
 
-    static public function playerCastlesExists($gameId, $playerId, $db) {
+    static public function playerCastlesExists($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('castle', 'castleId')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId)
-                ->where('razed = false');
+            ->from('castle', 'castleId')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('razed = false');
         try {
             $result = $db->query($select)->fetchAll();
             if (count($result)) {
@@ -1837,13 +1922,14 @@ Brak y');
         }
     }
 
-    static public function playerArmiesExists($gameId, $playerId, $db) {
+    static public function playerArmiesExists($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('army', 'armyId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('destroyed = false')
-                ->where('"playerId" = ?', $playerId);
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('destroyed = false')
+            ->where('"playerId" = ?', $playerId);
         try {
             $result = $db->query($select)->fetchAll();
             if (count($result)) {
@@ -1855,27 +1941,31 @@ Brak y');
         }
     }
 
-    static public function endGame($gameId, $db) {
+    static public function endGame($gameId, $db)
+    {
         $data['isActive'] = 'false';
 
         self::updateGame($gameId, $data, $db);
     }
 
-    static public function updateGame($gameId, $data, $db) {
+    static public function updateGame($gameId, $data, $db)
+    {
 
         $where = $db->quoteInto('"gameId" = ?', $gameId);
         return self::update('game', $data, $where, $db);
     }
 
-    static private function isFirstColor($color) {
+    static private function isFirstColor($color)
+    {
         return self::$playerColors[0] == $color;
     }
 
-    static public function updateTurnNumber($gameId, $nextPlayer, $db) {
+    static public function updateTurnNumber($gameId, $nextPlayer, $db)
+    {
         if (self::isFirstColor($nextPlayer['color'])) {
             $select = $db->select()
-                    ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
-                    ->where('"gameId" = ?', $gameId);
+                ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
+                ->where('"gameId" = ?', $gameId);
             try {
                 $turnNumber = $db->fetchOne($select);
             } catch (Exception $e) {
@@ -1897,7 +1987,8 @@ Brak y');
         self::updateGame($gameId, $data, $db);
     }
 
-    static public function raiseAllCastlesProductionTurn($gameId, $playerId, $db) {
+    static public function raiseAllCastlesProductionTurn($gameId, $playerId, $db)
+    {
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
@@ -1908,7 +1999,8 @@ Brak y');
         return self::update('castle', $data, $where, $db, true);
     }
 
-    static public function setPlayerLostGame($gameId, $playerId, $db) {
+    static public function setPlayerLostGame($gameId, $playerId, $db)
+    {
 
         $data['lost'] = 'true';
         $where = array(
@@ -1918,12 +2010,13 @@ Brak y');
         self::update('playersingame', $data, $where, $db);
     }
 
-    static public function getColorByArmyId($gameId, $armyId, $db) {
+    static public function getColorByArmyId($gameId, $armyId, $db)
+    {
 
         $select = $db->select()
-                ->from('army', 'playerId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"armyId" = ?', $armyId);
+            ->from('army', 'playerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId);
         try {
             $playerId = $db->fetchOne($select);
             if ($playerId) {
@@ -1937,12 +2030,13 @@ Brak y');
         }
     }
 
-    static public function getColorByCastleId($gameId, $castleId, $db) {
+    static public function getColorByCastleId($gameId, $castleId, $db)
+    {
 
         $select = $db->select()
-                ->from('castle', 'playerId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"castleId" = ?', $castleId);
+            ->from('castle', 'playerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"castleId" = ?', $castleId);
         try {
             $playerId = $db->fetchOne($select);
             if ($playerId) {
@@ -1956,11 +2050,12 @@ Brak y');
         }
     }
 
-    static public function getUnitIdByName($name, $db) {
+    static public function getUnitIdByName($name, $db)
+    {
 
         $select = $db->select()
-                ->from('unit', 'unitId')
-                ->where('name = ?', $name);
+            ->from('unit', 'unitId')
+            ->where('name = ?', $name);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1969,13 +2064,14 @@ Brak y');
         }
     }
 
-    static public function playerLost($gameId, $playerId, $db) {
+    static public function playerLost($gameId, $playerId, $db)
+    {
 
         $select = $db->select()
-                ->from('playersingame', 'lost')
-                ->where('"playerId" = ?', $playerId)
-                ->where('lost = ?', true)
-                ->where('"gameId" = ?', $gameId);
+            ->from('playersingame', 'lost')
+            ->where('"playerId" = ?', $playerId)
+            ->where('lost = ?', true)
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1984,13 +2080,14 @@ Brak y');
         }
     }
 
-    static public function checkAccessKey($gameId, $playerId, $accessKey, $db) {
+    static public function checkAccessKey($gameId, $playerId, $accessKey, $db)
+    {
 
         $select = $db->select()
-                ->from('playersingame', 'playerId')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"gameId" = ?', $gameId)
-                ->where('"accessKey" = ?', $accessKey);
+            ->from('playersingame', 'playerId')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('"accessKey" = ?', $accessKey);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -1999,7 +2096,8 @@ Brak y');
         }
     }
 
-    static public function updatePlayerInGameWSSUId($gameId, $playerId, $wssuid, $db) {
+    static public function updatePlayerInGameWSSUId($gameId, $playerId, $wssuid, $db)
+    {
 
         $data = array(
             'webSocketServerUserId' => $wssuid
@@ -2011,13 +2109,14 @@ Brak y');
         return self::update('playersingame', $data, $where, $db);
     }
 
-    static public function getPlayersWaitingForGame($gameId, $db) {
+    static public function getPlayersWaitingForGame($gameId, $db)
+    {
 
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), array('color', 'playerId'))
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
-                ->where('a."gameId" = ?', $gameId)
-                ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
+            ->from(array('a' => 'playersingame'), array('color', 'playerId'))
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName', 'computer'))
+            ->where('a."gameId" = ?', $gameId)
+            ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -2026,10 +2125,11 @@ Brak y');
         }
     }
 
-    static public function getGameMasterId($gameId, $db) {
+    static public function getGameMasterId($gameId, $db)
+    {
         $select = $db->select()
-                ->from('game', 'gameMasterId')
-                ->where('"gameId" = ?', $gameId);
+            ->from('game', 'gameMasterId')
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -2038,13 +2138,14 @@ Brak y');
         }
     }
 
-    static public function isColorInGame($gameId, $color, $db) {
+    static public function isColorInGame($gameId, $color, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), 'min(b."playerId")')
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-                ->where('"gameId" = ?', $gameId)
-                ->where('color = ?', $color)
-                ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
+            ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+            ->where('"gameId" = ?', $gameId)
+            ->where('color = ?', $color)
+            ->where('"webSocketServerUserId" IS NOT NULL OR computer = true');
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -2053,13 +2154,14 @@ Brak y');
         }
     }
 
-    static public function getComputerPlayerId($gameId, $db) {
+    static public function getComputerPlayerId($gameId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), 'min(b."playerId")')
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-                ->where('"gameId" != ?', $gameId)
-                ->where('color IS NOT NULL')
-                ->where('computer = true');
+            ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+            ->where('"gameId" != ?', $gameId)
+            ->where('color IS NOT NULL')
+            ->where('computer = true');
         $ids = self::getComputerPlayersIds($gameId, $db);
         if ($ids) {
             $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
@@ -2072,14 +2174,15 @@ Brak y');
         }
     }
 
-    static public function getComputerPlayersIds($gameId, $db) {
+    static public function getComputerPlayersIds($gameId, $db)
+    {
         $ids = '';
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), 'playerId')
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-                ->where('a."gameId" = ?', $gameId)
-                ->where('color IS NOT NULL')
-                ->where('computer = true');
+            ->from(array('a' => 'playersingame'), 'playerId')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+            ->where('a."gameId" = ?', $gameId)
+            ->where('color IS NOT NULL')
+            ->where('computer = true');
         try {
             foreach ($db->query($select)->fetchAll() as $row) {
                 if ($ids) {
@@ -2094,7 +2197,8 @@ Brak y');
         }
     }
 
-    static public function createPlayer($data, $db) {
+    static public function createPlayer($data, $db)
+    {
         try {
             $db->insert('player', $data);
             $seq = $db->quoteIdentifier('player_playerId_seq');
@@ -2104,7 +2208,8 @@ Brak y');
         }
     }
 
-    static public function createComputerPlayer($db) {
+    static public function createComputerPlayer($db)
+    {
         $data = array(
             'firstName' => 'Computer',
             'lastName' => 'Player',
@@ -2113,7 +2218,8 @@ Brak y');
         return self::createPlayer($data, $db);
     }
 
-    static public function createHero($playerId, $db) {
+    static public function createHero($playerId, $db)
+    {
         $data = array(
             'playerId' => $playerId
         );
@@ -2124,7 +2230,8 @@ Brak y');
         }
     }
 
-    static public function joinGame($gameId, $playerId, $db) {
+    static public function joinGame($gameId, $playerId, $db)
+    {
         $data = array(
             'gameId' => $gameId,
             'playerId' => $playerId,
@@ -2137,7 +2244,8 @@ Brak y');
         }
     }
 
-    static public function updatePlayerReady($gameId, $playerId, $color, $db) {
+    static public function updatePlayerReady($gameId, $playerId, $color, $db)
+    {
         if ($color && self::getColorByPlayerId($gameId, $playerId, $db) == $color) {
             $data['color'] = null;
         } else {
@@ -2152,17 +2260,19 @@ Brak y');
         self::update('playersingame', $data, $where, $db);
     }
 
-    static private function generateKey() {
+    static private function generateKey()
+    {
         return md5(rand(0, time()));
     }
 
-    static public function disconnectNotActive($gameId, $db) {
+    static public function disconnectNotActive($gameId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), 'playerId')
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', '')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"webSocketServerUserId" IS NULL')
-                ->where('computer = false');
+            ->from(array('a' => 'playersingame'), 'playerId')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', '')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"webSocketServerUserId" IS NULL')
+            ->where('computer = false');
         $where = array(
             $db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString())),
             $db->quoteInto('"gameId" = ?', $gameId)
@@ -2174,7 +2284,8 @@ Brak y');
         }
     }
 
-    static public function disconnectFromGame($gameId, $playerId, $db) {
+    static public function disconnectFromGame($gameId, $playerId, $db)
+    {
         $where = array(
             $db->quoteInto('"playerId" = ?', $playerId),
             $db->quoteInto('"gameId" = ?', $gameId)
@@ -2186,11 +2297,12 @@ Brak y');
         }
     }
 
-    static public function findNewGameMaster($gameId, $db) {
+    static public function findNewGameMaster($gameId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), 'playerId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"webSocketServerUserId" IS NOT NULL');
+            ->from(array('a' => 'playersingame'), 'playerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"webSocketServerUserId" IS NOT NULL');
         try {
             $gameMasterId = $db->fetchOne($select);
         } catch (Exception $e) {
@@ -2206,7 +2318,8 @@ Brak y');
         }
     }
 
-    static public function startGame($gameId, $db) {
+    static public function startGame($gameId, $db)
+    {
         $data = array(
             'turnPlayerId' => self::getPlayerIdByColor($gameId, 'white', $db),
             'isOpen' => 'false'
@@ -2214,13 +2327,14 @@ Brak y');
         self::updateGame($gameId, $data, $db);
     }
 
-    static public function getComputerPlayers($gameId, $db) {
+    static public function getComputerPlayers($gameId, $db)
+    {
         $select = $db->select()
-                ->from(array('a' => 'playersingame'), array('color', 'playerId'))
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-                ->where('a."gameId" = ?', $gameId)
-                ->where('color IS NOT NULL')
-                ->where('computer = true');
+            ->from(array('a' => 'playersingame'), array('color', 'playerId'))
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
+            ->where('a."gameId" = ?', $gameId)
+            ->where('color IS NOT NULL')
+            ->where('computer = true');
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -2229,10 +2343,11 @@ Brak y');
         }
     }
 
-    static public function getHeroes($playerId, $db) {
+    static public function getHeroes($playerId, $db)
+    {
         $select = $db->select()
-                ->from('hero')
-                ->where('"playerId" = ?', $playerId);
+            ->from('hero')
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -2241,7 +2356,8 @@ Brak y');
         }
     }
 
-    static public function addHeroToGame($gameId, $armyId, $heroId, $db) {
+    static public function addHeroToGame($gameId, $armyId, $heroId, $db)
+    {
         $data = array(
             'heroId' => $heroId,
             'armyId' => $armyId,
@@ -2255,11 +2371,12 @@ Brak y');
         }
     }
 
-    static public function isGameStarted($gameId, $db) {
+    static public function isGameStarted($gameId, $db)
+    {
         $select = $db->select()
-                ->from('game', 'gameId')
-                ->where('"isOpen" = false')
-                ->where('"gameId" = ?', $gameId);
+            ->from('game', 'gameId')
+            ->where('"isOpen" = false')
+            ->where('"gameId" = ?', $gameId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -2268,11 +2385,12 @@ Brak y');
         }
     }
 
-    static public function isPlayerInGame($gameId, $playerId, $db) {
+    static public function isPlayerInGame($gameId, $playerId, $db)
+    {
         $select = $db->select()
-                ->from('playersingame', 'gameId')
-                ->where('"gameId" = ?', $gameId)
-                ->where('"playerId" = ?', $playerId);
+            ->from('playersingame', 'gameId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {
@@ -2281,7 +2399,8 @@ Brak y');
         }
     }
 
-    static public function fortifyArmy($gameId, $playerId, $armyId, $db) {
+    static public function fortifyArmy($gameId, $playerId, $armyId, $db)
+    {
         $data = array(
             'fortified' => 'true'
         );
@@ -2293,7 +2412,8 @@ Brak y');
         return self::update('army', $data, $where, $db);
     }
 
-    static public function unfortifyComputerArmies($gameId, $playerId, $db) {
+    static public function unfortifyComputerArmies($gameId, $playerId, $db)
+    {
         $data = array(
             'fortified' => 'false'
         );
@@ -2304,7 +2424,8 @@ Brak y');
         return self::update('army', $data, $where, $db, true);
     }
 
-    static public function insertChatMessage($gameId, $playerId, $message, $db) {
+    static public function insertChatMessage($gameId, $playerId, $message, $db)
+    {
         $data = array(
             'message' => $message,
             'playerId' => $playerId,
@@ -2317,10 +2438,11 @@ Brak y');
         }
     }
 
-    static public function getUnits(Zend_Db_Adapter_Pdo_Pgsql $db) {
+    static public function getUnits(Zend_Db_Adapter_Pdo_Pgsql $db)
+    {
         $select = $db->select()
-                ->from('unit')
-                ->order('unitId');
+            ->from('unit')
+            ->order('unitId');
         try {
             $results = $db->query($select)->fetchAll();
         } catch (Exception $e) {
