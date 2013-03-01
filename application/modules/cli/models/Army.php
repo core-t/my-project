@@ -196,6 +196,10 @@ class Cli_Model_Army
                 'y' => $path[$i]['y']
             );
 
+            if ($path[$i]['tt'] == 'E') {
+                break;
+            }
+
             if ($stop) {
                 break;
             }
@@ -223,7 +227,7 @@ class Cli_Model_Army
     static public function addTowerDefenseModifier($army)
     {
         if (!isset($army['x'])) {
-            Cli_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            Cli_Model_Logger::debug('addTowerDefenseModifier');
             exit;
         }
         if (Application_Model_Board::isTowerAtPosition($army['x'], $army['y'])) {

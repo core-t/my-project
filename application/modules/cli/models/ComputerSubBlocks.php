@@ -160,7 +160,7 @@ castleId: ' . $castleId);
         }
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
-        if ($move['currentPosition']['x'] == $position['x'] && $move['currentPosition']['y'] == $position['y']) {
+        if (Application_Model_Board::isCastleFild($move['currentPosition'], Application_Model_Board::getCastlePosition($castleId))) {
             $move['in'] = true;
         } else {
             $move['in'] = false;

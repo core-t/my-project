@@ -164,7 +164,7 @@ function isEnemyCastle(x, y) {
             return castleId;
         }
     }
-    return false;
+    return null;
 }
 
 function isMyCastle(x, y) {

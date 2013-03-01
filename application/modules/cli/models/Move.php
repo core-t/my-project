@@ -123,6 +123,8 @@ class Cli_Model_Move
             } elseif ($enemy['ids']) { // enemy army
                 $fight = true;
                 $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
+                $enemy['x'] = $x;
+                $enemy['y'] = $y;
                 $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
                 $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
             }
