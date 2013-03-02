@@ -7,45 +7,45 @@ class Cli_Model_ComputerMainBlocks
     {
         $army = $mArmy->getArmy();
         if (!Cli_Model_Database::enemiesCastlesExist($gameId, $playerId, $db)) {
-            new Cli_Model_Logger('BRAK ZAMKÓW WROGA');
+            new Coret_Model_Logger('BRAK ZAMKÓW WROGA');
             return self::secondBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
         } else {
-            new Cli_Model_Logger('SĄ ZAMKI WROGA');
+            new Coret_Model_Logger('SĄ ZAMKI WROGA');
             $castleId = Cli_Model_ComputerSubBlocks::getWeakerEnemyCastle($gameId, $castlesAndFields['hostileCastles'], $army, $playerId, $db);
             if ($castleId !== null) {
-                new Cli_Model_Logger('JEST SŁABSZY ZAMEK WROGA');
+                new Coret_Model_Logger('JEST SŁABSZY ZAMEK WROGA');
                 $castleRange = Cli_Model_ComputerSubBlocks::isEnemyCastleInRange($castlesAndFields, $castleId, $mArmy);
                 if ($castleRange['in']) {
                     //atakuj
-                    new Cli_Model_Logger('SŁABSZY ZAMEK WROGA W ZASIĘGU - ATAKUJĘ!');
+                    new Coret_Model_Logger('SŁABSZY ZAMEK WROGA W ZASIĘGU - ATAKUJĘ!');
                     $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $castleRange['path'], $castlesAndFields['fields'], null, $playerId, $castleId, $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path'], $fightEnemy, $castleId);
                 } else {
-                    new Cli_Model_Logger('SŁABSZY ZAMEK WROGA POZA ZASIĘGIEM');
+                    new Coret_Model_Logger('SŁABSZY ZAMEK WROGA POZA ZASIĘGIEM');
                     $enemy = Cli_Model_ComputerSubBlocks::getWeakerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
                     if ($enemy) {
                         //atakuj
-                        new Cli_Model_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
+                        new Coret_Model_Logger('JEST SŁABSZA ARMIA WROGA W ZASIĘGU');
                         $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $enemy['path'], $castlesAndFields['fields'], $enemy, $playerId, $enemy['castleId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $enemy['path'], $fightEnemy, $enemy['castleId']);
                     } else {
-                        new Cli_Model_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
+                        new Coret_Model_Logger('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
                         $enemy = Cli_Model_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
                         if ($enemy) {
-                            new Cli_Model_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
+                            new Coret_Model_Logger('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
                             $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
                             if ($join) {
-                                new Cli_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
+                                new Coret_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                             } else {
-                                new Cli_Model_Logger('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ DO ZAMKU!');
+                                new Coret_Model_Logger('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ DO ZAMKU!');
                                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
                                 Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                             }
                         } else {
-                            new Cli_Model_Logger('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ DO ZAMKU!');
+                            new Coret_Model_Logger('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ DO ZAMKU!');
                             Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
                             Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
@@ -53,7 +53,7 @@ class Cli_Model_ComputerMainBlocks
                     }
                 }
             } else {
-                new Cli_Model_Logger('BRAK SŁABSZYCH ZAMKÓW WROGA');
+                new Coret_Model_Logger('BRAK SŁABSZYCH ZAMKÓW WROGA');
                 return self::secondBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
             }
         }
@@ -79,35 +79,35 @@ class Cli_Model_ComputerMainBlocks
             }
             if (isset($enemy)) {
                 //atakuj
-                new Cli_Model_Logger('WRÓG JEST SŁABSZY');
+                new Coret_Model_Logger('WRÓG JEST SŁABSZY');
                 $range = Cli_Model_ComputerSubBlocks::isEnemyArmyInRange($castlesAndFields, $enemy, $mArmy);
                 if ($range['in']) {
-                    new Cli_Model_Logger('SŁABSZY WRÓG W ZASIĘGU - ATAKUJ!');
+                    new Coret_Model_Logger('SŁABSZY WRÓG W ZASIĘGU - ATAKUJ!');
                     $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $range['path'], $castlesAndFields['fields'], $enemy, $playerId, $range['castleId'], $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy);
                 } else {
-                    new Cli_Model_Logger('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
+                    new Coret_Model_Logger('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $range['path'], $castlesAndFields['fields'], $army, $db);
                     Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path']);
                 }
             } else {
-                new Cli_Model_Logger('WRÓG JEST SILNIEJSZY');
+                new Coret_Model_Logger('WRÓG JEST SILNIEJSZY');
                 $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
                 if ($join) {
-                    new Cli_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
+                    new Coret_Model_Logger('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                 } else {
-                    new Cli_Model_Logger('BRAK MOJEJ ARMII W ZASIĘGU');
+                    new Coret_Model_Logger('BRAK MOJEJ ARMII W ZASIĘGU');
                     $castle = Cli_Model_ComputerSubBlocks::getMyCastleNearEnemy($enemies, $mArmy, $castlesAndFields['fields'], $myCastles);
                     if ($castle) {
-                        new Cli_Model_Logger('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
+                        new Coret_Model_Logger('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
                         Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castle['path'], $castlesAndFields['fields'], $army, $db);
                         Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $castle['currentPosition'], $castle['path']);
                     } else {
-                        new Cli_Model_Logger('NIE MA MOJEGO ZAMKU W POBLIŻU WROGA - ZOSTAŃ');
+                        new Coret_Model_Logger('NIE MA MOJEGO ZAMKU W POBLIŻU WROGA - ZOSTAŃ');
                         Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
@@ -120,18 +120,18 @@ class Cli_Model_ComputerMainBlocks
     {
         $army = $mArmy->getArmy();
         if (empty($army['heroes'])) {
-            new Cli_Model_Logger('BRAK HEROSA');
+            new Coret_Model_Logger('BRAK HEROSA');
             return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
         } else {
-            new Cli_Model_Logger('JEST HEROS');
+            new Coret_Model_Logger('JEST HEROS');
 //            new Cli_Model_Logger($army['heroes'], 'HEROS:');
             $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Model_Database::getFullRuins($gameId, $db), $mArmy);
             if (!$ruin) {
-                new Cli_Model_Logger('BRAK RUIN');
+                new Coret_Model_Logger('BRAK RUIN');
                 return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
             } else {
                 //idź do ruin
-                new Cli_Model_Logger('IDŹ DO RUIN');
+                new Coret_Model_Logger('IDŹ DO RUIN');
                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $ruin['path'], $castlesAndFields['fields'], $army, $db);
                 Cli_Model_SearchRuin::search($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
                 Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
@@ -143,8 +143,8 @@ class Cli_Model_ComputerMainBlocks
     static public function moveArmy($gameId, $playerId, $mArmy, $db)
     {
         $army = $mArmy->getArmy();
-        new Cli_Model_Logger('');
-        new Cli_Model_Logger($army['armyId'], 'armyId:');
+        new Coret_Model_Logger('');
+        new Coret_Model_Logger($army['armyId'], 'armyId:');
 
         $myCastles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
         $myCastleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $myCastles);
@@ -154,20 +154,20 @@ class Cli_Model_ComputerMainBlocks
         $enemies = Cli_Model_Database::getAllEnemiesArmies($gameId, $playerId, $db);
 
         if ($myCastleId !== null) {
-            new Cli_Model_Logger('W ZAMKU');
+            new Coret_Model_Logger('W ZAMKU');
 
             $castlePosition = Application_Model_Board::getCastlePosition($myCastleId);
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);
             if (!$enemiesHaveRange) {
-                new Cli_Model_Logger('BRAK WROGA Z ZASIĘGIEM');
+                new Coret_Model_Logger('BRAK WROGA Z ZASIĘGIEM');
 
                 if (!$enemiesInRange) {
-                    new Cli_Model_Logger('BRAK WROGA W ZASIĘGU');
+                    new Coret_Model_Logger('BRAK WROGA W ZASIĘGU');
 
                     return self::ruinBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
                 } else {
-                    new Cli_Model_Logger('JEST WRÓG W ZASIĘGU');
+                    new Coret_Model_Logger('JEST WRÓG W ZASIĘGU');
 
                     foreach ($enemiesInRange as $e) {
                         $castleId = Application_Model_Board::isCastleAtPosition($e['x'], $e['y'], $castlesAndFields['hostileCastles']);
@@ -179,7 +179,7 @@ class Cli_Model_ComputerMainBlocks
                         }
                     }
                     if (isset($enemy)) {
-                        new Cli_Model_Logger('WRÓG JEST SŁABSZY - ATAKUJ!');
+                        new Coret_Model_Logger('WRÓG JEST SŁABSZY - ATAKUJ!');
 
                         if ($castleId !== null) {
                             $range = Cli_Model_ComputerSubBlocks::isEnemyCastleInRange($castlesAndFields, $castleId, $mArmy);
@@ -189,40 +189,40 @@ class Cli_Model_ComputerMainBlocks
                         $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $range['path'], $castlesAndFields['fields'], $enemy, $playerId, $castleId, $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy, $castleId);
                     } else {
-                        new Cli_Model_Logger('WRÓG JEST SILNIEJSZY - ZOSTAŃ!');
+                        new Coret_Model_Logger('WRÓG JEST SILNIEJSZY - ZOSTAŃ!');
 
                         Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
                 }
             } else {
-                new Cli_Model_Logger('JEST WRÓG Z ZASIĘGIEM');
+                new Coret_Model_Logger('JEST WRÓG Z ZASIĘGIEM');
 
                 if (!$enemiesInRange) {
-                    new Cli_Model_Logger('BRAK WROGA W ZASIĘGU - ZOSTAŃ!');
+                    new Coret_Model_Logger('BRAK WROGA W ZASIĘGU - ZOSTAŃ!');
 
                     Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                 } else {
-                    new Cli_Model_Logger('JEST WRÓG W ZASIĘGU');
+                    new Coret_Model_Logger('JEST WRÓG W ZASIĘGU');
 
                     if (count($enemiesHaveRange) > count($enemiesInRange)) {
-                        new Cli_Model_Logger('WRÓGÓW Z ZASIĘGIEM > WRÓGÓW W ZASIĘGU - ZOSTAŃ!');
+                        new Coret_Model_Logger('WRÓGÓW Z ZASIĘGIEM > WRÓGÓW W ZASIĘGU - ZOSTAŃ!');
 
                         Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
-                        new Cli_Model_Logger('WRÓGÓW Z ZASIĘGIEM <= WRÓGÓW W ZASIĘGU');
+                        new Coret_Model_Logger('WRÓGÓW Z ZASIĘGIEM <= WRÓGÓW W ZASIĘGU');
 
                         $enemy = Cli_Model_ComputerSubBlocks::canAttackAllEnemyHaveRange($gameId, $playerId, $enemiesHaveRange, $army, $castlesAndFields['hostileCastles'], $db);
                         if (!$enemy) {
-                            new Cli_Model_Logger('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
+                            new Coret_Model_Logger('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
 
                             Cli_Model_Database::fortifyArmy($gameId, $playerId, $army['armyId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {
                             //atakuj
-                            new Cli_Model_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
+                            new Coret_Model_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
 
                             $aStar = $enemy['aStar'];
                             $aStar->getPath($enemy['key'], $enemy['movesToSpend']);
@@ -235,23 +235,23 @@ class Cli_Model_ComputerMainBlocks
                 }
             }
         } else {
-            new Cli_Model_Logger('POZA ZAMKIEM');
+            new Coret_Model_Logger('POZA ZAMKIEM');
 
             $myEmptyCastle = Cli_Model_ComputerSubBlocks::getMyEmptyCastleInMyRange($gameId, $myCastles, $mArmy, $castlesAndFields['fields'], $db);
             if (!$myEmptyCastle) {
-                new Cli_Model_Logger('NIE MA MOJEGO PUSTEGO ZAMKU W ZASIĘGU');
+                new Coret_Model_Logger('NIE MA MOJEGO PUSTEGO ZAMKU W ZASIĘGU');
 
                 return self::ruinBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
             } else {
-                new Cli_Model_Logger('JEST MÓJ PUSTY ZAMEK W ZASIĘGU');
+                new Coret_Model_Logger('JEST MÓJ PUSTY ZAMEK W ZASIĘGU');
 
                 if (!Cli_Model_ComputerSubBlocks::isMyCastleInRangeOfEnemy($enemies, $myEmptyCastle, $castlesAndFields['fields'])) {
-                    new Cli_Model_Logger('WRÓG NIE MA ZASIĘGU NA PUSTY ZAMEK');
+                    new Coret_Model_Logger('WRÓG NIE MA ZASIĘGU NA PUSTY ZAMEK');
 
                     return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
                 } else {
                     //idź do zamku
-                    new Cli_Model_Logger('WRÓG MA ZASIĘG NA PUSTY ZAMEK - IDŹ DO ZAMKU!');
+                    new Coret_Model_Logger('WRÓG MA ZASIĘG NA PUSTY ZAMEK - IDŹ DO ZAMKU!');
 
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $myEmptyCastle['path'], $castlesAndFields['fields'], $army, $db);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $myEmptyCastle['currentPosition'], $myEmptyCastle['path']);

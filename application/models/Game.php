@@ -87,16 +87,14 @@ class Application_Model_Game extends Game_Db_Table_Abstract
             ->where('b."playerId" = ?', $playerId)
             ->order('begin DESC');
         try {
-//            $result = $this->_db->query($select2)->fetchAll();
             $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select2));
+            $paginator->setCurrentPageNumber($pageNumber);
+            $paginator->setItemCountPerPage(10);
         } catch (Exception $e) {
             throw new Exception($select2->__toString());
         }
 
-        $paginator->setCurrentPageNumber($pageNumber);
-        $paginator->setItemCountPerPage(10);
-
-        foreach ($paginator as $k=>&$val) {
+        foreach ($paginator as $k => &$val) {
             $players = array();
 
             $select = $this->_db->select()

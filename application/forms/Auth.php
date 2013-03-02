@@ -7,16 +7,16 @@ class Application_Form_Auth extends Zend_Form {
         $this->setMethod('post');
         $this->setAction('/login');
         $this->addElement('text', 'login', array(
-            'label' => 'Login',
+            'label' => $this->getView()->translate('Email'),
             'required' => true,
             'filters' => array('StringTrim')
         ));
         $this->addElement('password', 'password', array(
-            'label' => 'Password',
+            'label' => $this->getView()->translate('Password'),
             'required' => true,
             'filters' => array('StringTrim')
         ));
-        $this->addElement('submit', 'submit', array('label' => 'Login'));
+        $this->addElement('submit', 'submit', array('label' => $this->getView()->translate('Sign in')));
         $this->setDecorators(array(
             'FormElements',
             array('HtmlTag', array('tag' => 'dl', 'class' => 'zend_form')),

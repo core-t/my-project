@@ -1,8 +1,10 @@
 <?php
 
-abstract class Game_Controller_Gui extends Game_Controller_Action {
+abstract class Game_Controller_Gui extends Game_Controller_Action
+{
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         if (empty($this->_namespace->player['playerId'])) {
@@ -15,6 +17,13 @@ abstract class Game_Controller_Gui extends Game_Controller_Action {
         $this->view->MainMenu();
         $this->view->googleAnalytics();
         $this->view->Version();
+
+        $language = Zend_Registry::get('lang');
+
+        $this->view->headMeta()->appendHttpEquiv('Content-Language', $language);
+
+//        $this->view->menu($this->getRequest()->getControllerName(), $language);
+        $this->view->language($language);
     }
 
 }

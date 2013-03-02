@@ -227,7 +227,7 @@ class Cli_Model_Army
     static public function addTowerDefenseModifier($army)
     {
         if (!isset($army['x'])) {
-            Cli_Model_Logger::debug('addTowerDefenseModifier');
+            Coret_Model_Logger::debug('addTowerDefenseModifier');
             exit;
         }
         if (Application_Model_Board::isTowerAtPosition($army['x'], $army['y'])) {

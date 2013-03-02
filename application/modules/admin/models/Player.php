@@ -6,10 +6,10 @@ class Admin_Model_Player extends Coret_Model_ParentDb
     protected $_name = 'player';
     protected $_primary = 'playerId';
     protected $_columns = array(
+        'activity' => array('nazwa' => 'Aktywność', 'typ' => 'data'),
         'login' => array('nazwa' => 'Login', 'typ' => 'tekst'),
         'firstName' => array('nazwa' => 'Imię', 'typ' => 'tekst'),
         'lastName' => array('nazwa' => 'Nazwisko', 'typ' => 'tekst'),
-        'activity' => array('nazwa' => 'Aktywność', 'typ' => 'data')
     );
 
     public function __construct($params, $id = 0)
