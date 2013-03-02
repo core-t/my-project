@@ -1,8 +1,10 @@
 <?php
 
-class NewController extends Game_Controller_Gui {
+class NewController extends Game_Controller_Gui
+{
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->view->form = new Application_Form_Creategame ();
         if ($this->_request->isPost()) {
             if ($this->view->form->isValid($this->_request->getPost())) {
@@ -12,8 +14,7 @@ class NewController extends Game_Controller_Gui {
                     $colors = $modelGame->getAllColors();
                     $modelGame->joinGame($this->_namespace->player['playerId']);
                     $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $colors[0]);
-                    for ($i = 1; $i < $this->_request->getParam('numberOfPlayers'); $i++)
-                    {
+                    for ($i = 1; $i < $this->_request->getParam('numberOfPlayers'); $i++) {
                         $playerId = $modelGame->getComputerPlayerId();
                         if (!$playerId) {
                             $modelPlayer = new Application_Model_Player(null, false);
@@ -24,7 +25,7 @@ class NewController extends Game_Controller_Gui {
                         $modelGame->joinGame($playerId);
                         $modelGame->updatePlayerReady($playerId, $colors[$i]);
                     }
-                    $this->_redirect('/gamesetup/index/gameId/' . $gameId);
+                    $this->_redirect('/' . Zend_Registry::get('lang') . '/gamesetup/index/gameId/' . $gameId);
                 }
             }
         }

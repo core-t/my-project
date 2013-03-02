@@ -45,7 +45,7 @@
         });
     }
     function makeUrl(event) {
-        top.location = '/<?php echo Zend_Registry::get('lang')?>/gamesetup/index/gameId/' + event.data.gameId;
+        top.location.replace('/<?php echo Zend_Registry::get('lang')?>/gamesetup/index/gameId/' + event.data.gameId);
     }
     refresh();
     setInterval('refresh()', 5000);

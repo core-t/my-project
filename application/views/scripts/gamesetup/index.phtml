@@ -1,11 +1,12 @@
-<h1>New game</h1>
-<p>Maximum number of players: <?php echo $this->numberOfPlayers ?></p>
-<h2>Players:</h2>
+<h1><?php echo $this->translate('New game')?></h1>
+<p><?php echo $this->translate('Maximum number of players')?>: <?php echo $this->numberOfPlayers ?></p>
+<h2><?php echo $this->translate('Players')?>:</h2>
 <table id="playersingame">
-    <th>Player name & color</th><th>Select your color</th><th>Human/AI</th>
+    <th><?php echo $this->translate('Player name & color')?></th>
+    <th><?php echo $this->translate('Select your color')?></th>
+    <th><?php echo $this->translate('Human/AI')?></th>
     <?php
-    for ($i = 0; $i < $this->numberOfPlayers; $i++)
-    {
+    for ($i = 0; $i < $this->numberOfPlayers; $i++) {
         echo '<tr id="' . $this->colors[$i] . '"><td class="td1"><div class="left"></div><div class="right">' . $this->colors[$i] . '</div></td><td class="td2"></td><td class="td3"></td></tr>';
     }
     ?>
@@ -15,18 +16,19 @@
     <li id="start"></li>
 </ul>
 
-<h2>The list of people who have not chosen their color:</h2>
+<h2><?php echo $this->translate('The list of people who have not chosen their color') ?>:</h2>
 <table id="playersout"></table>
 <ul>
-    <li><a class="button" href="/new">&laquo; Back</a></li>
+    <li><a class="button" href="/new">&laquo; <?php echo $this->translate('Back') ?></a></li>
 </ul>
 
 <script type="text/javascript">
-    var numberOfPlayers = <?php echo (int) $this->numberOfPlayers ?>;
+    var numberOfPlayers = <?php echo (int)$this->numberOfPlayers ?>;
     var colors = <?php echo Zend_Json::encode($this->colors) ?>;
 
-    var gameId = <?php echo (int) $this->gameId ?>;
-    var playerId = <?php echo (int) $this->player['playerId'] ?>;
+    var gameId = <?php echo (int)$this->gameId ?>;
+    var playerId = <?php echo (int)$this->player['playerId'] ?>;
     var accessKey = '<?php echo  $this->accessKey ?>';
 
+    var urlGemesetupStart = '/<?php echo  Zend_Registry::get('lang') ?>/gamesetup/start';
 </script>

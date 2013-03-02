@@ -3,34 +3,34 @@ var gameMaster = 0;
 var playersReady = 0;
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     initWebSocket();
 });
 
-function initWebSocket(){
-    ws = new WebSocket(wsURL+'/public');
+function initWebSocket() {
+    ws = new WebSocket(wsURL + '/public');
 
-    ws.onopen = function() {
+    ws.onopen = function () {
         wsClosed = false;
         wsRegister();
     };
 
-    ws.onmessage = function(e) {
-        var r=$.parseJSON( e.data );
+    ws.onmessage = function (e) {
+        var r = $.parseJSON(e.data);
 
-        if(typeof r.type == 'undefined'){
+        if (typeof r.type == 'undefined') {
             return;
         }
 
-        switch(r.type){
+        switch (r.type) {
 
             case 'start':
-                top.location = '/gamesetup/start';
+                top.location.replace(urlGemesetupStart);
                 break;
 
             case 'update':
                 //                console.log(r);
-                if(typeof r.gameMasterId == 'undefined'){
+                if (typeof r.gameMasterId == 'undefined') {
                     return;
                 }
 
@@ -40,35 +40,35 @@ function initWebSocket(){
 
                 var playersReady = 0;
 
-                for(i in r){
-                    if(typeof r[i].color == 'undefined'){
+                for (i in r) {
+                    if (typeof r[i].color == 'undefined') {
                         continue;
                     }
-                    if(r[i].color){
+                    if (r[i].color) {
                         playersReady++;
-                        $('#'+r[i].color+' .td1 div.left').html(r[i].firstName+' '+r[i].lastName);
+                        $('#' + r[i].color + ' .td1 div.left').html(r[i].firstName + ' ' + r[i].lastName);
 
 
-                        if(r[i].playerId == playerId){
-                            $('#'+r[i].color+' .td2 a').html('Unselect');
-                        }else{
-                            if(r.gameMasterId == playerId){
-                                $('#'+r[i].color+' .td2 a').html('Kick');
-                            }else{
-                                $('#'+r[i].color+' .td2 a').remove();
+                        if (r[i].playerId == playerId) {
+                            $('#' + r[i].color + ' .td2 a').html('Unselect');
+                        } else {
+                            if (r.gameMasterId == playerId) {
+                                $('#' + r[i].color + ' .td2 a').html('Kick');
+                            } else {
+                                $('#' + r[i].color + ' .td2 a').remove();
                             }
                         }
 
-                        if(r[i].computer){
-                            $('#'+r[i].color+' .td3').html('Computer');
-                        }else{
-                            $('#'+r[i].color+' .td3').html('Human');
+                        if (r[i].computer) {
+                            $('#' + r[i].color + ' .td3').html('Computer');
+                        } else {
+                            $('#' + r[i].color + ' .td3').html('Human');
                         }
-                    }else{
-                        if(r[i].computer){
+                    } else {
+                        if (r[i].computer) {
                             continue;
                         }
-                        $('#playersout').append('<tr><td># ' + r[i].firstName+' '+r[i].lastName + '</td></tr>');
+                        $('#playersout').append('<tr><td># ' + r[i].firstName + ' ' + r[i].lastName + '</td></tr>');
                     }
                 }
 
@@ -77,16 +77,16 @@ function initWebSocket(){
         }
     };
 
-    ws.onclose = function() {
+    ws.onclose = function () {
         wsClosed = true;
-        setTimeout ( 'initWebSocket()', 1000 );
+        setTimeout('initWebSocket()', 1000);
     };
 
 }
 
-function wsRegister(){
+function wsRegister() {
     var token = {
-        type: 'register',
+        type:'register',
         gameId:gameId,
         playerId:playerId,
         accessKey:accessKey
@@ -95,62 +95,62 @@ function wsRegister(){
     ws.send(JSON.stringify(token));
 }
 
-function wsChange(color){
+function wsChange(color) {
     var token = {
-        type: 'change',
+        type:'change',
         color:color
     };
 
     ws.send(JSON.stringify(token));
 }
 
-function wsComputer(color){
+function wsComputer(color) {
     var token = {
-        type: 'computer',
+        type:'computer',
         color:color
     };
 
     ws.send(JSON.stringify(token));
 }
 
-function prepareButtons(gameMasterId){
-    for(i = 0; i < numberOfPlayers; i++) {
-        $('#'+colors[i]+' .td1 div.left').html('');
+function prepareButtons(gameMasterId) {
+    for (i = 0; i < numberOfPlayers; i++) {
+        $('#' + colors[i] + ' .td1 div.left').html('');
 
-        $('#'+colors[i]+' .td2').html(
+        $('#' + colors[i] + ' .td2').html(
             $('<a>')
-            .addClass('button')
-            .html('Select')
-            .attr('id',colors[i])
-            .click(function(){
-                wsChange(this.id)
-            }));
-
-        if(gameMasterId == playerId){
-            $('#'+colors[i]+' .td3').html(
-                $('<a>')
                 .addClass('button')
-                .html('Set computer')
-                .attr('id',colors[i])
-                .click(function(){
-                    wsComputer(this.id)
+                .html('Select')
+                .attr('id', colors[i])
+                .click(function () {
+                    wsChange(this.id)
                 }));
-        }else{
-            $('#'+colors[i]+' .td3').html('');
+
+        if (gameMasterId == playerId) {
+            $('#' + colors[i] + ' .td3').html(
+                $('<a>')
+                    .addClass('button')
+                    .html('Set computer')
+                    .attr('id', colors[i])
+                    .click(function () {
+                        wsComputer(this.id)
+                    }));
+        } else {
+            $('#' + colors[i] + ' .td3').html('');
         }
     }
 }
 
-function prepareStartButton(gameMasterId, playersReady){
-    if(gameMasterId == playerId){
+function prepareStartButton(gameMasterId, playersReady) {
+    if (gameMasterId == playerId) {
         $('#start').html($('<a>').addClass('button').html('Start game'));
-        $('#start a').click(function(){
-            if(start){
+        $('#start a').click(function () {
+            if (start) {
                 wsStart();
-            //                    $('#start a').addClass('buttonOff');
+                //                    $('#start a').addClass('buttonOff');
             }
         });
-        if(numberOfPlayers <= playersReady) {
+        if (numberOfPlayers <= playersReady) {
             $('#start a').removeClass('buttonOff');
             start = 1;
         } else {
@@ -161,9 +161,9 @@ function prepareStartButton(gameMasterId, playersReady){
 
 }
 
-function wsStart(){
+function wsStart() {
     var token = {
-        type: 'start'
+        type:'start'
     };
 
     ws.send(JSON.stringify(token));

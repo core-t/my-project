@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-02 16:40+0100\n"
-"PO-Revision-Date: 2013-03-02 16:40+0100\n"
+"POT-Creation-Date: 2013-03-02 19:35+0100\n"
+"PO-Revision-Date: 2013-03-02 19:58+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -55,6 +55,16 @@ msgstr "Market"
 msgid "Version"
 msgstr "Wersja"
 
+#: application/forms/Creategame.php:12
+#, fuzzy
+msgid "Select number of players"
+msgstr "Ilość graczy"
+
+#: application/forms/Creategame.php:22
+#, fuzzy
+msgid "Create game"
+msgstr "Nowa gra"
+
 #: application/forms/Auth.php:10
 #: application/forms/Registration.php:26
 msgid "Email"
@@ -89,22 +99,22 @@ msgstr "Rejestracja"
 msgid "Incorrect login or password!"
 msgstr "Nieprawidłowy e-mail lub hasło!"
 
-#: library/Coret/View/Helper/Language.php:15
-#: library/Coret/View/Helper/Language.php:28
+#: library/Coret/View/Helper/Language.php:12
+#: library/Coret/View/Helper/Language.php:26
 msgid "niemiecki"
 msgstr ""
 
-#: library/Coret/View/Helper/Language.php:18
-#: library/Coret/View/Helper/Language.php:35
+#: library/Coret/View/Helper/Language.php:15
+#: library/Coret/View/Helper/Language.php:33
 msgid "angielski"
 msgstr ""
 
-#: library/Coret/View/Helper/Language.php:21
-#: library/Coret/View/Helper/Language.php:31
+#: library/Coret/View/Helper/Language.php:18
+#: library/Coret/View/Helper/Language.php:29
 msgid "polski"
 msgstr ""
 
-#: library/Coret/View/Helper/Language.php:42
+#: library/Coret/View/Helper/Language.php:40
 msgid "Wybierz język"
 msgstr ""
 
@@ -134,13 +144,66 @@ msgstr "Poprzednia"
 msgid "Next"
 msgstr "Następna"
 
+#: application/views/scripts/new/index.phtml:2
+#, fuzzy
+msgid "Create new game"
+msgstr "Nowa gra"
+
+#: application/views/scripts/new/index.phtml:5
+msgid "Join one of the games listed below"
+msgstr ""
+
+#: application/views/scripts/new/index.phtml:14
+msgid "Refresh"
+msgstr ""
+
+#: application/views/scripts/new/index.phtml:18
+msgid "Game master"
+msgstr "Mistrz gry"
+
+#: application/views/scripts/new/index.phtml:18
+#, fuzzy
+msgid "Current number of players"
+msgstr "Ilość graczy"
+
+#: application/views/scripts/new/index.phtml:18
+#, fuzzy
+msgid "Max number of players"
+msgstr "Ilość graczy"
+
+#: application/views/scripts/new/index.phtml:18
+msgid "Date"
+msgstr ""
+
+#: application/views/scripts/gamesetup/index.phtml:2
+#, fuzzy
+msgid "Maximum number of players"
+msgstr "Ilość graczy"
+
+#: application/views/scripts/gamesetup/index.phtml:3
+msgid "Players"
+msgstr "Gracze"
+
+#: application/views/scripts/gamesetup/index.phtml:5
+msgid "Player name & color"
+msgstr ""
+
+#: application/views/scripts/gamesetup/index.phtml:6
+#, fuzzy
+msgid "Select your color"
+msgstr "Twój kolor"
+
+#: application/views/scripts/gamesetup/index.phtml:7
+msgid "Human/AI"
+msgstr ""
+
+#: application/views/scripts/gamesetup/index.phtml:19
+msgid "The list of people who have not chosen their color"
+msgstr ""
+
 #: application/views/scripts/load/index.phtml:1
 msgid "Select which game you want to load"
 msgstr "Wybierz, którą grę chcesz wczytać"
-
-#: application/views/scripts/load/index.phtml:4
-msgid "Game master"
-msgstr "Mistrz gry"
 
 #: application/views/scripts/load/index.phtml:5
 msgid "Your color"
@@ -153,10 +216,6 @@ msgstr "Numer tury"
 #: application/views/scripts/load/index.phtml:7
 msgid "Number of Players"
 msgstr "Ilość graczy"
-
-#: application/views/scripts/load/index.phtml:8
-msgid "Players"
-msgstr "Gracze"
 
 #: application/views/scripts/load/index.phtml:9
 msgid "Start date"

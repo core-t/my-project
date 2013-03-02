@@ -5,13 +5,11 @@ class Application_Form_Creategame extends Zend_Form
 
     public function init()
     {
-
-        /* Form Elements & Other Definitions Here ... */
         $this->setMethod('post');
 
         $this->addElement('select', 'numberOfPlayers',
             array(
-                'label' => 'Select number of players',
+                'label' => $this->getView()->translate('Select number of players'),
                 'multiOptions' => array(2 => 2, 3 => 3, 4 => 4),
                 'required' => true,
                 'filters' => array('StringTrim'),
@@ -21,7 +19,7 @@ class Application_Form_Creategame extends Zend_Form
                 )
             )
         );
-        $this->addElement('submit', 'submit', array('label' => 'Create game'));
+        $this->addElement('submit', 'submit', array('label' => $this->getView()->translate('Create game')));
     }
 
 }

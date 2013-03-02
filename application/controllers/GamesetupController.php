@@ -1,13 +1,16 @@
 <?php
 
-class GamesetupController extends Game_Controller_Gui {
+class GamesetupController extends Game_Controller_Gui
+{
 
-    public function _init() {
+    public function _init()
+    {
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css?v=' . Zend_Registry::get('config')->version);
         $this->view->Websocket();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->view->headScript()->appendFile('/js/gamesetup.js?v=' . Zend_Registry::get('config')->version);
         $gameId = $this->_request->getParam('gameId');
         if (empty($gameId)) {
@@ -38,7 +41,8 @@ class GamesetupController extends Game_Controller_Gui {
         $this->view->player = $this->_namespace->player;
     }
 
-    public function startAction() {
+    public function startAction()
+    {
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak gameId!');
         }
@@ -47,7 +51,7 @@ class GamesetupController extends Game_Controller_Gui {
         }
         $modelGame = new Application_Model_Game($this->_namespace->gameId);
         if (!$modelGame->isPlayerReady($this->_namespace->player['playerId'])) {
-            $this->_redirect('/new');
+            $this->_redirect('/' . Zend_Registry::get('lang') . '/new');
         }
 
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
@@ -61,10 +65,9 @@ class GamesetupController extends Game_Controller_Gui {
             $playerHeroes = $modelHero->getHeroes();
         }
         $armyId = $modelArmy->createArmy(
-                $startPositions[$this->_namespace->player['color']]['position'], $this->_namespace->player['playerId']);
+            $startPositions[$this->_namespace->player['color']]['position'], $this->_namespace->player['playerId']);
         $res = $modelArmy->addHeroToGame($armyId, $playerHeroes[0]['heroId']);
-        switch ($res)
-        {
+        switch ($res) {
             case 1:
                 $modelCastle->addCastle($startPositions[$this->_namespace->player['color']]['id'], $this->_namespace->player['playerId']);
                 $this->_namespace->armyId = $armyId;
