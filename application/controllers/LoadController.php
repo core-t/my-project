@@ -1,14 +1,17 @@
 <?php
 
-class LoadController extends Game_Controller_Gui {
+class LoadController extends Game_Controller_Gui
+{
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css');
         $modelGame = new Application_Model_Game();
-        $this->view->myGames = $modelGame->getMyGames($this->_namespace->player['playerId']);
+        $this->view->myGames = $modelGame->getMyGames($this->_namespace->player['playerId'], $this->_request->getParam('page'));
     }
 
-    public function loadAction() {
+    public function loadAction()
+    {
         $gameId = $this->_request->getParam('gameId');
         if (!empty($gameId)) {
             $modelGame = new Application_Model_Game($gameId);

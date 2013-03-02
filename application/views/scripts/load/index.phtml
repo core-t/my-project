@@ -8,9 +8,8 @@
         <th><?php echo $this->translate('Players') ?></th>
         <th><?php echo $this->translate('Start date') ?></th>
         <?php
-        if (is_array($this->myGames)) {
-            foreach ($this->myGames as $game)
-            {
+        if (count($this->myGames)) {
+            foreach ($this->myGames as $game) {
                 $url = '/load/load/gameId/' . $game['gameId'];
                 $gameMaster = $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'];
                 echo '
@@ -20,8 +19,7 @@
         <td><a href="' . $url . '">' . $game['turnNumber'] . '</a></td>
         <td><a href="' . $url . '">' . $game['numberOfPlayers'] . '</a></td>
         <td><a href="' . $url . '">';
-                foreach ($game['players'] as $v)
-                {
+                foreach ($game['players'] as $v) {
                     echo '<span class="font-' . $v['color'] . '">' . $v['firstName'] . ' ' . $v['lastName'] . ' /' . $v['color'] . '/</span><br/>';
                 }
                 echo '</a></td>
@@ -32,18 +30,18 @@
         }
         ?>
     </table>
-
 </div>
+    <?php echo $this->paginationControl($this->myGames, 'Sliding', 'pagination_control.phtml');?>
 <ul>
     <li>
         <a href="/" class="button">&laquo; <?php echo $this->translate('Back') ?></a>
     </li>
 </ul>
 <script type="text/javascript">
-    $('.trlink').mouseover(function(){
-        $('#'+this.id).css('background','transparent url(../img/nav_bg.png) repeat');
+    $('.trlink').mouseover(function () {
+        $('#' + this.id).css('background', 'transparent url(../img/nav_bg.png) repeat');
     })
-    .mouseleave(function(){
-        $('#'+this.id).css('background','transparent');
-    });
+            .mouseleave(function () {
+                $('#' + this.id).css('background', 'transparent');
+            });
 </script>
