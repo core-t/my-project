@@ -32,7 +32,7 @@ class EditorController extends Game_Controller_Gui {
     public function editAction() {
         $mapId = $armyId = $this->_request->getParam('mapId');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/editor.css');
-        $this->view->headScript()->appendFile('/js/game/game.zoom.js');
+        $this->view->headScript()->appendFile('/js/game/zoom.js');
         $this->_helper->layout->setLayout('editor');
         $modelMap = new Application_Model_Map($mapId);
         $map = $modelMap->getMap($this->_namespace->player['playerId']);

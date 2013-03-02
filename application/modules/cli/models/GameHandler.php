@@ -120,7 +120,7 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
                 break;
 
             case 'castleBuildDefense':
-                new Cli_Model_CastleBuildDefense($dataIn['castleId'], $user, $db, $gameHandler);
+                new Cli_Model_CastleBuildDefense($dataIn['castleId'], $user, $db, $this);
                 break;
         }
     }

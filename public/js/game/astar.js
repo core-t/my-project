@@ -211,7 +211,7 @@ function addOpen(x, y, close, open, destX, destY) {
             }
             var g = selectedArmy.terrainCosts[type];
 //            console.log(g);
-            if (g > 99) {
+            if (g > 6) {
                 continue;
             }
             if (typeof open[key] != 'undefined') {

@@ -14,15 +14,16 @@ class GameController extends Game_Controller_Game {
         $this->view->headScript()->appendFile('/js/game/castles.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/armies.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/astar.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/walk.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/towers.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/ruins.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/test.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/chat.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.libs.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.zoom.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.websocket.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.ajax.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.message.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/libs.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/zoom.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/websocket.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/ajax.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/message.js?v=' . Zend_Registry::get('config')->version);
 
         $this->_helper->layout->setLayout('game');
 
@@ -123,7 +124,7 @@ class GameController extends Game_Controller_Game {
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
         $this->view->headScript()->prependFile('/js/jquery.min.js');
 
-        $this->view->headScript()->appendFile('/js/game/game.zoom.js');
+        $this->view->headScript()->appendFile('/js/game/zoom.js');
 
         $this->_helper->layout->setLayout('board');
     }
