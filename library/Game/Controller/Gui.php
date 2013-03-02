@@ -18,12 +18,7 @@ abstract class Game_Controller_Gui extends Game_Controller_Action
         $this->view->googleAnalytics();
         $this->view->Version();
 
-        $language = Zend_Registry::get('lang');
-
-        $this->view->headMeta()->appendHttpEquiv('Content-Language', $language);
-
-//        $this->view->menu($this->getRequest()->getControllerName(), $language);
-        $this->view->language($language);
+        $this->view->headMeta()->appendHttpEquiv('Content-Language', Zend_Registry::get('lang'));
     }
 
 }

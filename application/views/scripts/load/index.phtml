@@ -10,7 +10,7 @@
         <?php
         if (count($this->myGames)) {
             foreach ($this->myGames as $game) {
-                $url = '/load/load/gameId/' . $game['gameId'];
+                $url = '/' . Zend_Registry::get('lang') . '/load/load/gameId/' . $game['gameId'];
                 $gameMaster = $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'];
                 echo '
     <tr id="gid' . $game['gameId'] . '" onclick="window.location.href = \'' . $url . '\';" class="trlink">
@@ -31,7 +31,7 @@
         ?>
     </table>
 </div>
-    <?php echo $this->paginationControl($this->myGames, 'Sliding', 'pagination_control.phtml');?>
+<?php echo $this->paginationControl($this->myGames, 'Sliding', 'pagination_control.phtml'); ?>
 <ul>
     <li>
         <a href="/" class="button">&laquo; <?php echo $this->translate('Back') ?></a>

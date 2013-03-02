@@ -32,7 +32,9 @@ class LoginController extends Zend_Controller_Action
 
     public function logoutAction()
     {
-        // action body
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         Zend_Session::destroy(true);
         $this->_redirect($this->view->url(array('controller' => 'login', 'action' => null)));
     }

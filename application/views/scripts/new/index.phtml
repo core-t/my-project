@@ -1,47 +1,53 @@
-<h1>New game</h1>
-<h2>Create new game:</h2>
+<h1><?php echo $this->translate('New game')?></h1>
+<h2><?php echo $this->translate('Create new game')?>:</h2>
 <?php echo $this->form; ?>
 
-<h2>Join one of the games listed below:</h2>
-<div class="table"><table></table></div>
+<h2><?php echo $this->translate('Join one of the games listed below')?>:</h2>
+<div class="table">
+    <table></table>
+</div>
 <ul>
     <li>
-        <a class="button" href="/">&laquo; Back</a>
+        <a class="button" href="/">&laquo; <?php echo $this->translate('Back') ?></a>
     </li>
     <li>
-        <a class="button" href="javascript:refresh()">Refresh</a>
+        <a class="button" href="javascript:refresh()"><?php echo $this->translate('Refresh')?></a>
     </li>
 </ul>
 <script type="text/javascript">
-    var th = '<th>Game master</th><th>Current number of players</th><th>Max number of players</th><th>Date</th>';
+    var th = '<th><?php echo $this->translate('Game master')?></th><th><?php echo $this->translate('Current number of players')?></th><th><?php echo $this->translate('Max number of players')?></th><th><?php echo $this->translate('Date')?></th>';
     var mygames = $('.table table');
     function refresh() {
-        $.getJSON("/newajax/refresh", function(result) {
+        $.getJSON("/<?php echo Zend_Registry::get('lang')?>/newajax/refresh", function (result) {
 
             mygames.html('');
             mygames.append(th);
-            for(i in result) {
+            for (i in result) {
                 mygames.append(
-                $('<tr>')
-                .addClass('gid'+result[i].gameId)
-                .append($('<td>').append($('<a>').html(result[i].gameMaster)))
-                .append($('<td>').append($('<a>').html(result[i].playersingame)))
-                .append($('<td>').append($('<a>').html(result[i].numberOfPlayers)))
-                .append($('<td>').append($('<a>').html(result[i].begin.split('.')[0])))
-                .bind('click', { gameId: result[i].gameId }, makeUrl)
-                .mouseover(function(){$(this).css('background','transparent url(../img/nav_bg.png) repeat')})
-                .mouseleave(function(){$(this).css('background','transparent')})
-            );
-                $('#mygames td').mouseover(function(){
+                        $('<tr>')
+                                .addClass('gid' + result[i].gameId)
+                                .append($('<td>').append($('<a>').html(result[i].gameMaster)))
+                                .append($('<td>').append($('<a>').html(result[i].playersingame)))
+                                .append($('<td>').append($('<a>').html(result[i].numberOfPlayers)))
+                                .append($('<td>').append($('<a>').html(result[i].begin.split('.')[0])))
+                                .bind('click', { gameId:result[i].gameId }, makeUrl)
+                                .mouseover(function () {
+                                    $(this).css('background', 'transparent url(../img/nav_bg.png) repeat')
+                                })
+                                .mouseleave(function () {
+                                    $(this).css('background', 'transparent')
+                                })
+                );
+                $('#mygames td').mouseover(function () {
                     $('#mygames td').css('cursor', 'pointer')
                 });
             }
         });
     }
-    function makeUrl(event){
-        top.location = '/gamesetup/index/gameId/' + event.data.gameId;
+    function makeUrl(event) {
+        top.location = '/<?php echo Zend_Registry::get('lang')?>/gamesetup/index/gameId/' + event.data.gameId;
     }
     refresh();
-    setInterval ( 'refresh()', 5000 );
+    setInterval('refresh()', 5000);
 </script>
 

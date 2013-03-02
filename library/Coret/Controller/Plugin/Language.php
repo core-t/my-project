@@ -26,9 +26,5 @@ class Coret_Controller_Plugin_Language extends Zend_Controller_Plugin_Abstract
             APPLICATION_PATH . '/resources/languages/' . $lang . '/Zend_Validate.php',
             $lang,
             array('scan' => Zend_Translate::LOCALE_DIRECTORY)));
-
-//        Zend_Registry::set('Zend_Translate', );
-
     }
-
 }
