@@ -114,10 +114,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract
             $val['players'] = $players;
         }
 
-//        echo '<pre>';
-//        var_dump($paginator);
-//        echo '</pre>';
-
         return $paginator;
     }
 

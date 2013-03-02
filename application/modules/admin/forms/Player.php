@@ -1,11 +1,11 @@
 <?php
 
-class Admin_Form_Administrator extends Zend_Form {
+class Admin_Form_Player extends Zend_Form {
 
     public function init() {
         $this->setMethod('post');
-        $this->addElement('text', 'identyfikator', array(
-            'label' => 'Identyfikator',
+        $this->addElement('text', 'login', array(
+            'label' => 'Login',
             'required' => true,
             'filters' => array('StringTrim'),
             'validators' => array(array('StringLength', false, array(1, 20)))

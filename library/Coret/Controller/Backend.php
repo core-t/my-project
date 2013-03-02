@@ -1,10 +1,12 @@
 <?php
 
-abstract class Coret_Controller_Backend extends Zend_Controller_Action {
+abstract class Coret_Controller_Backend extends Zend_Controller_Action
+{
 
     public $params = null;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         Zend_Session::start();
@@ -32,11 +34,13 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
 //        new Application_View_Helper_Lang($language);
     }
 
-    public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array()) {
+    public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array())
+    {
         parent::__construct($request, $response, $invokeArgs);
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         $className = 'Admin_Model_' . ucfirst($this->view->controllerName);
         $m = new $className($this->params);
 
@@ -44,10 +48,12 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
 
         $this->view->paginator = new Zend_Paginator($m->getPagination());
         $this->view->paginator->setCurrentPageNumber($this->_request->getParam('page'));
-        $this->view->paginator->setItemCountPerPage(9);
+        $this->view->paginator->setItemCountPerPage(10);
+        $this->view->primary = $m->getPrimary();
     }
 
-    public function addAction() {
+    public function addAction()
+    {
         $className = 'Admin_Form_' . ucfirst($this->view->controllerName);
         $this->view->form = new $className();
         $this->view->form->addElement('submit', 'submit', array('label' => 'Dodaj'));
@@ -71,7 +77,8 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
         }
     }
 
-    public function editAction() {
+    public function editAction()
+    {
         $id = $this->_request->getParam('id');
         if (!$id) {
             throw new Exception('Brak id');
@@ -87,7 +94,8 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
         }
     }
 
-    public function deleteAction() {
+    public function deleteAction()
+    {
         $id = $this->_request->getParam('id');
         if (!$id) {
             throw new Exception('Brak id');
@@ -108,7 +116,8 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
         }
     }
 
-    protected function editHandlePost($id) {
+    protected function editHandlePost($id)
+    {
         if ($this->view->form->isValid($this->_request->getPost())) {
             $className = 'Admin_Model_' . ucfirst($this->view->controllerName);
             $model = new $className($this->params, $id);
@@ -124,7 +133,8 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action {
         }
     }
 
-    protected function editHandleElse($id) {
+    protected function editHandleElse($id)
+    {
         $className = 'Admin_Model_' . ucfirst($this->view->controllerName);
         $model = new $className($this->params, $id);
 

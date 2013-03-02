@@ -35,10 +35,10 @@ class Admin_LoginController extends Zend_Controller_Action {
     private function getAuthAdapter($params) {
         $authAdapter = new Zend_Auth_Adapter_DbTable(
                         Zend_Db_Table_Abstract::getDefaultAdapter(),
-                        'Administrator',
-                        'identyfikator',
-                        'haslo',
-                        'MD5(?)'
+                        'player',
+                        'login',
+                        'password',
+                        'MD5(?) AND admin = true'
         );
         $authAdapter->setIdentity($params['login']);
         $authAdapter->setCredential($params['haslo']);

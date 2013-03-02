@@ -1,0 +1,87 @@
+.hint {
+    color: red;
+}
+html {
+    margin:0px;
+    background-color: white;
+}
+body {
+    margin:0px;
+    font-family:arial, helvetica;
+    color: #3E4146;
+}
+h1 {
+    background: #ddd;
+    color: #c00000;
+    border-bottom: 1px solid #bbb;
+    border-top: 1px solid #bbb;
+    padding-left: 5px;
+}
+h3{
+    color:#3E4146;
+}
+#page {
+    margin:auto;
+    width:600px;
+}
+#page2 {
+    background: #ddd;
+    border-bottom: 1px solid #bbb;
+    border-top: 1px solid #bbb;
+    margin:25px 0 25px 0;
+}
+#center2 {
+    margin:auto;
+    width:600px;
+    text-align: justify;
+}
+#center {
+    background:#3E4146;
+    width:300px;
+    padding:10px;
+    border-radius:15px;
+    margin:auto;
+    border:1px solid #cecece;
+    box-shadow: 2px 2px 15px #000;
+}
+#lock {
+    float:right;
+}
+input#submit {
+    float:right;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #000;
+}
+input#submit:hover {
+    background: #ddd;
+    cursor: pointer;
+}
+#submit-element {
+    height:20px;
+}
+label {
+    color:white;
+}
+#footer {
+    text-align: center;
+    font-style: italic;
+}
+input {
+    border-radius:5px;
+}
+ul.errors {
+    background: #ccc;
+    color: #C00000;
+    border:1px solid #fff;
+    border-radius:5px;
+    margin-top: 4px;
+    padding: 5px 5px 5px 30px;
+}
+fieldset {
+    border-radius:5px;
+}
+legend {
+    color: #fff;
+    font-weight: bold;
+}

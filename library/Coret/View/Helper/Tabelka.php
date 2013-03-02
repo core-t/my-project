@@ -1,14 +1,17 @@
 <?php
 
-class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract {
+class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract
+{
 
     private $j = 0;
 
-    public function tabelka(array $kolumny, $kontroler) {
-        return $this->create($kolumny, $kontroler);
+    public function tabelka(array $kolumny, $kontroler, $primary)
+    {
+        return $this->create($kolumny, $kontroler, $primary);
     }
 
-    protected function create(array $kolumny, $kontroler) {
+    protected function create(array $kolumny, $kontroler, $primary)
+    {
         if (!is_array($kolumny)) {
             throw new Exception('$kolumny nie jest typu array');
         }
@@ -19,7 +22,7 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract {
         if (count($this->view->paginator)) {
             foreach ($this->view->paginator as $row) {
                 $tabelka .= $this->createTableContent($row, $kolumny);
-                $tabelka .= $this->createButtons($kontroler, $row['id'], $row);
+                $tabelka .= $this->createButtons($kontroler, $row[$primary], $row);
                 $tabelka .= '</tr>';
             }
         } else {
@@ -34,7 +37,8 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract {
         }
     }
 
-    protected function createTableHeader(array $kolumny) {
+    protected function createTableHeader(array $kolumny)
+    {
         $th = '';
         foreach ($kolumny AS $val) {
             $th .= '<th>' . $val['nazwa'] . '</th>';
@@ -42,7 +46,8 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract {
         return '<tr><th>Lp</th>' . $th . '<th></th></tr>';
     }
 
-    protected function createTableContent(array $v, array $kolumny) {
+    protected function createTableContent(array $v, array $kolumny)
+    {
         $this->j++;
         $content = '<tr><td>' . $this->j . '</td>';
         foreach ($v AS $key => $val) {
@@ -69,7 +74,8 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract {
         return $content;
     }
 
-    protected function createButtons($kontroler, $id, $params = null) {
+    protected function createButtons($kontroler, $id, $params = null)
+    {
         return '<td>
         <img class="pointer zmien" onclick="document.location = \'/admin/' . $kontroler . '/edit/id/' . $id . '\'" src="' . $this->view->baseUrl() . '/img/admin/zmien.png" alt="Zmień dane" title="Zmień dane" />
         <img class="pointer usun" onclick="document.location = \'/admin/' . $kontroler . '/delete/id/' . $id . '\'" src="' . $this->view->baseUrl() . '/img/admin/usun.png" alt="Usuń" title="Usuń" />

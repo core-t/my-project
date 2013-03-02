@@ -1,6 +1,7 @@
 <?php
 
-class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
+class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
+{
 
     /**
      *
@@ -25,7 +26,8 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param array $params
      * @param type $id
      */
-    public function __construct(Array $params, $id = 0) {
+    public function __construct(Array $params, $id = 0)
+    {
         $this->_id = intval($id);
         $this->_params = $params;
         $this->_db = $this->getDefaultAdapter();
@@ -36,7 +38,8 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param type $dane
      * @return type
      */
-    public function insertElement($dane) {
+    public function insertElement($dane)
+    {
         $this->_db->insert($this->_name, $dane);
         return $this->_db->lastInsertId();
     }
@@ -46,9 +49,10 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param type $dane
      * @return type
      */
-    public function updateElement($dane) {
+    public function updateElement($dane)
+    {
         $where = array(
-            $this->_db->quoteInto($this->_primary . ' = ?', $this->_id)
+            $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id)
         );
 
         $where = $this->addWhere($where);
@@ -60,11 +64,13 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      *
      * @return type
      */
-    protected function getSelect() {
+    protected function getSelect()
+    {
         $select = $this->_db->select()
-                ->from($this->_name);
+            ->from($this->_name);
 
         $select = $this->addSelectWhere($select);
+        $select = $this->addSelectOrder($select);
 
         return $select;
     }
@@ -74,16 +80,18 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param type $id
      * @return type
      */
-    public function getList($id = 0) {
+    public function getList($id = 0)
+    {
         $select = $this->getSelect();
         return $this->_db->fetchAll($select);
     }
 
     /**
      *
-     * @return \Zend_Paginator_Adapter_DbSelect
+     * @return Zend_Paginator_Adapter_DbSelect
      */
-    public function getPagination() {
+    public function getPagination()
+    {
         $select = $this->getSelect();
         return new Zend_Paginator_Adapter_DbSelect($select);
     }
@@ -92,10 +100,11 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      *
      * @return type
      */
-    public function getElement() {
+    public function getElement()
+    {
         $select = $this->_db->select()
-                ->from($this->_name)
-                ->where($this->_name . '.' . $this->_primary . ' = ?', $this->_id);
+            ->from($this->_name)
+            ->where($this->_name . '."' . $this->_primary . '" = ?', $this->_id);
         $select = $this->addJoin($select);
 
         $select = $this->addSelectWhere($select);
@@ -108,11 +117,13 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param type $select
      * @return type
      */
-    public function addJoin($select) {
+    public function addJoin($select)
+    {
         return $select;
     }
 
-    public function addSelectWhere($select) {
+    public function addSelectWhere($select)
+    {
         if (isset($this->_params['controller']) && $this->_params['controller']) {
             $select->where($this->_name . '.controller = ?', $this->_params['controller']);
         }
@@ -123,7 +134,13 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
         return $select;
     }
 
-    public function addWhere($where) {
+    protected function addSelectOrder($select)
+    {
+        return $select;
+    }
+
+    public function addWhere($where)
+    {
         if (isset($this->_params['controller']) && $this->_params['controller']) {
             $where[] = $this->_db->quoteInto('controller = ?', $this->_params['controller']);
         }
@@ -138,9 +155,10 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      *
      * @return type
      */
-    public function deleteElement() {
+    public function deleteElement()
+    {
         $where = array(
-            $this->_db->quoteInto($this->_primary . ' = ?', $this->_id)
+            $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_id)
         );
 
         $where = $this->addWhere($where);
@@ -152,7 +170,8 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      *
      * @return type
      */
-    public function getColumns() {
+    public function getColumns()
+    {
         return $this->_columns;
     }
 
@@ -161,11 +180,11 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param array $post
      * @return array
      */
-    public function prepareData(Array $post) {
+    public function prepareData(Array $post)
+    {
         $data = array();
 
-        for ($i = 0; $i < count($this->_columns); $i++)
-        {
+        for ($i = 0; $i < count($this->_columns); $i++) {
             $column = key($this->_columns);
 
             if (isset($post[$column])) {
@@ -185,7 +204,8 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract {
      * @param type $data
      * @return type
      */
-    public function addDataForInsert($data) {
+    public function addDataForInsert($data)
+    {
         if (isset($this->_params['controller']) && $this->_params['controller']) {
             $data['controller'] = $this->_params['controller'];
         }
