@@ -22,7 +22,7 @@ class LoginController extends Zend_Controller_Action
                 $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
                 if ($playerId) {
                     $this->_namespace->player = $modelPlayer->getPlayer($playerId);
-                    $this->_redirect('/index');
+                    $this->_redirect($this->view->url(array('controller' => 'index')));
                 } else {
                     $this->view->form->setDescription($this->view->translate('Incorrect login or password!'));
                 }
@@ -34,7 +34,7 @@ class LoginController extends Zend_Controller_Action
     {
         // action body
         Zend_Session::destroy(true);
-        $this->_redirect('/login');
+        $this->_redirect($this->view->url(array('controller' => 'login', 'action' => null)));
     }
 
     public function registrationAction()
@@ -55,7 +55,7 @@ class LoginController extends Zend_Controller_Action
                     $modelHero = new Application_Model_Hero($playerId);
                     $modelHero->createHero();
                     $this->_namespace->player = $modelPlayer->getPlayer($playerId);
-                    $this->_redirect('/index');
+                    $this->_redirect($this->view->url(array('controller' => 'index', 'action' => null)));
                 }
             }
         }

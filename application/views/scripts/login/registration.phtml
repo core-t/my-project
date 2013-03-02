@@ -1,5 +1,6 @@
 <?php echo $this->form; ?>
-<br /><br />
+<br/><br/>
 <div id="view-content">
-    <p><a href="/login" class="button">Login</a></p>
+    <p><a href="<?php echo $this->url(array('controller' => 'login', 'action' => null));?>"
+          class="button"><?php echo $this->translate('Sign in');?></a></p>
 </div>

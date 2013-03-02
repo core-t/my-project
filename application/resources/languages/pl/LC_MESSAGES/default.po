@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-02 15:52+0100\n"
-"PO-Revision-Date: 2013-03-02 15:53+0100\n"
+"POT-Creation-Date: 2013-03-02 16:40+0100\n"
+"PO-Revision-Date: 2013-03-02 16:40+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -19,35 +19,35 @@ msgstr ""
 "X-Poedit-SearchPath-2: library/Coret\n"
 "X-Poedit-SearchPath-3: library/Cli\n"
 
-#: application/views/helpers/Logout.php:6
+#: application/views/helpers/Logout.php:8
 msgid "Logout"
 msgstr "Wyloguj"
 
-#: application/views/helpers/MainMenu.php:10
+#: application/views/helpers/MainMenu.php:14
 msgid "Home"
 msgstr ""
 
-#: application/views/helpers/MainMenu.php:13
+#: application/views/helpers/MainMenu.php:17
 msgid "New game"
 msgstr "Nowa gra"
 
-#: application/views/helpers/MainMenu.php:16
+#: application/views/helpers/MainMenu.php:20
 msgid "Load game"
 msgstr "Wczytaj grę"
 
-#: application/views/helpers/MainMenu.php:19
+#: application/views/helpers/MainMenu.php:23
 msgid "Hero"
 msgstr "Bohater"
 
-#: application/views/helpers/MainMenu.php:22
+#: application/views/helpers/MainMenu.php:26
 msgid "Stats"
 msgstr "Statystyki"
 
-#: application/views/helpers/MainMenu.php:25
+#: application/views/helpers/MainMenu.php:29
 msgid "Map editor"
 msgstr "Edytor map"
 
-#: application/views/helpers/MainMenu.php:28
+#: application/views/helpers/MainMenu.php:32
 msgid "Market"
 msgstr "Market"
 
@@ -56,12 +56,38 @@ msgid "Version"
 msgstr "Wersja"
 
 #: application/forms/Auth.php:10
-msgid "Login"
-msgstr "Login"
+#: application/forms/Registration.php:26
+msgid "Email"
+msgstr "E-mail"
 
 #: application/forms/Auth.php:15
+#: application/forms/Registration.php:41
 msgid "Password"
 msgstr "Hasło"
+
+#: application/forms/Auth.php:19
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: application/forms/Registration.php:12
+msgid "First name"
+msgstr "Imię"
+
+#: application/forms/Registration.php:19
+msgid "Last name"
+msgstr "Nazwisko"
+
+#: application/forms/Registration.php:47
+msgid "Repeat password"
+msgstr "Powtórz hasło"
+
+#: application/forms/Registration.php:55
+msgid "Register"
+msgstr "Rejestracja"
+
+#: application/controllers/LoginController.php:27
+msgid "Incorrect login or password!"
+msgstr "Nieprawidłowy e-mail lub hasło!"
 
 #: library/Coret/View/Helper/Language.php:15
 #: library/Coret/View/Helper/Language.php:28
@@ -100,13 +126,21 @@ msgstr ""
 msgid "Tak"
 msgstr ""
 
+#: application/views/scripts/pagination_control.phtml:6
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: application/views/scripts/pagination_control.phtml:9
+msgid "Next"
+msgstr "Następna"
+
 #: application/views/scripts/load/index.phtml:1
 msgid "Select which game you want to load"
 msgstr "Wybierz, którą grę chcesz wczytać"
 
 #: application/views/scripts/load/index.phtml:4
 msgid "Game master"
-msgstr ""
+msgstr "Mistrz gry"
 
 #: application/views/scripts/load/index.phtml:5
 msgid "Your color"
@@ -128,3 +162,5 @@ msgstr "Gracze"
 msgid "Start date"
 msgstr "Data rozpoczęcia"
 
+#~ msgid "Login"
+#~ msgstr "Login"

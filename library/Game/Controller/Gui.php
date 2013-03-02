@@ -8,7 +8,7 @@ abstract class Game_Controller_Gui extends Game_Controller_Action
         parent::init();
 
         if (empty($this->_namespace->player['playerId'])) {
-            $this->_redirect('/login');
+            $this->_redirect($this->view->url(array('controller' => 'login')));
         }
 
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css?v=' . Zend_Registry::get('config')->version);

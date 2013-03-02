@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-02 15:52+0100\n"
-"PO-Revision-Date: 2013-03-02 15:53+0100\n"
+"POT-Creation-Date: 2013-03-02 16:05+0100\n"
+"PO-Revision-Date: 2013-03-02 16:06+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -56,11 +56,37 @@ msgid "Version"
 msgstr ""
 
 #: application/forms/Auth.php:10
-msgid "Login"
+#: application/forms/Registration.php:26
+msgid "Email"
 msgstr ""
 
 #: application/forms/Auth.php:15
+#: application/forms/Registration.php:41
 msgid "Password"
+msgstr ""
+
+#: application/forms/Auth.php:19
+msgid "Sign in"
+msgstr ""
+
+#: application/forms/Registration.php:12
+msgid "First name"
+msgstr ""
+
+#: application/forms/Registration.php:19
+msgid "Last name"
+msgstr ""
+
+#: application/forms/Registration.php:47
+msgid "Repeat password"
+msgstr ""
+
+#: application/forms/Registration.php:55
+msgid "Register"
+msgstr ""
+
+#: application/controllers/LoginController.php:27
+msgid "Incorrect login or password!"
 msgstr ""
 
 #: library/Coret/View/Helper/Language.php:15

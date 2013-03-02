@@ -5,7 +5,7 @@ class Application_Form_Auth extends Zend_Form {
     public function init() {
         /* Form Elements & Other Definitions Here ... */
         $this->setMethod('post');
-        $this->setAction('/login');
+
         $this->addElement('text', 'login', array(
             'label' => $this->getView()->translate('Email'),
             'required' => true,

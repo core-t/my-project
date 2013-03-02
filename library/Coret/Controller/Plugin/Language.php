@@ -11,14 +11,14 @@ class Coret_Controller_Plugin_Language extends Zend_Controller_Plugin_Abstract
             APPLICATION_PATH . "/resources/languages/",
             null,
             array('scan' => Zend_Translate::LOCALE_DIRECTORY));
-        
-//        $translate = Zend_Registry::get('Zend_Translate');
 
         if (!$translate->isAvailable($lang)) {
             $lang = 'en';
         }
 
         $translate->setLocale($lang);
+
+        Zend_Registry::set('Zend_Translate', $translate);
 
         Zend_Registry::set('lang', $lang);
 

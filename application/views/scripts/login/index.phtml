@@ -5,10 +5,11 @@ if ($this->active) {
     echo 'Wciąż jesteś zalogowany w innej przeglądarce!<br>Jakoś zrobie wylogowanie tamtego za potrwierdzeniem.';
 }
 ?>
-<br /><br />
+<br/><br/>
 <div id="view-content">
     <p>
-        <a href="/login/registration" class="button">Register</a>
+        <a href="<?php echo $this->url(array('action' => 'registration')) ?>"
+           class="button"><?php echo $this->translate('Register')?></a>
         <!--<a href="http://apps.facebook.com/testcore-t">Facebook</a>-->
     </p>
 </div>
