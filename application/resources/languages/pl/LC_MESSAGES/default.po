@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-02 19:35+0100\n"
-"PO-Revision-Date: 2013-03-02 19:58+0100\n"
+"POT-Creation-Date: 2013-03-03 13:42+0100\n"
+"PO-Revision-Date: 2013-03-03 13:50+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -56,14 +56,12 @@ msgid "Version"
 msgstr "Wersja"
 
 #: application/forms/Creategame.php:12
-#, fuzzy
 msgid "Select number of players"
-msgstr "Ilość graczy"
+msgstr "Wybierz ilość graczy"
 
 #: application/forms/Creategame.php:22
-#, fuzzy
 msgid "Create game"
-msgstr "Nowa gra"
+msgstr "Utwórz grę"
 
 #: application/forms/Auth.php:10
 #: application/forms/Registration.php:26
@@ -145,40 +143,36 @@ msgid "Next"
 msgstr "Następna"
 
 #: application/views/scripts/new/index.phtml:2
-#, fuzzy
 msgid "Create new game"
-msgstr "Nowa gra"
+msgstr "Utwórz nową grę"
 
 #: application/views/scripts/new/index.phtml:5
 msgid "Join one of the games listed below"
-msgstr ""
+msgstr "Dołącz do jednej z gier z listy poniżej"
 
 #: application/views/scripts/new/index.phtml:14
 msgid "Refresh"
-msgstr ""
+msgstr "Odświerz"
 
 #: application/views/scripts/new/index.phtml:18
 msgid "Game master"
 msgstr "Mistrz gry"
 
 #: application/views/scripts/new/index.phtml:18
-#, fuzzy
 msgid "Current number of players"
-msgstr "Ilość graczy"
+msgstr "Aktualna ilość graczy"
 
 #: application/views/scripts/new/index.phtml:18
-#, fuzzy
 msgid "Max number of players"
-msgstr "Ilość graczy"
+msgstr "Max ilość graczy"
 
 #: application/views/scripts/new/index.phtml:18
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: application/views/scripts/gamesetup/index.phtml:2
-#, fuzzy
 msgid "Maximum number of players"
-msgstr "Ilość graczy"
+msgstr "Maksymalna ilość graczy"
 
 #: application/views/scripts/gamesetup/index.phtml:3
 msgid "Players"
@@ -186,20 +180,19 @@ msgstr "Gracze"
 
 #: application/views/scripts/gamesetup/index.phtml:5
 msgid "Player name & color"
-msgstr ""
+msgstr "Nazwa i kolor gracza"
 
 #: application/views/scripts/gamesetup/index.phtml:6
-#, fuzzy
 msgid "Select your color"
-msgstr "Twój kolor"
+msgstr "Wybierz swój kolor"
 
 #: application/views/scripts/gamesetup/index.phtml:7
 msgid "Human/AI"
-msgstr ""
+msgstr "Człowiek/SI"
 
 #: application/views/scripts/gamesetup/index.phtml:19
 msgid "The list of people who have not chosen their color"
-msgstr ""
+msgstr "Lista osób, które nie wybrały koloru"
 
 #: application/views/scripts/load/index.phtml:1
 msgid "Select which game you want to load"
@@ -220,6 +213,82 @@ msgstr "Ilość graczy"
 #: application/views/scripts/load/index.phtml:9
 msgid "Start date"
 msgstr "Data rozpoczęcia"
+
+#: application/layouts/scripts/game.phtml:16
+msgid "Quit game"
+msgstr "Opuść grę"
+
+#: application/layouts/scripts/game.phtml:27
+msgid "Terrain"
+msgstr "Teren"
+
+#: application/layouts/scripts/game.phtml:31
+msgid "Income"
+msgstr "Przychód"
+
+#: application/layouts/scripts/game.phtml:35
+msgid "Costs"
+msgstr "Koszty"
+
+#: application/layouts/scripts/game.phtml:39
+msgid "Treasure"
+msgstr "Skarbiec"
+
+#: application/layouts/scripts/game.phtml:76
+msgid "Next turn"
+msgstr "Następna tura"
+
+#: application/layouts/scripts/game.phtml:80
+msgid "Name"
+msgstr "Nazwa"
+
+#: application/layouts/scripts/game.phtml:83
+msgid "Moves"
+msgstr "Ruchy"
+
+#: application/layouts/scripts/game.phtml:85
+msgid "Attack"
+msgstr "Atak"
+
+#: application/layouts/scripts/game.phtml:87
+msgid "Defense"
+msgstr "Obrona"
+
+#: application/layouts/scripts/game.phtml:94
+msgid "Disband army"
+msgstr "Rozwiąż armię"
+
+#: application/layouts/scripts/game.phtml:97
+msgid "Split army"
+msgstr "Podziel amię"
+
+#: application/layouts/scripts/game.phtml:100
+msgid "Army status"
+msgstr "Status armii"
+
+#: application/layouts/scripts/game.phtml:104
+msgid "Search ruins"
+msgstr "Przeszukaj ruiny"
+
+#: application/layouts/scripts/game.phtml:107
+msgid "Fortify army"
+msgstr "Fortyfikuj armię"
+
+#: application/layouts/scripts/game.phtml:111
+msgid "Skip in this turn"
+msgstr "Pomiń w tej turze"
+
+#: application/layouts/scripts/game.phtml:115
+msgid "Unselect army"
+msgstr "Odznacz armię"
+
+#: application/layouts/scripts/game.phtml:119
+msgid "Find next army"
+msgstr "Znajdź następną"
+
+#: application/layouts/scripts/game.phtml:132
+msgid "Chat"
+msgstr "Czat"
 
 #~ msgid "Login"
 #~ msgstr "Login"

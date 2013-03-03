@@ -13,7 +13,7 @@
     <div id="menuTop">
         <?php echo $this->placeholder('version') ?>
         <?php echo $this->placeholder('logout') ?>
-        <a href="/<?php echo Zend_Registry::get('lang') ?>/index">Quit game</a>
+        <a href="/<?php echo Zend_Registry::get('lang') ?>/index"><?php echo $this->translate('Quit game')?></a>
     </div>
     <div id="game">
         <!-- ZOOM WINDOW -->
@@ -24,18 +24,19 @@
                     <img id="map" src="/img/game/board.png" width="218px">
                 </div>
             </div>
-            <div id="terrain"> Terrain: <span id="coord" class="font-yellow"></span></div>
+            <div id="terrain"> <?php echo $this->translate('Terrain')?>: <span id="coord" class="font-yellow"></span>
+            </div>
             <div id="goldBox">
                 <div class="left">
-                    <div>Income</div>
+                    <div><?php echo $this->translate('Income')?></div>
                     <div class="text-right font-yellow" id="income">0</div>
                 </div>
                 <div class="left">
-                    <div>Costs</div>
+                    <div><?php echo $this->translate('Costs')?></div>
                     <div class="text-right font-yellow" id="costs">0</div>
                 </div>
                 <div class="left">
-                    <div>Treasure</div>
+                    <div><?php echo $this->translate('Treasure')?></div>
                     <div class="text-right font-yellow" id="gold">0</div>
                 </div>
             </div>
@@ -45,7 +46,7 @@
                 <div id="second" class="nr yellow">2</div>
                 <div id="third" class="nr green">3</div>
                 <div id="fourth" class="nr red">4</div>
-                <div id="playersLabel">Players</div>
+                <div id="playersLabel"><?php echo $this->translate('Players')?></div>
                 <div class="playersBox">
                     <div class="left white">
                         <div class="color">
@@ -71,41 +72,51 @@
                     </div>
                 </div>
                 <div id="turnBox">
-                    <div class="right"><a id="nextTurn" class="button">Next turn &raquo;</a></div>
+                    <div class="right"><a id="nextTurn"
+                                          class="button"><?php echo $this->translate('Next turn')?> &raquo;</a></div>
                 </div>
             </div>
             <div id="armyBox">
-                <div id="nameBox">Name: <span id="name" class="font-yellow"></span></div>
+                <div id="nameBox"><?php echo $this->translate('Name')?>: <span id="name" class="font-yellow"></span>
+                </div>
                 <div id="attrBox">
-                    <div class="left">Moves: <span id="moves" class="font-yellow"></span></div>
-                    <div class="left">Attack: <span id="attack" class="font-yellow"></span></div>
-                    <div class="left">Defense: <span id="defense" class="font-yellow"></span></div>
+                    <div class="left"><?php echo $this->translate('Moves')?>: <span id="moves"
+                                                                                    class="font-yellow"></span></div>
+                    <div class="left"><?php echo $this->translate('Attack')?>: <span id="attack"
+                                                                                     class="font-yellow"></span></div>
+                    <div class="left"><?php echo $this->translate('Defense')?>: <span id="defense"
+                                                                                      class="font-yellow"></span></div>
                 </div>
                 <div id="armyButtonsBox">
                     <div class="armyButtons">
                         <div class="left armyButton">
-                            <a id="disbandArmy" class="button buttonOff">Disband army</a>
+                            <a id="disbandArmy"
+                               class="button buttonOff"><?php echo $this->translate('Disband army')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="splitArmy" class="button buttonOff">Split army</a>
+                            <a id="splitArmy" class="button buttonOff"><?php echo $this->translate('Split army')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="armyStatus" class="button buttonOff">Army status</a>
+                            <a id="armyStatus" class="button buttonOff"><?php echo $this->translate('Army status')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="searchRuins" class="button buttonOff">Search ruins</a>
+                            <a id="searchRuins"
+                               class="button buttonOff"><?php echo $this->translate('Search ruins')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="quitArmy" class="button buttonOff">Fortify army</a>
+                            <a id="quitArmy" class="button buttonOff"><?php echo $this->translate('Fortify army')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="skipArmy" class="button buttonOff">Skip in this turn</a>
+                            <a id="skipArmy"
+                               class="button buttonOff"><?php echo $this->translate('Skip in this turn')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="unselectArmy" class="button buttonOff">Unselect army</a>
+                            <a id="unselectArmy"
+                               class="button buttonOff"><?php echo $this->translate('Unselect army')?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="nextArmy" class="button buttonOff">Find next army &raquo;</a>
+                            <a id="nextArmy"
+                               class="button buttonOff"><?php echo $this->translate('Find next army')?> &raquo;</a>
                         </div>
                     </div>
                 </div>
@@ -118,7 +129,7 @@
                 </div>
                 <div class="send">
                     <div class="left"><input type="text" name="msg" id="msg"></div>
-                    <div class="right"><a id="send" class="button">Chat</a></div>
+                    <div class="right"><a id="send" class="button"><?php echo $this->translate('Chat')?></a></div>
                 </div>
             </div>
         </div>

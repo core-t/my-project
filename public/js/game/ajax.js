@@ -13,7 +13,7 @@ function setProductionA(castleId) {
         return;
     }
 
-    $.getJSON('/production/set/castleId/'+castleId+'/unitId/'+unitId, function(result) {
+    $.getJSON('/en/production/set/castleId/'+castleId+'/unitId/'+unitId, function(result) {
         if(result.set) {
             if(unitId == -1){
                 $('#castle'+castleId).html('');
@@ -28,5 +28,5 @@ function setProductionA(castleId) {
 }
 
 function addTowerA(towerId){
-    $.getJSON('/tower/add/tid/'+towerId+'/c/'+turn.color)
+    $.getJSON('/en/tower/add/tid/'+towerId+'/c/'+turn.color)
 }
