@@ -1,28 +1,28 @@
-Image1= new Image(27,32);
+Image1 = new Image(27, 32);
 Image1.src = '../img/game/cursor_attack.png';
-Image2= new Image(14,46);
+Image2 = new Image(14, 46);
 Image2.src = '../img/game/cursor_castle.png';
-Image3= new Image(25,26);
+Image3 = new Image(25, 26);
 Image3.src = '../img/game/cursor_select.png';
-Image4= new Image(9,20);
+Image4 = new Image(9, 20);
 Image4.src = '../img/game/cursor.png';
 
 
-Image12= new Image(33,18);
+Image12 = new Image(33, 18);
 Image12.src = '../img/game/cursor_arrow_e.png';
-Image13= new Image(18,34);
+Image13 = new Image(18, 34);
 Image13.src = '../img/game/cursor_arrow_n.png';
-Image14= new Image(18,34);
+Image14 = new Image(18, 34);
 Image14.src = '../img/game/cursor_arrow_s.png';
-Image15= new Image(33,18);
+Image15 = new Image(33, 18);
 Image15.src = '../img/game/cursor_arrow_w.png';
-Image16= new Image(28,28);
+Image16 = new Image(28, 28);
 Image16.src = '../img/game/cursor_arrow_ne.png';
-Image17= new Image(28,28);
+Image17 = new Image(28, 28);
 Image17.src = '../img/game/cursor_arrow_nw.png';
-Image18= new Image(28,28);
+Image18 = new Image(28, 28);
 Image18.src = '../img/game/cursor_arrow_se.png';
-Image19= new Image(28,28);
+Image19 = new Image(28, 28);
 Image19.src = '../img/game/cursor_arrow_sw.png';
 
 var newX = 0;
@@ -66,34 +66,15 @@ var messageLeft;
 var documentWidth;
 var documentHeigh;
 
-$(document).ready(function() {
-    documentWidth = $(document).width();
-    documentHeigh = $(document).height() - 21;
-    $('.zoomWindow').css('height',documentHeigh+'px');
-
-    messageLeft = documentWidth / 2 - 160;
-
-    var left = documentWidth - 252;
-    var top = documentHeigh - 153;
-    $('#chatBox').css({
-        'left':left+'px',
-        'top':top+'px'
-    });
-    var goldBoxLeft = left/2;
-    $('#goldBox').css({
-        'left':goldBoxLeft+'px'
-    });
-    $('#playersBox').css({
-        'left':left+'px'
-    });
-    $('#armyBox').css({
-        'left':left+'px'
+$(document).ready(function () {
+    $(window).resize(function() {
+        adjustGui();
     });
 
+    adjustGui();
     fieldsCopy();
     unitsReformat();
     prepareButtons();
-    zoomer = new zoom(documentWidth, documentHeigh);
     startWebSocket();
 });
 

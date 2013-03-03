@@ -147,7 +147,7 @@ function updatePlayers(color) {
     players[color].active = 2;
 }
 
-function setlock() {
+function setLock() {
     lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
@@ -370,5 +370,33 @@ function unitsReformat() {
         units[i]['f'] = units[i].modMovesForest;
         units[i]['s'] = units[i].modMovesSwamp;
         units[i]['m'] = units[i].modMovesHills;
+    }
+}
+
+function adjustGui() {
+    documentWidth = $(document).width();
+    documentHeigh = $(document).height() - 21;
+    $('.zoomWindow').css('height', documentHeigh + 'px');
+
+    messageLeft = documentWidth / 2 - 160;
+
+    var left = documentWidth - 252;
+    var top = documentHeigh - 153;
+    $('#chatBox').css({
+        'left':left + 'px',
+        'top':top + 'px'
+    });
+    var goldBoxLeft = left / 2;
+    $('#goldBox').css({
+        'left':goldBoxLeft + 'px'
+    });
+    $('#playersBox').css({
+        'left':left + 'px'
+    });
+    $('#armyBox').css({
+        'left':left + 'px'
+    });
+    if (!zoomer) {
+        zoomer = new zoom(documentWidth, documentHeigh);
     }
 }

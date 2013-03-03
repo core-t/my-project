@@ -298,7 +298,7 @@ function wsArmyMove(movesSpend) {
         return;
     }
 
-    setlock();
+    setLock();
 
     var token = {
         type:'move',
