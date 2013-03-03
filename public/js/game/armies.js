@@ -325,6 +325,10 @@ function enemyArmyMouse(army) {
         });
 }
 
+function setParentArmy(army) {
+    parentArmy = army;
+}
+
 function selectArmy(a) {
     castlesAddCursorWhenSelectedArmy();
     armiesAddCursorWhenSelectedArmy();
