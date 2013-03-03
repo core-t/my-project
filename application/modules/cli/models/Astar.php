@@ -71,18 +71,17 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         $this->nr++;
         if ($this->nr > 30000) {
             $this->nr--;
-//            throw new Exception(Zend_Debug::dump($this->close));
             throw new Exception('>' + $this->nr);
         }
         $key = $this->findSmallestF();
         $x = $this->open[$key]['x'];
         $y = $this->open[$key]['y'];
         $this->close[$key] = $this->open[$key];
-        unset($this->open[$key]);
-        $this->addOpen($x, $y);
         if ($x == $this->destX && $y == $this->destY) {
             return true;
         }
+        unset($this->open[$key]);
+        $this->addOpen($x, $y);
         if (!$this->isNotEmpty()) {
             return null;
 //            throw new Exception('Nie znalazłem ścieżki');
@@ -133,6 +132,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         $endY = $y + 1;
         for ($i = $startX; $i <= $endX; $i++) {
             for ($j = $startY; $j <= $endY; $j++) {
+
                 if ($x == $i && $y == $j) {
                     continue;
                 }
@@ -158,7 +158,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
                 $g = $this->terrainCosts[$terrainType];
 
                 // jeżeli koszt ruchu większy od 99 to pomiń to pole
-                if ($g > 99) {
+                if ($g > 6) {
                     continue;
                 }
 
@@ -187,7 +187,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param int $g
      * @param string $key
      */
-    private function calculatePath($kA, $g, $key)
+    private
+    function calculatePath($kA, $g, $key)
     {
         if ($this->open[$key]['G'] > ($g + $this->close[$kA]['G'])) {
             $this->open[$key]['parent'] = array(
@@ -207,7 +208,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param type $parent
      * @return type
      */
-    private function node($x, $y, $g, $parent, $terrainType)
+    private
+    function node($x, $y, $g, $parent, $terrainType)
     {
         $h = $this->calculateH($x, $y);
         return array(
@@ -228,7 +230,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param type $moves
      * @return int
      */
-    public function getPath($key)
+    public
+    function getPath($key)
     {
         if (!isset($this->close[$key])) {
             new Coret_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');

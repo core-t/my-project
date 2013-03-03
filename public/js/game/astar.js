@@ -135,25 +135,21 @@ function showPath(close, key, moves) {
 
 function aStar(close, open, destX, destY, nr) {
     nr++;
+    if (nr > 30000) {
+        nr--;
+        console.log('>' + nr);
+        return;
+    }
     var f = findSmallestF(open);
     var x = open[f].x;
     var y = open[f].y;
     close[f] = open[f];
+    if (x == destX && y == destY) {
+        return;
+    }
     delete open[f];
     addOpen(x, y, close, open, destX, destY);
-    if (x == destX && y == destY) {
-        //        console.log(nr + ' bingo!');
-        return;
-    }
     if (!isNotEmpty(open)) {
-        //        console.log('dupa!');
-        return;
-    }
-    if (nr > 30000) {
-        //        console.log(open);
-        //        console.log(close);
-        nr--;
-        console.log('>' + nr);
         return;
     }
     aStar(close, open, destX, destY, nr);
@@ -173,6 +169,8 @@ function findSmallestF(open) {
     var i;
     var f;
     for (i in open) {
+        pX = open[i].x * 40;
+        pY = open[i].y * 40;
         if (typeof open[f] == 'undefined') {
             f = i;
         }
@@ -189,41 +187,44 @@ function addOpen(x, y, close, open, destX, destY) {
     var endX = x + 1;
     var endY = y + 1;
     var i, j = 0;
+
     for (i = startX; i <= endX; i++) {
         for (j = startY; j <= endY; j++) {
-            var key = i + '_' + j;
+
             if (x == i && y == j) {
                 continue;
             }
+
+            var key = i + '_' + j;
+
             if (typeof close[key] != 'undefined' && close[key].x == i && close[key].y == j) {
                 continue;
             }
-            if (typeof fields[j] == 'undefined') {
+
+            if (typeof fields[j] == 'undefined' || typeof fields[j][i] == 'undefined') {
                 continue;
             }
-            if (typeof fields[j][i] == 'undefined') {
-                continue;
-            }
+
             var type = fields[j][i];
-//            console.log(type);
+
             if (type == 'e') {
                 continue;
             }
             var g = selectedArmy.terrainCosts[type];
-//            console.log(g);
+
             if (g > 6) {
                 continue;
             }
             if (typeof open[key] != 'undefined') {
                 calculatePath(x + '_' + y, open, close, g, key);
-                continue;
+            } else {
+                var parent = {
+                    'x':x,
+                    'y':y
+                };
+                g += close[x + '_' + y].G;
+                open[key] = new node(i, j, destX, destY, g, parent, type);
             }
-            var parent = {
-                'x':x,
-                'y':y
-            };
-            g += close[x + '_' + y].G;
-            open[key] = new node(i, j, destX, destY, g, parent, type);
         }
     }
 }
@@ -240,25 +241,7 @@ function calculatePath(kA, open, close, g, key) {
 }
 
 function calculateH(x, y, destX, destY) {
-    var h = 0;
-    var xLengthPoints = x - destX;
-    var yLengthPoints = y - destY;
-    if (xLengthPoints < yLengthPoints) {
-        for (i = 1; i <= xLengthPoints; i++) {
-            h++;
-        }
-        for (i = 1; i <= (yLengthPoints - xLengthPoints); i++) {
-            h++;
-        }
-    } else {
-        for (i = 1; i <= yLengthPoints; i++) {
-            h++;
-        }
-        for (i = 1; i <= (xLengthPoints - yLengthPoints); i++) {
-            h++;
-        }
-    }
-    return h;
+    return Math.sqrt(Math.pow(destX - x, 2) + Math.pow(y - destY, 2))
 }
 
 function node(x, y, destX, destY, g, parent, tt) {
@@ -270,8 +253,3 @@ function node(x, y, destX, destY, g, parent, tt) {
     this.parent = parent;
     this.tt = tt;
 }
-
-function getVectorLength(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y1 - y2, 2))
-}
-

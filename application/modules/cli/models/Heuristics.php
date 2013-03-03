@@ -29,29 +29,30 @@ class Cli_Model_Heuristics {
      * @return int
      */
     public function calculateH($x, $y) {
-        $h = 0;
-        $xLengthPoints = abs($x - $this->destX);
-        $yLengthPoints = abs($y - $this->destY);
-        if ($xLengthPoints < $yLengthPoints) {
-            for ($i = 1; $i <= $xLengthPoints; $i++)
-            {
-                $h++;
-            }
-            for ($i = 1; $i <= ($yLengthPoints - $xLengthPoints); $i++)
-            {
-                $h++;
-            }
-        } else {
-            for ($i = 1; $i <= $yLengthPoints; $i++)
-            {
-                $h++;
-            }
-            for ($i = 1; $i <= ($xLengthPoints - $yLengthPoints); $i++)
-            {
-                $h++;
-            }
-        }
-        return $h;
+//        $h = 0;
+//        $xLengthPoints = abs($x - $this->destX);
+//        $yLengthPoints = abs($y - $this->destY);
+//        if ($xLengthPoints < $yLengthPoints) {
+//            for ($i = 1; $i <= $xLengthPoints; $i++)
+//            {
+//                $h++;
+//            }
+//            for ($i = 1; $i <= ($yLengthPoints - $xLengthPoints); $i++)
+//            {
+//                $h++;
+//            }
+//        } else {
+//            for ($i = 1; $i <= $yLengthPoints; $i++)
+//            {
+//                $h++;
+//            }
+//            for ($i = 1; $i <= ($xLengthPoints - $yLengthPoints); $i++)
+//            {
+//                $h++;
+//            }
+//        }
+//        return $h;
+        return sqrt(pow($this->destX - $x, 2) + pow($y - $this->destY, 2));
     }
 
 }
