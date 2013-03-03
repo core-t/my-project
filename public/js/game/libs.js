@@ -398,5 +398,7 @@ function adjustGui() {
     });
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
+    }else{
+        zoomer.lens.setdimensions(documentWidth, documentHeigh);
     }
 }

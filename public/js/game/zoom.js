@@ -2,8 +2,8 @@ function zoom(zoomWidth, zoomHeight) {
     var el = $('#game');
     var obj = this;
     var settings = {
-        zoomWidth: zoomWidth,
-        zoomHeight: zoomHeight
+        zoomWidth:zoomWidth,
+        zoomHeight:zoomHeight
     };
     largeimageloaded = false; //tell us if large image is loaded
     el.scale = {};
@@ -11,10 +11,11 @@ function zoom(zoomWidth, zoomHeight) {
     el.mouseDown = false;
     var smallimage = new Smallimage();
     var lens = new Lens();
+    this.lens = lens;
     var largeimage = new Largeimage();
 
     $.extend(obj, {
-        init: function () {
+        init:function () {
             //drag option
             $(".zoomPad", el).mousedown(function () {
                 el.mouseDown = true;
@@ -39,9 +40,9 @@ function zoom(zoomWidth, zoomHeight) {
             $(".zoomPad", el).bind('mousemove', function (e) {
 
                 //prevent fast mouse mevements not to fire the mouseout event
-                if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
-                    return false;
-                }
+//                if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
+//                    return false;
+//                }
 
                 if (!$('.zoomWindow', el).is(':visible')) {
                     obj.activate(e);
@@ -52,19 +53,19 @@ function zoom(zoomWidth, zoomHeight) {
             });
             largeimage.loadimage();
         },
-        load: function () {
+        load:function () {
             largeimage.loadimage();
         },
-        activate: function (e) {
+        activate:function (e) {
             //show lens and zoomWindow
             lens.show();
         }
     });
     /*========================================================,
-|   Smallimage
-|---------------------------------------------------------:
-|   Base image into the anchor element
-`========================================================*/
+     |   Smallimage
+     |---------------------------------------------------------:
+     |   Base image into the anchor element
+     `========================================================*/
 
     function Smallimage() {
         var $obj = this;
@@ -123,17 +124,25 @@ function zoom(zoomWidth, zoomHeight) {
     };
 
     /*========================================================,
-|   Lens
-|---------------------------------------------------------:
-|   Lens over the image
-`========================================================*/
+     |   Lens
+     |---------------------------------------------------------:
+     |   Lens over the image
+     `========================================================*/
 
     function Lens() {
         var $obj = this;
         this.node = $('.zoomPup');
-        this.setdimensions = function () {
-            this.node.w = (parseInt((settings.zoomWidth) / el.scale.x) > smallimage.w ) ? smallimage.w : (parseInt(settings.zoomWidth / el.scale.x));
-            this.node.h = (parseInt((settings.zoomHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(settings.zoomHeight / el.scale.y));
+        this.setdimensions = function (width, hidth) {
+            if (width && hidth) {
+                var zoomWidth = width;
+                var zoomHeight = hidth;
+            } else {
+                var zoomWidth = settings.zoomWidth;
+                var zoomHeight = settings.zoomHeight;
+            }
+
+            this.node.w = (parseInt((zoomWidth) / el.scale.x) > smallimage.w ) ? smallimage.w : (parseInt(zoomWidth / el.scale.x));
+            this.node.h = (parseInt((zoomHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(zoomHeight / el.scale.y));
             this.node.css({
                 'width':this.node.w,
                 'height':this.node.h
@@ -142,26 +151,25 @@ function zoom(zoomWidth, zoomHeight) {
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
         };
         this.setcenter = function (x, y) {
-            //            console.log(el);
 //            console.log(x);
 //            console.log(y);
-            this.node.top = parseInt((parseInt(y) - settings.zoomHeight/2)/20);
+            this.node.top = parseInt((parseInt(y) - settings.zoomHeight / 2) / el.scale.y);
 //            console.log(this.node.top);
-            this.node.left = parseInt((parseInt(x) - settings.zoomWidth/2)/20);
+            this.node.left = parseInt((parseInt(x) - settings.zoomWidth / 2) / el.scale.x);
 //            console.log(this.node.left);
-            if(this.node.top > 103){
-                this.node.top = 103;
-            }else if(this.node.top < -1){
+            if (this.node.top > smallimage.h) {
+                this.node.top = smallimage.h;
+            } else if (this.node.top < -1) {
                 this.node.top = -1;
             }
-            if(this.node.left > 134){
-                this.node.left = 134;
-            }else if(this.node.left < -1){
+            if (this.node.left > smallimage.w + this.node.w) {
+                this.node.left = smallimage.w + this.node.w;
+            } else if (this.node.left < -1) {
                 this.node.left = -1;
             }
             this.node.css({
-                top: this.node.top,
-                left: this.node.left
+                top:this.node.top,
+                left:this.node.left
             });
             largeimage.setposition();
         };
@@ -204,8 +212,8 @@ function zoom(zoomWidth, zoomHeight) {
             this.node.left = lensleft;
             this.node.top = lenstop;
             this.node.css({
-                'left': lensleft + 'px',
-                'top': lenstop + 'px'
+                'left':lensleft + 'px',
+                'top':lenstop + 'px'
             });
             largeimage.setposition();
         };
@@ -221,23 +229,16 @@ function zoom(zoomWidth, zoomHeight) {
         return this;
     };
     /*========================================================,
-|   LargeImage
-|---------------------------------------------------------:
-|   The large detailed image
-`========================================================*/
+     |   LargeImage
+     |---------------------------------------------------------:
+     |   The large detailed image
+     `========================================================*/
 
     function Largeimage() {
         var $obj = this;
         this.node = $('#board');
         $obj.scale = {};
         this.loadimage = function () {
-            this.node.css({
-                position:'absolute',
-                border: '0px',
-                display: 'block',
-                left: '-5000px',
-                top: '0px'
-            });
             $obj.w = this.node.width();
             $obj.h = this.node.height();
             $obj.pos = this.node.offset();
@@ -249,26 +250,29 @@ function zoom(zoomWidth, zoomHeight) {
             $obj.scale.y = ($obj.h / smallimage.h);
             el.scale = $obj.scale;
             //setting lens dimensions;
-            lens.setdimensions();
+            lens.setdimensions(0, 0);
             lens.show();
-            //             lens.setcenter(settings.zoomPupX, settings.zoomPupY);
+            this.node.bind('mousedown', function (e) {
+                if (!selectedArmy) {
+                    var x = e.pageX - parseInt(largeimage.node.css('left'));
+                    var y = e.pageY - parseInt(largeimage.node.css('top'));
+                    lens.setcenter(x, y);
+                }
+            });
             largeimageloaded = true;
         };
         this.setposition = function () {
             var left = -el.scale.x * (lens.getoffset().left - smallimage.bleft + 1);
             var top = -el.scale.y * (lens.getoffset().top - smallimage.btop + 1);
-            //            this.node.animate({
-            //                left: left + 'px',
-            //                top: top + 'px'
-            //            },300);
             this.node.css({
-                'left': left + 'px',
-                'top': top + 'px'
+                'left':left + 'px',
+                'top':top + 'px'
             });
         };
         return this;
     }
-    this.lensSetCenter = function(wi, hi) {
+
+    this.lensSetCenter = function (wi, hi) {
         lens.setcenter(wi, hi);
     };
 }
