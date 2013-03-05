@@ -61,7 +61,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     static public function isPlayerCastle($gameId, $castleId, $playerId, $db)
     {
         $select = $db->select()
-            ->from('castle', 'castleId')
+            ->from('castlesingame', 'castleId')
             ->where('razed = false')
             ->where('"gameId" = ?', $gameId)
             ->where('"playerId" = ?', $playerId)
@@ -692,7 +692,7 @@ Brak y');
             'gameId' => $gameId
         );
         try {
-            return $db->insert('castle', $data);
+            return $db->insert('castlesingame', $data);
         } catch (Exception $e) {
             echo($e);
         }
@@ -701,7 +701,7 @@ Brak y');
     static public function getCastleDefenseModifier($gameId, $castleId, $db)
     {
         $select = $db->select()
-            ->from('castle', 'defenseMod')
+            ->from('castlesingame', 'defenseMod')
             ->where('"gameId" = ?', $gameId)
             ->where('"castleId" = ?', $castleId);
         try {
@@ -730,7 +730,7 @@ Brak y');
     {
 
         $select = $db->select()
-            ->from('castle', 'castleId')
+            ->from('castlesingame', 'castleId')
             ->where('razed = false')
             ->where('"gameId" = ?', $gameId)
             ->where('"playerId" != ?', $playerId)
@@ -846,7 +846,7 @@ Brak y');
             'production' => null,
             'productionTurn' => 0,
         );
-        return self::update('castle', $data, $where, $db);
+        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function armyRemoveHero($gameId, $heroId, $db)
@@ -875,7 +875,7 @@ Brak y');
             'production' => null,
             'productionTurn' => 0,
         );
-        return self::update('castle', $data, $where, $db);
+        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function getPlayerInGameGold($gameId, $playerId, $db)
@@ -907,7 +907,7 @@ Brak y');
     static public function getCastle($gameId, $castleId, $db)
     {
         $select = $db->select()
-            ->from('castle')
+            ->from('castlesingame')
             ->where('"gameId" = ?', $gameId)
             ->where('"castleId" = ?', $castleId);
         try {
@@ -929,7 +929,7 @@ Brak y');
         $data = array(
             'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
         );
-        return self::update('castle', $data, $where, $db);
+        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db)
@@ -1600,7 +1600,7 @@ Brak y');
     {
         $playersCastles = array();
         $select = $db->select()
-            ->from('castle', array('castleId', 'production', 'productionTurn', 'defenseMod'))
+            ->from('castlesingame', array('castleId', 'production', 'productionTurn', 'defenseMod'))
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $gameId)
             ->where('razed = false');
@@ -1619,7 +1619,7 @@ Brak y');
     static public function getPlayerCastlesIds($gameId, $playerId, $db)
     {
         $select = $db->select()
-            ->from('castle', 'castleId')
+            ->from('castlesingame', 'castleId')
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $gameId)
             ->where('razed = false');
@@ -1636,7 +1636,7 @@ Brak y');
 
         $castles = array();
         $select = $db->select()
-            ->from('castle')
+            ->from('castlesingame')
             ->where('"gameId" = ?', $gameId);
         try {
             foreach ($db->query($select)->fetchAll() as $val) {
@@ -1652,7 +1652,7 @@ Brak y');
     static public function getCastleProduction($gameId, $castleId, $playerId, $db)
     {
         $select = $db->select()
-            ->from('castle', array('production', 'productionTurn'))
+            ->from('castlesingame', array('production', 'productionTurn'))
             ->where('"gameId" = ?', $gameId)
             ->where('"castleId" = ?', $castleId)
             ->where('"playerId" = ?', $playerId);
@@ -1676,7 +1676,7 @@ Brak y');
             'production' => $unitId,
             'productionTurn' => 0
         );
-        return self::update('castle', $data, $where, $db);
+        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function resetProductionTurn($gameId, $castleId, $playerId, $db)
@@ -1690,14 +1690,14 @@ Brak y');
         $data = array(
             'productionTurn' => 0
         );
-        return self::update('castle', $data, $where, $db);
+        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function enemiesCastlesExist($gameId, $playerId, $db)
     {
 
         $select = $db->select()
-            ->from('castle', 'castleId')
+            ->from('castlesingame', 'castleId')
             ->where('"playerId" != ?', $playerId)
             ->where('"gameId" = ?', $gameId)
             ->where('razed = false');
@@ -1738,7 +1738,7 @@ Brak y');
 
         $castles = array();
         $select = $db->select()
-            ->from('castle')
+            ->from('castlesingame')
             ->where('"gameId" = ?', $gameId)
             ->where('razed = true');
         try {
@@ -1907,7 +1907,7 @@ Brak y');
     {
 
         $select = $db->select()
-            ->from('castle', 'castleId')
+            ->from('castlesingame', 'castleId')
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $gameId)
             ->where('razed = false');
@@ -1996,7 +1996,7 @@ Brak y');
         $data = array(
             'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
         );
-        return self::update('castle', $data, $where, $db, true);
+        return self::update('castlesingame', $data, $where, $db, true);
     }
 
     static public function setPlayerLostGame($gameId, $playerId, $db)
@@ -2034,7 +2034,7 @@ Brak y');
     {
 
         $select = $db->select()
-            ->from('castle', 'playerId')
+            ->from('castlesingame', 'playerId')
             ->where('"gameId" = ?', $gameId)
             ->where('"castleId" = ?', $castleId);
         try {

@@ -35,12 +35,29 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
 
     /**
      *
+     * @param $post
+     * @return type
+     */
+    public function handleElement($post)
+    {
+        $dane = $this->prepareData($post);
+
+        if ($post['id']) {
+            return $this->updateElement($dane);
+        } else {
+            return $this->insertElement($dane);
+        }
+    }
+
+    /**
+     *
      * @param type $dane
      * @return type
      */
     public function insertElement($dane)
     {
         $this->_db->insert($this->_name, $dane);
+
         return $this->_db->lastInsertId();
     }
 
@@ -83,6 +100,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function getList($id = 0)
     {
         $select = $this->getSelect();
+
         return $this->_db->fetchAll($select);
     }
 
@@ -93,6 +111,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function getPagination()
     {
         $select = $this->getSelect();
+
         return new Zend_Paginator_Adapter_DbSelect($select);
     }
 
@@ -131,6 +150,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         if (isset($this->_params['action']) && $this->_params['action']) {
             $select->where($this->_name . '.action = ?', $this->_params['action']);
         }
+
         return $select;
     }
 
@@ -148,6 +168,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         if (isset($this->_params['action']) && $this->_params['action']) {
             $where[] = $this->_db->quoteInto('action = ?', $this->_params['action']);
         }
+
         return $where;
     }
 
@@ -213,8 +234,13 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         if (isset($this->_params['action']) && $this->_params['action']) {
             $data['action'] = $this->_params['action'];
         }
+
         return $data;
     }
 
+    public function getPrimary()
+    {
+        return $this->_primary;
+    }
 }
 

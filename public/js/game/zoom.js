@@ -267,17 +267,11 @@ function zoom(zoomWidth, zoomHeight) {
                     lens.setcenter((centerPageX + (pageX - e.pageX)) - left, (centerPageY + (pageY - e.pageY)) - top);
                 });
             });
+
             this.node.mouseup(function () {
                 $obj.node.unbind('mousemove');
             });
 
-//            this.node.bind('mousedown', function (e) {
-//                if (!selectedArmy) {
-//                    var x = e.pageX - parseInt(largeimage.node.css('left'));
-//                    var y = e.pageY - parseInt(largeimage.node.css('top'));
-//                    lens.setcenter(x, y);
-//                }
-//            });
             largeimageloaded = true;
         };
         this.setposition = function () {

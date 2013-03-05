@@ -23,9 +23,11 @@ class Admin_Model_Player extends Coret_Model_ParentDb
 
         if ($post['id']) {
             $dane['password'] = md5($dane['password']);
+
             return $this->updateElement($dane);
         } else {
             $dane['password'] = md5($dane['password']);
+
             return $this->insertElement($dane);
         }
     }
@@ -34,18 +36,16 @@ class Admin_Model_Player extends Coret_Model_ParentDb
     {
         $select = parent::addSelectWhere($select);
         $select->where($this->_name . '.computer = false');
+
         return $select;
     }
 
     protected function addSelectOrder($select)
     {
         $select = parent::addSelectOrder($select);
+
         return $select->order($this->_primary);
     }
 
-    public function getPrimary()
-    {
-        return $this->_primary;
-    }
 }
 
