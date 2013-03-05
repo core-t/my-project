@@ -252,13 +252,32 @@ function zoom(zoomWidth, zoomHeight) {
             //setting lens dimensions;
             lens.setdimensions(0, 0);
             lens.show();
-            this.node.bind('mousedown', function (e) {
-                if (!selectedArmy) {
-                    var x = e.pageX - parseInt(largeimage.node.css('left'));
-                    var y = e.pageY - parseInt(largeimage.node.css('top'));
-                    lens.setcenter(x, y);
-                }
+
+            this.node.mousedown(function (e) {
+                var pageX = e.pageX;
+                var pageY = e.pageY;
+
+                var left = parseInt(largeimage.node.css('left'));
+                var top = parseInt(largeimage.node.css('top'));
+
+                var centerPageX = settings.zoomWidth / 2;
+                var centerPageY = settings.zoomHeight / 2;
+
+                $obj.node.mousemove(function (e) {
+                    lens.setcenter((centerPageX + (pageX - e.pageX)) - left, (centerPageY + (pageY - e.pageY)) - top);
+                });
             });
+            this.node.mouseup(function () {
+                $obj.node.unbind('mousemove');
+            });
+
+//            this.node.bind('mousedown', function (e) {
+//                if (!selectedArmy) {
+//                    var x = e.pageX - parseInt(largeimage.node.css('left'));
+//                    var y = e.pageY - parseInt(largeimage.node.css('top'));
+//                    lens.setcenter(x, y);
+//                }
+//            });
             largeimageloaded = true;
         };
         this.setposition = function () {
