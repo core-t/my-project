@@ -272,6 +272,10 @@ function zoom(zoomWidth, zoomHeight) {
                 $obj.node.unbind('mousemove');
             });
 
+            this.node.mouseleave(function () {
+                $obj.node.unbind('mousemove');
+            });
+
             largeimageloaded = true;
         };
         this.setposition = function () {

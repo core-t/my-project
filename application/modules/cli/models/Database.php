@@ -21,6 +21,7 @@ class Cli_Model_Database
             $updateResult = $db->update($name, $data, $where);
         } catch (Exception $e) {
             echo($e);
+
             return;
         }
         switch ($updateResult) {
@@ -83,11 +84,13 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         if (!isset($position['x'])) {
             echo('
 Brak x');
+
             return;
         }
         if (!isset($position['y'])) {
             echo('
 Brak y');
+
             return;
         }
         $select = $db->select()
@@ -108,6 +111,7 @@ Brak y');
 (joinArmiesAtPosition) Brak armii na pozycji: ';
             Coret_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
             print_r($position);
+
             return array(
                 'armyId' => null,
                 'deletedIds' => null,
@@ -124,6 +128,7 @@ Brak y');
             self::soldiersUpdateArmyId($gameId, $result[$i]['armyId'], $firstArmyId, $db);
             self::destroyArmy($gameId, $result[$i]['armyId'], $playerId, $db);
         }
+
         return array(
             'armyId' => $firstArmyId,
             'deletedIds' => $result
@@ -139,6 +144,7 @@ Brak y');
             $db->quoteInto('"armyId" = ?', $oldArmyId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('heroesingame', $data, $where, $db, true);
     }
 
@@ -168,6 +174,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($selectHeroes->__toString());
+
             return;
         }
 
@@ -207,6 +214,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($selectSoldiers->__toString());
+
             return;
         }
 
@@ -242,6 +250,7 @@ Brak y');
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
+
         return self::update('army', $data, $where, $db);
     }
 
@@ -259,6 +268,7 @@ Brak y');
             foreach ($result as $row) {
                 $fields[$row['y']][$row['x']] = 'e';
             }
+
             return $fields;
         } catch (Exception $e) {
             echo($e);
@@ -280,6 +290,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -307,6 +318,7 @@ Brak y');
                 $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
                 $result['soldiers'] = self::getArmySoldiersForWalk($gameId, $armyId, $db);
                 $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
+
                 return $result;
             }
         } catch (Exception $e) {
@@ -329,12 +341,14 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
         foreach ($result as $k => $row) {
             $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
         }
+
         return $result;
     }
 
@@ -355,6 +369,7 @@ Brak y');
             foreach ($result as $k => $row) {
                 $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
             }
+
             return $result;
         } catch (Exception $e) {
             echo($e);
@@ -437,8 +452,10 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
+
         return count($towers) * 5;
     }
 
@@ -461,6 +478,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -489,6 +507,7 @@ Brak y');
         } elseif ($heroMovesLeft === null) {
             return (int)$soldierMovesLeft;
         }
+
         return 0;
     }
 
@@ -590,6 +609,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -625,6 +645,7 @@ Brak y');
         if ($result['destroyed']) {
             $result['heroes'] = array();
             $result['soldiers'] = array();
+
             return $result;
         }
 
@@ -635,10 +656,12 @@ Brak y');
             $result['destroyed'] = true;
             self::destroyArmy($gameId, $result['armyId'], $result['playerId'], $db);
             unset($result['playerId']);
+
             return $result;
         } else {
             unset($result['playerId']);
             $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $result['armyId'], $db);
+
             return $result;
         }
     }
@@ -653,6 +676,7 @@ Brak y');
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
+
         return self::update('army', $data, $where, $db);
     }
 
@@ -686,6 +710,21 @@ Brak y');
 
     static public function addCastle($gameId, $castleId, $playerId, $db)
     {
+        $data = array(
+            'castleId' => $castleId,
+            'gameId' => $gameId,
+            'winnerId' => $playerId,
+            'loserId' => 0
+        );
+
+        try {
+            $db->insert('castlesconquered', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
+
         $data = array(
             'castleId' => $castleId,
             'playerId' => $playerId,
@@ -819,6 +858,7 @@ Brak y');
                     $result[$k]['soldiers'] = $soldiers;
                 }
             }
+
             return $result;
         } catch (Exception $e) {
             echo($e);
@@ -830,23 +870,47 @@ Brak y');
     {
         $defenseMod = self::getCastleDefenseModifier($gameId, $castleId, $db);
         $defense = Application_Model_Board::getCastleDefense($castleId) + $defenseMod;
+
+        var_dump('$defenseMod');
         var_dump($defenseMod);
         if ($defense > 1) {
             $defenseMod--;
         }
         var_dump($defenseMod);
 
+        $select = $db->select()
+            ->from('castlesingame', 'playerId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"castleId" = ?', $castleId);
+
+        $data = array(
+            'castleId' => $castleId,
+            'gameId' => $gameId,
+            'winnerId' => $playerId,
+            'loserId' => new Zend_Db_Expr($select->__toString())
+        );
+
+        try {
+            $db->insert('castlesconquered', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId)
         );
+
         $data = array(
             'defenseMod' => $defenseMod,
             'playerId' => $playerId,
             'production' => null,
             'productionTurn' => 0,
         );
-        return self::update('castlesingame', $data, $where, $db);
+
+        self::update('castlesingame', $data, $where, $db);
     }
 
     static public function armyRemoveHero($gameId, $heroId, $db)
@@ -859,11 +923,25 @@ Brak y');
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId),
         );
+
         return self::update('heroesingame', $data, $where, $db);
     }
 
     static public function razeCastle($gameId, $castleId, $playerId, $db)
     {
+        $data = array(
+            'castleId' => $castleId,
+            'gameId' => $gameId,
+            'playerId' => $playerId
+        );
+
+        try {
+            $db->insert('castlesdestoyed', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -875,6 +953,7 @@ Brak y');
             'production' => null,
             'productionTurn' => 0,
         );
+
         return self::update('castlesingame', $data, $where, $db);
     }
 
@@ -901,6 +980,7 @@ Brak y');
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
+
         return self::update('playersingame', $data, $where, $db);
     }
 
@@ -929,6 +1009,7 @@ Brak y');
         $data = array(
             'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
         );
+
         return self::update('castlesingame', $data, $where, $db);
     }
 
@@ -947,6 +1028,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -959,6 +1041,7 @@ Brak y');
         if ($ids) {
             $heroes = self::getArmyHeroesForBattle($gameId, $ids, $db);
             $soldiers = self::getArmySoldiersForBattle($gameId, $ids, $db);
+
             return array(
                 'heroes' => $heroes,
                 'soldiers' => $soldiers,
@@ -995,6 +1078,7 @@ Brak y');
             if (!$ids) {
                 return;
             }
+
             return self::getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db);
         } catch (Exception $e) {
             echo($e);
@@ -1040,6 +1124,7 @@ Brak y');
                     $result[$k]['soldiers'] = $soldiers;
                 }
             }
+
             return $result;
         } catch (Exception $e) {
             echo($e);
@@ -1080,6 +1165,7 @@ Brak y');
 
         if ($heroId != self::getHeroIdByPlayerId($gameId, $playerId, $db)) {
             echo('HeroId jest inny');
+
             return;
         }
         $data = array(
@@ -1090,6 +1176,7 @@ Brak y');
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('heroesingame', $data, $where, $db);
     }
 
@@ -1209,15 +1296,18 @@ Brak y');
         );
         try {
             $db->insert('army', $data);
+
             return $armyId;
         } catch (Exception $e) {
             if ($sleep > 10) {
                 echo($e);
+
                 return;
             }
             sleep(rand(0, $sleep));
             $armyId = self::createArmy($gameId, $db, $position, $playerId, $sleep + 1);
         }
+
         return $armyId;
     }
 
@@ -1244,6 +1334,7 @@ Brak y');
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('heroesingame', $data, $where, $db);
     }
 
@@ -1256,6 +1347,7 @@ Brak y');
             $db->quoteInto('"soldierId" = ?', $soldierId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('soldier', $data, $where, $db);
     }
 
@@ -1290,6 +1382,7 @@ Brak y');
                 'gameId' => $gameId,
                 'heroId' => $heroId
             );
+
             return $db->insert('heroesingame', $data);
         } catch (Exception $e) {
             echo($e);
@@ -1324,6 +1417,7 @@ Brak y');
             $armyId = self::createArmy($gameId, $db, $position, $playerId);
         }
         self::addHeroToArmy($gameId, $armyId, $heroId, 0, $db);
+
         return $armyId;
     }
 
@@ -1358,6 +1452,7 @@ Brak y');
             $db->quoteInto('"heroId" = ?', $heroId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('heroesingame', $data, $where, $db);
     }
 
@@ -1495,6 +1590,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -1533,6 +1629,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -1568,6 +1665,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
 
@@ -1578,6 +1676,7 @@ Brak y');
                 self::destroyArmy($gameId, $army['armyId'], $playerId, $db);
             }
             $army['movesLeft'] = self::calculateArmyMovesLeft($gameId, $army['armyId'], $db);
+
             return $army;
         }
     }
@@ -1609,6 +1708,7 @@ Brak y');
             foreach ($result as $val) {
                 $playersCastles[$val['castleId']] = $val;
             }
+
             return $playersCastles;
         } catch (Exception $e) {
             echo($e);
@@ -1642,6 +1742,7 @@ Brak y');
             foreach ($db->query($select)->fetchAll() as $val) {
                 $castles[$val['castleId']] = $val;
             }
+
             return $castles;
         } catch (Exception $e) {
             echo($e);
@@ -1676,6 +1777,7 @@ Brak y');
             'production' => $unitId,
             'productionTurn' => 0
         );
+
         return self::update('castlesingame', $data, $where, $db);
     }
 
@@ -1690,6 +1792,7 @@ Brak y');
         $data = array(
             'productionTurn' => 0
         );
+
         return self::update('castlesingame', $data, $where, $db);
     }
 
@@ -1726,6 +1829,7 @@ Brak y');
                     unset($ruins[$row['ruinId']]);
                 }
             }
+
             return $ruins;
         } catch (Exception $e) {
             echo($e);
@@ -1746,6 +1850,7 @@ Brak y');
             foreach ($result as $val) {
                 $castles[$val['castleId']] = $val;
             }
+
             return $castles;
         } catch (Exception $e) {
             echo($e);
@@ -1775,6 +1880,7 @@ Brak y');
                     $armies['army' . $army['armyId']]['movesLeft'] = self::calculateMaxArmyMoves($gameId, $army['armyId'], $db);
                 }
             }
+
             return $armies;
         } catch (Exception $e) {
             echo($e);
@@ -1847,6 +1953,7 @@ Brak y');
 
         if (!isset($nextPlayerColor)) {
             echo('Błąd! Nie znalazłem koloru gracza');
+
             return;
         }
 
@@ -1878,6 +1985,7 @@ Brak y');
 
         if (!isset($nextPlayerId)) {
             echo('Błąd! Nie znalazłem gracza');
+
             return;
         }
 
@@ -1952,6 +2060,7 @@ Brak y');
     {
 
         $where = $db->quoteInto('"gameId" = ?', $gameId);
+
         return self::update('game', $data, $where, $db);
     }
 
@@ -1971,6 +2080,7 @@ Brak y');
             } catch (Exception $e) {
                 echo($e);
                 echo($select->__toString());
+
                 return;
             }
             $data = array(
@@ -1996,6 +2106,7 @@ Brak y');
         $data = array(
             'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
         );
+
         return self::update('castlesingame', $data, $where, $db, true);
     }
 
@@ -2106,6 +2217,7 @@ Brak y');
             $db->quoteInto('"playerId" = ?', $playerId),
             $db->quoteInto('"gameId" = ?', $gameId)
         );
+
         return self::update('playersingame', $data, $where, $db);
     }
 
@@ -2190,6 +2302,7 @@ Brak y');
                 }
                 $ids .= $row['playerId'];
             }
+
             return $ids;
         } catch (Exception $e) {
             echo($e);
@@ -2202,6 +2315,7 @@ Brak y');
         try {
             $db->insert('player', $data);
             $seq = $db->quoteIdentifier('player_playerId_seq');
+
             return $db->lastSequenceId($seq);
         } catch (Exception $e) {
             echo($e);
@@ -2215,6 +2329,7 @@ Brak y');
             'lastName' => 'Player',
             'computer' => 'true'
         );
+
         return self::createPlayer($data, $db);
     }
 
@@ -2308,6 +2423,7 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
         if ($gameMasterId) {
@@ -2409,6 +2525,7 @@ Brak y');
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId),
         );
+
         return self::update('army', $data, $where, $db);
     }
 
@@ -2421,6 +2538,7 @@ Brak y');
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"playerId" = ?', $playerId),
         );
+
         return self::update('army', $data, $where, $db, true);
     }
 
@@ -2448,12 +2566,14 @@ Brak y');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
             return;
         }
         $units = array();
         foreach ($results as $unit) {
             $units[$unit['unitId']] = $unit;
         }
+
         return $units;
     }
 
