@@ -253,28 +253,65 @@ function zoom(zoomWidth, zoomHeight) {
             lens.setdimensions(0, 0);
             lens.show();
 
-            this.node.mousedown(function (e) {
-                var pageX = e.pageX;
-                var pageY = e.pageY;
+            this.node
+                .mousedown(function (e) {
+                    if (!lock) {
+                        switch (e.which) {
+                            case 1:
+                                if (selectedArmy) {
+                                    wsArmyMove(cursorPosition(e.pageX, e.pageY, 1));
+                                } else {
+                                    var pageX = e.pageX;
+                                    var pageY = e.pageY;
 
-                var left = parseInt(largeimage.node.css('left'));
-                var top = parseInt(largeimage.node.css('top'));
+                                    var left = parseInt(largeimage.node.css('left'));
+                                    var top = parseInt(largeimage.node.css('top'));
 
-                var centerPageX = settings.zoomWidth / 2;
-                var centerPageY = settings.zoomHeight / 2;
+                                    var centerPageX = settings.zoomWidth / 2;
+                                    var centerPageY = settings.zoomHeight / 2;
 
-                $obj.node.mousemove(function (e) {
-                    lens.setcenter((centerPageX + (pageX - e.pageX)) - left, (centerPageY + (pageY - e.pageY)) - top);
+                                    $obj.node.mousemove(function (e) {
+                                        lens.setcenter((centerPageX + (pageX - e.pageX)) - left, (centerPageY + (pageY - e.pageY)) - top);
+                                    });
+                                }
+                                break;
+                            case 2:
+//                        alert('Middle mouse button pressed');
+                                break;
+                            case 3:
+                                if (selectedArmy) {
+                                    unselectArmy();
+                                }
+                                break;
+                            default:
+                                alert('You have a strange mouse');
+                        }
+                    }
+                })
+                .mousemove(function (e) {
+                    if (!lock) {
+                        cursorPosition(e.pageX, e.pageY);
+                    }
+                })
+                .mouseleave(function () {
+                    $('.path').remove();
+                    $obj.node
+                        .unbind('mousemove')
+                        .mousemove(function (e) {
+                            if (!lock) {
+                                cursorPosition(e.pageX, e.pageY);
+                            }
+                        });
+                })
+                .mouseup(function () {
+                    $obj.node
+                        .unbind('mousemove')
+                        .mousemove(function (e) {
+                            if (!lock) {
+                                cursorPosition(e.pageX, e.pageY);
+                            }
+                        });
                 });
-            });
-
-            this.node.mouseup(function () {
-                $obj.node.unbind('mousemove');
-            });
-
-            this.node.mouseleave(function () {
-                $obj.node.unbind('mousemove');
-            });
 
             largeimageloaded = true;
         };

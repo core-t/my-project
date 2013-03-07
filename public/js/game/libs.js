@@ -266,34 +266,8 @@ function notSet(val) {
 
 function prepareButtons() {
     zoomPad = $(".zoomPad");
-    board = $("#board")
-        .mousedown(function (event) {
-            if (!lock) {
-                switch (event.which) {
-                    case 1:
-                        if (selectedArmy) {
-                            wsArmyMove(cursorPosition(event.pageX, event.pageY, 1));
-                        }
-                        break;
-                    case 2:
-                        alert('Middle mouse button pressed');
-                        break;
-                    case 3:
-                        unselectArmy();
-                        break;
-                    default:
-                        alert('You have a strange mouse');
-                }
-            }
-        })
-        .mousemove(function (e) {
-            if (!lock) {
-                cursorPosition(e.pageX, e.pageY);
-            }
-        })
-        .mouseleave(function () {
-            $('.path').remove()
-        });
+    board = $("#board");
+
     $('#send').click(function () {
         wsChat();
     });
@@ -398,7 +372,7 @@ function adjustGui() {
     });
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
-    }else{
+    } else {
         zoomer.lens.setdimensions(documentWidth, documentHeigh);
     }
 }

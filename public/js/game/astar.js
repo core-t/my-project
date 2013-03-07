@@ -51,7 +51,7 @@ function getPath(close, key) {
     return path.reverse();
 }
 
-function showPath(close, key, moves) {
+function showPath(close, key) {
     if (notSet(close[key])) {
         return 0;
     }
