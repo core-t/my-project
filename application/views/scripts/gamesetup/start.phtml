@@ -4,14 +4,14 @@
 
 <script type="text/javascript">
     function refresh() {
-        $.getJSON('/gamesetupajax/allarmiesready', function(result) {
-            if(result.all) {
-                top.location = '/game';
+        $.getJSON('/en/gamesetupajax/allarmiesready', function (result) {
+            if (result.all) {
+                top.location.assign('/<?php echo  Zend_Registry::get('lang') ?>/game');
             }
         });
     }
-    $(document).ready(function() {
-        setInterval ( 'refresh()', 5000 );
+    $(document).ready(function () {
+        setInterval('refresh()', 5000);
     });
 
 </script>
