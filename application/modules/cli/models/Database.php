@@ -887,7 +887,7 @@ Brak y');
             'castleId' => $castleId,
             'gameId' => $gameId,
             'winnerId' => $playerId,
-            'loserId' => new Zend_Db_Expr($select->__toString())
+            'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')
         );
 
         try {
