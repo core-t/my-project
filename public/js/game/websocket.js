@@ -190,7 +190,7 @@ function wsNextTurn() {
     }
 
     var token = {
-        type:'nextTurn'
+        type: 'nextTurn'
     };
 
     ws.send(JSON.stringify(token));
@@ -203,7 +203,7 @@ function wsStartMyTurn() {
     }
 
     var token = {
-        type:'startTurn'
+        type: 'startTurn'
     };
 
     ws.send(JSON.stringify(token));
@@ -220,8 +220,8 @@ function wsCastleBuildDefense() {
         return;
     }
     var token = {
-        type:'castleBuildDefense',
-        castleId:castleId
+        type: 'castleBuildDefense',
+        castleId: castleId
     };
 
     ws.send(JSON.stringify(token));
@@ -238,8 +238,8 @@ function wsRazeCastle() {
         return;
     }
     var token = {
-        type:'razeCastle',
-        castleId:castleId
+        type: 'razeCastle',
+        castleId: castleId
     };
 
     ws.send(JSON.stringify(token));
@@ -258,9 +258,9 @@ function wsHeroResurrection(castleId) {
     unselectArmy();
 
     var token = {
-        type:'heroResurrection',
-        data:{
-            castleId:castleId
+        type: 'heroResurrection',
+        data: {
+            castleId: castleId
         }
     };
 
@@ -301,10 +301,10 @@ function wsArmyMove(movesSpend) {
     setLock();
 
     var token = {
-        type:'move',
-        x:x,
-        y:y,
-        armyId:unselectedArmy.armyId
+        type: 'move',
+        x: x,
+        y: y,
+        armyId: unselectedArmy.armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -337,11 +337,11 @@ function wsSplitArmy(armyId) {
     });
 
     var token = {
-        type:'splitArmy',
-        data:{
-            armyId:armyId,
-            s:s,
-            h:h
+        type: 'splitArmy',
+        data: {
+            armyId: armyId,
+            s: s,
+            h: h
         }
     };
 
@@ -363,11 +363,11 @@ function wsDisbandArmy() {
     unselectArmy(1);
 
     var token = {
-        type:'disbandArmy',
-        data:{
-            armyId:unselectedArmy.armyId,
-            x:unselectedArmy.x,
-            y:unselectedArmy.y
+        type: 'disbandArmy',
+        data: {
+            armyId: unselectedArmy.armyId,
+            x: unselectedArmy.x,
+            y: unselectedArmy.y
         }
     };
 
@@ -386,9 +386,9 @@ function wsJoinArmy(armyId) {
     }
 
     var token = {
-        type:'joinArmy',
-        data:{
-            armyId:armyId
+        type: 'joinArmy',
+        data: {
+            armyId: armyId
         }
     };
 
@@ -402,8 +402,8 @@ function wsFortifyArmy(armyId) {
     }
 
     var token = {
-        type:'fortifyArmy',
-        armyId:armyId
+        type: 'fortifyArmy',
+        armyId: armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -423,9 +423,9 @@ function wsSearchRuins() {
     }
     unselectArmy();
     var token = {
-        type:'ruin',
-        data:{
-            armyId:unselectedArmy.armyId
+        type: 'ruin',
+        data: {
+            armyId: unselectedArmy.armyId
         }
     };
 
@@ -446,7 +446,7 @@ function wsComputer() {
     }
 
     var token = {
-        type:'computer'
+        type: 'computer'
     };
 
     ws.send(JSON.stringify(token));
@@ -464,8 +464,8 @@ function wsChat() {
         $('#msg').val('');
 
         var token = {
-            type:'chat',
-            msg:msg
+            type: 'chat',
+            msg: msg
         };
 
         ws.send(JSON.stringify(token));
@@ -474,10 +474,10 @@ function wsChat() {
 
 function wsOpen() {
     var token = {
-        type:'open',
-        gameId:gameId,
-        playerId:my.id,
-        accessKey:accessKey
+        type: 'open',
+        gameId: gameId,
+        playerId: my.id,
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));

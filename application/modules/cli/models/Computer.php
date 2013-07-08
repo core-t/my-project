@@ -14,7 +14,6 @@ class Cli_Model_Computer {
             $gameHandler->sendError($user, 'To nie komputer!');
             return;
         }
-
         if (!Cli_Model_Database::playerTurnActive($user->parameters['gameId'], $playerId, $db)) {
             $token = Cli_Model_ComputerMainBlocks::startTurn($user->parameters['gameId'], $playerId, $db);
         } else {

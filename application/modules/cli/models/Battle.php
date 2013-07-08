@@ -136,9 +136,11 @@ class Cli_Model_Battle
         }
 
         while ($attackHits AND $defenseHits) {
-            $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];
-            $dieAttacking = $this->rollDie($maxDie);
-            $dieDefending = $this->rollDie($maxDie);
+//            $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];
+//            $dieAttacking = $this->rollDie($maxDie);
+//            $dieDefending = $this->rollDie($maxDie);
+            $dieAttacking = $this->rollDie($unitAttacking['attackPoints']);
+            $dieDefending = $this->rollDie($unitDefending['defensePoints']);
 
             if ($unitAttacking['attackPoints'] > $dieDefending AND $unitDefending['defensePoints'] <= $dieAttacking) {
                 $defenseHits--;

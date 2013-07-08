@@ -187,8 +187,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param int $g
      * @param string $key
      */
-    private
-    function calculatePath($kA, $g, $key)
+    private function calculatePath($kA, $g, $key)
     {
         if ($this->open[$key]['G'] > ($g + $this->close[$kA]['G'])) {
             $this->open[$key]['parent'] = array(
@@ -208,8 +207,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param type $parent
      * @return type
      */
-    private
-    function node($x, $y, $g, $parent, $terrainType)
+    private function node($x, $y, $g, $parent, $terrainType)
     {
         $h = $this->calculateH($x, $y);
         return array(
@@ -230,8 +228,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param type $moves
      * @return int
      */
-    public
-    function getPath($key)
+    public function getPath($key)
     {
         if (!isset($this->close[$key])) {
             new Coret_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
@@ -243,6 +240,27 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
             $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
         }
         $path = array_reverse($path);
+        return $path;
+    }
+
+    /**
+     *
+     *
+     * @param string $key
+     * @param type $moves
+     * @return int
+     */
+    public function getReturnPath($key)
+    {
+        if (!isset($this->close[$key])) {
+            new Coret_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
+            return;
+        }
+        $path = array();
+        while (!empty($this->close[$key]['parent'])) {
+            $path[] = $this->close[$key];
+            $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
+        }
         return $path;
     }
 

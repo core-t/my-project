@@ -33,7 +33,8 @@ class Cli_Model_ComputerSubBlocks
 Castle defender: ');
                     print_r($defender);
                     echo('
-castleId: ' . $castleId);
+castleId: ' . $castleId . '
+');
                     Cli_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
                 } else {
                     $result['attackerArmy'] = array(
@@ -214,9 +215,9 @@ castleId: ' . $castleId);
 
                 $move = $mArmy->calculateMovesSpend($aStar->getPath($castlePosition['x'] . '_' . $castlePosition['y']));
                 if ($move['currentPosition']['x'] == $castlePosition['x'] && $move['currentPosition']['y'] == $castlePosition['y']) {
-//                    $enemy['aStar'] = $aStar;
-//                    $enemy['key'] = $castlePosition['x'] . '_' . $castlePosition['y'];
-//                    $enemy['movesToSpend'] = $movesToSpend + 2;
+                    $enemy['aStar'] = $aStar;
+                    $enemy['key'] = $castlePosition['x'] . '_' . $castlePosition['y'];
+                    $enemy['currentPosition'] = $move['currentPosition'];
                     $enemiesHaveRange[] = $enemy;
                 }
             }

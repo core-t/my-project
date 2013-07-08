@@ -83,14 +83,14 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
     {
         if (!isset($position['x'])) {
             echo('
-Brak x');
-
+Brak x
+');
             return;
         }
         if (!isset($position['y'])) {
             echo('
-Brak y');
-
+Brak y
+');
             return;
         }
         $select = $db->select()
@@ -163,6 +163,10 @@ Brak y');
 
     static public function updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db)
     {
+        if (empty($path)) {
+            return;
+        }
+
         $units = Zend_Registry::get('units');
 
         $selectHeroes = $db->select()
@@ -243,8 +247,12 @@ Brak y');
             self::update('soldier', $data2, $where1, $db);
         }
 
-        $data = end($path);
-        $data ['fortified'] = 'false';
+        $end = end($path);
+        $data = array(
+            'x' => $end['x'],
+            'y' => $end['y'],
+            'fortified' => 'false'
+        );
         $where = array(
             $db->quoteInto('"armyId" = ?', $army['armyId']),
             $db->quoteInto('"gameId" = ?', $gameId),
