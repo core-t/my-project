@@ -456,12 +456,15 @@ function findNextArmy() {
     if (lock) {
         return;
     }
+    unselectArmy();
+
     var reset = true;
     for (i in players[my.color].armies) {
         if (typeof players[my.color].armies[i].armyId == 'undefined') {
             continue;
         }
         if (players[my.color].armies[i].moves == 0) {
+
             continue;
         }
         if ($.inArray(players[my.color].armies[i].armyId, skippedArmies) != -1) {
