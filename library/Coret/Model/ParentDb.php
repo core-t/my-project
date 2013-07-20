@@ -26,13 +26,15 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $params
      * @param int $id
      */
-    public function __construct(Array $params, $id = 0)
+    public function __construct(Array $params = array(), $id = 0)
     {
         $this->_id = intval($id);
         $this->_params = $params;
         $this->_db = $this->getDefaultAdapter();
-        $this->_db->query("SET NAMES 'utf8'");
-        $this->_db->query("set character set 'utf8'");
+        if (Zend_Registry::get('config')->resources->db->adapter == 'pdo_mysql') {
+            $this->_db->query("SET NAMES 'utf8'");
+            $this->_db->query("set character set 'utf8'");
+        }
     }
 
     public function create()
@@ -55,14 +57,14 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $sql .= 'PRIMARY KEY(`' . $this->_primary . '`),
             UNIQUE KEY `' . $this->_primary . '` (`' . $this->_primary . '`)
             ) ENGINE = MyISAM DEFAULT CHARSET = utf8 AUTO_INCREMENT = 1';
-        $stmt = $this->_db->query($sql);
+        $this->_db->query($sql);
     }
 
     /**
      * @param $post
      * @return bool|mixed|type
      */
-    public function handleElement($post)
+    public function save($post)
     {
         $dane = $this->prepareData($post);
         if (isset($post['id']) && $post['id']) {
@@ -184,7 +186,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return mixed
      */
-    protected function getSelect(array $columns, array $columns_lang)
+    protected function getSelect($order, array $columns, array $columns_lang)
     {
         $select = $this->_db->select();
 
@@ -198,7 +200,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $select = $this->addSelectWhereLang($select);
         $select = $this->addSelectWhere($select);
         $select = $this->addGroup($select);
-        $select = $this->addOrder($select);
+        $select = $this->addOrder($order, $select);
 
         return $select;
     }
@@ -207,9 +209,9 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return array
      */
-    public function getList(array $columns = array(), array $columns_lang = array())
+    public function getList($order, array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($columns, $columns_lang);
+        $select = $this->getSelect($order, $columns, $columns_lang);
         return $this->_db->fetchAll($select);
     }
 
@@ -217,9 +219,9 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return Zend_Paginator_Adapter_DbSelect
      */
-    public function getPagination(array $columns = array(), array $columns_lang = array())
+    public function getPagination($order, array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($columns, $columns_lang);
+        $select = $this->getSelect($order, $columns, $columns_lang);
         return new Zend_Paginator_Adapter_DbSelect($select);
     }
 
@@ -233,7 +235,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         }
         $select = $this->_db->select()
             ->from($this->_name)
-            ->where($this->_name . ' . ' . $this->_primary . ' = ?', $id);
+            ->where($this->_name . ' . "' . $this->_primary . '" = ?', $id);
 
         $select = $this->addSelectWhereLang($select);
         $select = $this->addSelectWhere($select);
@@ -334,8 +336,14 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param $select
      * @return mixed
      */
-    protected function addOrder($select)
+    protected function addOrder($order, $select)
     {
+        if ($order) {
+            $select->order($order);
+        } elseif (isset($this->_order) && $this->_order) {
+            $select->order($this->_order);
+        }
+
         return $select;
     }
 
@@ -359,7 +367,11 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      */
     protected function prepareData(Array $post)
     {
-        $data = array();
+        $namespace = new Zend_Session_Namespace();
+        $data = array(
+            'data' => new Zend_Db_Expr('now()'),
+            'id_administrator' => $namespace->id
+        );
         $data_lang = array();
         $data_img = array();
 
@@ -367,7 +379,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
             $column = key($this->_columns);
 
             if (isset($post[$column])) {
-                if (isset($this->_columns[$column]['db']) && !$this->_columns[$column]['db']) {
+                if (isset($this->_columns[$column]['active']['db']) && !$this->_columns[$column]['active']['db']) {
                     next($this->_columns);
                     continue;
                 }

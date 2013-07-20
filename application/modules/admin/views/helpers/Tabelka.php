@@ -71,7 +71,7 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
                 case 'checkbox':
                     $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::bool($val) . '</td>';
                     break;
-                case 'data':
+                case 'date':
                     $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::date($val) . '</td>';
                     break;
                 default:

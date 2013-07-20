@@ -1,13 +1,15 @@
 html {
     background: #E2ECF5;
 }
+
 body {
     background: #E2ECF5;
     color: #3E4146;
     font-size: 11px;
     font-family: Verdana, Arial, Helvetica, Sans-Serif;
-    margin:0px;
+    margin: 0px;
 }
+
 #page {
     background: #fff;
     margin: 0 auto;
@@ -16,26 +18,31 @@ body {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
-a,a:visited,a:active {
-    color:#184F9C;
-    text-decoration:none;
+
+a, a:visited, a:active {
+    color: #184F9C;
+    text-decoration: none;
 }
+
 a:hover {
-    color:blue;
-    text-decoration:underline;
+    color: blue;
+    text-decoration: underline;
 }
+
 h1 a, h1 a:visited, h1 a:active {
     color: white;
     text-shadow: 1px 1px black;
 }
+
 h1 a:hover {
     color: yellow;
-    text-decoration:none;
+    text-decoration: none;
     /*text-shadow: none;*/
     /*text-shadow: 1px 1px white;*/
 }
+
 #header {
-    width:auto;
+    width: auto;
     background: #3E4146;
     border-bottom: 1px solid white;
     box-shadow: 2px 2px 15px #3E4146;
@@ -43,163 +50,191 @@ h1 a:hover {
 
 #mainmenu {
     margin: 0 auto;
-    margin-bottom:1px;
-    height:38px;
-    width:998px;
+    margin-bottom: 1px;
+    height: 38px;
+    width: 998px;
 }
+
 #mainmenu h1 {
-    font-size:22px;
-    float:left;
-    color:#C92E00;
-    margin:0px;
-    padding-top:4px;
+    font-size: 22px;
+    float: left;
+    color: #C92E00;
+    margin: 0px;
+    padding-top: 4px;
 }
+
 #mainmenu ul {
     list-style-type: none;
-    padding-left:10px;
-    margin:0;
-    float:right;
+    padding-left: 10px;
+    margin: 0;
+    float: right;
 }
+
 #mainmenu ul li {
-    float:left;
+    float: left;
 }
+
 #mainmenu ul li a {
-    color:#F1E300;
-    font-size:13px;
-    font-weight:bold;
-    text-decoration:none;
-    line-height:38px;
-    padding:0 17px;
-    text-align:center;
-    display:block;
+    color: #F1E300;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 38px;
+    padding: 0 17px;
+    text-align: center;
+    display: block;
 }
+
 #mainmenu ul li a:hover {
-    color:#5D6166;
-    background:#F0F0EE;
+    color: #5D6166;
+    background: #F0F0EE;
 }
+
 #mainmenu ul li a.active {
-    color:#3E4146;
-    background:#EBF0C3;
+    color: #3E4146;
+    background: #EBF0C3;
 }
+
 #mainmenu ul li a.active:hover {
-    color:#CB121C;
+    color: #CB121C;
 }
 
 #center {
     margin: 0 auto;
-    min-height:500px;
-    padding:10px;
+    min-height: 500px;
+    padding: 10px;
 }
+
 #footer {
     padding: 10px;
-    text-align:center;
-    font-style:italic;
-    color:#CB121C;
+    text-align: center;
+    font-style: italic;
+    color: #CB121C;
     border-top: 1px solid #e8e8e8;
 }
 
 .errors {
-    color:#CB121C;
-    line-height:14px;
+    color: #CB121C;
+    line-height: 14px;
 }
 
-
 table#main td {
-    width:150px;
-    height:150px;
-    border:1px solid #C92E00;
-    text-align:center;
-    padding:15px;
-    border-radius:15px;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #C92E00;
+    text-align: center;
+    padding: 15px;
+    border-radius: 15px;
     box-shadow: 2px 2px 15px #000;
     background: #eee;
     cursor: pointer;
 }
+
 table#main td:hover {
     box-shadow: 2px 2px 15px #f00;
     background: #fff;
 }
+
 table#main td a:hover {
     text-decoration: none;
 }
+
 table#list {
     margin: 0 auto;
 }
+
 table#list td {
-    border:1px solid #cdcdcd;
-    padding:3px;
+    border: 1px solid #cdcdcd;
+    padding: 3px;
     height: 26px;
 }
+
 table#list tr:last-child td:first-child {
-    border-bottom-left-radius:5px;
+    border-bottom-left-radius: 5px;
 }
+
 table#list tr:last-child td:last-child {
-    border-bottom-right-radius:5px;
+    border-bottom-right-radius: 5px;
 }
+
 .pointer table#list td:hover {
     background: #eee;
 }
+
 table#list .active td {
     background: #ccc;
 }
+
 table#list th {
     border: 1px solid #B2BBC9;
-    padding:3px;
+    padding: 3px;
     background: #ddd;
     color: #3E4146;
     height: 13px;
 }
+
 table#list th:first-child {
-    border-top-left-radius:5px;
+    border-top-left-radius: 5px;
 }
+
 table#list th:last-child {
-    border-top-right-radius:5px;
+    border-top-right-radius: 5px;
 }
+
 .pointer {
     cursor: pointer;
 }
+
 td.pointer img {
-    border:none;
+    border: none;
 }
+
 div.dodaj img {
-    float:left;
-    padding-left:10px;
+    float: left;
+    padding-left: 10px;
     padding-top: 4px;
 }
+
 div.dodaj a {
-    float:left;
+    float: left;
 }
+
 div.dodaj {
-    clear:both;
-    height:30px;
+    clear: both;
+    height: 30px;
     width: 120px;
-    padding:10px 0;
+    padding: 10px 0;
 }
 
 div#numerHasloJednorazowe {
-    float:left;
-    width:20px;
-    text-align:right;
-    padding-right:3px;
+    float: left;
+    width: 20px;
+    text-align: right;
+    padding-right: 3px;
 }
+
 div#hasloJednorazowe {
-    float:left;
-    border:1px solid #dedede;
+    float: left;
+    border: 1px solid #dedede;
 }
+
 #pageTitle {
-    text-align:right;
+    text-align: right;
     background: #ddd;
     border-bottom: 1px solid #ccc;
     border-top: 1px solid #ccc;
+    margin-bottom: 10px;
 }
+
 #pageTitle h1 {
     padding-right: 15px;
 }
+
 input {
-    border-radius:5px;
+    border-radius: 5px;
 }
 
-.button, input#submit {
+.button, input[type="submit"] {
     border: 2px solid #DDD;
     padding: 7px 16px 7px;
     border-radius: 4px;
@@ -210,9 +245,10 @@ input {
     text-shadow: 0;
     cursor: pointer;
     display: inline-block;
+    background: white;
 }
 
-.button:hover, input#submit:hover {
+.button:hover, input[type="submit"]:hover {
     border: 2px solid #aaa;
     color: #000;
     background: white;
@@ -228,20 +264,24 @@ input#submit {
 input#nrb {
     width: 300px;
 }
+
 form {
     padding: 10px 10px 5px 10px;
     margin: 10px auto;
-    width: 600px;
+    width: 732px;
     border: 1px solid #ddd;
-    border-radius:15px;
+    border-radius: 15px;
     background: #E2ECF5;
 }
+
 .left {
     float: left;
 }
+
 .right {
     float: right;
 }
+
 .nourl {
     cursor: default;
 }
@@ -250,11 +290,13 @@ form {
     margin: 0 auto;
     width: 600px;
 }
+
 #klientMenu {
     height: 18px;
     margin-top: 14px;
     margin-left: 14px;
 }
+
 #klientMenu a {
     padding: 7px;
     margin-right: 1px;

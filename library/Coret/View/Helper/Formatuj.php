@@ -15,8 +15,12 @@ class Coret_View_Helper_Formatuj extends Zend_View_Helper_Abstract
 
     static public function date($data, $format = null)
     {
-        if ($format)
+        if (!$data) {
+            return;
+        }
+        if ($format) {
             return date($format, strtotime($data));
+        }
         if ($data) {
             return date('Y-m-d H:i:s', strtotime($data));
         }

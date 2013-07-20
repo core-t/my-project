@@ -4,7 +4,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
 {
 
     public $params = array();
-    protected $itemCountPerPage = 25;
+    protected $itemCountPerPage = 10;
 
     public function init()
     {
@@ -82,7 +82,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $this->view->kolumny = $m->getColumnsAll();
         $this->view->primary = $m->getPrimary();
 
-        $this->view->paginator = new Zend_Paginator($m->getPagination());
+        $this->view->paginator = new Zend_Paginator($m->getPagination($this->_request->getParam('order')));
         $this->view->paginator->setCurrentPageNumber($this->_request->getParam('page'));
         $this->view->paginator->setItemCountPerPage($this->itemCountPerPage);
     }
@@ -102,7 +102,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         if ($this->_request->isPost()) {
             if ($this->view->form->isValid($this->_request->getPost())) {
                 try {
-                    $model->handleElement($this->view->form->getValues());
+                    $model->save($this->view->form->getValues());
                     $this->_redirect($this->view->url());
                 } catch (Exception $e) {
                     echo $e->getMessage();
@@ -167,7 +167,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
 
         if ($this->view->form->isValid($this->_request->getPost())) {
             try {
-                $model->handleElement($this->view->form->getValues());
+                $model->save($this->view->form->getValues());
                 $this->_redirect('/admin/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName());
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -208,21 +208,21 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $this->view->form = new Zend_Form();
 
         foreach ($columns as $key => $row) {
-            if (isset($row['aktywny']) && !$row['aktywny']) {
+            if (isset($row['active']['form']) && !$row['active']['form']) {
                 continue;
             }
             $className = 'Coret_Form_' . ucfirst($row['typ']);
-            $attribs = array('name' => $key);
+            $attributes = array('name' => $key);
             if (isset($row['nazwa'])) {
-                $attribs['label'] = $row['nazwa'];
+                $attributes['label'] = $row['nazwa'];
             }
             if (isset($row['required'])) {
-                $attribs['required'] = $row['required'];
+                $attributes['required'] = $row['required'];
             }
             if (isset($row['validators'])) {
-                $attribs['validators'] = $row['validators'];
+                $attributes['validators'] = $row['validators'];
             }
-            $f = new $className($attribs);
+            $f = new $className($attributes);
             $this->view->form->addElements($f->getElements());
         }
 

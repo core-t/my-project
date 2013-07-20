@@ -14,10 +14,5 @@ class Admin_Model_Castle extends Coret_Model_ParentDb
         'y' => array('nazwa' => 'Y', 'typ' => 'tekst'),
     );
 
-    public function __construct($params, $id = 0)
-    {
-        parent::__construct(array(), $id);
-    }
-
 }
 
