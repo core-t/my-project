@@ -2,6 +2,31 @@ function mElement() {
     return $('#terrain');
 }
 
+function surrenderM() {
+    removeM();
+    mElement().after(
+        $('<div>')
+            .addClass('message')
+            .addClass('center')
+            .append($('<h3>').html('Surrender. Are you sure?'))
+            .append(
+                $('<div>')
+                    .addClass('button go')
+                    .html('Ok')
+                    .click(function () {
+                        removeM();
+                        wsSurrender();
+                    })
+            )
+            .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
+                removeM()
+            }))
+            .css({
+                'left': messageLeft + 'px'
+            })
+    );
+}
+
 function lostM(color) {
     removeM();
 
@@ -36,6 +61,7 @@ function lostM(color) {
 
 function winM(color) {
     removeM();
+    setLock();
 
     var msg;
 
@@ -43,7 +69,7 @@ function winM(color) {
         msg = '<br/>GAME OVER<br/><br/>You won!';
 
     } else {
-        msg = color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
+        msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
     }
 
     mElement().after(
@@ -62,7 +88,6 @@ function winM(color) {
             .css({
                 'left': messageLeft + 'px'
             })
-
     );
 }
 

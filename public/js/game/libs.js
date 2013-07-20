@@ -165,6 +165,9 @@ function unlock() {
 
 function makeMyCursorUnlock() {
     $('body *').css('cursor', 'url(../img/game/cursor.png), auto');
+    $('#chatBox #msg').css('cursor', 'auto');
+    $('.button').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
+    $('#surrender').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
     $('.zoomPup').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
     $('#map').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
     $('.c').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
@@ -174,6 +177,13 @@ function makeMyCursorUnlock() {
 
 function makeMyCursorLock() {
     $('body *').css('cursor', 'url(../img/game/cursor_hourglass.png), wait');
+    $('#chatBox *').css('cursor', 'url(../img/game/cursor.png), auto');
+    $('#chatBox #msg').css('cursor', 'auto');
+    $('#chatBox #send').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
+    $('.zoomPup').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('#map').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('.c').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
 }
 
 function titleBlink(msg) {
@@ -218,10 +228,10 @@ function getISODateTime(d) {
     };
 
     // default date parameter
-    if (typeof d === 'undefined') {
+    if (typeof d === 'undefined' || !d) {
         d = new Date();
     } else {
-        d = new Date(d);
+        d = new Date(d.substr(0, 4), d.substr(5, 2), d.substr(8, 2), d.substr(11, 2), d.substr(14, 2), d.substr(17, 2));
     }
 
     // return ISO datetime
@@ -278,6 +288,9 @@ function prepareButtons() {
     });
     $('#nextTurn').click(function () {
         nextTurnM()
+    });
+    $('#surrender').click(function () {
+        surrenderM()
     });
     $('#nextArmy').click(function () {
         findNextArmy()
@@ -355,20 +368,21 @@ function adjustGui() {
     messageLeft = documentWidth / 2 - 160;
 
     var left = documentWidth - 252;
+    var chatLeft = documentWidth - 500;
     var top = documentHeigh - 153;
     $('#chatBox').css({
-        'left':left + 'px',
-        'top':top + 'px'
+        'left': chatLeft + 'px',
+        'top': top + 'px'
     });
     var goldBoxLeft = left / 2;
     $('#goldBox').css({
-        'left':goldBoxLeft + 'px'
+        'left': goldBoxLeft + 'px'
     });
     $('#playersBox').css({
-        'left':left + 'px'
+        'left': left + 'px'
     });
     $('#armyBox').css({
-        'left':left + 'px'
+        'left': left + 'px'
     });
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);

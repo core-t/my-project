@@ -168,6 +168,14 @@ function startWebSocket() {
                     }
                     break;
 
+                case 'surrender':
+                    if (r.lost) {
+                        lostM(r.color);
+                    } else if (typeof r.win != 'undefined') {
+                        winM(r.color);
+                    }
+                    break;
+
                 default:
                     console.log(r);
 
@@ -470,6 +478,19 @@ function wsChat() {
 
         ws.send(JSON.stringify(token));
     }
+}
+
+function wsSurrender() {
+    if (wsClosed) {
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+    var token = {
+        type: 'surrender'
+    };
+
+    ws.send(JSON.stringify(token));
 }
 
 function wsOpen() {

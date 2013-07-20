@@ -55,7 +55,11 @@ function initWebSocket() {
                             if (r.gameMasterId == playerId) {
                                 $('#' + r[i].color + ' .td2 a').html('Kick');
                             } else {
-                                $('#' + r[i].color + ' .td2 a').remove();
+                                if (r[i].computer) {
+                                    $('#' + r[i].color + ' .td2 a').html('Select');
+                                } else {
+                                    $('#' + r[i].color + ' .td2 a').remove();
+                                }
                             }
                         }
 
@@ -86,10 +90,10 @@ function initWebSocket() {
 
 function wsRegister() {
     var token = {
-        type:'register',
-        gameId:gameId,
-        playerId:playerId,
-        accessKey:accessKey
+        type: 'register',
+        gameId: gameId,
+        playerId: playerId,
+        accessKey: accessKey
     };
 
     ws.send(JSON.stringify(token));
@@ -97,8 +101,8 @@ function wsRegister() {
 
 function wsChange(color) {
     var token = {
-        type:'change',
-        color:color
+        type: 'change',
+        color: color
     };
 
     ws.send(JSON.stringify(token));
@@ -106,8 +110,8 @@ function wsChange(color) {
 
 function wsComputer(color) {
     var token = {
-        type:'computer',
-        color:color
+        type: 'computer',
+        color: color
     };
 
     ws.send(JSON.stringify(token));
@@ -163,7 +167,7 @@ function prepareStartButton(gameMasterId, playersReady) {
 
 function wsStart() {
     var token = {
-        type:'start'
+        type: 'start'
     };
 
     ws.send(JSON.stringify(token));

@@ -9,8 +9,8 @@
 
 #page {
     background: none;
-    margin:0;
-    width:auto;
+    margin: 0;
+    width: auto;
 }
 
 #game {
@@ -20,24 +20,24 @@
 }
 
 #board {
-    position:absolute;
-    top:0px;
-    left:0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
-.zoomPad{
-    position:absolute;
+.zoomPad {
+    position: absolute;
     top: 10px;
     left: 10px;
 }
 
-.zoomPadLayout{
-    position:absolute;
+.zoomPadLayout {
+    position: absolute;
     cursor: default;
-    z-index:21000;
+    z-index: 21000;
     background: transparent url('../img/game/message_bg.png');
     border-bottom-right-radius: 10px;
-    border:1px solid #555;
+    border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
     padding: 10px;
     width: 213px;
@@ -45,136 +45,143 @@
     top: -10px;
     left: -10px;
 }
-.zoomPup{
+
+.zoomPup {
     background-color: #FFF;
     opacity: 0.25;
-    border:1px solid #fff;
+    border: 1px solid #fff;
     top: 0;
     left: 0;
     position: absolute;
     cursor: url('../img/game/lupa.png') 13 13, crosshair;
-    z-index:21001;
+    z-index: 21001;
 }
 
 #map {
-    position:absolute;
+    position: absolute;
     top: 0px;
     left: 0px;
     cursor: url('../img/game/lupa.png') 13 13, crosshair;
     border-bottom-right-radius: 3px;
 }
-.zoomWindow{
-    position:relative;
-    left:0;
-    top:0;
-    background:#000;
-    display:block;
-    overflow:hidden;
+
+.zoomWindow {
+    position: relative;
+    left: 0;
+    top: 0;
+    background: #000;
+    display: block;
+    overflow: hidden;
     height: 660px;
-    clear:both;
+    clear: both;
 }
 
 .castle {
-    position:absolute;
-    width:80px;
-    height:80px;
+    position: absolute;
+    width: 80px;
+    height: 80px;
     background: url('../img/game/castle_neutral.png') center center no-repeat;
-    border:none;
+    border: none;
     cursor: crosshair;
     z-index: 2202;
 }
-.c{
-    width:4px;
-    height:4px;
-    position:absolute;
-    background:#aaa;
+
+.c {
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    background: #aaa;
     cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
 
 .ruin {
-    position:absolute;
-    width:40px;
-    height:40px;
+    position: absolute;
+    width: 40px;
+    height: 40px;
     background: url(../img/game/ruin.png) center center no-repeat;
-    border:none;
+    border: none;
     cursor: crosshair;
     z-index: 2200;
 }
+
 .tower {
-    position:absolute;
-    width:40px;
-    height:40px;
+    position: absolute;
+    width: 40px;
+    height: 40px;
     background: url(../img/game/tower_neutral.png) center center no-repeat;
-    border:none;
+    border: none;
     cursor: crosshair;
     z-index: 2200;
 }
+
 .army {
-    position:absolute;
-    width:40px;
-    height:40px;
-    border:none;
-    border-radius:3px;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 3px;
     z-index: 10000;
 }
-.a{
-    width:2px;
-    height:2px;
-    position:absolute;
+
+.a {
+    width: 2px;
+    height: 2px;
+    position: absolute;
     cursor: url('../img/game/lupa.png') 13 13, crosshair;
 }
+
 .unit {
-    margin-top:10px;
-    margin-left:12px;
+    margin-top: 10px;
+    margin-left: 12px;
 }
 
 .path {
-    position:inherit;
-    width:34px;
-    height:34px;
-    margin:1px;
+    position: inherit;
+    width: 34px;
+    height: 34px;
+    margin: 1px;
     padding: 2px;
-    border:none;
+    border: none;
     border-radius: 3px;
-    z-index:2201;
-    color:white;
-    text-shadow:none;
-    background:#000;
-    opacity:0.66;
+    z-index: 2201;
+    color: white;
+    text-shadow: none;
+    background: #000;
+    opacity: 0.66;
 }
 
 .path1 {
-    opacity:0.66;
+    opacity: 0.66;
 }
 
 .path2 {
-    opacity:0.33;
+    opacity: 0.33;
 }
 
 .field {
-    position:absolute;
-    width:34px;
-    height:34px;
-    margin:1px;
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: 1px;
     padding: 2px;
-    border:none;
-    z-index:1700;
-    color:#000;
-    background:yellow;
-    opacity:0.33;
+    border: none;
+    z-index: 1700;
+    color: #000;
+    background: yellow;
+    opacity: 0.33;
 }
 
 #gameMenu {
-    height:145px;
+    height: 145px;
 }
 
-#gameMenu span{
-    color:#eee;
+#gameMenu span {
+    color: #eee;
 }
 
 .gameMenu {
-    float:left;
-    overflow:hidden;
+    float: left;
+    overflow: hidden;
 }
 
 .gameMenu.one {
@@ -182,110 +189,120 @@
 }
 
 .gameMenu.two {
-    width:170px;
+    width: 170px;
 }
 
 .gameMenu.three {
-    border-left:1px solid #555;
+    border-left: 1px solid #555;
 }
 
 .gameMenu p {
-    height:15px;
+    height: 15px;
 }
 
-#gameMenu .button{
-    line-height:12px;
-    padding:1px;
-    margin:1px;
+#gameMenu .button {
+    line-height: 12px;
+    padding: 1px;
+    margin: 1px;
     background: #800;
-    color:#ccc;
-}
-#gameMenu .button:hover{
-    color:#fff;
-}
-#gameMenu .button:active{
-    color:#f00;
-    text-shadow:-1px -1px 1px #000;
+    color: #ccc;
 }
 
-#gameMenu .buttonOff{
+#gameMenu .button:hover {
+    color: #fff;
+}
+
+#gameMenu .button:active {
+    color: #f00;
+    text-shadow: -1px -1px 1px #000;
+}
+
+#gameMenu .buttonOff {
     background: #555;
-    color:#444;
+    color: #444;
 }
 
-#gameMenu .buttonOff:hover{
+#gameMenu .buttonOff:hover {
     background: #555;
-    color:#444;
-    text-shadow:none;
+    color: #444;
+    text-shadow: none;
 }
 
-#playersBox{
-    position:absolute;
-    color:white;
-    z-index:27000;
+#playersBox {
+    position: absolute;
+    color: white;
+    z-index: 27000;
     top: 0px;
     background: transparent url('../img/game/message_bg.png');
     border-bottom-left-radius: 10px;
-    border:1px solid #555;
+    border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
     padding: 11px;
     width: 230px;
 }
 
-#playersLabel{
-    float:left;
-    font-size:20px;
+#playersLabel {
+    float: left;
+    font-size: 20px;
 }
 
-.playersBox{
-    clear:both;
-    height:109px;
+.playersBox {
+    clear: both;
+    height: 109px;
     width: 220px;
 }
 
-.playersBox div div div{
+.playersBox div div div {
     width: 110px;
     height: 110px;
-    border:none;
+    border: none;
 }
 
-.whitebg{
+.whitebg {
     background: url('../img/game/white.png') 1px 1px no-repeat;
 }
-#first{
+
+#first {
     left: 20px;
     top: 35px;
 }
-.yellowbg{
-    background:url('../img/game/yellow.png') 1px 1px no-repeat;
+
+.yellowbg {
+    background: url('../img/game/yellow.png') 1px 1px no-repeat;
 }
-#second{
+
+#second {
     left: 215px;
     top: 35px;
 }
-.greenbg{
-    background:url('../img/game/green.png') 1px 1px no-repeat;
+
+.greenbg {
+    background: url('../img/game/green.png') 1px 1px no-repeat;
 }
-#third{
+
+#third {
     left: 215px;
     top: 225px;
 }
-.redbg{
-    background:url('../img/game/red.png') 1px 1px no-repeat;
+
+.redbg {
+    background: url('../img/game/red.png') 1px 1px no-repeat;
 }
-#fourth{
+
+#fourth {
     left: 20px;
     top: 225px;
 }
-.nr{
+
+.nr {
     position: absolute;
-    text-shadow:2px 2px 0 #000;
+    text-shadow: 2px 2px 0 #000;
     color: white;
     line-height: 30px;
     font-size: 20px;
 }
 
-#turn{
+#turn {
     width: 80px;
     height: 80px;
     background: #000;
@@ -296,27 +313,27 @@
     z-index: 28000;
 }
 
-#armyButtonsBox{
+#armyButtonsBox {
     /*    height:69px;*/
 }
+
 #armyButtonsBox div.armyButtons {
-    clear:both;
-    text-align:center;
+    clear: both;
+    text-align: center;
 }
 
-#armyButtonsBox div div.armyButton{
+#armyButtonsBox div div.armyButton {
     height: 26px;
 }
-
 
 .message {
     width: 321px;
     min-height: 70px;
-    border:1px solid #555;
-    z-index:27000;
+    border: 1px solid #555;
+    z-index: 27000;
     background: transparent url('../img/game/message_bg.png');
-    position:absolute;
-    top:50px;
+    position: absolute;
+    top: 50px;
     overflow-x: hidden;
     border-radius: 10px;
     box-shadow: 5px 5px 20px #000;
@@ -325,24 +342,24 @@
 }
 
 .message h3 {
-    color:orange;
-    margin:4px;
+    color: orange;
+    margin: 4px;
 }
 
 .message h4 {
-    color:#ddd;
-    margin:3px 3px 3px 4px;
-    float:right;
+    color: #ddd;
+    margin: 3px 3px 3px 4px;
+    float: right;
 }
 
 .message h5 {
-    margin:2px 2px 2px 4px;
-    color:#d6d6d6;
+    margin: 2px 2px 2px 4px;
+    color: #d6d6d6;
 }
 
 .message .production {
     background: #CECEb0;
-    text-shadow:none;
+    text-shadow: none;
     color: #000;
     margin-left: 1px;
     margin-bottom: 5px;
@@ -352,12 +369,12 @@
 }
 
 .message .production .unit {
-    margin:2px;
-    text-align:center;
+    margin: 2px;
+    text-align: center;
     width: 158px;
 }
 
-.message .production #blank{
+.message .production #blank {
     border: none;
 }
 
@@ -366,29 +383,29 @@
 }
 
 .message .production .unit div {
-    float:left;
-    padding:5px 0 5px 5px;
-    width:25px;
+    float: left;
+    padding: 5px 0 5px 5px;
+    width: 25px;
 }
 
 .message .production .unit div.attributes {
-    float:left;
-    padding:1px;
-    width:124px;
+    float: left;
+    padding: 1px;
+    width: 124px;
 }
 
 .message .production .unit div p {
-    text-align:right;
+    text-align: right;
     height: 15px;
 }
 
 .message .production .unit div input {
-    margin-top:7px;
+    margin-top: 7px;
 }
 
 .message .production .unit p {
-    clear:both;
-    height:18px;
+    clear: both;
+    height: 18px;
 }
 
 .message .production label {
@@ -401,184 +418,184 @@
 }
 
 .message .right {
-    float:right;
+    float: right;
 }
 
-.message p.h{
-    line-height:24px;
+.message p.h {
+    line-height: 24px;
 }
 
-.message .split div.row{
-    clear:both;
-    height:31px;
+.message .split div.row {
+    clear: both;
+    height: 31px;
     margin: 1px;
     padding: 3px;
-    border:1px solid #222;
+    border: 1px solid #222;
     border-radius: 3px;
 }
 
-.message .split div.row div{
-    width:30px;
-    height:30px;
-    position:relative;
-    top:9px;
-    left:9px;
+.message .split div.row div {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 9px;
+    left: 9px;
 }
 
-.message .split div.row div.nr{
-    position:relative;
-    top:2px;
-    left:2px;
-    width:20px;
-    height:15px;
-    float:left;
+.message .split div.row div.nr {
+    position: relative;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 15px;
+    float: left;
     display: block;
 }
 
-.message .split div.row span{
-    position:relative;
-    top:17px;
-    left:0px;
+.message .split div.row span {
+    position: relative;
+    top: 17px;
+    left: 0px;
 }
 
-.message .split div.row img{
-    margin:1px 12px;
+.message .split div.row img {
+    margin: 1px 12px;
 }
 
-.message .split div.row div.img{
-    width:50px;
-    height:30px;
-    float:left;
-    position:relative;
-    top:0px;
-    left:0px;
+.message .split div.row div.img {
+    width: 50px;
+    height: 30px;
+    float: left;
+    position: relative;
+    top: 0px;
+    left: 0px;
 }
 
-.message .status div.row{
-    clear:both;
-    height:52px;
+.message .status div.row {
+    clear: both;
+    height: 52px;
     margin: 1px;
     padding: 3px;
-    border:1px solid #222;
+    border: 1px solid #222;
     border-radius: 3px;
 }
 
-.message .status div.row div{
+.message .status div.row div {
     /*    width:180px;*/
-    height:55px;
-    position:relative;
-    top:0px;
-    left:0px;
+    height: 55px;
+    position: relative;
+    top: 0px;
+    left: 0px;
 }
 
-.message .status div.row div p{
-    height:14px;
+.message .status div.row div p {
+    height: 14px;
 }
 
-.message .status div.row div.nr{
-    position:relative;
-    top:2px;
-    left:2px;
-    width:20px;
-    height:15px;
-    float:left;
+.message .status div.row div.nr {
+    position: relative;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 15px;
+    float: left;
     display: block;
 }
 
-.message .status div.row img{
-    margin:10px 5px;
+.message .status div.row img {
+    margin: 10px 5px;
 }
 
-.message .status div.row div.img{
-    width:43px;
-    height:30px;
-    float:left;
-    position:relative;
-    top:0px;
-    left:0px;
+.message .status div.row div.img {
+    width: 43px;
+    height: 30px;
+    float: left;
+    position: relative;
+    top: 0px;
+    left: 0px;
 }
 
-.message p{
-    height:24px;
+.message p {
+    height: 24px;
 }
 
-#gameMenu .message .button{
-    height:13px;
+#gameMenu .message .button {
+    height: 13px;
 }
 
 .message .go {
-    margin:20px auto;
-    min-width:50px;
+    margin: 20px auto;
+    min-width: 50px;
 }
 
 .message .battle {
-    width:100%;
-    text-align:center;
-    margin-top:4px;
-    min-height:31px;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+    min-height: 31px;
 }
 
 .center {
-    text-align:center;
+    text-align: center;
 }
 
 .split p {
-    text-align:center;
-    margin:2px;
+    text-align: center;
+    margin: 2px;
     background: #CECECE;
-    padding:1px;
+    padding: 1px;
 }
 
-#log{
-    width:150px;
-    height:29px;
+#log {
+    width: 150px;
+    height: 29px;
 }
 
-#turnBox{
-    margin:2px;
-    height:12px;
+#turnBox {
+    margin: 2px;
+    height: 12px;
 }
 
-#turnBox div{
+#turnBox div {
     /*    width:90px;*/
 }
 
-#chatBox{
+#chatBox {
     text-transform: none;
     position: absolute;
     z-index: 27000;
     background: transparent url('../img/game/message_bg.png');
-    width: 252px;
+    width: 500px;
     border-top-left-radius: 10px;
-    border:1px solid #555;
+    border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
     padding: 3px;
 }
 
-#chatBox #chatWindow{
-    height:121px;
+#chatBox #chatWindow {
+    height: 121px;
     border: none;
-    overflow:hidden;
-    color:#fff;
-    text-shadow:none;
+    overflow: hidden;
+    color: #fff;
+    text-shadow: none;
     margin: 2px;
 }
 
-#chatBox #chatWindow div{
-    position:relative;
-    top:85px;
-    left:0;
-    width:100%;
+#chatBox #chatWindow div {
+    position: relative;
+    top: 85px;
+    left: 0;
+    width: 100%;
     border: none;
-    line-height:12px;
-    font-size:10px;
-    font-family:arial;
+    line-height: 12px;
+    font-size: 10px;
+    font-family: arial;
 }
 
-#chatBox input{
-    width:165px;
-    height:16px;
-    border:1px solid #000;
+#chatBox input {
+    width: 400px;
+    height: 16px;
+    border: 1px solid #000;
     -webkit-touch-callout: text;
     -webkit-user-select: text;
     -khtml-user-select: text;
@@ -587,32 +604,32 @@
     user-select: text;
 }
 
-#chatBox .send .right{
-    padding:3px;
+#chatBox .send .right {
+    padding: 3px;
 }
 
-#chatBox .button{
-    margin:0;
-    width:28px;
+#chatBox .button {
+    margin: 0;
+    width: 28px;
 }
 
-#goldBox{
+#goldBox {
     position: absolute;
     color: #fff;
     z-index: 27000;
     top: 3px;
 }
 
-#goldBox div div{
-    width:56px;
-    height:14px;
+#goldBox div div {
+    width: 56px;
+    height: 14px;
 }
 
-#nameBox{
-    height:14px;
+#nameBox {
+    height: 14px;
 }
 
-#armyBox{
+#armyBox {
     position: absolute;
     color: #fff;
     z-index: 27000;
@@ -620,29 +637,29 @@
     background: transparent url('../img/game/message_bg.png');
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    border:1px solid #555;
+    border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
     padding: 11px;
     width: 230px;
 }
 
-#attrBox{
-    line-height:26px;
+#attrBox {
+    line-height: 26px;
 }
 
-#attrBox div{
-    width:76px;
+#attrBox div {
+    width: 76px;
 }
 
-.text-right{
-    text-align:right;
+.text-right {
+    text-align: right;
 }
 
 #terrain {
-    position:absolute;
-    color:white;
-    z-index:27000;
-    left:240px;
+    position: absolute;
+    color: white;
+    z-index: 27000;
+    left: 240px;
     top: 3px;
 }
 
@@ -658,4 +675,12 @@
 
 #nextTurn {
     margin-top: 10px;
+}
+
+#surrender {
+    position: absolute;
+    background: url("/img/game/white_flag.png");
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
 }

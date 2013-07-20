@@ -26,7 +26,7 @@ class Admin_LoginController extends Zend_Controller_Action {
             }
         }
 
-        $this->_helper->layout->setLayout('core-t_admin_login');
+        $this->_helper->layout->setLayout('admin_login');
         $this->view->headLink()->prependStylesheet('/css/core-t_admin_login.css');
 
         $this->view->copyright();

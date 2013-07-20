@@ -154,6 +154,6 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
             return;
         }
 
-        Cli_Model_Database::addGameHistoryOut($db, $gameId, Zend_Json::encode($token));
+        Cli_Model_Database::addGameHistoryOut($db, $gameId, $token);
     }
 }

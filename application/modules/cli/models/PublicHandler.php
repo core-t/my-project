@@ -79,7 +79,10 @@ class Cli_Model_PublicHandler extends Cli_Model_WofHandler {
 
                 if (Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $color) { // unselect
                     Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], $user->parameters['playerId'], $color, $db);
-                } elseif (!Cli_Model_Database::isColorInGame($user->parameters['gameId'], $color, $db)) { // select
+                } elseif (!Cli_Model_Database::isNoComputerColorInGame($user->parameters['gameId'], $color, $db)) { // select
+                    if (Cli_Model_Database::isColorInGame($user->parameters['gameId'], $color, $db)) {
+                        Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], Cli_Model_Database::getPlayerIdByColor($user->parameters['gameId'], $color, $db), $color, $db);
+                    }
                     Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], $user->parameters['playerId'], $color, $db);
                 } elseif (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) { // kick
                     Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], Cli_Model_Database::getPlayerIdByColor($user->parameters['gameId'], $color, $db), $color, $db);

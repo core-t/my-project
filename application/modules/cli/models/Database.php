@@ -2274,6 +2274,22 @@ Brak y
         }
     }
 
+    static public function isNoComputerColorInGame($gameId, $color, $db)
+    {
+        $select = $db->select()
+            ->from(array('a' => 'playersingame'), 'min(b."playerId")')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
+            ->where('"gameId" = ?', $gameId)
+            ->where('color = ?', $color)
+            ->where('"webSocketServerUserId" IS NOT NULL');
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
+
     static public function getComputerPlayerId($gameId, $db)
     {
         $select = $db->select()
@@ -2617,11 +2633,17 @@ Brak y
      * @param string $data
      * @return mixed
      */
-    static public function addGameHistoryOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $data)
+    static public function addGameHistoryOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $token)
     {
+        $type = $token['type'];
+        unset($token['type']);
+
+        $jsonData = Zend_Json::encode($token);
+
         $data = array(
-            'data' => $data,
-            'gameId' => $gameId
+            'data' => $jsonData,
+            'gameId' => $gameId,
+            'type' => $type
         );
         try {
             return $db->insert('gamehistoryout', $data);
