@@ -2564,6 +2564,10 @@ Brak y
         }
     }
 
+    /**
+     * @param Zend_Db_Adapter_Pdo_Pgsql $db
+     * @return array
+     */
     static public function getUnits(Zend_Db_Adapter_Pdo_Pgsql $db)
     {
         $select = $db->select()
@@ -2583,6 +2587,47 @@ Brak y
         }
 
         return $units;
+    }
+
+    /**
+     * @param Zend_Db_Adapter_Pdo_Pgsql $db
+     * @param int $gameId
+     * @param int $playerId
+     * @param string $data
+     * @return mixed
+     */
+    static public function addGameHistoryIn(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $playerId, $data)
+    {
+        $data = array(
+            'data' => $data,
+            'playerId' => $playerId,
+            'gameId' => $gameId
+        );
+        try {
+            return $db->insert('gamehistoryin', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
+    }
+
+    /**
+     * @param Zend_Db_Adapter_Pdo_Pgsql $db
+     * @param int $gameId
+     * @param int $playerId
+     * @param string $data
+     * @return mixed
+     */
+    static public function addGameHistoryOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $data)
+    {
+        $data = array(
+            'data' => $data,
+            'gameId' => $gameId
+        );
+        try {
+            return $db->insert('gamehistoryout', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
     }
 
 }

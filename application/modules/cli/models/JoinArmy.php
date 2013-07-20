@@ -22,9 +22,7 @@ class Cli_Model_JoinArmy {
             'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
         );
 
-        $users = Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
-
-        $gameHandler->sendToChannel($token, $users);
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

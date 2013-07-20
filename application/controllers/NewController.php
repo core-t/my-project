@@ -31,6 +31,11 @@ class NewController extends Game_Controller_Gui
         }
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/playerslist.css?v=' . Zend_Registry::get('config')->version);
+
+        $this->view->headScript()->appendScript('var th = \'<th>' . $this->view->translate('Game master') . '</th><th>' . $this->view->translate('Current number of players') . '</th><th>' . $this->view->translate('Max number of players') . '</th><th>' . $this->view->translate('Date') . '</th>\';');
+        $this->view->headScript()->appendScript('var lang = \'' . Zend_Registry::get('lang') . '\';');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/new.js?v=' . Zend_Registry::get('config')->version);
+
         if ($this->_namespace->gameId) {
             unset($this->_namespace->gameId);
         }

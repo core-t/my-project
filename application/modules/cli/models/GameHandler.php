@@ -7,15 +7,18 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_GameHandler extends Cli_Model_WofHandler {
+class Cli_Model_GameHandler extends Cli_Model_WofHandler
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $db = Cli_Model_Database::getDb();
         Zend_Registry::set('units', Cli_Model_Database::getUnits($db));
     }
 
-    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
+    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
+    {
 
         $dataIn = Zend_Json::decode($msg->getData());
         print_r('ZAPYTANIE ');
@@ -40,6 +43,8 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
             return;
         }
 
+        Cli_Model_Database::addGameHistoryIn($db, $user->parameters['gameId'], $user->parameters['playerId'], $msg->getData());
+
         if ($dataIn['type'] == 'computer') {
             new Cli_Model_Computer($user, $db, $this);
             return;
@@ -50,8 +55,7 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
             return;
         }
 
-        switch ($dataIn['type'])
-        {
+        switch ($dataIn['type']) {
             case 'move':
                 if (!isset($dataIn['armyId'])) {
                     $this->sendError($user, 'Brak "armyId"!');
@@ -105,14 +109,14 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
                 $token = Cli_Model_Turn::next($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                $this->sendToChannel($db, $token, $user->parameters['gameId']);
                 break;
 
             case 'startTurn':
                 $token = Cli_Model_Turn::start($user->parameters['gameId'], $user->parameters['playerId'], $db);
                 $token['type'] = $dataIn['type'];
 
-                $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                $this->sendToChannel($db, $token, $user->parameters['gameId']);
                 break;
 
             case 'razeCastle':
@@ -125,7 +129,8 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
         }
     }
 
-    public function onDisconnect(IWebSocketConnection $user) {
+    public function onDisconnect(IWebSocketConnection $user)
+    {
         if (Zend_Validate::is($user->parameters['gameId'], 'Digits') || Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
             $db = Cli_Model_Database::getDb();
             Cli_Model_Database::updatePlayerInGameWSSUId($user->parameters['gameId'], $user->parameters['playerId'], null, $db);
@@ -136,4 +141,19 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler {
 //        $this->say("[DEMO] {$user->getId()} disconnected");
     }
 
+    public function sendToChannel($db, $token, $gameId, $debug = null)
+    {
+
+        parent::sendToChannel($db, $token, $gameId, $debug);
+
+        if (!Zend_Validate::is($gameId, 'Digits')) {
+            return;
+        }
+
+        if ($token['type'] == 'chat') {
+            return;
+        }
+
+        Cli_Model_Database::addGameHistoryOut($db, $gameId, Zend_Json::encode($token));
+    }
 }

@@ -16,7 +16,7 @@ class Cli_Model_CastleRaze {
         $token['gold'] = $gold;
         $token['type'] = 'castle';
 
-        $gameHandler->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

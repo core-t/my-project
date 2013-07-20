@@ -11,7 +11,7 @@ class Cli_Model_Chat {
             'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
         );
 
-        $gameHandler->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

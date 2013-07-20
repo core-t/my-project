@@ -199,9 +199,7 @@ class Cli_Model_Move
             'deletedIds' => $deletedIds,
         );
 
-        $users = Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db);
-
-        $gameHandler->sendToChannel($token, $users);
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

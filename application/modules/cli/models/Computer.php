@@ -42,7 +42,7 @@ class Cli_Model_Computer {
                 break;
         }
 
-        $gameHandler->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

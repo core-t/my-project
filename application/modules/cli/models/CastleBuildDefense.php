@@ -33,7 +33,7 @@ class Cli_Model_CastleBuildDefense {
         $token['type'] = 'castle';
         Cli_Model_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $token['gold'], $db);
 
-        $gameHandler->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

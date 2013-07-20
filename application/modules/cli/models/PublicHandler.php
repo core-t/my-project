@@ -65,7 +65,7 @@ class Cli_Model_PublicHandler extends Cli_Model_WofHandler {
 
                     $token = array('type' => 'start');
 
-                    $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($user->parameters['gameId'], $db));
+                    $this->sendToChannel($db, $token, $user->parameters['gameId']);
                 }
                 break;
 
@@ -148,7 +148,7 @@ class Cli_Model_PublicHandler extends Cli_Model_WofHandler {
         $token['gameMasterId'] = Cli_Model_Database::getGameMasterId($gameId, $db);
         $token['type'] = 'update';
 
-        $this->sendToChannel($token, Cli_Model_Database::getInGameWSSUIds($gameId, $db));
+        $this->sendToChannel($db, $token, $gameId);
     }
 
 }

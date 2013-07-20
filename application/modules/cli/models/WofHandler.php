@@ -7,7 +7,16 @@
  */
 class Cli_Model_WofHandler extends WebSocket_UriHandler {
 
-    public function sendToChannel($token, $users, $debug = null) {
+    /**
+     * @param $db
+     * @param $token
+     * @param $gameId
+     * @param null $debug
+     */
+    public function sendToChannel($db, $token, $gameId, $debug = null) {
+
+        $users = Cli_Model_Database::getInGameWSSUIds($gameId, $db);
+
         if ($debug || Zend_Registry::get('config')->debug) {
             print_r('ODPOWIEDŹ ');
             print_r($token);
@@ -23,6 +32,11 @@ class Cli_Model_WofHandler extends WebSocket_UriHandler {
         }
     }
 
+    /**
+     * @param $user
+     * @param $msg
+     * @param null $debug
+     */
     public function sendError($user, $msg, $debug = null) {
         $token = array(
             'type' => 'error',
