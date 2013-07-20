@@ -47,90 +47,6 @@ function changeTurn(color, nr) {
     }
 }
 
-function startGame() {
-    if (!largeimageloaded) {
-        setTimeout('startGame()', 1000);
-        return;
-    }
-
-    for (i in castles) {
-        new createNeutralCastle(i);
-    }
-
-    for (i in ruins) {
-        new ruinCreate(i);
-    }
-    for (i in towers) {
-        new towerCreate(i);
-    }
-    for (color in players) {
-        players[color].active = 0;
-        $('.' + color + ' .color').addClass(color + 'bg');
-        if (players[color].computer) {
-            $('.' + color + ' .color .type').css('background', 'url(../img/game/computer.png) center center no-repeat');
-        } else {
-            $('.' + color + ' .color .type').css('background', 'url(../img/game/hero_' + color + '.png) center center no-repeat');
-        }
-
-        for (i in players[color].armies) {
-            players[color].armies[i] = new army(players[color].armies[i], color);
-            if (color == my.color) {
-                for (s in players[color].armies[i].soldiers) {
-                    costs += units[players[color].armies[i].soldiers[s].unitId].cost;
-                }
-                myArmies = true;
-            } else {
-                enemyArmies = true;
-            }
-        }
-
-        if (players[color].armies == "" && players[color].castles == "") {
-            $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-        }
-
-        for (i in players[color].castles) {
-            updateCastleDefense(i, players[color].castles[i].defenseMod);
-            castleOwner(i, color);
-            if (color == my.color) {
-                income += castles[i].income;
-                if (firstCastleId > i) {
-                    firstCastleId = i;
-                }
-                myCastles = true;
-                setMyCastleProduction(i);
-            } else {
-                enemyCastles = true;
-            }
-        }
-    }
-
-    showFirstCastle();
-
-    if (!enemyArmies && !enemyCastles) {
-        turnOff();
-        winM(my.color);
-    } else if (!myArmies && !myCastles) {
-        turnOff();
-        lostM(my.color);
-    } else {
-        if (my.turn) {
-            turnOn();
-        } else {
-            turnOff();
-        }
-        if (my.turn && !players[my.color].turnActive) {
-            wsStartMyTurn();
-        } else if (my.game && players[turn.color].computer) {
-            setTimeout('wsComputer()', 1000);
-        }
-    }
-
-    renderChatHistory();
-    costsUpdate(costs);
-    income += countPlayerTowers(my.color) * 5;
-    incomeUpdate(income);
-}
-
 function goldUpdate(gold) {
     $('#gold').html(gold);
 }
@@ -143,9 +59,9 @@ function incomeUpdate(gold) {
     $('#income').html(gold);
 }
 
-function updatePlayers(color) {
-    players[color].active = 2;
-}
+//function updatePlayers(color) {
+//    players[color].active = 2;
+//}
 
 function setLock() {
     lock = true;
@@ -272,6 +188,10 @@ function isSet(val) {
 
 function notSet(val) {
     return !isSet(val);
+}
+
+function isComputer(color) {
+    return players[color].computer;
 }
 
 function prepareButtons() {

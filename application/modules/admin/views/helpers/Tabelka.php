@@ -46,7 +46,7 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
                 continue;
             }
 
-            $th .= '<th><a href="' . $this->view->url(array('order' => $key)) . '">' . $val['nazwa'] . '</a></th>';
+            $th .= '<th><a href="' . $this->view->url(array('order' => $key)) . '">' . $val['label'] . '</a></th>';
         }
         return '<tr><th><a href="' . $this->view->url(array('order' => null)) . '">Lp</a></th>' . $th . '<th></th></tr>';
     }

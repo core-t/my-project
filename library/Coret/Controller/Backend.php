@@ -4,7 +4,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
 {
 
     public $params = array();
-    protected $itemCountPerPage = 10;
+    protected $itemCountPerPage = 20;
 
     public function init()
     {
@@ -213,8 +213,8 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
             }
             $className = 'Coret_Form_' . ucfirst($row['typ']);
             $attributes = array('name' => $key);
-            if (isset($row['nazwa'])) {
-                $attributes['label'] = $row['nazwa'];
+            if (isset($row['label'])) {
+                $attributes['label'] = $row['label'];
             }
             if (isset($row['required'])) {
                 $attributes['required'] = $row['required'];
@@ -249,7 +249,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         foreach ($columnsLang as $key => $row) {
 
             $className = 'Coret_Form_' . ucfirst($row['typ']);
-            $f = new $className(array('name' => $key, 'label' => $row['nazwa']));
+            $f = new $className(array('name' => $key, 'label' => $row['label']));
             $this->view->formLang->addElements($f->getElements());
         }
 

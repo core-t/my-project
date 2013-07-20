@@ -2541,9 +2541,29 @@ Brak y
 
     static public function fortifyArmy($gameId, $playerId, $armyId, $db)
     {
-        $data = array(
-            'fortified' => 'true'
-        );
+        $select = $db->select()
+            ->from('army', 'fortified')
+            ->where('"armyId" = ?', $armyId)
+            ->where('"gameId" = ?', $gameId)
+            ->where('"playerId" = ?', $playerId);
+
+        try {
+            $fortified = $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+            return;
+        }
+
+        if ($fortified == 't') {
+            $data = array(
+                'fortified' => 'f'
+            );
+        } else {
+            $data = array(
+                'fortified' => 't'
+            );
+        }
         $where = array(
             $db->quoteInto('"armyId" = ?', $armyId),
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -2635,16 +2655,22 @@ Brak y
      */
     static public function addGameHistoryOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $token)
     {
-        $type = $token['type'];
+        $data = array(
+            'gameId' => $gameId,
+            'type' => $token['type']
+        );
+
         unset($token['type']);
 
-        $jsonData = Zend_Json::encode($token);
+        self::prepareGameHistoryOutData('attackerColor', $data, $token);
+        self::prepareGameHistoryOutData('attackerArmy', $data, $token);
+        self::prepareGameHistoryOutData('defenderColor', $data, $token);
+        self::prepareGameHistoryOutData('defenderArmy', $data, $token);
+        self::prepareGameHistoryOutData('path', $data, $token);
+        self::prepareGameHistoryOutData('battle', $data, $token);
 
-        $data = array(
-            'data' => $jsonData,
-            'gameId' => $gameId,
-            'type' => $type
-        );
+        $data['data'] = Zend_Json::encode($token);
+
         try {
             return $db->insert('gamehistoryout', $data);
         } catch (Exception $e) {
@@ -2652,5 +2678,46 @@ Brak y
         }
     }
 
+
+    static public function prepareGameHistoryOutData($value, &$data, &$token)
+    {
+        if (array_key_exists($value, $token)) {
+            if (is_array($token[$value])) {
+                $data[$value] = Zend_Json::encode($token[$value]);
+            } else {
+                $data[$value] = $token[$value];
+            }
+
+            unset($token[$value]);
+        }
+    }
 }
 
+function check($array, $key)
+{
+    if (isset($array[$key])) {
+        if (is_null($array[$key])) {
+            echo $key . ' is null';
+        }
+        echo $key . ' is set';
+    }
+}
+
+if (isset($a['a'])) {
+    if (is_null($a['a'])) {
+        echo 'a is null';
+    }
+    echo 'a is set';
+}
+if (isset($a['b'])) {
+    if (is_null($a['a'])) {
+        echo 'b is null';
+    }
+    echo 'b is set';
+}
+if (isset($a['v'])) {
+    if (is_null($a['a'])) {
+        echo 'c is null';
+    }
+    echo 'c is set';
+}

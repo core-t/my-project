@@ -116,45 +116,45 @@ function army(obj, color) {
 
     if (this.canSwim) {
         this.terrainCosts = {
-            'b':1,
-            'c':0,
-            'e':null,
-            'f':300,
-            'g':200,
-            'm':500,
-            'M':1000,
-            'r':100,
-            's':400,
-            'S':1,
-            'w':1
+            'b': 1,
+            'c': 0,
+            'e': null,
+            'f': 300,
+            'g': 200,
+            'm': 500,
+            'M': 1000,
+            'r': 100,
+            's': 400,
+            'S': 1,
+            'w': 1
         };
     } else if (this.canFly > 0) {
         this.terrainCosts = {
-            'b':2,
-            'c':0,
-            'e':null,
-            'f':2,
-            'g':2,
-            'm':2,
-            'M':2,
-            'r':2,
-            's':2,
-            'S':2,
-            'w':2
+            'b': 2,
+            'c': 0,
+            'e': null,
+            'f': 2,
+            'g': 2,
+            'm': 2,
+            'M': 2,
+            'r': 2,
+            's': 2,
+            'S': 2,
+            'w': 2
         };
     } else {
         this.terrainCosts = {
-            'b':1,
-            'c':0,
-            'e':null,
-            'f':modMovesForest,
-            'g':2,
-            'm':modMovesHills,
-            'M':1000,
-            'r':1,
-            's':modMovesSwamp,
-            'S':1,
-            'w':50
+            'b': 1,
+            'c': 0,
+            'e': null,
+            'f': modMovesForest,
+            'g': 2,
+            'm': modMovesHills,
+            'M': 1000,
+            'r': 1,
+            's': modMovesSwamp,
+            'S': 1,
+            'w': 50
         };
     }
 
@@ -214,12 +214,12 @@ function army(obj, color) {
         .addClass('army')
         .addClass(color)
         .attr({
-            id:'army' + obj.armyId,
-            title:this.name
+            id: 'army' + obj.armyId,
+            title: this.name
         }).css({
-            background:'url(../img/game/flag_' + color + '_' + numberOfUnits + '.png) top left no-repeat',
-            left:(this.x * 40) + 'px',
-            top:(this.y * 40) + 'px'
+            background: 'url(../img/game/flag_' + color + '_' + numberOfUnits + '.png) top left no-repeat',
+            left: (this.x * 40) + 'px',
+            top: (this.y * 40) + 'px'
         });
     this.element.append(
         $('<img>')
@@ -235,10 +235,10 @@ function army(obj, color) {
 
     zoomPad.append(
         $('<div>').css({
-            'left':mX + 'px',
-            'top':mY + 'px',
-            'background':getColor(color),
-            'z-index':10
+            'left': mX + 'px',
+            'top': mY + 'px',
+            'background': getColor(color),
+            'z-index': 10
         })
             .attr('id', this.armyId)
             .addClass('a')
@@ -339,8 +339,8 @@ function selectArmy(a) {
     unfortifyArmy(a.armyId);
 
     $('#army' + a.armyId).css({
-        'box-shadow':'0 0 10px #fff',
-        'border':'1px solid #fff'
+        'box-shadow': '0 0 10px #fff',
+        'border': '1px solid #fff'
     });
     $('#name').html(a.name);
     $('#moves').html(a.moves);
@@ -382,8 +382,8 @@ function tmpUnselectArmy() {
     if (selectedArmy) {
         unselectedArmy = selectedArmy;
         $('#army' + selectedArmy.armyId).css({
-            'box-shadow':'none',
-            'border':'none'
+            'box-shadow': 'none',
+            'border': 'none'
         });
         board.css('cursor', 'url(../img/game/cursor.png), default');
     }
@@ -537,8 +537,12 @@ function fortifyArmy() {
 }
 
 function unfortifyArmy(armyId) {
+    if (isComputer(turn.color)) {
+        return;
+    }
     var index = $.inArray(armyId, quitedArmies);
     if (index != -1) {
+        wsFortifyArmy(armyId);
         quitedArmies.splice(index, 1);
     }
 }

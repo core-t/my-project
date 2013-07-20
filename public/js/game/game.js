@@ -6,24 +6,8 @@ Image3 = new Image(25, 26);
 Image3.src = '../img/game/cursor_select.png';
 Image4 = new Image(9, 20);
 Image4.src = '../img/game/cursor.png';
-
-
-//Image12 = new Image(33, 18);
-//Image12.src = '../img/game/cursor_arrow_e.png';
-//Image13 = new Image(18, 34);
-//Image13.src = '../img/game/cursor_arrow_n.png';
-//Image14 = new Image(18, 34);
-//Image14.src = '../img/game/cursor_arrow_s.png';
-//Image15 = new Image(33, 18);
-//Image15.src = '../img/game/cursor_arrow_w.png';
-//Image16 = new Image(28, 28);
-//Image16.src = '../img/game/cursor_arrow_ne.png';
-//Image17 = new Image(28, 28);
-//Image17.src = '../img/game/cursor_arrow_nw.png';
-//Image18 = new Image(28, 28);
-//Image18.src = '../img/game/cursor_arrow_se.png';
-//Image19 = new Image(28, 28);
-//Image19.src = '../img/game/cursor_arrow_sw.png';
+Image4 = new Image(20, 9);
+Image4.src = '../img/game/cursor_pointer.png';
 
 var newX = 0;
 var newY = 0;
@@ -50,8 +34,6 @@ var zoomer;
 var zoomPad;
 var board;
 
-//var cursorDirection;
-
 var documentTitle = document.title;
 var timeoutId = null;
 
@@ -77,4 +59,88 @@ $(document).ready(function () {
     prepareButtons();
     startWebSocket();
 });
+
+function startGame() {
+    if (!largeimageloaded) {
+        setTimeout('startGame()', 1000);
+        return;
+    }
+
+    for (i in castles) {
+        new createNeutralCastle(i);
+    }
+
+    for (i in ruins) {
+        new ruinCreate(i);
+    }
+    for (i in towers) {
+        new towerCreate(i);
+    }
+    for (color in players) {
+        players[color].active = 0;
+        $('.' + color + ' .color').addClass(color + 'bg');
+        if (players[color].computer) {
+            $('.' + color + ' .color .type').css('background', 'url(../img/game/computer.png) center center no-repeat');
+        } else {
+            $('.' + color + ' .color .type').css('background', 'url(../img/game/hero_' + color + '.png) center center no-repeat');
+        }
+
+        for (i in players[color].armies) {
+            players[color].armies[i] = new army(players[color].armies[i], color);
+            if (color == my.color) {
+                for (s in players[color].armies[i].soldiers) {
+                    costs += units[players[color].armies[i].soldiers[s].unitId].cost;
+                }
+                myArmies = true;
+            } else {
+                enemyArmies = true;
+            }
+        }
+
+        if (players[color].armies == "" && players[color].castles == "") {
+            $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
+        }
+
+        for (i in players[color].castles) {
+            updateCastleDefense(i, players[color].castles[i].defenseMod);
+            castleOwner(i, color);
+            if (color == my.color) {
+                income += castles[i].income;
+                if (firstCastleId > i) {
+                    firstCastleId = i;
+                }
+                myCastles = true;
+                setMyCastleProduction(i);
+            } else {
+                enemyCastles = true;
+            }
+        }
+    }
+
+    showFirstCastle();
+
+    if (!enemyArmies && !enemyCastles) {
+        turnOff();
+        winM(my.color);
+    } else if (!myArmies && !myCastles) {
+        turnOff();
+        lostM(my.color);
+    } else {
+        if (my.turn) {
+            turnOn();
+        } else {
+            turnOff();
+        }
+        if (my.turn && !players[my.color].turnActive) {
+            wsStartMyTurn();
+        } else if (my.game && players[turn.color].computer) {
+            setTimeout('wsComputer()', 1000);
+        }
+    }
+
+    renderChatHistory();
+    costsUpdate(costs);
+    income += countPlayerTowers(my.color) * 5;
+    incomeUpdate(income);
+}
 
