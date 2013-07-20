@@ -48,7 +48,7 @@ function startWebSocket() {
                     if (r.lost) {
                         lostM(r.color);
                     } else if (typeof r.win != 'undefined') {
-                        winM(color);
+                        winM(r.color);
                     } else {
                         changeTurn(r.color, r.nr);
                         wsComputer();

@@ -1,9 +1,10 @@
 <?php
 
-class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract
+class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
 {
 
     private $j = 0;
+    protected $_options = array();
 
     public function tabelka(array $kolumny, $kontroler, $primary)
     {
@@ -19,6 +20,7 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract
             throw new Exception('Brak parametru $kontroler');
         }
         $tabelka = $this->createTableHeader($kolumny);
+        $this->initJ();
         if (count($this->view->paginator)) {
             foreach ($this->view->paginator as $row) {
                 $tabelka .= $this->createTableContent($row, $kolumny);
@@ -35,6 +37,15 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract
         } else {
             return $tabelka;
         }
+    }
+
+    protected function initJ()
+    {
+        $page = Zend_Controller_Front::getInstance()->getRequest()->getParam('page');
+        if (empty($page)) {
+            $page = 1;
+        }
+        $this->j = ($page - 1) * $this->view->paginator->getItemCountPerPage();
     }
 
     protected function createTableHeader(array $kolumny)
@@ -60,14 +71,14 @@ class Zend_View_Helper_Tabelka extends Zend_View_Helper_Abstract
                 $klasa = ' class="' . $kolumny[$key]['class'] . '"';
             }
             switch ($kolumny[$key]['typ']) {
-                case 'nrb':
-                    $val = Coret_View_Helper_Formatuj::nrb($val);
+                case 'checkbox':
+                    $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::bool($val) . '</td>';
                     break;
                 case 'data':
                     $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::date($val) . '</td>';
                     break;
                 default:
-                    $content .= '<td' . $klasa . '>' . $val . '</td>';
+                    $content .= '<td' . $klasa . '>' . substr(strip_tags($val), 0, 100) . '</td>';
                     break;
             }
         }

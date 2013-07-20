@@ -1,8 +1,8 @@
-<?php
-echo $this->pageTitle($this->title);
-echo $this->translate('Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?');
-?>
+<?php echo $this->pageTitle($this->title); ?>
 
 <?php if ($this->ask): ?>
-    <a href="<?php echo $this->url(array('yes' => 1)); ?>"><?php echo $this->translate('Tak') ?></a>
+    <p>
+        <?php echo $this->translate('Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?'); ?>
+        <a class="button" href="<?php echo $this->url(array('yes' => 1)); ?>"><?php echo $this->translate('Tak') ?></a>
+    </p>
 <?php endif; ?>

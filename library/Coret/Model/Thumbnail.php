@@ -1,15 +1,16 @@
 <?php
 
-class Coret_Model_Thumbnail {
+class Coret_Model_Thumbnail
+{
 
     protected $_uploadDir = '/../public/upload/';
-    protected $_thumbSize = array('width' => 253, 'height' => 137);
     protected $_parentId;
     protected $_image;
     protected $_imgId;
     protected $_type;
 
-    public function __construct($params, $parentId, $image, $id_img = null) {
+    public function __construct($params, $parentId, $image, $id_img = null)
+    {
         if (isset($params['controller'])) {
             $this->_controllerName = $params['controller'];
         }
@@ -24,21 +25,26 @@ class Coret_Model_Thumbnail {
         $this->_uploadDir = APPLICATION_PATH . $this->_uploadDir;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->_type;
     }
 
-    public function setType($type) {
+    public function setType($type)
+    {
         $this->_type = $type;
     }
 
-    public function createThumbnail($width, $height, $prefix = '', $adaptiveResize = 0, $q = 80) {
+    public function createThumbnail($width, $height, $prefix = '', $adaptiveResize = 0, $q = 80)
+    {
         $this->setType(substr($this->_image, -3));
 
         $sourcePath = $this->_uploadDir . $this->_image;
 
         if (isset($this->_controllerName)) {
             $controllerName = $this->_controllerName . '_';
+        } else {
+            $controllerName = '';
         }
 
         if (isset($this->_actionName)) {
@@ -53,6 +59,8 @@ class Coret_Model_Thumbnail {
 
         if ($this->_imgId) {
             $id_img = '_' . $this->_imgId;
+        } else {
+            $id_img = '';
         }
 
         if ($prefix) {
