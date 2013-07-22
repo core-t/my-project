@@ -137,7 +137,7 @@ function army(obj, color) {
             'g': 2,
             'm': 2,
             'M': 2,
-            'r': 2,
+            'r': 1,
             's': 2,
             'S': 2,
             'w': 2

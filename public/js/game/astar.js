@@ -1,17 +1,17 @@
 // *** A* ***
 
 var terrain = {
-    'b':'Bridge',
-    'c':'Castle',
-    'e':'Enemy',
-    'f':'Forest',
-    'g':'Grassland',
-    'm':'Hills',
-    'M':'Mountains',
-    'r':'Road',
-    's':'Swamp',
-    'S':'Ship',
-    'w':'Water'
+    'b': 'Bridge',
+    'c': 'Castle',
+    'e': 'Enemy',
+    'f': 'Forest',
+    'g': 'Grassland',
+    'm': 'Hills',
+    'M': 'Mountains',
+    'r': 'Road',
+    's': 'Swamp',
+    'S': 'Ship',
+    'w': 'Water'
 }
 
 function cursorPosition(x, y, force) {
@@ -23,20 +23,21 @@ function cursorPosition(x, y, force) {
         var destY = Math.round(Y / 40);
         var tmpX = destX * 40;
         var tmpY = destY * 40;
-        if (newX != tmpX || newY != tmpY || force == 1) {
-            $('.path').remove();
-            newX = tmpX;
-            newY = tmpY;
-            var startX = selectedArmy.x;
-            var startY = selectedArmy.y;
-            var open = new Object();
-            var close = new Object();
-            var start = new node(startX, startY, destX, destY, 0);
-            open[startX + '_' + startY] = start;
-            aStar(close, open, destX, destY, 1);
-            $('#coord').html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
-            return showPath(close, destX + '_' + destY, selectedArmy.moves);
+        if (newX == tmpX && newY == tmpY && force != 1) {
+            return null;
         }
+        $('.path').remove();
+        newX = tmpX;
+        newY = tmpY;
+        var startX = selectedArmy.x;
+        var startY = selectedArmy.y;
+        var open = new Object();
+        var close = new Object();
+        var start = new node(startX, startY, destX, destY, 0);
+        open[startX + '_' + startY] = start;
+        aStar(close, open, destX, destY, 1);
+        $('#coord').html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
+        return showPath(close, destX + '_' + destY, selectedArmy.moves);
     }
     return null;
 }
@@ -73,7 +74,14 @@ function showPath(close, key) {
             if (notSet(soldiersMovesLeft[soldier.soldierId])) {
                 soldiersMovesLeft[soldier.soldierId] = soldier.movesLeft;
             }
-            if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
+
+            if (selectedArmy.canFly > 0) {
+                if (path[i].tt == 'r') {
+                    soldiersMovesLeft[soldier.soldierId] -= 1;
+                } else if (path[i].tt != 'c') {
+                    soldiersMovesLeft[soldier.soldierId] -= 2;
+                }
+            } else if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
                 soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
             } else {
                 soldiersMovesLeft[soldier.soldierId] -= selectedArmy.terrainCosts[path[i].tt];
@@ -119,8 +127,8 @@ function showPath(close, key) {
             $('<div>')
                 .addClass('path ' + className)
                 .css({
-                    left:pX + 'px',
-                    top:pY + 'px'
+                    left: pX + 'px',
+                    top: pY + 'px'
                 })
                 .html(path[i].G)
         );
@@ -219,8 +227,8 @@ function addOpen(x, y, close, open, destX, destY) {
                 calculatePath(x + '_' + y, open, close, g, key);
             } else {
                 var parent = {
-                    'x':x,
-                    'y':y
+                    'x': x,
+                    'y': y
                 };
                 g += close[x + '_' + y].G;
                 open[key] = new node(i, j, destX, destY, g, parent, type);
@@ -232,8 +240,8 @@ function addOpen(x, y, close, open, destX, destY) {
 function calculatePath(kA, open, close, g, key) {
     if (open[key].G > (g + close[kA].G)) {
         open[key].parent = {
-            'x':close[kA].x,
-            'y':close[kA].y
+            'x': close[kA].x,
+            'y': close[kA].y
         };
         open[key].G = g + close[kA].G;
         open[key].F = open[key].G + open[key].H;
