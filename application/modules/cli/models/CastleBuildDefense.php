@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_CastleBuildDefense {
+class Cli_Model_CastleBuildDefense
+{
 
-    public function __construct($castleId, $user, $db, $gameHandler) {
+    public function __construct($castleId, $user, $db, $gameHandler)
+    {
         if ($castleId == null) {
             $gameHandler->sendError($user, 'Brak "castleId"!');
             return;
@@ -14,11 +16,13 @@ class Cli_Model_CastleBuildDefense {
         }
         $gold = Cli_Model_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
         $defenseModifier = Cli_Model_Database::getCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
+        if (empty($defenseModifier)) {
+            $defenseModifier = 1;
+        }
         $defensePoints = Application_Model_Board::getCastleDefense($castleId);
         $defense = $defenseModifier + $defensePoints;
         $costs = 0;
-        for ($i = 1; $i <= $defense; $i++)
-        {
+        for ($i = 1; $i <= $defense; $i++) {
             $costs += $i * 100;
         }
         if ($gold < $costs) {
@@ -26,11 +30,15 @@ class Cli_Model_CastleBuildDefense {
             return;
         }
         Cli_Model_Database::buildDefense($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
-        $token = Cli_Model_Database::getCastle($user->parameters['gameId'], $castleId, $db);
-        $token['defensePoints'] = $defensePoints;
-        $token['color'] = Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db);
-        $token['gold'] = $gold - $costs;
-        $token['type'] = 'castle';
+
+        $token = array(
+            'type' => 'defense',
+            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db),
+            'gold' => $gold - $costs,
+            'defenseMod' => $defenseModifier,
+            'castleId' => $castleId
+        );
+
         Cli_Model_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $token['gold'], $db);
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

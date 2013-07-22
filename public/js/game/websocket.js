@@ -159,13 +159,42 @@ function startWebSocket() {
                     }
                     break;
 
-                case 'castle':
-                    castleUpdate(r);
-                    castleOwner(r.castleId, r.color);
+//                case 'castle':
+//                    castleUpdate(r);
+//                    castleOwner(r.castleId, r.color);
+//                    if (r.color == my.color) {
+//                        removeM();
+//                        goldUpdate(r.gold);
+//                    }
+//                    break;
+
+                case 'raze':
+                    $('#castle' + r.castleId).remove();
+                    $('#c' + r.castleId).remove();
+                    delete castles[r.castleId];
                     if (r.color == my.color) {
                         removeM();
                         goldUpdate(r.gold);
                     }
+                    break;
+
+                case 'defense':
+                    updateCastleDefense(r.castleId, r.defenseMod);
+                    if (r.color == my.color) {
+                        removeM();
+                        goldUpdate(r.gold);
+                    }
+                    break;
+
+                case 'production':
+                    if (r.unitId == -1) {
+                        $('#castle' + r.castleId).html('');
+                    } else {
+                        $('#castle' + r.castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
+                    }
+                    removeM();
+                    castles[r.castleId].currentProduction = r.unitId;
+                    castles[r.castleId].currentProductionTurn = 0;
                     break;
 
                 case 'surrender':
@@ -267,9 +296,7 @@ function wsHeroResurrection(castleId) {
 
     var token = {
         type: 'heroResurrection',
-        data: {
-            castleId: castleId
-        }
+        castleId: castleId
     };
 
     ws.send(JSON.stringify(token));
@@ -346,11 +373,9 @@ function wsSplitArmy(armyId) {
 
     var token = {
         type: 'splitArmy',
-        data: {
-            armyId: armyId,
-            s: s,
-            h: h
-        }
+        armyId: armyId,
+        s: s,
+        h: h
     };
 
     ws.send(JSON.stringify(token));
@@ -372,11 +397,7 @@ function wsDisbandArmy() {
 
     var token = {
         type: 'disbandArmy',
-        data: {
-            armyId: unselectedArmy.armyId,
-            x: unselectedArmy.x,
-            y: unselectedArmy.y
-        }
+        armyId: unselectedArmy.armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -395,9 +416,7 @@ function wsJoinArmy(armyId) {
 
     var token = {
         type: 'joinArmy',
-        data: {
-            armyId: armyId
-        }
+        armyId: armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -432,9 +451,7 @@ function wsSearchRuins() {
     unselectArmy();
     var token = {
         type: 'ruin',
-        data: {
-            armyId: unselectedArmy.armyId
-        }
+        armyId: unselectedArmy.armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -488,6 +505,44 @@ function wsSurrender() {
 
     var token = {
         type: 'surrender'
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsAddTower(towerId) {
+    if (wsClosed) {
+        simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+    var token = {
+        type: 'tower',
+        towerId: towerId
+    };
+
+    ws.send(JSON.stringify(token));
+}
+
+function wsProduction(castleId) {
+    var unitId
+    var production = $('input:radio[name=production]:checked').val();
+
+    if (production == 'stop') {
+        unitId = -1;
+    } else {
+        unitId = getUnitId(production);
+    }
+
+    if (!unitId) {
+        console.log('Brak unitId!');
+        return;
+    }
+
+    var token = {
+        type: 'production',
+        castleId: castleId,
+        unitId: unitId
     };
 
     ws.send(JSON.stringify(token));

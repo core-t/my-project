@@ -358,19 +358,31 @@
 }
 
 .message .production {
-    background: #CECEb0;
+    border: 1px solid #CECEb0;
     text-shadow: none;
     color: #000;
     margin-left: 1px;
     margin-bottom: 5px;
-    border-radius: 4px;
+    border-radius: 5px;
     padding: 2px;
     width: auto;
 }
 
 .message .production .unit {
-    margin: 2px;
+    background: #CECEb0;
+    border: none;
+    margin: 0;
     text-align: center;
+    width: 158px;
+    cursor: pointer;
+}
+
+.message .production .unit:hover {
+    background: #B5B59B;
+}
+
+.message .production .empty {
+    border: none;
     width: 158px;
 }
 
@@ -410,7 +422,9 @@
 
 .message .production label {
     line-height: 20px;
-    color: #006500;
+    color: #CECEb0;
+    text-transform: uppercase;
+    padding-left: 4px;
 }
 
 .message .cancel {
@@ -423,6 +437,10 @@
 
 .message p.h {
     line-height: 24px;
+}
+
+.message p.h input {
+    margin: 5px 6px;
 }
 
 .message .split div.row {
@@ -659,8 +677,8 @@
     position: absolute;
     color: white;
     z-index: 27000;
-    left: 240px;
-    top: 3px;
+    left: 3px;
+    top: 145px;
 }
 
 #turnNumber {
@@ -683,4 +701,10 @@
     width: 32px;
     height: 32px;
     cursor: pointer;
+}
+
+.message #income {
+    position: absolute;
+    top: 10px;
+    left: 255px;
 }

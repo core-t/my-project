@@ -420,9 +420,9 @@ function castleM(castleId, color) {
     removeM();
     var time = '';
     var attr;
-    var capital = null;
+    var capital = '';
     if (castles[castleId].capital) {
-        capital = $('<h4>').append('Capital city');
+        capital = ' - Capital city';
     }
     var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
     var j = 0;
@@ -461,7 +461,7 @@ function castleM(castleId, color) {
             .append(
                 $('<p>')
                     .append($('<input>').attr(attr))
-                    .append(' ' + unitName)
+                    .append(' ' + unitName + ' (' + travelBy + ')')
             )
             .append($('<div>').append($('<img>').attr('src', '/img/game/' + img + '_' + color + '.png')))
             .append(
@@ -469,7 +469,7 @@ function castleM(castleId, color) {
                     .addClass('attributes')
                     .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitName].time + 't'))
                     .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitName].cost + 'g'))
-                    .append($('<p>').html(travelBy))
+//                    .append($('<p>').html(travelBy))
                     .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
             );
         j++;
@@ -480,7 +480,7 @@ function castleM(castleId, color) {
         var m = l * 2;
         tr.append(td[m]);
         if (typeof td[m + 1] == 'undefined') {
-            tr.append($('<td>').addClass('unit').html('&nbsp;'));
+            tr.append($('<td>').addClass('empty').html('&nbsp;'));
         } else {
             tr.append(td[m + 1]);
         }
@@ -490,6 +490,7 @@ function castleM(castleId, color) {
         $('<tr>')
             .append(
                 $('<td>')
+                    .addClass('unit')
                     .append(
                         $('<input>').attr({
                             type: 'radio',
@@ -502,11 +503,10 @@ function castleM(castleId, color) {
             .append(
                 $('<td id="blank">')
                     .append($('<div>').addClass('button submit').html('Apply').click(function () {
-                        setProductionA(castleId)
+                        wsProduction(castleId)
                     })
                     ))
-    )
-    ;
+    );
     var resurrectionElement;
     var resurrection = true;
     for (armyId in players[my.color].armies) {
@@ -540,16 +540,16 @@ function castleM(castleId, color) {
             )
             .append(buttonResurestion);
     }
-    var buttonBuilDefense;
-    var cssBuilDefense;
-    var costBuilDefense = 0;
+    var buttonBuildDefense;
+//    var cssBuildDefense;
+    var costBuildDefense = 0;
     for (i = 1; i <= castles[castleId].defense; i++) {
-        costBuilDefense += i * 100;
+        costBuildDefense += i * 100;
     }
-    if ($('#gold').html() < costBuilDefense) {
-        buttonBuilDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuilDefense + 'g)');
+    if ($('#gold').html() < costBuildDefense) {
+        buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
     } else {
-        buttonBuilDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuilDefense + 'g)').click(function () {
+        buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
             wsCastleBuildDefense();
         });
     }
@@ -559,12 +559,10 @@ function castleM(castleId, color) {
             .css({
                 'left': messageLeft + 'px'
             })
-            .append(capital)
-            .append($('<h3>').append(castles[castleId].name))
-            .append($('<h5>').append('Position: ' + castles[castleId].position['x'] + ' East - ' + castles[castleId].position['y'] + ' South'))
-            .append($('<h5>').append('Defense: ' + castles[castleId].defense))
-            .append($('<h5>').append('Income: ' + castles[castleId].income + ' gold/turn'))
-            .append(table)
+            .append($('<h3>').append(castles[castleId].name).append(capital))
+//            .append($('<h5>').append('Position: ' + castles[castleId].position['x'] + ' East - ' + castles[castleId].position['y'] + ' South'))
+            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
+            .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
             .append(
                 $('<p>')
                     .addClass('h')
@@ -575,8 +573,9 @@ function castleM(castleId, color) {
                             value: castleId
                         })
                     )
-                    .append(buttonBuilDefense)
+                    .append(buttonBuildDefense)
             )
+            .append(table)
             .append(
                 $('<p>')
                     .addClass('h')
@@ -591,6 +590,7 @@ function castleM(castleId, color) {
                         wsRazeCastle()
                     }))
             )
+            .append($('<br>'))
             .append(
                 $('<p>')
                     .append($('<div>').addClass('button cancel').html('Cancel').click(function () {

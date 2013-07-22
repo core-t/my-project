@@ -78,15 +78,4 @@ class Application_Model_Castle extends Game_Db_Table_Abstract {
         }
     }
 
-    public function setCastleProduction($castleId, $unitId, $playerId) {
-        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
-        $where[] = $this->_db->quoteInto('"castleId" = ?', $castleId);
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        $data = array(
-            'production' => $unitId,
-            'productionTurn' => 0
-        );
-        return $this->_db->update($this->_name, $data, $where);
-    }
-
 }

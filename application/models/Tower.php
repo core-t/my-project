@@ -12,39 +12,6 @@ class Application_Model_Tower extends Game_Db_Table_Abstract
         parent::__construct();
     }
 
-    public function towerExists($towerId) {
-        try {
-            $select = $this->_db->select()
-                    ->from($this->_name, $this->_primary)
-                    ->where('"'.$this->_primary.'" = ?', $towerId)
-                    ->where('"gameId" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            if(isset($result[0][$this->_primary])){
-                return true;
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function changeTowerOwner($towerId, $playerId){
-        $data = array(
-            'playerId' => $playerId
-        );
-        $where[] = $this->_db->quoteInto('"'.$this->_primary.'" = ?', $towerId);
-        $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
-        return $this->_db->update($this->_name, $data, $where);
-    }
-
-    public function addTower($towerId, $playerId) {
-        $data = array(
-            'towerId' => $towerId,
-            'gameId' => $this->_gameId,
-            'playerId' => $playerId
-        );
-        $this->_db->insert($this->_name, $data);
-    }
-
     public function getTowers(){
         try {
             $select = $this->_db->select()

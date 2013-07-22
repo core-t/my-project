@@ -33,7 +33,7 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
         }
 
         if (!Zend_Validate::is($user->parameters['gameId'], 'Digits') || !Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
-            $this->sendError($user, 'Brak "gameId" lub "playerId". Brak autoryzacji.');
+            $this->sendError($user, 'No "gameId" or "playerId". No authorized.');
             return;
         }
 
@@ -51,42 +51,56 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
         }
 
         if (!Cli_Model_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
-            $this->sendError($user, 'Nie Twoja tura.');
+            $this->sendError($user, 'Not your turn.');
             return;
         }
 
         switch ($dataIn['type']) {
             case 'move':
                 if (!isset($dataIn['armyId'])) {
-                    $this->sendError($user, 'Brak "armyId"!');
+                    $this->sendError($user, 'No "armyId"!');
                     return;
                 }
 
                 if (!isset($dataIn['x'])) {
-                    $this->sendError($user, 'Brak "x"!');
+                    $this->sendError($user, 'No "x"!');
                     return;
                 }
 
                 if (!isset($dataIn['y'])) {
-                    $this->sendError($user, 'Brak "y"!');
+                    $this->sendError($user, 'No "y"!');
                     return;
                 }
 
                 new Cli_Model_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
                 break;
 
+            case 'tower':
+                $towerId = $dataIn['towerId'];
+                if ($towerId === null) {
+                    $this->sendError($user, 'No "towerId"!');
+                    return;
+                }
+
+                if (Cli_Model_Database::towerExists($db, $towerId, $user->parameters['gameId'])) {
+                    Cli_Model_Database::changeTowerOwner($db, $towerId, $user->parameters['playerId'], $user->parameters['gameId']);
+                } else {
+                    Cli_Model_Database::addTower($db, $towerId, $user->parameters['playerId'], $user->parameters['gameId']);
+                }
+                break;
+
             case 'splitArmy':
-                new Cli_Model_SplitArmy($dataIn['data']['armyId'], $dataIn['data']['s'], $dataIn['data']['h'], $user, $db, $this);
+                new Cli_Model_SplitArmy($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $this);
                 break;
 
             case 'joinArmy':
-                new Cli_Model_JoinArmy($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_JoinArmy($dataIn['armyId'], $user, $db, $this);
                 break;
 
             case 'fortifyArmy':
                 $armyId = $dataIn['armyId'];
                 if (empty($armyId)) {
-                    $this->sendError($user, 'Brak "armyId"!');
+                    $this->sendError($user, 'No "armyId"!');
                     return;
                 }
 
@@ -94,15 +108,15 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
                 break;
 
             case 'disbandArmy':
-                new Cli_Model_DisbandArmy($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_DisbandArmy($dataIn['armyId'], $user, $db, $this);
                 break;
 
             case 'heroResurrection':
-                new Cli_Model_HeroResurrection($dataIn['data']['castleId'], $user, $db, $this);
+                new Cli_Model_HeroResurrection($dataIn['castleId'], $user, $db, $this);
                 break;
 
             case 'ruin':
-                new Cli_Model_SearchRuin($dataIn['data']['armyId'], $user, $db, $this);
+                new Cli_Model_SearchRuin($dataIn['armyId'], $user, $db, $this);
                 break;
 
             case 'nextTurn':
@@ -117,6 +131,39 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
                 $token['type'] = $dataIn['type'];
 
                 $this->sendToChannel($db, $token, $user->parameters['gameId']);
+                break;
+
+            case 'production':
+                $castleId = $dataIn['castleId'];
+                $unitId = $dataIn['unitId'];
+
+                if ($castleId === null) {
+                    $this->sendError($user, 'No "castleId"!');
+                    return;
+                }
+                if (empty($unitId)) {
+                    $this->sendError($user, 'No "unitId"!');
+                    return;
+                }
+
+                if ($unitId == -1) {
+                    $unitId = null;
+                }
+
+                if (!Cli_Model_Database::isPlayerCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db)) {
+                    $this->sendError($user, 'To nie jest Twój zamek!');
+                    return;
+                }
+
+                if (Cli_Model_Database::setCastleProduction($user->parameters['gameId'], $castleId, $unitId, $user->parameters['playerId'], $db)) {
+                    $token = array(
+                        'type' => $dataIn['type'],
+                        'unitId' => $unitId,
+                        'castleId' => $castleId
+                    );
+
+                    $this->sendToChannel($db, $token, $user->parameters['gameId']);
+                }
                 break;
 
             case 'razeCastle':

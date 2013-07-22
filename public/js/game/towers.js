@@ -71,7 +71,7 @@ function changeTower(x, y, towerId){
     if(fields[y][x] != 'e'){
         if(towers[towerId].color != turn.color){
             if(turn.color==my.color || (my.game && players[turn.color].computer)){
-                addTowerA(towerId);
+                wsAddTower(towerId);
             }
             towers[towerId].color = turn.color;
             $('#tower' + towerId).css('background','url(../img/game/tower_'+turn.color+'.png) center center no-repeat');

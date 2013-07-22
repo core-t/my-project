@@ -1775,7 +1775,6 @@ Brak y
 
     static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db)
     {
-
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId),
@@ -2691,33 +2690,43 @@ Brak y
             unset($token[$value]);
         }
     }
-}
 
-function check($array, $key)
-{
-    if (isset($array[$key])) {
-        if (is_null($array[$key])) {
-            echo $key . ' is null';
+    static public function towerExists($db, $towerId, $gameId)
+    {
+        try {
+            $select = $db->select()
+                ->from('tower', 'towerId')
+                ->where('"towerId" = ?', $towerId)
+                ->where('"gameId" = ?', $gameId);
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo $e;
+            echo $select->__toString();
         }
-        echo $key . ' is set';
     }
-}
 
-if (isset($a['a'])) {
-    if (is_null($a['a'])) {
-        echo 'a is null';
+    static public function changeTowerOwner($db, $towerId, $playerId, $gameId)
+    {
+        $data = array(
+            'playerId' => $playerId
+        );
+        $where[] = $db->quoteInto('"tower" = ?', $towerId);
+        $where[] = $db->quoteInto('"gameId" = ?', $gameId);
+
+        return self::update('tower', $data, $where, $db, true);
     }
-    echo 'a is set';
-}
-if (isset($a['b'])) {
-    if (is_null($a['a'])) {
-        echo 'b is null';
+
+    static public function addTower($db, $towerId, $playerId, $gameId)
+    {
+        $data = array(
+            'towerId' => $towerId,
+            'gameId' => $gameId,
+            'playerId' => $playerId
+        );
+        try {
+            return $db->insert('tower', $data);
+        } catch (Exception $e) {
+            echo($e);
+        }
     }
-    echo 'b is set';
-}
-if (isset($a['v'])) {
-    if (is_null($a['a'])) {
-        echo 'c is null';
-    }
-    echo 'c is set';
 }
