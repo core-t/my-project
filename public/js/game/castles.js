@@ -139,7 +139,7 @@ function updateCastleCurrentProductionTurn(castleId, productionTurn) {
 }
 
 function updateCastleDefense(castleId, defenseMod) {
-    castles[castleId].defense += defenseMod;
+    castles[castleId].defense = castles[castleId].defensePoints + defenseMod;
     if (castles[castleId].defense < 1) {
         castles[castleId].defense = 1;
     }

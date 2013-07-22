@@ -1,4 +1,8 @@
 function chat(color, msg, time) {
+    if (color != my.color) {
+        titleBlink('Incoming chat!');
+    }
+
     var chatWindow = $('#chatWindow div').append('<br/>').append('<span style="color:' + color + '">' + color + ' (' + time + '): </span>' + msg);
     var scroll = 120 - chatWindow[0].scrollHeight;
     chatWindow.animate({

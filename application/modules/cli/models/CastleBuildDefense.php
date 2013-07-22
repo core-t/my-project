@@ -16,11 +16,14 @@ class Cli_Model_CastleBuildDefense
         }
         $gold = Cli_Model_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
         $defenseModifier = Cli_Model_Database::getCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
-        if (empty($defenseModifier)) {
-            $defenseModifier = 1;
-        }
         $defensePoints = Application_Model_Board::getCastleDefense($castleId);
         $defense = $defenseModifier + $defensePoints;
+        if ($defense < 1) {
+            $defense = 1;
+            $defenseModifier = $defense - $defensePoints;
+        }
+        $defenseModifier++;
+
         $costs = 0;
         for ($i = 1; $i <= $defense; $i++) {
             $costs += $i * 100;
@@ -29,7 +32,7 @@ class Cli_Model_CastleBuildDefense
             $gameHandler->sendError($user, 'Za mało złota!');
             return;
         }
-        Cli_Model_Database::buildDefense($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
+        Cli_Model_Database::buildDefense($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db, $defenseModifier);
 
         $token = array(
             'type' => 'defense',

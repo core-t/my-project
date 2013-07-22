@@ -153,20 +153,8 @@ function startWebSocket() {
                     break;
 
                 case 'chat':
-                    if (r.msg) {
-                        titleBlink('Incoming chat!');
-                        chat(r.color, r.msg, makeTime());
-                    }
+                    chat(r.color, r.msg, makeTime());
                     break;
-
-//                case 'castle':
-//                    castleUpdate(r);
-//                    castleOwner(r.castleId, r.color);
-//                    if (r.color == my.color) {
-//                        removeM();
-//                        goldUpdate(r.gold);
-//                    }
-//                    break;
 
                 case 'raze':
                     $('#castle' + r.castleId).remove();
@@ -425,6 +413,10 @@ function wsJoinArmy(armyId) {
 function wsFortifyArmy(armyId) {
     if (wsClosed) {
         simpleM('Sorry, server is disconnected.');
+        return;
+    }
+
+    if (!my.turn) {
         return;
     }
 

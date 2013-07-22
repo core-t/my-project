@@ -124,8 +124,15 @@
                     </div>
                 </div>
             </div>
-            <div id="board"
-                 style="background: url('../img/game/board.png') no-repeat;width: 4360px;height:2760px;"></div>
+            <div id="timer">
+                <table>
+                    <tr>
+                        <th><?php echo $this->translate('Color') ?></th>
+                        <th><?php echo $this->translate('Turn nr') ?></th>
+                        <th><?php echo $this->translate('Time spend') ?></th>
+                    </tr>
+                </table>
+            </div>
             <div id="chatBox">
                 <div id="chatWindow">
                     <div></div>
@@ -135,6 +142,8 @@
                     <div class="right"><a id="send" class="button"><?php echo $this->translate('Send') ?></a></div>
                 </div>
             </div>
+            <div id="board"
+                 style="background: url('../img/game/board.png') no-repeat;width: 4360px;height:2760px;"></div>
         </div>
     </div>
 </div>

@@ -695,7 +695,7 @@ Brak y
             ->where('"ruinId" = ?', $ruinId)
             ->where('"gameId" = ?', $gameId);
         try {
-            return $db->fetchOne($select);
+            return Zend_Validate::is($db->fetchOne($select), 'Digits');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -1006,8 +1006,20 @@ Brak y
         }
     }
 
-    static public function buildDefense($gameId, $castleId, $playerId, $db)
+    static public function buildDefense($gameId, $castleId, $playerId, $db,$defenseMod)
     {
+//        $select = $db->select()
+//            ->from('castlesingame', 'defenseMod')
+//            ->where('"gameId" = ?', $gameId)
+//            ->where('"playerId" = ?', $playerId)
+//            ->where('"castleId" = ?', $castleId);
+//        $defenseMod = $db->fetchOne($select);
+//        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
+//
+//        if ($defensePoints + $defenseMod < 1) {
+//            $defenseMod = 1 - $defensePoints;
+//        }
+//        $defenseMod++;
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
@@ -1015,7 +1027,7 @@ Brak y
             $db->quoteInto('"castleId" = ?', $castleId)
         );
         $data = array(
-            'defenseMod' => new Zend_Db_Expr('"defenseMod" + 1')
+            'defenseMod' => $defenseMod
         );
 
         return self::update('castlesingame', $data, $where, $db);
@@ -2667,6 +2679,18 @@ Brak y
         self::prepareGameHistoryOutData('defenderArmy', $data, $token);
         self::prepareGameHistoryOutData('path', $data, $token);
         self::prepareGameHistoryOutData('battle', $data, $token);
+//        oldArmyId
+//        deletedIds
+//        victory
+//        castleId
+//        ruinId
+//lost
+//gold
+//costs
+//income
+//armies
+//nr
+//action
 
         $data['data'] = Zend_Json::encode($token);
 

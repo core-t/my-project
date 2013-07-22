@@ -102,7 +102,7 @@ function makeMyCursorLock() {
     $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
 }
 
-function titleBlink(msg) {
+function titleBlinkk(msg) {
     if (timeoutId) {
         clearInterval(timeoutId);
     }
@@ -113,11 +113,16 @@ function titleBlink(msg) {
             document.title = msg;
         }
     });
-    window.onmousemove = function () {
+    $(document).bind("mousemove keypress", function () {
         clearInterval(timeoutId);
         document.title = documentTitle;
         window.onmousemove = null;
-    };
+    });
+//    window.onmousemove = function () {
+//        clearInterval(timeoutId);
+//        document.title = documentTitle;
+//        window.onmousemove = null;
+//    };
 }
 
 function getColor(color) {
@@ -307,6 +312,7 @@ function adjustGui() {
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
     } else {
-        zoomer.lens.setdimensions(documentWidth, documentHeigh);
+        zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
+        zoomer.lens.setdimensions();
     }
 }

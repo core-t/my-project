@@ -1,10 +1,11 @@
-function zoom(zoomWidth, zoomHeight) {
+function zoom(gameWidth, gameHeight) {
     var el = $('#game');
     var obj = this;
     var settings = {
-        zoomWidth:zoomWidth,
-        zoomHeight:zoomHeight
+        gameWidth: gameWidth,
+        gameHeight: gameHeight
     };
+
     largeimageloaded = false; //tell us if large image is loaded
     el.scale = {};
     el.mousepos = {};
@@ -15,7 +16,7 @@ function zoom(zoomWidth, zoomHeight) {
     var largeimage = new Largeimage();
 
     $.extend(obj, {
-        init:function () {
+        init: function () {
             //drag option
             $(".zoomPad", el).mousedown(function () {
                 el.mouseDown = true;
@@ -53,10 +54,10 @@ function zoom(zoomWidth, zoomHeight) {
             });
             largeimage.loadimage();
         },
-        load:function () {
+        load: function () {
             largeimage.loadimage();
         },
-        activate:function (e) {
+        activate: function (e) {
             //show lens and zoomWindow
             lens.show();
         }
@@ -134,18 +135,18 @@ function zoom(zoomWidth, zoomHeight) {
         this.node = $('.zoomPup');
         this.setdimensions = function (width, hidth) {
             if (width && hidth) {
-                var zoomWidth = width;
-                var zoomHeight = hidth;
+                var gameWidth = width;
+                var gameHeight = hidth;
             } else {
-                var zoomWidth = settings.zoomWidth;
-                var zoomHeight = settings.zoomHeight;
+                var gameWidth = settings.gameWidth;
+                var gameHeight = settings.gameHeight;
             }
 
-            this.node.w = (parseInt((zoomWidth) / el.scale.x) > smallimage.w ) ? smallimage.w : (parseInt(zoomWidth / el.scale.x));
-            this.node.h = (parseInt((zoomHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(zoomHeight / el.scale.y));
+            this.node.w = (parseInt((gameWidth) / el.scale.x) > smallimage.w ) ? smallimage.w : (parseInt(gameWidth / el.scale.x));
+            this.node.h = (parseInt((gameHeight) / el.scale.y) > smallimage.h ) ? smallimage.h : (parseInt(gameHeight / el.scale.y));
             this.node.css({
-                'width':this.node.w,
-                'height':this.node.h
+                'width': this.node.w,
+                'height': this.node.h
             });
             this.node.top = (smallimage.oh - this.node.h - 2) / 2;
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
@@ -153,9 +154,9 @@ function zoom(zoomWidth, zoomHeight) {
         this.setcenter = function (x, y) {
 //            console.log(x);
 //            console.log(y);
-            this.node.top = parseInt((parseInt(y) - settings.zoomHeight / 2) / el.scale.y);
+            this.node.top = parseInt((parseInt(y) - settings.gameHeight / 2) / el.scale.y);
 //            console.log(this.node.top);
-            this.node.left = parseInt((parseInt(x) - settings.zoomWidth / 2) / el.scale.x);
+            this.node.left = parseInt((parseInt(x) - settings.gameWidth / 2) / el.scale.x);
 //            console.log(this.node.left);
             if (this.node.top > smallimage.h) {
                 this.node.top = smallimage.h;
@@ -168,8 +169,8 @@ function zoom(zoomWidth, zoomHeight) {
                 this.node.left = -1;
             }
             this.node.css({
-                top:this.node.top,
-                left:this.node.left
+                top: this.node.top,
+                left: this.node.left
             });
             largeimage.setposition();
         };
@@ -212,8 +213,8 @@ function zoom(zoomWidth, zoomHeight) {
             this.node.left = lensleft;
             this.node.top = lenstop;
             this.node.css({
-                'left':lensleft + 'px',
-                'top':lenstop + 'px'
+                'left': lensleft + 'px',
+                'top': lenstop + 'px'
             });
             largeimage.setposition();
         };
@@ -267,8 +268,8 @@ function zoom(zoomWidth, zoomHeight) {
                                     var left = parseInt(largeimage.node.css('left'));
                                     var top = parseInt(largeimage.node.css('top'));
 
-                                    var centerPageX = settings.zoomWidth / 2;
-                                    var centerPageY = settings.zoomHeight / 2;
+                                    var centerPageX = settings.gameWidth / 2;
+                                    var centerPageY = settings.gameHeight / 2;
 
                                     $obj.node.mousemove(function (e) {
                                         lens.setcenter((centerPageX + (pageX - e.pageX)) - left, (centerPageY + (pageY - e.pageY)) - top);
@@ -319,8 +320,8 @@ function zoom(zoomWidth, zoomHeight) {
             var left = -el.scale.x * (lens.getoffset().left - smallimage.bleft + 1);
             var top = -el.scale.y * (lens.getoffset().top - smallimage.btop + 1);
             this.node.css({
-                'left':left + 'px',
-                'top':top + 'px'
+                'left': left + 'px',
+                'top': top + 'px'
             });
         };
         return this;
@@ -329,4 +330,11 @@ function zoom(zoomWidth, zoomHeight) {
     this.lensSetCenter = function (wi, hi) {
         lens.setcenter(wi, hi);
     };
+
+    this.setSettings = function (gameWidth, gameHeight) {
+        settings = {
+            gameWidth: gameWidth,
+            gameHeight: gameHeight
+        };
+    }
 }
