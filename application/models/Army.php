@@ -73,7 +73,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 
     private function getArmyHeroes($armyId, $in = false) {
         $select = $this->_db->select()
-                ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
+                ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
                 ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
                 ->where('"gameId" = ?', $this->_gameId)
                 ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');

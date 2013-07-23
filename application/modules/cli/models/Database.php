@@ -363,7 +363,7 @@ Brak y
     static private function getArmyHeroes($gameId, $armyId, $in, $db)
     {
         $select = $db->select()
-            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints'))
+            ->from(array('a' => 'hero'), array('heroId', 'name', 'numberOfMoves', 'attackPoints', 'defensePoints'))
             ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
             ->where('"gameId" = ?', $gameId)
             ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
@@ -1006,7 +1006,7 @@ Brak y
         }
     }
 
-    static public function buildDefense($gameId, $castleId, $playerId, $db,$defenseMod)
+    static public function buildDefense($gameId, $castleId, $playerId, $db, $defenseMod)
     {
 //        $select = $db->select()
 //            ->from('castlesingame', 'defenseMod')
@@ -2673,24 +2673,34 @@ Brak y
 
         unset($token['type']);
 
-        self::prepareGameHistoryOutData('attackerColor', $data, $token);
-        self::prepareGameHistoryOutData('attackerArmy', $data, $token);
-        self::prepareGameHistoryOutData('defenderColor', $data, $token);
-        self::prepareGameHistoryOutData('defenderArmy', $data, $token);
-        self::prepareGameHistoryOutData('path', $data, $token);
-        self::prepareGameHistoryOutData('battle', $data, $token);
-//        oldArmyId
-//        deletedIds
-//        victory
-//        castleId
-//        ruinId
-//lost
-//gold
-//costs
-//income
-//armies
-//nr
-//action
+        $keys = array(
+            'attackerColor',
+            'attackerArmy',
+            'defenderColor',
+            'defenderArmy',
+            'path',
+            'battle',
+            'oldArmyId',
+            'deletedIds',
+            'victory',
+            'castleId',
+            'ruinId',
+            'lost',
+            'win',
+            'gold',
+            'costs',
+            'income',
+            'armies',
+            'nr',
+            'action',
+            'color',
+            'x',
+            'y',
+        );
+
+        foreach ($keys as $key) {
+            self::prepareGameHistoryOutData($key, $data, $token);
+        }
 
         $data['data'] = Zend_Json::encode($token);
 
@@ -2707,6 +2717,12 @@ Brak y
         if (array_key_exists($value, $token)) {
             if (is_array($token[$value])) {
                 $data[$value] = Zend_Json::encode($token[$value]);
+            } elseif (is_bool($token[$value])) {
+                if ($token[$value]) {
+                    $data[$value] = 't';
+                } else {
+                    $data[$value] = 'f';
+                }
             } else {
                 $data[$value] = $token[$value];
             }

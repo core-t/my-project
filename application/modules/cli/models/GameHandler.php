@@ -50,6 +50,24 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
             return;
         }
 
+        if ($dataIn['type'] == 'tower') {
+            $towerId = $dataIn['towerId'];
+            if ($towerId === null) {
+                $this->sendError($user, 'No "towerId"!');
+                return;
+            }
+
+            $playerId = Cli_Model_Database::getTurnPlayerId($user->parameters['gameId'], $db);
+            // sprawdzić czy armia gracza jest w pobliżu wieży
+
+            if (Cli_Model_Database::towerExists($db, $towerId, $user->parameters['gameId'])) {
+                Cli_Model_Database::changeTowerOwner($db, $towerId, $playerId, $user->parameters['gameId']);
+            } else {
+                Cli_Model_Database::addTower($db, $towerId, $playerId, $user->parameters['gameId']);
+            }
+            return;
+        }
+
         if (!Cli_Model_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
             $this->sendError($user, 'Not your turn.');
             return;
@@ -73,20 +91,6 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
                 }
 
                 new Cli_Model_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
-                break;
-
-            case 'tower':
-                $towerId = $dataIn['towerId'];
-                if ($towerId === null) {
-                    $this->sendError($user, 'No "towerId"!');
-                    return;
-                }
-
-                if (Cli_Model_Database::towerExists($db, $towerId, $user->parameters['gameId'])) {
-                    Cli_Model_Database::changeTowerOwner($db, $towerId, $user->parameters['playerId'], $user->parameters['gameId']);
-                } else {
-                    Cli_Model_Database::addTower($db, $towerId, $user->parameters['playerId'], $user->parameters['gameId']);
-                }
                 break;
 
             case 'splitArmy':

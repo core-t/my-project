@@ -15,6 +15,22 @@ class Admin_Model_Historyout extends Coret_Model_ParentDb
         'defenderArmy' => array('label' => 'D army', 'typ' => 'varchar'),
         'path' => array('label' => 'Path', 'typ' => 'varchar'),
         'battle' => array('label' => 'Battle', 'typ' => 'varchar'),
+        'oldArmyId' => array('label' => 'oldArmyId', 'typ' => 'varchar'),
+        'deletedIds' => array('label' => 'deletedIds', 'typ' => 'varchar'),
+        'victory' => array('label' => 'victory', 'typ' => 'varchar'),
+        'castleId' => array('label' => 'castleId', 'typ' => 'varchar'),
+        'ruinId' => array('label' => 'ruinId', 'typ' => 'varchar'),
+        'lost' => array('label' => 'lost', 'typ' => 'varchar'),
+        'win' => array('label' => 'win', 'typ' => 'varchar'),
+        'gold' => array('label' => 'gold', 'typ' => 'varchar'),
+        'costs' => array('label' => 'costs', 'typ' => 'varchar'),
+        'income' => array('label' => 'income', 'typ' => 'varchar'),
+        'armies' => array('label' => 'armies', 'typ' => 'varchar'),
+        'nr' => array('label' => 'nr', 'typ' => 'varchar'),
+        'action' => array('label' => 'action', 'typ' => 'varchar'),
+        'color' => array('label' => 'color', 'typ' => 'varchar'),
+        'x' => array('label' => 'x', 'typ' => 'varchar'),
+        'y' => array('label' => 'y', 'typ' => 'varchar'),
     );
     protected $_columns_lang = array();
     protected $_order = 'data';
