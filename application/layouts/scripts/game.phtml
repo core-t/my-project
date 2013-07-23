@@ -26,7 +26,7 @@
             </div>
             <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
             </div>
-            <div id="goldBox">
+            <div id="goldBox" class="box">
                 <div class="left">
                     <div><?php echo $this->translate('Income') ?></div>
                     <div class="text-right font-yellow" id="income">0</div>
@@ -40,7 +40,7 @@
                     <div class="text-right font-yellow" id="gold">0</div>
                 </div>
             </div>
-            <div id="playersBox">
+            <div id="playersBox" class="box">
                 <div id="turn"><span id="turnNumber"></span></div>
                 <div id="first" class="nr white">1</div>
                 <div id="second" class="nr yellow">2</div>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <div id="armyBox">
+            <div id="armyBox" class="box">
                 <div id="nameBox"><?php echo $this->translate('Name') ?>: <span id="name" class="font-yellow"></span>
                 </div>
                 <div id="attrBox">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div id="timer">
+            <div id="timerBox" class="box">
                 <table>
                     <tr>
                         <th><?php echo $this->translate('Color') ?></th>
@@ -133,7 +133,7 @@
                     </tr>
                 </table>
             </div>
-            <div id="chatBox">
+            <div id="chatBox" class="box">
                 <div id="chatWindow">
                     <div></div>
                 </div>

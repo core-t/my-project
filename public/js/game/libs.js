@@ -37,6 +37,9 @@ function changeTurn(color, nr) {
     }
     $('#turn').css('background', color);
     $('#turnNumber').html(turn.nr);
+
+    timer.update();
+
     if (turn.color == my.color) {
         turnOn();
         wsStartMyTurn();
@@ -102,7 +105,7 @@ function makeMyCursorLock() {
     $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
 }
 
-function titleBlinkk(msg) {
+function titleBlink(msg) {
     if (timeoutId) {
         clearInterval(timeoutId);
     }
@@ -292,7 +295,7 @@ function adjustGui() {
 
     messageLeft = documentWidth / 2 - 160;
 
-    var left = documentWidth - 252;
+    var left = documentWidth - 237;
     var chatLeft = documentWidth - 500;
     var top = documentHeigh - 153;
     $('#chatBox').css({
@@ -309,6 +312,10 @@ function adjustGui() {
     $('#armyBox').css({
         'left': left + 'px'
     });
+    $('#timerBox').css({
+        'left': left + 'px'
+    });
+
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
     } else {

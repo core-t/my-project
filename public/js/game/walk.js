@@ -39,7 +39,7 @@ function walk(r, xy, computer) {
         $('#army' + r.oldArmyId).animate({
                 left:(r.path[i].x * 40) + 'px',
                 top:(r.path[i].y * 40) + 'px'
-            }, 300,
+            }, 200,
             function () {
                 if (typeof r.path[i] == 'undefined') {
                     console.log('coś tu nie gra');

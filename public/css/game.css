@@ -41,7 +41,7 @@
     box-shadow: 5px 5px 20px #000;
     padding: 10px;
     width: 213px;
-    height: 132px;
+    height: 155px;
     top: -10px;
     left: -10px;
 }
@@ -229,15 +229,8 @@
 }
 
 #playersBox {
-    position: absolute;
-    color: white;
-    z-index: 27000;
-    top: 0px;
-    background: transparent url('../img/game/message_bg.png');
+    border-top: none;
     border-bottom-left-radius: 10px;
-    border: 1px solid #555;
-    box-shadow: 5px 5px 20px #000;
-    padding: 11px;
     width: 230px;
 }
 
@@ -579,15 +572,9 @@
 }
 
 #chatBox {
-    text-transform: none;
-    position: absolute;
-    z-index: 27000;
-    background: transparent url('../img/game/message_bg.png');
     width: 500px;
     border-top-left-radius: 10px;
-    border: 1px solid #555;
-    box-shadow: 5px 5px 20px #000;
-    padding: 3px;
+    text-transform: none;
 }
 
 #chatBox #chatWindow {
@@ -631,42 +618,82 @@
     width: 28px;
 }
 
+#timerBox {
+    top: 602px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    width: 230px;
+}
+
+#timerBox table {
+    width: 100%;
+}
+
+#timerBox #time {
+    overflow: hidden;
+}
+
+#timerBox #time div {
+    float: right;
+}
+
+#timerBox table td, #timerBox table th {
+    padding: 1px;
+}
+
+#timerBox td {
+    border: none;
+}
+
+#timerBox #second {
+    width: 20px;
+    text-align: center;
+}
+
+#timerBox #minute {
+    width: 20px;
+    text-align: center;
+}
+
+#timerBox #hour {
+    min-width: 20px;
+    text-align: center;
+}
+
 #goldBox {
-    position: absolute;
-    color: #fff;
-    z-index: 27000;
-    top: 3px;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #goldBox div div {
     width: 56px;
     height: 14px;
-}
-
-#nameBox {
-    height: 14px;
+    padding: 2px;
+    text-align: center;
 }
 
 #armyBox {
-    position: absolute;
-    color: #fff;
-    z-index: 27000;
     top: 316px;
-    background: transparent url('../img/game/message_bg.png');
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    border: 1px solid #555;
-    box-shadow: 5px 5px 20px #000;
-    padding: 11px;
     width: 230px;
 }
 
-#attrBox {
-    line-height: 26px;
+#armyBox #nameBox {
+    line-height: 14px;
+    margin: 5px;
+    background: url("../img/bg_0.jpg");
 }
 
-#attrBox div {
-    width: 76px;
+#armyBox #attrBox {
+    height: 26px;
+    margin: 5px;
+}
+
+#armyBox #attrBox div {
+    width: 73px;
+    background: url("../img/bg_0.jpg");
 }
 
 .text-right {
@@ -707,4 +734,14 @@
     position: absolute;
     top: 10px;
     left: 255px;
+}
+
+.box {
+    position: absolute;
+    z-index: 27000;
+    background: transparent url('../img/game/message_bg.png');
+    border: 1px solid #555;
+    box-shadow: 5px 5px 20px #000;
+    padding: 3px;
+    color: #fff;
 }

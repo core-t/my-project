@@ -15,12 +15,15 @@ var terrain = {
 }
 
 function cursorPosition(x, y, force) {
+    var offset = $('.zoomWindow').offset();
+    var X = x - 20 - parseInt(board.css('left')) - offset.left;
+    var Y = y - 20 - parseInt(board.css('top')) - offset.top;
+    var destX = Math.round(X / 40);
+    var destY = Math.round(Y / 40);
+
+    $('#coord').html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
+
     if (selectedArmy) {
-        var offset = $('.zoomWindow').offset();
-        var X = x - 20 - parseInt(board.css('left')) - offset.left;
-        var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        var destX = Math.round(X / 40);
-        var destY = Math.round(Y / 40);
         var tmpX = destX * 40;
         var tmpY = destY * 40;
         if (newX == tmpX && newY == tmpY && force != 1) {
@@ -36,7 +39,7 @@ function cursorPosition(x, y, force) {
         var start = new node(startX, startY, destX, destY, 0);
         open[startX + '_' + startY] = start;
         aStar(close, open, destX, destY, 1);
-        $('#coord').html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
+
         return showPath(close, destX + '_' + destY, selectedArmy.moves);
     }
     return null;

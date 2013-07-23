@@ -142,5 +142,6 @@ function startGame() {
     costsUpdate(costs);
     income += countPlayerTowers(my.color) * 5;
     incomeUpdate(income);
+    timer.start();
 }
 

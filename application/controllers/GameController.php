@@ -22,8 +22,8 @@ class GameController extends Game_Controller_Game {
         $this->view->headScript()->appendFile('/js/game/libs.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/zoom.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/websocket.js?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/ajax.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/message.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/timer.js?v=' . Zend_Registry::get('config')->version);
 
         $this->_helper->layout->setLayout('game');
 
