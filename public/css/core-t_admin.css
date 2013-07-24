@@ -141,6 +141,7 @@ table#main td a:hover {
 
 table#list {
     margin: 0 auto;
+    min-width: 900px;
 }
 
 table#list td {
@@ -368,4 +369,8 @@ legend {
 
 label {
     font-size: 14px;
+}
+
+#order {
+    margin: 0 3px;
 }

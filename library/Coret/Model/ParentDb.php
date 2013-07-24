@@ -186,7 +186,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return mixed
      */
-    protected function getSelect($order, array $columns, array $columns_lang)
+    protected function getSelect($sort, $order, array $columns, array $columns_lang)
     {
         $select = $this->_db->select();
 
@@ -200,7 +200,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $select = $this->addSelectWhereLang($select);
         $select = $this->addSelectWhere($select);
         $select = $this->addGroup($select);
-        $select = $this->addOrder($order, $select);
+        $select = $this->addOrder($sort, $order, $select);
 
         return $select;
     }
@@ -209,9 +209,9 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return array
      */
-    public function getList($order, array $columns = array(), array $columns_lang = array())
+    public function getList($sort = '', $order = '', array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($order, $columns, $columns_lang);
+        $select = $this->getSelect($sort, $order, $columns, $columns_lang);
         return $this->_db->fetchAll($select);
     }
 
@@ -219,9 +219,9 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return Zend_Paginator_Adapter_DbSelect
      */
-    public function getPagination($order, array $columns = array(), array $columns_lang = array())
+    public function getPagination($sort, $order, array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($order, $columns, $columns_lang);
+        $select = $this->getSelect($sort, $order, $columns, $columns_lang);
         return new Zend_Paginator_Adapter_DbSelect($select);
     }
 
@@ -336,12 +336,20 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param $select
      * @return mixed
      */
-    protected function addOrder($order, $select)
+    protected function addOrder($sort, $order, $select)
     {
-        if ($order) {
-            $select->order($order);
-        } elseif (isset($this->_order) && $this->_order) {
-            $select->order($this->_order);
+        if ($sort) {
+            if ($order) {
+                $select->order($sort . ' ' . $order);
+            } else {
+                $select->order($sort);
+            }
+        } elseif (isset($this->_sort) && $this->_sort) {
+            if (isset($this->_order) && $this->_order) {
+                $select->order($this->_sort . ' ' . $order);
+            } else {
+                $select->order($this->_sort);
+            }
         }
 
         return $select;

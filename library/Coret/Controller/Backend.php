@@ -82,7 +82,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $this->view->kolumny = $m->getColumnsAll();
         $this->view->primary = $m->getPrimary();
 
-        $this->view->paginator = new Zend_Paginator($m->getPagination($this->_request->getParam('order')));
+        $this->view->paginator = new Zend_Paginator($m->getPagination($this->_request->getParam('sort'),$this->_request->getParam('order')));
         $this->view->paginator->setCurrentPageNumber($this->_request->getParam('page'));
         $this->view->paginator->setItemCountPerPage($this->itemCountPerPage);
     }
