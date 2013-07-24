@@ -356,7 +356,8 @@ function selectArmy(a) {
     if (typeof selectedArmy.heroKey != 'undefined' && getRuinId(selectedArmy) !== null) {
         $('#searchRuins').removeClass('buttonOff');
     }
-    zoomer.lensSetCenter(a.x * 40, a.y * 40);
+//    zoomer.lensSetCenter(a.x * 40, a.y * 40);
+    zoomer.setCenterIfOutOfScreen(a.x * 40, a.y * 40);
 }
 
 function unselectArmy(skipJoin) {

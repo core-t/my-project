@@ -339,21 +339,24 @@ function zoom(gameWidth, gameHeight) {
     }
 
     this.setCenterIfOutOfScreen = function (x, y) {
-        var top = parseInt((parseInt(y) - settings.gameHeight / 2) / el.scale.y);
-        console.log(top);
-        console.log(lens.node.top);
-        console.log(lens.node.top + lens.node.h);
+        var top = parseInt(parseInt(y) / el.scale.y);
+        var lensTop = parseInt($('.zoomPup').css('top'));
+        var lensHeight = parseInt($('.zoomPup').css('height'));
 
-        var left = parseInt((parseInt(x) - settings.gameWidth / 2) / el.scale.x);
-        console.log(left);
-        console.log(lens.node.lens);
-        console.log(lens.node.left + lens.node.w);
+        var maxTop = lensTop + lensHeight - 1;
+        var minTop = lensTop + 1;
 
-        if (top > lens.node.top + lens.node.h && top < lens.node.top) {
+        var left = parseInt((parseInt(x)) / el.scale.x);
+        var lensLeft = parseInt($('.zoomPup').css('left'));
+        var lensWidth = parseInt($('.zoomPup').css('width'));
+
+        var maxLeft = lensLeft + lensWidth - 1;
+        var minLeft = lensLeft + 1;
+
+        if ((top >= maxTop) || (top <= minTop)) {
             lens.setcenter(x, y);
-        } else if (left > lens.node.left + lens.node.w && left < lens.node.left) {
+        } else if ((left >= maxLeft) || (left <= minLeft)) {
             lens.setcenter(x, y);
         }
-
     };
 }

@@ -61,10 +61,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             // sprawdzić czy armia gracza jest w pobliżu wieży
 
             if (Cli_Model_Database::towerExists($db, $towerId, $user->parameters['gameId'])) {
-                echo 'aaa';
                 Cli_Model_Database::changeTowerOwner($db, $towerId, $playerId, $user->parameters['gameId']);
             } else {
-                echo 'bbb';
                 Cli_Model_Database::addTower($db, $towerId, $playerId, $user->parameters['gameId']);
             }
             return;
