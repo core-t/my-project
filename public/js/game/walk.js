@@ -35,10 +35,10 @@ function walk(r, xy, computer) {
 
         return;
     } else {
-        //        zoomer.lensSetCenter(r.path[i].x*40, r.path[i].y*40);
+        zoomer.setCenterIfOutOfScreen(r.path[i].x * 40, r.path[i].y * 40);
         $('#army' + r.oldArmyId).animate({
-                left:(r.path[i].x * 40) + 'px',
-                top:(r.path[i].y * 40) + 'px'
+                left: (r.path[i].x * 40) + 'px',
+                top: (r.path[i].y * 40) + 'px'
             }, 200,
             function () {
                 if (typeof r.path[i] == 'undefined') {

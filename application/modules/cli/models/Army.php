@@ -65,6 +65,7 @@ class Cli_Model_Army
             $this->army['terrainCosts']['s'] = $modMovesSwamp;
             $this->army['terrainCosts']['m'] = $modMovesHills;
         }
+        var_dump($this->army);
     }
 
     public function getArmy()
@@ -144,22 +145,34 @@ class Cli_Model_Army
 
         for ($i = 0; $i < count($path); $i++) {
             $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
+            var_dump('$defaultMoveCost=');
+            var_dump($defaultMoveCost);
 
             foreach ($this->army['soldiers'] as $soldier) {
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
 
-                if ($path[$i]['tt'] == 'f') {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
-                } elseif ($path[$i]['tt'] == 's') {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
-                } elseif ($path[$i]['tt'] == 'm') {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
+                if ($this->army['canFly'] <= 0) {
+                    if ($path[$i]['tt'] == 'f') {
+                        var_dump('f');
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
+                    } elseif ($path[$i]['tt'] == 's') {
+                        var_dump('s');
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
+                    } elseif ($path[$i]['tt'] == 'm') {
+                        var_dump('m');
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
+                    } else {
+                        var_dump('def');
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                    }
                 } else {
+                    var_dump('def');
                     $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
-
+                var_dump('$soldiersMovesLeft[$soldier[\'soldierId\']]');
+                var_dump($soldiersMovesLeft[$soldier['soldierId']]);
                 if ($soldiersMovesLeft[$soldier['soldierId']] < 0) {
                     $skip = true;
                 }

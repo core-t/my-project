@@ -7,7 +7,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_PublicHandler extends Cli_Model_WofHandler {
+class Cli_Model_PublicHandler extends Cli_WofHandler {
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
 

@@ -7,7 +7,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_GameHandler extends Cli_Model_WofHandler
+class Cli_Model_GameHandler extends Cli_WofHandler
 {
 
     public function __construct()
@@ -61,8 +61,10 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
             // sprawdzić czy armia gracza jest w pobliżu wieży
 
             if (Cli_Model_Database::towerExists($db, $towerId, $user->parameters['gameId'])) {
+                echo 'aaa';
                 Cli_Model_Database::changeTowerOwner($db, $towerId, $playerId, $user->parameters['gameId']);
             } else {
+                echo 'bbb';
                 Cli_Model_Database::addTower($db, $towerId, $playerId, $user->parameters['gameId']);
             }
             return;
@@ -70,6 +72,10 @@ class Cli_Model_GameHandler extends Cli_Model_WofHandler
 
         if (!Cli_Model_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
             $this->sendError($user, 'Not your turn.');
+
+            if (Zend_Registry::get('config')->exitOnErrors) {
+                exit;
+            }
             return;
         }
 

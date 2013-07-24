@@ -35,7 +35,7 @@ $application->getBootstrap()->bootstrap(array('date', 'config', 'modules', 'fron
 declare(ticks = 1);
 
 // Start server
-$server = new Cli_Model_WofSocketServer();
+$server = new Cli_WofSocketServer();
 $server->run();
 
 exit;

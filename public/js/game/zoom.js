@@ -337,4 +337,23 @@ function zoom(gameWidth, gameHeight) {
             gameHeight: gameHeight
         };
     }
+
+    this.setCenterIfOutOfScreen = function (x, y) {
+        var top = parseInt((parseInt(y) - settings.gameHeight / 2) / el.scale.y);
+        console.log(top);
+        console.log(lens.node.top);
+        console.log(lens.node.top + lens.node.h);
+
+        var left = parseInt((parseInt(x) - settings.gameWidth / 2) / el.scale.x);
+        console.log(left);
+        console.log(lens.node.lens);
+        console.log(lens.node.left + lens.node.w);
+
+        if (top > lens.node.top + lens.node.h && top < lens.node.top) {
+            lens.setcenter(x, y);
+        } else if (left > lens.node.left + lens.node.w && left < lens.node.left) {
+            lens.setcenter(x, y);
+        }
+
+    };
 }

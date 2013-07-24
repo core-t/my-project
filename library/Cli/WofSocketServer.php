@@ -18,7 +18,7 @@ interface IWebSocketServerObserver {
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_WofSocketServer implements IWebSocketServerObserver {
+class Cli_WofSocketServer implements IWebSocketServerObserver {
 
     protected $debug = true;
     protected $server;

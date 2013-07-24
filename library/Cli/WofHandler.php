@@ -5,7 +5,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_WofHandler extends WebSocket_UriHandler {
+class Cli_WofHandler extends WebSocket_UriHandler {
 
     /**
      * @param $db

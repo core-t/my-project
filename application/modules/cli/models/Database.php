@@ -2733,11 +2733,11 @@ Brak y
 
     static public function towerExists($db, $towerId, $gameId)
     {
+        $select = $db->select()
+            ->from('tower', 'towerId')
+            ->where('"towerId" = ?', $towerId)
+            ->where('"gameId" = ?', $gameId);
         try {
-            $select = $db->select()
-                ->from('tower', 'towerId')
-                ->where('"towerId" = ?', $towerId)
-                ->where('"gameId" = ?', $gameId);
             return $db->fetchOne($select);
         } catch (Exception $e) {
             echo $e;
@@ -2750,8 +2750,10 @@ Brak y
         $data = array(
             'playerId' => $playerId
         );
-        $where[] = $db->quoteInto('"tower" = ?', $towerId);
-        $where[] = $db->quoteInto('"gameId" = ?', $gameId);
+        $where = array(
+            $db->quoteInto('"towerId" = ?', $towerId),
+            $db->quoteInto('"gameId" = ?', $gameId)
+        );
 
         return self::update('tower', $data, $where, $db, true);
     }
