@@ -51,31 +51,31 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
         return '<tr><th><a href="' . $this->view->url(array('order' => null)) . '">Lp</a></th>' . $th . '<th></th></tr>';
     }
 
-    protected function createTableContent(array $v, array $kolumny)
+    protected function createTableContent(array $row, array $columns)
     {
         $this->j++;
         $content = '<tr><td>' . $this->j . '</td>';
-        foreach ($v AS $key => $val) {
-            if (!isset($kolumny[$key])) {
+        foreach (array_keys($columns) as $key) {
+
+            if (!array_key_exists($key, $row)) {
                 continue;
             }
-            if (isset($kolumny[$key]['active']['table']) && !$kolumny[$key]['active']['table']) {
-                continue;
-            }
-            if (!isset($kolumny[$key]['class'])) {
-                $klasa = '';
+
+            if (isset($columns[$key]['class'])) {
+                $cssClass = ' class="' . $columns[$key]['class'] . '"';
             } else {
-                $klasa = ' class="' . $kolumny[$key]['class'] . '"';
+                $cssClass = '';
             }
-            switch ($kolumny[$key]['typ']) {
+
+            switch ($columns[$key]['typ']) {
                 case 'checkbox':
-                    $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::bool($val) . '</td>';
+                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::bool($row[$key]) . '</td>';
                     break;
                 case 'date':
-                    $content .= '<td' . $klasa . '>' . Coret_View_Helper_Formatuj::date($val) . '</td>';
+                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::date($row[$key]) . '</td>';
                     break;
                 default:
-                    $content .= '<td' . $klasa . '>' . substr(strip_tags($val), 0, 100) . '</td>';
+                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::varchar($row[$key]) . '</td>';
                     break;
             }
         }

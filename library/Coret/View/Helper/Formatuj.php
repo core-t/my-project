@@ -43,4 +43,14 @@ class Coret_View_Helper_Formatuj extends Zend_View_Helper_Abstract
             return 'NIE';
         }
     }
+
+    static function varchar($varchar)
+    {
+        if (empty($varchar)) {
+            return;
+        }
+
+        return substr(strip_tags($varchar), 0, 100);
+    }
+
 }
