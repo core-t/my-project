@@ -6,13 +6,13 @@ class Admin_Model_Player extends Coret_Model_ParentDb
     protected $_name = 'player';
     protected $_primary = 'playerId';
     protected $_columns = array(
-        'login' => array('label' => 'Login', 'typ' => 'varchar'),
-        'activity' => array('label' => 'Aktywność', 'typ' => 'date'),
-        'firstName' => array('label' => 'Imię', 'typ' => 'varchar'),
-        'lastName' => array('label' => 'Nazwisko', 'typ' => 'varchar'),
-        'admin' => array('label' => 'Admin', 'typ' => 'checkbox'),
+        'login' => array('label' => 'Login', 'type' => 'varchar'),
+        'activity' => array('label' => 'Aktywność', 'type' => 'date'),
+        'firstName' => array('label' => 'Imię', 'type' => 'varchar'),
+        'lastName' => array('label' => 'Nazwisko', 'type' => 'varchar'),
+        'admin' => array('label' => 'Admin', 'type' => 'checkbox'),
 //        'locale' => array('label' => 'Lang', 'typ' => 'varchar'),
-        'creationDate' => array('label' => 'Data utworzenia', 'typ' => 'date')
+        'creationDate' => array('label' => 'Data utworzenia', 'type' => 'date')
     );
 
     public function __construct($params, $id = 0)

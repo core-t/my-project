@@ -96,7 +96,7 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
                 $cssClass = '';
             }
 
-            switch ($columns[$key]['typ']) {
+            switch ($columns[$key]['type']) {
                 case 'checkbox':
                     $content .= '<td class="center' . $cssClass . '">' . Coret_View_Helper_Formatuj::bool($row[$key]) . '</td>';
                     break;

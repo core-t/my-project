@@ -41,8 +41,8 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . $this->_name . '` (
             `' . $this->_primary . '` bigint(20) unsigned NOT NULL AUTO_INCREMENT,';
-        foreach ($this->_columns as $columnName => $vals) {
-            switch ($vals['typ']) {
+        foreach ($this->_columns as $columnName => $val) {
+            switch ($val['typ']) {
                 case 'varchar':
                     $sql .= '`' . $columnName . '` varchar(256) NOT NULL,';
                     break;
@@ -186,7 +186,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return mixed
      */
-    protected function getSelect($sort, $order, array $columns, array $columns_lang)
+    protected function getSelect(array $columns, array $columns_lang)
     {
         $select = $this->_db->select();
 
@@ -200,7 +200,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $select = $this->addSelectWhereLang($select);
         $select = $this->addSelectWhere($select);
         $select = $this->addGroup($select);
-        $select = $this->addOrder($sort, $order, $select);
+        $select = $this->addOrder($select);
 
         return $select;
     }
@@ -209,19 +209,20 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param array $columns
      * @return array
      */
-    public function getList($sort = '', $order = '', array $columns = array(), array $columns_lang = array())
+    public function getList(array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($sort, $order, $columns, $columns_lang);
+        $select = $this->getSelect($columns, $columns_lang);
         return $this->_db->fetchAll($select);
     }
 
     /**
      * @param array $columns
+     * @param array $columns_lang
      * @return Zend_Paginator_Adapter_DbSelect
      */
-    public function getPagination($sort, $order, array $columns = array(), array $columns_lang = array())
+    public function getPagination(array $columns = array(), array $columns_lang = array())
     {
-        $select = $this->getSelect($sort, $order, $columns, $columns_lang);
+        $select = $this->getSelect($columns, $columns_lang);
         return new Zend_Paginator_Adapter_DbSelect($select);
     }
 
@@ -281,6 +282,15 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
             $select->where($this->_name . ' . action = ?', $this->_params['action']);
         }
 
+        $search = Zend_Controller_Front::getInstance()->getRequest()->getParam('search');
+        if ($search) {
+            foreach (array_keys($this->_columns) as $key) {
+                if ($this->_columns[$key]['type'] == 'varchar' || $this->_columns[$key]['type'] == 'text') {
+                    $select->where($this->_name . ' . ' . $this->_db->quoteInto('?', $key) . ' LIKE ?', '%' . $search . '%');
+                }
+            }
+        }
+
         return $select;
     }
 
@@ -336,8 +346,11 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      * @param $select
      * @return mixed
      */
-    protected function addOrder($sort, $order, $select)
+    protected function addOrder($select)
     {
+        $sort = Zend_Controller_Front::getInstance()->getRequest()->getParam('sort');
+        $order = Zend_Controller_Front::getInstance()->getRequest()->getParam('order');
+
         if ($sort) {
             if ($order) {
                 $select->order($sort . ' ' . $order);

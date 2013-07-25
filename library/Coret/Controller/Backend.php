@@ -82,7 +82,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $this->view->kolumny = $m->getColumnsAll();
         $this->view->primary = $m->getPrimary();
 
-        $this->view->paginator = new Zend_Paginator($m->getPagination($this->_request->getParam('sort'), $this->_request->getParam('order')));
+        $this->view->paginator = new Zend_Paginator($m->getPagination());
         $this->view->paginator->setCurrentPageNumber($this->_request->getParam('page'));
         $this->view->paginator->setItemCountPerPage($this->itemCountPerPage);
     }
@@ -211,7 +211,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
             if (isset($row['active']['form']) && !$row['active']['form']) {
                 continue;
             }
-            $className = 'Coret_Form_' . ucfirst($row['typ']);
+            $className = 'Coret_Form_' . ucfirst($row['type']);
             $attributes = array('name' => $key);
             if (isset($row['label'])) {
                 $attributes['label'] = $row['label'];
@@ -248,7 +248,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
 
         foreach ($columnsLang as $key => $row) {
 
-            $className = 'Coret_Form_' . ucfirst($row['typ']);
+            $className = 'Coret_Form_' . ucfirst($row['type']);
             $f = new $className(array('name' => $key, 'label' => $row['label']));
             $this->view->formLang->addElements($f->getElements());
         }

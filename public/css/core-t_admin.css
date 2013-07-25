@@ -397,11 +397,13 @@ form#search {
     padding: 0;
     margin: 0;
     border: none;
+    width: 237px;
 }
 
 form#search dl {
     position: relative;
     top: 10px;
+    margin: 0;
 }
 
 form#search dt {
