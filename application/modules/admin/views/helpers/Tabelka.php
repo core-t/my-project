@@ -20,6 +20,7 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
             throw new Exception('No $controller parameter');
         }
         $table = $this->createTableHeader($columns);
+        $this->initJ();
         if (count($this->view->paginator)) {
             foreach ($this->view->paginator as $row) {
                 $table .= $this->createTableContent($row, $columns);
@@ -36,6 +37,15 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
         } else {
             return $table;
         }
+    }
+
+    protected function initJ()
+    {
+        $page = Zend_Controller_Front::getInstance()->getRequest()->getParam('page');
+        if (empty($page)) {
+            $page = 1;
+        }
+        $this->j = ($page - 1) * $this->view->paginator->getItemCountPerPage();
     }
 
     protected function createTableHeader(array $columns)
@@ -73,7 +83,7 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
     protected function createTableContent(array $row, array $columns)
     {
         $this->j++;
-        $content = '<tr><td>' . $this->j . '</td>';
+        $content = '<tr><td class="right">' . $this->j . '.</td>';
         foreach (array_keys($columns) as $key) {
 
             if (!array_key_exists($key, $row)) {
@@ -81,20 +91,20 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
             }
 
             if (isset($columns[$key]['class'])) {
-                $cssClass = ' class="' . $columns[$key]['class'] . '"';
+                $cssClass = ' ' . $columns[$key]['class'];
             } else {
                 $cssClass = '';
             }
 
             switch ($columns[$key]['typ']) {
                 case 'checkbox':
-                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::bool($row[$key]) . '</td>';
+                    $content .= '<td class="center' . $cssClass . '">' . Coret_View_Helper_Formatuj::bool($row[$key]) . '</td>';
                     break;
                 case 'date':
-                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::date($row[$key]) . '</td>';
+                    $content .= '<td class="center' . $cssClass . '">' . Coret_View_Helper_Formatuj::date($row[$key]) . '</td>';
                     break;
                 default:
-                    $content .= '<td' . $cssClass . '>' . Coret_View_Helper_Formatuj::varchar($row[$key]) . '</td>';
+                    $content .= '<td class="left' . $cssClass . '">' . Coret_View_Helper_Formatuj::varchar($row[$key]) . '</td>';
                     break;
             }
         }

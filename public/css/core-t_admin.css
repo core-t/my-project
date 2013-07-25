@@ -330,6 +330,7 @@ form {
 
 .paginationControl {
     line-height: 20px;
+    text-align: center;
 }
 
 fieldset {
@@ -373,4 +374,19 @@ label {
 
 #order {
     margin: 0 3px;
+}
+
+#list td.left {
+    float: none;
+    text-align: left;
+}
+
+#list td.center {
+    float: none;
+    text-align: center;
+}
+
+#list td.right {
+    float: none;
+    text-align: right;
 }

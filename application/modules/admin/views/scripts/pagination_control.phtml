@@ -2,15 +2,27 @@
     <?php if ($this->pageCount): ?>
         <div>
             <!-- Previous page link -->
-            <?php if (isset($this->previous)): ?><a href="<?php echo $this->url(array('page' => $this->previous)); ?>"><?php echo $this->translate('Back'); ?></a><?php else: ?>Back<?php endif; ?>
+            <?php if (isset($this->previous)): ?>
+                <a href="<?php echo $this->url(array('page' => $this->firs)); ?>"><?php echo $this->translate('First'); ?></a>
+                <a href="<?php echo $this->url(array('page' => $this->previous)); ?>"><?php echo $this->translate('Back'); ?></a>
+            <?php else: ?>
+                First Back
+            <?php endif; ?>
+
             <!-- Next page link -->
-            <?php if (isset($this->next)): ?><a href="<?php echo $this->url(array('page' => $this->next)); ?>">Next</a><?php else: ?>Next<?php endif; ?>
+            <?php if (isset($this->next)): ?>
+                <a href="<?php echo $this->url(array('page' => $this->next)); ?>">Next</a>
+                <a href="<?php echo $this->url(array('page' => $this->last)); ?>">Last</a>
+            <?php else: ?>
+                Next Last
+            <?php endif; ?>
         </div>
     <?php endif; ?>
     <div class="box_pagination">
         <!-- Numbered page links -->
         <?php foreach ($this->pagesInRange as $page): ?>
-            <?php if ($page != $this->current): ?><a href="<?php echo $this->url(array('page' => $page)); ?>">{<?php echo $page; ?>}</a><?php else: ?>{<?php echo $page; ?>}<?php endif; ?>
+            <?php if ($page != $this->current): ?><a href="<?php echo $this->url(array('page' => $page)); ?>">
+                {<?php echo $page; ?>}</a><?php else: ?>{<?php echo $page; ?>}<?php endif; ?>
         <?php endforeach; ?>
     </div>
 </div>
