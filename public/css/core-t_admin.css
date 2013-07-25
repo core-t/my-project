@@ -390,3 +390,48 @@ label {
     float: none;
     text-align: right;
 }
+
+form#search {
+    float: right;
+    background: none;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+form#search dl {
+    position: relative;
+    top: 10px;
+}
+
+form#search dt {
+    display: none;
+}
+
+form#search dd {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    line-height: 50px;
+}
+
+form#search #search-element {
+    left: 0;
+}
+
+form#search #send-element {
+    left: 158px;
+}
+
+input#search {
+    border: 2px solid #aaa;
+    color: #000;
+    background: white;
+    text-decoration: none;
+    border: 2px solid #DDD;
+    padding: 5px 8px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-shadow: 0;
+    display: inline-block;
+}
