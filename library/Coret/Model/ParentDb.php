@@ -236,7 +236,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         }
         $select = $this->_db->select()
             ->from($this->_name)
-            ->where($this->_name . ' . "' . $this->_primary . '" = ?', $id);
+            ->where($this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ?', $id);
 
         $select = $this->addSelectWhereLang($select);
         $select = $this->addSelectWhere($select);
@@ -257,13 +257,13 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     protected function addJoin($select, $columns_lang = array())
     {
         if ($columns_lang) {
-            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_primary . ' = ' . $this->_name . '_Lang . ' . $this->_primary, $columns_lang);
+            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_name . '_Lang . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
         } elseif (isset($this->_columns_lang) && $this->_columns_lang) {
             $columns_lang = array();
             foreach (array_keys($this->_columns_lang) as $column) {
                 $columns_lang[] = $column;
             }
-            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_primary . ' = ' . $this->_name . '_Lang . ' . $this->_primary, $columns_lang);
+            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_name . '_Lang . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
         }
         return $select;
     }
@@ -284,10 +284,17 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
 
         $search = Zend_Controller_Front::getInstance()->getRequest()->getParam('search');
         if ($search) {
+            $whereString = '';
             foreach (array_keys($this->_columns) as $key) {
                 if ($this->_columns[$key]['type'] == 'varchar' || $this->_columns[$key]['type'] == 'text') {
-                    $select->where($this->_name . ' . ' . $this->_db->quoteInto('?', $key) . ' LIKE ?', '%' . $search . '%');
+                    if ($whereString) {
+                        $whereString .= ' OR ';
+                    }
+                    $whereString .= $this->_db->quoteInto($this->_name . ' . ' . $this->_db->quoteIdentifier($key) . ' ILIKE ?', '%' . $search . '%');
                 }
+            }
+            if ($whereString) {
+                $select->where($whereString);
             }
         }
 
