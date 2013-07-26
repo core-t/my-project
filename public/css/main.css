@@ -45,16 +45,7 @@ hr {
 }
 
 #menuTop a {
-    color:#fff;
     float: right;
-    text-decoration: none;
-    line-height:20px;
-    padding-right:10px;
-}
-
-#menuTop a:hover {
-    color: #000;
-    text-shadow:none;
 }
 
 a {
@@ -94,7 +85,7 @@ input {
 }
 
 .button:hover, #submit:hover {
-    color:#fff;
+    color:#da2;
 }
 .button:active, #submit:active {
     color:#000;
@@ -199,7 +190,7 @@ td {
 }
 
 #content form{
-    /*background: url('../img/nav_bg.png');*/
+    background: url('../img/nav_bg.png');
     border-radius: 20px;
     padding: 40px;
     margin-top: 10px;
