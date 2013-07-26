@@ -21,6 +21,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     protected $_name;
     protected $_primary;
     protected $_columns;
+    protected $_adminId = 'adminId';
 
     /**
      * @param array $params
@@ -42,7 +43,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $sql = 'CREATE TABLE IF NOT EXISTS `' . $this->_name . '` (
             `' . $this->_primary . '` bigint(20) unsigned NOT NULL AUTO_INCREMENT,';
         foreach ($this->_columns as $columnName => $val) {
-            switch ($val['typ']) {
+            switch ($val['type']) {
                 case 'varchar':
                     $sql .= '`' . $columnName . '` varchar(256) NOT NULL,';
                     break;
@@ -161,7 +162,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function updateElement($dane)
     {
         $where = array(
-            $this->_db->quoteInto($this->_primary . ' = ?', $this->_id)
+            $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_id)
         );
         $where = $this->addWhere($where);
         return $this->_db->update($this->_name, $dane, $where);
@@ -381,7 +382,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function deleteElement()
     {
         $where = array(
-            $this->_db->quoteInto($this->_primary . ' = ?', $this->_id)
+            $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_id)
         );
 
         $where = $this->addWhere($where);
@@ -395,10 +396,10 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      */
     protected function prepareData(Array $post)
     {
-        $namespace = new Zend_Session_Namespace();
+        $session = new Zend_Session_Namespace('admin');
         $data = array(
-            'data' => new Zend_Db_Expr('now()'),
-            'id_administrator' => $namespace->id
+            'date' => new Zend_Db_Expr('now()'),
+            $this->_adminId => $session->adminId
         );
         $data_lang = array();
         $data_img = array();
@@ -411,7 +412,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
                     next($this->_columns);
                     continue;
                 }
-                if ($this->_columns[$column]['typ'] == 'image') {
+                if ($this->_columns[$column]['type'] == 'image') {
                     if ($post[$column]) {
                         $data_img[$column] = $post[$column];
                     }

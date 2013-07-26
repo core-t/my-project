@@ -7,14 +7,16 @@ class Application_Model_Map extends Game_Db_Table_Abstract
     protected $_sequence = "map_mapId_seq";
     protected $_db;
     protected $mapId;
-    
-    public function __construct($mapId = 0) {
+
+    public function __construct($mapId = 0)
+    {
         $this->mapId = $mapId;
         $this->_db = $this->getDefaultAdapter();
         parent::__construct();
     }
 
-    public function createMap($params, $playerId) {
+    public function createMap($params, $playerId)
+    {
         $data = array(
             'name' => $params['name'],
             'mapWidth' => $params['mapWidth'],
@@ -26,31 +28,50 @@ class Application_Model_Map extends Game_Db_Table_Abstract
         $seq = $this->_db->quoteIdentifier($this->_sequence);
         return $this->_db->lastSequenceId($seq);
     }
-    
-    public function getPlayerMapList($playerId){
+
+    public function getPlayerMapList($playerId)
+    {
         try {
             $select = $this->_db->select()
-                    ->from($this->_name)
-                    ->where('"playerId" = ?', $playerId);
+                ->from($this->_name)
+                ->where('"playerId" = ?', $playerId);
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
-    
-    public function getMap($playerId){
+
+    public function getMap($playerId)
+    {
         try {
             $select = $this->_db->select()
-                    ->from($this->_name)
-                    ->where('"'.$this->_primary.'" = ?', $this->mapId)
-                    ->where('"playerId" = ?', $playerId);
+                ->from($this->_name)
+                ->where('"' . $this->_primary . '" = ?', $this->mapId)
+                ->where('"playerId" = ?', $playerId);
             $result = $this->_db->query($select)->fetchAll();
             return $result[0];
         } catch (PDOException $e) {
             throw new Exception($select->__toString());
         }
     }
-    
-    
+
+    public function getAllMapsList()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name);
+        try {
+            $list = $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+
+        $maps = array();
+
+        foreach ($list as $map) {
+            $maps[$map['mapId']] = $map['name'];
+        }
+
+        return $maps;
+    }
 }
 

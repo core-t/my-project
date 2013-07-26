@@ -15,6 +15,14 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         if (!Zend_Auth::getInstance()->hasIdentity()) {
             $this->_redirect('/admin/login');
         }
+
+        $session = new Zend_Session_Namespace('admin');
+        if (!isset($session->adminId)) {
+            $mAdmin = new Admin_Model_Player();
+            $session->adminId = $mAdmin->getPrimaryIdByLogin(Zend_Auth::getInstance()->getIdentity());
+        }
+
+
         $this->_helper->layout->setLayout('admin');
 
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/core-t_admin.css');
@@ -31,37 +39,6 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $this->view->copyright();
 
         $this->view->controllerName = $this->slugify(strtolower(str_replace(' ', '', $this->view->title)));
-    }
-
-    private function slugify($text)
-    {
-        // replace non letter or digits by -
-        $text = preg_replace('#[^\\pL\d]+#u', '-', $text);
-
-        // trim
-        $text = trim($text, '-');
-
-        $text = str_replace('ł', 'l', $text);
-        $text = str_replace('ś', 's', $text);
-        $text = str_replace('ć', 'c', $text);
-
-        // transliterate
-        if (function_exists('iconv')) {
-//            $text = iconv('UTF-8', 'ASCII//TRANSLIT', utf8_encode($text));
-            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-        }
-
-        // lowercase
-        $text = strtolower($text);
-
-        // remove unwanted characters
-        $text = preg_replace('#[^-\w]+#', '', $text);
-
-        if (empty($text)) {
-            return 'n-a';
-        }
-
-        return $text;
     }
 
     public function __construct(Zend_Controller_Request_Abstract $request, Zend_Controller_Response_Abstract $response, array $invokeArgs = array())
@@ -264,4 +241,36 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
     {
 
     }
+
+    private function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('#[^\\pL\d]+#u', '-', $text);
+
+        // trim
+        $text = trim($text, '-');
+
+        $text = str_replace('ł', 'l', $text);
+        $text = str_replace('ś', 's', $text);
+        $text = str_replace('ć', 'c', $text);
+
+        // transliterate
+        if (function_exists('iconv')) {
+//            $text = iconv('UTF-8', 'ASCII//TRANSLIT', utf8_encode($text));
+            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        }
+
+        // lowercase
+        $text = strtolower($text);
+
+        // remove unwanted characters
+        $text = preg_replace('#[^-\w]+#', '', $text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
 }
+

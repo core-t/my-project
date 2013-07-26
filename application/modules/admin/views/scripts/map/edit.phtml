@@ -1,0 +1,60 @@
+<?php echo $this->pageTitle($this->title); ?>
+<fieldset>
+    <legend>Zmiana danych</legend>
+
+    <?php
+    echo $this->form;
+    ?>
+
+</fieldset>
+<fieldset>
+    <legend>Tłumaczenia</legend>
+
+    <?php
+    echo $this->formLang;
+    ?>
+
+    <div class="button" id="zapisz">zapisz</div>
+</fieldset>
+<script>
+    $(function () {
+        getName();
+        $('#zapisz').click(function () {
+            var data = {
+                'id': $('#id').val(),
+                'id_lang': $('#lang #id_lang').val(),
+                'text': $('#lang #text').val(),
+                'c': '<?php echo $this->controllerName?>'
+            };
+            $.ajax({
+                type: "POST",
+                url: '/admin/ajaxlang/save',
+                data: data,
+                success: function (result) {
+                    alert('Zapisano');
+                }
+            });
+        });
+
+        $('#lang #id_lang').change(function () {
+            getName();
+        });
+    });
+    function getName() {
+        var data = {
+            'id': $('#id').val(),
+            'id_lang': $('#lang #id_lang').val(),
+            'c': '<?php echo $this->controllerName?>'
+        };
+        $.ajax({
+            type: "POST",
+            url: '/admin/ajaxlang/get',
+            data: data,
+            success: function (result) {
+                result = jQuery.parseJSON(result);
+                $('#lang #text').val(result.text);
+            }
+        });
+
+    }
+</script>

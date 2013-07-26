@@ -19,6 +19,12 @@ class Application_Form_Creategame extends Zend_Form
                 )
             )
         );
+
+        $mMap = new Application_Model_Map();
+
+        $f = new Coret_Form_Select(array('name' => 'mapId', 'opt' => $mMap->getAllMapsList()));
+        $this->addElements($f->getElements());
+
         $this->addElement('submit', 'submit', array('label' => $this->getView()->translate('Create game')));
     }
 

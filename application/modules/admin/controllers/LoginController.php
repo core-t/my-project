@@ -19,8 +19,6 @@ class Admin_LoginController extends Zend_Controller_Action {
                 if (!$result->isValid()) {
                     $this->view->form->setDescription('Wprowadzono błędne dane');
                 } else {
-                    $namespace = new Zend_Session_Namespace();
-                    $namespace->idUzytkownik = $auth->getIdentity();
                     $this->_redirect('/admin');
                 }
             }

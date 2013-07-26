@@ -85,6 +85,9 @@ class Admin_View_Helper_Tabelka extends Zend_View_Helper_Abstract
         $this->j++;
         $content = '<tr><td class="right">' . $this->j . '.</td>';
         foreach (array_keys($columns) as $key) {
+            if (isset($columns[$key]['active']['table']) && !$columns[$key]['active']['table']) {
+                continue;
+            }
 
             if (!array_key_exists($key, $row)) {
                 continue;
