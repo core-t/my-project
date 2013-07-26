@@ -20,11 +20,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         return md5(rand(0, time()));
     }
 
-    public function createGame($numberOfPlayers, $playerId)
+    public function createGame($numberOfPlayers, $playerId, $mapId)
     {
         $data = array(
             'numberOfPlayers' => $numberOfPlayers,
-            'gameMasterId' => $playerId
+            'gameMasterId' => $playerId,
+            'mapId' => $mapId
         );
 
         $this->_db->insert($this->_name, $data);

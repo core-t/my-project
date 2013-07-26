@@ -1,8 +1,10 @@
 <?php
 
-class GameController extends Game_Controller_Game {
+class GameController extends Game_Controller_Game
+{
 
-    public function indexAction() {
+    public function indexAction()
+    {
         // action body
         $mGame = new Application_Model_Game($this->_namespace->gameId);
 //        if (!$mGame->isActive()) {
@@ -40,8 +42,7 @@ class GameController extends Game_Controller_Game {
         $neutralTowers = Application_Model_Board::getTowers();
         $playersTowers = $mTower->getTowers();
         $towers = array();
-        foreach (array_keys($neutralTowers) as $k)
-        {
+        foreach (array_keys($neutralTowers) as $k) {
             $towers[$k] = $neutralTowers[$k];
             if (isset($playersTowers[$k])) {
                 $towers[$k]['color'] = $playersTowers[$k];
@@ -59,9 +60,9 @@ class GameController extends Game_Controller_Game {
         $colors = array();
 
         $game = $mGame->getGame();
+        $this->view->map($game['mapId']);
 
-        foreach ($players as $player)
-        {
+        foreach ($players as $player) {
             $colors[$player['playerId']] = $player['color'];
             $this->view->players[$player['color']]['armies'] = $mArmy->getPlayerArmies($player['playerId']);
             $this->view->players[$player['color']]['castles'] = $mCastle->getPlayerCastles($player['playerId']);
@@ -99,27 +100,25 @@ class GameController extends Game_Controller_Game {
         $razed = $mCastle->getRazedCastles();
         $this->view->ruins = Application_Model_Board::getRuins();
         $emptyRuins = $mRuin->getVisited();
-        foreach (array_keys($emptyRuins) as $id)
-        {
+        foreach (array_keys($emptyRuins) as $id) {
             $this->view->ruins[$id]['e'] = 1;
         }
         $this->view->fields = Zend_Json::encode(Application_Model_Board::getBoardFields());
-        foreach ($castlesSchema as $id => $castle)
-        {
+        foreach ($castlesSchema as $id => $castle) {
             if (!isset($razed[$id])) {
                 $this->view->castlesSchema[$id] = $castle;
             }
         }
 
         $this->view->chatHistory = $mChat->getChatHistory();
-        foreach ($this->view->chatHistory as $k => $v)
-        {
+        foreach ($this->view->chatHistory as $k => $v) {
             $this->view->chatHistory[$k]['color'] = $colors[$v['playerId']];
         }
         $this->view->gameId = $this->_namespace->gameId;
     }
 
-    public function boardAction() {
+    public function boardAction()
+    {
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/board.css');
         $this->view->headScript()->prependFile('/js/jquery.min.js');
@@ -129,7 +128,8 @@ class GameController extends Game_Controller_Game {
         $this->_helper->layout->setLayout('board');
     }
 
-    public function testAction() {
+    public function testAction()
+    {
 //         $this->view->headScript()->appendFile('/js/jWebSocket.js');
 //         $this->view->headScript()->appendFile('/js/jwsChannelPlugIn.js');
 //         $this->_helper->layout->setLayout('game');

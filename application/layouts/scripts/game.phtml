@@ -21,7 +21,7 @@
             <div class="zoomPadLayout">
                 <div class="zoomPad">
                     <div class="zoomPup"></div>
-                    <img id="map" src="/img/game/board.png" width="218px">
+                    <?php echo $this->placeholder('map') ?>
                 </div>
             </div>
             <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
@@ -142,8 +142,7 @@
                     <div class="right"><a id="send" class="button"><?php echo $this->translate('Send') ?></a></div>
                 </div>
             </div>
-            <div id="board"
-                 style="background: url('../img/game/board.png') no-repeat;width: 4360px;height:2760px;"></div>
+            <?php echo $this->placeholder('board') ?>
         </div>
     </div>
 </div>

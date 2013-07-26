@@ -9,7 +9,7 @@ class NewController extends Game_Controller_Gui
         if ($this->_request->isPost()) {
             if ($this->view->form->isValid($this->_request->getPost())) {
                 $modelGame = new Application_Model_Game ();
-                $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId']);
+                $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId'], $this->_request->getParam('mapId'));
                 if ($gameId) {
                     $colors = $modelGame->getAllColors();
                     $modelGame->joinGame($this->_namespace->player['playerId']);
