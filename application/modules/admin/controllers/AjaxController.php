@@ -58,4 +58,10 @@ class Admin_AjaxController extends Coret_Controller_BackendAjax {
         echo Zend_Json::encode($data);
     }
 
+    public function aAction()
+    {
+        $mMap = new Admin_Model_Map();
+        $mMap->fields($this->_id);
+    }
+
 }

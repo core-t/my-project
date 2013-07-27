@@ -13,19 +13,19 @@ class Admin_Model_Map extends Coret_Model_ParentDb
     );
     protected $_adminId = 'playerId';
 
-    public function fields()
+    public function fields($mapId)
     {
         $fields = Application_Model_Board::getBoardFields();
         foreach ($fields as $y => $row) {
             foreach ($row as $x => $type) {
                 $data = array(
-                    'mapId' => 4,
+                    'mapId' => $mapId,
                     'x' => $x,
                     'y' => $y,
                     'type' => $type
                 );
                 try {
-                    $this->_db->insert('map', $data);
+                    $this->_db->insert('mapfields', $data);
                 } catch (Exception $e) {
                     echo $e;
                     exit;
