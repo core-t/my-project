@@ -25,7 +25,7 @@ class NewController extends Game_Controller_Gui
                         $modelGame->joinGame($playerId);
                         $modelGame->updatePlayerReady($playerId, $colors[$i]);
                     }
-                    $this->_redirect('/' . Zend_Registry::get('lang') . '/gamesetup/index/gameId/' . $gameId);
+                    $this->_redirect('/' . Zend_Registry::get('lang') . '/setup/index/gameId/' . $gameId);
                 }
             }
         }

@@ -37,9 +37,12 @@ class GameController extends Game_Controller_Game
         $mArtefact = new Application_Model_Artefact();
         $mChat = new Application_Model_Chat($this->_namespace->gameId);
 
+        $game = $mGame->getGame();
+
         $this->view->artefacts = $mArtefact->getArtefacts();
         $this->view->units = $mUnit->getUnits();
-        $neutralTowers = Application_Model_Board::getTowers();
+        $mMapTowers = new Application_Model_MapTowers($game['mapId']);
+        $neutralTowers = $mMapTowers->getMapTowers();
         $playersTowers = $mTower->getTowers();
         $towers = array();
         foreach (array_keys($neutralTowers) as $k) {
@@ -59,7 +62,8 @@ class GameController extends Game_Controller_Game
         $this->view->turn = array();
         $colors = array();
 
-        $game = $mGame->getGame();
+        $mMapFields = new Application_Model_MapFields($game['mapId']);
+        $mMapCastles = new Application_Model_MapCastles($game['mapId']);
         $this->view->map($game['mapId']);
 
         foreach ($players as $player) {
@@ -96,15 +100,15 @@ class GameController extends Game_Controller_Game
         }
 
         $this->view->castlesSchema = array();
-        $castlesSchema = Application_Model_Board::getCastlesSchema();
         $razed = $mCastle->getRazedCastles();
-        $this->view->ruins = Application_Model_Board::getRuins();
+        $mMapRuins = new Application_Model_MapRuins($game['mapId']);
+        $this->view->ruins = $mMapRuins->getMapRuins();
         $emptyRuins = $mRuin->getVisited();
         foreach (array_keys($emptyRuins) as $id) {
             $this->view->ruins[$id]['e'] = 1;
         }
-        $this->view->fields = Zend_Json::encode(Application_Model_Board::getBoardFields());
-        foreach ($castlesSchema as $id => $castle) {
+        $this->view->fields = Zend_Json::encode($mMapFields->getMapFields());
+        foreach ($mMapCastles->getMapCastles() as $id => $castle) {
             if (!isset($razed[$id])) {
                 $this->view->castlesSchema[$id] = $castle;
             }

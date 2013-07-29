@@ -57,7 +57,8 @@ class SetupController extends Game_Controller_Gui
         $modelArmy = new Application_Model_Army($this->_namespace->gameId);
         $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
         $modelCastle = new Application_Model_Castle($this->_namespace->gameId);
-        $startPositions = Application_Model_Board::getDefaultStartPositions();
+        $mMapCastles = new Application_Model_MapCastles($modelGame->getMapId());
+        $startPositions = $mMapCastles->getDefaultStartPositions();
         $playerHeroes = $modelHero->getHeroes();
         $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
         if (empty($playerHeroes)) {

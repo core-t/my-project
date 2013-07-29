@@ -1,10 +1,12 @@
 <?php
 
-class Admin_AjaxController extends Coret_Controller_BackendAjax {
+class Admin_AjaxController extends Coret_Controller_BackendAjax
+{
 
     protected $_id;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         $this->_id = $this->_request->getParam('id');
@@ -14,7 +16,8 @@ class Admin_AjaxController extends Coret_Controller_BackendAjax {
         }
     }
 
-    public function addimageAction() {
+    public function addimageAction()
+    {
         $imageId = $this->_request->getParam('image');
 
         if (empty($imageId)) {
@@ -41,7 +44,8 @@ class Admin_AjaxController extends Coret_Controller_BackendAjax {
         echo Zend_Json::encode($data);
     }
 
-    public function delimageAction() {
+    public function delimageAction()
+    {
         $params = array(
             'controller' => 'portfolio'
         );
@@ -64,4 +68,21 @@ class Admin_AjaxController extends Coret_Controller_BackendAjax {
         $mMap->fields($this->_id);
     }
 
+    public function bAction()
+    {
+        $mMap = new Admin_Model_Map();
+        $mMap->castles($this->_id);
+    }
+
+    public function cAction()
+    {
+        $mMap = new Admin_Model_Map();
+        $mMap->ruins($this->_id);
+    }
+
+    public function dAction()
+    {
+        $mMap = new Admin_Model_Map();
+        $mMap->towers($this->_id);
+    }
 }

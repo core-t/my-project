@@ -1,10 +1,10 @@
 <?php
 
-class Application_Model_MapFields extends Game_Db_Table_Abstract
+class Application_Model_MapTowers extends Game_Db_Table_Abstract
 {
-    protected $_name = 'mapfields';
-    protected $_primary = 'mapId';
-    protected $_sequence = "map_mapId_seq";
+    protected $_name = 'maptowers';
+    protected $_primary = 'mapTowerId';
+//    protected $_sequence = "map_mapId_seq";
     protected $_db;
     protected $mapId;
 
@@ -15,7 +15,7 @@ class Application_Model_MapFields extends Game_Db_Table_Abstract
         parent::__construct();
     }
 
-    public function getMapFields()
+    public function getMapTowers()
     {
         $select = $this->_db->select()
             ->from($this->_name)
@@ -26,13 +26,13 @@ class Application_Model_MapFields extends Game_Db_Table_Abstract
             throw new Exception($select->__toString());
         }
 
-        $mapFields = array();
+        $mapTowers = array();
 
         foreach ($all as $val) {
-            $mapFields[$val['y']][$val['x']] = $val['type'];
+            $mapTowers[$val['mapTowerId']] = $val;
         }
 
-        return $mapFields;
+        return $mapTowers;
     }
 
 }

@@ -4,6 +4,7 @@ class SetupajaxController extends Game_Controller_Action {
 
     public function _init() {
         $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');
         }
@@ -16,7 +17,7 @@ class SetupajaxController extends Game_Controller_Action {
         } else {
             $result = array('all' => false);
         }
-        $this->view->response = Zend_Json::encode($result);
+        echo Zend_Json::encode($result);
     }
 
 }

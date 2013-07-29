@@ -632,5 +632,12 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         return $this->_db->fetchOne($select);
     }
 
+    public function getMapId()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'mapId')
+            ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_gameId);
+        return $this->_db->fetchOne($select);
+    }
 }
 

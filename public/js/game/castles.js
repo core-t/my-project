@@ -1,8 +1,8 @@
 // *** CASTLES ***
 
 function castleFields(castleId, type) {
-    x = castles[castleId].position.x;
-    y = castles[castleId].position.y;
+    x = castles[castleId].x;
+    y = castles[castleId].y;
     fields[y][x] = type;
     fields[y + 1][x] = type;
     fields[y][x + 1] = type;
@@ -21,8 +21,8 @@ function createNeutralCastle(castleId) {
                 title: castles[castleId].name + ' (' + castles[castleId].defense + ')'
             })
             .css({
-                left: (castles[castleId].position.x * 40) + 'px',
-                top: (castles[castleId].position.y * 40) + 'px'
+                left: (castles[castleId].x * 40) + 'px',
+                top: (castles[castleId].y * 40) + 'px'
             })
             .mouseover(function () {
                 castleOnMouse(this.id, 'g');
@@ -35,8 +35,8 @@ function createNeutralCastle(castleId) {
             })
     );
     castleFields(castleId, 'e');
-    mX = castles[castleId].position.x * 2;
-    mY = castles[castleId].position.y * 2;
+    mX = castles[castleId].x * 2;
+    mY = castles[castleId].y * 2;
     zoomPad.append(
         $('<div>').css({
             'left': mX + 'px',
