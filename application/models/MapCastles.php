@@ -8,11 +8,15 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
     protected $_db;
     protected $mapId;
 
-    public function __construct($mapId)
+    public function __construct($mapId, $db = false)
     {
         $this->mapId = $mapId;
-        $this->_db = $this->getDefaultAdapter();
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            $this->_db = $this->getDefaultAdapter();
+            parent::__construct();
+        }
     }
 
     public function getMapCastles()
@@ -57,15 +61,15 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
             ),
             'green' => array(
                 'id' => $castles[1]['mapCastleId'],
-                'position' => array('x' => $castles[1]['x'], 'y' => $castles[0]['y'])
+                'position' => array('x' => $castles[1]['x'], 'y' => $castles[1]['y'])
             ),
             'red' => array(
                 'id' => $castles[2]['mapCastleId'],
-                'position' => array('x' => $castles[2]['x'], 'y' => $castles[0]['y'])
+                'position' => array('x' => $castles[2]['x'], 'y' => $castles[2]['y'])
             ),
             'yellow' => array(
                 'id' => $castles[3]['mapCastleId'],
-                'position' => array('x' => $castles[3]['x'], 'y' => $castles[0]['y'])
+                'position' => array('x' => $castles[3]['x'], 'y' => $castles[3]['y'])
             )
         );
     }

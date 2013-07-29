@@ -7,9 +7,11 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_PublicHandler extends Cli_WofHandler {
+class Cli_Model_PublicHandler extends Cli_WofHandler
+{
 
-    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
+    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
+    {
 
         $dataIn = Zend_Json::decode($msg->getData());
 //        print_r('ZAPYTANIE ');
@@ -42,23 +44,23 @@ class Cli_Model_PublicHandler extends Cli_WofHandler {
             return;
         }
 
-        switch ($dataIn['type'])
-        {
+        switch ($dataIn['type']) {
             case 'start':
                 if (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
                     Cli_Model_Database::disconnectNotActive($user->parameters['gameId'], $db);
                     Cli_Model_Database::startGame($user->parameters['gameId'], $db);
                     $computerPlayers = Cli_Model_Database::getComputerPlayers($user->parameters['gameId'], $db);
-                    foreach ($computerPlayers as $computer)
-                    {
-                        $startPositions = Application_Model_Board::getDefaultStartPositions();
+                    $mMapCastles = new Application_Model_MapCastles(Cli_Model_Database::getMapId($db, $user->parameters['gameId']), $nodb = true);
+                    foreach ($computerPlayers as $computer) {
+
+                        $startPositions = $mMapCastles->getDefaultStartPositions($db);
                         $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
                         if (empty($playerHeroes)) {
                             Cli_Model_Database::createHero($computer['playerId'], $db);
                             $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
                         }
                         $armyId = Cli_Model_Database::createArmy(
-                                        $user->parameters['gameId'], $db, $startPositions[$computer['color']]['position'], $computer['playerId']);
+                            $user->parameters['gameId'], $db, $startPositions[$computer['color']]['position'], $computer['playerId']);
                         Cli_Model_Database::addHeroToGame($user->parameters['gameId'], $armyId, $playerHeroes[0]['heroId'], $db);
                         Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$computer['color']]['id'], $computer['playerId'], $db);
                     }
@@ -129,7 +131,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler {
         }
     }
 
-    public function onDisconnect(IWebSocketConnection $user) {
+    public function onDisconnect(IWebSocketConnection $user)
+    {
         if (!isset($user->parameters['gameId']) || !isset($user->parameters['playerId'])) {
             return;
         }
@@ -146,7 +149,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler {
         $this->update($user->parameters['gameId'], $db);
     }
 
-    private function update($gameId, $db) {
+    private function update($gameId, $db)
+    {
         $token = Cli_Model_Database::getPlayersWaitingForGame($gameId, $db);
         $token['gameMasterId'] = Cli_Model_Database::getGameMasterId($gameId, $db);
         $token['type'] = 'update';

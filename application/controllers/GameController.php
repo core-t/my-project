@@ -5,7 +5,6 @@ class GameController extends Game_Controller_Game
 
     public function indexAction()
     {
-        // action body
         $mGame = new Application_Model_Game($this->_namespace->gameId);
 //        if (!$mGame->isActive()) {
 //            throw new Exception('Game initialization error');

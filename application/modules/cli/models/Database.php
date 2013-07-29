@@ -2776,4 +2776,12 @@ Brak y
             echo($e);
         }
     }
+
+    static public function getMapId($db, $gameId)
+    {
+        $select = $db->select()
+            ->from('game', 'mapId')
+            ->where($db->quoteIdentifier('gameId') . ' = ?', $gameId);
+        return $db->fetchOne($select);
+    }
 }
