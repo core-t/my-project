@@ -8,11 +8,14 @@ class Application_Model_MapRuins extends Game_Db_Table_Abstract
     protected $_db;
     protected $mapId;
 
-    public function __construct($mapId)
+    public function __construct($mapId, $db = null)
     {
         $this->mapId = $mapId;
-        $this->_db = $this->getDefaultAdapter();
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
     }
 
     public function getMapRuins()

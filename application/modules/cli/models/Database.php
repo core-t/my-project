@@ -877,10 +877,10 @@ Brak y
         }
     }
 
-    static public function changeOwner($gameId, $castleId, $playerId, $db)
+    static public function changeOwner($gameId, $castle, $playerId, $db)
     {
-        $defenseMod = self::getCastleDefenseModifier($gameId, $castleId, $db);
-        $defense = Application_Model_Board::getCastleDefense($castleId) + $defenseMod;
+        $defenseMod = self::getCastleDefenseModifier($gameId, $castle['castleId'], $db);
+        $defense = $castle['defense'] + $defenseMod;
 
         if ($defense > 1) {
             $defenseMod--;
@@ -889,10 +889,10 @@ Brak y
         $select = $db->select()
             ->from('castlesingame', 'playerId')
             ->where('"gameId" = ?', $gameId)
-            ->where('"castleId" = ?', $castleId);
+            ->where('"castleId" = ?', $castle['castleId']);
 
         $data = array(
-            'mapCastleId' => $castleId,
+            'mapCastleId' => $castle['castleId'],
             'gameId' => $gameId,
             'winnerId' => $playerId,
             'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')
@@ -908,7 +908,7 @@ Brak y
 
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"castleId" = ?', $castleId)
+            $db->quoteInto('"castleId" = ?', $castle['castleId'])
         );
 
         $data = array(
@@ -938,7 +938,7 @@ Brak y
     static public function razeCastle($gameId, $castleId, $playerId, $db)
     {
         $data = array(
-            'castleId' => $castleId,
+            'mapCastleId' => $castleId,
             'gameId' => $gameId,
             'playerId' => $playerId
         );
@@ -1842,7 +1842,7 @@ Brak y
             ->where('"gameId" = ?', $gameId);
         try {
             $result = $db->query($select)->fetchAll();
-            $ruins = Application_Model_Board::getRuins();
+            $ruins = Zend_Registry::get('ruins');
             foreach ($result as $row) {
                 if (isset($ruins[$row['ruinId']])) {
                     unset($ruins[$row['ruinId']]);

@@ -42,9 +42,8 @@ class Cli_Model_Turn {
         if (!$db) {
             $db = self::getDb();
         }
-//        $castles = array();
+
         $income = 0;
-        $costs = 0;
 
         Cli_Model_Database::turnActivate($gameId, $playerId, $db);
         Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
@@ -54,22 +53,24 @@ class Cli_Model_Turn {
 
 //        if (Cli_Database::getTurnNumber($gameId, $db) > 0) {
         $castles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
+        $mapCastles = Zend_Registry::get('castles');
         foreach ($castles as $dbCastle)
         {
             $castleId = $dbCastle['castleId'];
 //                $castles[$castleId] = Application_Model_Board::getCastle($castleId);
 //                $castle = $castles[$castleId];
-            $boardCastle = Application_Model_Board::getCastle($castleId);
+//            $boardCastle = Application_Model_Board::getCastle($castleId);
+            $boardCastle = $mapCastles[$castleId];
             $income += $boardCastle['income'];
             $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $boardCastle['position'], $db);
 
 //                $castleProduction = Cli_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
 //                    $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
-            $unitName = Application_Model_Board::getUnitName($dbCastle['production']);
+            $unitId = $dbCastle['production'];
             if ($dbCastle['production'] AND
-                    $boardCastle['production'][$unitName]['time'] <= $dbCastle['productionTurn']
-                    AND $boardCastle['production'][$unitName]['cost'] <= $gold
+                    $boardCastle['production'][$unitId]['time'] <= $dbCastle['productionTurn']
+                    AND $boardCastle['production'][$unitId]['cost'] <= $gold
             ) {
                 if (!$armyId) {
                     $armyId = Cli_Model_Database::createArmy($gameId, $db, $boardCastle['position'], $playerId);

@@ -147,6 +147,10 @@ class Cli_Model_ComputerMainBlocks
         new Coret_Model_Logger($army['armyId'], 'armyId:');
 
         $myCastles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
+        $mapCastles = Zend_Registry::get('castles');
+        foreach ($myCastles as $myCastleId => $myCastle) {
+            $myCastles[$myCastleId]['position'] = $mapCastles[$myCastleId]['position'];
+        }
         $myCastleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $myCastles);
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
         $razed = Cli_Model_Database::getRazedCastles($gameId, $db);
@@ -156,7 +160,7 @@ class Cli_Model_ComputerMainBlocks
         if ($myCastleId !== null) {
             new Coret_Model_Logger('W ZAMKU');
 
-            $castlePosition = Application_Model_Board::getCastlePosition($myCastleId);
+            $castlePosition = $myCastles[$myCastleId]['position'];
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);
             if (!$enemiesHaveRange) {
@@ -313,26 +317,27 @@ class Cli_Model_ComputerMainBlocks
             return;
         }
 
+        $mapCastles = Zend_Registry::get('castles');
         $castlesId = Cli_Model_Database::getPlayerCastlesIds($gameId, $playerId, $db);
         foreach ($castlesId as $id) {
             $castleId = $id['castleId'];
-            $castles[$castleId] = Application_Model_Board::getCastle($castleId);
+            $castles[$castleId] = $mapCastles[$castleId];
             $castle = $castles[$castleId];
             $income += $castle['income'];
             $castleProduction = Cli_Model_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
             if ($turnNumber < 10) {
-                $unitName = Application_Model_Board::getMinProductionTimeUnit($castleId);
+                $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
             } else {
-                $unitName = Application_Model_Board::getCastleOptimalProduction($castleId);
+                $unitId = Application_Model_Board::getCastleOptimalProduction($castle['production']);
             }
-            $unitId = Cli_Model_Database::getUnitIdByName($unitName, $db);
+
             if ($unitId != $castleProduction['production']) {
                 Cli_Model_Database::setCastleProduction($gameId, $castleId, $unitId, $playerId, $db);
                 $castleProduction = Cli_Model_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
             }
             $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-            $unitName = Application_Model_Board::getUnitName($castleProduction['production']);
-            if ($castle['production'][$unitName]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitName]['cost'] <= $gold) {
+            $unitId = $castleProduction['production'];
+            if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
                 if (Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
                     $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
                     if (!$armyId) {

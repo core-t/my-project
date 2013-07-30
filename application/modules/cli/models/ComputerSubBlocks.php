@@ -11,16 +11,17 @@ class Cli_Model_ComputerSubBlocks
 
         $position = end($path);
         $fields = Application_Model_Board::changeArmyField($fields, $position['x'], $position['y'], 'E');
+        $mapCastles = Zend_Registry::get('castles');
 
         if ($castleId !== null) { // castle
             if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
                 $result['defenderColor'] = Cli_Model_Database::getColorByCastleId($gameId, $castleId, $db);
-                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $mapCastles[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
                 $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
-                $defender = Cli_Model_Database::getDefenderFromCastlePosition($gameId, Application_Model_Board::getCastlePosition($castleId), $db);
+                $defender = Cli_Model_Database::getDefenderFromCastlePosition($gameId, $mapCastles[$castleId]['position'], $db);
 
                 if (empty($defender)) {
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
@@ -35,7 +36,7 @@ Castle defender: ');
                     echo('
 castleId: ' . $castleId . '
 ');
-                    Cli_Model_Database::changeOwner($gameId, $castleId, $playerId, $db);
+                    Cli_Model_Database::changeOwner($gameId, $mapCastles[$castleId], $playerId, $db);
                 } else {
                     $result['attackerArmy'] = array(
                         'armyId' => $army['armyId'],
@@ -133,7 +134,7 @@ castleId: ' . $castleId . '
         asort($heuristics, SORT_NUMERIC);
 
         foreach (array_keys($heuristics) as $castleId) {
-            $position = Application_Model_Board::getCastlePosition($castleId);
+            $position = $castles[$castleId]['position'];
             if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $position, $db);
             } else {
@@ -150,8 +151,9 @@ castleId: ' . $castleId . '
 
     static public function isEnemyCastleInRange($castlesAndFields, $castleId, $mArmy)
     {
+        $mapCastles = Zend_Registry::get('castles');
         $army = $mArmy->getArmy();
-        $position = Application_Model_Board::getCastlePosition($castleId);
+        $position = $mapCastles[$castleId]['position'];
         $fields = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $position['x'], $position['y'], 'E');
         try {
             $aStar = new Cli_Model_Astar($army, $position['x'], $position['y'], $fields);
@@ -161,7 +163,7 @@ castleId: ' . $castleId . '
         }
 
         $move = $mArmy->calculateMovesSpend($aStar->getPath($position['x'] . '_' . $position['y']));
-        if (Application_Model_Board::isCastleFild($move['currentPosition'], Application_Model_Board::getCastlePosition($castleId))) {
+        if (Application_Model_Board::isCastleField($move['currentPosition'], $position)) {
             $move['in'] = true;
         } else {
             $move['in'] = false;
@@ -290,7 +292,7 @@ castleId: ' . $castleId . '
     {
         $army = $mArmy->getArmy();
         foreach ($myCastles as $castle) {
-            $position = Application_Model_Board::getCastlePosition($castle['castleId']);
+            $position = $castle['position'];
             if (Cli_Model_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
                 continue;
             }
@@ -475,7 +477,7 @@ castleId: ' . $castleId . '
         $k = key($heuristics);
         $heuristics = array();
         foreach ($myCastles as $j => $castle) {
-            $position = Application_Model_Board::getCastlePosition($castle['castleId']);
+            $position = $castle['castleId']['position'];
             $mHeuristics = new Cli_Model_Heuristics($enemies[$k]['x'], $enemies[$k]['y']);
             $heuristics[$j] = $mHeuristics->calculateH($position['x'], $position['y']);
         }
@@ -485,7 +487,7 @@ castleId: ' . $castleId . '
         asort($heuristics, SORT_NUMERIC);
         $k = key($heuristics);
         $castle = $myCastles[$k];
-        $position = Application_Model_Board::getCastlePosition($castle['castleId']);
+        $position = $castle['castleId']['position'];
         try {
             $aStar = new Cli_Model_Astar($army, $position['x'], $position['y'], $fields);
         } catch (Exception $e) {

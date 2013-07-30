@@ -31,7 +31,8 @@ class Cli_Model_Move
         }
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
-        $castlesSchema = Application_Model_Board::getCastlesSchema();
+//        $castlesSchema = Application_Model_Board::getCastlesSchema();
+        $castlesSchema = Zend_Registry::get('castles');
         $allCastles = Cli_Model_Database::getAllCastles($user->parameters['gameId'], $db);
 
         $aP = array(
@@ -41,7 +42,7 @@ class Cli_Model_Move
 
         foreach ($castlesSchema as $cId => $castle) {
             if (!isset($allCastles[$cId])) { // castle is neutral
-                if (Application_Model_Board::isCastleFild($aP, Application_Model_Board::getCastlePosition($cId))) { // trakuję neutralny zamek jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
+                if (Application_Model_Board::isCastleField($aP, $castle['position'])) { // trakuję neutralny zamek jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
                     $fields = Application_Model_Board::changeCasteFields($fields, $castle['position']['x'], $castle['position']['y'], 'E');
                     $castleId = $cId;
                     $defenderColor = 'neutral';
@@ -58,7 +59,7 @@ class Cli_Model_Move
             if ($user->parameters['playerId'] == $allCastles[$cId]['playerId']) { // my castle
                 $fields = Application_Model_Board::changeCasteFields($fields, $castle['position']['x'], $castle['position']['y'], 'c');
             } else { // enemy castle
-                if (Application_Model_Board::isCastleFild($aP, Application_Model_Board::getCastlePosition($cId))) { // trakuję zamek wroga jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
+                if (Application_Model_Board::isCastleField($aP, $castle['position'])) { // trakuję zamek wroga jak własny ponieważ go atakuję i jeśli wygram to będę mógł po nim chodzić
                     $fields = Application_Model_Board::changeCasteFields($fields, $castle['position']['x'], $castle['position']['y'], 'E');
                     $castleId = $cId;
                 } else {
@@ -110,13 +111,13 @@ class Cli_Model_Move
 
         $fight = false;
 
-        if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleFild($move['currentPosition'], Application_Model_Board::getCastlePosition($castleId))) { // castle
+        if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleField($move['currentPosition'], $castlesSchema[$castleId]['position'])) { // castle
             $fight = true;
             if ($defenderColor == 'neutral') {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
                 $defenderColor = Cli_Model_Database::getColorByCastleId($user->parameters['gameId'], $castleId, $db);
-                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], Application_Model_Board::getCastlePosition($castleId), $db);
+                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], $castlesSchema[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $enemy['ids']) { // enemy army
@@ -143,7 +144,7 @@ class Cli_Model_Move
                 if ($defenderColor == 'neutral') {
                     $defender = $battle->getDefender();
                 } else {
-                    $castle = Application_Model_Board::getCastle($castleId);
+                    $castle = $castlesSchema[$castleId];
                     $defender = Cli_Model_Database::getDefenderFromCastlePosition($user->parameters['gameId'], $castle['position'], $db);
                 }
             } else {
@@ -155,7 +156,7 @@ class Cli_Model_Move
                     if ($defenderColor == 'neutral') {
                         Cli_Model_Database::addCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
                     } else {
-                        Cli_Model_Database::changeOwner($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
+                        Cli_Model_Database::changeOwner($user->parameters['gameId'], $castlesSchema[$castleId], $user->parameters['playerId'], $db);
                     }
                 }
                 Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db);

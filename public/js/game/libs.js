@@ -290,7 +290,7 @@ function unitsReformat() {
 
 function adjustGui() {
     documentWidth = $(document).width();
-    documentHeigh = $(document).height() - 21;
+    documentHeigh = $(document).height() - 22;
     $('.zoomWindow').css('height', documentHeigh + 'px');
 
     messageLeft = documentWidth / 2 - 160;

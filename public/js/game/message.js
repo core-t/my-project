@@ -428,15 +428,14 @@ function castleM(castleId, color) {
     var j = 0;
     var td = new Array();
 
-    for (unitName in castles[castleId].production) {
-        var img = unitName.replace(' ', '_').toLowerCase();
-        var unitId = getUnitId(unitName);
+    for (unitId in castles[castleId].production) {
+        var img = units[unitId].name.replace(' ', '_').toLowerCase();
         var travelBy = '';
         if (unitId == castles[castleId].currentProduction) {
             attr = {
                 type: 'radio',
                 name: 'production',
-                value: unitName,
+                value: units[unitId].name,
                 checked: 'checked'
             }
             time = castles[castleId].currentProductionTurn + '/';
@@ -444,7 +443,7 @@ function castleM(castleId, color) {
             attr = {
                 type: 'radio',
                 name: 'production',
-                value: unitName
+                value: units[unitId].name
             }
             time = '';
         }
@@ -461,14 +460,14 @@ function castleM(castleId, color) {
             .append(
                 $('<p>')
                     .append($('<input>').attr(attr))
-                    .append(' ' + unitName + ' (' + travelBy + ')')
+                    .append(' ' + units[unitId].name + ' (' + travelBy + ')')
             )
             .append($('<div>').append($('<img>').attr('src', '/img/game/' + img + '_' + color + '.png')))
             .append(
                 $('<div>')
                     .addClass('attributes')
-                    .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitName].time + 't'))
-                    .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitName].cost + 'g'))
+                    .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitId].time + 't'))
+                    .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitId].cost + 'g'))
 //                    .append($('<p>').html(travelBy))
                     .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
             );

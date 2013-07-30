@@ -31,7 +31,14 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             $user->parameters = $open->getParameters();
             $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
             $mMapFields = new Application_Model_MapFields($mGame->getMapId(), $db);
+            $mMapCastles = new Application_Model_MapCastles($mGame->getMapId(), $db);
+            $mMapRuins = new Application_Model_MapRuins($mGame->getMapId(), $db);
+            $mMapTowers = new Application_Model_MapTowers($mGame->getMapId(), $db);
+
             Zend_Registry::set('fields', $mMapFields->getMapFields());
+            Zend_Registry::set('castles', $mMapCastles->getMapCastles());
+            Zend_Registry::set('ruins', $mMapRuins->getMapRuins());
+            Zend_Registry::set('towers', $mMapTowers->getMapTowers());
             return;
         }
 
