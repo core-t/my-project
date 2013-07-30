@@ -264,24 +264,27 @@ Brak y
 
     static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db)
     {
-        $fields = Application_Model_Board::getBoardFields();
+        $fields = Zend_Registry::get('fields');
 
         $select = $db->select()
             ->from('army', array('x', 'y'))
             ->where('"gameId" = ?', $gameId)
             ->where('"playerId" != ?', $playerId)
             ->where('destroyed = false');
+
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $row) {
-                $fields[$row['y']][$row['x']] = 'e';
-            }
-
-            return $fields;
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+            return;
         }
+
+        foreach ($result as $row) {
+            $fields[$row['y']][$row['x']] = 'e';
+        }
+
+        return $fields;
     }
 
     static public function getArmy($gameId, $armyId, $playerId, $db)
@@ -719,7 +722,7 @@ Brak y
     static public function addCastle($gameId, $castleId, $playerId, $db)
     {
         $data = array(
-            'castleId' => $castleId,
+            'mapCastleId' => $castleId,
             'gameId' => $gameId,
             'winnerId' => $playerId,
             'loserId' => 0
@@ -879,12 +882,9 @@ Brak y
         $defenseMod = self::getCastleDefenseModifier($gameId, $castleId, $db);
         $defense = Application_Model_Board::getCastleDefense($castleId) + $defenseMod;
 
-        var_dump('$defenseMod');
-        var_dump($defenseMod);
         if ($defense > 1) {
             $defenseMod--;
         }
-        var_dump($defenseMod);
 
         $select = $db->select()
             ->from('castlesingame', 'playerId')
@@ -892,7 +892,7 @@ Brak y
             ->where('"castleId" = ?', $castleId);
 
         $data = array(
-            'castleId' => $castleId,
+            'mapCastleId' => $castleId,
             'gameId' => $gameId,
             'winnerId' => $playerId,
             'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')

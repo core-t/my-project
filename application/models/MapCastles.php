@@ -5,16 +5,14 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
     protected $_name = 'mapcastles';
     protected $_primary = 'mapCastleId';
     protected $_sequence = '';
-    protected $_db;
     protected $mapId;
 
-    public function __construct($mapId, $db = false)
+    public function __construct($mapId, $db = null)
     {
         $this->mapId = $mapId;
         if ($db) {
             $this->_db = $db;
         } else {
-            $this->_db = $this->getDefaultAdapter();
             parent::__construct();
         }
     }

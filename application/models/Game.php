@@ -6,13 +6,16 @@ class Application_Model_Game extends Game_Db_Table_Abstract
     protected $_name = 'game';
     protected $_primary = 'gameId';
     protected $_sequence = "game_gameId_seq";
-    protected $_id;
     protected $_playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
-    public function __construct($gameId = 0)
+    public function __construct($gameId = 0, $db = null)
     {
         $this->_gameId = $gameId;
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
     }
 
     private function generateKey()

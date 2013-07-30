@@ -50,10 +50,10 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     Cli_Model_Database::disconnectNotActive($user->parameters['gameId'], $db);
                     Cli_Model_Database::startGame($user->parameters['gameId'], $db);
                     $computerPlayers = Cli_Model_Database::getComputerPlayers($user->parameters['gameId'], $db);
-                    $mMapCastles = new Application_Model_MapCastles(Cli_Model_Database::getMapId($db, $user->parameters['gameId']), $nodb = true);
+                    $mMapCastles = new Application_Model_MapCastles(Cli_Model_Database::getMapId($db, $user->parameters['gameId']), $db);
                     foreach ($computerPlayers as $computer) {
 
-                        $startPositions = $mMapCastles->getDefaultStartPositions($db);
+                        $startPositions = $mMapCastles->getDefaultStartPositions();
                         $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
                         if (empty($playerHeroes)) {
                             Cli_Model_Database::createHero($computer['playerId'], $db);

@@ -4,15 +4,17 @@ class Application_Model_MapFields extends Game_Db_Table_Abstract
 {
     protected $_name = 'mapfields';
     protected $_primary = 'mapId';
-    protected $_sequence = "map_mapId_seq";
-    protected $_db;
+//    protected $_sequence = "map_mapId_seq";
     protected $mapId;
 
-    public function __construct($mapId)
+    public function __construct($mapId, $db = null)
     {
         $this->mapId = $mapId;
-        $this->_db = $this->getDefaultAdapter();
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
     }
 
     public function getMapFields()

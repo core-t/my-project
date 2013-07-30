@@ -29,6 +29,9 @@ class Cli_Model_GameHandler extends Cli_WofHandler
         if ($dataIn['type'] == 'open') {
             $open = new Cli_Model_Open($dataIn, $user, $db, $this);
             $user->parameters = $open->getParameters();
+            $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+            $mMapFields = new Application_Model_MapFields($mGame->getMapId(), $db);
+            Zend_Registry::set('fields', $mMapFields->getMapFields());
             return;
         }
 
