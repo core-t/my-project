@@ -23,6 +23,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
         $dataIn = Zend_Json::decode($msg->getData());
         print_r('ZAPYTANIE ');
         print_r($dataIn);
+        new Coret_Model_Logger($dataIn);
 
         $db = Cli_Model_Database::getDb();
 
@@ -208,12 +209,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
 
     public function sendToChannel($db, $token, $gameId, $debug = null)
     {
-
+        new Coret_Model_Logger($token);
         parent::sendToChannel($db, $token, $gameId, $debug);
-
-        if (!Zend_Validate::is($gameId, 'Digits')) {
-            return;
-        }
 
         if ($token['type'] == 'chat') {
             return;
