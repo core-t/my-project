@@ -16,7 +16,11 @@ class Cli_Model_CastleBuildDefense
         }
         $gold = Cli_Model_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
         $defenseModifier = Cli_Model_Database::getCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
-        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
+//        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
+
+        $mapCastles = Zend_Registry::get('castles');
+        $defensePoints = $mapCastles[$castleId]['defensePoints'];
+
         $defense = $defenseModifier + $defensePoints;
         if ($defense < 1) {
             $defense = 1;

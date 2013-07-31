@@ -2643,7 +2643,7 @@ Brak y
      * @param string $data
      * @return mixed
      */
-    static public function addGameHistoryIn(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $playerId, $token)
+    static public function addTokensIn(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $playerId, $token)
     {
         $data = array(
             'playerId' => $playerId,
@@ -2656,7 +2656,7 @@ Brak y
         $data['data'] = Zend_Json::encode($token);
 
         try {
-            return $db->insert('gamehistoryin', $data);
+            return $db->insert('tokensin', $data);
         } catch (Exception $e) {
             echo($e);
         }
@@ -2669,7 +2669,7 @@ Brak y
      * @param string $data
      * @return mixed
      */
-    static public function addGameHistoryOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $token)
+    static public function addTokensOut(Zend_Db_Adapter_Pdo_Pgsql $db, $gameId, $token)
     {
         $data = array(
             'gameId' => $gameId,
@@ -2710,7 +2710,7 @@ Brak y
         $data['data'] = Zend_Json::encode($token);
 
         try {
-            return $db->insert('gamehistoryout', $data);
+            return $db->insert('tokensout', $data);
         } catch (Exception $e) {
             echo($e);
         }

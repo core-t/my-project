@@ -15,17 +15,20 @@ class Admin_Model_Map extends Coret_Model_ParentDb
 
     public function fields($mapId)
     {
-        $fields = Application_Model_Board::getBoardFields();
+        $mapFields4 = new Application_Model_MapFields(4);
+        $fields = $mapFields4->getMapFields();
         foreach ($fields as $y => $row) {
             foreach ($row as $x => $type) {
                 $data = array(
-                    'mapId' => $mapId,
-                    'x' => $x,
-                    'y' => $y,
                     'type' => $type
                 );
+                $where = array(
+                    '"mapId" = 7',
+                    $this->_db->quoteInto('"x" = ?', $x),
+                    $this->_db->quoteInto('"y" = ?', $y + 8)
+                );
                 try {
-                    $this->_db->insert('mapfields', $data);
+                    $this->_db->update('mapfields', $data, $where);
                 } catch (Exception $e) {
                     echo $e;
                     exit;
@@ -83,7 +86,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
             $data = array(
                 'mapId' => $mapId,
                 'x' => $ruin['x'],
-                'y' => $ruin['y']+8
+                'y' => $ruin['y'] + 8
             );
             try {
                 $this->_db->insert('mapruins', $data);
@@ -102,7 +105,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
             $data = array(
                 'mapId' => $mapId,
                 'x' => $ruin['x'],
-                'y' => $ruin['y']+8
+                'y' => $ruin['y'] + 8
             );
             try {
                 $this->_db->insert('maptowers', $data);

@@ -334,9 +334,10 @@ class Cli_Model_ComputerMainBlocks
             if ($unitId != $castleProduction['production']) {
                 Cli_Model_Database::setCastleProduction($gameId, $castleId, $unitId, $playerId, $db);
                 $castleProduction = Cli_Model_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
+                $unitId = $castleProduction['production'];
             }
             $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-            $unitId = $castleProduction['production'];
+
             if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
                 if (Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
                     $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);

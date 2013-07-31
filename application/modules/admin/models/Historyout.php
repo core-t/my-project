@@ -2,8 +2,8 @@
 
 class Admin_Model_Historyout extends Coret_Model_ParentDb
 {
-    protected $_name = 'gamehistoryout';
-    protected $_primary = 'gamehistoryoutId';
+    protected $_name = 'tokensout';
+    protected $_primary = 'tokensoutId';
     protected $_columns = array(
         'gameId' => array('label' => 'Game Id', 'type' => 'number'),
         'data' => array('label' => 'Data', 'type' => 'text'),

@@ -53,7 +53,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             return;
         }
 
-        Cli_Model_Database::addGameHistoryIn($db, $user->parameters['gameId'], $user->parameters['playerId'], $dataIn);
+        Cli_Model_Database::addTokensIn($db, $user->parameters['gameId'], $user->parameters['playerId'], $dataIn);
 
         if ($dataIn['type'] == 'computer') {
             new Cli_Model_Computer($user, $db, $this);
@@ -219,6 +219,6 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             return;
         }
 
-        Cli_Model_Database::addGameHistoryOut($db, $gameId, $token);
+        Cli_Model_Database::addTokensOut($db, $gameId, $token);
     }
 }

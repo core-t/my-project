@@ -31,8 +31,8 @@ class Cli_Model_HeroResurrection {
             return;
         }
 
-        $position = Application_Model_Board::getCastlePosition($castleId);
-        $armyId = Cli_Model_Database::heroResurection($user->parameters['gameId'], $heroId, $position, $user->parameters['playerId'], $db);
+        $mapCastles = Zend_Registry::get('castles');
+        $armyId = Cli_Model_Database::heroResurection($user->parameters['gameId'], $heroId, $mapCastles[$castleId]['position'], $user->parameters['playerId'], $db);
         $gold -= 100;
         Cli_Model_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $gold, $db);
 
