@@ -274,5 +274,13 @@ class Cli_Model_Army
         return array('armyId', 'destroyed', 'fortified', 'x', 'y', $columnName);
     }
 
+    public function canSwim()
+    {
+        return $this->army['canSwim'];
+    }
 
+    public function canFly()
+    {
+        return $this->army['canFly'];
+    }
 }

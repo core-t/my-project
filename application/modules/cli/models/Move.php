@@ -31,6 +31,21 @@ class Cli_Model_Move
         }
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
+
+        if ($fields[$y][$x]['type'] == 'w') {
+            if ($army['canSwim'] || $army['canFly']) {
+                $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $x, $y, $db);
+                if ($otherArmyId) {
+                    $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
+                    $mOtherArmy = new Cli_Model_Army($otherArmy);
+                    if (!$mOtherArmy->canSwim() && !$mOtherArmy->canFly()) {
+                        $gameHandler->sendError($user, 'Nie możesz zostawić armii na wodzie.');
+                        return;
+                    }
+                }
+            }
+        }
+
         $castlesSchema = Zend_Registry::get('castles');
         $allCastles = Cli_Model_Database::getAllCastles($user->parameters['gameId'], $db);
 

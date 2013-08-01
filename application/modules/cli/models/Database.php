@@ -2784,4 +2784,21 @@ Brak y
             ->where($db->quoteIdentifier('gameId') . ' = ?', $gameId);
         return $db->fetchOne($select);
     }
+
+    static public function isOtherArmyAtPosition($gameId, $armyId, $x, $y, $db)
+    {
+        $select = $db->select()
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $gameId)
+            ->where('"armyId" = ?', $armyId)
+            ->where('destroyed = false')
+            ->where('x = ?', $x)
+            ->where('y = ?', $y);
+        try {
+            return $db->fetchOne($select);
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
 }
