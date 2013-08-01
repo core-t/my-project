@@ -2790,7 +2790,7 @@ Brak y
         $select = $db->select()
             ->from('army', 'armyId')
             ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $armyId)
+            ->where('"armyId" != ?', $armyId)
             ->where('destroyed = false')
             ->where('x = ?', $x)
             ->where('y = ?', $y);

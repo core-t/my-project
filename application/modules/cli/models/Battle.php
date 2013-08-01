@@ -142,6 +142,11 @@ class Cli_Model_Battle
             $dieAttacking = $this->rollDie($unitAttacking['attackPoints']);
             $dieDefending = $this->rollDie($unitDefending['defensePoints']);
 
+            echo '$unitAttacking[\'attackPoints\']=' . $unitAttacking['attackPoints'] . "\n";
+            echo '$dieDefending=' . $dieDefending . "\n";
+            echo '$unitDefending[\'defensePoints\']=' . $unitDefending['defensePoints'] . "\n";
+            echo '$dieAttacking=' . $dieAttacking . "\n\n";
+
             if ($unitAttacking['attackPoints'] > $dieDefending AND $unitDefending['defensePoints'] <= $dieAttacking) {
                 $defenseHits--;
             } elseif ($unitAttacking['attackPoints'] <= $dieDefending AND $unitDefending['defensePoints'] > $dieAttacking) {

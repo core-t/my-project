@@ -32,16 +32,28 @@ class Cli_Model_Move
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
 
-        if ($fields[$y][$x]['type'] == 'w') {
+        if ($fields[$army['y']][$army['x']] == 'w') {
             if ($army['canSwim'] || $army['canFly']) {
-                $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $x, $y, $db);
+                $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $army['x'], $army['y'], $db);
                 if ($otherArmyId) {
                     $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
                     $mOtherArmy = new Cli_Model_Army($otherArmy);
                     if (!$mOtherArmy->canSwim() && !$mOtherArmy->canFly()) {
+                        new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
                         $gameHandler->sendError($user, 'Nie możesz zostawić armii na wodzie.');
                         return;
                     }
+                }
+            }
+        } elseif ($fields[$army['y']][$army['x']] == 'M') {
+            $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $army['x'], $army['y'], $db);
+            if ($otherArmyId) {
+                $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
+                $mOtherArmy = new Cli_Model_Army($otherArmy);
+                if (!$mOtherArmy->canFly()) {
+                    new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
+                    $gameHandler->sendError($user, 'Nie możesz zostawić armii w górach.');
+                    return;
                 }
             }
         }
