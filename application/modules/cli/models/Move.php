@@ -31,7 +31,6 @@ class Cli_Model_Move
         }
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
-//        $castlesSchema = Application_Model_Board::getCastlesSchema();
         $castlesSchema = Zend_Registry::get('castles');
         $allCastles = Cli_Model_Database::getAllCastles($user->parameters['gameId'], $db);
 

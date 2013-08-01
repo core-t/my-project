@@ -157,9 +157,7 @@ function startWebSocket() {
                     break;
 
                 case 'raze':
-                    $('#castle' + r.castleId).remove();
-                    $('#c' + r.castleId).remove();
-                    delete castles[r.castleId];
+                    razeCastle(r.castleId);
                     if (r.color == my.color) {
                         removeM();
                         goldUpdate(r.gold);
@@ -175,14 +173,7 @@ function startWebSocket() {
                     break;
 
                 case 'production':
-                    if (r.unitId == -1) {
-                        $('#castle' + r.castleId).html('');
-                    } else {
-                        $('#castle' + r.castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
-                    }
-                    removeM();
-                    castles[r.castleId].currentProduction = r.unitId;
-                    castles[r.castleId].currentProductionTurn = 0;
+                    updateProduction(r.unitId, r.castleId);
                     break;
 
                 case 'surrender':

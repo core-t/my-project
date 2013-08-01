@@ -229,6 +229,8 @@ class Cli_Model_ComputerMainBlocks
                             new Coret_Model_Logger('ATAKUJĘ WRÓGÓW Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
                             $aStar = $enemy['aStar'];
                             $path = $aStar->getReturnPath($enemy['key']);
+                            var_dump($path);
+                            exit;
                             $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $path, $castlesAndFields['fields'], $enemy, $playerId, $enemy['castleId'], $db);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $path, $fightEnemy, $enemy['castleId']);
                         }

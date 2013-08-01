@@ -19,7 +19,7 @@ class Application_Model_Board
         $units = Zend_Registry::get('units');
         $arr = array();
         foreach ($production as $unitId => $unit) {
-            switch ($units[$unitId]) {
+            switch ($units[$unitId]['name']) {
                 case 'Griffins':
                     $arr[1] = $unitId;
                     break;
@@ -49,7 +49,7 @@ class Application_Model_Board
                     break;
             }
         }
-        asort($arr, SORT_NUMERIC);
+//        asort($arr, SORT_NUMERIC);
 //        throw new Exception(Zend_Debug::dump($arr));
         foreach ($arr as $unitId) {
             return $unitId;

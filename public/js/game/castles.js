@@ -192,3 +192,21 @@ function showFirstCastle() {
         showFirstArmy(my.color);
     }
 }
+
+function razeCastle(castleId) {
+    castleFields(castleId, 'g')
+    $('#castle' + castleId).remove();
+    $('#c' + castleId).remove();
+    delete castles[castleId];
+}
+
+function updateProduction(unitId, castleId) {
+    if (unitId === null) {
+        $('#castle' + castleId).html('');
+    } else {
+        $('#castle' + castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
+    }
+    removeM();
+    castles[castleId].currentProduction = unitId;
+    castles[castleId].currentProductionTurn = 0;
+}
