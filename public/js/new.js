@@ -1,12 +1,12 @@
-var mygames;
+var myGames;
 
 function refresh() {
     $.getJSON("/' + lang + '/newajax/refresh", function (result) {
 
-        mygames.html('');
-        mygames.append(th);
+        myGames.html('');
+        myGames.append(th);
         for (i in result) {
-            mygames.append(
+            myGames.append(
                 $('<tr>')
                     .addClass('gid' + result[i].gameId)
                     .append($('<td>').append($('<a>').html(result[i].gameMaster)).css('cursor', 'pointer'))
@@ -28,11 +28,11 @@ function refresh() {
     });
 }
 function makeUrl(event) {
-    top.location.replace('/' + lang + '/gamesetup/index/gameId/' + event.data.gameId);
+    top.location.replace('/' + lang + '/setup/index/gameId/' + event.data.gameId);
 }
 
 $().ready(function () {
-    mygames = $('.table table');
+    myGames = $('.table table');
 
     refresh();
     setInterval('refresh()', 5000);

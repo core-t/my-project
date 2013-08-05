@@ -1166,20 +1166,6 @@ Brak y
         }
     }
 
-    static public function addRuin($gameId, $ruinId, $db)
-    {
-
-        $data = array(
-            'ruinId' => $ruinId,
-            'gameId' => $gameId
-        );
-        try {
-            $db->insert('ruin', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
     static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db)
     {
 

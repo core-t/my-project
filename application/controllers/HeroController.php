@@ -20,6 +20,8 @@ class HeroController extends Game_Controller_Gui {
                 $this->_helper->redirector('index', 'hero');
             }
         }
+
+
     }
 
 }

@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_SearchRuin {
+class Cli_Model_SearchRuin
+{
 
-    public function __construct($armyId, $user, $db, $gameHandler) {
+    public function __construct($armyId, $user, $db, $gameHandler)
+    {
         if (!Zend_Validate::is($armyId, 'Digits')) {
             $gameHandler->sendError($user, 'Brak "armyId"!');
             return;
@@ -53,30 +55,33 @@ class Cli_Model_SearchRuin {
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
-    static public function search($gameId, $ruinId, $heroId, $armyId, $playerId, $db) {
-
+    static public function search($gameId, $ruinId, $heroId, $armyId, $playerId, $db)
+    {
         $turn = Cli_Model_Database::getTurn($gameId, $db);
 
-        $random = rand(0, 100);
-        if ($random < 10) {//10%
+//        $random = rand(0, 100);
+        $random = 100;
+        if ($random < 10) { //10%
 //śmierć
             if ($turn['nr'] <= 7) {
                 $find = array('null', 1);
-                Cli_Model_Database::addRuin($gameId, $ruinId, $db);
+                $mRuin = new Application_Model_RuinsInGame($gameId, $db);
+                $mRuin->add($ruinId);
                 Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             } else {
                 $find = array('death', 1);
                 Cli_Model_Database::armyRemoveHero($gameId, $heroId, $db);
             }
-        } elseif ($random < 55) {//45%
+        } elseif ($random < 55) { //45%
 //kasa
             $gold = rand(50, 150);
             $find = array('gold', $gold);
             $inGameGold = Cli_Model_Database::getPlayerInGameGold($gameId, $playerId, $db);
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold + $inGameGold, $db);
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            Cli_Model_Database::addRuin($gameId, $ruinId, $db);
-        } elseif ($random < 85) {//30%
+            $mRuin = new Application_Model_RuinsInGame($gameId, $db);
+            $mRuin->add($ruinId);
+        } elseif ($random < 85) { //30%
 //jednostki
             if ($turn['nr'] <= 7) {
                 $max1 = 11;
@@ -112,31 +117,41 @@ class Cli_Model_SearchRuin {
                 $max2 = 3;
             }
             $unitId = rand(11, $max1);
-            $numerOfUnits = rand($min2, $max2);
-            $find = array('alies', $numerOfUnits);
-            for ($i = 0; $i < $numerOfUnits; $i++)
-            {
+            $numberOfUnits = rand($min2, $max2);
+            $find = array('alies', $numberOfUnits);
+            for ($i = 0; $i < $numberOfUnits; $i++) {
                 Cli_Model_Database::addSoldierToArmy($gameId, $armyId, $unitId, $db);
             }
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            Cli_Model_Database::addRuin($gameId, $ruinId, $db);
-        } elseif ($random < 95) {//10%
+            $mRuin = new Application_Model_RuinsInGame($gameId, $db);
+            $mRuin->add($ruinId);
+
+        } elseif ($random < 95) { //10%
 //nic
             $find = array('null', 1);
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            Cli_Model_Database::addRuin($gameId, $ruinId, $db);
-        } else {//5%
-//artefakt
-            $artefactId = rand(5, 34);
+            $mRuin = new Application_Model_RuinsInGame($gameId, $db);
+            $mRuin->add($ruinId);
 
-            if (Cli_Model_Inventory::itemExists($gameId, $artefactId, $heroId, $db)) {
-                Cli_Model_Inventory::increaseItemQuantity($gameId, $artefactId, $heroId, $db);
+        } else { //5%
+//artefakt
+            $artifactId = rand(5, 34);
+
+            $mChest = new Application_Model_Chest($playerId, $db);
+
+            if ($mChest->artifactExists($artifactId)) {
+                $mChest->increaseArtifactQuantity($artifactId);
             } else {
-                Cli_Model_Inventory::addArtefact($gameId, $artefactId, $heroId, $db);
+                $mChest->add($artifactId);
             }
-            $find = array('artefact', $artefactId);
+
+            $find = array('artefact', $artifactId);
+
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-            Cli_Model_Database::addRuin($gameId, $ruinId, $db);
+
+            $mRuin = new Application_Model_RuinsInGame($gameId, $db);
+            $mRuin->add($ruinId);
+
         }
 
         return $find;
