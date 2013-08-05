@@ -21,9 +21,9 @@ class Cli_Model_ComputerSubBlocks
                 $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->fight();
                 $battle->updateArmies($gameId, $db);
-                $defender = Cli_Model_Database::getDefenderFromCastlePosition($gameId, $mapCastles[$castleId]['position'], $db);
+                $defender = Cli_Model_Database::getDefender($gameId, $enemy['ids'], $db);
 
-                if (empty($defender)) {
+                if (!$battle->getDefender()) {
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
                     $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     $result['victory'] = true;
@@ -52,7 +52,7 @@ castleId: ' . $castleId . '
                 $battle->updateArmies($gameId, $db);
                 $defender = $battle->getDefender();
 
-                if (empty($defender['soldiers'])) {
+                if (!$battle->getDefender()) {
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
                     $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     Cli_Model_Database::addCastle($gameId, $castleId, $playerId, $db);
@@ -70,12 +70,13 @@ castleId: ' . $castleId . '
         } else { // enemy army
             $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
             $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
+            $enemy['ids'][] = $enemy['armyId'];
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
             $battle->updateArmies($gameId, $db);
-            $defender = Cli_Model_Database::getDefenderFromPosition($gameId, array('x' => $enemy['x'], 'y' => $enemy['y']), $db);
+            $defender = Cli_Model_Database::getDefender($gameId, $enemy['ids'], $db);
 
-            if (empty($defender)) {
+            if (!$battle->getDefender()) {
                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
                 $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                 $result['victory'] = true;

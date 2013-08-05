@@ -20,7 +20,7 @@ function startWebSocket() {
                     break;
 
                 case 'move':
-                    //                    console.log(r);
+//                    console.log(r);
                     move(r);
                     break;
 
@@ -43,7 +43,7 @@ function startWebSocket() {
                     break;
 
                 case 'nextTurn':
-                    //                    console.log(r);
+                    console.log(r);
                     unselectArmy();
                     if (r.lost) {
                         lostM(r.color);

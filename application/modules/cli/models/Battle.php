@@ -136,16 +136,16 @@ class Cli_Model_Battle
         }
 
         while ($attackHits AND $defenseHits) {
-//            $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];
-//            $dieAttacking = $this->rollDie($maxDie);
-//            $dieDefending = $this->rollDie($maxDie);
-            $dieAttacking = $this->rollDie($unitAttacking['attackPoints']);
-            $dieDefending = $this->rollDie($unitDefending['defensePoints']);
+            $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];
+            $dieAttacking = $this->rollDie($maxDie);
+            $dieDefending = $this->rollDie($maxDie);
+//            $dieAttacking = $this->rollDie($unitAttacking['attackPoints']);
+//            $dieDefending = $this->rollDie($unitDefending['defensePoints']);
 
-            echo '$unitAttacking[\'attackPoints\']=' . $unitAttacking['attackPoints'] . "\n";
-            echo '$dieDefending=' . $dieDefending . "\n";
-            echo '$unitDefending[\'defensePoints\']=' . $unitDefending['defensePoints'] . "\n";
-            echo '$dieAttacking=' . $dieAttacking . "\n\n";
+//            echo '$unitAttacking[\'attackPoints\']=' . $unitAttacking['attackPoints'] . "\n";
+//            echo '$dieDefending=' . $dieDefending . "\n";
+//            echo '$unitDefending[\'defensePoints\']=' . $unitDefending['defensePoints'] . "\n";
+//            echo '$dieAttacking=' . $dieAttacking . "\n\n";
 
             if ($unitAttacking['attackPoints'] > $dieDefending AND $unitDefending['defensePoints'] <= $dieAttacking) {
                 $defenseHits--;

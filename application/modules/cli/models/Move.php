@@ -170,14 +170,13 @@ class Cli_Model_Move
                 if ($defenderColor == 'neutral') {
                     $defender = $battle->getDefender();
                 } else {
-                    $castle = $castlesSchema[$castleId];
-                    $defender = Cli_Model_Database::getDefenderFromCastlePosition($user->parameters['gameId'], $castle['position'], $db);
+                    $defender = Cli_Model_Database::getDefender($user->parameters['gameId'], $enemy['ids'], $db);
                 }
             } else {
-                $defender = Cli_Model_Database::getDefenderFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $db);
+                $defender = Cli_Model_Database::getDefender($user->parameters['gameId'], $enemy['ids'], $db);
             }
 
-            if (empty($defender)) {
+            if (!$battle->getDefender()) {
                 if (Zend_Validate::is($castleId, 'Digits')) {
                     if ($defenderColor == 'neutral') {
                         Cli_Model_Database::addCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);

@@ -66,5 +66,27 @@ class Application_Model_RuinsInGame extends Game_Db_Table_Abstract
             echo($select->__toString());
         }
     }
+
+    public function getFullRuins()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_foreign_2)
+            ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_gameId);
+        try {
+            $result = $this->_db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+
+        $ruins = Zend_Registry::get('ruins');
+        foreach ($result as $row) {
+            if (isset($ruins[$row['ruinId']])) {
+                unset($ruins[$row['ruinId']]);
+            }
+        }
+
+        return $ruins;
+    }
 }
 

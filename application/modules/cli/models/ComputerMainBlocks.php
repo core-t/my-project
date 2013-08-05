@@ -124,8 +124,10 @@ class Cli_Model_ComputerMainBlocks
             return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
         } else {
             new Coret_Model_Logger('JEST HEROS');
-//            new Cli_Model_Logger($army['heroes'], 'HEROS:');
-            $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], Cli_Model_Database::getFullRuins($gameId, $db), $mArmy);
+
+            $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
+            $ruin = Cli_Model_ComputerSubBlocks::getNearestRuin($castlesAndFields['fields'], $mRuinsInGame->getFullRuins(), $mArmy);
+
             if (!$ruin) {
                 new Coret_Model_Logger('BRAK RUIN');
                 return self::firstBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
