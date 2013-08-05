@@ -1,12 +1,14 @@
 <h2><?php echo $this->translate('Select which game you want to load') ?></h2>
 <div class="table">
     <table>
-        <th><?php echo $this->translate('Game master') ?></th>
-        <th><?php echo $this->translate('Your color') ?></th>
-        <th><?php echo $this->translate('Turn number') ?></th>
-        <th><?php echo $this->translate('Number of Players') ?></th>
-        <th><?php echo $this->translate('Players') ?></th>
-        <th><?php echo $this->translate('Start date') ?></th>
+        <tr>
+            <th><?php echo $this->translate('Game master') ?></th>
+            <th><?php echo $this->translate('Your color') ?></th>
+            <th><?php echo $this->translate('Turn number') ?></th>
+            <th><?php echo $this->translate('Number of Players') ?></th>
+            <th><?php echo $this->translate('Players') ?></th>
+            <th><?php echo $this->translate('Start date') ?></th>
+        </tr>
         <?php
         if (count($this->myGames)) {
             foreach ($this->myGames as $game) {
@@ -39,10 +41,10 @@
 </ul>
 <script type="text/javascript">
     $('.trlink')
-            .mouseover(function () {
-                $('#' + this.id).css('background', 'transparent url(../img/nav_bg.png) repeat');
-            })
-            .mouseleave(function () {
-                $('#' + this.id).css('background', 'transparent');
-            });
+        .mouseover(function () {
+            $('#' + this.id).css('background', 'transparent url(../img/nav_bg.png) repeat');
+        })
+        .mouseleave(function () {
+            $('#' + this.id).css('background', 'transparent');
+        });
 </script>

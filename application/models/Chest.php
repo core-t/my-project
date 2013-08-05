@@ -21,8 +21,8 @@ class Application_Model_Chest extends Game_Db_Table_Abstract
     public function add($artifactId)
     {
         $data = array(
-            $this->_db->quoteInto($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $artifactId),
-            $this->_db->quoteInto($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_playerId)
+            $this->_foreign_2 => $artifactId,
+            $this->_foreign_1 => $this->_playerId
         );
 
         try {
@@ -40,9 +40,7 @@ class Application_Model_Chest extends Game_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_playerId);
 
         try {
-            if ($this->_db->fetchOne($select) !== null) {
-                return true;
-            }
+            return Zend_Validate::is($this->_db->fetchOne($select), 'Digits');
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -67,4 +65,12 @@ class Application_Model_Chest extends Game_Db_Table_Abstract
         }
     }
 
+    public function getAll()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name)
+            ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_playerId);
+
+        return $this->_db->query($select)->fetchAll();
+    }
 }

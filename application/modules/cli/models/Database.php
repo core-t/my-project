@@ -378,25 +378,12 @@ Brak y
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $k => $row) {
-                $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
+                $mInventory = new Application_Model_Inventory($gameId, $db);
+                $result[$k]['artefacts'] = $mInventory->getArtifactsByHeroId($row['heroId']);
+//                $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
             }
 
             return $result;
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static private function getArtefactsByHeroId($gameId, $heroId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'inventory'), 'artefactId')
-            ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"', '')
-            ->where('"heroId" = ?', $heroId)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -689,20 +676,6 @@ Brak y
         );
 
         return self::update('army', $data, $where, $db);
-    }
-
-    static public function ruinExists($gameId, $ruinId, $db)
-    {
-        $select = $db->select()
-            ->from('ruin', 'ruinId')
-            ->where('"ruinId" = ?', $ruinId)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return Zend_Validate::is($db->fetchOne($select), 'Digits');
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
     }
 
     static public function getColorByPlayerId($gameId, $playerId, $db)

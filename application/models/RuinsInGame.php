@@ -41,17 +41,30 @@ class Application_Model_RuinsInGame extends Game_Db_Table_Abstract
     public function add($ruinId)
     {
         $data = array(
-            'ruinId' => $ruinId,
-            'gameId' => $this->_gameId
+            $this->_foreign_2 => $ruinId,
+            $this->_foreign_1 => $this->_gameId
         );
 
         try {
-            $this->_db->insert('ruin', $data);
+            $this->_db->insert($this->_name, $data);
         } catch (Exception $e) {
             echo($e);
         }
     }
 
+    public function ruinExists($ruinId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_foreign_2)
+            ->where($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $ruinId)
+            ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_gameId);
 
+        try {
+            return Zend_Validate::is($this->_db->fetchOne($select), 'Digits');
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+    }
 }
 

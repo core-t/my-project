@@ -1,19 +1,24 @@
 <?php
 
-class Application_Model_Army extends Game_Db_Table_Abstract {
+class Application_Model_Army extends Game_Db_Table_Abstract
+{
 
     protected $_name = 'army';
     protected $_primary = 'armyId';
-    protected $_db;
     protected $_gameId;
 
-    public function __construct($gameId) {
+    public function __construct($gameId, $db = null)
+    {
         $this->_gameId = $gameId;
-        $this->_db = $this->getDefaultAdapter();
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
     }
 
-    public function createArmy($position, $playerId, $sleep = 0) {
+    public function createArmy($position, $playerId, $sleep = 0)
+    {
         $armyId = $this->getNewArmyId();
         $data = array(
             'armyId' => $armyId,
@@ -35,10 +40,11 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         return $armyId;
     }
 
-    private function getNewArmyId() {
+    private function getNewArmyId()
+    {
         $select = $this->_db->select()
-                ->from($this->_name, 'max("armyId")')
-                ->where('"gameId" = ?', $this->_gameId);
+            ->from($this->_name, 'max("armyId")')
+            ->where('"gameId" = ?', $this->_gameId);
         try {
             return $this->_db->fetchOne($select) + 1;
         } catch (PDOException $e) {
@@ -46,37 +52,42 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
-    public function getPlayerArmies($playerId) {
+    public function getPlayerArmies($playerId)
+    {
         $select = $this->_db->select()
-                ->from($this->_name, array('armyId', 'fortified', 'x', 'y'))
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"playerId" = ?', $playerId)
-                ->where('destroyed = false');
+            ->from($this->_name, array('armyId', 'fortified', 'x', 'y'))
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false');
+
         try {
             $result = $this->_db->query($select)->fetchAll();
-            $array = array();
-            foreach ($result as $k => $army)
-            {
-                $array['army' . $army['armyId']] = $army;
-                $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
-                $array['army' . $army['armyId']]['soldiers'] = $this->getArmySoldiers($army['armyId']);
-                if (empty($array['army' . $army['armyId']]['heroes']) AND empty($array['army' . $army['armyId']]['soldiers'])) {
-                    $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);
-                    unset($array['army' . $army['armyId']]);
-                }
-            }
-            return $array;
         } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
+
+        $array = array();
+
+        foreach ($result as $army) {
+            $array['army' . $army['armyId']] = $army;
+            $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
+            $array['army' . $army['armyId']]['soldiers'] = $this->getArmySoldiers($army['armyId']);
+            if (empty($array['army' . $army['armyId']]['heroes']) AND empty($array['army' . $army['armyId']]['soldiers'])) {
+                $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);
+                unset($array['army' . $army['armyId']]);
+            }
+        }
+
+        return $array;
     }
 
-    private function getArmyHeroes($armyId, $in = false) {
+    private function getArmyHeroes($armyId, $in = false)
+    {
         $select = $this->_db->select()
-                ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
-                ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
-                ->where('"gameId" = ?', $this->_gameId)
-                ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
+            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
+            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
+            ->where('"gameId" = ?', $this->_gameId)
+            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
         try {
             if ($in) {
                 $select->where('"' . $this->_primary . '" IN (?)', new Zend_Db_Expr($armyId));
@@ -84,9 +95,9 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
                 $select->where('"' . $this->_primary . '" = ?', $armyId);
             }
             $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $row)
-            {
-                $result[$k]['artefacts'] = $this->getArtefactsByHeroId($row['heroId']);
+            foreach ($result as $k => $row) {
+                $mInventory = new Application_Model_Inventory($this->_gameId);
+                $result[$k]['artefacts'] = $mInventory->getArtifactsByHeroId($row['heroId']);
             }
             return $result;
         } catch (PDOException $e) {
@@ -94,11 +105,14 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
-    private function getArtefactsByHeroId($heroId) {
+    private function getArmySoldiers($armyId)
+    {
         $select = $this->_db->select()
-                ->from(array('a' => 'inventory'))
-                ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"')
-                ->where('"heroId" = ?', $heroId);
+            ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId'))
+            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'unitId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"' . $this->_primary . '" = ?', $armyId)
+            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
         try {
             return $this->_db->query($select)->fetchAll();
         } catch (PDOException $e) {
@@ -106,21 +120,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
     }
 
-    private function getArmySoldiers($armyId) {
-        $select = $this->_db->select()
-                ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId'))
-                ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'unitId')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"' . $this->_primary . '" = ?', $armyId)
-                ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
-        try {
-            return $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function destroyArmy($armyId, $playerId) {
+    public function destroyArmy($armyId, $playerId)
+    {
         $data = array(
             'destroyed' => 'true'
         );
@@ -131,7 +132,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
 //         return $this->_db->delete($this->_name, $where);
     }
 
-    public function addHeroToGame($armyId, $heroId) {
+    public function addHeroToGame($armyId, $heroId)
+    {
         $data = array(
             'heroId' => $heroId,
             'armyId' => $armyId,
@@ -141,10 +143,11 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         return $this->_db->insert('heroesingame', $data);
     }
 
-    public function allArmiesReady() {
+    public function allArmiesReady()
+    {
         $select = $this->_db->select()
-                ->from($this->_name, 'count(*) as number')
-                ->where('"gameId" = ?', $this->_gameId);
+            ->from($this->_name, 'count(*) as number')
+            ->where('"gameId" = ?', $this->_gameId);
         try {
             $numberOfArmies = $this->_db->fetchOne($select);
         } catch (Exception $e) {
@@ -152,9 +155,9 @@ class Application_Model_Army extends Game_Db_Table_Abstract {
         }
 
         $select = $this->_db->select()
-                ->from('playersingame', 'count(*) as number')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('color IS NOT NULL');
+            ->from('playersingame', 'count(*) as number')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('color IS NOT NULL');
         try {
             $numberOfPlayers = $this->_db->fetchOne($select);
         } catch (Exception $e) {

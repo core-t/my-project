@@ -5,9 +5,13 @@ class Application_Model_Artifact extends Game_Db_Table_Abstract
     protected $_name = 'artifact';
     protected $_primary = 'artifactId';
 
-    public function __construct()
+    public function __construct($db = null)
     {
-        parent::__construct();
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
     }
 
     public function getArtifacts()

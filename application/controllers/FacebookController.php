@@ -39,7 +39,7 @@ class FacebookController extends Zend_Controller_Action {
                 'lastName' => $fbUserInfo['last_name'],
                 'locale' => $fbUserInfo['locale']
             );
-            $modelPlayer->updatePlayer($data);
+            $modelPlayer->updateFacebookData($data);
 //            $playerActivity = new Warlords_Player_Activity();
 
             $this->_namespace->player = $modelPlayer->getPlayer();

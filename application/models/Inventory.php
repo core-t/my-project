@@ -4,6 +4,9 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
 {
 
     protected $_name = 'inventory';
+    protected $_foreign_1 = 'artifactId';
+    protected $_foreign_2 = 'heroId';
+    protected $_foreign_3 = 'gameId';
 
     public function __construct($gameId, $db = null)
     {
@@ -63,4 +66,32 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
         }
     }
 
+    public function getArtifactsByHeroId($heroId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_foreign_1)
+            ->where($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $heroId)
+            ->where($this->_db->quoteIdentifier($this->_foreign_3) . ' = ?', $this->_gameId);
+
+        try {
+            return $this->_db->query($select)->fetchAll();
+        } catch (PDOException $e) {
+            throw new Exception($select->__toString());
+        }
+    }
+
+    //    static private function getArtefactsByHeroId($gameId, $heroId, $db)
+//    {
+//        $select = $db->select()
+//            ->from(array('a' => 'inventory'), 'artefactId')
+//            ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"', '')
+//            ->where('"heroId" = ?', $heroId)
+//            ->where('"gameId" = ?', $gameId);
+//        try {
+//            return $db->query($select)->fetchAll();
+//        } catch (Exception $e) {
+//            echo($e);
+//            echo($select->__toString());
+//        }
+//    }
 }

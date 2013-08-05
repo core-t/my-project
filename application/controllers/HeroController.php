@@ -1,13 +1,10 @@
 <?php
 
-class HeroController extends Game_Controller_Gui {
+class HeroController extends Game_Controller_Gui
+{
 
-    public function _init() {
-
-    }
-
-    public function indexAction() {
-        // action body
+    public function indexAction()
+    {
         $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
         $this->view->heroes = $modelHero->getHeroes();
 
@@ -17,11 +14,15 @@ class HeroController extends Game_Controller_Gui {
             if ($this->view->form->isValid($this->_request->getPost())) {
 
                 $modelHero->changeHoroName($this->view->heroes[0]['heroId'], $this->_request->getParam('name'));
-                $this->_helper->redirector('index', 'hero');
+                $this->_redirect('/hero');
             }
         }
 
+        $mChest = new Application_Model_Chest($this->_namespace->player['playerId']);
+        $this->view->chest = $mChest->getAll();
 
+        $mArtifact = new Application_Model_Artifact();
+        $this->view->artifacts = $mArtifact->getArtifacts();
     }
 
 }
