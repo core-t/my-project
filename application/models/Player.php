@@ -53,7 +53,8 @@ class Application_Model_Player extends Game_Db_Table_Abstract
         $data = array(
             'firstName' => 'Computer',
             'lastName' => 'Player',
-            'computer' => 'true'
+            'computer' => 'true',
+            'adminId' => 1
         );
         return $this->createPlayer($data);
     }
