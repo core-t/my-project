@@ -402,7 +402,8 @@ function tmpUnselectArmy() {
 
 function deleteArmy(armyId, color, quiet) {
     if (typeof players[color].armies[armyId] == 'undefined') {
-        console.log('Brak armi o armyId = ' + armyId + ' i kolorze =' + color);
+        console.log('Brak armi o armyId = ' + armyId + ' i kolorze = ' + color);
+        return;
     }
 
     armyFields(players[color].armies[armyId]);

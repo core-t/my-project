@@ -1,0 +1,101 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+--
+-- Data for Name: mapcastles; Type: TABLE DATA; Schema: public; Owner: wof
+--
+
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (6, 4, 62, 56, 'MARTHOS', 20, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (7, 4, 41, 37, 'ELVALLIE', 33, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (8, 4, 48, 34, 'CHARLING', 16, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (9, 4, 33, 38, 'GILDENHOME', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (10, 4, 43, 45, 'LOREMARK', 3, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (11, 4, 42, 26, 'ARGENTHORN', 22, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (12, 4, 54, 22, 'ANGBAR', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (13, 4, 59, 24, 'SSURI', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (14, 4, 56, 27, 'TROY', 13, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (15, 4, 65, 35, 'HEREUTH', 26, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (16, 4, 84, 42, 'GLUK', 17, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (17, 4, 86, 45, 'GORK', 15, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (18, 4, 87, 27, 'GAROM', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (19, 4, 90, 16, 'BALAD NARAN', 29, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (20, 4, 41, 0, 'GALIN', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (21, 4, 100, 3, 'KOR', 30, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (22, 4, 89, 0, 'DETHAL', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (23, 4, 85, 2, 'THURTZ', 18, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (24, 4, 78, 0, 'DARCLAN', 23, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (25, 4, 71, 6, 'ILNYR', 21, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (26, 4, 68, 18, 'DUINOTH', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (27, 4, 58, 3, 'KAZRACK', 21, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (28, 4, 48, 2, 'VERNON', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (29, 4, 22, 8, 'HIMELTON', 14, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (30, 4, 19, 20, 'STORMHEIM', 20, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (31, 4, 7, 7, 'OHMSMOUTH', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (32, 4, 4, 16, 'WELLMORE', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (33, 4, 8, 25, 'TASME', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (34, 4, 8, 34, 'VARDE', 23, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (35, 4, 15, 32, 'QUIESCE', 3, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (36, 4, 8, 42, 'KHORFE', 26, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (37, 4, 22, 54, 'ALFAR''S GAP', 18, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (38, 4, 31, 18, 'LADOR', 16, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (72, 7, 62, 64, 'MARTHOS', 20, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (73, 7, 41, 45, 'ELVALLIE', 33, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (74, 7, 48, 42, 'CHARLING', 16, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (75, 7, 33, 46, 'GILDENHOME', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (76, 7, 43, 53, 'LOREMARK', 3, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (77, 7, 42, 34, 'ARGENTHORN', 22, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (78, 7, 54, 30, 'ANGBAR', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (79, 7, 59, 32, 'SSURI', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (80, 7, 56, 35, 'TROY', 13, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (81, 7, 65, 43, 'HEREUTH', 26, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (82, 7, 84, 50, 'GLUK', 17, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (83, 7, 86, 53, 'GORK', 15, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (84, 7, 87, 35, 'GAROM', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (85, 7, 90, 24, 'BALAD NARAN', 29, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (86, 7, 41, 8, 'GALIN', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (87, 7, 100, 11, 'KOR', 30, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (88, 7, 89, 8, 'DETHAL', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (89, 7, 85, 10, 'THURTZ', 18, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (90, 7, 78, 8, 'DARCLAN', 23, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (91, 7, 71, 14, 'ILNYR', 21, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (92, 7, 68, 26, 'DUINOTH', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (93, 7, 58, 11, 'KAZRACK', 21, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (94, 7, 48, 10, 'VERNON', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (95, 7, 22, 16, 'HIMELTON', 14, false, 1);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (96, 7, 19, 28, 'STORMHEIM', 20, true, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (97, 7, 7, 15, 'OHMSMOUTH', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (98, 7, 4, 24, 'WELLMORE', 20, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (99, 7, 8, 33, 'TASME', 19, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (100, 7, 8, 42, 'VARDE', 23, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (101, 7, 15, 40, 'QUIESCE', 3, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (102, 7, 8, 50, 'KHORFE', 26, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (103, 7, 22, 62, 'ALFAR''S GAP', 18, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (104, 7, 31, 26, 'LADOR', 16, false, 2);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (106, 7, 20, 5, 'Hithos', 28, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (107, 7, 37, 1, 'Dhar-Khosis', 30, false, 4);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (108, 7, 59, 2, 'Citadel of Fire', 24, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (109, 7, 63, 2, 'Citadel of Ice', 26, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (110, 7, 86, 0, 'Pa-Kur', 25, false, 3);
+INSERT INTO mapcastles ("mapCastleId", "mapId", x, y, name, income, capital, defense) VALUES (111, 7, 95, 0, 'Ar-Arak', 26, false, 3);
+
+
+--
+-- Name: mapcastles_mapCastleId_seq; Type: SEQUENCE SET; Schema: public; Owner: wof
+--
+
+SELECT pg_catalog.setval('"mapcastles_mapCastleId_seq"', 111, true);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

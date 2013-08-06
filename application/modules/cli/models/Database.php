@@ -441,24 +441,6 @@ Brak y
         }
     }
 
-    static public function calculateIncomeFromTowers($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('tower', 'towerId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" IN (?)', $playerId);
-        try {
-            $towers = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        return count($towers) * 5;
-    }
-
     static public function calculateCostsOfSoldiers($gameId, $playerId, $db)
     {
         $select1 = $db->select()
@@ -2673,47 +2655,6 @@ Brak y
             }
 
             unset($token[$value]);
-        }
-    }
-
-    static public function towerExists($db, $towerId, $gameId)
-    {
-        $select = $db->select()
-            ->from('tower', 'towerId')
-            ->where('"towerId" = ?', $towerId)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo $e;
-            echo $select->__toString();
-        }
-    }
-
-    static public function changeTowerOwner($db, $towerId, $playerId, $gameId)
-    {
-        $data = array(
-            'playerId' => $playerId
-        );
-        $where = array(
-            $db->quoteInto('"towerId" = ?', $towerId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-
-        return self::update('tower', $data, $where, $db, true);
-    }
-
-    static public function addTower($db, $towerId, $playerId, $gameId)
-    {
-        $data = array(
-            'towerId' => $towerId,
-            'gameId' => $gameId,
-            'playerId' => $playerId
-        );
-        try {
-            return $db->insert('tower', $data);
-        } catch (Exception $e) {
-            echo($e);
         }
     }
 

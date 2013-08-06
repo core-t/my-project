@@ -20,7 +20,7 @@ function startWebSocket() {
                     break;
 
                 case 'move':
-//                    console.log(r);
+                    console.log(r);
                     move(r);
                     break;
 

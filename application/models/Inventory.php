@@ -49,23 +49,6 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
         }
     }
 
-    public function increaseItemQuantity($artifactId, $heroId)
-    {
-        $data = array(
-            'quantity' => new Zend_Db_Expr('quantity + 1')
-        );
-        $where = array(
-            $this->_db->quoteInto('"artifactId" = ?', $artifactId),
-            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
-            $this->_db->quoteInto('"heroId" = ?', $heroId)
-        );
-        try {
-            $this->_db->update('inventory', $data, $where);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
     public function getArtifactsByHeroId($heroId)
     {
         $select = $this->_db->select()
@@ -80,18 +63,4 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
         }
     }
 
-    //    static private function getArtefactsByHeroId($gameId, $heroId, $db)
-//    {
-//        $select = $db->select()
-//            ->from(array('a' => 'inventory'), 'artefactId')
-//            ->join(array('b' => 'artefact'), 'a."artefactId" = b."artefactId"', '')
-//            ->where('"heroId" = ?', $heroId)
-//            ->where('"gameId" = ?', $gameId);
-//        try {
-//            return $db->query($select)->fetchAll();
-//        } catch (Exception $e) {
-//            echo($e);
-//            echo($select->__toString());
-//        }
-//    }
 }

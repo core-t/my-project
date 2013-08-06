@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_Turn {
+class Cli_Model_Turn
+{
 
-    static public function next($gameId, $playerId, $db) {
+    static public function next($gameId, $playerId, $db)
+    {
         if (Cli_Model_Database::playerLost($gameId, $playerId, $db)) {
             return;
         }
@@ -12,8 +14,7 @@ class Cli_Model_Turn {
             'color' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db)
         );
 
-        while (empty($response))
-        {
+        while (empty($response)) {
             $nextPlayer = Cli_Model_Database::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
             $playerCastlesExists = Cli_Model_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
             $playerArmiesExists = Cli_Model_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
@@ -38,7 +39,8 @@ class Cli_Model_Turn {
         return $response;
     }
 
-    static public function start($gameId, $playerId, $db = null) {
+    static public function start($gameId, $playerId, $db = null)
+    {
         if (!$db) {
             $db = self::getDb();
         }
@@ -54,8 +56,7 @@ class Cli_Model_Turn {
 //        if (Cli_Database::getTurnNumber($gameId, $db) > 0) {
         $castles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
         $mapCastles = Zend_Registry::get('castles');
-        foreach ($castles as $dbCastle)
-        {
+        foreach ($castles as $dbCastle) {
             $castleId = $dbCastle['castleId'];
 //                $castles[$castleId] = Application_Model_Board::getCastle($castleId);
 //                $castle = $castles[$castleId];
@@ -69,8 +70,8 @@ class Cli_Model_Turn {
 
             $unitId = $dbCastle['production'];
             if ($dbCastle['production'] AND
-                    $boardCastle['production'][$unitId]['time'] <= $dbCastle['productionTurn']
-                    AND $boardCastle['production'][$unitId]['cost'] <= $gold
+                $boardCastle['production'][$unitId]['time'] <= $dbCastle['productionTurn']
+                AND $boardCastle['production'][$unitId]['cost'] <= $gold
             ) {
                 if (!$armyId) {
                     $armyId = Cli_Model_Database::createArmy($gameId, $db, $boardCastle['position'], $playerId);
@@ -86,7 +87,9 @@ class Cli_Model_Turn {
             return array('gameover' => 1);
         } else {
             $costs = Cli_Model_Database::calculateCostsOfSoldiers($gameId, $playerId, $db);
-            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
+            $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
+            $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
+//            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
             $gold = $gold + $income - $costs;
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
 

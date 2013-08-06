@@ -705,7 +705,7 @@ function killM(b, clb, data) {
         if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
             if (isTruthful(data.victory)) {
                 for (i in data.defenderArmy) {
-                    deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
+                     deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
                 }
             } else {
                 for (i in data.defenderArmy) {
