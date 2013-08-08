@@ -14,7 +14,6 @@ class Cli_Model_GameHandler extends Cli_WofHandler
     {
         parent::__construct();
         $db = Cli_Model_Database::getDb();
-        Zend_Registry::set('units', Cli_Model_Database::getUnits($db));
     }
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
@@ -30,12 +29,15 @@ class Cli_Model_GameHandler extends Cli_WofHandler
         if ($dataIn['type'] == 'open') {
             $open = new Cli_Model_Open($dataIn, $user, $db, $this);
             $user->parameters = $open->getParameters();
+
             $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
             $mMapFields = new Application_Model_MapFields($mGame->getMapId(), $db);
             $mMapCastles = new Application_Model_MapCastles($mGame->getMapId(), $db);
             $mMapRuins = new Application_Model_MapRuins($mGame->getMapId(), $db);
             $mMapTowers = new Application_Model_MapTowers($mGame->getMapId(), $db);
+            $mMapUnits = new Application_Model_MapUnits($mGame->getMapId(), $db);
 
+            Zend_Registry::set('units', $mMapUnits->getUnits($db));
             Zend_Registry::set('fields', $mMapFields->getMapFields());
             Zend_Registry::set('castles', $mMapCastles->getMapCastles());
             Zend_Registry::set('ruins', $mMapRuins->getMapRuins());

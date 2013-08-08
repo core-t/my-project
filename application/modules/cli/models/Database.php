@@ -395,8 +395,8 @@ Brak y
     static private function getArmySoldiersForBattle($gameId, $ids, $db)
     {
         $select = $db->select()
-            ->from(array('a' => 'soldier'), 'soldierId')
-            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
+            ->from(array('a' => 'soldier'), array('soldierId', 'unitId'))
+//            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
             ->where('"gameId" = ?', $gameId)
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
@@ -1157,25 +1157,6 @@ Brak y
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
-        }
-    }
-
-    static public function addSoldierToArmy($gameId, $armyId, $unitId, $db)
-    {
-
-        $select = $db->select()
-            ->from('unit', 'numberOfMoves')
-            ->where('"unitId" = ?', $unitId);
-        $data = array(
-            'armyId' => $armyId,
-            'gameId' => $gameId,
-            'unitId' => $unitId,
-            'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
-        );
-        try {
-            return $db->insert('soldier', $data);
-        } catch (Exception $e) {
-            echo($e);
         }
     }
 
@@ -2402,21 +2383,6 @@ Brak y
         }
     }
 
-    static public function addHeroToGame($gameId, $armyId, $heroId, $db)
-    {
-        $data = array(
-            'heroId' => $heroId,
-            'armyId' => $armyId,
-            'gameId' => $gameId,
-            'movesLeft' => 16
-        );
-        try {
-            return $db->insert('heroesingame', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
     static public function isGameStarted($gameId, $db)
     {
         $select = $db->select()
@@ -2504,31 +2470,6 @@ Brak y
         } catch (Exception $e) {
             echo($e);
         }
-    }
-
-    /**
-     * @param Zend_Db_Adapter_Pdo_Pgsql $db
-     * @return array
-     */
-    static public function getUnits(Zend_Db_Adapter_Pdo_Pgsql $db)
-    {
-        $select = $db->select()
-            ->from('unit')
-            ->order('unitId');
-        try {
-            $results = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-        $units = array();
-        foreach ($results as $unit) {
-            $units[$unit['unitId']] = $unit;
-        }
-
-        return $units;
     }
 
     /**

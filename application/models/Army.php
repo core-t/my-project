@@ -125,11 +125,12 @@ class Application_Model_Army extends Game_Db_Table_Abstract
         $data = array(
             'destroyed' => 'true'
         );
+
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $armyId);
         $where[] = $this->_db->quoteInto('"gameId" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+
         return $this->_db->update($this->_name, $data, $where);
-//         return $this->_db->delete($this->_name, $where);
     }
 
     public function addHeroToGame($armyId, $heroId)

@@ -350,7 +350,8 @@ class Cli_Model_ComputerMainBlocks
                         $mArmy = new Application_Model_Army($gameId, $db);
                         $armyId = $mArmy->createArmy($castle['position'], $playerId);
                     }
-                    Cli_Model_Database::addSoldierToArmy($gameId, $armyId, $castleProduction['production'], $db);
+                    $mSoldier = new Application_Model_Soldier($gameId, $db);
+                    $mSoldier->add($armyId, $castleProduction['production']);
                 }
             }
         }

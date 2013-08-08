@@ -121,8 +121,9 @@ class Cli_Model_SearchRuin
             $unitId = rand(11, $max1);
             $numberOfUnits = rand($min2, $max2);
             $find = array('alies', $numberOfUnits);
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
             for ($i = 0; $i < $numberOfUnits; $i++) {
-                Cli_Model_Database::addSoldierToArmy($gameId, $armyId, $unitId, $db);
+                $mSoldier->add($armyId, $unitId);
             }
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);

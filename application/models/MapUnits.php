@@ -25,7 +25,7 @@ class Application_Model_MapUnits extends Game_Db_Table_Abstract
             ->where('name = ?', $name);
         try {
             return $this->_db->fetchOne($select);
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
     }
@@ -39,8 +39,11 @@ class Application_Model_MapUnits extends Game_Db_Table_Abstract
             ->order($this->_primary);
         try {
             $result = $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+
+            return;
         }
         foreach ($result as $unit) {
             $units[$unit[$this->_primary]] = $unit;

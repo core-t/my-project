@@ -32,13 +32,13 @@ class GameController extends Game_Controller_Game
         $mArmy = new Application_Model_Army($this->_namespace->gameId);
         $mRuin = new Application_Model_RuinsInGame($this->_namespace->gameId);
         $mTower = new Application_Model_TowersInGame($this->_namespace->gameId);
-        $mUnit = new Application_Model_MapUnits();
-        $mArtefact = new Application_Model_Artifact();
+        $mArtifact = new Application_Model_Artifact();
         $mChat = new Application_Model_Chat($this->_namespace->gameId);
 
         $game = $mGame->getGame();
 
-        $this->view->artefacts = $mArtefact->getArtifacts();
+        $this->view->artefacts = $mArtifact->getArtifacts();
+        $mUnit = new Application_Model_MapUnits($game['mapId']);
         $this->view->units = $mUnit->getUnits();
         $mMapTowers = new Application_Model_MapTowers($game['mapId']);
         $neutralTowers = $mMapTowers->getMapTowers();
