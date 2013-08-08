@@ -347,7 +347,8 @@ class Cli_Model_ComputerMainBlocks
                 if (Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
                     $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
                     if (!$armyId) {
-                        $armyId = Cli_Model_Database::createArmy($gameId, $db, $castle['position'], $playerId);
+                        $mArmy = new Application_Model_Army($gameId, $db);
+                        $armyId = $mArmy->createArmy($castle['position'], $playerId);
                     }
                     Cli_Model_Database::addSoldierToArmy($gameId, $armyId, $castleProduction['production'], $db);
                 }

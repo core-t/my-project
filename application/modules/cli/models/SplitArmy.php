@@ -25,7 +25,8 @@ class Cli_Model_SplitArmy {
 
                 if (empty($childArmyId)) {
                     $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
-                    $childArmyId = Cli_Model_Database::createArmy($user->parameters['gameId'], $db, $position, $user->parameters['playerId']);
+                    $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+                    $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
                 Cli_Model_Database::heroUpdateArmyId($user->parameters['gameId'], $heroId, $childArmyId, $db);
             }
@@ -40,7 +41,8 @@ class Cli_Model_SplitArmy {
 
                 if (empty($childArmyId)) {
                     $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
-                    $childArmyId = Cli_Model_Database::createArmy($user->parameters['gameId'], $db, $position, $user->parameters['playerId']);
+                    $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+                    $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
                 Cli_Model_Database::soldierUpdateArmyId($user->parameters['gameId'], $soldierId, $childArmyId, $db);
             }

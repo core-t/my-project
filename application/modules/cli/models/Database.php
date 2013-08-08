@@ -1247,34 +1247,6 @@ Brak y
         }
     }
 
-    static public function createArmy($gameId, $db, $position, $playerId, $sleep = 0)
-    {
-
-        $armyId = self::getNewArmyId($gameId, $db);
-        $data = array(
-            'armyId' => $armyId,
-            'playerId' => $playerId,
-            'gameId' => $gameId,
-            'x' => $position['x'],
-            'y' => $position['y']
-        );
-        try {
-            $db->insert('army', $data);
-
-            return $armyId;
-        } catch (Exception $e) {
-            if ($sleep > 10) {
-                echo($e);
-
-                return;
-            }
-            sleep(rand(0, $sleep));
-            $armyId = self::createArmy($gameId, $db, $position, $playerId, $sleep + 1);
-        }
-
-        return $armyId;
-    }
-
     static private function getNewArmyId($gameId, $db)
     {
 
@@ -1378,7 +1350,8 @@ Brak y
 
         $armyId = self::getArmyIdFromPosition($gameId, $position, $db);
         if (!$armyId) {
-            $armyId = self::createArmy($gameId, $db, $position, $playerId);
+            $mArmy = new Application_Model_Army($gameId, $db);
+            $armyId = $mArmy->createArmy($position, $playerId);
         }
         self::addHeroToArmy($gameId, $armyId, $heroId, 0, $db);
 

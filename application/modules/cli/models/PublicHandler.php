@@ -59,8 +59,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                             Cli_Model_Database::createHero($computer['playerId'], $db);
                             $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
                         }
-                        $armyId = Cli_Model_Database::createArmy(
-                            $user->parameters['gameId'], $db, $startPositions[$computer['color']]['position'], $computer['playerId']);
+                        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+                        $armyId = $mArmy->createArmy($startPositions[$computer['color']]['position'], $computer['playerId']);
                         Cli_Model_Database::addHeroToGame($user->parameters['gameId'], $armyId, $playerHeroes[0]['heroId'], $db);
                         Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$computer['color']]['id'], $computer['playerId'], $db);
                     }

@@ -74,7 +74,8 @@ class Cli_Model_Turn
                 AND $boardCastle['production'][$unitId]['cost'] <= $gold
             ) {
                 if (!$armyId) {
-                    $armyId = Cli_Model_Database::createArmy($gameId, $db, $boardCastle['position'], $playerId);
+                    $mArmy = new Application_Model_Army($gameId, $db);
+                    $armyId = $mArmy->createArmy($boardCastle['position'], $playerId);
                 }
 
                 Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db);

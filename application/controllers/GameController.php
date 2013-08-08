@@ -32,7 +32,7 @@ class GameController extends Game_Controller_Game
         $mArmy = new Application_Model_Army($this->_namespace->gameId);
         $mRuin = new Application_Model_RuinsInGame($this->_namespace->gameId);
         $mTower = new Application_Model_TowersInGame($this->_namespace->gameId);
-        $mUnit = new Application_Model_Unit();
+        $mUnit = new Application_Model_MapUnits();
         $mArtefact = new Application_Model_Artifact();
         $mChat = new Application_Model_Chat($this->_namespace->gameId);
 

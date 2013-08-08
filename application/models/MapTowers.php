@@ -4,8 +4,6 @@ class Application_Model_MapTowers extends Game_Db_Table_Abstract
 {
     protected $_name = 'maptowers';
     protected $_primary = 'mapTowerId';
-//    protected $_sequence = "map_mapId_seq";
-    protected $_db;
     protected $mapId;
 
     public function __construct($mapId, $db = null)
