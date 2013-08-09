@@ -79,7 +79,9 @@ class Cli_Model_Turn
                 }
 
                 Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db);
-                $mSoldier = new Application_Model_Soldier($gameId, $db);
+                if (!isset($mSoldier)) {
+                    $mSoldier = new Application_Model_Soldier($gameId, $db);
+                }
                 $mSoldier->add($armyId, $castleInGame['production']);
             }
         }
@@ -88,10 +90,12 @@ class Cli_Model_Turn
         if (empty($castles) && empty($armies)) {
             return array('gameover' => 1);
         } else {
-            $costs = Cli_Model_Database::calculateCostsOfSoldiers($gameId, $playerId, $db);
+            if (!isset($mSoldier)) {
+                $mSoldier = new Application_Model_Soldier($gameId, $db);
+            }
+            $costs = $mSoldier->calculateCostsOfSoldiers($playerId);
             $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
-//            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
             $gold = $gold + $income - $costs;
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
 

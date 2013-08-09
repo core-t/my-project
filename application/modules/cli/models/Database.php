@@ -306,11 +306,12 @@ Brak y
         }
 
         if (isset($result['armyId'])) {
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
+
             $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
-            $result['soldiers'] = self::getArmySoldiersForWalk($gameId, $armyId, $db);
+            $result['soldiers'] = $mSoldier->getForWalk($armyId);
             $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
         }
-
 
         return $result;
     }
@@ -325,17 +326,22 @@ Brak y
             ->where('"armyId" = ?', $armyId);
         try {
             $result = $db->fetchRow($select);
-            if (isset($result['armyId'])) {
-                $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
-                $result['soldiers'] = self::getArmySoldiersForWalk($gameId, $armyId, $db);
-                $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
-
-                return $result;
-            }
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
+
+            return;
         }
+
+        if (isset($result['armyId'])) {
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
+            $result['soldiers'] = $mSoldier->getForWalk($armyId);
+            $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
+
+            return $result;
+        }
+
     }
 
     static private function getArmyHeroesForBattle($gameId, $ids, $db)
@@ -392,40 +398,6 @@ Brak y
         }
     }
 
-    static private function getArmySoldiersForBattle($gameId, $ids, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'soldier'), array('soldierId', 'unitId'))
-//            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" IN (?)', $ids)
-            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
-
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static private function getArmySoldiersForWalk($gameId, $ids, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'soldier'), array('movesLeft', 'soldierId', 'unitId'))
-            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', array(''))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" IN (?)', $ids)
-            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
-
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static private function getArmySoldiers($gameId, $armyId, $db)
     {
         $select = $db->select()
@@ -439,38 +411,6 @@ Brak y
             echo($e);
             echo($select->__toString());
         }
-    }
-
-    static public function calculateCostsOfSoldiers($gameId, $playerId, $db)
-    {
-        $select1 = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false');
-
-        $select = $db->select()
-            ->from(array('a' => 'soldier'), '')
-            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'cost')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" IN (?)', new Zend_Db_Expr($select1));
-
-        try {
-            $soldiers = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        $costs = 0;
-
-        foreach ($soldiers as $unit) {
-            $costs += $unit['cost'];
-        }
-
-        return $costs;
     }
 
     static public function calculateArmyMovesLeft($gameId, $armyId, $db)
@@ -597,10 +537,12 @@ Brak y
 
         $armies = array();
 
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+
         foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;
             $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-            $armies['army' . $army['armyId']]['soldiers'] = self::getArmySoldiersForWalk($gameId, $army['armyId'], $db);
+            $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
                 self::destroyArmy($gameId, $armies['army' . $army['armyId']]['armyId'], $playerId, $db);
                 unset($armies['army' . $army['armyId']]);
@@ -632,7 +574,9 @@ Brak y
         }
 
         $result['heroes'] = self::getArmyHeroes($gameId, $result['armyId'], false, $db);
-        $result['soldiers'] = self::getArmySoldiersForWalk($gameId, $result['armyId'], $db);
+
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $result['soldiers'] = $mSoldier->getForWalk($result['armyId']);
 
         if (empty($result['heroes']) && empty($result['soldiers'])) {
             $result['destroyed'] = true;
@@ -781,9 +725,10 @@ Brak y
             $ids[] = $id['armyId'];
         }
         if ($ids) {
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
             return array(
                 'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
-                'soldiers' => self::getArmySoldiersForBattle($gameId, $ids, $db),
+                'soldiers' => $mSoldier->getForBattle($ids),
                 'ids' => $ids
             );
         } else {
@@ -1017,12 +962,10 @@ Brak y
         }
 
         if ($ids) {
-            $heroes = self::getArmyHeroesForBattle($gameId, $ids, $db);
-            $soldiers = self::getArmySoldiersForBattle($gameId, $ids, $db);
-
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
             return array(
-                'heroes' => $heroes,
-                'soldiers' => $soldiers,
+                'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
+                'soldiers' => $mSoldier->getForBattle($ids),
                 'ids' => $ids
             );
         } else {
@@ -1036,7 +979,6 @@ Brak y
 
     static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db)
     {
-
         $ids = '';
         $select = $db->select()
             ->from('army', 'armyId')
@@ -1587,9 +1529,11 @@ Brak y
             return;
         }
 
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+
         foreach ($result as $army) {
             $army['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-            $army['soldiers'] = self::getArmySoldiersForWalk($gameId, $army['armyId'], $db);
+            $army['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($army['heroes']) AND empty($army['soldiers'])) {
                 self::destroyArmy($gameId, $army['armyId'], $playerId, $db);
             }
@@ -1768,10 +1712,13 @@ Brak y
         }
 
         $armies = array();
+
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+
         foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;
             $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-            $armies['army' . $army['armyId']]['soldiers'] = self::getArmySoldiersForWalk($gameId, $army['armyId'], $db);
+            $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
                 self::destroyArmy($gameId, $armies['army' . $army['armyId']]['armyId'], $playerId, $db);
                 unset($armies['army' . $army['armyId']]);

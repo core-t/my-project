@@ -367,7 +367,10 @@ class Cli_Model_ComputerMainBlocks
             $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
 //            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
-            $gold = $gold + $income - Cli_Model_Database::calculateCostsOfSoldiers($gameId, $playerId, $db);
+            if (!isset($mSoldier)) {
+                $mSoldier = new Application_Model_Soldier($gameId, $db);
+            }
+            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($playerId);
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
             $action = 'start';
             $color = Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db);
