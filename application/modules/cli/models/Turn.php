@@ -96,7 +96,10 @@ class Cli_Model_Turn
             if (!isset($mSoldier)) {
                 $mSoldier = new Application_Model_Soldier($gameId, $db);
             }
-            $costs = $mSoldier->calculateCostsOfSoldiers($playerId);
+            if (!isset($mArmy)) {
+                $mArmy = new Application_Model_Army($gameId, $db);
+            }
+            $costs = $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
             $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
             $gold = $gold + $income - $costs;
@@ -107,7 +110,6 @@ class Cli_Model_Turn
                 'costs' => $costs,
                 'income' => $income,
                 'armies' => $armies,
-//                'castles' => $castles,
                 'color' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db)
             );
         }

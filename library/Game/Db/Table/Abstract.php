@@ -4,12 +4,15 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
 {
 
     protected $_db;
+    protected $_quiet = false;
+    protected $_cli = true;
 
     public function __construct($config = null)
     {
-
         parent::__construct($config);
+
         $this->_db = $this->getDefaultAdapter();
+        $this->_cli = false;
 
         $this->logActivity();
     }
@@ -26,13 +29,27 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
 //        $activity->logRequest();
     }
 
-    protected function update($data, $where, $quiet = false)
+    protected function setQuiet($quiet)
+    {
+        $this->_quiet = $quiet;
+    }
+
+    protected function setCli($cli)
+    {
+        $this->_cli = $cli;
+    }
+
+    public function update(array $data, $where)
     {
         try {
             $updateResult = $this->_db->update($this->_name, $data, $where);
         } catch (Exception $e) {
-            echo($e);
-
+            new Coret_Model_Logger($e);
+            if ($this->_cli) {
+                echo($e);
+            } else {
+                throw $e;
+            }
             return;
         }
         switch ($updateResult) {
@@ -41,7 +58,7 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
                 break;
 
             case 0:
-                if ($quiet) {
+                if ($this->_quiet) {
                     return;
                 }
                 echo('
@@ -58,7 +75,7 @@ Zapytanie zwróciło błąd
                 break;
 
             default:
-                if ($quiet) {
+                if ($this->_quiet) {
                     return;
                 }
                 echo('
@@ -69,4 +86,19 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 break;
         }
     }
+
+    public function insert(array $data)
+    {
+        try {
+            return $this->_db->insert($this->_name, $data);
+        } catch (Exception $e) {
+            new Coret_Model_Logger($e);
+            if ($this->_cli) {
+                echo($e);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
 }

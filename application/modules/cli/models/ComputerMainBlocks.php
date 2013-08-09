@@ -373,7 +373,10 @@ class Cli_Model_ComputerMainBlocks
             if (!isset($mSoldier)) {
                 $mSoldier = new Application_Model_Soldier($gameId, $db);
             }
-            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($playerId);
+            if (!isset($mArmy)) {
+                $mArmy = new Application_Model_Army($gameId, $db);
+            }
+            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
             $action = 'start';
             $color = Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db);

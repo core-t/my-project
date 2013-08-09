@@ -7,7 +7,7 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
 
     public function __construct($gameId, $db = null)
     {
-        $this->gameId = $gameId;
+        $this->_gameId = $gameId;
         if ($db) {
             $this->_db = $db;
         } else {
@@ -24,11 +24,7 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
             'movesLeft' => 16
         );
 
-        try {
-            return $this->_db->insert($this->_name, $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        return $this->insert($data);
     }
 
     public function resetMovesLeft($playerId)
