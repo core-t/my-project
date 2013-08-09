@@ -309,7 +309,10 @@ class Cli_Model_ComputerMainBlocks
         Cli_Model_Database::turnActivate($gameId, $playerId, $db);
         Cli_Model_Database::unfortifyComputerArmies($gameId, $playerId, $db);
         Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
-        Cli_Model_Database::resetSoldiersMovesLeft($gameId, $playerId, $db);
+
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
         $gold = Cli_Model_Database::getPlayerInGameGold($gameId, $playerId, $db);
         $income = 0;

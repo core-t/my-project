@@ -989,37 +989,25 @@ Brak y
             ->where('y = (?)', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $id) {
-                if ($ids) {
-                    $ids .= ',';
-                }
-                $ids .= $id['armyId'];
-            }
-            if (!$ids) {
-                return;
-            }
-
-            return self::getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
         }
-    }
 
-    static public function getSwimmingSoldiersFromArmiesIds($gameId, $ids, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'soldier'), null)
-            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
-            ->where('"canSwim" = true')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
+        foreach ($result as $id) {
+            if ($ids) {
+                $ids .= ',';
+            }
+            $ids .= $id['armyId'];
         }
+
+        if (!$ids) {
+            return;
+        }
+
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+
+        return $mSoldier->getSwimmingFromArmiesIds($ids);
     }
 
     static public function getDefenderFromPosition($gameId, $position, $db)
@@ -1473,44 +1461,6 @@ Brak y
         }
     }
 
-    static public function resetSoldiersMovesLeft($gameId, $playerId, $db)
-    {
-        $subSelect = $db->select()
-            ->from('army', 'armyId')
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false')
-            ->where('"gameId" = ?', $gameId);
-        $select = $db->select()
-            ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
-            ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
-            ->where('"gameId" = ?', $gameId);
-        try {
-            $soldiers = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        foreach ($soldiers as $soldier) {
-            if ($soldier['movesLeft'] > 2) {
-                $soldier['movesLeft'] = 2;
-            }
-            $select = $db->select()
-                ->from('unit', new Zend_Db_Expr('"numberOfMoves" + ' . $soldier['movesLeft']))
-                ->where('"unitId" = ?', $soldier['unitId']);
-            $data = array(
-                'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
-            );
-            $where = array(
-                $db->quoteInto('"soldierId" = ?', $soldier['soldierId']),
-                $db->quoteInto('"gameId" = ?', $gameId)
-            );
-            self::update('soldier', $data, $where, $db, true);
-        }
-    }
-
     static public function getComputerArmyToMove($gameId, $playerId, $db)
     {
         $select = $db->select()
@@ -1733,7 +1683,9 @@ Brak y
     static public function calculateMaxArmyMoves($gameId, $armyId, $db)
     {
         $heroMoves = self::getMaxHeroesMoves($gameId, $armyId, $db);
-        $soldierMoves = self::getMaxSoldiersMoves($gameId, $armyId, $db);
+
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $soldierMoves = $mSoldier->getMaximumMoves($armyId);
         if ($heroMoves > $soldierMoves) {
             return $heroMoves;
         } else {
@@ -1747,22 +1699,6 @@ Brak y
         $select = $db->select()
             ->from(array('a' => 'hero'), 'max("numberOfMoves")')
             ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $armyId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static private function getMaxSoldiersMoves($gameId, $armyId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'unit'), 'max("numberOfMoves")')
-            ->join(array('b' => 'soldier'), 'a."unitId" = b."unitId"', '')
             ->where('"gameId" = ?', $gameId)
             ->where('"armyId" = ?', $armyId);
         try {
@@ -1997,20 +1933,6 @@ Brak y
             } else {
                 print_r(debug_backtrace(0, 2));
             }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getUnitIdByName($name, $db)
-    {
-
-        $select = $db->select()
-            ->from('unit', 'unitId')
-            ->where('name = ?', $name);
-        try {
-            return $db->fetchOne($select);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());

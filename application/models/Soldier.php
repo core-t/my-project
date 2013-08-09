@@ -4,12 +4,12 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
 {
     protected $_name = 'soldier';
     protected $_primary = 'soldierId';
-    protected $_gameId;
+    protected $gameId;
     protected $_mapUnits = 'mapunits';
 
     public function __construct($gameId, $db = null)
     {
-        $this->gameId = $gameId;
+        $this->_gameId = $gameId;
         if ($db) {
             $this->_db = $db;
         } else {
@@ -23,33 +23,27 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
 
         $data = array(
             'armyId' => $armyId,
-            'gameId' => $this->gameId,
+            'gameId' => $this->_gameId,
             'unitId' => $unitId,
             'movesLeft' => $units[$unitId]['numberOfMoves']
         );
 
         try {
-            return $this->db->insert($this->_name, $data);
+            return $this->_db->insert($this->_name, $data);
         } catch (Exception $e) {
             echo($e);
         }
     }
 
-    public function resetMovesLeft($playerId)
+    public function resetMovesLeft($subSelect)
     {
-        $subSelect = $this->db->select()
-            ->from('army', 'armyId')
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false')
-            ->where('"gameId" = ?', $gameId);
-
-        $select = $this->db->select()
+        $select = $this->_db->select()
             ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
-            ->where('"gameId" = ?', $gameId);
+            ->where('"gameId" = ?', $this->_gameId);
 
         try {
-            $soldiers = $this->db->query($select)->fetchAll();
+            $soldiers = $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -57,21 +51,23 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             return;
         }
 
+        $units = Zend_Registry::get('units');
+
         foreach ($soldiers as $soldier) {
             if ($soldier['movesLeft'] > 2) {
                 $soldier['movesLeft'] = 2;
             }
-            $select = $this->db->select()
-                ->from('unit', new Zend_Db_Expr('"numberOfMoves" + ' . $soldier['movesLeft']))
-                ->where('"unitId" = ?', $soldier['unitId']);
+
             $data = array(
-                'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
+                'movesLeft' => $units[$soldier['unitId']]['numberOfMoves'] + $soldier['movesLeft']
             );
+
             $where = array(
-                $this->db->quoteInto('"soldierId" = ?', $soldier['soldierId']),
-                $this->db->quoteInto('"gameId" = ?', $gameId)
+                $this->_db->quoteInto('"soldierId" = ?', $soldier['soldierId']),
+                $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
             );
-            self::update('soldier', $data, $where, $this->db, true);
+
+            $this->update($data, $where, true);
         }
     }
 
@@ -79,15 +75,15 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
     {
 //        $units = Zend_Registry::get('units');
 
-        $select = $this->db->select()
+        $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('soldierId', 'unitId'))
             ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'unitId', 'name'))
-            ->where('"gameId" = ?', $this->gameId)
+            ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
         try {
-            $soldiers = $this->db->query($select)->fetchAll();
+            $soldiers = $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -102,15 +98,15 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
 
     public function getForWalk($armyId)
     {
-        $select = $this->db->select()
+        $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('movesLeft', 'soldierId', 'unitId'))
             ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."unitId"', array(''))
-            ->where('"gameId" = ?', $this->gameId)
+            ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
         try {
-            return $this->db->query($select)->fetchAll();
+            return $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -121,19 +117,19 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
     {
         $units = Zend_Registry::get('units');
 
-        $select1 = $this->db->select()
+        $select1 = $this->_db->select()
             ->from('army', 'armyId')
-            ->where('"gameId" = ?', $this->gameId)
+            ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId)
             ->where('destroyed = false');
 
-        $select = $this->db->select()
+        $select = $this->_db->select()
             ->from($this->_name, 'unitId')
-            ->where('"gameId" = ?', $this->gameId)
+            ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', new Zend_Db_Expr($select1));
 
         try {
-            $soldiers = $this->db->query($select)->fetchAll();
+            $soldiers = $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -150,20 +146,58 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
         return $costs;
     }
 
-         public function getSwimmingSoldiersFromArmiesIds($ids)
+    public function getSwimmingFromArmiesIds($ids)
     {
-        $select = $this->db->select()
-            ->from(array('a' => 'soldier'), null)
-            ->join(array('b' => 'unit'), 'a."unitId" = b."unitId"', 'canSwim')
-            ->where('"canSwim" = true')
-            ->where('"gameId" = ?', $this->gameId)
+        $units = Zend_Registry::get('units');
+        $canSwimIds = '';
+
+        foreach ($units as $unit) {
+            if ($unit['canSwim']) {
+                if ($canSwimIds) {
+                    $canSwimIds .= ',';
+                }
+                $canSwimIds .= $unit['unitId'];
+            }
+        }
+
+        $select = $this->_db->select()
+            ->from($this->_name, 'unitId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"unitId" = IN (?)', new Zend_Db_Expr($canSwimIds))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
+
         try {
-            return $this->db->query($select)->fetchAll();
+            return $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
         }
+    }
+
+    public function getMaximumMoves($armyId)
+    {
+        $units = Zend_Registry::get('units');
+
+        $select = $this->_db->select()
+            ->from($this->_name, 'unitId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"armyId" = ?', $armyId);
+        try {
+            $soldiers = $this->_db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            echo($e);
+            echo($select->__toString());
+        }
+
+        $moves = 0;
+
+        foreach ($soldiers as $soldier) {
+            if ($moves < $units[$soldier['unitId']]['numberOfMoves']) {
+                $moves = $units[$soldier['unitId']]['numberOfMoves'];
+            }
+        }
+
+        return $moves;
     }
 }
 

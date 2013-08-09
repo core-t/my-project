@@ -170,5 +170,13 @@ class Application_Model_Army extends Game_Db_Table_Abstract
         }
     }
 
+    public function getSelectForPlayerAll($playerId)
+    {
+        return $this->_db->select()
+            ->from($this->_name, 'armyId')
+            ->where('destroyed = false')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $this->_gameId);
+    }
 }
 
