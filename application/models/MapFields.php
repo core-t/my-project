@@ -21,12 +21,10 @@ class Application_Model_MapFields extends Game_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from($this->_name)
-            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
-        try {
-            $all = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->order(array('y', 'x'));
+
+        $all = $this->selectAll($select);
 
         $mapFields = array();
 
@@ -37,5 +35,16 @@ class Application_Model_MapFields extends Game_Db_Table_Abstract
         return $mapFields;
     }
 
+    public function add($x, $y, $type)
+    {
+        $data = array(
+            'mapId' => $this->mapId,
+            'x' => $x,
+            'y' => $y,
+            'type' => $type
+        );
+
+        $this->insert($data);
+    }
 }
 

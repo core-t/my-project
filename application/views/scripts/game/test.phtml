@@ -5,86 +5,189 @@
 //exit;
 $img = imagecreatefrompng("img/maps/warlords.png");
 
-for ($y = 0; $y <= 68; $y++) {
-   echo '$fields[' . $y . '] = array(<br/>';
-   $g = false;
-   for ($x = 0; $x <= 108; $x++) {
-       if ($g)
-           echo ',';
-       $g = true;
-       $x1 = $x*40 + 8;
-       $y1 = $y*40 + 8;
-       $rgb1 = imagecolorat($img, $x1, $y1);
-       $x2 = $x*40 + 8;
-       $y2 = $y*40 + 32;
-       $rgb2 = imagecolorat($img, $x2, $y2);
-       $x3 = $x*40 + 32;
-       $y3 = $y*40 + 6;
-       $rgb3 = imagecolorat($img, $x3, $y3);
-       $x4 = $x*40 + 32;
-       $y4 = $y*40 + 34;
-       $rgb4 = imagecolorat($img, $x4, $y4);
-       $x5 = $x*40 + 20;
-       $y5 = $y*40 + 20;
-       $rgb5 = imagecolorat($img, $x5, $y5);
-       $x6 = $x*40 + 20;
-       $y6 = $y*40 + 6;
-       $rgb6 = imagecolorat($img, $x6, $y6);
-       $x7 = $x*40 + 20;
-       $y7 = $y*40 + 38;
-       $rgb7 = imagecolorat($img, $x7, $y7);
-       $x8 = $x*40 + 25;
-       $y8 = $y*40 + 6;
-       $rgb8 = imagecolorat($img, $x8, $y8);
-       $x9 = $x*40 + 21;
-       $y9 = $y*40 + 38;
-       $rgb9 = imagecolorat($img, $x9, $y9);
-       $x10 = $x*40 + 22;
-       $y10 = $y*40 + 32;
-       $rgb10 = imagecolorat($img, $x10, $y10);
-//       if(!$rgb10){
-//           $newx = $x*40;
-//           $newy = $y*40;
-//           echo '$towers[] = array(\'x\' => '.$newx.', \'y\' => '.$newy.');<br/>';
-//       }
-       echo "'".getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9, $rgb10)."'";
-   }
-   echo '<br/>);<br/>';
+$mMapFields = new Application_Model_MapFields(1);
+$m = new map();
+
+for ($y = 0; $y <= 76; $y++) {
+    $bigY = $y * 40;
+
+    for ($x = 0; $x <= 108; $x++) {
+        $bigX = $x * 40;
+        $rgb = array();
+
+        $x1 = $bigX + 8;
+        $y1 = $bigY + 8;
+        $rgb[] = imagecolorat($img, $x1, $y1);
+
+        $x2 = $bigX + 8;
+        $y2 = $bigY + 32;
+        $rgb[] = imagecolorat($img, $x2, $y2);
+
+        $x3 = $bigX + 32;
+        $y3 = $bigY + 6;
+        $rgb[] = imagecolorat($img, $x3, $y3);
+
+        $x4 = $bigX + 32;
+        $y4 = $bigY + 34;
+        $rgb[] = imagecolorat($img, $x4, $y4);
+
+        $x5 = $bigX + 20;
+        $y5 = $bigY + 20;
+        $rgb[] = imagecolorat($img, $x5, $y5);
+
+        $x6 = $bigX + 20;
+        $y6 = $bigY + 6;
+        $rgb[] = imagecolorat($img, $x6, $y6);
+
+        $x7 = $bigX + 20;
+        $y7 = $bigY + 38;
+        $rgb[] = imagecolorat($img, $x7, $y7);
+
+        $x8 = $bigX + 25;
+        $y8 = $bigY + 6;
+        $rgb[] = imagecolorat($img, $x8, $y8);
+
+        $x9 = $bigX + 21;
+        $y9 = $bigY + 38;
+        $rgb[] = imagecolorat($img, $x9, $y9);
+
+        $x10 = $bigX + 22;
+        $y10 = $bigY + 32;
+        $rgb[] = imagecolorat($img, $x10, $y10);
+
+        if ($x == 17 && $y == 5) {
+//            echo $m->getSymbol($rgb);
+            $m->showRGB($rgb);
+            exit;
+        }
+    }
+}
+class map
+{
+    public $smallMountain1 = array(
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '25856',
+        '5609045',
+        '2655784',
+        '2655784',
+    );
+
+    public $smallMountain2 = array(
+        '2655784',
+        '25856',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '25856',
+    );
+
+    public $road1 = array(
+        '2655784',
+        '2655784',
+        '2655784',
+        '5609045',
+        '5592405',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+        '2655784',
+    );
+    public $road2 = array(
+        '2655784',
+        '5609045',
+        '2655784',
+        '5609045',
+        '5592405',
+        '5609045',
+        '7697781',
+        '5609045',
+        '9868950',
+        '7697781',
+    );
+    public $road3 = array(
+        '2655784',
+        '5609045',
+        '2655784',
+        '2655784',
+        '9868950',
+        '7697781',
+        '7697781',
+        '9868950',
+        '9868950',
+        '7697781',
+    );
+
+    function showRGB($rgb)
+    {
+        foreach ($rgb as $v) {
+            echo "'" . $v . "'" . ',<br/>';
+        }
+    }
+
+    function getSymbol($rgb)
+    {
+//    if (isEqual($rgb[4]) AND !isEqual($rgb[0]) AND !isEqual($rgb[1]) AND !isEqual($rgb[2]) AND !isEqual($rgb[3])) return 'r'; // road
+//    elseif (isEqual($rgb[4]) AND (getB($rgb[0]) == 199 OR getB($rgb[1]) == 199 OR getB($rgb[2]) == 199 OR getB($rgb[3]) == 199)) return 'r'; // road
+//    elseif (getG($rgb[5]) OR getG($rgb[6]) OR getG($rgb[7]) OR getG($rgb[8])) return 'f'; // forest
+//    elseif (getB($rgb[0]) == 199 OR getB($rgb[1]) == 199 OR getB($rgb[2]) == 199 OR getB($rgb[3]) == 199) return 'w'; // water
+//    elseif (isEqual($rgb[0]) OR isEqual($rgb[1]) OR isEqual($rgb[2]) OR isEqual($rgb[3])) return 'M'; // big mountains
+//    elseif (getG($rgb[0]) OR getG($rgb[1]) OR getG($rgb[2]) OR getG($rgb[3])) return 'm'; // small mountains
+//    // swamp
+//
+//    else return 'g'; // grass
+        if (checkType($rgb, $this->smallMountain1) || checkType($rgb, $this->smallMountain2)) {
+            return 'm';
+        }
+    }
+
+    function checkType($rgb, $type)
+    {
+        foreach ($rgb as $k => $v) {
+            if ($v != $type[$k])
+                return;
+        }
+
+        return true;
+    }
+
+
+    function getRGB($rgb)
+    {
+        $r = ($rgb >> 16) & 0xFF;
+        $g = ($rgb >> 8) & 0xFF;
+        $b = $rgb & 0xFF;
+        return array($r, $g, $b);
+    }
+
 }
 
-function getSymbol($rgb1, $rgb2, $rgb3, $rgb4, $rgb5, $rgb6, $rgb7, $rgb8, $rgb9, $rgb10) {
-    if(!$rgb10) return 'g'; // tower (grass)
-    elseif(isEqual($rgb5) AND !isEqual($rgb1) AND !isEqual($rgb2) AND !isEqual($rgb3) AND !isEqual($rgb4)) return 'r'; // road
-    elseif(isEqual($rgb5) AND (getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199)) return 'r'; // road
-    elseif(getG($rgb6) OR getG($rgb7) OR getG($rgb8) OR getG($rgb9)) return 'f';  // forest
-    elseif(getB($rgb1) == 199 OR getB($rgb2) == 199 OR getB($rgb3) == 199 OR getB($rgb4) == 199) return 'w'; // water
-    elseif(isEqual($rgb1) OR isEqual($rgb2) OR isEqual($rgb3) OR isEqual($rgb4)) return 'M'; // big mountains
-    elseif(getG($rgb1) OR getG($rgb2) OR getG($rgb3) OR getG($rgb4)) return 'm'; // small mountains
-   // swamp
-
-   else return 'g'; // grass
+function getB($rgb)
+{
+    return $rgb & 0xFF;
 }
 
-function getRGB($rgb) {
-   $r = ($rgb >> 16) & 0xFF;
-   $g = ($rgb >> 8) & 0xFF;
-   $b = $rgb & 0xFF;
-   return array($r, $g, $b);
+function getG($rgb)
+{
+    if ((($rgb >> 8) & 0xFF) == 101) return true;
 }
 
-function getB($rgb) {
-   return $rgb & 0xFF;
-}
-
-function getG($rgb) {
-   if((($rgb >> 8) & 0xFF) == 101) return true;
-}
-
-function isEqual($rgb) {
-   $r = ($rgb >> 16) & 0xFF;
-   $g = ($rgb >> 8) & 0xFF;
-   $b = $rgb & 0xFF;
-   if(($r == $g) AND ($g == $b)) return true;
+function isEqual($rgb)
+{
+    $r = ($rgb >> 16) & 0xFF;
+    $g = ($rgb >> 8) & 0xFF;
+    $b = $rgb & 0xFF;
+    if (($r == $g) AND ($g == $b)) return true;
 
 }
+
 ?>
