@@ -61,8 +61,8 @@ class Cli_Model_SearchRuin
     {
         $turn = Cli_Model_Database::getTurn($gameId, $db);
 
-//        $random = rand(0, 100);
-$random=84;
+        $random = rand(0, 100);
+
         if ($random < 10) { //10%
 //śmierć
             if ($turn['nr'] <= 7) {
