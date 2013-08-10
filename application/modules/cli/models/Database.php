@@ -1561,11 +1561,15 @@ Brak y
 
     static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db)
     {
+
+
         $where = array(
             $db->quoteInto('"gameId" = ?', $gameId),
             $db->quoteInto('"castleId" = ?', $castleId),
             $db->quoteInto('"playerId" = ?', $playerId)
         );
+
+
         $data = array(
             'production' => $unitId,
             'productionTurn' => 0

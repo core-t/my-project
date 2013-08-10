@@ -38,7 +38,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
             ->where('"gameId" = ?', $this->_gameId);
 
-        $soldiers = $this->fetchAll($select);
+        $soldiers = $this->selectAll($select);
 
         $units = Zend_Registry::get('units');
 
@@ -72,7 +72,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
-        $soldiers = $this->fetchAll($select);
+        $soldiers = $this->selectAll($select);
 
 //        foreach($soldiers as $soldier){
 //
@@ -87,7 +87,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->from($this->_name, array('movesLeft', 'soldierId', 'unitId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId);
-        return $this->fetchAll($select);
+        return $this->selectAll($select);
     }
 
     public function getForWalk($armyId)
@@ -99,7 +99,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" = ?', $armyId)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
-        return $this->fetchAll($select);
+        return $this->selectAll($select);
     }
 
     public function getSoldiers($armyId)
@@ -109,7 +109,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId);
 
-        return $this->fetchAll($select);
+        return $this->selectAll($select);
     }
 
     public function calculateCostsOfSoldiers($subSelect)
@@ -121,7 +121,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()));
 
-        $soldiers = $this->fetchAll($select);
+        $soldiers = $this->selectAll($select);
 
         $costs = 0;
 
@@ -152,7 +152,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"unitId" = IN (?)', new Zend_Db_Expr($canSwimIds))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
 
-        return $this->fetchAll($select);
+        return $this->selectAll($select);
     }
 
     public function getMaximumMoves($armyId)
@@ -164,7 +164,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId);
 
-        $soldiers = $this->fetchAll($select);
+        $soldiers = $this->selectAll($select);
 
         $moves = 0;
 

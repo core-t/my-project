@@ -570,33 +570,18 @@ function computerArmiesUpdate(armies, color) {
 
 // *** UNITS ***
 
-function getUnitId(name) {
-    switch (name) {
-        case 'Light Infantry':
-            return 1;
-        case 'Heavy Infantry':
-            return 2;
-        case 'Cavalry':
-            return 3;
-        case 'Giants':
-            return 4;
-        case 'Wolves':
-            return 5;
-        case 'Navy':
-            return 6;
-        case 'Archers':
-            return 7;
-        case 'Pegasi':
-            return 8;
-        case 'Dwarves':
-            return 9;
-        case 'Griffins':
-            return 10;
-        default:
-            return null;
+var Unit = {
+    getId: function (name) {
+        for (i in units) {
+            if (units[i] != null && units[i].name == name) {
+                return units[i].mapUnitId;
+            }
+        }
+
+        return null;
+    },
+    getImage: function (unitId, color) {
+        return '/img/game/' + units[unitId].name.replace(' ', '_').toLowerCase() + '_' + color + '.png'
     }
 }
 
-function getUnitImage(unitId, color) {
-    return '/img/game/' + units[unitId].name.replace(' ', '_').toLowerCase() + '_' + color + '.png'
-}

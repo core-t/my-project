@@ -46,7 +46,7 @@ function startWebSocket() {
                     console.log(r);
                     unselectArmy();
                     if (r.lost) {
-                        lostM(r.color);
+                        Message.lost(r.color);
                     } else if (typeof r.win != 'undefined') {
                         winM(r.color);
                     } else {
@@ -58,7 +58,7 @@ function startWebSocket() {
                 case 'startTurn':
                     //                    console.log(r);
                     if (typeof r.gameover != 'undefined') {
-                        lostM(r.color);
+                        Message.lost(r.color);
                     } else if (r.color == my.color) {
                         goldUpdate(r.gold);
                         $('#costs').html(r.costs);
@@ -178,7 +178,7 @@ function startWebSocket() {
 
                 case 'surrender':
                     if (r.lost) {
-                        lostM(r.color);
+                        Message.lost(r.color);
                     } else if (typeof r.win != 'undefined') {
                         winM(r.color);
                     }
@@ -509,12 +509,12 @@ function wsAddTower(towerId) {
 
 function wsProduction(castleId) {
     var unitId
-    var production = $('input:radio[name=production]:checked').val();
+    var name = $('input:radio[name=production]:checked').val();
 
-    if (production == 'stop') {
+    if (name == 'stop') {
         unitId = -1;
     } else {
-        unitId = getUnitId(production);
+        unitId = Unit.getId(name);
     }
 
     if (!unitId) {

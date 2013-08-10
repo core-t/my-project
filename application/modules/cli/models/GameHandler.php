@@ -177,6 +177,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     return;
                 }
 
+                //checkCastleProduction() !!!
+
                 if (Cli_Model_Database::setCastleProduction($user->parameters['gameId'], $castleId, $unitId, $user->parameters['playerId'], $db)) {
                     $token = array(
                         'type' => $dataIn['type'],

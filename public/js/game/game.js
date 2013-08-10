@@ -124,7 +124,7 @@ function startGame() {
         winM(my.color);
     } else if (!myArmies && !myCastles) {
         turnOff();
-        lostM(my.color);
+        Message.lost(my.color);
     } else {
         if (my.turn) {
             turnOn();

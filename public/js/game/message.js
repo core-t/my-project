@@ -1,63 +1,64 @@
-function mElement() {
-    return $('#terrain');
-}
+var Message = {
+    element: function () {
+        return $('#terrain');
+    },
+    surrender: function () {
+        removeM();
+        Message.element().after(
+            $('<div>')
+                .addClass('message')
+                .addClass('center')
+                .append($('<h3>').html('Surrender. Are you sure?'))
+                .append(
+                    $('<div>')
+                        .addClass('button go')
+                        .html('Ok')
+                        .click(function () {
+                            removeM();
+                            wsSurrender();
+                        })
+                )
+                .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
+                    removeM()
+                }))
+                .css({
+                    'left': messageLeft + 'px'
+                })
+        );
+    },
+    lost: function (color) {
+        removeM();
 
-function surrenderM() {
-    removeM();
-    mElement().after(
-        $('<div>')
-            .addClass('message')
-            .addClass('center')
-            .append($('<h3>').html('Surrender. Are you sure?'))
-            .append(
-                $('<div>')
+        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
+
+        var msg;
+
+        if (color == my.color) {
+            msg = '<br/>GAME OVER<br/><br/>You lose!';
+        } else {
+            msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
+        }
+
+        Message.element().after(
+            $('<div>')
+                .addClass('message')
+                .addClass('center')
+                .append($('<h3>').html(msg))
+                .append($('<div>')
                     .addClass('button go')
                     .html('Ok')
                     .click(function () {
                         removeM();
-                        wsSurrender();
+
                     })
-            )
-            .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-                removeM()
-            }))
-            .css({
-                'left': messageLeft + 'px'
-            })
-    );
-}
-
-function lostM(color) {
-    removeM();
-
-    $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-
-    var msg;
-
-    if (color == my.color) {
-        msg = '<br/>GAME OVER<br/><br/>You lose!';
-    } else {
-        msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
-    }
-
-    mElement().after(
-        $('<div>')
-            .addClass('message')
-            .addClass('center')
-            .append($('<h3>').html(msg))
-            .append($('<div>')
-                .addClass('button go')
-                .html('Ok')
-                .click(function () {
-                    removeM();
-
+                )
+                .css({
+                    'left': messageLeft + 'px'
                 })
-            )
-            .css({
-                'left': messageLeft + 'px'
-            })
-    );
+        );
+    }
 }
+
 
 function winM(color) {
     removeM();
@@ -72,7 +73,7 @@ function winM(color) {
         msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
     }
 
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -97,7 +98,7 @@ function turnM() {
         castleM(firstCastleId, my.color);
     }
 
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -118,7 +119,7 @@ function turnM() {
 
 function nextTurnM() {
     removeM();
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -144,7 +145,7 @@ function nextTurnM() {
 
 function simpleM(message) {
     removeM();
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -171,7 +172,7 @@ function disbandArmyM() {
         return;
     }
     removeM();
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -250,7 +251,7 @@ function splitArmyM(a) {
         overflow = 'hidden';
     }
 
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .append(army)
@@ -383,7 +384,7 @@ function armyStatusM() {
     } else {
         overflow = 'hidden';
     }
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .addClass('center')
@@ -468,7 +469,6 @@ function castleM(castleId, color) {
                     .addClass('attributes')
                     .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitId].time + 't'))
                     .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitId].cost + 'g'))
-//                    .append($('<p>').html(travelBy))
                     .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
             );
         j++;
@@ -552,7 +552,7 @@ function castleM(castleId, color) {
             wsCastleBuildDefense();
         });
     }
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .css({
@@ -615,7 +615,7 @@ function battleM(data, clb) {
         }
         attack.append(
             $('<img>').attr({
-                'src': getUnitImage(battle.attack.soldiers[i].unitId, attackerColor),
+                'src': Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor),
                 'id': 'unit' + battle.attack.soldiers[i].soldierId
             })
         );
@@ -633,7 +633,7 @@ function battleM(data, clb) {
             })
         );
     }
-    mElement().after(
+    Message.element().after(
         $('<div>')
             .addClass('message')
             .css({
@@ -654,7 +654,7 @@ function battleM(data, clb) {
         }
         defense.append(
             $('<img>').attr({
-                'src': getUnitImage(battle.defense.soldiers[i].unitId, defenderColor),
+                'src': Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor),
                 'id': 'unit' + battle.defense.soldiers[i].soldierId
             })
         );
@@ -705,7 +705,7 @@ function killM(b, clb, data) {
         if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
             if (isTruthful(data.victory)) {
                 for (i in data.defenderArmy) {
-                     deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
+                    deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
                 }
             } else {
                 for (i in data.defenderArmy) {

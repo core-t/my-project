@@ -101,7 +101,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    public function fetchAll($select)
+    public function selectAll($select)
     {
         try {
             return $this->_db->query($select)->fetchAll();
