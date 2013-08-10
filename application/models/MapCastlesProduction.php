@@ -23,7 +23,7 @@ class Application_Model_MapCastlesProduction extends Game_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier('mapCastleId') . ' = ?', $mapCastleId);
 
         try {
-            $all = $this->_db->query($select)->fetchAll();
+            $all = $this->selectAll($select);
         } catch (Exception $e) {
             throw new Exception($select->__toString());
         }
@@ -35,6 +35,5 @@ class Application_Model_MapCastlesProduction extends Game_Db_Table_Abstract
 
         return $production;
     }
-
 }
 

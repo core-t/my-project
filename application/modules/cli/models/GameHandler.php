@@ -177,7 +177,14 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     return;
                 }
 
-                //checkCastleProduction() !!!
+                $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
+                $production = $mMapCastlesProduction->getMapCastlesProduction($castleId);
+                if (!isset($production[$unitId])) {
+                    $this->sendError($user, 'Can\'t produce this unit here!');
+                    return;
+                }
+
+                
 
                 if (Cli_Model_Database::setCastleProduction($user->parameters['gameId'], $castleId, $unitId, $user->parameters['playerId'], $db)) {
                     $token = array(
