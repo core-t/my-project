@@ -38,14 +38,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
             ->where('"gameId" = ?', $this->_gameId);
 
-        try {
-            $soldiers = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
+        $soldiers = $this->fetchAll($select);
 
         $units = Zend_Registry::get('units');
 
@@ -79,18 +72,22 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
-        try {
-            $soldiers = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
+        $soldiers = $this->fetchAll($select);
 
 //        foreach($soldiers as $soldier){
 //
 //        }
 
         return $soldiers;
+    }
+
+    public function getForArmyPosition($armyId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('movesLeft', 'soldierId', 'unitId'))
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"armyId" = ?', $armyId);
+        return $this->fetchAll($select);
     }
 
     public function getForWalk($armyId)
@@ -102,17 +99,17 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"armyId" = ?', $armyId)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
-        try {
-            return $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            if ($this->_cli) {
-                echo($e);
-                echo($select->__toString());
-            } else {
-                throw $e;
-            }
+        return $this->fetchAll($select);
+    }
 
-        }
+    public function getSoldiers($armyId)
+    {
+        $select = $this->_db->select()
+            ->from('soldier', 'unitId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"armyId" = ?', $armyId);
+
+        return $this->fetchAll($select);
     }
 
     public function calculateCostsOfSoldiers($subSelect)
@@ -124,14 +121,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()));
 
-        try {
-            $soldiers = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
+        $soldiers = $this->fetchAll($select);
 
         $costs = 0;
 
@@ -162,12 +152,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->where('"unitId" = IN (?)', new Zend_Db_Expr($canSwimIds))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
 
-        try {
-            return $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
+        return $this->fetchAll($select);
     }
 
     public function getMaximumMoves($armyId)
@@ -178,12 +163,8 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
             ->from($this->_name, 'unitId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId);
-        try {
-            $soldiers = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
+
+        $soldiers = $this->fetchAll($select);
 
         $moves = 0;
 
@@ -194,6 +175,16 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
         }
 
         return $moves;
+    }
+
+    public function destroy($soldierId)
+    {
+        $where = array(
+            $$this->_db->quoteInto('"soldierId" = ?', $soldierId),
+            $$this->_db->quoteInto('"gameId" = ?', $$this->_gameId)
+        );
+
+        $this->delete($where);
     }
 }
 

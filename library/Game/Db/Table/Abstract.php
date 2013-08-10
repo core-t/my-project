@@ -101,4 +101,32 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
+    public function fetchAll($select)
+    {
+        try {
+            return $this->_db->query($select)->fetchAll();
+        } catch (Exception $e) {
+            new Coret_Model_Logger($e);
+            if ($this->_cli) {
+                echo($e);
+                echo($select->__toString());
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    public function delete($where)
+    {
+        try {
+            $this->_db->delete($this->_name, $where);
+        } catch (Exception $e) {
+            new Coret_Model_Logger($e);
+            if ($this->_cli) {
+                echo($e);
+            } else {
+                throw $e;
+            }
+        }
+    }
 }

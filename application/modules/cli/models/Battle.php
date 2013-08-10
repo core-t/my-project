@@ -40,9 +40,11 @@ class Cli_Model_Battle
 
     private function updateSoldiers($soldiers, $gameId, $db)
     {
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {
-                Cli_Model_Database::destroySoldier($gameId, $v['soldierId'], $db);
+                $mSoldier->destroy($v['soldierId']);
             }
         }
     }

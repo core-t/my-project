@@ -209,18 +209,8 @@ Brak y
             self::update('heroesingame', $data2, $where1, $db);
         }
 
-        $selectSoldiers = $db->select()
-            ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $army['armyId']);
-        try {
-            $soldiers = $db->query($selectSoldiers)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($selectSoldiers->__toString());
-
-            return;
-        }
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $soldiers = $mSoldier->getForArmyPosition($army['armyId']);
 
         foreach ($soldiers as $soldier) {
             $movesSpend = 0;
@@ -766,7 +756,9 @@ Brak y
             }
 
             $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-            $soldiers = self::getArmySoldiers($gameId, $army['armyId'], $db);
+
+            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $soldiers = $mSoldier->getSoldiers($army['armyId']);
 
             if (empty($heroes) AND empty($soldiers)) {
                 self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
@@ -1020,38 +1012,28 @@ Brak y
             ->where('y = ?', $position['y']);
         try {
             $result = $db->query($select)->fetchAll();
-            foreach ($result as $k => $army) {
-                $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-                $soldiers = self::getArmySoldiers($gameId, $army['armyId'], $db);
-                if (empty($heroes) && empty($soldiers)) {
-                    self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
-                    unset($result[$k]);
-                } else {
-                    unset($result[$k]['playerId']);
-                    $result[$k]['heroes'] = $heroes;
-                    $result[$k]['soldiers'] = $soldiers;
-                }
-            }
-
-            return $result;
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
         }
-    }
 
-    static public function destroySoldier($gameId, $soldierId, $db)
-    {
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
 
-        $where = array(
-            $db->quoteInto('"soldierId" = ?', $soldierId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-        try {
-            $db->delete('soldier', $where);
-        } catch (Exception $e) {
-            echo($e);
+        foreach ($result as $k => $army) {
+            $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
+
+            $soldiers = $mSoldier->getSoldiers($army['armyId']);
+            if (empty($heroes) && empty($soldiers)) {
+                self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
+                unset($result[$k]);
+            } else {
+                unset($result[$k]['playerId']);
+                $result[$k]['heroes'] = $heroes;
+                $result[$k]['soldiers'] = $soldiers;
+            }
         }
+
+        return $result;
     }
 
     static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db)
