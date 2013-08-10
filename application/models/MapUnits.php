@@ -33,21 +33,18 @@ class Application_Model_MapUnits extends Game_Db_Table_Abstract
     public function getUnits()
     {
         $units = array(null);
+
         $select = $this->_db->select()
             ->from($this->_name)
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->order($this->_primary);
-        try {
-            $result = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
 
-            return;
-        }
+        $result = $this->selectAll($select);
+
         foreach ($result as $unit) {
             $units[$unit[$this->_primary]] = $unit;
         }
+
         return $units;
     }
 
