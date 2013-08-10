@@ -332,7 +332,10 @@ class Cli_Model_ComputerMainBlocks
             $castles[$castleId] = $mapCastles[$castleId];
             $castle = $castles[$castleId];
             $income += $castle['income'];
-            $castleProduction = Cli_Model_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
+
+            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+
+            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
             if ($turnNumber < 10) {
                 $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
             } else {
@@ -340,8 +343,8 @@ class Cli_Model_ComputerMainBlocks
             }
 
             if ($unitId != $castleProduction['production']) {
-                Cli_Model_Database::setCastleProduction($gameId, $castleId, $unitId, $playerId, $db);
-                $castleProduction = Cli_Model_Database::getCastleProduction($gameId, $castleId, $playerId, $db);
+                $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
+                $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
                 $unitId = $castleProduction['production'];
             }
             $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];

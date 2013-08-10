@@ -1544,40 +1544,6 @@ Brak y
         }
     }
 
-    static public function getCastleProduction($gameId, $castleId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('castlesingame', array('production', 'productionTurn'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"castleId" = ?', $castleId)
-            ->where('"playerId" = ?', $playerId);
-        try {
-            return $db->fetchRow($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function setCastleProduction($gameId, $castleId, $unitId, $playerId, $db)
-    {
-
-
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"castleId" = ?', $castleId),
-            $db->quoteInto('"playerId" = ?', $playerId)
-        );
-
-
-        $data = array(
-            'production' => $unitId,
-            'productionTurn' => 0
-        );
-
-        return self::update('castlesingame', $data, $where, $db);
-    }
-
     static public function resetProductionTurn($gameId, $castleId, $playerId, $db)
     {
 

@@ -85,40 +85,44 @@ class Cli_Model_SearchRuin
             $mRuinsInGame->add($ruinId);
         } elseif ($random < 85) { //30%
 //jednostki
+            $units = Zend_Registry::get('units');
+            reset($units);
+            $lightInfantryId = key($units);
+
             if ($turn['nr'] <= 7) {
-                $max1 = 11;
+                $max1 = $lightInfantryId + 10;
                 $min2 = 1;
                 $max2 = 1;
             } elseif ($turn['nr'] <= 12) {
-                $max1 = 13;
+                $max1 = $lightInfantryId + 12;
                 $min2 = 1;
                 $max2 = 1;
             } elseif ($turn['nr'] <= 16) {
-                $max1 = 14;
+                $max1 = $lightInfantryId + 13;
                 $min2 = 1;
                 $max2 = 1;
             } elseif ($turn['nr'] <= 19) {
-                $max1 = 15;
+                $max1 = $lightInfantryId + 14;
                 $min2 = 1;
                 $max2 = 1;
             } elseif ($turn['nr'] <= 21) {
-                $max1 = 15;
+                $max1 = $lightInfantryId + 14;
                 $min2 = 1;
                 $max2 = 2;
             } elseif ($turn['nr'] <= 23) {
-                $max1 = 15;
+                $max1 = $lightInfantryId + 14;
                 $min2 = 1;
                 $max2 = 3;
             } elseif ($turn['nr'] <= 25) {
-                $max1 = 15;
+                $max1 = $lightInfantryId + 14;
                 $min2 = 2;
                 $max2 = 3;
             } else {
-                $max1 = 15;
+                $max1 = $lightInfantryId + 14;
                 $min2 = 3;
                 $max2 = 3;
             }
-            $unitId = rand(11, $max1);
+            $unitId = rand($lightInfantryId + 10, $max1);
             $numberOfUnits = rand($min2, $max2);
             $find = array('alies', $numberOfUnits);
             $mSoldier = new Application_Model_Soldier($gameId, $db);

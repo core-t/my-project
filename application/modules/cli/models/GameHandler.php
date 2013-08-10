@@ -184,9 +184,9 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     return;
                 }
 
-                
+                $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
 
-                if (Cli_Model_Database::setCastleProduction($user->parameters['gameId'], $castleId, $unitId, $user->parameters['playerId'], $db)) {
+                if ($mCastlesInGame->setProduction($castleId, $user->parameters['playerId'], $unitId)) {
                     $token = array(
                         'type' => $dataIn['type'],
                         'unitId' => $unitId,
