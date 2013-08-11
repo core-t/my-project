@@ -167,8 +167,9 @@
     border: none;
     z-index: 1700;
     color: #000;
-    background: yellow;
-    opacity: 0.33;
+    text-shadow: none;
+    /*background: yellow;*/
+    /*opacity: 0.33;*/
 }
 
 #gameMenu {
