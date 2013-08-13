@@ -64,23 +64,13 @@ class Admin_Model_Map extends Coret_Model_ParentDb
         $castlesSchema = $mMapCastle->getMapCastles();
 
         foreach ($castlesSchema as $castle) {
-            if ($castle['capital']) {
-                $c = 't';
-            } else {
-                $c = 'f';
-            }
-            $data = array(
-                'mapId' => $mapId,
-                'name' => $castle['name'],
-                'income' => $castle['income'],
-                'defense' => $castle['defensePoints'],
-                'x' => $castle['position']['x'],
-                'y' => $castle['position']['y'] + 79,
-                'capital' => $c
-            );
-//            var_dump($data);exit;
+            $production = $mMapCastlesProduction->getCastleProduction($castle['mapCastleId']);
+
+            $castle['mapId'] = $mapId;
+            unset($castle['mapCastleId']);
+
             try {
-                $this->_db->insert('mapcastles', $data);
+                $this->_db->insert('mapcastles', $castle);
             } catch (Exception $e) {
                 echo $e;
                 var_dump($data);
@@ -88,7 +78,6 @@ class Admin_Model_Map extends Coret_Model_ParentDb
             }
 
             $mapCastleId = $this->_db->lastSequenceId('mapcastles_mapCastleId_seq');
-            $production = $mMapCastlesProduction->getCastleProduction($mapCastleId);
 
             foreach ($production as $unit) {
                 $unit['mapCastleId'] = $mapCastleId;

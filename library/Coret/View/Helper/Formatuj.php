@@ -53,4 +53,8 @@ class Coret_View_Helper_Formatuj extends Zend_View_Helper_Abstract
         return substr(strip_tags($varchar), 0, 100);
     }
 
+    static function number($number)
+    {
+        return $number;
+    }
 }
