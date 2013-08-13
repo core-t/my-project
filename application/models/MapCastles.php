@@ -34,7 +34,7 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
         foreach ($castles as $val) {
             $mapCastles[$val['mapCastleId']] = $val;
             $mapCastles[$val['mapCastleId']]['defensePoints'] = $val['defense'];
-            $mapCastles[$val['mapCastleId']]['production'] = $mMapCastlesProduction->getMapCastlesProduction($val['mapCastleId']);
+            $mapCastles[$val['mapCastleId']]['production'] = $mMapCastlesProduction->getCastleProduction($val['mapCastleId']);
             $mapCastles[$val['mapCastleId']]['position'] = array('x' => $val['x'], 'y' => $val['y']);
             $mapCastles[$val['mapCastleId']]['castleId'] = $val['mapCastleId'];
         }

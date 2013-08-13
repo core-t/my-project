@@ -7,7 +7,7 @@ class Application_Model_MapCastlesProduction extends Game_Db_Table_Abstract
     protected $_sequence = '';
     protected $mapCastleId;
 
-    public function __construct($db)
+    public function __construct($db = null)
     {
         if ($db) {
             $this->_db = $db;
@@ -16,7 +16,7 @@ class Application_Model_MapCastlesProduction extends Game_Db_Table_Abstract
         }
     }
 
-    public function getMapCastlesProduction($mapCastleId)
+    public function getCastleProduction($mapCastleId)
     {
         $select = $this->_db->select()
             ->from($this->_name)

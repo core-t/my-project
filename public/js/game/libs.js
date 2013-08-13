@@ -316,6 +316,15 @@ function adjustGui() {
         'left': left + 'px'
     });
 
+    var zoomPadLayoutHeight = parseInt($('#map').css('height'));
+
+    $('.zoomPadLayout').css({
+        width: parseInt($('#map').css('width')) + 20 + 'px',
+        height: zoomPadLayoutHeight + 40 + 'px'
+    });
+
+    $('#terrain').css('top', zoomPadLayoutHeight + 5 +'px');
+
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
     } else {

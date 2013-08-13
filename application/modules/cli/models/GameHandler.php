@@ -13,7 +13,6 @@ class Cli_Model_GameHandler extends Cli_WofHandler
     public function __construct()
     {
         parent::__construct();
-        $db = Cli_Model_Database::getDb();
     }
 
     public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
@@ -184,7 +183,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                 }
 
                 $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
-                $production = $mMapCastlesProduction->getMapCastlesProduction($castleId);
+                $production = $mMapCastlesProduction->getCastleProduction($castleId);
                 if (!isset($production[$unitId])) {
                     $this->sendError($user, 'Can\'t produce this unit here!');
                     return;

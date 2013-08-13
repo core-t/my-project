@@ -23,7 +23,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
                     'type' => $type
                 );
                 $where = array(
-                    '"mapId" = 7',
+                    $this->_db->quoteInto('"mapId" = ?', $mapId),
                     $this->_db->quoteInto('"x" = ?', $x),
                     $this->_db->quoteInto('"y" = ?', $y + 8)
                 );
@@ -37,9 +37,32 @@ class Admin_Model_Map extends Coret_Model_ParentDb
         }
     }
 
+    public function units($mapId)
+    {
+        $mMapUnits = new Application_Model_MapUnits(7);
+        $units = $mMapUnits->getUnits();
+
+        foreach ($units as $unit) {
+            unset($unit['mapUnitId']);
+            $unit['mapId'] = $mapId;
+
+            try {
+                $this->_db->insert('mapunits', $unit);
+            } catch (Exception $e) {
+                var_dump($unit);
+                throw $e;
+            }
+        }
+
+    }
+
     public function castles($mapId)
     {
-        $castlesSchema = Application_Model_Board::getCastlesSchema();
+        $mMapCastle = new Application_Model_MapCastles(7);
+        $mMapCastlesProduction = new Application_Model_MapCastlesProduction();
+
+        $castlesSchema = $mMapCastle->getMapCastles();
+
         foreach ($castlesSchema as $castle) {
             if ($castle['capital']) {
                 $c = 't';
@@ -52,7 +75,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
                 'income' => $castle['income'],
                 'defense' => $castle['defensePoints'],
                 'x' => $castle['position']['x'],
-                'y' => $castle['position']['y'] + 8,
+                'y' => $castle['position']['y'] + 79,
                 'capital' => $c
             );
 //            var_dump($data);exit;
@@ -63,18 +86,19 @@ class Admin_Model_Map extends Coret_Model_ParentDb
                 var_dump($data);
                 exit;
             }
-            $mapCastleId = $this->_db->lastSequenceId($sequence);
 
+            $mapCastleId = $this->_db->lastSequenceId('mapcastles_mapCastleId_seq');
+            $production = $mMapCastlesProduction->getCastleProduction($mapCastleId);
 
-            foreach ($castle['production'] as $unit => $production) {
-                $data = array(
-                    "unitId" => $mUnit->getUnitIdByName($unit),
-                    "time" => $production['time'],
-                    "cost" => $production['cost'],
-                    'mapCastleId' => $mapCastleId
-                );
-                $this->_db->insert('mapcastlesproduction', $data);
-
+            foreach ($production as $unit) {
+                $unit['mapCastleId'] = $mapCastleId;
+                try {
+                    $this->_db->insert('mapcastlesproduction', $unit);
+                } catch (Exception $e) {
+                    echo $e;
+                    var_dump($unit);
+                    exit;
+                }
             }
         }
     }
@@ -86,7 +110,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
             $data = array(
                 'mapId' => $mapId,
                 'x' => $ruin['x'],
-                'y' => $ruin['y'] + 8
+                'y' => $ruin['y'] + 80
             );
             try {
                 $this->_db->insert('mapruins', $data);
@@ -105,7 +129,7 @@ class Admin_Model_Map extends Coret_Model_ParentDb
             $data = array(
                 'mapId' => $mapId,
                 'x' => $ruin['x'],
-                'y' => $ruin['y'] + 8
+                'y' => $ruin['y'] + 80
             );
             try {
                 $this->_db->insert('maptowers', $data);

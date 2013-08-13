@@ -39,9 +39,6 @@
     border-bottom-right-radius: 10px;
     border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
-    padding: 10px;
-    width: 213px;
-    height: 155px;
     top: -10px;
     left: -10px;
 }
@@ -706,7 +703,6 @@
     color: white;
     z-index: 27000;
     left: 3px;
-    top: 145px;
 }
 
 #turnNumber {
