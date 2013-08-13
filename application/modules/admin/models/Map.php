@@ -43,13 +43,25 @@ class Admin_Model_Map extends Coret_Model_ParentDb
         $units = $mMapUnits->getUnits();
 
         foreach ($units as $unit) {
+            if (empty($unit)) {
+                continue;
+            }
             unset($unit['mapUnitId']);
             $unit['mapId'] = $mapId;
+            if ($unit['canFly']) {
+                $unit['canFly'] = 't';
+            } else {
+                $unit['canFly'] = 'f';
+            }
+            if ($unit['canSwim']) {
+                $unit['canSwim'] = 't';
+            } else {
+                $unit['canSwim'] = 'f';
+            }
 
             try {
                 $this->_db->insert('mapunits', $unit);
             } catch (Exception $e) {
-                var_dump($unit);
                 throw $e;
             }
         }
@@ -59,34 +71,41 @@ class Admin_Model_Map extends Coret_Model_ParentDb
     public function castles($mapId)
     {
         $mMapCastle = new Application_Model_MapCastles(7);
-        $mMapCastlesProduction = new Application_Model_MapCastlesProduction();
 
         $castlesSchema = $mMapCastle->getMapCastles();
 
         foreach ($castlesSchema as $castle) {
-            $production = $mMapCastlesProduction->getCastleProduction($castle['mapCastleId']);
+            $data = array(
+                'mapId' => $mapId,
+                'x' => $castle['x'],
+                'y' => $castle['y'] + 79,
+                'name' => $castle['name'],
+                'income' => $castle['income'],
+                'defense' => $castle['defense'],
+            );
 
-            $castle['mapId'] = $mapId;
-            unset($castle['mapCastleId']);
+            if ($castle['capital']) {
+                $data['capital'] = 't';
+            } else {
+                $data['capital'] = 'f';
+            }
 
             try {
-                $this->_db->insert('mapcastles', $castle);
+                $this->_db->insert('mapcastles', $data);
             } catch (Exception $e) {
-                echo $e;
-                var_dump($data);
-                exit;
+                throw $e;
             }
 
             $mapCastleId = $this->_db->lastSequenceId('mapcastles_mapCastleId_seq');
 
-            foreach ($production as $unit) {
+            foreach ($castle['production'] as $unit) {
                 $unit['mapCastleId'] = $mapCastleId;
+                unset($unit['mapCastleProductionId']);
                 try {
                     $this->_db->insert('mapcastlesproduction', $unit);
                 } catch (Exception $e) {
-                    echo $e;
                     var_dump($unit);
-                    exit;
+                    throw $e;
                 }
             }
         }
@@ -94,12 +113,14 @@ class Admin_Model_Map extends Coret_Model_ParentDb
 
     public function ruins($mapId)
     {
-        $ruinsSchema = Application_Model_Board::getRuins();
-        foreach ($ruinsSchema as $ruin) {
+        $mMapRuins = new Application_Model_MapRuins(7);
+        $ruins = $mMapRuins->getMapRuins();
+
+        foreach ($ruins as $ruin) {
             $data = array(
                 'mapId' => $mapId,
                 'x' => $ruin['x'],
-                'y' => $ruin['y'] + 80
+                'y' => $ruin['y'] + 79
             );
             try {
                 $this->_db->insert('mapruins', $data);
@@ -113,12 +134,13 @@ class Admin_Model_Map extends Coret_Model_ParentDb
 
     public function towers($mapId)
     {
-        $towersSchema = Application_Model_Board::getTowers();
-        foreach ($towersSchema as $ruin) {
+        $mMapTowers = new Application_Model_MapTowers(7);
+        $towers = $mMapTowers->getMapTowers();
+        foreach ($towers as $tower) {
             $data = array(
                 'mapId' => $mapId,
-                'x' => $ruin['x'],
-                'y' => $ruin['y'] + 80
+                'x' => $tower['x'],
+                'y' => $tower['y'] + 79
             );
             try {
                 $this->_db->insert('maptowers', $data);
