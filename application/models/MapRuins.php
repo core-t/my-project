@@ -38,5 +38,14 @@ class Application_Model_MapRuins extends Game_Db_Table_Abstract
         return $ret;
     }
 
+    public function add($x, $y)
+    {
+        $data = array(
+            'mapId' => $this->mapId,
+            'x' => $x,
+            'y' => $y
+        );
+        $this->insert($data);
+    }
 }
 

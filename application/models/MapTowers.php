@@ -36,5 +36,14 @@ class Application_Model_MapTowers extends Game_Db_Table_Abstract
         return $mapTowers;
     }
 
+    public function add($x, $y)
+    {
+        $data = array(
+            'mapId' => $this->mapId,
+            'x' => $x,
+            'y' => $y
+        );
+        $this->insert($data);
+    }
 }
 

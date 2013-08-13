@@ -1,7 +1,9 @@
 <?php
 $img = imagecreatefrompng("img/maps/new.png");
-
-$mMapFields = new Application_Model_MapFields(1);
+$mapId = 1;
+$mMapFields = new Application_Model_MapFields($mapId);
+$mMapTowers = new Application_Model_MapTowers($mapId);
+$mMapRuins = new Application_Model_MapRuins($mapId);
 $m = new map();
 
 for ($y = 0; $y <= 155; $y++) {
@@ -51,8 +53,15 @@ for ($y = 0; $y <= 155; $y++) {
         $y10 = $bigY + 32;
         $rgb[] = imagecolorat($img, $x10, $y10);
 
-//        $mMapFields->add($x, $y, $m->getSymbol($rgb));
-        if ($x == 57 && $y == 54) {
+//        $symbol = $m->getSymbol($rgb);
+//        if ($symbol == 'R') {
+//            $mMapRuins->add($x, $y);
+//        }
+//        if ($symbol == 't') {
+//            $mMapTowers->add($x, $y);
+//        }
+//        $mMapFields->add($x, $y, $symbol);
+        if ($x == 15 && $y == 5) {
             $m->showRGB($rgb);
             exit;
         }
@@ -60,6 +69,20 @@ for ($y = 0; $y <= 155; $y++) {
 }
 class map
 {
+    public $castle = array(
+        array('5609045', '2655784', '6632448', '2655784', '5609045', '5609045', '25856', '2655784', '25856', '25856',),
+    );
+
+    public $ruin = array(
+        array('7697781', '5592405', '7697781', '2655784', '5592405', '7697781', '2655784', '7697781', '2655784', '5592405',),
+        array('5609045', '5609045', '2655784', '2655784', '7697781', '2655784', '2655784', '2655784', '5609045', '5592405',),
+        array('2655784', '7697781', '2655784', '5609045', '2655784', '5609045', '2655784', '2655784', '2655784', '5592405',),
+    );
+
+    public $tower = array(
+        array('5609045', '2655784', '2655784', '2655784', '7697781', '7697781', '2655784', '9868950', '2655784', '0',),
+    );
+
     public $swamp = array(
         array('25856', '2655784', '25856', '25856', '25856', '5609045', '5609045', '25856', '2655784', '25856',),
         array('25856', '2655784', '25856', '2655784', '2655784', '265`5784', '25856', '25856', '25856', '25856',),
@@ -258,10 +281,10 @@ class map
     );
 
     public $road = array(
-        array('5609045','5609045','2655784','5609045','5592405','7697781','7697781','9868950','9868950','7697781',),
-        array('2655784','5609045','2655784','5609045','5592405','5609045','7697781','2655784','9868950','7697781',),
-        array('2655784','5609045','5609045','5609045','5592405','7697781','7697781','9868950','9868950','7697781',),
-        array('2655784','5609045','2655784','5609045','5592405','7697781','7697781','9868950','9868950','7697781',),
+        array('5609045', '5609045', '2655784', '5609045', '5592405', '7697781', '7697781', '9868950', '9868950', '7697781',),
+        array('2655784', '5609045', '2655784', '5609045', '5592405', '5609045', '7697781', '2655784', '9868950', '7697781',),
+        array('2655784', '5609045', '5609045', '5609045', '5592405', '7697781', '7697781', '9868950', '9868950', '7697781',),
+        array('2655784', '5609045', '2655784', '5609045', '5592405', '7697781', '7697781', '9868950', '9868950', '7697781',),
         array('2655784', '2655784', '5609045', '5609045', '5592405', '7697781', '2655784', '9868950', '2655784', '5609045',),
         array('2655784', '2655784', '2655784', '5609045', '5592405', '9868950', '9868950', '9868950', '9868950', '5592405',),
         array('2655784', '2655784', '2655784', '2655784', '5592405', '5609045', '2655784', '2655784', '2655784', '2655784',),
@@ -364,26 +387,32 @@ class map
 
     function getSymbol($rgb)
     {
-        if ($this->eachType($rgb, $this->water)) {
-            return 'w';
-        }
-        if ($this->eachType($rgb, $this->smallMountain)) {
-            return 'm';
-        }
-        if ($this->eachType($rgb, $this->bigMountain)) {
-            return 'M';
-        }
-        if ($this->eachType($rgb, $this->forest)) {
-            return 'f';
-        }
-        if ($this->eachType($rgb, $this->road)) {
-            return 'r';
-        }
-        if ($this->eachType($rgb, $this->bridge)) {
-            return 'b';
-        }
-        if ($this->eachType($rgb, $this->swamp)) {
-            return 's';
+//        if ($this->eachType($rgb, $this->water)) {
+//            return 'w';
+//        }
+//        if ($this->eachType($rgb, $this->smallMountain)) {
+//            return 'm';
+//        }
+//        if ($this->eachType($rgb, $this->bigMountain)) {
+//            return 'M';
+//        }
+//        if ($this->eachType($rgb, $this->forest)) {
+//            return 'f';
+//        }
+//        if ($this->eachType($rgb, $this->road)) {
+//            return 'r';
+//        }
+//        if ($this->eachType($rgb, $this->bridge)) {
+//            return 'b';
+//        }
+//        if ($this->eachType($rgb, $this->swamp)) {
+//            return 's';
+//        }
+//        if ($this->eachType($rgb, $this->tower)) {
+//            return 't';
+//        }
+        if ($this->eachType($rgb, $this->ruin)) {
+            return 'R';
         }
 
         return 'g';

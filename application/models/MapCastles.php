@@ -47,7 +47,9 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name, array('mapCastleId', 'x', 'y'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
-            ->where('capital = true');
+            ->where('capital = true')
+            ->order('mapCastleId');
+
         try {
             $castles = $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {

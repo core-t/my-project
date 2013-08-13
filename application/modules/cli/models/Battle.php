@@ -95,8 +95,6 @@ class Cli_Model_Battle
         }
         foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
-                var_dump($unitDefending);
-                exit;
                 $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
                 $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
