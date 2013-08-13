@@ -4,6 +4,7 @@ $mapId = 1;
 $mMapFields = new Application_Model_MapFields($mapId);
 $mMapTowers = new Application_Model_MapTowers($mapId);
 $mMapRuins = new Application_Model_MapRuins($mapId);
+$mMapCastles = new Application_Model_MapCastles($mapId);
 $m = new map();
 
 for ($y = 0; $y <= 155; $y++) {
@@ -53,7 +54,10 @@ for ($y = 0; $y <= 155; $y++) {
         $y10 = $bigY + 32;
         $rgb[] = imagecolorat($img, $x10, $y10);
 
-//        $symbol = $m->getSymbol($rgb);
+        $symbol = $m->getSymbol($rgb);
+        if ($symbol == 'c') {
+            $mMapCastles->add($x, $y);
+        }
 //        if ($symbol == 'R') {
 //            $mMapRuins->add($x, $y);
 //        }
@@ -61,10 +65,10 @@ for ($y = 0; $y <= 155; $y++) {
 //            $mMapTowers->add($x, $y);
 //        }
 //        $mMapFields->add($x, $y, $symbol);
-        if ($x == 15 && $y == 5) {
-            $m->showRGB($rgb);
-            exit;
-        }
+//        if ($x == 15 && $y == 5) {
+//            $m->showRGB($rgb);
+//            exit;
+//        }
     }
 }
 class map
@@ -411,8 +415,11 @@ class map
 //        if ($this->eachType($rgb, $this->tower)) {
 //            return 't';
 //        }
-        if ($this->eachType($rgb, $this->ruin)) {
-            return 'R';
+//        if ($this->eachType($rgb, $this->ruin)) {
+//            return 'R';
+//        }
+        if ($this->eachType($rgb, $this->castle)) {
+            return 'c';
         }
 
         return 'g';

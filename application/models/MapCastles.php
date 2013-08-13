@@ -75,5 +75,19 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
             )
         );
     }
+
+    public function add($x, $y)
+    {
+        $data = array(
+            'mapId' => $this->mapId,
+            'x' => $x,
+            'y' => $y,
+            'name' => 'a',
+            'income' => 1,
+            'defense' => 1
+        );
+        $this->insert($data);
+    }
+
 }
 
