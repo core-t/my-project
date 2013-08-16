@@ -142,14 +142,14 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
                 if ($canSwimIds) {
                     $canSwimIds .= ',';
                 }
-                $canSwimIds .= $unit['unitId'];
+                $canSwimIds .= $unit['mapUnitId'];
             }
         }
 
         $select = $this->_db->select()
             ->from($this->_name, 'unitId')
             ->where('"gameId" = ?', $this->_gameId)
-            ->where('"unitId" = IN (?)', new Zend_Db_Expr($canSwimIds))
+            ->where('"unitId" IN (?)', new Zend_Db_Expr($canSwimIds))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($ids));
 
         return $this->selectAll($select);
@@ -180,8 +180,8 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
     public function destroy($soldierId)
     {
         $where = array(
-            $$this->_db->quoteInto('"soldierId" = ?', $soldierId),
-            $$this->_db->quoteInto('"gameId" = ?', $$this->_gameId)
+            $this->_db->quoteInto('"soldierId" = ?', $soldierId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
         );
 
         $this->delete($where);

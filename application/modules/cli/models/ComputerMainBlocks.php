@@ -326,6 +326,7 @@ class Cli_Model_ComputerMainBlocks
         }
 
         $mapCastles = Zend_Registry::get('castles');
+
         $castlesId = Cli_Model_Database::getPlayerCastlesIds($gameId, $playerId, $db);
         foreach ($castlesId as $id) {
             $castleId = $id['castleId'];
@@ -333,14 +334,14 @@ class Cli_Model_ComputerMainBlocks
             $castle = $castles[$castleId];
             $income += $castle['income'];
 
-            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
-
-            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
             if ($turnNumber < 10) {
                 $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
             } else {
                 $unitId = Application_Model_Board::getCastleOptimalProduction($castle['production']);
             }
+
+            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
 
             if ($unitId != $castleProduction['production']) {
                 $mCastlesInGame->setProduction($castleId, $playerId, $unitId);

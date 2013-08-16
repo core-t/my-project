@@ -173,20 +173,21 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     return;
                 }
 
-                if ($unitId == -1) {
-                    $unitId = null;
-                }
 
                 if (!Cli_Model_Database::isPlayerCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db)) {
                     $this->sendError($user, 'To nie jest Twój zamek!');
                     return;
                 }
 
-                $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
-                $production = $mMapCastlesProduction->getCastleProduction($castleId);
-                if (!isset($production[$unitId])) {
-                    $this->sendError($user, 'Can\'t produce this unit here!');
-                    return;
+                if ($unitId != -1) {
+                    $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
+                    $production = $mMapCastlesProduction->getCastleProduction($castleId);
+                    if (!isset($production[$unitId])) {
+                        $this->sendError($user, 'Can\'t produce this unit here!');
+                        return;
+                    }
+                } else {
+                    $unitId = null;
                 }
 
                 $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);

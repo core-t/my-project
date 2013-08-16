@@ -56,7 +56,7 @@ class Application_Model_Board
         }
     }
 
-    static public function getMinProductionTimeUnit($production)
+    static public function getMinProductionTimeUnit(array $production)
     {
         $min = 100;
         foreach ($production as $key => $val) {

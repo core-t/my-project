@@ -22,31 +22,27 @@ class Application_Model_TowersInGame extends Game_Db_Table_Abstract
             ->from(array('a' => $this->_name), $this->_primary)
             ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
             ->where('a."gameId" = ?', $this->_gameId);
-        try {
-            $result = $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-        $towers = array();
+
+	$result = $this->selectAll($select);
+
+	$towers = array();
+	
         foreach ($result as $k => $row) {
             $towers[$row['towerId']] = $row['color'];
         }
+        
         return $towers;
     }
 
     public function getTower($towerId)
     {
-        try {
-            $select = $this->_db->select()
-                ->from(array('a' => $this->_name), $this->_primary)
-                ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
-                ->where('"' . $this->_primary . '" = ?', $towerId)
-                ->where('a."gameId" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            return $result[0];
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+	$select = $this->_db->select()
+	    ->from(array('a' => $this->_name), $this->_primary)
+	    ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId" AND a."gameId" = b."gameId"', 'color')
+	    ->where('"' . $this->_primary . '" = ?', $towerId)
+	    ->where('a."gameId" = ?', $this->_gameId);
+	    
+        return $this->selectOne($select);
     }
 
     public function calculateIncomeFromTowers($playerId)
@@ -55,14 +51,8 @@ class Application_Model_TowersInGame extends Game_Db_Table_Abstract
             ->from($this->_name, 'towerId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" IN (?)', $playerId);
-        try {
-            $towers = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
+            
+	$towers = $this->selectAll($select);
 
         return count($towers) * 5;
     }
@@ -73,12 +63,8 @@ class Application_Model_TowersInGame extends Game_Db_Table_Abstract
             ->from($this->_name, 'towerId')
             ->where('"towerId" = ?', $towerId)
             ->where('"gameId" = ?', $this->_gameId);
-        try {
-            return $this->_db->fetchOne($select);
-        } catch (Exception $e) {
-            echo $e;
-            echo $select->__toString();
-        }
+            
+        return $this->selectOne($select);
     }
 
     public function changeTowerOwner($towerId, $playerId)
@@ -91,7 +77,8 @@ class Application_Model_TowersInGame extends Game_Db_Table_Abstract
             $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
         );
 
-        return self::update($this->_name, $data, $where, $db, true);
+        $this->setQuiet(true);
+        return $this->update($data, $where);
     }
 
     public function addTower($towerId, $playerId)
@@ -101,11 +88,8 @@ class Application_Model_TowersInGame extends Game_Db_Table_Abstract
             'gameId' => $this->_gameId,
             'playerId' => $playerId
         );
-        try {
-            return $this->_db->insert($this->_name, $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
+        
+	return $this->insert($data);
     }
 }
 
