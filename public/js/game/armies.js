@@ -160,7 +160,7 @@ function army(obj, color) {
 
     if (this.canSwim) {
         this.name = units[6].name;
-        this.img = this.name.replace(' ', '_').toLowerCase();
+        this.img = 'units/' + this.name.replace(' ', '_').toLowerCase();
         this.attack = units[6].attackPoints;
         this.defense = units[6].defensePoints;
     } else if (typeof this.heroes[this.heroKey] != 'undefined') {
@@ -169,12 +169,12 @@ function army(obj, color) {
         } else {
             this.name = 'Anonymous hero';
         }
-        this.img = 'hero';
+        this.img = 'heroes/' + color;
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
     } else if (typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
         this.name = units[this.soldiers[this.soldierKey].unitId].name;
-        this.img = this.name.replace(' ', '_').toLowerCase();
+        this.img = 'units/' + this.name.replace(' ', '_').toLowerCase();
         this.attack = attack;
         this.defense = defense;
     } else {
@@ -217,14 +217,14 @@ function army(obj, color) {
             id: 'army' + obj.armyId,
             title: this.name
         }).css({
-            background: 'url(../img/game/flag_' + color + '_' + numberOfUnits + '.png) top left no-repeat',
+            background: 'url(../img/game/flags/' + color + '_' + numberOfUnits + '.png) top left no-repeat',
             left: (this.x * 40) + 'px',
             top: (this.y * 40) + 'px'
         });
     this.element.append(
         $('<img>')
             .addClass('unit')
-            .attr('src', '/img/game/' + this.img + '_' + color + '.png')
+            .attr('src', '/img/game/' + this.img + '.png')
     );
     board.append(this.element);
 

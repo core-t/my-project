@@ -119,7 +119,7 @@ function castleOwner(castleId, color) {
     castle.removeClass()
         .addClass('castle ' + color)
         .html('')
-        .css('background', 'url(../img/game/castle_' + color + '.png) center center no-repeat');
+        .css('background', 'url(../img/game/castles/' + color + '.png) center center no-repeat');
 
     castles[castleId].color = color;
 

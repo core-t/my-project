@@ -12,7 +12,7 @@ function towerCreate(towerId) {
             .css({
                 left: (towers[towerId].x * 40) + 'px',
                 top: (towers[towerId].y * 40) + 'px',
-                background: 'url(../img/game/tower_' + towers[towerId].color + '.png) center center no-repeat'
+                background: 'url(../img/game/towers/' + towers[towerId].color + '.png) center center no-repeat'
             })
     );
 }
@@ -74,7 +74,7 @@ function changeTower(x, y, towerId) {
                 wsAddTower(towerId);
             }
             towers[towerId].color = turn.color;
-            $('#tower' + towerId).css('background', 'url(../img/game/tower_' + turn.color + '.png) center center no-repeat');
+            $('#tower' + towerId).css('background', 'url(../img/game/towers/' + turn.color + '.png) center center no-repeat');
         }
         return true;
     } else {
@@ -84,7 +84,7 @@ function changeTower(x, y, towerId) {
 
 function changeEnemyTower(towerId, color) {
     towers[towerId].color = color;
-    $('#tower' + towerId).css('background', 'url(../img/game/tower_' + color + '.png) center center no-repeat');
+    $('#tower' + towerId).css('background', 'url(../img/game/towers/' + color + '.png) center center no-repeat');
 }
 
 function countPlayerTowers(color) {

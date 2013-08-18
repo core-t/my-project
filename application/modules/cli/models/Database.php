@@ -1661,70 +1661,6 @@ Brak y
         }
     }
 
-    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db)
-    {
-
-        $find = false;
-
-        /* szukam następnego koloru w dostępnych kolorach */
-        foreach (self::$playerColors as $color) {
-            /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
-            if ($playerColor == $color) {
-                $find = true;
-                continue;
-            }
-
-            /* to jest przewinięty kolor gracza */
-            if ($find) {
-                $nextPlayerColor = $color;
-                break;
-            }
-        }
-
-        if (!isset($nextPlayerColor)) {
-            echo('Błąd! Nie znalazłem koloru gracza');
-
-            return;
-        }
-
-        $playersInGame = self::getPlayersInGameReady($gameId, $db);
-
-        /* przypisuję playerId do koloru */
-        foreach ($playersInGame as $k => $player) {
-            if ($player['color'] == $nextPlayerColor) {
-                $nextPlayerId = $player['playerId'];
-                break;
-            }
-        }
-
-        /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
-        if (!isset($nextPlayerId)) {
-            foreach ($playersInGame as $k => $player) {
-                if ($player['color'] == self::$playerColors[0]) {
-                    if ($player['lost']) {
-                        $nextPlayerId = $playersInGame[$k + 1]['playerId'];
-                        $nextPlayerColor = $playersInGame[$k + 1]['color'];
-                    } else {
-                        $nextPlayerId = $player['playerId'];
-                        $nextPlayerColor = $player['color'];
-                    }
-                    break;
-                }
-            }
-        }
-
-        if (!isset($nextPlayerId)) {
-            echo('Błąd! Nie znalazłem gracza');
-
-            return;
-        }
-
-        return array(
-            'playerId' => $nextPlayerId,
-            'color' => $nextPlayerColor
-        );
-    }
-
     static public function getPlayersInGameReady($gameId, $db)
     {
 
@@ -1796,7 +1732,8 @@ Brak y
 
     static private function isFirstColor($color)
     {
-        return self::$playerColors[0] == $color;
+        $playerColors = Zend_Registry::get('colors');
+        return $playerColors[0] == $color;
     }
 
     static public function updateTurnNumber($gameId, $nextPlayer, $db)
@@ -2175,22 +2112,6 @@ Brak y
         self::updateGame($gameId, $data, $db);
     }
 
-    static public function getComputerPlayers($gameId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'playersingame'), array('color', 'playerId'))
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-            ->where('a."gameId" = ?', $gameId)
-            ->where('color IS NOT NULL')
-            ->where('computer = true');
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function getHeroes($playerId, $db)
     {
         $select = $db->select()
@@ -2391,14 +2312,6 @@ Brak y
 
             unset($token[$value]);
         }
-    }
-
-    static public function getMapId($db, $gameId)
-    {
-        $select = $db->select()
-            ->from('game', 'mapId')
-            ->where($db->quoteIdentifier('gameId') . ' = ?', $gameId);
-        return $db->fetchOne($select);
     }
 
     static public function isOtherArmyAtPosition($gameId, $armyId, $x, $y, $db)

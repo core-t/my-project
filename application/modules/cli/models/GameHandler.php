@@ -30,11 +30,15 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             $user->parameters = $open->getParameters();
 
             $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
-            $mMapFields = new Application_Model_MapFields($mGame->getMapId(), $db);
-            $mMapCastles = new Application_Model_MapCastles($mGame->getMapId(), $db);
-            $mMapRuins = new Application_Model_MapRuins($mGame->getMapId(), $db);
-            $mMapTowers = new Application_Model_MapTowers($mGame->getMapId(), $db);
-            $mMapUnits = new Application_Model_MapUnits($mGame->getMapId(), $db);
+
+            $mapId = $mGame->getMapId();
+
+            $mMapFields = new Application_Model_MapFields($mapId, $db);
+            $mMapCastles = new Application_Model_MapCastles($mapId, $db);
+            $mMapRuins = new Application_Model_MapRuins($mapId, $db);
+            $mMapTowers = new Application_Model_MapTowers($mapId, $db);
+            $mMapUnits = new Application_Model_MapUnits($mapId, $db);
+            $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
             $units = $mMapUnits->getUnits($db);
             Zend_Registry::set('units', $units);
@@ -42,6 +46,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             Zend_Registry::set('castles', $mMapCastles->getMapCastles());
             Zend_Registry::set('ruins', $mMapRuins->getMapRuins());
             Zend_Registry::set('towers', $mMapTowers->getMapTowers());
+            Zend_Registry::set('colors', $mMapPlayers->getColors());
 
             reset($units);
             next($units);

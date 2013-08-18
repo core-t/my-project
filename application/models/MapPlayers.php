@@ -25,5 +25,23 @@ class Application_Model_MapPlayers extends Game_Db_Table_Abstract
 
         return $this->selectOne($select);
     }
+
+    public function getColors()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'shortName')
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->order('startOrder');
+
+        $all = $this->selectAll($select);
+
+        $array = array();
+
+        foreach ($all as $row) {
+            $array[] = $row['shortName'];
+        }
+
+        return $array;
+    }
 }
 

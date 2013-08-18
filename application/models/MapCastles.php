@@ -50,26 +50,7 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
             ->where('capital = true')
             ->order('mapCastleId');
 
-        $castles = $this->selectAll($select);
-
-        return array(
-            'white' => array(
-                'id' => $castles[0]['mapCastleId'],
-                'position' => array('x' => $castles[0]['x'], 'y' => $castles[0]['y'])
-            ),
-            'green' => array(
-                'id' => $castles[1]['mapCastleId'],
-                'position' => array('x' => $castles[1]['x'], 'y' => $castles[1]['y'])
-            ),
-            'red' => array(
-                'id' => $castles[2]['mapCastleId'],
-                'position' => array('x' => $castles[2]['x'], 'y' => $castles[2]['y'])
-            ),
-            'yellow' => array(
-                'id' => $castles[3]['mapCastleId'],
-                'position' => array('x' => $castles[3]['x'], 'y' => $castles[3]['y'])
-            )
-        );
+        return $this->selectAll($select);
     }
 
     public function add($x, $y)

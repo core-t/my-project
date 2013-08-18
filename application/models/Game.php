@@ -6,7 +6,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract
     protected $_name = 'game';
     protected $_primary = 'gameId';
     protected $_sequence = "game_gameId_seq";
-    protected $_playerColors = array('white', 'yellow', 'green', 'red', 'orange');
 
     public function __construct($gameId = 0, $db = null)
     {
@@ -150,11 +149,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract
             ->from($this->_name)
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->fetchRow($select);
-    }
-
-    public function getAllColors()
-    {
-        return $this->_playerColors;
     }
 
     public function getPlayerColor($playerId)
@@ -432,52 +426,6 @@ class Application_Model_Game extends Game_Db_Table_Abstract
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         $result = $this->_db->query($select)->fetchAll();
         return $result[0]['turnPlayerId'];
-    }
-
-    public function nextTurn($playerColor)
-    {
-        $find = false;
-        // szukam następnego koloru w dostępnych kolorach
-        foreach ($this->_playerColors as $color) {
-            if ($playerColor == $color) {
-                $find = true;
-                continue;
-            }
-            if ($find) {
-                $nextPlayerColor = $color;
-                break;
-            }
-        }
-        if (!isset($nextPlayerColor)) {
-            throw new Exception('Nie znalazłem koloru gracza');
-        }
-        $playersInGame = $this->getPlayersInGameReady();
-        // przypisuję playerId do koloru
-        foreach ($playersInGame as $k => $player) {
-            if ($player['color'] == $nextPlayerColor) {
-                $nextPlayerId = $player['playerId'];
-                break;
-            }
-        }
-        // jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy
-        if (!isset($nextPlayerId)) {
-            foreach ($playersInGame as $k => $player) {
-                if ($player['color'] == $this->_playerColors[0]) {
-                    if ($player['lost']) {
-                        $nextPlayerId = $playersInGame[$k + 1]['playerId'];
-                        $nextPlayerColor = $playersInGame[$k + 1]['color'];
-                    } else {
-                        $nextPlayerId = $player['playerId'];
-                        $nextPlayerColor = $player['color'];
-                    }
-                    break;
-                }
-            }
-        }
-        if (!isset($nextPlayerId)) {
-            throw new Exception('Nie znalazłem gracza');
-        }
-        return array('playerId' => $nextPlayerId, 'color' => $nextPlayerColor);
     }
 
     public function updateTurnNumber($playerId)

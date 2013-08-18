@@ -46,30 +46,50 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
         switch ($dataIn['type']) {
             case 'start':
-                if (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
-                    Cli_Model_Database::disconnectNotActive($user->parameters['gameId'], $db);
-                    Cli_Model_Database::startGame($user->parameters['gameId'], $db);
-                    $computerPlayers = Cli_Model_Database::getComputerPlayers($user->parameters['gameId'], $db);
-                    $mMapCastles = new Application_Model_MapCastles(Cli_Model_Database::getMapId($db, $user->parameters['gameId']), $db);
-                    foreach ($computerPlayers as $computer) {
-
-                        $startPositions = $mMapCastles->getDefaultStartPositions();
-                        $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
-                        if (empty($playerHeroes)) {
-                            Cli_Model_Database::createHero($computer['playerId'], $db);
-                            $playerHeroes = Cli_Model_Database::getHeroes($computer['playerId'], $db);
-                        }
-                        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
-                        $armyId = $mArmy->createArmy($startPositions[$computer['color']]['position'], $computer['playerId']);
-                        $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
-                        $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
-                        Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$computer['color']]['id'], $computer['playerId'], $db);
-                    }
-
-                    $token = array('type' => 'start');
-
-                    $this->sendToChannel($db, $token, $user->parameters['gameId']);
+                if (!Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+                    echo('Not game master!');
+                    return;
                 }
+
+                Cli_Model_Database::disconnectNotActive($user->parameters['gameId'], $db);
+                Cli_Model_Database::startGame($user->parameters['gameId'], $db);
+
+                $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+                $players = $mPlayersInGame->getAll();
+
+                $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+                $mapId = $mGame->getMapId();
+                $mMapCastles = new Application_Model_MapCastles($mapId, $db);
+                $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
+
+                $playerColors = $mMapPlayers->getColors();
+                $startCastles = $mMapCastles->getDefaultStartPositions();
+
+                $startPositions = array();
+
+                foreach ($playerColors as $key => $color) {
+                    $startPositions[$color] = array(
+                        'id' => $startCastles[$key]['mapCastleId'],
+                        'position' => array('x' => $startCastles[$key]['x'], 'y' => $startCastles[$key]['y'])
+                    );
+                }
+
+                foreach ($players as $player) {
+                    $playerHeroes = Cli_Model_Database::getHeroes($player['playerId'], $db);
+                    if (empty($playerHeroes)) {
+                        Cli_Model_Database::createHero($player['playerId'], $db);
+                        $playerHeroes = Cli_Model_Database::getHeroes($player['playerId'], $db);
+                    }
+                    $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+                    $armyId = $mArmy->createArmy($startPositions[$player['color']]['position'], $player['playerId']);
+                    $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+                    $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
+                    Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$player['color']]['id'], $player['playerId'], $db);
+                }
+
+                $token = array('type' => 'start');
+
+                $this->sendToChannel($db, $token, $user->parameters['gameId']);
                 break;
 
             case 'change':

@@ -15,7 +15,7 @@ class Cli_Model_Turn
         );
 
         while (empty($response)) {
-            $nextPlayer = Cli_Model_Database::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
+            $nextPlayer = self::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
             $playerCastlesExists = Cli_Model_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
             $playerArmiesExists = Cli_Model_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
             if ($playerCastlesExists || $playerArmiesExists) {
@@ -113,6 +113,72 @@ class Cli_Model_Turn
                 'color' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db)
             );
         }
+    }
+
+    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db)
+    {
+
+        $find = false;
+
+        $playerColors = Zend_Registry::get('colors');
+
+        /* szukam następnego koloru w dostępnych kolorach */
+        foreach ($playerColors as $color) {
+            /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
+            if ($playerColor == $color) {
+                $find = true;
+                continue;
+            }
+
+            /* to jest przewinięty kolor gracza */
+            if ($find) {
+                $nextPlayerColor = $color;
+                break;
+            }
+        }
+
+        if (!isset($nextPlayerColor)) {
+            echo('Błąd! Nie znalazłem koloru gracza');
+
+            return;
+        }
+
+        $playersInGame = Cli_Model_Database::getPlayersInGameReady($gameId, $db);
+
+        /* przypisuję playerId do koloru */
+        foreach ($playersInGame as $k => $player) {
+            if ($player['color'] == $nextPlayerColor) {
+                $nextPlayerId = $player['playerId'];
+                break;
+            }
+        }
+
+        /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
+        if (!isset($nextPlayerId)) {
+            foreach ($playersInGame as $k => $player) {
+                if ($player['color'] == $playerColors[0]) {
+                    if ($player['lost']) {
+                        $nextPlayerId = $playersInGame[$k + 1]['playerId'];
+                        $nextPlayerColor = $playersInGame[$k + 1]['color'];
+                    } else {
+                        $nextPlayerId = $player['playerId'];
+                        $nextPlayerColor = $player['color'];
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!isset($nextPlayerId)) {
+            echo('Błąd! Nie znalazłem gracza');
+
+            return;
+        }
+
+        return array(
+            'playerId' => $nextPlayerId,
+            'color' => $nextPlayerColor
+        );
     }
 
 }
