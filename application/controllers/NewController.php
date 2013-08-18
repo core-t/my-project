@@ -11,6 +11,7 @@ class NewController extends Game_Controller_Gui
                 $modelGame = new Application_Model_Game ();
                 $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId'], $this->_request->getParam('mapId'));
                 if ($gameId) {
+
                     $colors = $modelGame->getAllColors();
                     $modelGame->joinGame($this->_namespace->player['playerId']);
                     $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $colors[0]);

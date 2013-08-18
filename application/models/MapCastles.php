@@ -50,11 +50,7 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
             ->where('capital = true')
             ->order('mapCastleId');
 
-        try {
-            $castles = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
+        $castles = $this->selectAll($select);
 
         return array(
             'white' => array(

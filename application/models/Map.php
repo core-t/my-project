@@ -83,12 +83,10 @@ class Application_Model_Map extends Game_Db_Table_Abstract
     public function getAllMapsList()
     {
         $select = $this->_db->select()
-            ->from($this->_name);
-        try {
-            $list = $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+            ->from($this->_name)
+            ->order('mapId');
+
+        $list = $this->selectAll($select);
 
         $maps = array();
 
@@ -97,6 +95,14 @@ class Application_Model_Map extends Game_Db_Table_Abstract
         }
 
         return $maps;
+    }
+
+    public function getMinMapId()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'min("mapId")');
+
+        return $this->selectOne($select);
     }
 }
 

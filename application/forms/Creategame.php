@@ -7,22 +7,12 @@ class Application_Form_Creategame extends Zend_Form
     {
         $this->setMethod('post');
 
-        $this->addElement('select', 'numberOfPlayers',
-            array(
-                'label' => $this->getView()->translate('Select number of players'),
-                'multiOptions' => array(2 => 2, 3 => 3, 4 => 4),
-                'required' => true,
-                'filters' => array('StringTrim'),
-                'validators' => array(
-                    array('Alnum'),
-                    new Zend_Validate_Between(array('min' => 2, 'max' => 4))
-                )
-            )
-        );
-
         $mMap = new Application_Model_Map();
 
-        $f = new Coret_Form_Select(array('name' => 'mapId', 'label'=> $this->getView()->translate('Select map'), 'opt' => $mMap->getAllMapsList()));
+        $f = new Coret_Form_Select(array('name' => 'mapId', 'label' => $this->getView()->translate('Select map'), 'opt' => $mMap->getAllMapsList()));
+        $this->addElements($f->getElements());
+
+        $f = new Application_Form_NumberOfPlayers();
         $this->addElements($f->getElements());
 
         $this->addElement('submit', 'submit', array('label' => $this->getView()->translate('Create game')));

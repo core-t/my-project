@@ -31,9 +31,21 @@ function makeUrl(event) {
     top.location.replace('/' + lang + '/setup/index/gameId/' + event.data.gameId);
 }
 
+function getNumberOfPlayersForm() {
+    var mapId = $('#mapId').val();
+    $.getJSON('/' + lang + '/newajax/nop/mapId/' + mapId, function (result) {
+        var html = $.parseHTML(result);
+        $('#numberOfPlayers').html($(html[0][0]).html());
+    });
+}
+
 $().ready(function () {
     myGames = $('.table table');
 
     refresh();
     setInterval('refresh()', 5000);
+
+    $('#mapId').change(function () {
+        getNumberOfPlayersForm();
+    });
 });
