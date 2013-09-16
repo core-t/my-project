@@ -77,7 +77,7 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    background: url('../img/game/castle_neutral.png') center center no-repeat;
+    background: url('../img/game/castles/neutral.png') center center no-repeat;
     border: none;
     cursor: crosshair;
     z-index: 2202;

@@ -49,7 +49,7 @@ var documentWidth;
 var documentHeigh;
 
 $(document).ready(function () {
-    $(window).resize(function() {
+    $(window).resize(function () {
         adjustGui();
     });
 
@@ -82,7 +82,7 @@ function startGame() {
         if (players[color].computer) {
             $('.' + color + ' .color .type').css('background', 'url(../img/game/computer.png) center center no-repeat');
         } else {
-            $('.' + color + ' .color .type').css('background', 'url(../img/game/hero_' + color + '.png) center center no-repeat');
+            $('.' + color + ' .color .type').css('background', 'url(..' + Hero.getImage(color) + ') center center no-repeat');
         }
 
         for (i in players[color].armies) {

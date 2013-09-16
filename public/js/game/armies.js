@@ -169,12 +169,12 @@ function army(obj, color) {
         } else {
             this.name = 'Anonymous hero';
         }
-        this.img = 'heroes/' + color;
+        this.img = Hero.getImage(color);
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
     } else if (typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
         this.name = units[this.soldiers[this.soldierKey].unitId].name;
-        this.img = 'units/' + this.name.replace(' ', '_').toLowerCase();
+        this.img = Unit.getImageByName(this.name.replace(' ', '_').toLowerCase(), color);
         this.attack = attack;
         this.defense = defense;
     } else {
@@ -224,7 +224,7 @@ function army(obj, color) {
     this.element.append(
         $('<img>')
             .addClass('unit')
-            .attr('src', '/img/game/' + this.img + '.png')
+            .attr('src', this.img)
     );
     board.append(this.element);
 
@@ -581,7 +581,15 @@ var Unit = {
         return null;
     },
     getImage: function (unitId, color) {
-        return '/img/game/' + units[unitId].name.replace(' ', '_').toLowerCase() + '_' + color + '.png'
+        return '/img/game/units/' + color + '/' + units[unitId].name.replace(' ', '_').toLowerCase() + '.png'
+    },
+    getImageByName: function (name, color) {
+        return '/img/game/units/' + color + '/' + name + '.png';
     }
 }
 
+var Hero = {
+    getImage: function (color) {
+        return '/img/game/heroes/' + color + '.png';
+    }
+}

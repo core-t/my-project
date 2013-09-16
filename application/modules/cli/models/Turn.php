@@ -124,6 +124,8 @@ class Cli_Model_Turn
 
         /* szukam następnego koloru w dostępnych kolorach */
         foreach ($playerColors as $color) {
+
+            echo $color;
             /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
             if ($playerColor == $color) {
                 $find = true;
@@ -138,9 +140,7 @@ class Cli_Model_Turn
         }
 
         if (!isset($nextPlayerColor)) {
-            echo('Błąd! Nie znalazłem koloru gracza');
-
-            return;
+            $nextPlayerColor = $playerColors[0];
         }
 
         $playersInGame = Cli_Model_Database::getPlayersInGameReady($gameId, $db);

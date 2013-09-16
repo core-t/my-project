@@ -323,7 +323,7 @@ function adjustGui() {
         height: zoomPadLayoutHeight + 40 + 'px'
     });
 
-    $('#terrain').css('top', zoomPadLayoutHeight + 5 +'px');
+    $('#terrain').css('top', zoomPadLayoutHeight + 5 + 'px');
 
     if (!zoomer) {
         zoomer = new zoom(documentWidth, documentHeigh);
@@ -332,3 +332,7 @@ function adjustGui() {
         zoomer.lens.setdimensions();
     }
 }
+
+//function getUnitImage(color, name) {
+//    return '/img/game/units/' + color + '/' + name + '.png';
+//}

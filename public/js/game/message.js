@@ -211,7 +211,7 @@ function splitArmyM(a) {
                 .append($('<div>').addClass('nr').html(numberOfUnits))
                 .append($('<div>').addClass('img').html(
                     $('<img>').attr({
-                        'src': '/img/game/' + img + '_' + selectedArmy.color + '.png',
+                        'src': Unit.getImageByName(img, selectedArmy.color),
                         'id': 'unit' + selectedArmy.soldiers[i].soldierId
                     })
                 ))
@@ -231,7 +231,7 @@ function splitArmyM(a) {
                 .append($('<div>').addClass('nr').html(numberOfUnits))
                 .append($('<div>').addClass('img').html(
                     $('<img>').attr({
-                        'src': '/img/game/hero_' + selectedArmy.color + '.png',
+                        'src': Hero.getImage(selectedArmy.color),
                         'id': 'hero' + selectedArmy.heroes[i].heroId
                     })
                 ))
@@ -320,7 +320,7 @@ function armyStatusM() {
                 .append($('<div>').addClass('nr').html(numberOfUnits))
                 .append($('<div>').addClass('img').html(
                     $('<img>').attr({
-                        'src': '/img/game/' + img + '_' + selectedArmy.color + '.png',
+                        'src': Unit.getImageByName(img, selectedArmy.color),
                         'id': 'unit' + selectedArmy.soldiers[i].soldierId
                     })
                 ))
@@ -356,7 +356,7 @@ function armyStatusM() {
                 .append($('<div>').addClass('nr').html(numberOfUnits))
                 .append($('<div>').addClass('img').html(
                     $('<img>').attr({
-                        'src': '/img/game/hero_' + selectedArmy.color + '.png',
+                        'src': Hero.getImage(selectedArmy.color),
                         'id': 'hero' + selectedArmy.heroes[i].heroId
                     })
                 ))
@@ -463,7 +463,7 @@ function castleM(castleId, color) {
                     .append($('<input>').attr(attr))
                     .append(' ' + units[unitId].name + ' (' + travelBy + ')')
             )
-            .append($('<div>').append($('<img>').attr('src', '/img/game/' + img + '_' + color + '.png')))
+            .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, color))))
             .append(
                 $('<div>')
                     .addClass('attributes')
@@ -628,7 +628,7 @@ function battleM(data, clb) {
         }
         attack.append(
             $('<img>').attr({
-                'src': '/img/game/hero_' + attackerColor + '.png',
+                'src': Hero.getImage(attackerColor),
                 'id': 'hero' + battle.attack.heroes[i].heroId
             })
         );
@@ -668,7 +668,7 @@ function battleM(data, clb) {
         }
         defense.append(
             $('<img>').attr({
-                'src': '/img/game/hero_' + defenderColor + '.png',
+                'src': Hero.getImage(defenderColor),
                 'id': 'hero' + battle.defense.heroes[i].heroId
             })
         );
