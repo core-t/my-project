@@ -1,5 +1,16 @@
 var myGames;
 
+$().ready(function () {
+    myGames = $('.table table');
+
+    refresh();
+    setInterval('refresh()', 5000);
+
+    $('#mapId').change(function () {
+        getNumberOfPlayersForm();
+    });
+});
+
 function refresh() {
     $.getJSON("/' + lang + '/newajax/refresh", function (result) {
 
@@ -38,14 +49,3 @@ function getNumberOfPlayersForm() {
         $('#numberOfPlayers').html($(html[0][0]).html());
     });
 }
-
-$().ready(function () {
-    myGames = $('.table table');
-
-    refresh();
-    setInterval('refresh()', 5000);
-
-    $('#mapId').change(function () {
-        getNumberOfPlayersForm();
-    });
-});

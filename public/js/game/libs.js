@@ -129,10 +129,15 @@ function titleBlink(msg) {
 }
 
 function getColor(color) {
-    if (color == 'green') {
-        return '#00db00';
-    } else {
-        return color;
+    switch(color){
+        case 'green':
+            return '#00db00';
+        case 'selentines':
+            return '#000CFF';
+        case 'horse_lords':
+            return '#00BFFF';
+        default:
+            return color;
     }
 }
 

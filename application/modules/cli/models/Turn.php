@@ -124,8 +124,6 @@ class Cli_Model_Turn
 
         /* szukam następnego koloru w dostępnych kolorach */
         foreach ($playerColors as $color) {
-
-            echo $color;
             /* znajduję kolor gracza, który ma aktualnie turę i przewijam na następny */
             if ($playerColor == $color) {
                 $find = true;

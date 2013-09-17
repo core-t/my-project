@@ -11,7 +11,7 @@ class GameController extends Game_Controller_Game
 //        }
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->appendFile('/js/game/game.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/init.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/castles.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/armies.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/astar.js?v=' . Zend_Registry::get('config')->version);
