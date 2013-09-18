@@ -134,14 +134,17 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         }
     }
 
-    public function startGame()
+    public function startGame($turnPlayerId)
     {
+
         $data = array(
-            'turnPlayerId' => $this->getPlayerIdByColor('white'),
+            'turnPlayerId' => $turnPlayerId,
             'isOpen' => 'false'
         );
+
         $this->updateGame($data);
     }
+
 
     public function getGame()
     {
@@ -309,7 +312,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract
             ->from(array('a' => 'playersingame'), 'min(b."playerId")')
             ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
             ->where('a."gameId" != ?', $this->_gameId)
-            ->where('color is not null')
+            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' is not null')
             ->where('computer = true'); //throw new Exception($select->__toString());
         try {
             $ids = $this->getComputerPlayersIds();
@@ -331,7 +334,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract
                 ->from(array('a' => 'playersingame'), 'playerId')
                 ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
                 ->where('a."gameId" = ?', $this->_gameId)
-                ->where('color is not null')
+                ->where($this->_db->quoteIdentifier('mapPlayerId') . ' is not null')
                 ->where('computer = true');
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $row) {
@@ -374,13 +377,13 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         }
     }
 
-    public function isColorInGame($playerId, $color)
+    public function isColorInGame($playerId, $mapPlayerId)
     {
         $select = $this->_db->select()
-            ->from('playersingame', 'color')
+            ->from('playersingame', 'mapPlayerId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" != ?', $playerId)
-            ->where('color = ?', $color);
+            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' = ?', $mapPlayerId);
         try {
             return $this->_db->fetchOne($select);
         } catch (PDOException $e) {
@@ -388,20 +391,21 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         }
     }
 
-    public function updatePlayerReady($playerId, $color)
+    public function updatePlayerReady($playerId, $mapPlayerId)
     {
-        if ($this->isColorInGame($playerId, $color)) {
+        if ($this->isColorInGame($playerId, $mapPlayerId)) {
             return false;
         }
         $player = $this->getPlayerInGame($playerId);
-        if ($player['color'] == $color) {
-            $data['color'] = null;
+        if ($player['mapPlayerId'] == $mapPlayerId) {
+            $data['mapPlayerId'] = null;
         } else {
-            $data['color'] = $color;
+            $data['mapPlayerId'] = $mapPlayerId;
         }
 
         $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
         $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+
         $this->_db->update('playersingame', $data, $where);
     }
 

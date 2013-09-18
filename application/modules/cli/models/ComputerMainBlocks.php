@@ -288,10 +288,12 @@ class Cli_Model_ComputerMainBlocks
 
 //        print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4));
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         return array(
             'defenderColor' => $fightEnemy['defenderColor'],
             'defenderArmy' => $defenderArmy,
-            'attackerColor' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db),
+            'attackerColor' => $playersInGameColors($playerId),
             'attackerArmy' => $attackerArmy,
             'battle' => $fightEnemy['battle'],
             'victory' => $fightEnemy['victory'],
@@ -383,7 +385,10 @@ class Cli_Model_ComputerMainBlocks
             $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
             $action = 'start';
-            $color = Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db);
+
+            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
+            $color = $playersInGameColors($playerId);
         }
 
         return array(

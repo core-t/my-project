@@ -209,9 +209,11 @@ class Cli_Model_Move
             $deletedIds = $armiesIds['deletedIds'];
         }
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $token = array(
             'type' => 'move',
-            'attackerColor' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db),
+            'attackerColor' => $playersInGameColors($user->parameters['playerId']),
             'attackerArmy' => $attacker,
             'defenderColor' => $defenderColor,
             'defenderArmy' => $defender,

@@ -10,8 +10,11 @@ class Cli_Model_Turn
         }
 
         $response = array();
+
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $nextPlayer = array(
-            'color' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db)
+            'color' => $playersInGameColors($playerId)
         );
 
         while (empty($response)) {
@@ -105,12 +108,14 @@ class Cli_Model_Turn
             $gold = $gold + $income - $costs;
             Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
 
+            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
             return array(
                 'gold' => $gold,
                 'costs' => $costs,
                 'income' => $income,
                 'armies' => $armies,
-                'color' => Cli_Model_Database::getColorByPlayerId($gameId, $playerId, $db)
+                'color' => $playersInGameColors($playerId)
             );
         }
     }

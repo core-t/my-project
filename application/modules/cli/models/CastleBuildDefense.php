@@ -37,10 +37,11 @@ class Cli_Model_CastleBuildDefense
             return;
         }
         Cli_Model_Database::buildDefense($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db, $defenseModifier);
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'defense',
-            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db),
+            'color' => $playersInGameColors($user->parameters['playerId']),
             'gold' => $gold - $costs,
             'defenseMod' => $defenseModifier,
             'castleId' => $castleId

@@ -36,7 +36,7 @@ class SetupController extends Game_Controller_Gui
 
         $mMapPlayers = new Application_Model_MapPlayers($modelGame->getMapId());
 
-        $this->view->colors = $mMapPlayers->getColors();
+        $this->view->colors = $mMapPlayers->getAll();
         $this->view->numberOfPlayers = $modelGame->getNumberOfPlayers();
         $this->view->accessKey = $modelGame->getAccessKey($this->_namespace->player['playerId']);
         $this->view->gameId = $gameId;

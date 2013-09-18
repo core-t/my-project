@@ -12,9 +12,9 @@ class NewController extends Game_Controller_Gui
                 $gameId = $modelGame->createGame($this->_request->getParam('numberOfPlayers'), $this->_namespace->player['playerId'], $this->_request->getParam('mapId'));
                 if ($gameId) {
                     $mMapPlayers = new Application_Model_MapPlayers($this->_request->getParam('mapId'));
-                    $colors = $mMapPlayers->getColors();
+                    $colors = $mMapPlayers->getAll();
                     $modelGame->joinGame($this->_namespace->player['playerId']);
-                    $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $colors[0]);
+                    $modelGame->updatePlayerReady($this->_namespace->player['playerId'], $colors[0]['mapPlayerId']);
                     for ($i = 1; $i < $this->_request->getParam('numberOfPlayers'); $i++) {
                         $playerId = $modelGame->getComputerPlayerId();
                         if (!$playerId) {
@@ -24,7 +24,7 @@ class NewController extends Game_Controller_Gui
                             $modelHero->createHero();
                         }
                         $modelGame->joinGame($playerId);
-                        $modelGame->updatePlayerReady($playerId, $colors[$i]);
+                        $modelGame->updatePlayerReady($playerId, $colors[$i]['mapPlayerId']);
                     }
                     $this->_redirect('/' . Zend_Registry::get('lang') . '/setup/index/gameId/' . $gameId);
                 }

@@ -29,7 +29,7 @@ function initWebSocket() {
                 break;
 
             case 'update':
-                //                console.log(r);
+//                                console.log(r);
                 if (typeof r.gameMasterId == 'undefined') {
                     return;
                 }
@@ -44,6 +44,7 @@ function initWebSocket() {
                     if (typeof r[i].color == 'undefined') {
                         continue;
                     }
+
                     if (r[i].color) {
                         playersReady++;
                         $('#' + r[i].color + ' .td1 div.left').html(r[i].firstName + ' ' + r[i].lastName);
@@ -119,28 +120,28 @@ function wsComputer(color) {
 
 function prepareButtons(gameMasterId) {
     for (i = 0; i < numberOfPlayers; i++) {
-        $('#' + colors[i] + ' .td1 div.left').html('');
+        $('#' + colors[i].shortName + ' .td1 div.left').html('');
 
-        $('#' + colors[i] + ' .td2').html(
+        $('#' + colors[i].shortName + ' .td2').html(
             $('<a>')
                 .addClass('button')
                 .html('Select')
-                .attr('id', colors[i])
+                .attr('id', colors[i].shortName)
                 .click(function () {
                     wsChange(this.id)
                 }));
 
         if (gameMasterId == playerId) {
-            $('#' + colors[i] + ' .td3').html(
+            $('#' + colors[i].shortName + ' .td3').html(
                 $('<a>')
                     .addClass('button')
                     .html('Set computer')
-                    .attr('id', colors[i])
+                    .attr('id', colors[i].shortName)
                     .click(function () {
                         wsComputer(this.id)
                     }));
         } else {
-            $('#' + colors[i] + ' .td3').html('');
+            $('#' + colors[i].shortName + ' .td3').html('');
         }
     }
 }

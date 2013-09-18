@@ -15,9 +15,11 @@ class Cli_Model_CastleRaze
         Cli_Model_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $gold, $db);
 //        $token = Cli_Model_Database::getCastle($user->parameters['gameId'], $castleId, $db);
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $token = array(
             'type' => 'raze',
-            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db),
+            'color' => $playersInGameColors($user->parameters['playerId']),
             'gold' => $gold,
             'castleId' => $castleId
         );

@@ -169,81 +169,8 @@ h3 {
     text-align: center;
 }
 
-.whitebg {
-    background: #fff;
-    text-shadow: none;
-}
-
-.greenbg {
-    background: green;
-    text-shadow: none;
-}
-
-.yellowbg {
-    background: yellow;
-    text-shadow: none;
-}
-
-.yellowbg a {
-    color: #000;
-}
-
-.redbg {
-    background: red;
-    text-shadow: none;
-}
-
-.orangebg {
-    background: orange;
-    text-shadow: none;
-}
-
-.blackbg {
-    background: black;
-    text-shadow: none;
-}
-
-.selentinesbg {
-    background: #0086C7;
-    text-shadow: none;
-}
-
-.horse_lordsbg {
-    background: #0055C7;
-    text-shadow: none;
-}
-
-.font-white {
-    color: white;
-}
-
-.font-green {
-    color: green;
-}
-
-.font-yellow {
-    color: yellow;
-}
-
-.font-red {
-    color: red;
-}
-
-.font-orange {
-    color: orange;
-}
-
 .font-black {
-    color: black;
     text-shadow: 0px 0px 2px #fff;
-}
-
-.font-selentines {
-    color: #0086C7;
-}
-
-.font-horse_lords {
-    color: #0055C7;
 }
 
 table {

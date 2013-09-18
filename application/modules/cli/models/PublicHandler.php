@@ -36,6 +36,14 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
             Cli_Model_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
             $this->update($dataIn['gameId'], $db);
+
+            $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+
+            $mapId = $mGame->getMapId();
+
+            $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
+            Zend_Registry::set('mapPlayerIdToShortNameRelations', $mMapPlayers->getMapPlayerIdToShortNameRelations());
+
             return;
         }
 
@@ -51,14 +59,16 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     return;
                 }
 
-                Cli_Model_Database::disconnectNotActive($user->parameters['gameId'], $db);
-                Cli_Model_Database::startGame($user->parameters['gameId'], $db);
-
                 $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
-                $players = $mPlayersInGame->getAll();
+                $mPlayersInGame->disconnectNotActive();
 
                 $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+
+                $mGame->startGame($mPlayersInGame->getPlayerIdByColor('white'));
+                $players = $mPlayersInGame->getAll();
+
                 $mapId = $mGame->getMapId();
+
                 $mMapCastles = new Application_Model_MapCastles($mapId, $db);
                 $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
@@ -100,15 +110,17 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     return;
                 }
 
-                if (Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $color) { // unselect
-                    Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], $user->parameters['playerId'], $color, $db);
-                } elseif (!Cli_Model_Database::isNoComputerColorInGame($user->parameters['gameId'], $color, $db)) { // select
-                    if (Cli_Model_Database::isColorInGame($user->parameters['gameId'], $color, $db)) {
-                        Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], Cli_Model_Database::getPlayerIdByColor($user->parameters['gameId'], $color, $db), $color, $db);
+                $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+
+                if ($mPlayersInGame->getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $color) { // unselect
+                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $color);
+                } elseif (!$mPlayersInGame->isNoComputerColorInGame($color)) { // select
+                    if ($mPlayersInGame->isColorInGame($color)) {
+                        $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByColor($color), $color);
                     }
-                    Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], $user->parameters['playerId'], $color, $db);
+                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $color);
                 } elseif (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) { // kick
-                    Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], Cli_Model_Database::getPlayerIdByColor($user->parameters['gameId'], $color, $db), $color, $db);
+                    $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByColor($color), $color);
                 } else {
                     echo('Błąd!');
                     return;
@@ -130,7 +142,9 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     return;
                 }
 
-                if (Cli_Model_Database::isColorInGame($user->parameters['gameId'], $color, $db)) {
+                $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+
+                if ($mPlayersInGame->isColorInGame($color)) {
                     echo('Ten kolor jest już w grze!');
                     return;
                 }
@@ -145,7 +159,7 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 if (!Cli_Model_Database::isPlayerInGame($user->parameters['gameId'], $playerId, $db)) {
                     Cli_Model_Database::joinGame($user->parameters['gameId'], $playerId, $db);
                 }
-                Cli_Model_Database::updatePlayerReady($user->parameters['gameId'], $playerId, $color, $db);
+                $mPlayersInGame->updatePlayerReady($playerId, $color);
 
                 $this->update($user->parameters['gameId'], $db);
                 break;
@@ -172,7 +186,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
     private function update($gameId, $db)
     {
-        $token = Cli_Model_Database::getPlayersWaitingForGame($gameId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $token = $mPlayersInGame->getPlayersWaitingForGame();
         $token['gameMasterId'] = Cli_Model_Database::getGameMasterId($gameId, $db);
         $token['type'] = 'update';
 

@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_DisbandArmy {
+class Cli_Model_DisbandArmy
+{
 
-    public function __construct($armyId, $user, $db, $gameHandler) {
+    public function __construct($armyId, $user, $db, $gameHandler)
+    {
         if (empty($armyId)) {
             $gameHandler->sendError($user, 'Brak "armyId"!');
             return;
@@ -15,10 +17,12 @@ class Cli_Model_DisbandArmy {
             return;
         }
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $token = array(
             'type' => 'disbandArmy',
             'armyId' => $armyId,
-            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
+            'color' => $playersInGameColors($user->parameters['playerId'])
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

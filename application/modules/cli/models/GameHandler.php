@@ -30,6 +30,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             $user->parameters = $open->getParameters();
 
             $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+            $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
 
             $mapId = $mGame->getMapId();
 
@@ -51,6 +52,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             reset($units);
             next($units);
             Zend_Registry::set('fistUnitId', key($units));
+
+            Zend_Registry::set('playersInGameColors', $mPlayersInGame->getAllColors());
 
             return;
         }

@@ -3,7 +3,6 @@
     <table>
         <tr>
             <th><?php echo $this->translate('Game master') ?></th>
-            <th><?php echo $this->translate('Your color') ?></th>
             <th><?php echo $this->translate('Turn number') ?></th>
             <th><?php echo $this->translate('Number of Players') ?></th>
             <th><?php echo $this->translate('Players') ?></th>
@@ -17,7 +16,6 @@
                 echo '
     <tr id="gid' . $game['gameId'] . '" onclick="window.location.href = \'' . $url . '\';" class="trlink">
         <td><a href="' . $url . '">' . $gameMaster . '</a></td>
-        <td class="' . $game['color'] . 'bg"><a href="' . $url . '">' . $game['color'] . '</a></td>
         <td><a href="' . $url . '">' . $game['turnNumber'] . '</a></td>
         <td><a href="' . $url . '">' . $game['numberOfPlayers'] . '</a></td>
         <td><a href="' . $url . '">';

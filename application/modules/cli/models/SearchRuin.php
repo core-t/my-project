@@ -46,12 +46,14 @@ class Cli_Model_SearchRuin
             );
         }
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $token = array(
             'type' => 'ruin',
             'army' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $armyId, $db),
             'ruin' => $ruin,
             'find' => $find,
-            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
+            'color' => $playersInGameColors($user->parameters['playerId'])
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

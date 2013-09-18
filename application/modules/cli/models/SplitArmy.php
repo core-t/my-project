@@ -53,11 +53,13 @@ class Cli_Model_SplitArmy {
             return;
         }
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         $token = array(
             'type' => 'splitArmy',
             'parentArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $parentArmyId, $db),
             'childArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $childArmyId, $db),
-            'color' => Cli_Model_Database::getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db)
+            'color' => $playersInGameColors($user->parameters['playerId'])
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

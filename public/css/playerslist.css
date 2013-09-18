@@ -14,32 +14,16 @@
     color:#333;
 }
 #playersingame tr td div.left {
-    min-width: 350px;
+    width: 300px;
+    overflow: hidden;
 }
 #playersingame tr td div.right {
     text-shadow:none;
-    min-width:70px;
+    min-width:117px;
     margin-right:1px;
-    line-height:24px;
-}
-#playersingame tr#green td div.right {
-    background: #0f0;
+    /*line-height:24px;*/
     border-radius: 5px;
-}
-
-#playersingame tr#white td div.right {
-    background: #fff;
-    border-radius: 5px;
-}
-
-#playersingame tr#red td div.right {
-    background: #f00;
-    border-radius: 5px;
-}
-
-#playersingame tr#yellow td div.right {
-    background: yellow;
-    border-radius: 5px;
+    padding: 5px;
 }
 
 #playersout td {

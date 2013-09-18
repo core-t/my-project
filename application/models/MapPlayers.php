@@ -33,15 +33,38 @@ class Application_Model_MapPlayers extends Game_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->order('startOrder');
 
-        $all = $this->selectAll($select);
-
         $array = array();
 
-        foreach ($all as $row) {
+        foreach ($this->selectAll($select) as $row) {
             $array[] = $row['shortName'];
         }
 
         return $array;
+    }
+
+    public function getMapPlayerIdToShortNameRelations()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('mapPlayerId', 'shortName'))
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $row) {
+            $array[$row['shortName']] = $row['mapPlayerId'];
+        }
+
+        return $array;
+    }
+
+    public function getAll()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name)
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->order('startOrder');
+
+        return $this->selectAll($select);
     }
 }
 
