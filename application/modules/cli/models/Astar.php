@@ -231,7 +231,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     public function getPath($key)
     {
         if (!isset($this->close[$key])) {
-            new Coret_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
+            $l = new Coret_Model_Logger();
+            $l->log('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
             return;
         }
         $path = array();
@@ -253,7 +254,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     public function getReturnPath($key)
     {
         if (!isset($this->close[$key])) {
-            new Coret_Model_Logger('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
+            $l = new Coret_Model_Logger();
+            $l->log('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
             return;
         }
         $path = array();

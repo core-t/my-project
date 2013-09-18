@@ -42,6 +42,22 @@ class Application_Model_MapPlayers extends Game_Db_Table_Abstract
         return $array;
     }
 
+    public function getMapPlayerIds()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'mapPlayerId')
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->order('startOrder');
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $row) {
+            $array[] = $row['mapPlayerId'];
+        }
+
+        return $array;
+    }
+
     public function getMapPlayerIdToShortNameRelations()
     {
         $select = $this->_db->select()

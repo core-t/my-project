@@ -1,20 +1,25 @@
 <?php
 
-class Cli_Model_Open {
+class Cli_Model_Open
+{
 
     private $_parameters = array();
 
-    public function __construct($dataIn, $user, $db, $gameHandler) {
+    public function __construct($dataIn, $user, $db, $gameHandler)
+    {
         if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
             $gameHandler->sendError($user, 'Brak "gameId" lub "playerId"');
             return;
         }
-        if (!Cli_Model_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
+
+        $mPlayersInGame = new Application_Model_PlayersInGame($dataIn['gameId'], $db);
+
+        if (!$mPlayersInGame->checkAccessKey($dataIn['playerId'], $dataIn['accessKey'], $db)) {
             $gameHandler->sendError($user, 'Brak uprawnień!');
             return;
         }
 
-        Cli_Model_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
+        $mPlayersInGame->updatePlayerInGameWSSUId($dataIn['playerId'], $user->getId());
 
         $token = array(
             'type' => 'open'
@@ -28,7 +33,8 @@ class Cli_Model_Open {
         );
     }
 
-    public function getParameters() {
+    public function getParameters()
+    {
         return $this->_parameters;
     }
 

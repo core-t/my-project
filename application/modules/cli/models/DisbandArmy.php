@@ -22,7 +22,7 @@ class Cli_Model_DisbandArmy
         $token = array(
             'type' => 'disbandArmy',
             'armyId' => $armyId,
-            'color' => $playersInGameColors($user->parameters['playerId'])
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

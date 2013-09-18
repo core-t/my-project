@@ -41,33 +41,33 @@ function initWebSocket() {
                 var playersReady = 0;
 
                 for (i in r) {
-                    if (typeof r[i].color == 'undefined') {
+                    if (typeof r[i].mapPlayerId == 'undefined') {
                         continue;
                     }
 
-                    if (r[i].color) {
+                    if (r[i].mapPlayerId) {
                         playersReady++;
-                        $('#' + r[i].color + ' .td1 div.left').html(r[i].firstName + ' ' + r[i].lastName);
+                        $('#' + r[i].mapPlayerId + ' .td1 div.left').html(r[i].firstName + ' ' + r[i].lastName);
 
 
                         if (r[i].playerId == playerId) {
-                            $('#' + r[i].color + ' .td2 a').html('Unselect');
+                            $('#' + r[i].mapPlayerId + ' .td2 a').html('Unselect');
                         } else {
                             if (r.gameMasterId == playerId) {
-                                $('#' + r[i].color + ' .td2 a').html('Kick');
+                                $('#' + r[i].mapPlayerId + ' .td2 a').html('Kick');
                             } else {
                                 if (r[i].computer) {
-                                    $('#' + r[i].color + ' .td2 a').html('Select');
+                                    $('#' + r[i].mapPlayerId + ' .td2 a').html('Select');
                                 } else {
-                                    $('#' + r[i].color + ' .td2 a').remove();
+                                    $('#' + r[i].mapPlayerId + ' .td2 a').remove();
                                 }
                             }
                         }
 
                         if (r[i].computer) {
-                            $('#' + r[i].color + ' .td3').html('Computer');
+                            $('#' + r[i].mapPlayerId + ' .td3').html('Computer');
                         } else {
-                            $('#' + r[i].color + ' .td3').html('Human');
+                            $('#' + r[i].mapPlayerId + ' .td3').html('Human');
                         }
                     } else {
                         if (r[i].computer) {
@@ -100,19 +100,19 @@ function wsRegister() {
     ws.send(JSON.stringify(token));
 }
 
-function wsChange(color) {
+function wsChange(mapPlayerId) {
     var token = {
         type: 'change',
-        color: color
+        mapPlayerId: mapPlayerId
     };
 
     ws.send(JSON.stringify(token));
 }
 
-function wsComputer(color) {
+function wsComputer(mapPlayerId) {
     var token = {
         type: 'computer',
-        color: color
+        mapPlayerId: mapPlayerId
     };
 
     ws.send(JSON.stringify(token));
@@ -120,28 +120,28 @@ function wsComputer(color) {
 
 function prepareButtons(gameMasterId) {
     for (i = 0; i < numberOfPlayers; i++) {
-        $('#' + colors[i].shortName + ' .td1 div.left').html('');
+        $('#' + mapPlayers[i].mapPlayerId + ' .td1 div.left').html('');
 
-        $('#' + colors[i].shortName + ' .td2').html(
+        $('#' + mapPlayers[i].mapPlayerId + ' .td2').html(
             $('<a>')
                 .addClass('button')
                 .html('Select')
-                .attr('id', colors[i].shortName)
+                .attr('id', mapPlayers[i].mapPlayerId)
                 .click(function () {
                     wsChange(this.id)
                 }));
 
         if (gameMasterId == playerId) {
-            $('#' + colors[i].shortName + ' .td3').html(
+            $('#' + mapPlayers[i].mapPlayerId + ' .td3').html(
                 $('<a>')
                     .addClass('button')
                     .html('Set computer')
-                    .attr('id', colors[i].shortName)
+                    .attr('id', mapPlayers[i].mapPlayerId)
                     .click(function () {
                         wsComputer(this.id)
                     }));
         } else {
-            $('#' + colors[i].shortName + ' .td3').html('');
+            $('#' + mapPlayers[i].mapPlayerId + ' .td3').html('');
         }
     }
 }
@@ -152,7 +152,6 @@ function prepareStartButton(gameMasterId, playersReady) {
         $('#start a').click(function () {
             if (start) {
                 wsStart();
-                //                    $('#start a').addClass('buttonOff');
             }
         });
         if (numberOfPlayers <= playersReady) {

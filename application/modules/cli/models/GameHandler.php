@@ -21,7 +21,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
         $dataIn = Zend_Json::decode($msg->getData());
         print_r('ZAPYTANIE ');
         print_r($dataIn);
-        new Coret_Model_Logger($dataIn);
+        $l = new Coret_Model_Logger();
+        $l->log($dataIn);
 
         $db = Cli_Model_Database::getDb();
 
@@ -225,7 +226,10 @@ class Cli_Model_GameHandler extends Cli_WofHandler
     {
         if (Zend_Validate::is($user->parameters['gameId'], 'Digits') || Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
             $db = Cli_Model_Database::getDb();
-            Cli_Model_Database::updatePlayerInGameWSSUId($user->parameters['gameId'], $user->parameters['playerId'], null, $db);
+
+            $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+            $mPlayersInGame->updatePlayerInGameWSSUId($user->parameters['playerId'], null);
+
 //            Game_Cli_Database::disconnectFromGame($user->parameters['gameId'], $user->parameters['playerId'], $db);
 //            $this->update($user->parameters['gameId'], $db);
         }
@@ -235,7 +239,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
 
     public function sendToChannel($db, $token, $gameId, $debug = null)
     {
-        new Coret_Model_Logger($token);
+        $l = new Coret_Model_Logger();
+        $l->log($token);
         parent::sendToChannel($db, $token, $gameId, $debug);
 
         if ($token['type'] == 'chat') {

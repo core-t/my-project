@@ -262,7 +262,9 @@ class Cli_Model_Battle
     {
         $fistUnitId = Zend_Registry::get('fistUnitId');
 
-        $turn = Cli_Model_Database::getTurn($gameId, $db);
+        $mGame = new Application_Model_Game($gameId, $db);
+        $turn = $mGame->getTurn();
+
         $numberOfSoldiers = ceil($turn['nr'] / 10);
         $soldiers = array();
         for ($i = 1; $i <= $numberOfSoldiers; $i++) {

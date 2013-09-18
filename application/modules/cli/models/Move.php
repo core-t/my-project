@@ -213,7 +213,7 @@ class Cli_Model_Move
 
         $token = array(
             'type' => 'move',
-            'attackerColor' => $playersInGameColors($user->parameters['playerId']),
+            'attackerColor' => $playersInGameColors[$user->parameters['playerId']],
             'attackerArmy' => $attacker,
             'defenderColor' => $defenderColor,
             'defenderArmy' => $defender,

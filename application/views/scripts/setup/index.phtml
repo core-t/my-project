@@ -6,10 +6,10 @@
     <th><?php echo $this->translate('Select your color') ?></th>
     <th><?php echo $this->translate('Human/AI') ?></th>
     <?php for ($i = 0; $i < $this->numberOfPlayers; $i++): ?>
-        <tr id="<?php echo $this->colors[$i]['shortName'] ?>">
+        <tr id="<?php echo $this->mapPlayers[$i]['mapPlayerId'] ?>">
             <td class="td1">
                 <div class="left"></div>
-                <div class="right" style="background: <?php echo $this->colors[$i]['backgroundColor'] ?>;color: <?php echo $this->colors[$i]['textColor'] ?>"><?php echo $this->colors[$i]['longName'] ?></div>
+                <div class="right" style="background: <?php echo $this->mapPlayers[$i]['backgroundColor'] ?>;color: <?php echo $this->mapPlayers[$i]['textColor'] ?>"><?php echo $this->mapPlayers[$i]['longName'] ?></div>
             </td>
             <td class="td2"></td>
             <td class="td3"></td>
@@ -30,7 +30,7 @@
 
 <script type="text/javascript">
     var numberOfPlayers = <?php echo (int)$this->numberOfPlayers ?>;
-    var colors = <?php echo Zend_Json::encode($this->colors) ?>;
+    var mapPlayers = <?php echo Zend_Json::encode($this->mapPlayers) ?>;
 
     var gameId = <?php echo (int)$this->gameId ?>;
     var playerId = <?php echo (int)$this->player['playerId'] ?>;

@@ -5,7 +5,9 @@ class Cli_Model_Turn
 
     static public function next($gameId, $playerId, $db)
     {
-        if (Cli_Model_Database::playerLost($gameId, $playerId, $db)) {
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+
+        if ($mPlayersInGame->playerLost($playerId)) {
             return;
         }
 
@@ -14,7 +16,7 @@ class Cli_Model_Turn
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $nextPlayer = array(
-            'color' => $playersInGameColors($playerId)
+            'color' => $playersInGameColors[$playerId]
         );
 
         while (empty($response)) {
@@ -30,12 +32,15 @@ class Cli_Model_Turn
                 } else { // zmieniam turę
                     Cli_Model_Database::updateTurnNumber($gameId, $nextPlayer, $db);
                     Cli_Model_Database::raiseAllCastlesProductionTurn($gameId, $playerId, $db);
-                    $turn = Cli_Model_Database::getTurn($gameId, $db);
+
+                    $mGame = new Application_Model_Game($gameId, $db);
+                    $turn = $mGame->getTurn();
+
                     $response['lost'] = $turn['lost'];
                     $response['nr'] = $turn['nr'];
                 }
             } else {
-                Cli_Model_Database::setPlayerLostGame($gameId, $nextPlayer['playerId'], $db);
+                $mPlayersInGame->setPlayerLostGame($nextPlayer['playerId']);
             }
         }
 
@@ -50,14 +55,17 @@ class Cli_Model_Turn
 
         $income = 0;
 
-        Cli_Model_Database::turnActivate($gameId, $playerId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $mPlayersInGame->turnActivate($playerId);
+
         Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
 
         $mArmy = new Application_Model_Army($gameId, $db);
         $mSoldier = new Application_Model_Soldier($gameId, $db);
         $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
-        $gold = Cli_Model_Database::getPlayerInGameGold($gameId, $playerId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
 
 //        if (Cli_Database::getTurnNumber($gameId, $db) > 0) {
         $castles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
@@ -106,7 +114,8 @@ class Cli_Model_Turn
             $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
             $gold = $gold + $income - $costs;
-            Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold, $db);
+
+            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
 
             $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
@@ -115,7 +124,7 @@ class Cli_Model_Turn
                 'costs' => $costs,
                 'income' => $income,
                 'armies' => $armies,
-                'color' => $playersInGameColors($playerId)
+                'color' => $playersInGameColors[$playerId]
             );
         }
     }
@@ -146,7 +155,8 @@ class Cli_Model_Turn
             $nextPlayerColor = $playerColors[0];
         }
 
-        $playersInGame = Cli_Model_Database::getPlayersInGameReady($gameId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $playersInGame = $mPlayersInGame->getPlayersInGameReady();
 
         /* przypisuję playerId do koloru */
         foreach ($playersInGame as $k => $player) {

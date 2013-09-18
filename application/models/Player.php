@@ -8,10 +8,14 @@ class Application_Model_Player extends Game_Db_Table_Abstract
     protected $_sequence = 'player_playerId_seq';
     protected $_playerId;
 
-//    public function __construct()
-//    {
-//        parent::__construct();
-//    }
+    public function __construct($db = null)
+    {
+        if ($db) {
+            $this->_db = $db;
+        } else {
+            parent::__construct();
+        }
+    }
 
     public function auth($login, $password)
     {
@@ -43,7 +47,7 @@ class Application_Model_Player extends Game_Db_Table_Abstract
 
     public function createPlayer($data)
     {
-        $this->_db->insert($this->_name, $data);
+        $this->insert($data);
         $seq = $this->_db->quoteIdentifier($this->_sequence);
         return $this->_db->lastSequenceId($seq);
     }

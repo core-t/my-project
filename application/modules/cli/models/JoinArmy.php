@@ -24,7 +24,7 @@ class Cli_Model_JoinArmy
             'type' => 'joinArmy',
             'army' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $armiesIds['armyId'], $db),
             'deletedIds' => $armiesIds['deletedIds'],
-            'color' => $playersInGameColors($user->parameters['playerId'])
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

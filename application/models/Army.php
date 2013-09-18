@@ -131,30 +131,13 @@ class Application_Model_Army extends Game_Db_Table_Abstract
         return $this->_db->insert('heroesingame', $data);
     }
 
-    public function allArmiesReady()
+    public function getNumberOfArmies()
     {
         $select = $this->_db->select()
             ->from($this->_name, 'count(*) as number')
             ->where('"gameId" = ?', $this->_gameId);
-        try {
-            $numberOfArmies = $this->_db->fetchOne($select);
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
 
-        $select = $this->_db->select()
-            ->from('playersingame', 'count(*) as number')
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('color IS NOT NULL');
-        try {
-            $numberOfPlayers = $this->_db->fetchOne($select);
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
-
-        if ($numberOfArmies >= $numberOfPlayers) {
-            return true;
-        }
+        return $this->selectOne($select);
     }
 
     public function getSelectForPlayerAll($playerId)

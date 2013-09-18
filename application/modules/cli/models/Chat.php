@@ -10,7 +10,7 @@ class Cli_Model_Chat {
         $token = array(
             'type' => 'chat',
             'msg' => $msg,
-            'color' => $playersInGameColors($user->parameters['playerId'])
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

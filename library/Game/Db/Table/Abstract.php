@@ -44,10 +44,15 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
         try {
             $updateResult = $this->_db->update($this->_name, $data, $where);
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
+
                 echo($e);
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
+
                 throw $e;
             }
             return;
@@ -92,10 +97,13 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         try {
             return $this->_db->insert($this->_name, $data);
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
                 echo($e);
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
                 throw $e;
             }
         }
@@ -106,12 +114,18 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         try {
             return $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
-            new Coret_Model_Logger($select->__toString());
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
+                $l->log($select->__toString());
+
                 echo($e);
                 echo($select->__toString());
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
+                $l->log($select->__toString());
+
                 throw $e;
             }
         }
@@ -122,28 +136,40 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         try {
             return $this->_db->fetchRow($select);
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
-            new Coret_Model_Logger($select->__toString());
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
+                $l->log($select->__toString());
+
                 echo($e);
                 echo($select->__toString());
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
+                $l->log($select->__toString());
+
                 throw $e;
             }
         }
     }
-    
+
     public function selectOne($select)
     {
-	try {
+        try {
             return $this->_db->fetchOne($select);
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
-            new Coret_Model_Logger($select->__toString());
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
+                $l->log($select->__toString());
+
                 echo($e);
                 echo($select->__toString());
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
+                $l->log($select->__toString());
+
                 throw $e;
             }
         }
@@ -154,10 +180,13 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         try {
             $this->_db->delete($this->_name, $where);
         } catch (Exception $e) {
-            new Coret_Model_Logger($e);
             if ($this->_cli) {
+                $l = new Coret_Model_Logger();
+                $l->log($e);
                 echo($e);
             } else {
+                $l = new Coret_Model_Logger('www');
+                $l->log($e);
                 throw $e;
             }
         }

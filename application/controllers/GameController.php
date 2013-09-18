@@ -34,6 +34,7 @@ class GameController extends Game_Controller_Game
         $mTower = new Application_Model_TowersInGame($this->_namespace->gameId);
         $mArtifact = new Application_Model_Artifact();
         $mChat = new Application_Model_Chat($this->_namespace->gameId);
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_namespace->gameId);
 
         $game = $mGame->getGame();
 
@@ -55,7 +56,7 @@ class GameController extends Game_Controller_Game
 
         $this->view->towers = $towers;
 
-        $players = $mGame->getPlayersInGameReady();
+        $players = $mPlayersInGame->getPlayersInGameReady();
 
         $this->view->players = array();
         $this->view->turn = array();
@@ -72,18 +73,21 @@ class GameController extends Game_Controller_Game
             $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
             $this->view->players[$player['color']]['computer'] = $player['computer'];
             $this->view->players[$player['color']]['lost'] = $player['lost'];
+
             if ($game['turnPlayerId'] == $player['playerId']) {
                 $this->view->turn['playerId'] = $player['playerId'];
                 $this->view->turn['color'] = $player['color'];
                 $this->view->turn['nr'] = $game['turnNumber'];
                 $this->_namespace->turn = $this->view->turn;
             }
+
             if ($this->_namespace->player['playerId'] == $player['playerId']) {
                 $this->view->gold = $player['gold'];
                 $this->view->accessKey = $player['accessKey'];
+                $this->view->color = $player['color'];
             }
         }
-        $this->view->color = $this->_namespace->player['color'];
+
         $this->view->id = $this->_namespace->player['playerId'];
         if ($this->view->turn['playerId'] == $this->_namespace->player['playerId']) {
             $this->view->myTurn = 'true';

@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_Computer {
+class Cli_Model_Computer
+{
 
-    public function __construct($user, $db, $gameHandler) {
+    public function __construct($user, $db, $gameHandler)
+    {
         if (!Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
             $gameHandler->sendError($user, 'Nie Twoja gra!');
             return;
@@ -14,7 +16,9 @@ class Cli_Model_Computer {
             $gameHandler->sendError($user, 'To nie komputer!');
             return;
         }
-        if (!Cli_Model_Database::playerTurnActive($user->parameters['gameId'], $playerId, $db)) {
+
+        $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+        if (!$mPlayersInGame->playerTurnActive($playerId)) {
             $token = Cli_Model_ComputerMainBlocks::startTurn($user->parameters['gameId'], $playerId, $db);
         } else {
             $army = Cli_Model_Database::getComputerArmyToMove($user->parameters['gameId'], $playerId, $db);
@@ -26,8 +30,7 @@ class Cli_Model_Computer {
             }
         }
 
-        switch ($token['action'])
-        {
+        switch ($token['action']) {
             case 'continue':
                 $token['type'] = 'computer';
                 break;

@@ -59,7 +59,7 @@ class Cli_Model_SplitArmy {
             'type' => 'splitArmy',
             'parentArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $parentArmyId, $db),
             'childArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $childArmyId, $db),
-            'color' => $playersInGameColors($user->parameters['playerId'])
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

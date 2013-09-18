@@ -451,34 +451,20 @@ Brak y
         }
     }
 
-    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('playersingame', 'webSocketServerUserId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" != ?', $playerId);
-
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getInGameWSSUIds($gameId, $db)
-    {
-        $select = $db->select()
-            ->from('playersingame', 'webSocketServerUserId')
-            ->where('"gameId" = ?', $gameId);
-
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
+//    static public function getInGameWSSUIdsExceptMine($gameId, $playerId, $db)
+//    {
+//        $select = $db->select()
+//            ->from('playersingame', 'webSocketServerUserId')
+//            ->where('"gameId" = ?', $gameId)
+//            ->where('"playerId" != ?', $playerId);
+//
+//        try {
+//            return $db->query($select)->fetchAll();
+//        } catch (Exception $e) {
+//            echo($e);
+//            echo($select->__toString());
+//        }
+//    }
 
     static public function isPlayerTurn($gameId, $playerId, $db)
     {
@@ -619,20 +605,6 @@ Brak y
             ->where('"castleId" = ?', $castleId);
         try {
             return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getTurn($gameId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'game'), array('nr' => 'turnNumber'))
-            ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('color', 'lost'))
-            ->where('a."gameId" = ?', $gameId);
-        try {
-            return $db->fetchRow($select);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
@@ -830,33 +802,6 @@ Brak y
         );
 
         return self::update('castlesingame', $data, $where, $db);
-    }
-
-    static public function getPlayerInGameGold($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('playersingame', 'gold')
-            ->where('"playerId" = ?', $playerId)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function updatePlayerInGameGold($gameId, $playerId, $gold, $db)
-    {
-
-        $data['gold'] = $gold;
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId)
-        );
-
-        return self::update('playersingame', $data, $where, $db);
     }
 
     static public function getCastle($gameId, $castleId, $db)
@@ -1343,42 +1288,6 @@ Brak y
         }
     }
 
-    static public function playerTurnActive($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('playersingame', 'turnActive')
-            ->where('"playerId" = ?', $playerId)
-            ->where('"turnActive" = ?', true)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function turnActivate($gameId, $playerId, $db)
-    {
-
-        $data = array(
-            'turnActive' => 'true'
-        );
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId)
-        );
-        self::update('playersingame', $data, $where, $db);
-        $data['turnActive'] = 'false';
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"turnActive" = ?', 'true'),
-            $db->quoteInto('"playerId" != ?', $playerId)
-        );
-        self::update('playersingame', $data, $where, $db);
-    }
-
     static public function resetHeroesMovesLeft($gameId, $playerId, $db)
     {
         $select = $db->select()
@@ -1633,22 +1542,6 @@ Brak y
         }
     }
 
-    static public function getPlayersInGameReady($gameId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'playersingame'))
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-            ->where('color is not null')
-            ->where('a."gameId" = ?', $gameId);
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function playerCastlesExists($gameId, $playerId, $db)
     {
 
@@ -1749,17 +1642,6 @@ Brak y
         return self::update('castlesingame', $data, $where, $db, true);
     }
 
-    static public function setPlayerLostGame($gameId, $playerId, $db)
-    {
-
-        $data['lost'] = 'true';
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId)
-        );
-        self::update('playersingame', $data, $where, $db);
-    }
-
     static public function getColorByArmyId($gameId, $armyId, $db)
     {
 
@@ -1803,52 +1685,6 @@ Brak y
         }
     }
 
-    static public function playerLost($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('playersingame', 'lost')
-            ->where('"playerId" = ?', $playerId)
-            ->where('lost = ?', true)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function checkAccessKey($gameId, $playerId, $accessKey, $db)
-    {
-
-        $select = $db->select()
-            ->from('playersingame', 'playerId')
-            ->where('"playerId" = ?', $playerId)
-            ->where('"gameId" = ?', $gameId)
-            ->where('"accessKey" = ?', $accessKey);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function updatePlayerInGameWSSUId($gameId, $playerId, $wssuid, $db)
-    {
-
-        $data = array(
-            'webSocketServerUserId' => $wssuid
-        );
-        $where = array(
-            $db->quoteInto('"playerId" = ?', $playerId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-
-        return self::update('playersingame', $data, $where, $db);
-    }
-
     static public function getGameMasterId($gameId, $db)
     {
         $select = $db->select()
@@ -1862,172 +1698,12 @@ Brak y
         }
     }
 
-    static public function getComputerPlayerId($gameId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'playersingame'), 'min(b."playerId")')
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-            ->where('"gameId" != ?', $gameId)
-            ->where('color IS NOT NULL')
-            ->where('computer = true');
-        $ids = self::getComputerPlayersIds($gameId, $db);
-        if ($ids) {
-            $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
-        }
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getComputerPlayersIds($gameId, $db)
-    {
-        $ids = '';
-        $select = $db->select()
-            ->from(array('a' => 'playersingame'), 'playerId')
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-            ->where('a."gameId" = ?', $gameId)
-            ->where('color IS NOT NULL')
-            ->where('computer = true');
-        try {
-            foreach ($db->query($select)->fetchAll() as $row) {
-                if ($ids) {
-                    $ids .= ',';
-                }
-                $ids .= $row['playerId'];
-            }
-
-            return $ids;
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function createPlayer($data, $db)
-    {
-        try {
-            $db->insert('player', $data);
-            $seq = $db->quoteIdentifier('player_playerId_seq');
-
-            return $db->lastSequenceId($seq);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
-    static public function createComputerPlayer($db)
-    {
-        $data = array(
-            'firstName' => 'Computer',
-            'lastName' => 'Player',
-            'computer' => 'true'
-        );
-
-        return self::createPlayer($data, $db);
-    }
-
-    static public function createHero($playerId, $db)
-    {
-        $data = array(
-            'playerId' => $playerId
-        );
-        try {
-            $db->insert('hero', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
-    static public function joinGame($gameId, $playerId, $db)
-    {
-        $data = array(
-            'gameId' => $gameId,
-            'playerId' => $playerId,
-            'accessKey' => self::generateKey()
-        );
-        try {
-            $db->insert('playersingame', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
-    static private function generateKey()
-    {
-        return md5(rand(0, time()));
-    }
-
-    static public function disconnectFromGame($gameId, $playerId, $db)
-    {
-        $where = array(
-            $db->quoteInto('"playerId" = ?', $playerId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-        try {
-            $db->delete('playersingame', $where);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
-    static public function findNewGameMaster($gameId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'playersingame'), 'playerId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"webSocketServerUserId" IS NOT NULL');
-        try {
-            $gameMasterId = $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-        if ($gameMasterId) {
-            $data = array(
-                'gameMasterId' => $gameMasterId
-            );
-            self::updateGame($gameId, $data, $db);
-        }
-    }
-
-    static public function getHeroes($playerId, $db)
-    {
-        $select = $db->select()
-            ->from('hero')
-            ->where('"playerId" = ?', $playerId);
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function isGameStarted($gameId, $db)
     {
         $select = $db->select()
             ->from('game', 'gameId')
             ->where('"isOpen" = false')
             ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isPlayerInGame($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('playersingame', 'gameId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId);
         try {
             return $db->fetchOne($select);
         } catch (Exception $e) {

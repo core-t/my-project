@@ -14,7 +14,10 @@ class Cli_Model_CastleBuildDefense
             $gameHandler->sendError($user, 'To nie jest Twój zamek.');
             return;
         }
-        $gold = Cli_Model_Database::getPlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $db);
+
+        $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
+
         $defenseModifier = Cli_Model_Database::getCastleDefenseModifier($user->parameters['gameId'], $castleId, $db);
 //        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
 
@@ -41,13 +44,14 @@ class Cli_Model_CastleBuildDefense
 
         $token = array(
             'type' => 'defense',
-            'color' => $playersInGameColors($user->parameters['playerId']),
+            'color' => $playersInGameColors[$user->parameters['playerId']],
             'gold' => $gold - $costs,
             'defenseMod' => $defenseModifier,
             'castleId' => $castleId
         );
 
-        Cli_Model_Database::updatePlayerInGameGold($user->parameters['gameId'], $user->parameters['playerId'], $token['gold'], $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+        $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $token['gold']);
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }

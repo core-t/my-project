@@ -13,7 +13,7 @@ class HeroController extends Game_Controller_Gui
         if ($this->_request->isPost()) {
             if ($this->view->form->isValid($this->_request->getPost())) {
 
-                $modelHero->changeHoroName($this->view->heroes[0]['heroId'], $this->_request->getParam('name'));
+                $modelHero->changeHeroName($this->view->heroes[0]['heroId'], $this->_request->getParam('name'));
                 $this->_redirect('/hero');
             }
         }

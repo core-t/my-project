@@ -24,7 +24,10 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 $this->sendError($user, 'Brak "gameId" lub "playerId"');
                 return;
             }
-            if (!Cli_Model_Database::checkAccessKey($dataIn['gameId'], $dataIn['playerId'], $dataIn['accessKey'], $db)) {
+
+            $mPlayersInGame = new Application_Model_PlayersInGame($dataIn['gameId'], $db);
+
+            if (!$mPlayersInGame->checkAccessKey($dataIn['playerId'], $dataIn['accessKey'], $db)) {
                 $this->sendError($user, 'Brak uprawnień!');
                 return;
             }
@@ -34,7 +37,7 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 'playerId' => $dataIn['playerId']
             );
 
-            Cli_Model_Database::updatePlayerInGameWSSUId($dataIn['gameId'], $dataIn['playerId'], $user->getId(), $db);
+            $mPlayersInGame->updatePlayerInGameWSSUId($dataIn['playerId'], $user->getId());
             $this->update($dataIn['gameId'], $db);
 
             $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
@@ -72,29 +75,32 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 $mMapCastles = new Application_Model_MapCastles($mapId, $db);
                 $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
-                $playerColors = $mMapPlayers->getColors();
+                $playerColors = $mMapPlayers->getMapPlayerIds();
                 $startCastles = $mMapCastles->getDefaultStartPositions();
 
                 $startPositions = array();
 
-                foreach ($playerColors as $key => $color) {
-                    $startPositions[$color] = array(
+                foreach ($playerColors as $key => $mapPlayerId) {
+                    $startPositions[$mapPlayerId] = array(
                         'id' => $startCastles[$key]['mapCastleId'],
                         'position' => array('x' => $startCastles[$key]['x'], 'y' => $startCastles[$key]['y'])
                     );
                 }
 
                 foreach ($players as $player) {
-                    $playerHeroes = Cli_Model_Database::getHeroes($player['playerId'], $db);
+                    $mHero = new Application_Model_Hero($player['playerId'], $db);
+                    $playerHeroes = $mHero->getHeroes();
                     if (empty($playerHeroes)) {
-                        Cli_Model_Database::createHero($player['playerId'], $db);
-                        $playerHeroes = Cli_Model_Database::getHeroes($player['playerId'], $db);
+                        $mHero->createHero();
+                        $playerHeroes = $mHero->getHeroes($player['playerId'], $db);
                     }
                     $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
-                    $armyId = $mArmy->createArmy($startPositions[$player['color']]['position'], $player['playerId']);
+
+                    $armyId = $mArmy->createArmy($startPositions[$player['mapPlayerId']]['position'], $player['playerId']);
+
                     $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
                     $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
-                    Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$player['color']]['id'], $player['playerId'], $db);
+                    Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$player['mapPlayerId']]['id'], $player['playerId'], $db);
                 }
 
                 $token = array('type' => 'start');
@@ -103,24 +109,24 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 break;
 
             case 'change':
-                $color = $dataIn['color'];
+                $mapPlayerId = $dataIn['mapPlayerId'];
 
-                if (empty($color)) {
-                    echo('Brak color!');
+                if (empty($mapPlayerId)) {
+                    echo('Brak mapPlayerId!');
                     return;
                 }
 
                 $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
 
-                if ($mPlayersInGame->getColorByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $color) { // unselect
-                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $color);
-                } elseif (!$mPlayersInGame->isNoComputerColorInGame($color)) { // select
-                    if ($mPlayersInGame->isColorInGame($color)) {
-                        $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByColor($color), $color);
+                if ($mPlayersInGame->getMapPlayerIdByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $mapPlayerId) { // unselect
+                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $mapPlayerId);
+                } elseif (!$mPlayersInGame->isNoComputerColorInGame($mapPlayerId)) { // select
+                    if ($mPlayersInGame->isColorInGame($mapPlayerId)) {
+                        $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByMapPlayerId($mapPlayerId), $mapPlayerId);
                     }
-                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $color);
+                    $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $mapPlayerId);
                 } elseif (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) { // kick
-                    $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByColor($color), $color);
+                    $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByMapPlayerId($mapPlayerId), $mapPlayerId);
                 } else {
                     echo('Błąd!');
                     return;
@@ -130,10 +136,10 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 break;
 
             case 'computer':
-                $color = $dataIn['color'];
+                $mapPlayerId = $dataIn['mapPlayerId'];
 
-                if (empty($color)) {
-                    echo('Brak color!');
+                if (empty($mapPlayerId)) {
+                    echo('Brak mapPlayerId!');
                     return;
                 }
 
@@ -144,22 +150,25 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
                 $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
 
-                if ($mPlayersInGame->isColorInGame($color)) {
+                if ($mPlayersInGame->isColorInGame($mapPlayerId)) {
                     echo('Ten kolor jest już w grze!');
                     return;
                 }
 
-                $playerId = Cli_Model_Database::getComputerPlayerId($user->parameters['gameId'], $db);
+                $playerId = $mPlayersInGame->getComputerPlayerId();
 
                 if (!$playerId) {
-                    $playerId = Cli_Model_Database::createComputerPlayer($db);
-                    Cli_Model_Database::createHero($playerId, $db);
+                    $mPlayer = new Application_Model_Player($db);
+                    $playerId = $mPlayer->createComputerPlayer();
+
+                    $mHero = new Application_Model_Hero($playerId, $db);
+                    $mHero->createHero();
                 }
 
-                if (!Cli_Model_Database::isPlayerInGame($user->parameters['gameId'], $playerId, $db)) {
-                    Cli_Model_Database::joinGame($user->parameters['gameId'], $playerId, $db);
+                if (!$mPlayersInGame->isPlayerInGame($playerId)) {
+                    $mPlayersInGame->joinGame($playerId);
                 }
-                $mPlayersInGame->updatePlayerReady($playerId, $color);
+                $mPlayersInGame->updatePlayerReady($playerId, $mapPlayerId);
 
                 $this->update($user->parameters['gameId'], $db);
                 break;
@@ -179,8 +188,11 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
             return;
         }
 
-        Cli_Model_Database::disconnectFromGame($user->parameters['gameId'], $user->parameters['playerId'], $db);
-        Cli_Model_Database::findNewGameMaster($user->parameters['gameId'], $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+        $mPlayersInGame->disconnectFromGame($user->parameters['playerId']);
+
+        $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+        $mGame->setNewGameMaster($mPlayersInGame->findNewGameMaster());
         $this->update($user->parameters['gameId'], $db);
     }
 

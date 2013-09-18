@@ -53,7 +53,7 @@ class Cli_Model_SearchRuin
             'army' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $armyId, $db),
             'ruin' => $ruin,
             'find' => $find,
-            'color' => $playersInGameColors($user->parameters['playerId'])
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
@@ -61,7 +61,8 @@ class Cli_Model_SearchRuin
 
     static public function search($gameId, $ruinId, $heroId, $armyId, $playerId, $db)
     {
-        $turn = Cli_Model_Database::getTurn($gameId, $db);
+        $mGame = new Application_Model_Game($gameId, $db);
+        $turn = $mGame->getTurn();
 
         $random = rand(0, 100);
 
@@ -80,8 +81,12 @@ class Cli_Model_SearchRuin
 //kasa
             $gold = rand(50, 150);
             $find = array('gold', $gold);
-            $inGameGold = Cli_Model_Database::getPlayerInGameGold($gameId, $playerId, $db);
-            Cli_Model_Database::updatePlayerInGameGold($gameId, $playerId, $gold + $inGameGold, $db);
+
+            $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+            $inGameGold = $mPlayersInGame->getPlayerInGameGold($playerId);
+
+            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold + $inGameGold);
+
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);

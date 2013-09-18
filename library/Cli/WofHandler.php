@@ -5,7 +5,8 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_WofHandler extends WebSocket_UriHandler {
+class Cli_WofHandler extends WebSocket_UriHandler
+{
 
     /**
      * @param $db
@@ -13,18 +14,18 @@ class Cli_WofHandler extends WebSocket_UriHandler {
      * @param $gameId
      * @param null $debug
      */
-    public function sendToChannel($db, $token, $gameId, $debug = null) {
+    public function sendToChannel($db, $token, $gameId, $debug = null)
+    {
 
-        $users = Cli_Model_Database::getInGameWSSUIds($gameId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $users = $mPlayersInGame->getInGameWSSUIds();
 
         if ($debug || Zend_Registry::get('config')->debug) {
             print_r('ODPOWIEDŹ ');
             print_r($token);
         }
-        foreach ($users AS $row)
-        {
-            foreach ($this->users AS $u)
-            {
+        foreach ($users AS $row) {
+            foreach ($this->users AS $u) {
                 if ($u->getId() == $row['webSocketServerUserId']) {
                     $this->send($u, Zend_Json::encode($token));
                 }
@@ -37,7 +38,8 @@ class Cli_WofHandler extends WebSocket_UriHandler {
      * @param $msg
      * @param null $debug
      */
-    public function sendError($user, $msg, $debug = null) {
+    public function sendError($user, $msg, $debug = null)
+    {
         $token = array(
             'type' => 'error',
             'msg' => $msg
