@@ -6,6 +6,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract
     protected $_name = 'game';
     protected $_primary = 'gameId';
     protected $_sequence = "game_gameId_seq";
+    protected $_gameId;
 
     public function __construct($gameId = 0, $db = null)
     {
@@ -77,43 +78,33 @@ class Application_Model_Game extends Game_Db_Table_Abstract
 
     public function getMyGames($playerId, $pageNumber)
     {
-        $select1 = $this->_db->select()
-            ->from('playersingame', $this->_primary)
-            ->where('color is not null')
-            ->where('lost = false')
-            ->where('"playerId" = ?', $playerId);
-        $select2 = $this->_db->select()
-            ->from(array('a' => $this->_name))
-            ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', array('color'))
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId);
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), array('gameMasterId', 'turnNumber', $this->_primary, 'numberOfPlayers', 'begin', 'turnPlayerId'))
+            ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', null)
+            ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', null)
             ->where('"isOpen" = false')
             ->where('"isActive" = true')
-            ->where('a."gameId" IN ?', $select1)
+            ->where('a."gameId" IN ?', $mPlayersInGame->getSelectForMyGames($playerId))
             ->where('b."playerId" = ?', $playerId)
             ->order('begin DESC');
         try {
-            $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select2));
+            $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
             $paginator->setCurrentPageNumber($pageNumber);
             $paginator->setItemCountPerPage(10);
         } catch (Exception $e) {
-            throw new Exception($select2->__toString());
+            $l = new Coret_Model_Logger('www');
+            $l->log($select->__toString());
+            $l->log($e);
+            throw $e;
         }
 
-        foreach ($paginator as $k => &$val) {
-            $players = array();
+        $mPlayer = new Application_Model_Player();
 
-            $select = $this->_db->select()
-                ->from(array('a' => 'player'), array('firstName', 'lastName', 'playerId'))
-                ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', array('color'))
-                ->where('"gameId" = ?', $val['gameId'])
-                ->where('color is not null');
-            try {
-                foreach ($this->_db->query($select)->fetchAll() as $v) {
-                    $players[$v['playerId']] = $v;
-                }
-            } catch (PDOException $e) {
-                throw new Exception($select->__toString());
-            }
-            $val['players'] = $players;
+        foreach ($paginator as &$val) {
+            $mPlayersInGame = new Application_Model_PlayersInGame($val['gameId']);
+            $val['players'] = $mPlayersInGame->getGamePlayers();
+            $val['playerTurn'] = $mPlayer->getPlayer($val['turnPlayerId']);
         }
 
         return $paginator;

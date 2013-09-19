@@ -311,7 +311,7 @@ class Application_Model_PlayersInGame extends Game_Db_Table_Abstract
         $where = array(
             $this->_db->quoteInto($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId),
             $this->_db->quoteInto($this->_db->quoteIdentifier('turnActive') . ' = ?', true),
-            $this->_db->quoteInto($this->_db->quoteIdentifier('playerId') . ' = ?', $playerId)
+            $this->_db->quoteInto($this->_db->quoteIdentifier('playerId') . ' != ?', $playerId)
         );
 
         $this->update($data, $where);
@@ -397,5 +397,29 @@ class Application_Model_PlayersInGame extends Game_Db_Table_Abstract
         return $this->_db->fetchOne($select);
     }
 
+    public function getSelectForMyGames($playerId)
+    {
+        return $this->_db->select()
+            ->from($this->_name, 'gameId')
+            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' is not null')
+            ->where('lost = false')
+            ->where($this->_db->quoteIdentifier('playerId') . ' = ?', $playerId);
+    }
+
+    public function getGamePlayers()
+    {
+        $players = array();
+
+        $select = $this->_db->select()
+            ->from(array('b' => $this->_name), 'playerId')
+            ->join(array('a' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName'))
+            ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', array('color' => 'shortName', 'longName', 'backgroundColor', 'textColor'))
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
+            ->where('b . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' is not null');
+        foreach ($this->selectAll($select) as $v) {
+            $players[$v['playerId']] = $v;
+        }
+        return $players;
+    }
 }
 

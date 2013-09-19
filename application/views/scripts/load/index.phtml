@@ -2,33 +2,45 @@
 <div class="table">
     <table>
         <tr>
-            <th><?php echo $this->translate('Game master') ?></th>
-            <th><?php echo $this->translate('Turn number') ?></th>
+            <th>
+                <div></div><?php echo $this->translate('Game master') ?>
+                <hr style="border: 1px solid #878967">
+                <div></div><?php echo $this->translate('Player turn') ?>
+            </th>
+            <th><?php echo $this->translate('Turn nr') ?></th>
             <th><?php echo $this->translate('Number of Players') ?></th>
-            <th><?php echo $this->translate('Players') ?></th>
+            <th><?php echo $this->translate('Player name') ?></th>
+            <th><?php echo $this->translate('Player color') ?></th>
             <th><?php echo $this->translate('Start date') ?></th>
         </tr>
-        <?php
-        if (count($this->myGames)) {
-            foreach ($this->myGames as $game) {
-                $url = '/' . Zend_Registry::get('lang') . '/load/load/gameId/' . $game['gameId'];
-                $gameMaster = $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'];
-                echo '
-    <tr id="gid' . $game['gameId'] . '" onclick="window.location.href = \'' . $url . '\';" class="trlink">
-        <td><a href="' . $url . '">' . $gameMaster . '</a></td>
-        <td><a href="' . $url . '">' . $game['turnNumber'] . '</a></td>
-        <td><a href="' . $url . '">' . $game['numberOfPlayers'] . '</a></td>
-        <td><a href="' . $url . '">';
-                foreach ($game['players'] as $v) {
-                    echo '<span class="font-' . $v['color'] . '">' . $v['firstName'] . ' ' . $v['lastName'] . ' /' . $v['color'] . '/</span><br/>';
-                }
-                echo '</a></td>
-        <td><a href="' . $url . '">' . strftime('%F %H:%M:%S', strtotime($game['begin'])) . '</a></td>
-    </tr>
-    ';
-            }
-        }
-        ?>
+        <?php if (count($this->myGames)): ?>
+            <?php foreach ($this->myGames as $game): ?>
+                <tr id="gid<?php echo $game['gameId'] ?>"
+                    onclick="window.location.href = '<?php echo '/' . Zend_Registry::get('lang') . '/load/load/gameId/' . $game['gameId'] ?>';"
+                    class="trlink">
+                    <td>
+                        <div><?php echo $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'] ?></div>
+                        <hr style="border: 1px solid #878967">
+                        <div><?php echo $game['playerTurn']['firstName'] . ' ' . $game['playerTurn']['lastName'] ?></div>
+                    </td>
+                    <td><?php echo $game['turnNumber'] ?></td>
+                    <td><?php echo $game['numberOfPlayers'] ?></td>
+                    <td style="width: 180px">
+                        <?php foreach ($game['players'] as $v): ?>
+                            <div><?php echo $v['firstName'] . ' ' . $v['lastName'] ?></div>
+                        <?php endforeach ?>
+                    </td>
+                    <td style="text-shadow: none;width: 160px">
+                        <?php foreach ($game['players'] as $v): ?>
+                            <div
+                                style="background: <?php echo $v['backgroundColor'] ?>; color: <?php echo $v['textColor'] ?>"><?php echo $v['longName'] ?></div>
+                        <?php endforeach ?>
+                    </td>
+                    <td><?php echo strftime('%F %H:%M:%S', strtotime($game['begin'])) ?></td>
+                </tr>
+
+            <?php endforeach ?>
+        <?php endif ?>
     </table>
 </div>
 <?php echo $this->paginationControl($this->myGames, 'Sliding', 'pagination_control.phtml'); ?>
@@ -37,6 +49,7 @@
         <a href="/" class="button">&laquo; <?php echo $this->translate('Back') ?></a>
     </li>
 </ul>
+
 <script type="text/javascript">
     $('.trlink')
         .mouseover(function () {

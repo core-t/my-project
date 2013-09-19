@@ -322,7 +322,6 @@ class Cli_Model_ComputerMainBlocks
         $mSoldier = new Application_Model_Soldier($gameId, $db);
         $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
         $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
 
         $income = 0;
@@ -331,7 +330,7 @@ class Cli_Model_ComputerMainBlocks
         $turnNumber = Cli_Model_Database::getTurnNumber($gameId, $db);
 
         if ($turnNumber == 0) {
-            var_dump('?');
+            var_dump('??????????????????????');
             return;
         }
 
