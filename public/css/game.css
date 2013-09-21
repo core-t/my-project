@@ -571,6 +571,7 @@
     top: 260px;
     margin: 2px;
     height: 12px;
+    width: 220px;
 }
 
 #turnBox div {
@@ -718,11 +719,12 @@
 }
 
 #surrender {
-    position: absolute;
-    background: url("/img/game/white_flag.png");
+    /*position: absolute;*/
+    background: url("../img/game/white_flag.png");
     width: 32px;
     height: 32px;
     cursor: pointer;
+    float: right;
 }
 
 .message #income {

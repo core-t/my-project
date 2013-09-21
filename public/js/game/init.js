@@ -59,6 +59,7 @@ $(document).ready(function () {
     prepareButtons();
     startWebSocket();
 
+    Players.init();
     Players.draw();
     Players.turn();
 });
