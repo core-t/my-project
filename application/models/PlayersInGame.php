@@ -171,7 +171,7 @@ class Application_Model_PlayersInGame extends Game_Db_Table_Abstract
         $select = $this->_db->select()
             ->from(array('a' => $this->_name))
             ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-            ->join(array('c' => 'mapplayers'), 'a . "mapPlayerId" = c . "mapPlayerId"', array('color' => 'shortName'))
+            ->join(array('c' => 'mapplayers'), 'a . "mapPlayerId" = c . "mapPlayerId"', array('color' => 'shortName', 'backgroundColor', 'textColor'))
             ->where('a . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL')
             ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId);
 

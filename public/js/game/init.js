@@ -58,6 +58,9 @@ $(document).ready(function () {
     unitsReformat();
     prepareButtons();
     startWebSocket();
+
+    Players.draw();
+    Players.turn();
 });
 
 function startGame() {

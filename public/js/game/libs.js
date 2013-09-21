@@ -28,25 +28,26 @@ function turnOff() {
 function changeTurn(color, nr) {
     if (!color) {
         console.log('Turn "color" not set');
-        return false;
+        return;
     }
-    $('#turn').css('background', 'none');
+
     turn.color = color;
+
     if (typeof nr != 'undefined') {
         turn.nr = nr;
     }
-    $('#turn').css('background', color);
-    $('#turnNumber').html(turn.nr);
+
+    Players.turn();
 
     timer.update();
 
     if (turn.color == my.color) {
         turnOn();
         wsStartMyTurn();
-        return 0;
+        return;
     } else {
         turnOff();
-        return 1;
+        return;
     }
 }
 
@@ -267,10 +268,6 @@ function prepareButtons() {
     $('#splitArmy').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
-
-    //    $('.'+my.color+' .color').append('You');
-    $('#turn').css('background', turn.color);
-    $('#turnNumber').html(turn.nr);
 }
 
 function fieldsCopy() {

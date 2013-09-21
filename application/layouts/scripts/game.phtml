@@ -13,7 +13,8 @@
     <div id="menuTop">
         <?php echo $this->placeholder('version') ?>
         <?php echo $this->placeholder('logout') ?>
-        <a href="/<?php echo Zend_Registry::get('lang') ?>/index" class="button"><?php echo $this->translate('Quit game') ?></a>
+        <a href="/<?php echo Zend_Registry::get('lang') ?>/index"
+           class="button"><?php echo $this->translate('Quit game') ?></a>
     </div>
     <div id="game">
         <!-- ZOOM WINDOW -->
@@ -42,35 +43,8 @@
             </div>
             <div id="playersBox" class="box">
                 <div id="turn"><span id="turnNumber"></span></div>
-                <div id="first" class="nr white">1</div>
-                <div id="second" class="nr yellow">2</div>
-                <div id="third" class="nr green">3</div>
-                <div id="fourth" class="nr red">4</div>
                 <div id="playersLabel"><?php echo $this->translate('Players') ?></div>
-                <div class="playersBox">
-                    <div class="left white">
-                        <div class="color">
-                            <div class="type"></div>
-                        </div>
-                    </div>
-                    <div class="left yellow">
-                        <div class="color">
-                            <div class="type"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="playersBox">
-                    <div class="right green">
-                        <div class="color">
-                            <div class="type"></div>
-                        </div>
-                    </div>
-                    <div class="right red">
-                        <div class="color">
-                            <div class="type"></div>
-                        </div>
-                    </div>
-                </div>
+                <canvas id="playersCanvas" width="220px" height="220px"></canvas>
                 <div id="turnBox">
                     <div id="surrender" title="<?php echo $this->translate('Surrender') ?>"></div>
                     <div class="right">

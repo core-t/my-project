@@ -105,7 +105,7 @@
     position: absolute;
     width: 40px;
     height: 40px;
-    background: url(../img/game/tower_neutral.png) center center no-repeat;
+    background: url(../img/game/towers/neutral.png) center center no-repeat;
     border: none;
     cursor: crosshair;
     z-index: 2200;
@@ -230,6 +230,7 @@
     border-top: none;
     border-bottom-left-radius: 10px;
     width: 230px;
+    height: 300px;
 }
 
 #playersLabel {
@@ -295,13 +296,18 @@
 
 #turn {
     width: 80px;
-    height: 80px;
-    background: #000;
-    border-radius: 40px;
+    height: 30px;
     position: absolute;
-    top: 102px;
-    left: 83px;
+    top: 125px;
+    left: 80px;
     z-index: 28000;
+}
+
+#turnNumber {
+    font-size: 30px;
+    text-shadow: none;
+    text-align: center;
+    display: block;
 }
 
 #armyButtonsBox {
@@ -561,6 +567,8 @@
 }
 
 #turnBox {
+    position: absolute;
+    top: 260px;
     margin: 2px;
     height: 12px;
 }
@@ -705,16 +713,6 @@
     left: 3px;
 }
 
-#turnNumber {
-    font-size: 30px;
-    line-height: 86px;
-    color: #000;
-    text-shadow: none;
-    text-align: center;
-    /*width: 80px;*/
-    display: block;
-}
-
 #nextTurn {
     margin-top: 10px;
 }
@@ -741,4 +739,10 @@
     box-shadow: 5px 5px 20px #000;
     padding: 3px;
     color: #fff;
+}
+
+#playersCanvas {
+    position: absolute;
+    top: 30px;
+    left: 10px;
 }

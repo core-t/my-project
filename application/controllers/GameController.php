@@ -25,6 +25,7 @@ class GameController extends Game_Controller_Game
         $this->view->headScript()->appendFile('/js/game/websocket.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/message.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/timer.js?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/game/players.js?v=' . Zend_Registry::get('config')->version);
 
         $this->_helper->layout->setLayout('game');
 
@@ -73,6 +74,8 @@ class GameController extends Game_Controller_Game
             $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
             $this->view->players[$player['color']]['computer'] = $player['computer'];
             $this->view->players[$player['color']]['lost'] = $player['lost'];
+            $this->view->players[$player['color']]['backgroundColor'] = $player['backgroundColor'];
+            $this->view->players[$player['color']]['textColor'] = $player['textColor'];
 
             if ($game['turnPlayerId'] == $player['playerId']) {
                 $this->view->turn['playerId'] = $player['playerId'];
