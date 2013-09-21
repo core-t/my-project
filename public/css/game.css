@@ -296,7 +296,6 @@
 
 #turn {
     width: 80px;
-    height: 30px;
     position: absolute;
     top: 125px;
     left: 80px;
@@ -747,4 +746,5 @@
     position: absolute;
     top: 30px;
     left: 10px;
+    background: white;
 }

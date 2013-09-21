@@ -82,12 +82,8 @@ function startGame() {
     }
     for (color in players) {
         players[color].active = 0;
+
         $('.' + color + ' .color').addClass(color + 'bg');
-        if (players[color].computer) {
-            $('.' + color + ' .color .type').css('background', 'url(../img/game/computer.png) center center no-repeat');
-        } else {
-            $('.' + color + ' .color .type').css('background', 'url(..' + Hero.getImage(color) + ') center center no-repeat');
-        }
 
         for (i in players[color].armies) {
             players[color].armies[i] = new army(players[color].armies[i], color);
