@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div id="playersBox" class="box">
-                <img id="aaawhite" src="/img/game/heroes/white.png">
+<!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->
                 <div id="turn"><span id="turnNumber"></span></div>
                 <div id="playersLabel"><?php echo $this->translate('Players') ?></div>
                 <canvas id="playersCanvas" width="220px" height="220px"></canvas>
@@ -77,6 +77,10 @@
                         <div class="left armyButton">
                             <a id="searchRuins"
                                class="button buttonOff"><?php echo $this->translate('Search ruins') ?></a>
+                        </div>
+                        <div class="left armyButton">
+                            <a id="showArtifacts"
+                               class="button buttonOff"><?php echo $this->translate('Show artifacts') ?></a>
                         </div>
                         <div class="left armyButton">
                             <a id="splitArmy" class="button buttonOff"><?php echo $this->translate('Split army') ?></a>

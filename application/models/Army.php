@@ -98,8 +98,8 @@ class Application_Model_Army extends Game_Db_Table_Abstract
             }
             $result = $this->_db->query($select)->fetchAll();
             foreach ($result as $k => $row) {
-                $mInventory = new Application_Model_Inventory($this->_gameId);
-                $result[$k]['artefacts'] = $mInventory->getArtifactsByHeroId($row['heroId']);
+                $mInventory = new Application_Model_Inventory($row['heroId']);
+                $result[$k]['artifacts'] = $mInventory->getByGameId($this->_gameId);
             }
             return $result;
         } catch (PDOException $e) {

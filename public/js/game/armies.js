@@ -353,8 +353,11 @@ function selectArmy(a) {
     $('#skipArmy').removeClass('buttonOff');
     $('#quitArmy').removeClass('buttonOff');
     selectedArmy = a;
-    if (typeof selectedArmy.heroKey != 'undefined' && getRuinId(selectedArmy) !== null) {
-        $('#searchRuins').removeClass('buttonOff');
+    if (typeof selectedArmy.heroKey != 'undefined') {
+        if (getRuinId(selectedArmy) !== null) {
+            $('#searchRuins').removeClass('buttonOff');
+        }
+        $('#showArtifacts').removeClass('buttonOff');
     }
 //    zoomer.lensSetCenter(a.x * 40, a.y * 40);
     zoomer.setCenterIfOutOfScreen(a.x * 40, a.y * 40);
@@ -371,7 +374,6 @@ function unselectArmy(skipJoin) {
     armiesAddCursorWhenUnselectedArmy();
     myCastlesAddCursor();
 
-    //    $('#info').html('');
     $('#name').html('');
     $('#moves').html('');
     $('#attack').html('');
@@ -396,6 +398,7 @@ function tmpUnselectArmy() {
     $('#skipArmy').addClass('buttonOff');
     $('#quitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
+    $('#showArtifacts').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     removeM();
 }

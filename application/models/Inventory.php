@@ -2,15 +2,14 @@
 
 class Application_Model_Inventory extends Game_Db_Table_Abstract
 {
-
     protected $_name = 'inventory';
     protected $_foreign_1 = 'artifactId';
     protected $_foreign_2 = 'heroId';
     protected $_foreign_3 = 'gameId';
 
-    public function __construct($gameId, $db = null)
+    public function __construct($heroId, $db = null)
     {
-        $this->_gameId = $gameId;
+        $this->_heroId = $heroId;
         if ($db) {
             $this->_db = $db;
         } else {
@@ -18,49 +17,39 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
         }
     }
 
-    public function addArtifact($artifactId, $heroId)
+    public function addArtifact($artifactId, $gameId)
     {
         $data = array(
             $this->_db->quoteInto('"artifactId" = ?', $artifactId),
-            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
-            $this->_db->quoteInto('"heroId" = ?', $heroId)
+            $this->_db->quoteInto('"gameId" = ?', $gameId),
+            $this->_db->quoteInto('"heroId" = ?', $this->_heroId)
         );
-        try {
-            $this->_db->insert('inventory', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
+
+
+        $this->insert($data);
     }
 
-    public function itemExists($artifactId, $heroId)
+    public function itemExists($artifactId, $gameId)
     {
         $select = $this->_db->select()
             ->from('inventory', 'artifactId')
             ->where('"artifactId" = ?', $artifactId)
-            ->where('"heroId" = ?', $heroId)
-            ->where('"gameId" = ?', $this->_gameId);
-        try {
-            if ($this->_db->fetchOne($select) !== null) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
+            ->where('"heroId" = ?', $this->_heroId)
+            ->where('"gameId" = ?', $gameId);
+
+        if ($this->selectOne($select) !== null) {
+            return true;
         }
     }
 
-    public function getArtifactsByHeroId($heroId)
+    public function getByGameId($gameId)
     {
         $select = $this->_db->select()
             ->from($this->_name, $this->_foreign_1)
-            ->where($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $heroId)
-            ->where($this->_db->quoteIdentifier($this->_foreign_3) . ' = ?', $this->_gameId);
+            ->where($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $this->_heroId)
+            ->where($this->_db->quoteIdentifier($this->_foreign_3) . ' = ?', $gameId);
 
-        try {
-            return $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+        return $this->selectAll($select);
     }
 
 }

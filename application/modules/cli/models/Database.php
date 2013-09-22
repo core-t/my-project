@@ -353,8 +353,8 @@ Brak y
         }
 
         foreach ($result as $k => $row) {
-            $mInventory = new Application_Model_Inventory($gameId, $db);
-            $result[$k]['artefacts'] = $mInventory->getArtifactsByHeroId($row['heroId']);
+            $mInventory = new Application_Model_Inventory($row['heroId'], $db);
+            $result[$k]['artefacts'] = $mInventory->getByGameId($gameId);
 //            $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
         }
 
@@ -376,8 +376,8 @@ Brak y
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $k => $row) {
-                $mInventory = new Application_Model_Inventory($gameId, $db);
-                $result[$k]['artefacts'] = $mInventory->getArtifactsByHeroId($row['heroId']);
+                $mInventory = new Application_Model_Inventory($row['heroId'], $db);
+                $result[$k]['artefacts'] = $mInventory->getByGameId($gameId);
 //                $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
             }
 

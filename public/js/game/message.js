@@ -56,6 +56,24 @@ var Message = {
                     'left': messageLeft + 'px'
                 })
         );
+    },
+    showArtifacts: function () {
+        Message.element().after(
+            $('<div>')
+                .addClass('message')
+                .addClass('center')
+                .append($('<h3>').html('Artifacts'))
+                .append($('<div>')
+                    .addClass('button go')
+                    .html('Ok')
+                    .click(function () {
+                        removeM();
+                    })
+                )
+                .css({
+                    'left': messageLeft + 'px'
+                })
+        );
     }
 }
 

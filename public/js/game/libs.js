@@ -130,7 +130,7 @@ function titleBlink(msg) {
 }
 
 function getColor(color) {
-    switch(color){
+    switch (color) {
         case 'green':
             return '#00db00';
         case 'selentines':
@@ -257,6 +257,9 @@ function prepareButtons() {
     });
     $('#searchRuins').click(function () {
         wsSearchRuins()
+    });
+    $('#showArtifacts').click(function () {
+        Message.showArtifacts();
     });
     $('#test').click(function () {
         test()

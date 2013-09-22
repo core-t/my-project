@@ -5,6 +5,8 @@ class HeroController extends Game_Controller_Gui
 
     public function indexAction()
     {
+        $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/hero.css?v=' . Zend_Registry::get('config')->version);
+
         $modelHero = new Application_Model_Hero($this->_namespace->player['playerId']);
         $this->view->heroes = $modelHero->getHeroes();
 

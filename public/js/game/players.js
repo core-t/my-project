@@ -30,15 +30,15 @@ var Players = {
             var x = this.circle_center_x + Math.cos(r_start_angle) * r_length;
             var y = this.circle_center_y + Math.sin(r_start_angle) * r_length;
 
-//            this.ctx.moveTo(this.circle_center_x, this.circle_center_y);
-//            this.ctx.lineTo(x, y);
-//            this.ctx.arc(this.circle_center_x, this.circle_center_y, r_length, r_start_angle, r_end_angle, false);
-//            this.ctx.lineTo(this.circle_center_x, this.circle_center_y);
-//            this.ctx.fillStyle = players[shortName].backgroundColor;
-//            this.ctx.fill();
+            this.ctx.moveTo(this.circle_center_x, this.circle_center_y);
+            this.ctx.lineTo(x, y);
+            this.ctx.arc(this.circle_center_x, this.circle_center_y, r_length, r_start_angle, r_end_angle, false);
+            this.ctx.lineTo(this.circle_center_x, this.circle_center_y);
+            this.ctx.fillStyle = players[shortName].backgroundColor;
+            this.ctx.fill();
 
-            var img = document.getElementById('aaa'+shortName);
-console.log(img);
+//            var img = document.getElementById('aaa'+shortName);
+//console.log(img);
 //            var img = new Image;
 //            if (players[shortName].computer) {
 //                img.src = '../img/game/computer.png';
@@ -46,19 +46,20 @@ console.log(img);
 //                img.src = '../' + Hero.getImage(shortName);
 //            }
 //            img.onload = function () {
-            this.ctx.drawImage(img, 0,0);
+//            this.ctx.drawImage(img, 0,0);
 //            }
 //            img.src = '/img/game/computer.png';
-            i++;break;
+            i++;
+//            break;
         }
 
 
     },
     turn: function () {
-//        this.ctx.beginPath();
-//        this.ctx.arc(this.circle_center_x, this.circle_center_y, 50, 0, Math.PI * 2, true);
-//        this.ctx.fillStyle = players[turn.color].backgroundColor;
-//        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(this.circle_center_x, this.circle_center_y, 50, 0, Math.PI * 2, true);
+        this.ctx.fillStyle = players[turn.color].backgroundColor;
+        this.ctx.fill();
 
         $('#turnNumber').css('color', players[turn.color].textColor).html(turn.nr);
     },

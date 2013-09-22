@@ -1,0 +1,12 @@
+#chest {
+    /*float: left;*/
+    /*width: 350px;*/
+}
+#inventory{
+    float: right;
+    width: 350px;
+}
+
+.table table {
+    width: auto;
+}
