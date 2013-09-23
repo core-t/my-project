@@ -184,11 +184,7 @@ function startWebSocket() {
                     }
                     break;
 
-                case 'inventoryAdd':
-                    console.log(r);
-                    break;
-
-                case 'inventoryDel':
+                case 'inventory':
                     console.log(r);
                     break;
 
@@ -558,7 +554,12 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    inventoryDel: function () {
+    inventoryDel: function (heroId) {
+        var token = {
+            type: 'inventoryDel',
+            heroId: heroId
+        };
 
+        ws.send(JSON.stringify(token));
     }
 }

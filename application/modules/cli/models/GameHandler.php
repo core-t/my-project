@@ -221,7 +221,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                 break;
 
             case 'inventoryAdd':
-                $cliInventory = new Cli_Model_Inventory($user, $db, $this);
+                $cliInventory = new Cli_Model_InventoryAdd($dataIn['heroId'], $user, $db, $this);
                 break;
 
             case 'inventoryDel':
