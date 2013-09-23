@@ -58,11 +58,37 @@ var Message = {
         );
     },
     showArtifacts: function () {
+        var htmlChest = $('<div>').attr('id', 'chest');
+        for (i in players[my.color].chest) {
+            htmlChest.append(
+                $('<div>')
+                    .html(artifacts[players[my.color].chest[i].artifactId].name + ' ' + players[my.color].chest[i].quantity)
+                    .click(function () {
+                        Websocket.inventoryAdd(selectedArmy.heroes[0].heroId);
+                    })
+            );
+        }
+
+        var htmlInventory = $('<div>').attr('id', 'inventory');
+        for (i in selectedArmy.heroes[0].artifacts) {
+            htmlInventory.append(
+                $('<div>')
+                    .html('')
+                    .click(function () {
+                        Websocket.inventoryDel(selectedArmy.heroes[0].heroId);
+                    })
+            );
+        }
+
+
         Message.element().after(
             $('<div>')
                 .addClass('message')
                 .addClass('center')
-                .append($('<h3>').html('Artifacts'))
+                .append($('<h3>').html('Chest'))
+                .append(htmlChest)
+                .append($('<h3>').html('Inventory'))
+                .append(htmlInventory)
                 .append($('<div>')
                     .addClass('button go')
                     .html('Ok')
@@ -74,6 +100,7 @@ var Message = {
                     'left': messageLeft + 'px'
                 })
         );
+
     }
 }
 

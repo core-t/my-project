@@ -748,3 +748,16 @@
     left: 10px;
     /*background: white;*/
 }
+
+#chest {
+    background: #fff;
+    text-shadow: none;
+}
+
+#chest div {
+    border: 1px solid #ccc;
+}
+
+#inventory {
+    background: #fff;
+}

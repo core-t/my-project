@@ -68,11 +68,12 @@ class Application_Model_Army extends Game_Db_Table_Abstract
 
         $array = array();
 
+        $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId);
         $mSoldier = new Application_Model_Soldier($this->_gameId);
 
         foreach ($result as $army) {
             $array['army' . $army['armyId']] = $army;
-            $array['army' . $army['armyId']]['heroes'] = $this->getArmyHeroes($army['armyId']);
+            $array['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
             $array['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($array['army' . $army['armyId']]['heroes']) AND empty($array['army' . $army['armyId']]['soldiers'])) {
                 $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);
@@ -81,30 +82,6 @@ class Application_Model_Army extends Game_Db_Table_Abstract
         }
 
         return $array;
-    }
-
-    private function getArmyHeroes($armyId, $in = false)
-    {
-        $select = $this->_db->select()
-            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
-            ->where('"gameId" = ?', $this->_gameId)
-            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
-        try {
-            if ($in) {
-                $select->where('"' . $this->_primary . '" IN (?)', new Zend_Db_Expr($armyId));
-            } else {
-                $select->where('"' . $this->_primary . '" = ?', $armyId);
-            }
-            $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $k => $row) {
-                $mInventory = new Application_Model_Inventory($row['heroId']);
-                $result[$k]['artifacts'] = $mInventory->getByGameId($this->_gameId);
-            }
-            return $result;
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
     }
 
     public function destroyArmy($armyId, $playerId)

@@ -39,5 +39,6 @@ class Application_Model_Hero extends Game_Db_Table_Abstract
         $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $heroId);
         return $this->_db->update($this->_name, $data, $where);
     }
+
 }
 

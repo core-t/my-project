@@ -31,6 +31,24 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
     {
     }
 
+    public function getArmyHeroes($armyId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
+            ->join(array('b' => $this->_name), 'a."heroId" = b."heroId"', array('movesLeft'))
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
+            ->where($this->_db->quoteIdentifier('armyId') . ' = ?', $armyId)
+            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
+
+        $result = $this->selectAll($select);
+
+        foreach ($result as $k => $row) {
+            $mInventory = new Application_Model_Inventory($row['heroId'], $this->_gameId);
+            $result[$k]['artifacts'] = $mInventory->getAll();
+        }
+
+        return $result;
+    }
 
 }
 

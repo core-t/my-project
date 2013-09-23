@@ -39,7 +39,7 @@ class GameController extends Game_Controller_Game
 
         $game = $mGame->getGame();
 
-        $this->view->artefacts = $mArtifact->getArtifacts();
+        $this->view->artifacts = $mArtifact->getArtifacts();
         $mUnit = new Application_Model_MapUnits($game['mapId']);
         $this->view->units = $mUnit->getUnits();
         $mMapTowers = new Application_Model_MapTowers($game['mapId']);
@@ -68,7 +68,10 @@ class GameController extends Game_Controller_Game
         $this->view->map($game['mapId']);
 
         foreach ($players as $player) {
+            $mChest = new Application_Model_Chest($player['playerId']);
+
             $colors[$player['playerId']] = $player['color'];
+            $this->view->players[$player['color']]['chest'] = $mChest->getAll();
             $this->view->players[$player['color']]['armies'] = $mArmy->getPlayerArmies($player['playerId']);
             $this->view->players[$player['color']]['castles'] = $mCastle->getPlayerCastles($player['playerId']);
             $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];

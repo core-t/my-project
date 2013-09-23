@@ -4,7 +4,7 @@ function startWebSocket() {
     ws.onopen = function () {
         wsClosed = false;
         $("#wsStatus").html("connected");
-        wsOpen();
+        Websocket.open();
     };
 
     ws.onmessage = function (e) {
@@ -182,6 +182,14 @@ function startWebSocket() {
                     } else if (typeof r.win != 'undefined') {
                         winM(r.color);
                     }
+                    break;
+
+                case 'inventoryAdd':
+                    console.log(r);
+                    break;
+
+                case 'inventoryDel':
+                    console.log(r);
                     break;
 
                 default:
@@ -531,13 +539,26 @@ function wsProduction(castleId) {
     ws.send(JSON.stringify(token));
 }
 
-function wsOpen() {
-    var token = {
-        type: 'open',
-        gameId: gameId,
-        playerId: my.id,
-        accessKey: accessKey
-    };
+Websocket = {
+    open: function () {
+        var token = {
+            type: 'open',
+            gameId: gameId,
+            playerId: my.id,
+            accessKey: accessKey
+        };
 
-    ws.send(JSON.stringify(token));
+        ws.send(JSON.stringify(token));
+    },
+    inventoryAdd: function (heroId) {
+        var token = {
+            type: 'inventoryAdd',
+            heroId: heroId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    inventoryDel: function () {
+
+    }
 }

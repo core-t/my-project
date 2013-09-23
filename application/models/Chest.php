@@ -68,7 +68,7 @@ class Application_Model_Chest extends Game_Db_Table_Abstract
     public function getAll()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
+            ->from($this->_name, array('artifactId', 'quantity'))
             ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_playerId);
 
         return $this->_db->query($select)->fetchAll();

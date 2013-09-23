@@ -297,8 +297,9 @@ Brak y
 
         if (isset($result['armyId'])) {
             $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
-            $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
+            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
             $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
         }
@@ -325,7 +326,8 @@ Brak y
 
         if (isset($result['armyId'])) {
             $mSoldier = new Application_Model_Soldier($gameId, $db);
-            $result['heroes'] = self::getArmyHeroes($gameId, $armyId, false, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
             $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
 
@@ -353,8 +355,8 @@ Brak y
         }
 
         foreach ($result as $k => $row) {
-            $mInventory = new Application_Model_Inventory($row['heroId'], $db);
-            $result[$k]['artefacts'] = $mInventory->getByGameId($gameId);
+            $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
+            $result[$k]['artefacts'] = $mInventory->getAll();
 //            $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
         }
 
@@ -376,8 +378,8 @@ Brak y
         try {
             $result = $db->query($select)->fetchAll();
             foreach ($result as $k => $row) {
-                $mInventory = new Application_Model_Inventory($row['heroId'], $db);
-                $result[$k]['artefacts'] = $mInventory->getByGameId($gameId);
+                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
+                $result[$k]['artefacts'] = $mInventory->getAll();
 //                $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
             }
 
@@ -499,11 +501,12 @@ Brak y
 
         $armies = array();
 
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         $mSoldier = new Application_Model_Soldier($gameId, $db);
 
         foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;
-            $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
+            $armies['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
             $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
                 self::destroyArmy($gameId, $armies['army' . $army['armyId']]['armyId'], $playerId, $db);
@@ -535,7 +538,8 @@ Brak y
             return $result;
         }
 
-        $result['heroes'] = self::getArmyHeroes($gameId, $result['armyId'], false, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $result['heroes'] = $mHeroesInGame->getArmyHeroes($result['armyId']);
 
         $mSoldier = new Application_Model_Soldier($gameId, $db);
         $result['soldiers'] = $mSoldier->getForWalk($result['armyId']);
@@ -699,7 +703,8 @@ Brak y
                 continue;
             }
 
-            $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+            $heroes = $mHeroesInGame->getArmyHeroes($army['armyId']);
 
             $mSoldier = new Application_Model_Soldier($gameId, $db);
             $soldiers = $mSoldier->getSoldiers($army['armyId']);
@@ -934,11 +939,11 @@ Brak y
             echo($select->__toString());
         }
 
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         $mSoldier = new Application_Model_Soldier($gameId, $db);
 
         foreach ($result as $k => $army) {
-            $heroes = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
-
+            $heroes = $mHeroesInGame->getArmyHeroes($army['armyId']);
             $soldiers = $mSoldier->getSoldiers($army['armyId']);
             if (empty($heroes) && empty($soldiers)) {
                 self::destroyArmy($gameId, $army['armyId'], $army['playerId'], $db);
@@ -1343,9 +1348,10 @@ Brak y
         }
 
         $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
         foreach ($result as $army) {
-            $army['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
+            $army['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
             $army['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($army['heroes']) AND empty($army['soldiers'])) {
                 self::destroyArmy($gameId, $army['armyId'], $playerId, $db);
@@ -1497,10 +1503,11 @@ Brak y
         $armies = array();
 
         $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
         foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;
-            $armies['army' . $army['armyId']]['heroes'] = self::getArmyHeroes($gameId, $army['armyId'], false, $db);
+            $armies['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
             $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
                 self::destroyArmy($gameId, $armies['army' . $army['armyId']]['armyId'], $playerId, $db);

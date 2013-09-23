@@ -219,6 +219,14 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             case 'castleBuildDefense':
                 new Cli_Model_CastleBuildDefense($dataIn['castleId'], $user, $db, $this);
                 break;
+
+            case 'inventoryAdd':
+                $cliInventory = new Cli_Model_Inventory($user, $db, $this);
+                break;
+
+            case 'inventoryDel':
+
+                break;
         }
     }
 
