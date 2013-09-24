@@ -184,8 +184,21 @@ function startWebSocket() {
                     }
                     break;
 
-                case 'inventory':
-                    console.log(r);
+                case 'inventoryAdd':
+                    $('#inventory').append(
+                        $('<div>')
+                            .html(artifacts[r.artifactId].name)
+                            .click(function () {
+                                Websocket.inventoryDel(selectedArmy.heroes[0].heroId);
+                            })
+                    );
+                    for (a in players[my.color].armies) {
+                        for (h in players[my.color].armies[a].heroes) {
+                            if (players[my.color].armies[a].heroes[h].heroId == r.heroId) {
+                                players[my.color].armies[a].heroes[h].artifacts.push({artifactId: r.artifactId});
+                            }
+                        }
+                    }
                     break;
 
                 default:
@@ -546,10 +559,11 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    inventoryAdd: function (heroId) {
+    inventoryAdd: function (heroId, artifactId) {
         var token = {
             type: 'inventoryAdd',
-            heroId: heroId
+            heroId: heroId,
+            artifactId: artifactId
         };
 
         ws.send(JSON.stringify(token));

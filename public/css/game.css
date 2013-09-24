@@ -760,4 +760,9 @@
 
 #inventory {
     background: #fff;
+    text-shadow: none;
+}
+
+#inventory div {
+    border: 1px solid #ccc;
 }

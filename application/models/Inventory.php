@@ -21,9 +21,9 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
     public function addArtifact($artifactId)
     {
         $data = array(
-            $this->_db->quoteInto('"artifactId" = ?', $artifactId),
-            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
-            $this->_db->quoteInto('"heroId" = ?', $this->_heroId)
+            'artifactId' => $artifactId,
+            'gameId' => $this->_gameId,
+            'heroId' => $this->_heroId
         );
 
 
@@ -38,9 +38,7 @@ class Application_Model_Inventory extends Game_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier($this->_foreign_2) . ' = ?', $this->_heroId)
             ->where($this->_db->quoteIdentifier($this->_foreign_3) . ' = ?', $this->_gameId);
 
-        if ($this->selectOne($select) !== null) {
-            return true;
-        }
+        return $this->selectOne($select);
     }
 
     public function getAll()

@@ -40,5 +40,14 @@ class Application_Model_Hero extends Game_Db_Table_Abstract
         return $this->_db->update($this->_name, $data, $where);
     }
 
+    public function isMyHero($heroId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'heroId')
+            ->where($this->_db->quoteIdentifier('playerId') . ' = ?', $this->_playerId)
+            ->where($this->_db->quoteIdentifier('heroId') . ' = ?', $heroId);
+
+        return $this->selectOne($select);
+    }
 }
 

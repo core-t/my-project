@@ -62,20 +62,24 @@ var Message = {
         for (i in players[my.color].chest) {
             htmlChest.append(
                 $('<div>')
+                    .attr('id', players[my.color].chest[i].artifactId)
                     .html(artifacts[players[my.color].chest[i].artifactId].name + ' ' + players[my.color].chest[i].quantity)
                     .click(function () {
-                        Websocket.inventoryAdd(selectedArmy.heroes[0].heroId);
+                        Websocket.inventoryAdd(selectedArmy.heroes[0].heroId, $(this).attr('id'));
                     })
             );
         }
 
         var htmlInventory = $('<div>').attr('id', 'inventory');
+
         for (i in selectedArmy.heroes[0].artifacts) {
+            console.log('a');
             htmlInventory.append(
                 $('<div>')
-                    .html('')
+                    .attr('id', selectedArmy.heroes[0].artifacts[i].artifactId)
+                    .html(artifacts[selectedArmy.heroes[0].artifacts[i].artifactId].name)
                     .click(function () {
-                        Websocket.inventoryDel(selectedArmy.heroes[0].heroId);
+                        Websocket.inventoryDel(selectedArmy.heroes[0].heroId, $(this).attr('id'));
                     })
             );
         }
