@@ -74,6 +74,13 @@ class Application_Model_Army extends Game_Db_Table_Abstract
         foreach ($result as $army) {
             $array['army' . $army['armyId']] = $army;
             $array['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+
+
+            foreach ($array['army' . $army['armyId']]['heroes'] as $k => $row) {
+                $mInventory = new Application_Model_Inventory($row['heroId'], $this->_gameId);
+                $array['army' . $army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
+            }
+
             $array['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
             if (empty($array['army' . $army['armyId']]['heroes']) AND empty($array['army' . $army['armyId']]['soldiers'])) {
                 $this->destroyArmy($array['army' . $army['armyId']]['armyId'], $playerId);

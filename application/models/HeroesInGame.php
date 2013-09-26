@@ -40,14 +40,7 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier('armyId') . ' = ?', $armyId)
             ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
 
-        $result = $this->selectAll($select);
-
-        foreach ($result as $k => $row) {
-            $mInventory = new Application_Model_Inventory($row['heroId'], $this->_gameId);
-            $result[$k]['artifacts'] = $mInventory->getAll();
-        }
-
-        return $result;
+        return $this->selectAll($select);
     }
 
 }

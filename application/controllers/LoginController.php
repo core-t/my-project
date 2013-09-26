@@ -20,7 +20,7 @@ class LoginController extends Zend_Controller_Action
                 $playerId = $modelPlayer->auth($this->_request->getParam('login'), $this->_request->getParam('password'));
                 if ($playerId) {
                     $this->_namespace->player = $modelPlayer->getPlayer($playerId);
-                    $this->_redirect('/index');
+                    $this->_redirect($this->view->url(array('controller' => 'index')));
                 } else {
                     $this->view->form->setDescription($this->view->translate('Incorrect login or password!'));
                 }

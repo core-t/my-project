@@ -766,3 +766,13 @@
 #inventory div {
     border: 1px solid #ccc;
 }
+
+.artifactDescription {
+    position: absolute;
+    background: #555;
+    text-shadow: none;
+    color: #fff;
+    min-width: 200px;
+    min-height: 200px;
+    z-index: 28000;
+}

@@ -73,13 +73,32 @@ var Message = {
         var htmlInventory = $('<div>').attr('id', 'inventory');
 
         for (i in selectedArmy.heroes[0].artifacts) {
-            console.log('a');
             htmlInventory.append(
                 $('<div>')
                     .attr('id', selectedArmy.heroes[0].artifacts[i].artifactId)
                     .html(artifacts[selectedArmy.heroes[0].artifacts[i].artifactId].name)
                     .click(function () {
                         Websocket.inventoryDel(selectedArmy.heroes[0].heroId, $(this).attr('id'));
+                    })
+//                    .mouseover(function (e) {
+//                        console.log(e);
+//
+//                    })
+                    .mousemove(function (e) {
+                        $('.zoomWindow #des' + $(this).attr('id')).remove();
+                        $('.zoomWindow').append(
+                            $('<div>')
+                                .attr('id', 'des' + $(this).attr('id'))
+                                .addClass('artifactDescription')
+                                .css({
+                                    top: e.pageY + 'px',
+                                    left: e.pageX + 'px'
+
+                                })
+                        );
+                    })
+                    .mouseleave(function () {
+                        $('.zoomWindow #des' + $(this).attr('id')).remove();
                     })
             );
         }
