@@ -11,8 +11,8 @@ class NewajaxController extends Game_Controller_Action
 
     public function refreshAction()
     {
-        $m = new Application_Model_Game();
-        $response = $modelGame->getOpen();
+        $mGame = new Application_Model_Game();
+        $response = $mGame->getOpen();
         echo Zend_Json::encode($response);
     }
 
