@@ -20,10 +20,11 @@ class Application_Model_PlayersInGame extends Game_Db_Table_Abstract
     public function getAll()
     {
         $select = $this->_db->select()
-            ->from(array('a' => $this->_name), array('mapPlayerId', 'playerId'))
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', array('computer'))
-            ->where('a."gameId" = ?', $this->_gameId)
-            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL');
+            ->from(array('a' => $this->_name), 'playerId')
+            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', 'computer')
+            ->join(array('c' => 'mapplayers'), 'a . "mapPlayerId" = c . "mapPlayerId"', 'mapCastleId')
+            ->where('a . ' . $this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
+            ->where('a . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL');
 
         return $this->selectAll($select);
     }

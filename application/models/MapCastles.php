@@ -50,7 +50,13 @@ class Application_Model_MapCastles extends Game_Db_Table_Abstract
             ->where('capital = true')
             ->order('mapCastleId');
 
-        return $this->selectAll($select);
+        $startPositions = array();
+
+        foreach ($this->selectAll($select) as $position) {
+            $startPositions[$position['mapCastleId']] = $position;
+        }
+
+        return $startPositions;
     }
 
     public function add($x, $y)

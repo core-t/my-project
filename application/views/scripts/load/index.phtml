@@ -27,13 +27,12 @@
                     <td><?php echo $game['numberOfPlayers'] ?></td>
                     <td style="width: 180px">
                         <?php foreach ($game['players'] as $v): ?>
-                            <div><?php echo $v['firstName'] . ' ' . $v['lastName'] ?></div>
+                            <div style="height: 28px;"><?php echo $v['firstName'] . ' ' . $v['lastName'] ?></div>
                         <?php endforeach ?>
                     </td>
-                    <td style="text-shadow: none;width: 160px">
+                    <td style="width: 160px">
                         <?php foreach ($game['players'] as $v): ?>
-                            <div
-                                style="background: <?php echo $v['backgroundColor'] ?>; color: <?php echo $v['textColor'] ?>"><?php echo $v['longName'] ?></div>
+                            <div style="height: 28px;"><div class="left"><img src="/img/game/heroes/<?php echo $v['color'] ?>.png" /></div><div class="right" style="line-height: 28px"><?php echo $v['longName'] ?></div></div>
                         <?php endforeach ?>
                     </td>
                     <td><?php echo strftime('%F %H:%M:%S', strtotime($game['begin'])) ?></td>
@@ -52,6 +51,7 @@
 
 <script type="text/javascript">
     $('.trlink')
+        .css('cursor', 'pointer')
         .mouseover(function () {
             $('#' + this.id).css('background', 'transparent url(../img/nav_bg.png) repeat');
         })

@@ -22,23 +22,23 @@ class SetupController extends Game_Controller_Gui
 
         $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
 
-        $modelGame = new Application_Model_Game($gameId);
-        $modelGame->updateGameMaster($this->_namespace->player['playerId']);
+        $mGame = new Application_Model_Game($gameId);
+        $mGame->updateGameMaster($this->_namespace->player['playerId']);
 
-        if ($modelGame->getGameMasterId() != $this->_namespace->player['playerId']) {
-            if ($modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
-                $modelGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
+        if ($mGame->getGameMasterId() != $this->_namespace->player['playerId']) {
+            if ($mGame->isPlayerInGame($this->_namespace->player['playerId'])) {
+                $mGame->disconnectFromGame($gameId, $this->_namespace->player['playerId']);
             }
-            $modelGame->joinGame($this->_namespace->player['playerId']);
-        } elseif (!$modelGame->isPlayerInGame($this->_namespace->player['playerId'])) {
-            $modelGame->joinGame($this->_namespace->player['playerId']);
+            $mGame->joinGame($this->_namespace->player['playerId']);
+        } elseif (!$mGame->isPlayerInGame($this->_namespace->player['playerId'])) {
+            $mGame->joinGame($this->_namespace->player['playerId']);
         }
 
-        $mMapPlayers = new Application_Model_MapPlayers($modelGame->getMapId());
+        $mMapPlayers = new Application_Model_MapPlayers($mGame->getMapId());
 
         $this->view->mapPlayers = $mMapPlayers->getAll();
-        $this->view->numberOfPlayers = $modelGame->getNumberOfPlayers();
-        $this->view->accessKey = $modelGame->getAccessKey($this->_namespace->player['playerId']);
+        $this->view->numberOfPlayers = $mGame->getNumberOfPlayers();
+        $this->view->accessKey = $mGame->getAccessKey($this->_namespace->player['playerId']);
         $this->view->gameId = $gameId;
         $this->view->player = $this->_namespace->player;
     }

@@ -76,16 +76,7 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
                 $playerColors = $mMapPlayers->getMapPlayerIds();
-                $startCastles = $mMapCastles->getDefaultStartPositions();
-
-                $startPositions = array();
-
-                foreach ($playerColors as $key => $mapPlayerId) {
-                    $startPositions[$mapPlayerId] = array(
-                        'id' => $startCastles[$key]['mapCastleId'],
-                        'position' => array('x' => $startCastles[$key]['x'], 'y' => $startCastles[$key]['y'])
-                    );
-                }
+                $startPositions = $mMapCastles->getDefaultStartPositions();
 
                 foreach ($players as $player) {
                     $mHero = new Application_Model_Hero($player['playerId'], $db);
@@ -96,11 +87,11 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     }
                     $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
 
-                    $armyId = $mArmy->createArmy($startPositions[$player['mapPlayerId']]['position'], $player['playerId']);
+                    $armyId = $mArmy->createArmy($startPositions[$player['mapCastleId']], $player['playerId']);
 
                     $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
                     $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
-                    Cli_Model_Database::addCastle($user->parameters['gameId'], $startPositions[$player['mapPlayerId']]['id'], $player['playerId'], $db);
+                    Cli_Model_Database::addCastle($user->parameters['gameId'], $player['mapCastleId'], $player['playerId'], $db);
                 }
 
                 $token = array('type' => 'start');
