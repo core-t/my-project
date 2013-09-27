@@ -56,6 +56,7 @@ $(document).ready(function () {
     adjustGui();
     fieldsCopy();
     unitsReformat();
+    artifactsReformat()
     prepareButtons();
     startWebSocket();
 

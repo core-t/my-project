@@ -67,6 +67,25 @@ var Message = {
                     .click(function () {
                         Websocket.inventoryAdd(selectedArmy.heroes[0].heroId, $(this).attr('id'));
                     })
+                    .mousemove(function (e) {
+                        $('.zoomWindow #des' + $(this).attr('id')).remove();
+                        $('.zoomWindow').append(
+                            $('<div>')
+                                .attr('id', 'des' + $(this).attr('id'))
+                                .addClass('artifactDescription')
+                                .css({
+                                    top: e.pageY + 'px',
+                                    left: e.pageX + 'px'
+
+                                })
+                                .append(
+                                    '<h3>' + artifacts[$(this).attr('id')].name + '</h3><div>' + artifacts[$(this).attr('id')].description + '</div>'
+                                )
+                        );
+                    })
+                    .mouseleave(function () {
+                        $('.zoomWindow #des' + $(this).attr('id')).remove();
+                    })
             );
         }
 

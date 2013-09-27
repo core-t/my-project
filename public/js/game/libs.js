@@ -282,17 +282,6 @@ function fieldsCopy() {
     }
 }
 
-function unitsReformat() {
-    for (i in units) {
-        if (i == 0) {
-            continue;
-        }
-        units[i]['f'] = units[i].modMovesForest;
-        units[i]['s'] = units[i].modMovesSwamp;
-        units[i]['m'] = units[i].modMovesHills;
-    }
-}
-
 function adjustGui() {
     documentWidth = $(document).width();
     documentHeigh = $(document).height() - 22;
@@ -338,6 +327,14 @@ function adjustGui() {
     }
 }
 
-//function getUnitImage(color, name) {
-//    return '/img/game/units/' + color + '/' + name + '.png';
-//}
+function artifactsReformat() {
+    for (i in artifacts) {
+        for (j in artifacts[i]) {
+            if (artifacts[i][j]) {
+                console.log(j);
+                console.log(artifacts[i][j]);
+            }
+        }
+        break;
+    }
+}

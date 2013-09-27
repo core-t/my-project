@@ -573,6 +573,17 @@ function computerArmiesUpdate(armies, color) {
 
 // *** UNITS ***
 
+function unitsReformat() {
+    for (i in units) {
+        if (i == 0) {
+            continue;
+        }
+        units[i]['f'] = units[i].modMovesForest;
+        units[i]['s'] = units[i].modMovesSwamp;
+        units[i]['m'] = units[i].modMovesHills;
+    }
+}
+
 var Unit = {
     getId: function (name) {
         for (i in units) {
