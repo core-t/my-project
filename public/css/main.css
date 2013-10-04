@@ -59,7 +59,16 @@ hr {
 }
 
 a {
+
     text-decoration: none;
+}
+
+.paginationControl a {
+    color: yellow;
+}
+
+.paginationControl a:hover {
+    color: #fff;
 }
 
 a:hover {
@@ -188,6 +197,7 @@ th {
     text-align: center;
     background: url('../img/bg_0.jpg');
     padding: 4px;
+    color: #fff;
 }
 
 td {
@@ -218,7 +228,7 @@ td {
     color: orange;
 }
 
-label{
+label {
     color: #000;
     text-shadow: 0 0 5px grey;
 }
@@ -231,4 +241,8 @@ select {
     border-radius: 10px;
     padding: 6px;
 
+}
+
+p#info {
+    text-align: center;
 }

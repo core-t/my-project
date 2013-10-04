@@ -16,7 +16,11 @@ function refresh() {
 
         myGames.html('');
         myGames.append(th);
+
+        var j = 0;
+
         for (i in result) {
+            j++;
             myGames.append(
                 $('<tr>')
                     .addClass('gid' + result[i].gameId)
@@ -35,6 +39,9 @@ function refresh() {
             $('#mygames td').mouseover(function () {
                 $('#mygames td').css('cursor', 'pointer')
             });
+        }
+        if(j==0 ){
+            $('#info').html('Brak otwartych gier');
         }
     });
 }
