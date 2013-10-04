@@ -645,6 +645,7 @@
 
 #timerBox table td, #timerBox table th {
     padding: 1px;
+    background: none;
 }
 
 #timerBox td {
@@ -689,7 +690,7 @@
 #armyBox #nameBox {
     line-height: 14px;
     margin: 5px;
-    background: url("../img/bg_0.jpg");
+    /*background: url("../img/bg_0.jpg");*/
 }
 
 #armyBox #attrBox {
@@ -699,7 +700,7 @@
 
 #armyBox #attrBox div {
     width: 73px;
-    background: url("../img/bg_0.jpg");
+    /*background: url("../img/bg_0.jpg");*/
 }
 
 .text-right {
@@ -775,4 +776,12 @@
     min-width: 200px;
     min-height: 200px;
     z-index: 28000;
+}
+
+#menuTop {
+    border-bottom: none;
+}
+
+html {
+    background: #000;
 }

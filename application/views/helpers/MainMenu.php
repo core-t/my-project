@@ -10,11 +10,11 @@ class zend_View_Helper_MainMenu extends Zend_View_Helper_Abstract
         $this->view->placeholder('mainMenu')->append('
 <div>
     <ul>
-        <li>
+        <!--<li>
             <a href="/' . $lang . '/index" class="button">' . $this->view->translate('Home') . '</a>
-        </li>
+        </li>-->
         <li>
-            <a href=" /' . $lang . '/new" class="button">' . $this->view->translate('New game') . '</a>
+            <a href=" /' . $lang . '/new" class="button">' . $this->view->translate('Play') . '</a>
         </li>
         <li>
             <a href="/' . $lang . '/load" class="button">' . $this->view->translate('Load game') . '</a>
