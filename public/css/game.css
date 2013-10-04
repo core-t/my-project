@@ -230,7 +230,7 @@
     border-top: none;
     border-bottom-left-radius: 10px;
     width: 230px;
-    height: 300px;
+    height: 270px;
 }
 
 #playersLabel {
@@ -297,7 +297,7 @@
 #turn {
     width: 80px;
     position: absolute;
-    top: 125px;
+    top: 95px;
     left: 80px;
     z-index: 28000;
 }
@@ -319,7 +319,7 @@
 }
 
 #armyButtonsBox div div.armyButton {
-    height: 26px;
+    /*height: 26px;*/
 }
 
 .message {
@@ -567,9 +567,9 @@
 
 #turnBox {
     position: absolute;
-    top: 260px;
-    margin: 2px;
-    height: 12px;
+    top: 230px;
+    /*margin: 2px;*/
+    /*height: 12px;*/
     width: 220px;
 }
 
@@ -604,9 +604,11 @@
 }
 
 #chatBox input {
-    width: 400px;
-    height: 16px;
+    width: 382px;
+    line-height: 23px;
     border: 1px solid #000;
+    margin: 2px;
+
     -webkit-touch-callout: text;
     -webkit-user-select: text;
     -khtml-user-select: text;
@@ -626,8 +628,9 @@
 
 #timerBox {
     top: 602px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    left: -1px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     width: 230px;
 }
 
@@ -725,6 +728,7 @@
     height: 32px;
     cursor: pointer;
     float: right;
+    margin-right: 10px;
 }
 
 .message #income {
@@ -745,7 +749,7 @@
 
 #playersCanvas {
     position: absolute;
-    top: 30px;
+    /*top: 30px;*/
     left: 10px;
     /*background: white;*/
 }

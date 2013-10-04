@@ -290,11 +290,11 @@ function adjustGui() {
     messageLeft = documentWidth / 2 - 160;
 
     var left = documentWidth - 237;
-    var chatLeft = documentWidth - 500;
-    var top = documentHeigh - 153;
+    var chatLeft = documentWidth - 522;
+    var chatTop = documentHeigh - 183;
     $('#chatBox').css({
         'left': chatLeft + 'px',
-        'top': top + 'px'
+        'top': chatTop + 'px'
     });
     var goldBoxLeft = left / 2;
     $('#goldBox').css({
@@ -306,9 +306,9 @@ function adjustGui() {
     $('#armyBox').css({
         'left': left + 'px'
     });
-    $('#timerBox').css({
-        'left': left + 'px'
-    });
+//    $('#timerBox').css({
+//        'left': left + 'px'
+//    });
 
     var zoomPadLayoutHeight = parseInt($('#map').css('height'));
 
