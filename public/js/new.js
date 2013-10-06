@@ -41,7 +41,7 @@ function refresh() {
             });
         }
         if(j==0 ){
-            $('#info').html('Brak otwartych gier');
+            $('#info').html(info);
         }
     });
 }

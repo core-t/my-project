@@ -33,16 +33,22 @@
                     </td>
                     <td style="width: 160px">
                         <?php foreach ($game['players'] as $v): ?>
-                            <div style="height: 28px;"><div class="left"><img src="/img/game/heroes/<?php echo $v['color'] ?>.png" /></div><div class="right" style="line-height: 28px"><?php echo $v['longName'] ?></div></div>
+                            <div style="height: 28px;">
+                                <div class="left"><img src="/img/game/heroes/<?php echo $v['color'] ?>.png"/></div>
+                                <div class="right" style="line-height: 28px"><?php echo $v['longName'] ?></div>
+                            </div>
                         <?php endforeach ?>
                     </td>
                     <td><?php echo strftime('%F %H:%M:%S', strtotime($game['begin'])) ?></td>
                 </tr>
-
             <?php endforeach ?>
         <?php endif ?>
     </table>
+    <?php if (!count($this->myGames)): ?>
+        <p id="info"><?php echo $this->translate('There are no games to load') ?></p>
+    <?php endif ?>
 </div>
+<br/>
 <?php echo $this->paginationControl($this->myGames, 'Sliding', 'pagination_control.phtml'); ?>
 <ul>
     <li>

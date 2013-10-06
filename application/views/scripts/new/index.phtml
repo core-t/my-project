@@ -1,8 +1,8 @@
-<h1><?php echo $this->translate('Play')?></h1>
-<h2><?php echo $this->translate('Create new game')?>:</h2>
+<h1><?php echo $this->translate('Play') ?></h1>
+<h2><?php echo $this->translate('Create new game') ?>:</h2>
 <?php echo $this->form; ?>
 
-<h2><?php echo $this->translate('Join one of the games listed below')?>:</h2>
+<h2><?php echo $this->translate('Join one of the games listed below') ?>:</h2>
 <div class="table">
     <table></table>
     <p id="info"></p>
@@ -13,6 +13,9 @@
         <a class="button" href="/">&laquo; <?php echo $this->translate('Back') ?></a>
     </li>
     <li>
-        <a class="button" href="javascript:refresh()"><?php echo $this->translate('Refresh')?></a>
+        <a class="button" href="javascript:refresh()"><?php echo $this->translate('Refresh') ?></a>
     </li>
 </ul>
+<script type="text/javascript">
+    var info = '<?php echo $this->translate('There are no open games') ?>';
+</script>

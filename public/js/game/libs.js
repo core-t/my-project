@@ -284,14 +284,14 @@ function fieldsCopy() {
 
 function adjustGui() {
     documentWidth = $(document).width();
-    documentHeigh = $(document).height() - 22;
+    documentHeigh = $(document).height() - 35;
     $('.zoomWindow').css('height', documentHeigh + 'px');
 
     messageLeft = documentWidth / 2 - 160;
 
     var left = documentWidth - 237;
-    var chatLeft = documentWidth - 522;
-    var chatTop = documentHeigh - 183;
+    var chatLeft = documentWidth - 507;
+    var chatTop = documentHeigh - 169;
     $('#chatBox').css({
         'left': chatLeft + 'px',
         'top': chatTop + 'px'

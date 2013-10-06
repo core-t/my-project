@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-03 13:42+0100\n"
-"PO-Revision-Date: 2013-03-03 13:50+0100\n"
+"POT-Creation-Date: 2013-10-06 18:20+0100\n"
+"PO-Revision-Date: 2013-10-06 18:20+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -25,11 +25,11 @@ msgstr "Wyloguj"
 
 #: application/views/helpers/MainMenu.php:14
 msgid "Home"
-msgstr ""
+msgstr "Start"
 
 #: application/views/helpers/MainMenu.php:17
-msgid "New game"
-msgstr "Nowa gra"
+msgid "Play"
+msgstr "Graj"
 
 #: application/views/helpers/MainMenu.php:20
 msgid "Load game"
@@ -40,14 +40,18 @@ msgid "Hero"
 msgstr "Bohater"
 
 #: application/views/helpers/MainMenu.php:26
+msgid "Profile"
+msgstr "Profil"
+
+#: application/views/helpers/MainMenu.php:29
 msgid "Stats"
 msgstr "Statystyki"
 
-#: application/views/helpers/MainMenu.php:29
+#: application/views/helpers/MainMenu.php:32
 msgid "Map editor"
 msgstr "Edytor map"
 
-#: application/views/helpers/MainMenu.php:32
+#: application/views/helpers/MainMenu.php:35
 msgid "Market"
 msgstr "Market"
 
@@ -55,47 +59,71 @@ msgstr "Market"
 msgid "Version"
 msgstr "Wersja"
 
-#: application/forms/Creategame.php:12
+#: application/forms/NumberOfPlayers.php:25
 msgid "Select number of players"
 msgstr "Wybierz ilość graczy"
 
-#: application/forms/Creategame.php:22
+#: application/forms/Password.php:9
+#: application/forms/Auth.php:15
+msgid "Password"
+msgstr "Hasło"
+
+#: application/forms/Password.php:16
+msgid "Repeat password"
+msgstr "Powtórz hasło"
+
+#: application/forms/Creategame.php:12
+msgid "Select map"
+msgstr "Wybierz mapę"
+
+#: application/forms/Creategame.php:18
 msgid "Create game"
 msgstr "Utwórz grę"
 
 #: application/forms/Auth.php:10
-#: application/forms/Registration.php:26
 msgid "Email"
 msgstr "E-mail"
-
-#: application/forms/Auth.php:15
-#: application/forms/Registration.php:41
-msgid "Password"
-msgstr "Hasło"
 
 #: application/forms/Auth.php:19
 msgid "Sign in"
 msgstr "Zaloguj się"
 
-#: application/forms/Registration.php:12
-msgid "First name"
-msgstr "Imię"
-
-#: application/forms/Registration.php:19
-msgid "Last name"
-msgstr "Nazwisko"
-
-#: application/forms/Registration.php:47
-msgid "Repeat password"
-msgstr "Powtórz hasło"
-
-#: application/forms/Registration.php:55
+#: application/forms/Registration.php:32
 msgid "Register"
 msgstr "Rejestracja"
 
-#: application/controllers/LoginController.php:27
+#: application/forms/Player.php:9
+msgid "First name"
+msgstr "Imię"
+
+#: application/forms/Player.php:16
+msgid "Last name"
+msgstr "Nazwisko"
+
+#: application/controllers/LoginController.php:25
 msgid "Incorrect login or password!"
 msgstr "Nieprawidłowy e-mail lub hasło!"
+
+#: application/controllers/ProfileController.php:13
+#: application/controllers/ProfileController.php:16
+msgid "Submit"
+msgstr "Potwierdź"
+
+#: application/controllers/NewController.php:36
+msgid "Game master"
+msgstr "Mistrz gry"
+
+#: application/controllers/NewController.php:36
+msgid "Current number of players"
+msgstr "Aktualna ilość graczy"
+
+#: application/controllers/NewController.php:36
+msgid "Max number of players"
+msgstr "Max ilość graczy"
+
+#: application/controllers/NewController.php:36
+msgid "Date"
+msgstr "Data"
 
 #: library/Coret/View/Helper/Language.php:12
 #: library/Coret/View/Helper/Language.php:26
@@ -120,17 +148,19 @@ msgstr ""
 msgid "Wszelkie prawa zastrzeżone"
 msgstr ""
 
-#: application/modules/admin/views/scripts/pagination_control.phtml:5
+#: application/modules/admin/views/scripts/pagination_control.phtml:6
+msgid "First"
+msgstr "Pierwszy"
+
+#: application/modules/admin/views/scripts/pagination_control.phtml:7
 msgid "Back"
 msgstr "Cofnij"
 
-#: application/modules/admin/views/scripts/oferta/delete.phtml:3
-#: application/modules/admin/views/scripts/player/delete.phtml:3
+#: application/modules/admin/views/scripts/artifact/delete.phtml:5
 msgid "Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
 msgstr ""
 
-#: application/modules/admin/views/scripts/oferta/delete.phtml:7
-#: application/modules/admin/views/scripts/player/delete.phtml:7
+#: application/modules/admin/views/scripts/artifact/delete.phtml:6
 msgid "Tak"
 msgstr ""
 
@@ -142,6 +172,34 @@ msgstr "Poprzednia"
 msgid "Next"
 msgstr "Następna"
 
+#: application/views/scripts/setup/index.phtml:1
+msgid "New game"
+msgstr "Nowa gra"
+
+#: application/views/scripts/setup/index.phtml:2
+msgid "Maximum number of players"
+msgstr "Maksymalna ilość graczy"
+
+#: application/views/scripts/setup/index.phtml:3
+msgid "Players"
+msgstr "Gracze"
+
+#: application/views/scripts/setup/index.phtml:5
+msgid "Player name & color"
+msgstr "Nazwa i kolor gracza"
+
+#: application/views/scripts/setup/index.phtml:6
+msgid "Select your color"
+msgstr "Wybierz swój kolor"
+
+#: application/views/scripts/setup/index.phtml:7
+msgid "Human/AI"
+msgstr "Człowiek/SI"
+
+#: application/views/scripts/setup/index.phtml:24
+msgid "The list of people who have not chosen their color"
+msgstr "Lista osób, które nie wybrały koloru"
+
 #: application/views/scripts/new/index.phtml:2
 msgid "Create new game"
 msgstr "Utwórz nową grę"
@@ -150,145 +208,179 @@ msgstr "Utwórz nową grę"
 msgid "Join one of the games listed below"
 msgstr "Dołącz do jednej z gier z listy poniżej"
 
-#: application/views/scripts/new/index.phtml:14
+#: application/views/scripts/new/index.phtml:16
 msgid "Refresh"
 msgstr "Odświerz"
 
-#: application/views/scripts/new/index.phtml:18
-msgid "Game master"
-msgstr "Mistrz gry"
+#: application/views/scripts/new/index.phtml:20
+msgid "There are no open games"
+msgstr "Brak otwartych gier"
 
-#: application/views/scripts/new/index.phtml:18
-msgid "Current number of players"
-msgstr "Aktualna ilość graczy"
+#: application/views/scripts/profile/index.phtml:3
+msgid "Change your data"
+msgstr "Zmień swoje dane"
 
-#: application/views/scripts/new/index.phtml:18
-msgid "Max number of players"
-msgstr "Max ilość graczy"
+#: application/views/scripts/profile/index.phtml:6
+msgid "Change your password"
+msgstr "Zmień swoje hasło"
 
-#: application/views/scripts/new/index.phtml:18
-msgid "Date"
-msgstr "Data"
+#: application/views/scripts/hero/index.phtml:2
+msgid "Hero statistics"
+msgstr "Statystyki bohatera"
 
-#: application/views/scripts/gamesetup/index.phtml:2
-msgid "Maximum number of players"
-msgstr "Maksymalna ilość graczy"
+#: application/views/scripts/hero/index.phtml:4
+msgid "Attack points"
+msgstr "Punkty ataku"
 
-#: application/views/scripts/gamesetup/index.phtml:3
-msgid "Players"
-msgstr "Gracze"
+#: application/views/scripts/hero/index.phtml:5
+msgid "Defense points"
+msgstr "Punkty obrony"
 
-#: application/views/scripts/gamesetup/index.phtml:5
-msgid "Player name & color"
-msgstr "Nazwa i kolor gracza"
+#: application/views/scripts/hero/index.phtml:6
+msgid "Number of moves"
+msgstr "Ilość ruchów"
 
-#: application/views/scripts/gamesetup/index.phtml:6
-msgid "Select your color"
-msgstr "Wybierz swój kolor"
+#: application/views/scripts/hero/index.phtml:9
+msgid "Artifacts"
+msgstr "Artefakty"
 
-#: application/views/scripts/gamesetup/index.phtml:7
-msgid "Human/AI"
-msgstr "Człowiek/SI"
+#: application/views/scripts/hero/index.phtml:11
+msgid "Chest"
+msgstr "Skrzynia"
 
-#: application/views/scripts/gamesetup/index.phtml:19
-msgid "The list of people who have not chosen their color"
-msgstr "Lista osób, które nie wybrały koloru"
-
-#: application/views/scripts/load/index.phtml:1
-msgid "Select which game you want to load"
-msgstr "Wybierz, którą grę chcesz wczytać"
-
-#: application/views/scripts/load/index.phtml:5
-msgid "Your color"
-msgstr "Twój kolor"
-
-#: application/views/scripts/load/index.phtml:6
-msgid "Turn number"
-msgstr "Numer tury"
-
-#: application/views/scripts/load/index.phtml:7
-msgid "Number of Players"
-msgstr "Ilość graczy"
-
-#: application/views/scripts/load/index.phtml:9
-msgid "Start date"
-msgstr "Data rozpoczęcia"
-
-#: application/layouts/scripts/game.phtml:16
-msgid "Quit game"
-msgstr "Opuść grę"
-
-#: application/layouts/scripts/game.phtml:27
-msgid "Terrain"
-msgstr "Teren"
-
-#: application/layouts/scripts/game.phtml:31
-msgid "Income"
-msgstr "Przychód"
-
-#: application/layouts/scripts/game.phtml:35
-msgid "Costs"
-msgstr "Koszty"
-
-#: application/layouts/scripts/game.phtml:39
-msgid "Treasure"
-msgstr "Skarbiec"
-
-#: application/layouts/scripts/game.phtml:76
-msgid "Next turn"
-msgstr "Następna tura"
-
-#: application/layouts/scripts/game.phtml:80
+#: application/views/scripts/hero/index.phtml:13
 msgid "Name"
 msgstr "Nazwa"
 
-#: application/layouts/scripts/game.phtml:83
+#: application/views/scripts/hero/index.phtml:14
+msgid "Quantity"
+msgstr "Ilość"
+
+#: application/views/scripts/load/index.phtml:2
+msgid "Select which game you want to load"
+msgstr "Wybierz, którą grę chcesz wczytać"
+
+#: application/views/scripts/load/index.phtml:9
+msgid "Player turn"
+msgstr "Tura gracza"
+
+#: application/views/scripts/load/index.phtml:11
+msgid "Turn nr"
+msgstr "Numer tury"
+
+#: application/views/scripts/load/index.phtml:12
+msgid "Number of Players"
+msgstr "Ilość graczy"
+
+#: application/views/scripts/load/index.phtml:13
+msgid "Player name"
+msgstr "Nazwa gracza"
+
+#: application/views/scripts/load/index.phtml:14
+msgid "Player color"
+msgstr "Kolor gracza"
+
+#: application/views/scripts/load/index.phtml:15
+msgid "Start date"
+msgstr "Data rozpoczęcia"
+
+#: application/views/scripts/load/index.phtml:48
+msgid "There are no games to load"
+msgstr "Brak gry do załadowania"
+
+#: application/layouts/scripts/game.phtml:17
+msgid "Quit game"
+msgstr "Opuść grę"
+
+#: application/layouts/scripts/game.phtml:28
+msgid "Terrain"
+msgstr "Teren"
+
+#: application/layouts/scripts/game.phtml:32
+msgid "Income"
+msgstr "Przychód"
+
+#: application/layouts/scripts/game.phtml:36
+msgid "Costs"
+msgstr "Koszty"
+
+#: application/layouts/scripts/game.phtml:40
+msgid "Treasure"
+msgstr "Skarbiec"
+
+#: application/layouts/scripts/game.phtml:49
+msgid "Surrender"
+msgstr "Poddaj się"
+
+#: application/layouts/scripts/game.phtml:51
+msgid "Next turn"
+msgstr "Następna tura"
+
+#: application/layouts/scripts/game.phtml:59
 msgid "Moves"
 msgstr "Ruchy"
 
-#: application/layouts/scripts/game.phtml:85
+#: application/layouts/scripts/game.phtml:61
 msgid "Attack"
 msgstr "Atak"
 
-#: application/layouts/scripts/game.phtml:87
+#: application/layouts/scripts/game.phtml:63
 msgid "Defense"
 msgstr "Obrona"
 
-#: application/layouts/scripts/game.phtml:94
+#: application/layouts/scripts/game.phtml:70
 msgid "Disband army"
 msgstr "Rozwiąż armię"
 
-#: application/layouts/scripts/game.phtml:97
-msgid "Split army"
-msgstr "Podziel amię"
-
-#: application/layouts/scripts/game.phtml:100
-msgid "Army status"
-msgstr "Status armii"
-
-#: application/layouts/scripts/game.phtml:104
-msgid "Search ruins"
-msgstr "Przeszukaj ruiny"
-
-#: application/layouts/scripts/game.phtml:107
-msgid "Fortify army"
-msgstr "Fortyfikuj armię"
-
-#: application/layouts/scripts/game.phtml:111
-msgid "Skip in this turn"
-msgstr "Pomiń w tej turze"
-
-#: application/layouts/scripts/game.phtml:115
+#: application/layouts/scripts/game.phtml:74
 msgid "Unselect army"
 msgstr "Odznacz armię"
 
-#: application/layouts/scripts/game.phtml:119
+#: application/layouts/scripts/game.phtml:78
+msgid "Search ruins"
+msgstr "Przeszukaj ruiny"
+
+#: application/layouts/scripts/game.phtml:82
+msgid "Show artifacts"
+msgstr "Pokaż artefakty"
+
+#: application/layouts/scripts/game.phtml:85
+msgid "Split army"
+msgstr "Podziel amię"
+
+#: application/layouts/scripts/game.phtml:89
+msgid "Army status"
+msgstr "Status armii"
+
+#: application/layouts/scripts/game.phtml:92
+msgid "Fortify army"
+msgstr "Fortyfikuj armię"
+
+#: application/layouts/scripts/game.phtml:96
+msgid "Skip in this turn"
+msgstr "Pomiń w tej turze"
+
+#: application/layouts/scripts/game.phtml:100
 msgid "Find next army"
 msgstr "Znajdź następną"
 
-#: application/layouts/scripts/game.phtml:132
-msgid "Chat"
-msgstr "Czat"
+#: application/layouts/scripts/game.phtml:108
+msgid "Color"
+msgstr "Kolor"
+
+#: application/layouts/scripts/game.phtml:110
+msgid "Time spend"
+msgstr "Czas"
+
+#: application/layouts/scripts/game.phtml:120
+msgid "Send"
+msgstr "Wyślij"
+
+#~ msgid "Your color"
+#~ msgstr "Twój kolor"
+
+#~ msgid "Chat"
+#~ msgstr "Czat"
 
 #~ msgid "Login"
 #~ msgstr "Login"
