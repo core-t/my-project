@@ -230,7 +230,7 @@
     border-top: none;
     border-bottom-left-radius: 10px;
     width: 230px;
-    height: 270px;
+    height: 216px;
 }
 
 #playersLabel {
@@ -297,8 +297,8 @@
 #turn {
     width: 80px;
     position: absolute;
-    top: 95px;
-    left: 80px;
+    top: 75px;
+    left: 60px;
     z-index: 28000;
 }
 
@@ -567,7 +567,7 @@
 
 #turnBox {
     position: absolute;
-    top: 230px;
+    top: 185px;
     /*margin: 2px;*/
     /*height: 12px;*/
     width: 220px;
@@ -584,7 +584,7 @@
 }
 
 #chatBox #chatWindow {
-    height: 121px;
+    height: 124px;
     border: none;
     overflow: hidden;
     color: #fff;
@@ -684,7 +684,7 @@
 }
 
 #armyBox {
-    top: 316px;
+    top: 237px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     width: 230px;
@@ -718,7 +718,7 @@
 }
 
 #nextTurn {
-    margin-top: 10px;
+    /*margin-top: 10px;*/
 }
 
 #surrender {
@@ -728,7 +728,7 @@
     height: 32px;
     cursor: pointer;
     float: right;
-    margin-right: 10px;
+    /*margin-right: 10px;*/
 }
 
 .message #income {

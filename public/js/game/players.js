@@ -1,8 +1,8 @@
 // *** PLAYERS ***
 
 var Players = {
-    circle_center_x: 110,
-    circle_center_y: 110,
+    circle_center_x: 90,
+    circle_center_y: 90,
     canvas: null,
     ctx: null,
     init: function () {
