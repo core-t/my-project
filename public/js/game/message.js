@@ -58,6 +58,8 @@ var Message = {
         );
     },
     showArtifacts: function () {
+        removeM();
+
         var htmlChest = $('<div>').attr('id', 'chest');
         for (i in players[my.color].chest) {
             htmlChest.append(

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-06 18:20+0100\n"
-"PO-Revision-Date: 2013-10-06 18:20+0100\n"
+"POT-Creation-Date: 2013-10-06 23:48+0100\n"
+"PO-Revision-Date: 2013-10-06 23:48+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -172,9 +172,14 @@ msgstr "Poprzednia"
 msgid "Next"
 msgstr "Następna"
 
+#: application/views/scripts/setup/start.phtml:1
 #: application/views/scripts/setup/index.phtml:1
 msgid "New game"
 msgstr "Nowa gra"
+
+#: application/views/scripts/setup/start.phtml:2
+msgid "Waiting for other players"
+msgstr "Czekam na innych graczy"
 
 #: application/views/scripts/setup/index.phtml:2
 msgid "Maximum number of players"
