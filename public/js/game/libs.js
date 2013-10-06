@@ -224,7 +224,7 @@ function prepareButtons() {
         nextTurnM()
     });
     $('#surrender').click(function () {
-        surrenderM()
+        Message.surrender()
     });
     $('#nextArmy').click(function () {
         findNextArmy()

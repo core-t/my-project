@@ -95,8 +95,9 @@ function startWebSocket() {
                             case 'null':
                                 simpleM('You have found nothing.');
                                 break
-                            case 'artefact':
-                                simpleM('You have found an ancient artefact.');
+                            case 'artifact':
+                                simpleM('You have found an ancient artifact - "' + artifacts[r.find[1]].name + '".');
+                                Chest.update(r.color, r.find[1]);
                                 break
                             case 'empty':
                                 simpleM('Ruins are empty.');

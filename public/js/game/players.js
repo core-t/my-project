@@ -5,13 +5,15 @@ var Players = {
     circle_center_y: 90,
     canvas: null,
     ctx: null,
+    length: 0,
     init: function () {
         this.canvas = $('#playersCanvas');
         this.ctx = this.canvas[0].getContext('2d');
+        this.length = Object.size(players);
     },
     draw: function () {
         var r_length = 100;
-        var r_angle = Math.PI * 2 / Object.size(players);
+        var r_angle = Math.PI * 2 / this.length;
 
         var i = 0;
         for (shortName in players) {
@@ -52,8 +54,6 @@ var Players = {
             i++;
 //            break;
         }
-
-
     },
     turn: function () {
         this.ctx.beginPath();

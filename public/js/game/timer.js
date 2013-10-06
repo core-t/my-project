@@ -64,7 +64,7 @@ var timer = {
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
         $('#timerBox table')
             .append($('<tr>')
-                .append($('<td>').html(turn.color))
+                .append($('<td>').html($('<img>').attr('src', Hero.getImage(turn.color))))
                 .append($('<td>').html(turn.nr))
                 .append(
                     $('<td id="time">')
@@ -76,8 +76,9 @@ var timer = {
                 )
             )
 
-        var count = $('#timerBox tr').length;
-        if (count > 4) {
+        var count = $('#timerBox tr').length - 1;
+
+        if (count > Players.length) {
             var i = 0;
             $('#timerBox tr').each(function () {
                 i++;

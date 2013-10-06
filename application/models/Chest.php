@@ -71,6 +71,12 @@ class Application_Model_Chest extends Game_Db_Table_Abstract
             ->from($this->_name, array('artifactId', 'quantity'))
             ->where($this->_db->quoteIdentifier($this->_foreign_1) . ' = ?', $this->_playerId);
 
-        return $this->_db->query($select)->fetchAll();
+        $chest = array();
+
+        foreach ($this->selectAll($select) as $row) {
+            $chest[$row['artifactId']] = $row;
+        }
+
+        return $chest;
     }
 }

@@ -99,10 +99,6 @@ var Message = {
                     .click(function () {
                         Websocket.inventoryDel(selectedArmy.heroes[0].heroId, $(this).attr('id'));
                     })
-//                    .mouseover(function (e) {
-//                        console.log(e);
-//
-//                    })
                     .mousemove(function (e) {
                         $('.zoomWindow #des' + $(this).attr('id')).remove();
                         $('.zoomWindow').append(
