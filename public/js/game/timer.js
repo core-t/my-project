@@ -6,7 +6,7 @@ var timer = {
 //        timer.clear();
         $('#timerBox table')
             .append($('<tr>')
-                .append($('<td>').html(turn.color))
+                .append($('<td>').html($('<img>').attr('src', Hero.getImage(turn.color))))
                 .append($('<td>').html(turn.nr))
                 .append(
                     $('<td id="time">')
