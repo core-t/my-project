@@ -221,7 +221,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                 break;
 
             case 'inventoryAdd':
-                $cliInventory = new Cli_Model_InventoryAdd($dataIn['heroId'], $dataIn['artifactId'], $user, $db, $this);
+                new Cli_Model_InventoryAdd($dataIn['heroId'], $dataIn['artifactId'], $user, $db, $this);
                 break;
 
             case 'inventoryDel':
@@ -229,7 +229,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                 break;
 
             case 'surrender':
-
+                new Cli_Model_Surrender($user, $db, $this);
                 break;
         }
     }

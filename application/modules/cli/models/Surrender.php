@@ -11,8 +11,8 @@ class Cli_Model_Surrender
         }
 
         $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
-        foreach ($mCastlesInGame->getPlayerCastles($user->parameters['playerId']) as $castle) {
-            $mCastlesInGame->razeCastle($castle['castleId'], $user->parameters['playerId']);
+        foreach (array_keys($mCastlesInGame->getPlayerCastles($user->parameters['playerId'])) as $castleId) {
+            $mCastlesInGame->razeCastle($castleId, $user->parameters['playerId']);
         }
 
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
