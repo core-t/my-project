@@ -65,7 +65,9 @@ class Cli_Model_ComputerMainBlocks
         $l = new Coret_Model_Logger();
         $army = $mArmy->getArmy();
         if (!$enemies) {
-            throw new Exception('Wygrałem!?');
+            return array(
+                'action' => 'end'
+            );
         } else {
             foreach ($enemies as $e) {
                 $castleId = Application_Model_Board::isCastleAtPosition($e['x'], $e['y'], $castlesAndFields['hostileCastles']);

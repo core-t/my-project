@@ -178,10 +178,11 @@ function startWebSocket() {
                     break;
 
                 case 'surrender':
-                    if (r.lost) {
-                        Message.lost(r.color);
-                    } else if (typeof r.win != 'undefined') {
-                        winM(r.color);
+                    for (i in players[r.color].armies) {
+                        deleteArmy(players[r.color].armies[i].armyId, r.color, 1);
+                    }
+                    for (i in players[r.color].castles) {
+                        razeCastle(players[r.color].castles[i].castleId);
                     }
                     break;
 
