@@ -178,10 +178,12 @@ class Cli_Model_Move
 
             if (!$battle->getDefender()) {
                 if (Zend_Validate::is($castleId, 'Digits')) {
+
+                    $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
                     if ($defenderColor == 'neutral') {
-                        Cli_Model_Database::addCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
+                        $mCastlesInGame->addCastle($castleId, $user->parameters['playerId']);
                     } else {
-                        Cli_Model_Database::changeOwner($user->parameters['gameId'], $castlesSchema[$castleId], $user->parameters['playerId'], $db);
+                        $mCastlesInGame->changeOwner($castlesSchema[$castleId], $user->parameters['playerId']);
                     }
                 }
                 Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db);

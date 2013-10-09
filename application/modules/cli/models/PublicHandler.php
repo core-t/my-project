@@ -91,7 +91,9 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
                     $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
                     $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
-                    Cli_Model_Database::addCastle($user->parameters['gameId'], $player['mapCastleId'], $player['playerId'], $db);
+
+                    $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+                    $mCastlesInGame->addCastle($player['mapCastleId'], $player['playerId']);
                 }
 
                 $token = array('type' => 'start');

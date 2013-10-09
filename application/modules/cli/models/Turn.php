@@ -68,7 +68,10 @@ class Cli_Model_Turn
         $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
 
 //        if (Cli_Database::getTurnNumber($gameId, $db) > 0) {
-        $castles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
+
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        $castles = $mCastlesInGame->getPlayerCastles($playerId);
+
         $mapCastles = Zend_Registry::get('castles');
         foreach ($castles as $castleInGame) {
             $castleId = $castleInGame['castleId'];
@@ -92,7 +95,8 @@ class Cli_Model_Turn
                     $armyId = $mArmy->createArmy($boardCastle['position'], $playerId);
                 }
 
-                Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db);
+                $mCastlesInGame->resetProductionTurn($castleId, $playerId);
+
                 if (!isset($mSoldier)) {
                     $mSoldier = new Application_Model_Soldier($gameId, $db);
                 }

@@ -256,7 +256,10 @@ class Cli_Model_Army
     static public function addCastleDefenseModifier($army, $gameId, $castleId, $db)
     {
         $mapCastles = Zend_Registry::get('castles');
-        $defenseModifier = $mapCastles[$castleId]['defense'] + Cli_Model_Database::getCastleDefenseModifier($gameId, $castleId, $db);
+
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        $defenseModifier = $mapCastles[$castleId]['defense'] + $mCastlesInGame->getCastleDefenseModifier($castleId);
+
         if ($defenseModifier > 0) {
             if (isset($army['defenseModifier'])) {
                 $army['defenseModifier'] += $defenseModifier;

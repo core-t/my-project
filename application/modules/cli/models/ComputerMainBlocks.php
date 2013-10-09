@@ -154,7 +154,9 @@ class Cli_Model_ComputerMainBlocks
         $l->log('');
         $l->log($army['armyId'], 'armyId:');
 
-        $myCastles = Cli_Model_Database::getPlayerCastles($gameId, $playerId, $db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        $myCastles = $mCastlesInGame->getPlayerCastles($playerId);
+
         $mapCastles = Zend_Registry::get('castles');
         foreach ($myCastles as $myCastleId => $myCastle) {
             $myCastles[$myCastleId]['position'] = $mapCastles[$myCastleId]['position'];
@@ -362,7 +364,7 @@ class Cli_Model_ComputerMainBlocks
             $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
             if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
-                if (Cli_Model_Database::resetProductionTurn($gameId, $castleId, $playerId, $db) == 1) {
+                if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
                     $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
                     if (!$armyId) {
                         $mArmy = new Application_Model_Army($gameId, $db);

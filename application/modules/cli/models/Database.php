@@ -591,49 +591,6 @@ Brak y
         return self::update('army', $data, $where, $db);
     }
 
-    static public function addCastle($gameId, $castleId, $playerId, $db)
-    {
-        $data = array(
-            'mapCastleId' => $castleId,
-            'gameId' => $gameId,
-            'winnerId' => $playerId,
-            'loserId' => 0
-        );
-
-        try {
-            $db->insert('castlesconquered', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
-
-        $data = array(
-            'castleId' => $castleId,
-            'playerId' => $playerId,
-            'gameId' => $gameId
-        );
-        try {
-            return $db->insert('castlesingame', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
-    static public function getCastleDefenseModifier($gameId, $castleId, $db)
-    {
-        $select = $db->select()
-            ->from('castlesingame', 'defenseMod')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"castleId" = ?', $castleId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function isEnemyCastle($gameId, $castleId, $playerId, $db)
     {
 
@@ -742,50 +699,6 @@ Brak y
         }
 
         return $result;
-    }
-
-    static public function changeOwner($gameId, $castle, $playerId, $db)
-    {
-        $defenseMod = self::getCastleDefenseModifier($gameId, $castle['castleId'], $db);
-        $defense = $castle['defense'] + $defenseMod;
-
-        if ($defense > 1) {
-            $defenseMod--;
-        }
-
-        $select = $db->select()
-            ->from('castlesingame', 'playerId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"castleId" = ?', $castle['castleId']);
-
-        $data = array(
-            'mapCastleId' => $castle['castleId'],
-            'gameId' => $gameId,
-            'winnerId' => $playerId,
-            'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')
-        );
-
-        try {
-            $db->insert('castlesconquered', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
-
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"castleId" = ?', $castle['castleId'])
-        );
-
-        $data = array(
-            'defenseMod' => $defenseMod,
-            'playerId' => $playerId,
-            'production' => null,
-            'productionTurn' => 0,
-        );
-
-        self::update('castlesingame', $data, $where, $db);
     }
 
     static public function armyRemoveHero($gameId, $heroId, $db)
@@ -1336,27 +1249,6 @@ Brak y
         }
     }
 
-    static public function getPlayerCastles($gameId, $playerId, $db)
-    {
-        $playersCastles = array();
-        $select = $db->select()
-            ->from('castlesingame', array('castleId', 'production', 'productionTurn', 'defenseMod'))
-            ->where('"playerId" = ?', $playerId)
-            ->where('"gameId" = ?', $gameId)
-            ->where('razed = false');
-        try {
-            $result = $db->query($select)->fetchAll();
-            foreach ($result as $val) {
-                $playersCastles[$val['castleId']] = $val;
-            }
-
-            return $playersCastles;
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function getPlayerCastlesIds($gameId, $playerId, $db)
     {
         $select = $db->select()
@@ -1389,21 +1281,6 @@ Brak y
             echo($e);
             echo($select->__toString());
         }
-    }
-
-    static public function resetProductionTurn($gameId, $castleId, $playerId, $db)
-    {
-
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId),
-            $db->quoteInto('"castleId" = ?', $castleId)
-        );
-        $data = array(
-            'productionTurn' => 0
-        );
-
-        return self::update('castlesingame', $data, $where, $db);
     }
 
     static public function enemiesCastlesExist($gameId, $playerId, $db)

@@ -36,7 +36,8 @@ Castle defender: ');
                     echo('
 castleId: ' . $castleId . '
 ');
-                    Cli_Model_Database::changeOwner($gameId, $mapCastles[$castleId], $playerId, $db);
+                    $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+                    $mCastlesInGame->changeOwner($mapCastles[$castleId], $playerId);
                 } else {
                     $result['attackerArmy'] = array(
                         'armyId' => $army['armyId'],
@@ -55,7 +56,9 @@ castleId: ' . $castleId . '
                 if (!$battle->getDefender()) {
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
                     $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
-                    Cli_Model_Database::addCastle($gameId, $castleId, $playerId, $db);
+
+                    $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+                    $mCastlesInGame->addCastle($castleId, $playerId);
                     $result['victory'] = true;
                 } else {
                     $result['attackerArmy'] = array(

@@ -137,6 +137,99 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
+    public function changeOwner($castle, $playerId)
+    {
+        $defenseMod = $this->getCastleDefenseModifier($castle['castleId']);
+        $defense = $castle['defense'] + $defenseMod;
 
+        if ($defense > 1) {
+            $defenseMod--;
+        }
+
+        $select = $this->_db->select()
+            ->from($this->_name, 'playerId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"castleId" = ?', $castle['castleId']);
+
+        $data = array(
+            'mapCastleId' => $castle['castleId'],
+            'gameId' => $this->_gameId,
+            'winnerId' => $playerId,
+            'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')
+        );
+
+        try {
+            $this->_db->insert('castlesconquered', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
+
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"castleId" = ?', $castle['castleId'])
+        );
+
+        $data = array(
+            'defenseMod' => $defenseMod,
+            'playerId' => $playerId,
+            'production' => null,
+            'productionTurn' => 0,
+        );
+
+        $this->update($data, $where);
+    }
+
+    public function getCastleDefenseModifier($castleId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'defenseMod')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"castleId" = ?', $castleId);
+
+        return $this->selectOne($select);
+    }
+
+    public function addCastle($castleId, $playerId)
+    {
+        $data = array(
+            'mapCastleId' => $castleId,
+            'gameId' => $this->_gameId,
+            'winnerId' => $playerId,
+            'loserId' => 0
+        );
+
+        try {
+            $this->_db->insert('castlesconquered', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
+
+        $data = array(
+            'castleId' => $castleId,
+            'playerId' => $playerId,
+            'gameId' => $this->_gameId
+        );
+
+        $this->insert($data);
+    }
+
+    public function resetProductionTurn($castleId, $playerId)
+    {
+
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId),
+            $this->_db->quoteInto('"castleId" = ?', $castleId)
+        );
+        $data = array(
+            'productionTurn' => 0
+        );
+
+        return $this->update($data, $where);
+    }
 }
 
