@@ -178,12 +178,14 @@ function startWebSocket() {
                     break;
 
                 case 'surrender':
+                    unselectArmy();
                     for (i in players[r.color].armies) {
-                        deleteArmy(players[r.color].armies[i].armyId, r.color, 1);
+                        deleteArmy(i, r.color, 1);
                     }
                     for (i in players[r.color].castles) {
-                        razeCastle(players[r.color].castles[i].castleId);
+                        razeCastle(i);
                     }
+                    wsNextTurn();
                     break;
 
                 case 'inventoryAdd':
