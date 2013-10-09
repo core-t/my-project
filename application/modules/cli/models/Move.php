@@ -191,7 +191,8 @@ class Cli_Model_Move
                     $defender[]['armyId'] = $id;
                 }
             } else {
-                Cli_Model_Database::destroyArmy($user->parameters['gameId'], $army['armyId'], $user->parameters['playerId'], $db);
+                $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+                $mArmy2->destroyArmy($army['armyId'], $user->parameters['playerId']);
                 $attacker = array(
                     'armyId' => $attackerArmyId,
                     'destroyed' => true

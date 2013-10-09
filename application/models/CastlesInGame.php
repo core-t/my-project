@@ -44,5 +44,72 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
 
         return $this->selectRow($select);
     }
+
+    public function razeCastle($gameId, $castleId, $playerId, $db)
+    {
+        $data = array(
+            'mapCastleId' => $castleId,
+            'gameId' => $gameId,
+            'playerId' => $playerId
+        );
+
+        try {
+            $db->insert('castlesdestoyed', $data);
+        } catch (Exception $e) {
+            echo($e);
+
+            return;
+        }
+
+        $where = array(
+            $db->quoteInto('"gameId" = ?', $gameId),
+            $db->quoteInto('"castleId" = ?', $castleId),
+            $db->quoteInto('"playerId" = ?', $playerId)
+        );
+
+        $data = array(
+            'razed' => 'true',
+            'production' => null,
+            'productionTurn' => 0,
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function getRazedCastles()
+    {
+        $castles = array();
+
+        $select = $this->_db->select()
+            ->from($this->_name)
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('razed = true');
+
+        foreach ($this->selectAll($select) as $key => $val) {
+            $castles[$val['castleId']] = $val;
+        }
+
+        return $castles;
+    }
+
+    public function getPlayerCastles($playerId)
+    {
+        $playersCastles = array();
+
+        $select = $this->_db->select()
+            ->from($this->_name, array('production', 'productionTurn', 'defenseMod', 'castleId'))
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('razed = false');
+
+        foreach ($this->selectAll($select) as $val) {
+            $playersCastles[$val['castleId']] = $val;
+            unset($playersCastles[$val['castleId']]['castleId']);
+        }
+
+        return $playersCastles;
+    }
+
+
 }
 

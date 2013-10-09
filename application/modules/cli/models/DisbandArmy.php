@@ -10,7 +10,8 @@ class Cli_Model_DisbandArmy
             return;
         }
 
-        $destroyArmyResponse = Cli_Model_Database::destroyArmy($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+        $destroyArmyResponse = $mArmy->destroyArmy($armyId, $user->parameters['playerId']);
 
         if (!$destroyArmyResponse) {
             $gameHandler->sendError($user, 'Nie mogę usunąć armii!');

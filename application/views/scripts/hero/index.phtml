@@ -6,23 +6,22 @@
     <?php echo $this->translate('Number of moves') ?>: <?php echo $this->heroes[0]['numberOfMoves'] ?></br>
 <?php endif ?>
 <?php echo $this->form ?>
-<h2><?php echo $this->translate('Artifacts') ?>:</h2>
-<div class="table" id="chest">
-    <h3><?php echo $this->translate('Chest') ?></h3>
-    <table>
-        <th><?php echo $this->translate('Name') ?></th>
-        <th><?php echo $this->translate('Quantity') ?></th>
-        <?php if (count($this->chest)): ?>
-            <?php foreach ($this->chest as $artifact): ?>
-                <tr>
-                    <td><?php echo $this->artifacts[$artifact['artifactId']]['name'] ?></td>
-                    <td><?php echo $artifact['quantity'] ?></td>
-                </tr>
-            <?php endforeach ?>
-        <?php endif ?>
-    </table>
-
-</div>
+<!--<h2>--><?php //echo $this->translate('Artifacts') ?><!--:</h2>-->
+<!--<div class="table" id="chest">-->
+<!--    <h3>--><?php //echo $this->translate('Chest') ?><!--</h3>-->
+<!--    <table>-->
+<!--        <th>--><?php //echo $this->translate('Name') ?><!--</th>-->
+<!--        <th>--><?php //echo $this->translate('Quantity') ?><!--</th>-->
+<!--        --><?php //if (count($this->chest)): ?>
+<!--            --><?php //foreach ($this->chest as $artifact): ?>
+<!--                <tr>-->
+<!--                    <td>--><?php //echo $this->artifacts[$artifact['artifactId']]['name'] ?><!--</td>-->
+<!--                    <td>--><?php //echo $artifact['quantity'] ?><!--</td>-->
+<!--                </tr>-->
+<!--            --><?php //endforeach ?>
+<!--        --><?php //endif ?>
+<!--    </table>-->
+<!--</div>-->
 <ul>
     <li>
         <a class="button" href="/">&laquo; Back</a>

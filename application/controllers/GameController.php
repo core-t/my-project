@@ -30,7 +30,7 @@ class GameController extends Game_Controller_Game
 
         $this->_helper->layout->setLayout('game');
 
-        $mCastle = new Application_Model_Castle($this->_namespace->gameId);
+        $mCastlesInGame = new Application_Model_CastlesInGame($this->_namespace->gameId);
         $mArmy = new Application_Model_Army($this->_namespace->gameId);
         $mRuin = new Application_Model_RuinsInGame($this->_namespace->gameId);
         $mTower = new Application_Model_TowersInGame($this->_namespace->gameId);
@@ -73,8 +73,29 @@ class GameController extends Game_Controller_Game
 
             $colors[$player['playerId']] = $player['color'];
             $this->view->players[$player['color']]['chest'] = $mChest->getAll();
-            $this->view->players[$player['color']]['armies'] = $mArmy->getPlayerArmies($player['playerId']);
-            $this->view->players[$player['color']]['castles'] = $mCastle->getPlayerCastles($player['playerId']);
+            $this->view->players[$player['color']]['armies'] = array();
+
+            $mHeroesInGame = new Application_Model_HeroesInGame($this->_namespace->gameId);
+            $mSoldier = new Application_Model_Soldier($this->_namespace->gameId);
+
+            foreach ($mArmy->getPlayerArmies($player['playerId']) as $army) {
+                $this->view->players[$player['color']]['armies']['army' . $army['armyId']] = $army;
+                $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+
+
+                foreach ($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'] as $k => $row) {
+                    $mInventory = new Application_Model_Inventory($row['heroId'], $this->_namespace->gameId);
+                    $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
+                }
+
+                $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
+                if (empty($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes']) AND empty($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['soldiers'])) {
+                    $mArmy->destroyArmy($army['armyId'], $player['playerId']);
+                    unset($this->view->players[$player['color']]['armies']['army' . $army['armyId']]);
+                }
+            }
+
+            $this->view->players[$player['color']]['castles'] = $mCastlesInGame->getPlayerCastles($player['playerId']);
             $this->view->players[$player['color']]['turnActive'] = $player['turnActive'];
             $this->view->players[$player['color']]['computer'] = $player['computer'];
             $this->view->players[$player['color']]['lost'] = $player['lost'];
@@ -110,7 +131,7 @@ class GameController extends Game_Controller_Game
         }
 
         $this->view->castlesSchema = array();
-        $razed = $mCastle->getRazedCastles();
+        $razed = $mCastlesInGame->getRazedCastles();
         $mMapRuins = new Application_Model_MapRuins($game['mapId']);
         $this->view->ruins = $mMapRuins->getMapRuins();
         $emptyRuins = $mRuin->getVisited();

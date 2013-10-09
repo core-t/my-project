@@ -802,36 +802,6 @@ Brak y
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function razeCastle($gameId, $castleId, $playerId, $db)
-    {
-        $data = array(
-            'mapCastleId' => $castleId,
-            'gameId' => $gameId,
-            'playerId' => $playerId
-        );
-
-        try {
-            $db->insert('castlesdestoyed', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
-
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"castleId" = ?', $castleId),
-            $db->quoteInto('"playerId" = ?', $playerId)
-        );
-        $data = array(
-            'razed' => 'true',
-            'production' => null,
-            'productionTurn' => 0,
-        );
-
-        return self::update('castlesingame', $data, $where, $db);
-    }
-
     static public function getCastle($gameId, $castleId, $db)
     {
         $select = $db->select()

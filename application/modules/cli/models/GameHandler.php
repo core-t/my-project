@@ -227,6 +227,10 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             case 'inventoryDel':
 
                 break;
+
+            case 'surrender':
+
+                break;
         }
     }
 
