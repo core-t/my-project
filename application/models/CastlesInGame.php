@@ -45,16 +45,16 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
         return $this->selectRow($select);
     }
 
-    public function razeCastle($gameId, $castleId, $playerId, $db)
+    public function razeCastle($castleId, $playerId)
     {
         $data = array(
             'mapCastleId' => $castleId,
-            'gameId' => $gameId,
+            'gameId' => $this->_gameId,
             'playerId' => $playerId
         );
 
         try {
-            $db->insert('castlesdestoyed', $data);
+            $this->_db->insert('castlesdestoyed', $data);
         } catch (Exception $e) {
             echo($e);
 
@@ -62,9 +62,9 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
         }
 
         $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"castleId" = ?', $castleId),
-            $db->quoteInto('"playerId" = ?', $playerId)
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"castleId" = ?', $castleId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId)
         );
 
         $data = array(
@@ -108,6 +108,33 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
         }
 
         return $playersCastles;
+    }
+
+    public function buildDefense($castleId, $playerId, $defenseMod)
+    {
+//        $select = $db->select()
+//            ->from('castlesingame', 'defenseMod')
+//            ->where('"gameId" = ?', $gameId)
+//            ->where('"playerId" = ?', $playerId)
+//            ->where('"castleId" = ?', $castleId);
+//        $defenseMod = $db->fetchOne($select);
+//        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
+//
+//        if ($defensePoints + $defenseMod < 1) {
+//            $defenseMod = 1 - $defensePoints;
+//        }
+//        $defenseMod++;
+
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId),
+            $this->_db->quoteInto('"castleId" = ?', $castleId)
+        );
+        $data = array(
+            'defenseMod' => $defenseMod
+        );
+
+        return $this->update($data, $where);
     }
 
 

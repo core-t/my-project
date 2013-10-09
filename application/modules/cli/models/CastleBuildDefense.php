@@ -39,7 +39,10 @@ class Cli_Model_CastleBuildDefense
             $gameHandler->sendError($user, 'Za mało złota!');
             return;
         }
-        Cli_Model_Database::buildDefense($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db, $defenseModifier);
+
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        $mCastlesInGame->buildDefense($castleId, $user->parameters['playerId'], $defenseModifier);
+
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(

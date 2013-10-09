@@ -802,47 +802,6 @@ Brak y
         return self::update('heroesingame', $data, $where, $db);
     }
 
-    static public function getCastle($gameId, $castleId, $db)
-    {
-        $select = $db->select()
-            ->from('castlesingame')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"castleId" = ?', $castleId);
-        try {
-            return $db->fetchRow($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function buildDefense($gameId, $castleId, $playerId, $db, $defenseMod)
-    {
-//        $select = $db->select()
-//            ->from('castlesingame', 'defenseMod')
-//            ->where('"gameId" = ?', $gameId)
-//            ->where('"playerId" = ?', $playerId)
-//            ->where('"castleId" = ?', $castleId);
-//        $defenseMod = $db->fetchOne($select);
-//        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
-//
-//        if ($defensePoints + $defenseMod < 1) {
-//            $defenseMod = 1 - $defensePoints;
-//        }
-//        $defenseMod++;
-
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId),
-            $db->quoteInto('"castleId" = ?', $castleId)
-        );
-        $data = array(
-            'defenseMod' => $defenseMod
-        );
-
-        return self::update('castlesingame', $data, $where, $db);
-    }
-
     static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db)
     {
         $select = $db->select()

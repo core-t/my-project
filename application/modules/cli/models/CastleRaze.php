@@ -10,7 +10,8 @@ class Cli_Model_CastleRaze
             return;
         }
 
-        Cli_Model_Database::razeCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        $mCastlesInGame->razeCastle($castleId, $user->parameters['playerId']);
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
         $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']) + 1000;

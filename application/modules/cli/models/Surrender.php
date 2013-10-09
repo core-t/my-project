@@ -5,19 +5,21 @@ class Cli_Model_Surrender
 
     public function __construct($user, $db, $gameHandler)
     {
-        $mArmy = new Application_Model_Army($user->parameters['gameId']);
+        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
         foreach ($mArmy->getPlayerArmies($user->parameters['playerId']) as $army) {
             $mArmy->destroyArmy($army['armyId'], $user->parameters['playerId']);
         }
 
-        $mCastle = new Application_Model_Castle($this->_namespace->gameId);
-        foreach ($mCastle->getPlayerCastles($user->parameters['playerId']) as $castle){
-            $mCastle->
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        foreach ($mCastlesInGame->getPlayerCastles($user->parameters['playerId']) as $castle) {
+            $mCastlesInGame->razeCastle($castle['castleId'], $user->parameters['playerId']);
         }
+
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'surrender',
-            'playerId' => $user->parameters['playerId']
+            'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
