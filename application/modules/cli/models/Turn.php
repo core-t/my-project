@@ -73,13 +73,14 @@ class Cli_Model_Turn
         $castles = $mCastlesInGame->getPlayerCastles($playerId);
 
         $mapCastles = Zend_Registry::get('castles');
-        foreach ($castles as $castleInGame) {
-            $castleId = $castleInGame['castleId'];
+
+        foreach ($castles as $castleId => $castleInGame) {
 //                $castles[$castleId] = Application_Model_Board::getCastle($castleId);
 //                $castle = $castles[$castleId];
 //            $boardCastle = Application_Model_Board::getCastle($castleId);
             $boardCastle = $mapCastles[$castleId];
             $income += $boardCastle['income'];
+
             $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $boardCastle['position'], $db);
 
 //                $castleProduction = Cli_Database::getCastleProduction($gameId, $castleId, $playerId, $db);

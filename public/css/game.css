@@ -432,7 +432,7 @@
 }
 
 .message p.h {
-    line-height: 24px;
+    /*line-height: 24px;*/
 }
 
 .message p.h input {
@@ -530,7 +530,7 @@
 }
 
 .message p {
-    height: 24px;
+    /*height: 24px;*/
 }
 
 #gameMenu .message .button {
