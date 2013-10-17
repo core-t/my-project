@@ -246,16 +246,12 @@ function wsStartMyTurn() {
     ws.send(JSON.stringify(token));
 }
 
-function wsCastleBuildDefense() {
+function wsCastleBuildDefense(castleId) {
     if (wsClosed) {
         simpleM('Sorry, server is disconnected.');
         return;
     }
 
-    var castleId = $('input[name=defense]:checked').val();
-    if (!castleId) {
-        return;
-    }
     var token = {
         type: 'castleBuildDefense',
         castleId: castleId
@@ -264,16 +260,12 @@ function wsCastleBuildDefense() {
     ws.send(JSON.stringify(token));
 }
 
-function wsRazeCastle() {
+function wsRazeCastle(castleId) {
     if (wsClosed) {
         simpleM('Sorry, server is disconnected.');
         return;
     }
 
-    var castleId = $('input[name=raze]:checked').val();
-    if (!castleId) {
-        return;
-    }
     var token = {
         type: 'razeCastle',
         castleId: castleId
@@ -528,9 +520,8 @@ function wsAddTower(towerId) {
     ws.send(JSON.stringify(token));
 }
 
-function wsProduction(castleId) {
+function wsProduction(castleId, name) {
     var unitId
-    var name = $('input:radio[name=production]:checked').val();
 
     if (name == 'stop') {
         unitId = -1;

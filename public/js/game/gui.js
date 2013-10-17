@@ -8,7 +8,7 @@ var Gui = {
                 Message.remove();
                 break;
             case 69:
-                nextTurnM();
+                Message.nextTurn();
                 break;
             case 70:
                 fortifyArmy();
@@ -36,7 +36,7 @@ var Gui = {
             }
         });
         $('#nextTurn').click(function () {
-            nextTurnM()
+            Message.nextTurn();
         });
         $('#surrender').click(function () {
             Message.surrender()
@@ -52,17 +52,17 @@ var Gui = {
         });
         $('#splitArmy').click(function () {
             if (selectedArmy) {
-                splitArmyM()
+                Message.splitArmy()
             }
         });
         $('#armyStatus').click(function () {
             if (selectedArmy) {
-                armyStatusM()
+                Message.armyStatus()
             }
         });
         $('#disbandArmy').click(function () {
             if (selectedArmy) {
-                disbandArmyM()
+                Message.disbandArmy()
             }
         });
         $('#unselectArmy').click(function () {

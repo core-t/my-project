@@ -1,5 +1,29 @@
 // *** CASTLES ***
 
+var Castle = {
+    handle: function () {
+        var castleId = $('input[name=defense]').val();
+
+//        if (!castleId) {
+//            return;
+//        }
+
+        if ($('input[name=defense]').is(':checked')) {
+            wsCastleBuildDefense(castleId);
+            return;
+        }
+
+        var name = $('input:radio[name=production]:checked').val();
+
+        if (name) {
+            wsProduction(castleId, name);
+            return;
+        }
+
+//        wsHeroResurrection(castleId);
+    }
+}
+
 function castleFields(castleId, type) {
     x = castles[castleId].x;
     y = castles[castleId].y;

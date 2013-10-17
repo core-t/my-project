@@ -8,25 +8,13 @@ var Message = {
             $('.message').remove();
         }
     },
-    exec: function (txt) {
+    show: function (txt) {
         this.remove();
         this.element().after(
             $('<div>')
                 .addClass('message')
                 .addClass('center')
                 .append(txt)
-//                .append(
-//                    $('<div>')
-//                        .addClass('button go')
-//                        .html('Ok')
-//                        .click(function () {
-//                            this.remove();
-//                            func();
-//                        })
-//                )
-//                .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-//                    this.remove()
-//                }))
                 .css({
                     'left': this.left + 'px',
                     'display': 'block'
@@ -40,8 +28,11 @@ var Message = {
                 .addClass('button go')
                 .html('Ok')
                 .click(function () {
-                    this.remove();
-                    func();
+                    if (typeof func != 'undefined') {
+                        func();
+                    } else {
+                        Message.remove();
+                    }
                 })
         )
     },
@@ -51,17 +42,16 @@ var Message = {
                 .addClass('button cancel')
                 .html('Cancel')
                 .click(function () {
-                    this.remove()
+                    Message.remove()
                 })
         )
     },
     surrender: function () {
-        Message.remove();
-        this.exec('Surrender. Are you sure?', 'wsSurrender');
+        this.show('Surrender. Are you sure?');
+        this.ok('wsSurrender');
+        this.cancel();
     },
     lost: function (color) {
-        Message.remove();
-
         $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
 
         var msg;
@@ -72,24 +62,7 @@ var Message = {
             msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
         }
 
-        this.exec(msg, '');
-//        this.element().after(
-//            $('<div>')
-//                .addClass('message')
-//                .addClass('center')
-//                .append($('<h3>').html(msg))
-//                .append($('<div>')
-//                    .addClass('button go')
-//                    .html('Ok')
-//                    .click(function () {
-//                        Message.remove();
-//
-//                    })
-//                )
-//                .css({
-//                    'left': this.left + 'px'
-//                })
-//        );
+        this.show(msg, '');
     },
     showArtifacts: function () {
         Message.remove();
@@ -154,7 +127,7 @@ var Message = {
             );
         }
 
-//        this.exec('Surrender. Are you sure?', 'wsSurrender');
+//        this.show('Surrender. Are you sure?', 'wsSurrender');
         this.element().after(
             $('<div>')
                 .addClass('message')
@@ -181,7 +154,7 @@ var Message = {
         if (my.turn && turn.nr == 1) {
             Message.castle(firstCastleId, my.color);
         } else {
-            this.exec('Your turn.');
+            this.show($('<div>').html('Your turn.'));
             this.ok();
         }
     },
@@ -199,6 +172,11 @@ var Message = {
         var time = '';
         var attr;
         var capital = '';
+
+        if (typeof castles[castleId] == 'undefined') {
+            return;
+        }
+
         if (castles[castleId].capital) {
             capital = ' - Capital city';
         }
@@ -285,22 +263,21 @@ var Message = {
             }
         }
         if (resurrection) {
-            var buttonResurection;
-            var cssResurection;
+            var buttonResurrection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
+            var cssResurrection;
             if ($('#gold').html() < 100) {
-                buttonResurection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
-                cssResurection = {
+                cssResurrection = {
                     'color': '#d00000'
                 };
             } else {
-                buttonResurection = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function () {
+                buttonResurrection.click(function () {
                     wsHeroResurrection(castleId)
                 });
-                cssResurection = {};
+                cssResurrection = {};
             }
             resurrectionElement = $('<p>')
                 .addClass('h')
-                .css(cssResurection)
+                .css(cssResurrection)
                 .append(
                     $('<input>').attr({
                         type: 'checkbox',
@@ -308,7 +285,7 @@ var Message = {
                         value: castleId
                     })
                 )
-                .append(buttonResurection);
+                .append(buttonResurrection);
         }
         var buttonBuildDefense;
         var costBuildDefense = 0;
@@ -325,14 +302,13 @@ var Message = {
 
         var div = $('<div>')
             .append($('<h3>').append(castles[castleId].name).append(capital))
-//            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
-            .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
+            .append($('<h5>').append('Castle defense: ' + castles[castleId].defense))
+            .append($('<h5>').append('Income: ' + castles[castleId].income + ' gold/turn'))
             .append(
                 $('<fieldset>')
-                    .append($('<label>').html('Castle defense: ' + castles[castleId].defense))
+                    .append($('<label>').html('Build castle defense'))
                     .append(
                         $('<div>')
-                            .append('Build castle defense ')
                             .append(
                                 $('<input>').attr({
                                     type: 'checkbox',
@@ -348,210 +324,137 @@ var Message = {
             .append($('<br>'))
             .append(resurrectionElement);
 
-        Message.exec(div.html());
-        this.ok();
+        Message.show(div.html());
+        this.ok(Castle.handle);
         this.cancel();
-    }
-}
+    },
+    nextTurn: function () {
+        var div = $('<div>').html('Next turn. Are you sure?');
+        Message.show(div);
+        this.ok(wsNextTurn);
+        this.cancel();
+    },
+    win: function (color) {
+        setLock();
 
+        var msg;
 
-function winM(color) {
-    Message.remove();
-    setLock();
+        if (color == my.color) {
+            msg = '<br/>GAME OVER<br/><br/>You won!';
 
-    var msg;
+        } else {
+            msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
+        }
 
-    if (color == my.color) {
-        msg = '<br/>GAME OVER<br/><br/>You won!';
+        this.show(msg);
+        this.ok(Message.remove);
+    },
+    simple: function (message) {
+        this.show(message);
+        this.ok(Message.remove);
+    },
+    disbandArmy: function () {
+        if (typeof selectedArmy == 'undefined') {
+            return;
+        }
+        if (!my.turn) {
+            return;
+        }
 
-    } else {
-        msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
-    }
+        this.show($('<div>').html('Are you sure?'));
+        this.ok(wsDisbandArmy);
+        this.cancel();
+    },
+    splitArmy: function (a) {
+        if (typeof selectedArmy == 'undefined') {
+            return;
+        }
+        Message.remove();
+        var army = $('<div>').addClass('split');
+        var numberOfUnits = 0;
 
-    this.exec(msg, '');
-//    Message.element().after(
-//        $('<div>')
-//            .addClass('message')
-//            .addClass('center')
-//            .append($('<h3>').html(msg))
-//            .append($('<div>')
-//                .addClass('button go')
-//                .html('Ok')
-//                .click(function () {
-//                    Message.remove();
-//
-//                })
-//            )
-//            .css({
-//                'left': Message.left + 'px'
-//            })
-//    );
-}
-
-function nextTurnM() {
-    Message.remove();
-
-    Message.exec('Next turn. Are you sure?', 'wsNextTurn');
-//    Message.element().after(
-//        $('<div>')
-//            .addClass('message')
-//            .addClass('center')
-//            .append($('<h3>').html('Next turn. Are you sure?'))
-//            .append(
-//                $('<div>')
-//                    .addClass('button go')
-//                    .html('Ok')
-//                    .click(function () {
-//                        Message.remove();
-//                        wsNextTurn();
-//                        //                nextTurnA();
-//                    })
-//            )
-//            .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-//                Message.remove()
-//            }))
-//            .css({
-//                'left': Message.left + 'px'
-//            })
-//    );
-}
-
-function simpleM(message) {
-    Message.remove();
-    Message.element().after(
-        $('<div>')
-            .addClass('message')
-            .addClass('center')
-            .append($('<h3>').html(message))
-            .append(
+        for (i in selectedArmy.soldiers) {
+            var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
+            numberOfUnits++;
+            army.append(
                 $('<div>')
-                    .addClass('button go')
-                    .html('Ok')
-                    .click(function () {
-                        Message.remove();
-                    })
-            )
-            .css({
-                'left': Message.left + 'px'
-            })
-    );
-}
-
-function disbandArmyM() {
-    if (typeof selectedArmy == 'undefined') {
-        return;
-    }
-    if (!my.turn) {
-        return;
-    }
-    Message.remove();
-    Message.element().after(
-        $('<div>')
-            .addClass('message')
-            .addClass('center')
-            .append($('<h3>').html('Are you sure?'))
-            .append(
+                    .addClass('row')
+                    .append($('<div>').addClass('nr').html(numberOfUnits))
+                    .append($('<div>').addClass('img').html(
+                        $('<img>').attr({
+                            'src': Unit.getImageByName(img, selectedArmy.color),
+                            'id': 'unit' + selectedArmy.soldiers[i].soldierId
+                        })
+                    ))
+                    .append($('<span>').html(' Moves left: ' + selectedArmy.soldiers[i].movesLeft + ' '))
+                    .append($('<div>').addClass('right').html($('<input>').attr({
+                        type: 'checkbox',
+                        name: 'soldierId',
+                        value: selectedArmy.soldiers[i].soldierId
+                    })))
+            );
+        }
+        for (i in selectedArmy.heroes) {
+            numberOfUnits++;
+            army.append(
                 $('<div>')
-                    .addClass('button go')
-                    .html('Disband')
-                    .click(function () {
-                        wsDisbandArmy()
-                    })
-            )
-            .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-                Message.remove()
-            }))
-            .css({
-                'left': Message.left + 'px'
-            })
-    );
-}
+                    .addClass('row')
+                    .append($('<div>').addClass('nr').html(numberOfUnits))
+                    .append($('<div>').addClass('img').html(
+                        $('<img>').attr({
+                            'src': Hero.getImage(selectedArmy.color),
+                            'id': 'hero' + selectedArmy.heroes[i].heroId
+                        })
+                    ))
+                    .append($('<span>').html(' Moves left: ' + selectedArmy.heroes[i].movesLeft + ' '))
+                    .append($('<div>').addClass('right').html($('<input>').attr({
+                        type: 'checkbox',
+                        name: 'heroId',
+                        value: selectedArmy.heroes[i].heroId
+                    })))
+            );
+        }
+        var height = numberOfUnits * 39 + 40;
+        if (height > documentHeigh - 100) {
+            height = documentHeigh - 100;
+            overflow = 'auto';
+        } else {
+            overflow = 'hidden';
+        }
 
-function splitArmyM(a) {
-    if (typeof selectedArmy == 'undefined') {
-        return;
-    }
-    Message.remove();
-    var army = $('<div>').addClass('split');
-    var numberOfUnits = 0;
 
-    for (i in selectedArmy.soldiers) {
-        var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
-        numberOfUnits++;
-        army.append(
+        Message.element().after(
             $('<div>')
-                .addClass('row')
-                .append($('<div>').addClass('nr').html(numberOfUnits))
-                .append($('<div>').addClass('img').html(
-                    $('<img>').attr({
-                        'src': Unit.getImageByName(img, selectedArmy.color),
-                        'id': 'unit' + selectedArmy.soldiers[i].soldierId
-                    })
-                ))
-                .append($('<span>').html(' Moves left: ' + selectedArmy.soldiers[i].movesLeft + ' '))
-                .append($('<div>').addClass('right').html($('<input>').attr({
-                    type: 'checkbox',
-                    name: 'soldierId',
-                    value: selectedArmy.soldiers[i].soldierId
-                })))
-        );
-    }
-    for (i in selectedArmy.heroes) {
-        numberOfUnits++;
-        army.append(
-            $('<div>')
-                .addClass('row')
-                .append($('<div>').addClass('nr').html(numberOfUnits))
-                .append($('<div>').addClass('img').html(
-                    $('<img>').attr({
-                        'src': Hero.getImage(selectedArmy.color),
-                        'id': 'hero' + selectedArmy.heroes[i].heroId
-                    })
-                ))
-                .append($('<span>').html(' Moves left: ' + selectedArmy.heroes[i].movesLeft + ' '))
-                .append($('<div>').addClass('right').html($('<input>').attr({
-                    type: 'checkbox',
-                    name: 'heroId',
-                    value: selectedArmy.heroes[i].heroId
-                })))
-        );
-    }
-    var height = numberOfUnits * 39 + 40;
-    if (height > documentHeigh - 100) {
-        height = documentHeigh - 100;
-        overflow = 'auto';
-    } else {
-        overflow = 'hidden';
+                .addClass('message')
+                .append(army)
+                .append(
+                    $('<div>')
+                        .css({
+                            'margin-top': '15px'
+                        })
+                        .append(
+                            $('<div>').addClass('left')
+                                .append($('<a>').addClass('button cancel').html('Cancel').click(function () {
+                                    Message.remove()
+                                }))
+                        )
+                        .append(
+                            $('<div>').addClass('right')
+                                .append($('<a>').addClass('button submit').html('Select units').click(function () {
+                                    wsSplitArmy(selectedArmy.armyId)
+                                }))
+                        )
+                )
+                .css({
+                    'height': height + 'px',
+                    'left': Message.left + 'px',
+                    'overflow-y': overflow
+                }));
     }
 
-    Message.element().after(
-        $('<div>')
-            .addClass('message')
-            .append(army)
-            .append(
-                $('<div>')
-                    .css({
-                        'margin-top': '15px'
-                    })
-                    .append(
-                        $('<div>').addClass('left')
-                            .append($('<a>').addClass('button cancel').html('Cancel').click(function () {
-                                Message.remove()
-                            }))
-                    )
-                    .append(
-                        $('<div>').addClass('right')
-                            .append($('<a>').addClass('button submit').html('Select units').click(function () {
-                                wsSplitArmy(selectedArmy.armyId)
-                            }))
-                    )
-            )
-            .css({
-                'height': height + 'px',
-                'left': Message.left + 'px',
-                'overflow-y': overflow
-            }));
+
 }
+
 
 function armyStatusM() {
     if (typeof selectedArmy == 'undefined') {
