@@ -400,7 +400,7 @@ function tmpUnselectArmy() {
     $('#searchRuins').addClass('buttonOff');
     $('#showArtifacts').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
-    removeM();
+    Message.remove();
 }
 
 function deleteArmy(armyId, color, quiet) {

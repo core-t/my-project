@@ -48,8 +48,7 @@ class Application_Model_Player extends Game_Db_Table_Abstract
     public function createPlayer($data)
     {
         $this->insert($data);
-        $seq = $this->_db->quoteIdentifier($this->_sequence);
-        return $this->_db->lastSequenceId($seq);
+        return $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
     }
 
     public function createComputerPlayer()

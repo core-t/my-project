@@ -152,8 +152,9 @@ h1 {
 }
 
 h1#title {
-    font-size: 6em;
+    font-size: 101px;
     color: yellow;
+    text-align: center;
 }
 
 h2 {

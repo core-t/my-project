@@ -5,7 +5,7 @@ var Gui = {
         var key = event.keyCode || event.charCode;
         switch (key) {
             case 27:
-                removeM();
+                Message.remove();
                 break;
             case 69:
                 nextTurnM();
@@ -20,7 +20,7 @@ var Gui = {
                 skipArmy();
                 break;
             default:
-//                console.log(key);
+                console.log(key);
         }
     },
     prepareButtons: function () {
@@ -115,7 +115,7 @@ var Gui = {
         documentHeigh = $(document).height() - 35;
         $('.zoomWindow').css('height', documentHeigh + 'px');
 
-        console.log(parseInt($('.message')));
+//        console.log(parseInt($('.message')));
         Message.left = documentWidth / 2 - parseInt($('.message').css('width')) / 2;
 
         var left = documentWidth - 237;

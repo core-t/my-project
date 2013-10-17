@@ -138,32 +138,33 @@ class Cli_Model_SearchRuin
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
 
-        } elseif ($random < 95) { //10%
+//        } elseif ($random < 95) { //10%
+        } else {
 //nic
             $find = array('null', 1);
             Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
 
-        } else { //5%
-//artefakt
-            $artifactId = rand(5, 34);
-
-            $mChest = new Application_Model_Chest($playerId, $db);
-
-            if ($mChest->artifactExists($artifactId)) {
-                $mChest->increaseArtifactQuantity($artifactId);
-            } else {
-                $mChest->add($artifactId);
-            }
-
-            $find = array('artifact', $artifactId);
-
-            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
-
-            $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
-            $mRuinsInGame->add($ruinId);
-
+//        } else { //5%
+////artefakt
+//            $artifactId = rand(5, 34);
+//
+//            $mChest = new Application_Model_Chest($playerId, $db);
+//
+//            if ($mChest->artifactExists($artifactId)) {
+//                $mChest->increaseArtifactQuantity($artifactId);
+//            } else {
+//                $mChest->add($artifactId);
+//            }
+//
+//            $find = array('artifact', $artifactId);
+//
+//            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+//
+//            $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
+//            $mRuinsInGame->add($ruinId);
+//
         }
 
         return $find;

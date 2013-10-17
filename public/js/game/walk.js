@@ -1,5 +1,5 @@
 function move(r, computer) {
-    removeM();
+    Message.remove();
     if (typeof r.path[1] == 'undefined') {
         zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
     } else {

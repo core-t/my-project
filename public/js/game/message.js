@@ -3,8 +3,13 @@ var Message = {
     element: function () {
         return $('#terrain');
     },
+    remove: function () {
+        if (typeof $('.message') != 'undefined') {
+            $('.message').remove();
+        }
+    },
     exec: function (txt, func) {
-        console.log('aaa');
+        this.remove();
         this.element().after(
             $('<div>')
                 .addClass('message')
@@ -15,12 +20,12 @@ var Message = {
                         .addClass('button go')
                         .html('Ok')
                         .click(function () {
-                            removeM();
+                            this.remove();
                             func();
                         })
                 )
                 .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-                    removeM()
+                    this.remove()
                 }))
                 .css({
                     'left': this.left + 'px',
@@ -30,11 +35,11 @@ var Message = {
 
     },
     surrender: function () {
-        removeM();
+        Message.remove();
         this.exec('Surrender. Are you sure?', 'wsSurrender');
     },
     lost: function (color) {
-        removeM();
+        Message.remove();
 
         $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
 
@@ -56,7 +61,7 @@ var Message = {
 //                    .addClass('button go')
 //                    .html('Ok')
 //                    .click(function () {
-//                        removeM();
+//                        Message.remove();
 //
 //                    })
 //                )
@@ -66,7 +71,7 @@ var Message = {
 //        );
     },
     showArtifacts: function () {
-        removeM();
+        Message.remove();
 
         var htmlChest = $('<div>').attr('id', 'chest');
         for (i in players[my.color].chest) {
@@ -141,7 +146,7 @@ var Message = {
                     .addClass('button go')
                     .html('Ok')
                     .click(function () {
-                        removeM();
+                        Message.remove();
                     })
                 )
                 .css({
@@ -154,7 +159,7 @@ var Message = {
 
 
 function winM(color) {
-    removeM();
+    Message.remove();
     setLock();
 
     var msg;
@@ -176,7 +181,7 @@ function winM(color) {
 //                .addClass('button go')
 //                .html('Ok')
 //                .click(function () {
-//                    removeM();
+//                    Message.remove();
 //
 //                })
 //            )
@@ -187,7 +192,7 @@ function winM(color) {
 }
 
 function turnM() {
-    removeM();
+    Message.remove();
     if (my.turn && turn.nr == 1) {
         castleM(firstCastleId, my.color);
     }
@@ -202,7 +207,7 @@ function turnM() {
 //                .addClass('button go')
 //                .html('Ok')
 //                .click(function () {
-//                    removeM();
+//                    Message.remove();
 //
 //                })
 //            )
@@ -213,7 +218,7 @@ function turnM() {
 }
 
 function nextTurnM() {
-    removeM();
+    Message.remove();
 
     Message.exec('Next turn. Are you sure?', 'wsNextTurn');
 //    Message.element().after(
@@ -226,13 +231,13 @@ function nextTurnM() {
 //                    .addClass('button go')
 //                    .html('Ok')
 //                    .click(function () {
-//                        removeM();
+//                        Message.remove();
 //                        wsNextTurn();
 //                        //                nextTurnA();
 //                    })
 //            )
 //            .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-//                removeM()
+//                Message.remove()
 //            }))
 //            .css({
 //                'left': Message.left + 'px'
@@ -241,7 +246,7 @@ function nextTurnM() {
 }
 
 function simpleM(message) {
-    removeM();
+    Message.remove();
     Message.element().after(
         $('<div>')
             .addClass('message')
@@ -252,7 +257,7 @@ function simpleM(message) {
                     .addClass('button go')
                     .html('Ok')
                     .click(function () {
-                        removeM();
+                        Message.remove();
                     })
             )
             .css({
@@ -268,7 +273,7 @@ function disbandArmyM() {
     if (!my.turn) {
         return;
     }
-    removeM();
+    Message.remove();
     Message.element().after(
         $('<div>')
             .addClass('message')
@@ -283,7 +288,7 @@ function disbandArmyM() {
                     })
             )
             .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-                removeM()
+                Message.remove()
             }))
             .css({
                 'left': Message.left + 'px'
@@ -295,7 +300,7 @@ function splitArmyM(a) {
     if (typeof selectedArmy == 'undefined') {
         return;
     }
-    removeM();
+    Message.remove();
     var army = $('<div>').addClass('split');
     var numberOfUnits = 0;
 
@@ -360,7 +365,7 @@ function splitArmyM(a) {
                     .append(
                         $('<div>').addClass('left')
                             .append($('<a>').addClass('button cancel').html('Cancel').click(function () {
-                                removeM()
+                                Message.remove()
                             }))
                     )
                     .append(
@@ -381,7 +386,7 @@ function armyStatusM() {
     if (typeof selectedArmy == 'undefined') {
         return;
     }
-    removeM();
+    Message.remove();
     var army = $('<div>').addClass('status');
     var numberOfUnits = 0;
     var bonusTower = 0;
@@ -494,7 +499,7 @@ function armyStatusM() {
                     .addClass('button cancel')
                     .html('Ok')
                     .click(function () {
-                        removeM()
+                        Message.remove()
                     }))
             )
             .css({
@@ -515,14 +520,14 @@ function castleM(castleId, color) {
     if (selectedArmy) {
         return;
     }
-    removeM();
+    Message.remove();
     var time = '';
     var attr;
     var capital = '';
     if (castles[castleId].capital) {
         capital = ' - Capital city';
     }
-    var table = $('<table>').addClass('production').append($('<label>').html('Production:'));
+    var table = $('<table>');
     var j = 0;
     var td = new Array();
 
@@ -596,12 +601,6 @@ function castleM(castleId, color) {
                     )
                     .append(' Stop production')
             )
-            .append(
-                $('<td id="blank">')
-                    .append($('<div>').addClass('button submit').html('Apply').click(function () {
-                        wsProduction(castleId)
-                    })
-                    ))
     );
     var resurrectionElement;
     var resurrection = true;
@@ -666,21 +665,22 @@ function castleM(castleId, color) {
                 )
                 .append(buttonBuildDefense)
         )
-        .append(table)
-        .append(
-            $('<p>')
-                .addClass('h')
-                .append(
-                    $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'raze',
-                        value: castleId
-                    })
-                )
-                .append($('<div>').addClass('button right').html('Raze (income 1000g)').click(function () {
-                    wsRazeCastle()
-                }))
-        )
+        .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table))
+
+//        .append(
+//            $('<p>')
+//                .addClass('h')
+//                .append(
+//                    $('<input>').attr({
+//                        type: 'checkbox',
+//                        name: 'raze',
+//                        value: castleId
+//                    })
+//                )
+//                .append($('<div>').addClass('button right').html('Raze (income 1000g)').click(function () {
+//                    wsRazeCastle()
+//                }))
+//        )
         .append($('<br>'))
         .append(resurrectionElement);
 
@@ -690,10 +690,10 @@ function castleM(castleId, color) {
 //        $('<div>')
 //            .addClass('message')
 //            .css({
-//                'left': Message.left + 'px'
+//                'left': Message.left + 'px',
+//                'display':'block'
 //            })
 //            .append($('<h3>').append(castles[castleId].name).append(capital))
-////            .append($('<h5>').append('Position: ' + castles[castleId].position['x'] + ' East - ' + castles[castleId].position['y'] + ' South'))
 //            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
 //            .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
 //            .append(
@@ -727,7 +727,7 @@ function castleM(castleId, color) {
 //            .append(
 //                $('<p>')
 //                    .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-//                        removeM()
+//                        Message.remove()
 //                    }))
 //            )
 //            .append(resurrectionElement)
@@ -820,7 +820,7 @@ function battleM(data, clb) {
         });
     } else {
         $('#battleOk').click(function () {
-            removeM();
+            Message.remove();
         });
     }
     if (newBattle) {
@@ -870,13 +870,6 @@ function killM(b, clb, data) {
     }
 }
 
-function removeM() {
-    if (typeof $('.message') != 'undefined') {
-        //        console.log('removeM');
-
-        $('.message').remove();
-    }
-}
 
 
 

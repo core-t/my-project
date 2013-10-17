@@ -206,7 +206,7 @@ function updateProduction(unitId, castleId) {
     } else {
         $('#castle' + castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
     }
-    removeM();
+    Message.remove();
     castles[castleId].currentProduction = unitId;
     castles[castleId].currentProductionTurn = 0;
 }

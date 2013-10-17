@@ -108,7 +108,7 @@ function startWebSocket() {
                     break;
 
                 case 'splitArmy':
-                    removeM();
+                    Message.remove();
                     players[r.color].armies['army' + r.parentArmy.armyId] = new army(r.parentArmy, r.color);
                     setParentArmy(players[r.color].armies['army' + r.parentArmy.armyId]);
                     players[r.color].armies['army' + r.childArmy.armyId] = new army(r.childArmy, r.color);
@@ -121,7 +121,7 @@ function startWebSocket() {
 
                 case 'joinArmy':
                     //                    console.log(r);
-                    removeM();
+                    Message.remove();
                     zoomer.lensSetCenter(r.army.x * 40, r.army.y * 40);
                     for (i in r.deletedIds) {
                         deleteArmy('army' + r.deletedIds[i].armyId, r.color);
@@ -131,13 +131,13 @@ function startWebSocket() {
 
                 case 'disbandArmy':
                     if (typeof r.armyId != 'undefined' && r.color != 'undefined') {
-                        removeM();
+                        Message.remove();
                         deleteArmy('army' + r.armyId, r.color);
                     }
                     break;
 
                 case 'heroResurrection':
-                    removeM();
+                    Message.remove();
                     zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                     players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
                     if (my.color == turn.color) {
@@ -160,7 +160,7 @@ function startWebSocket() {
                 case 'raze':
                     razeCastle(r.castleId);
                     if (r.color == my.color) {
-                        removeM();
+                        Message.remove();
                         goldUpdate(r.gold);
                     }
                     break;
@@ -168,7 +168,7 @@ function startWebSocket() {
                 case 'defense':
                     updateCastleDefense(r.castleId, r.defenseMod);
                     if (r.color == my.color) {
-                        removeM();
+                        Message.remove();
                         goldUpdate(r.gold);
                     }
                     break;

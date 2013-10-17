@@ -42,18 +42,18 @@ class LoginController extends Zend_Controller_Action
         $form = new Application_Form_Registration();
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_request->getPost())) {
-                $modelPlayer = new Application_Model_Player(null, false);
+                $mPlayer = new Application_Model_Player();
                 $data = array(
                     'firstName' => $this->_request->getParam('firstName'),
                     'lastName' => $this->_request->getParam('lastName'),
                     'login' => $this->_request->getParam('login'),
                     'password' => md5($this->_request->getParam('password'))
                 );
-                $playerId = $modelPlayer->createPlayer($data);
+                $playerId = $mPlayer->createPlayer($data);
                 if ($playerId) {
                     $modelHero = new Application_Model_Hero($playerId);
                     $modelHero->createHero();
-                    $this->_namespace->player = $modelPlayer->getPlayer($playerId);
+                    $this->_namespace->player = $mPlayer->getPlayer($playerId);
                     $this->_redirect($this->view->url(array('controller' => 'index', 'action' => null)));
                 }
             }

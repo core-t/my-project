@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-06 23:48+0100\n"
-"PO-Revision-Date: 2013-10-06 23:48+0100\n"
+"PO-Revision-Date: 2013-10-10 12:09+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -215,7 +215,7 @@ msgstr "Dołącz do jednej z gier z listy poniżej"
 
 #: application/views/scripts/new/index.phtml:16
 msgid "Refresh"
-msgstr "Odświerz"
+msgstr "Odśwież"
 
 #: application/views/scripts/new/index.phtml:20
 msgid "There are no open games"
