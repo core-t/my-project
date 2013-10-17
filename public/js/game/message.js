@@ -285,22 +285,22 @@ var Message = {
             }
         }
         if (resurrection) {
-            var buttonResurestion;
-            var cssResurestion;
+            var buttonResurection;
+            var cssResurection;
             if ($('#gold').html() < 100) {
-                buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
-                cssResurestion = {
+                buttonResurection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
+                cssResurection = {
                     'color': '#d00000'
                 };
             } else {
-                buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function () {
+                buttonResurection = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function () {
                     wsHeroResurrection(castleId)
                 });
-                cssResurestion = {};
+                cssResurection = {};
             }
             resurrectionElement = $('<p>')
                 .addClass('h')
-                .css(cssResurestion)
+                .css(cssResurection)
                 .append(
                     $('<input>').attr({
                         type: 'checkbox',
@@ -308,43 +308,49 @@ var Message = {
                         value: castleId
                     })
                 )
-                .append(buttonResurestion);
+                .append(buttonResurection);
         }
         var buttonBuildDefense;
-//    var cssBuildDefense;
         var costBuildDefense = 0;
         for (i = 1; i <= castles[castleId].defense; i++) {
             costBuildDefense += i * 100;
         }
-        if ($('#gold').html() < costBuildDefense) {
-            buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
-        } else {
-            buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
-                wsCastleBuildDefense();
-            });
-        }
+//        if ($('#gold').html() < costBuildDefense) {
+//            buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
+//        } else {
+//            buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
+//                wsCastleBuildDefense();
+//            });
+//        }
 
         var div = $('<div>')
             .append($('<h3>').append(castles[castleId].name).append(capital))
-            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
+//            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
             .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
             .append(
-                $('<p>')
-                    .addClass('h')
+                $('<fieldset>')
+                    .append($('<label>').html('Castle defense: ' + castles[castleId].defense))
                     .append(
-                        $('<input>').attr({
-                            type: 'checkbox',
-                            name: 'defense',
-                            value: castleId
-                        })
+                        $('<div>')
+                            .append('Build castle defense ')
+                            .append(
+                                $('<input>').attr({
+                                    type: 'checkbox',
+                                    name: 'defense',
+                                    value: castleId
+                                })
+                            )
+                            .append(' cost ' + costBuildDefense + 'g')
                     )
-                    .append(buttonBuildDefense)
             )
+            .append($('<br>'))
             .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table))
             .append($('<br>'))
             .append(resurrectionElement);
 
         Message.exec(div.html());
+        this.ok();
+        this.cancel();
     }
 }
 

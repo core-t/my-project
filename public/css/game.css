@@ -356,13 +356,16 @@
     color: #d6d6d6;
 }
 
-.message .production {
+.message fieldset{
     border: 1px solid #CECEb0;
+    border-radius: 5px;
+}
+
+.message .production {
     text-shadow: none;
     color: #000;
     margin-left: 1px;
     margin-bottom: 5px;
-    border-radius: 5px;
 }
 
 .message .production table{
@@ -423,11 +426,10 @@
     height: 18px;
 }
 
-.message .production label {
+.message label {
     line-height: 20px;
     color: #CECEb0;
     text-transform: uppercase;
-    padding-left: 4px;
 }
 
 .message .cancel {
