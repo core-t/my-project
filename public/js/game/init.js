@@ -50,14 +50,14 @@ var documentHeigh;
 
 $(document).ready(function () {
     $(window).resize(function () {
-        adjustGui();
+        Gui.adjust();
     });
 
-    adjustGui();
+    Gui.adjust();
     fieldsCopy();
     unitsReformat();
     artifactsReformat()
-    prepareButtons();
+    Gui.prepareButtons();
     startWebSocket();
 
     Players.init();

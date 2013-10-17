@@ -329,8 +329,9 @@
     z-index: 27000;
     background: transparent url('../img/game/message_bg.png');
     position: absolute;
-    top: 50px;
+    top: 60px;
     overflow-x: hidden;
+    display: none;
     border-radius: 10px;
     box-shadow: 5px 5px 20px #000;
     text-shadow: 2px 2px 0 #000;
@@ -788,4 +789,9 @@
 
 html {
     background: #000;
+}
+
+#close {
+    position: absolute;
+    cursor: pointer;
 }

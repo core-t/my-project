@@ -8,7 +8,7 @@
     echo $this->headScript() . "\n";
     ?>
 </head>
-<body>
+<body onkeydown="Gui.doKey(arguments[0] || window.event)">
 <div id="page">
     <div id="menuTop">
         <?php echo $this->placeholder('version') ?>
@@ -27,6 +27,7 @@
             </div>
             <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
             </div>
+            <div class="message"></div>
             <div id="goldBox" class="box">
                 <div class="left">
                     <div><?php echo $this->translate('Income') ?></div>
@@ -42,7 +43,7 @@
                 </div>
             </div>
             <div id="playersBox" class="box">
-<!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->
+                <!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->
                 <div id="turn"><span id="turnNumber"></span></div>
                 <canvas id="playersCanvas" width="180px" height="180px"></canvas>
                 <div id="turnBox">
@@ -51,6 +52,7 @@
                         <a id="nextTurn" class="button"><?php echo $this->translate('Next turn') ?> &raquo;</a>
                     </div>
                 </div>
+                <div id="close">X</div>
             </div>
             <div id="armyBox" class="box">
                 <div id="nameBox"><?php echo $this->translate('Name') ?>: <span id="name" class="font-yellow"></span>
@@ -77,10 +79,11 @@
                             <a id="searchRuins"
                                class="button buttonOff"><?php echo $this->translate('Search ruins') ?></a>
                         </div>
-<!--                        <div class="left armyButton">-->
-<!--                            <a id="showArtifacts"-->
-<!--                               class="button buttonOff">--><?php //echo $this->translate('Show artifacts') ?><!--</a>-->
-<!--                        </div>-->
+                        <!--                        <div class="left armyButton">-->
+                        <!--                            <a id="showArtifacts"-->
+                        <!--                               class="button buttonOff">-->
+                        <?php //echo $this->translate('Show artifacts') ?><!--</a>-->
+                        <!--                        </div>-->
                         <div class="left armyButton">
                             <a id="splitArmy" class="button buttonOff"><?php echo $this->translate('Split army') ?></a>
                         </div>
@@ -101,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+                <div id="close">X</div>
             </div>
             <div id="timerBox" class="box">
                 <table>
@@ -119,6 +123,7 @@
                     <div class="left"><input type="text" name="msg" id="msg"></div>
                     <div class="right"><a id="send" class="button"><?php echo $this->translate('Send') ?></a></div>
                 </div>
+                <div id="close">X</div>
             </div>
             <?php echo $this->placeholder('board') ?>
         </div>

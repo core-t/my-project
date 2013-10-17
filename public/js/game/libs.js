@@ -208,71 +208,6 @@ function isComputer(color) {
     return players[color].computer;
 }
 
-function prepareButtons() {
-    zoomPad = $(".zoomPad");
-    board = $("#board");
-
-    $('#send').click(function () {
-        wsChat();
-    });
-    $('#msg').keypress(function (e) {
-        if (e.which == 13) {
-            wsChat();
-        }
-    });
-    $('#nextTurn').click(function () {
-        nextTurnM()
-    });
-    $('#surrender').click(function () {
-        Message.surrender()
-    });
-    $('#nextArmy').click(function () {
-        findNextArmy()
-    });
-    $('#skipArmy').click(function () {
-        skipArmy()
-    });
-    $('#quitArmy').click(function () {
-        fortifyArmy()
-    });
-    $('#splitArmy').click(function () {
-        if (selectedArmy) {
-            splitArmyM()
-        }
-    });
-    $('#armyStatus').click(function () {
-        if (selectedArmy) {
-            armyStatusM()
-        }
-    });
-    $('#disbandArmy').click(function () {
-        if (selectedArmy) {
-            disbandArmyM()
-        }
-    });
-    $('#unselectArmy').click(function () {
-        if (selectedArmy) {
-            unselectArmy();
-        }
-    });
-    $('#searchRuins').click(function () {
-        wsSearchRuins()
-    });
-    $('#showArtifacts').click(function () {
-        Message.showArtifacts();
-    });
-    $('#test').click(function () {
-        test()
-    });
-    $('#nextTurn').addClass('buttonOff');
-    $('#nextArmy').addClass('buttonOff');
-    $('#skipArmy').addClass('buttonOff');
-    $('#quitArmy').addClass('buttonOff');
-    $('#splitArmy').addClass('buttonOff');
-    $('#disbandArmy').addClass('buttonOff');
-    $('#searchRuins').addClass('buttonOff');
-}
-
 function fieldsCopy() {
     for (y in fieldsOryginal) {
         fields[y] = new Array();
@@ -282,59 +217,14 @@ function fieldsCopy() {
     }
 }
 
-function adjustGui() {
-    documentWidth = $(document).width();
-    documentHeigh = $(document).height() - 35;
-    $('.zoomWindow').css('height', documentHeigh + 'px');
-
-    messageLeft = documentWidth / 2 - 160;
-
-    var left = documentWidth - 237;
-    var chatLeft = documentWidth - 507;
-    var chatTop = documentHeigh - 169;
-    $('#chatBox').css({
-        'left': chatLeft + 'px',
-        'top': chatTop + 'px'
-    });
-    var goldBoxLeft = left / 2;
-    $('#goldBox').css({
-        'left': goldBoxLeft + 'px'
-    });
-    $('#playersBox').css({
-        'left': left + 'px'
-    });
-    $('#armyBox').css({
-        'left': left + 'px'
-    });
-//    $('#timerBox').css({
-//        'left': left + 'px'
-//    });
-
-    var zoomPadLayoutHeight = parseInt($('#map').css('height'));
-
-    $('.zoomPadLayout').css({
-        width: parseInt($('#map').css('width')) + 20 + 'px',
-        height: zoomPadLayoutHeight + 40 + 'px'
-    });
-
-    $('#terrain').css('top', zoomPadLayoutHeight + 5 + 'px');
-
-    if (!zoomer) {
-        zoomer = new zoom(documentWidth, documentHeigh);
-    } else {
-        zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
-        zoomer.lens.setdimensions();
-    }
-}
-
 function artifactsReformat() {
-    for (i in artifacts) {
-        for (j in artifacts[i]) {
-            if (artifacts[i][j]) {
-                console.log(j);
-                console.log(artifacts[i][j]);
-            }
-        }
-        break;
-    }
+//    for (i in artifacts) {
+//        for (j in artifacts[i]) {
+//            if (artifacts[i][j]) {
+//                console.log(j);
+//                console.log(artifacts[i][j]);
+//            }
+//        }
+//        break;
+//    }
 }

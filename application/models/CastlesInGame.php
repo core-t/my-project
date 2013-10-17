@@ -104,7 +104,7 @@ class Application_Model_CastlesInGame extends Game_Db_Table_Abstract
 
         foreach ($this->selectAll($select) as $val) {
             $playersCastles[$val['castleId']] = $val;
-            unset($playersCastles[$val['castleId']]['castleId']);
+//            unset($playersCastles[$val['castleId']]['castleId']);
         }
 
         return $playersCastles;
