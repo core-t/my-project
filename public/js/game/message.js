@@ -8,31 +8,52 @@ var Message = {
             $('.message').remove();
         }
     },
-    exec: function (txt, func) {
+    exec: function (txt) {
         this.remove();
         this.element().after(
             $('<div>')
                 .addClass('message')
                 .addClass('center')
                 .append(txt)
-                .append(
-                    $('<div>')
-                        .addClass('button go')
-                        .html('Ok')
-                        .click(function () {
-                            this.remove();
-                            func();
-                        })
-                )
-                .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-                    this.remove()
-                }))
+//                .append(
+//                    $('<div>')
+//                        .addClass('button go')
+//                        .html('Ok')
+//                        .click(function () {
+//                            this.remove();
+//                            func();
+//                        })
+//                )
+//                .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
+//                    this.remove()
+//                }))
                 .css({
                     'left': this.left + 'px',
                     'display': 'block'
                 })
         );
 
+    },
+    ok: function (func) {
+        $('.message').append(
+            $('<div>')
+                .addClass('button go')
+                .html('Ok')
+                .click(function () {
+                    this.remove();
+                    func();
+                })
+        )
+    },
+    cancel: function () {
+        $('.message').append(
+            $('<div>')
+                .addClass('button cancel')
+                .html('Cancel')
+                .click(function () {
+                    this.remove()
+                })
+        )
     },
     surrender: function () {
         Message.remove();
@@ -154,6 +175,176 @@ var Message = {
                 })
         );
 
+    },
+    turn: function () {
+        this.remove();
+        if (my.turn && turn.nr == 1) {
+            Message.castle(firstCastleId, my.color);
+        } else {
+            this.exec('Your turn.');
+            this.ok();
+        }
+    },
+    castle: function (castleId, color) {
+        if (lock) {
+            return;
+        }
+        if (!my.turn) {
+            return;
+        }
+        if (selectedArmy) {
+            return;
+        }
+        Message.remove();
+        var time = '';
+        var attr;
+        var capital = '';
+        if (castles[castleId].capital) {
+            capital = ' - Capital city';
+        }
+        var table = $('<table>');
+        var j = 0;
+        var td = new Array();
+
+        for (unitId in castles[castleId].production) {
+            var img = units[unitId].name.replace(' ', '_').toLowerCase();
+            var travelBy = '';
+            if (unitId == castles[castleId].currentProduction) {
+                attr = {
+                    type: 'radio',
+                    name: 'production',
+                    value: units[unitId].name,
+                    checked: 'checked'
+                }
+                time = castles[castleId].currentProductionTurn + '/';
+            } else {
+                attr = {
+                    type: 'radio',
+                    name: 'production',
+                    value: units[unitId].name
+                }
+                time = '';
+            }
+
+            if (units[unitId].canFly) {
+                travelBy = 'ground / air';
+            } else if (units[unitId].canSwim) {
+                travelBy = 'water';
+            } else {
+                travelBy = 'ground';
+            }
+            td[j] = $('<td>')
+                .addClass('unit')
+                .append(
+                    $('<p>')
+                        .append($('<input>').attr(attr))
+                        .append(' ' + units[unitId].name + ' (' + travelBy + ')')
+                )
+                .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, color))))
+                .append(
+                    $('<div>')
+                        .addClass('attributes')
+                        .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitId].time + 't'))
+                        .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitId].cost + 'g'))
+                        .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
+                );
+            j++;
+        }
+        var k = Math.ceil(j / 2);
+        for (l = 0; l < k; l++) {
+            var tr = $('<tr>');
+            var m = l * 2;
+            tr.append(td[m]);
+            if (typeof td[m + 1] == 'undefined') {
+                tr.append($('<td>').addClass('empty').html('&nbsp;'));
+            } else {
+                tr.append(td[m + 1]);
+            }
+            table.append(tr);
+        }
+        table.append(
+            $('<tr>')
+                .append(
+                    $('<td>')
+                        .addClass('unit')
+                        .append(
+                            $('<input>').attr({
+                                type: 'radio',
+                                name: 'production',
+                                value: 'stop'
+                            })
+                        )
+                        .append(' Stop production')
+                )
+        );
+        var resurrectionElement;
+        var resurrection = true;
+        for (armyId in players[my.color].armies) {
+            for (j in players[my.color].armies[armyId].heroes) {
+                resurrection = false;
+            }
+        }
+        if (resurrection) {
+            var buttonResurestion;
+            var cssResurestion;
+            if ($('#gold').html() < 100) {
+                buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
+                cssResurestion = {
+                    'color': '#d00000'
+                };
+            } else {
+                buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function () {
+                    wsHeroResurrection(castleId)
+                });
+                cssResurestion = {};
+            }
+            resurrectionElement = $('<p>')
+                .addClass('h')
+                .css(cssResurestion)
+                .append(
+                    $('<input>').attr({
+                        type: 'checkbox',
+                        name: 'resurrection',
+                        value: castleId
+                    })
+                )
+                .append(buttonResurestion);
+        }
+        var buttonBuildDefense;
+//    var cssBuildDefense;
+        var costBuildDefense = 0;
+        for (i = 1; i <= castles[castleId].defense; i++) {
+            costBuildDefense += i * 100;
+        }
+        if ($('#gold').html() < costBuildDefense) {
+            buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
+        } else {
+            buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
+                wsCastleBuildDefense();
+            });
+        }
+
+        var div = $('<div>')
+            .append($('<h3>').append(castles[castleId].name).append(capital))
+            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
+            .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
+            .append(
+                $('<p>')
+                    .addClass('h')
+                    .append(
+                        $('<input>').attr({
+                            type: 'checkbox',
+                            name: 'defense',
+                            value: castleId
+                        })
+                    )
+                    .append(buttonBuildDefense)
+            )
+            .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table))
+            .append($('<br>'))
+            .append(resurrectionElement);
+
+        Message.exec(div.html());
     }
 }
 
@@ -177,32 +368,6 @@ function winM(color) {
 //            .addClass('message')
 //            .addClass('center')
 //            .append($('<h3>').html(msg))
-//            .append($('<div>')
-//                .addClass('button go')
-//                .html('Ok')
-//                .click(function () {
-//                    Message.remove();
-//
-//                })
-//            )
-//            .css({
-//                'left': Message.left + 'px'
-//            })
-//    );
-}
-
-function turnM() {
-    Message.remove();
-    if (my.turn && turn.nr == 1) {
-        castleM(firstCastleId, my.color);
-    }
-
-    Message.exec('Your turn.', '');
-//    Message.element().after(
-//        $('<div>')
-//            .addClass('message')
-//            .addClass('center')
-//            .append($('<h3>').html('Your turn.'))
 //            .append($('<div>')
 //                .addClass('button go')
 //                .html('Ok')
@@ -510,231 +675,6 @@ function armyStatusM() {
     );
 }
 
-function castleM(castleId, color) {
-    if (lock) {
-        return;
-    }
-    if (!my.turn) {
-        return;
-    }
-    if (selectedArmy) {
-        return;
-    }
-    Message.remove();
-    var time = '';
-    var attr;
-    var capital = '';
-    if (castles[castleId].capital) {
-        capital = ' - Capital city';
-    }
-    var table = $('<table>');
-    var j = 0;
-    var td = new Array();
-
-    for (unitId in castles[castleId].production) {
-        var img = units[unitId].name.replace(' ', '_').toLowerCase();
-        var travelBy = '';
-        if (unitId == castles[castleId].currentProduction) {
-            attr = {
-                type: 'radio',
-                name: 'production',
-                value: units[unitId].name,
-                checked: 'checked'
-            }
-            time = castles[castleId].currentProductionTurn + '/';
-        } else {
-            attr = {
-                type: 'radio',
-                name: 'production',
-                value: units[unitId].name
-            }
-            time = '';
-        }
-
-        if (units[unitId].canFly) {
-            travelBy = 'ground / air';
-        } else if (units[unitId].canSwim) {
-            travelBy = 'water';
-        } else {
-            travelBy = 'ground';
-        }
-        td[j] = $('<td>')
-            .addClass('unit')
-            .append(
-                $('<p>')
-                    .append($('<input>').attr(attr))
-                    .append(' ' + units[unitId].name + ' (' + travelBy + ')')
-            )
-            .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, color))))
-            .append(
-                $('<div>')
-                    .addClass('attributes')
-                    .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitId].time + 't'))
-                    .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitId].cost + 'g'))
-                    .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
-            );
-        j++;
-    }
-    var k = Math.ceil(j / 2);
-    for (l = 0; l < k; l++) {
-        var tr = $('<tr>');
-        var m = l * 2;
-        tr.append(td[m]);
-        if (typeof td[m + 1] == 'undefined') {
-            tr.append($('<td>').addClass('empty').html('&nbsp;'));
-        } else {
-            tr.append(td[m + 1]);
-        }
-        table.append(tr);
-    }
-    table.append(
-        $('<tr>')
-            .append(
-                $('<td>')
-                    .addClass('unit')
-                    .append(
-                        $('<input>').attr({
-                            type: 'radio',
-                            name: 'production',
-                            value: 'stop'
-                        })
-                    )
-                    .append(' Stop production')
-            )
-    );
-    var resurrectionElement;
-    var resurrection = true;
-    for (armyId in players[my.color].armies) {
-        for (j in players[my.color].armies[armyId].heroes) {
-            resurrection = false;
-        }
-    }
-    if (resurrection) {
-        var buttonResurestion;
-        var cssResurestion;
-        if ($('#gold').html() < 100) {
-            buttonResurestion = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
-            cssResurestion = {
-                'color': '#d00000'
-            };
-        } else {
-            buttonResurestion = $('<div>').addClass('button right').html('Hero resurrection (cost 100g)').click(function () {
-                wsHeroResurrection(castleId)
-            });
-            cssResurestion = {};
-        }
-        resurrectionElement = $('<p>')
-            .addClass('h')
-            .css(cssResurestion)
-            .append(
-                $('<input>').attr({
-                    type: 'checkbox',
-                    name: 'resurrection',
-                    value: castleId
-                })
-            )
-            .append(buttonResurestion);
-    }
-    var buttonBuildDefense;
-//    var cssBuildDefense;
-    var costBuildDefense = 0;
-    for (i = 1; i <= castles[castleId].defense; i++) {
-        costBuildDefense += i * 100;
-    }
-    if ($('#gold').html() < costBuildDefense) {
-        buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
-    } else {
-        buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
-            wsCastleBuildDefense();
-        });
-    }
-
-    var div = $('<div>')
-        .append($('<h3>').append(castles[castleId].name).append(capital))
-        .append($('<h5>').append('City defense: ' + castles[castleId].defense))
-        .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
-        .append(
-            $('<p>')
-                .addClass('h')
-                .append(
-                    $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'defense',
-                        value: castleId
-                    })
-                )
-                .append(buttonBuildDefense)
-        )
-        .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table))
-
-//        .append(
-//            $('<p>')
-//                .addClass('h')
-//                .append(
-//                    $('<input>').attr({
-//                        type: 'checkbox',
-//                        name: 'raze',
-//                        value: castleId
-//                    })
-//                )
-//                .append($('<div>').addClass('button right').html('Raze (income 1000g)').click(function () {
-//                    wsRazeCastle()
-//                }))
-//        )
-        .append($('<br>'))
-        .append(resurrectionElement);
-
-    Message.exec(div.html(), '');
-
-//    Message.element().after(
-//        $('<div>')
-//            .addClass('message')
-//            .css({
-//                'left': Message.left + 'px',
-//                'display':'block'
-//            })
-//            .append($('<h3>').append(castles[castleId].name).append(capital))
-//            .append($('<h5>').append('City defense: ' + castles[castleId].defense))
-//            .append($('<h5>').append(castles[castleId].income + ' gold/turn').attr('id', 'income'))
-//            .append(
-//                $('<p>')
-//                    .addClass('h')
-//                    .append(
-//                        $('<input>').attr({
-//                            type: 'checkbox',
-//                            name: 'defense',
-//                            value: castleId
-//                        })
-//                    )
-//                    .append(buttonBuildDefense)
-//            )
-//            .append(table)
-//            .append(
-//                $('<p>')
-//                    .addClass('h')
-//                    .append(
-//                        $('<input>').attr({
-//                            type: 'checkbox',
-//                            name: 'raze',
-//                            value: castleId
-//                        })
-//                    )
-//                    .append($('<div>').addClass('button right').html('Raze (income 1000g)').click(function () {
-//                        wsRazeCastle()
-//                    }))
-//            )
-//            .append($('<br>'))
-//            .append(
-//                $('<p>')
-//                    .append($('<div>').addClass('button cancel').html('Cancel').click(function () {
-//                        Message.remove()
-//                    }))
-//            )
-//            .append(resurrectionElement)
-//    );
-
-}
-
 function battleM(data, clb) {
     var battle = data.battle;
     var attackerColor = data.attackerColor;
@@ -816,7 +756,7 @@ function battleM(data, clb) {
 
     if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
         $('#battleOk').click(function () {
-            castleM(data.castleId, data.attackerColor);
+            Message.castle(data.castleId, data.attackerColor);
         });
     } else {
         $('#battleOk').click(function () {

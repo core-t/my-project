@@ -12,7 +12,7 @@ function turnOn() {
     $('#nextTurn').removeClass('buttonOff');
     $('#nextArmy').removeClass('buttonOff');
     showFirstCastle();
-    turnM();
+    Message.turn();
     titleBlink('Your turn!');
 //    test();
 }

@@ -96,7 +96,7 @@ function castleOwner(castleId, color) {
             .unbind('mouseout')
             .unbind('click')
             .click(function () {
-                castleM(castleId, color)
+                Message.castle(castleId, color)
             });
     } else {
         castleFields(castleId, 'e');
