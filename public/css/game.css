@@ -295,6 +295,16 @@
     font-size: 20px;
 }
 
+#exit {
+    position: absolute;
+    top: 10px;
+    left: 210px;
+    background: url('../img/game/exit.png') no-repeat;
+    width: 18px;
+    height: 19px;
+    cursor: pointer;
+}
+
 #turn {
     width: 80px;
     position: absolute;
@@ -357,7 +367,7 @@
     color: #d6d6d6;
 }
 
-.message fieldset{
+.message fieldset {
     border: 1px solid #CECEb0;
     border-radius: 5px;
 }
@@ -367,7 +377,7 @@
     color: #000;
 }
 
-.message .production table{
+.message .production table {
     padding: 2px;
     width: auto;
 
@@ -798,4 +808,33 @@ html {
 #close {
     position: absolute;
     cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background: transparent url('../img/game/message_bg.png');
+    border: 1px solid #555;
+    box-shadow: 5px 5px 20px #000;
+    border-radius: 10px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#timerBox #close {
+    left: 225px;
+    top: -10px;
+}
+
+#playersBox #close {
+    left: -10px;
+    /*top: -10px;*/
+}
+
+#chatBox #close {
+    left: -10px;
+    top: -10px;
+}
+
+#armyBox #close {
+    left: -10px;
+    top: -10px;
 }

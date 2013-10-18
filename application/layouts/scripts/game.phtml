@@ -39,6 +39,7 @@
             <div id="playersBox" class="box">
                 <!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->
                 <div id="turn"><span id="turnNumber"></span></div>
+                <div id="exit"></div>
                 <canvas id="playersCanvas" width="180px" height="180px"></canvas>
                 <div id="turnBox">
                     <div id="surrender" title="<?php echo $this->translate('Surrender') ?>"></div>
@@ -49,6 +50,7 @@
                 <div id="close">X</div>
             </div>
             <div id="armyBox" class="box">
+                <div id="close">X</div>
                 <div id="nameBox"><?php echo $this->translate('Name') ?>: <span id="name" class="font-yellow"></span>
                 </div>
                 <div id="attrBox">
@@ -98,9 +100,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="close">X</div>
             </div>
             <div id="timerBox" class="box">
+                <div id="close">X</div>
                 <table>
                     <tr>
                         <th><?php echo $this->translate('Color') ?></th>
@@ -108,9 +110,9 @@
                         <th><?php echo $this->translate('Time spend') ?></th>
                     </tr>
                 </table>
-                <div id="close">X</div>
             </div>
             <div id="chatBox" class="box">
+                <div id="close">X</div>
                 <div id="chatWindow">
                     <div></div>
                 </div>
@@ -118,7 +120,6 @@
                     <div class="left"><input type="text" name="msg" id="msg"></div>
                     <div class="right"><a id="send" class="button"><?php echo $this->translate('Send') ?></a></div>
                 </div>
-                <div id="close">X</div>
             </div>
             <?php echo $this->placeholder('board') ?>
         </div>

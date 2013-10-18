@@ -35,6 +35,10 @@ var Gui = {
         zoomPad = $(".zoomPad");
         board = $("#board");
 
+        $('#exit').click(function () {
+            window.location = '/' + lang + '/index';
+        });
+
         $('#send').click(function () {
             wsChat();
         });
@@ -97,9 +101,10 @@ var Gui = {
             var left = parseInt($('#timerBox').css('left'));
             var move = -220;
 
-            if (Gui.playerBox['close']) {
+            if (Gui.timerBox['close']) {
                 move = -move;
             }
+
             $('#timerBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.timerBox['close'] = !Gui.timerBox['close'];
             });
