@@ -1,22 +1,30 @@
 var Gui = {
     armyBox: {'close': 0},
+    chatBox: {'close': 0},
     playerBox: {'close': 0},
+    timerBox: {'close': 0},
     doKey: function (event) {
         var key = event.keyCode || event.charCode;
         switch (key) {
-            case 27:
+            case 27: //ESC
                 Message.remove();
                 break;
-            case 69:
+            case 68: //d
+                Message.disbandArmy();
+                break;
+            case 69: //t
                 Message.nextTurn();
                 break;
-            case 70:
+            case 70: //f
                 fortifyArmy();
                 break;
-            case 78:
+            case 78: //n
                 findNextArmy();
                 break;
-            case 83:
+            case 82: //r
+                wsSearchRuins();
+                break;
+            case 83: //s
                 skipArmy();
                 break;
             default:
@@ -61,9 +69,7 @@ var Gui = {
             }
         });
         $('#disbandArmy').click(function () {
-            if (selectedArmy) {
-                Message.disbandArmy()
-            }
+            Message.disbandArmy()
         });
         $('#unselectArmy').click(function () {
             if (selectedArmy) {
@@ -87,6 +93,17 @@ var Gui = {
         $('#disbandArmy').addClass('buttonOff');
         $('#searchRuins').addClass('buttonOff');
 
+        $('#timerBox #close').click(function () {
+            var left = parseInt($('#timerBox').css('left'));
+            var move = -220;
+
+            if (Gui.playerBox['close']) {
+                move = -move;
+            }
+            $('#timerBox').animate({'left': left + move + 'px'}, 1000, function () {
+                Gui.timerBox['close'] = !Gui.timerBox['close'];
+            });
+        });
         $('#playersBox #close').click(function () {
             var left = parseInt($('#playersBox').css('left'));
             var move = 220;
@@ -96,6 +113,17 @@ var Gui = {
             }
             $('#playersBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.playerBox['close'] = !Gui.playerBox['close'];
+            });
+        });
+        $('#chatBox #close').click(function () {
+            var left = parseInt($('#chatBox').css('left'));
+            var move = 490;
+
+            if (Gui.chatBox['close']) {
+                move = -move;
+            }
+            $('#chatBox').animate({'left': left + move + 'px'}, 1000, function () {
+                Gui.chatBox['close'] = !Gui.chatBox['close'];
             });
         });
         $('#armyBox #close').click(function () {
@@ -112,11 +140,8 @@ var Gui = {
     },
     adjust: function () {
         documentWidth = $(document).width();
-        documentHeigh = $(document).height() - 35;
+        documentHeigh = $(document).height();
         $('.zoomWindow').css('height', documentHeigh + 'px');
-
-//        console.log(parseInt($('.message')));
-        Message.left = documentWidth / 2 - parseInt($('.message').css('width')) / 2;
 
         var left = documentWidth - 237;
         var chatLeft = documentWidth - 507;

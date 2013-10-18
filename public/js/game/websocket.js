@@ -337,7 +337,7 @@ function wsArmyMove(movesSpend) {
     ws.send(JSON.stringify(token));
 }
 
-function wsSplitArmy(armyId) {
+function wsSplitArmy() {
     if (wsClosed) {
         simpleM('Sorry, server is disconnected.');
         return;
@@ -365,7 +365,7 @@ function wsSplitArmy(armyId) {
 
     var token = {
         type: 'splitArmy',
-        armyId: armyId,
+        armyId: selectedArmy.armyId,
         s: s,
         h: h
     };

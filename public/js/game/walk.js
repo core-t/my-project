@@ -26,7 +26,7 @@ function walk(r, xy, computer) {
         }
 
         if (isTruthful(r.battle)) {
-            battleM(r, function () {
+            Message.battle(r, function () {
                 walkEnd(r, r.attackerColor, r.deletedIds, computer);
             });
         } else {

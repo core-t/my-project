@@ -11,6 +11,7 @@
     background: none;
     margin: 0;
     width: auto;
+    min-height: 100%;
 }
 
 #game {
@@ -364,8 +365,6 @@
 .message .production {
     text-shadow: none;
     color: #000;
-    margin-left: 1px;
-    margin-bottom: 5px;
 }
 
 .message .production table{
@@ -428,8 +427,9 @@
 
 .message label {
     line-height: 20px;
-    color: #CECEb0;
+    color: #fff;
     text-transform: uppercase;
+    text-shadow: none;
 }
 
 .message .cancel {
@@ -789,10 +789,6 @@
     min-width: 200px;
     min-height: 200px;
     z-index: 28000;
-}
-
-#menuTop {
-    border-bottom: none;
 }
 
 html {

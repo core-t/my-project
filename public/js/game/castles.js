@@ -13,14 +13,17 @@ var Castle = {
             return;
         }
 
+        if ($('input[name=resurrection]').is(':checked')) {
+            wsHeroResurrection(castleId);
+            return;
+        }
+
         var name = $('input:radio[name=production]:checked').val();
 
         if (name) {
             wsProduction(castleId, name);
             return;
         }
-
-//        wsHeroResurrection(castleId);
     }
 }
 

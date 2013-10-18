@@ -1,5 +1,4 @@
 var Message = {
-    left: null,
     element: function () {
         return $('#terrain');
     },
@@ -12,15 +11,14 @@ var Message = {
         this.remove();
         this.element().after(
             $('<div>')
-                .addClass('message')
-                .addClass('center')
+                .addClass('message center')
                 .append(txt)
-                .css({
-                    'left': this.left + 'px',
-                    'display': 'block'
-                })
         );
-
+        var left = documentWidth / 2 - parseInt($('.message').css('width')) / 2;
+        $('.message').css({
+            'left': left + 'px',
+            'display': 'block'
+        })
     },
     ok: function (func) {
         $('.message').append(
@@ -36,13 +34,17 @@ var Message = {
                 })
         )
     },
-    cancel: function () {
+    cancel: function (func) {
         $('.message').append(
             $('<div>')
                 .addClass('button cancel')
                 .html('Cancel')
                 .click(function () {
-                    Message.remove()
+                    if (typeof func != 'undefined') {
+                        func();
+                    } else {
+                        Message.remove();
+                    }
                 })
         )
     },
@@ -168,14 +170,14 @@ var Message = {
         if (selectedArmy) {
             return;
         }
-        Message.remove();
-        var time = '';
-        var attr;
-        var capital = '';
 
         if (typeof castles[castleId] == 'undefined') {
             return;
         }
+
+        var time = '';
+        var attr;
+        var capital = '';
 
         if (castles[castleId].capital) {
             capital = ' - Capital city';
@@ -263,29 +265,42 @@ var Message = {
             }
         }
         if (resurrection) {
-            var buttonResurrection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
-            var cssResurrection;
-            if ($('#gold').html() < 100) {
-                cssResurrection = {
-                    'color': '#d00000'
-                };
-            } else {
-                buttonResurrection.click(function () {
-                    wsHeroResurrection(castleId)
-                });
-                cssResurrection = {};
-            }
-            resurrectionElement = $('<p>')
-                .addClass('h')
-                .css(cssResurrection)
-                .append(
-                    $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'resurrection',
-                        value: castleId
-                    })
-                )
-                .append(buttonResurrection);
+            var resurrectionElement = $('<fieldset>')
+                    .append($('<label>').html('Hero resurrection'))
+                    .append(
+                        $('<div>')
+                            .append(
+                                $('<input>').attr({
+                                    type: 'checkbox',
+                                    name: 'resurrection',
+                                    value: castleId
+                                })
+                            )
+                            .append(' cost 100g')
+                    )
+//            var buttonResurrection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
+//            var cssResurrection;
+//            if ($('#gold').html() < 100) {
+//                cssResurrection = {
+//                    'color': '#d00000'
+//                };
+//            } else {
+//                buttonResurrection.click(function () {
+//                    wsHeroResurrection(castleId)
+//                });
+//                cssResurrection = {};
+//            }
+//            resurrectionElement = $('<p>')
+//                .addClass('h')
+//                .css(cssResurrection)
+//                .append(
+//                    $('<input>').attr({
+//                        type: 'checkbox',
+//                        name: 'resurrection',
+//                        value: castleId
+//                    })
+//                )
+//                .append(buttonResurrection);
         }
         var buttonBuildDefense;
         var costBuildDefense = 0;
@@ -357,7 +372,12 @@ var Message = {
         if (typeof selectedArmy == 'undefined') {
             return;
         }
+
         if (!my.turn) {
+            return;
+        }
+
+        if (!selectedArmy) {
             return;
         }
 
@@ -422,303 +442,290 @@ var Message = {
             overflow = 'hidden';
         }
 
+        this.show(army);
+        this.ok(wsSplitArmy);
+        this.cancel();
 
-        Message.element().after(
-            $('<div>')
-                .addClass('message')
-                .append(army)
-                .append(
-                    $('<div>')
-                        .css({
-                            'margin-top': '15px'
+//                .css({
+//                    'height': height + 'px',
+//                    'left': Message.left + 'px',
+//                    'overflow-y': overflow
+//                }));
+    },
+    armyStatus: function () {
+        if (typeof selectedArmy == 'undefined') {
+            return;
+        }
+
+        var army = $('<div>').addClass('status');
+        var numberOfUnits = 0;
+        var bonusTower = 0;
+        var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
+        var attackPoints;
+        var defensePoints;
+
+        if (isTowerAtPosition(selectedArmy.x, selectedArmy.y)) {
+            bonusTower = 1;
+        }
+        for (i in selectedArmy.soldiers) {
+            numberOfUnits++;
+            var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
+            attackPoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].attackPoints).css('color', '#da8');
+            defensePoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].defensePoints).css('color', '#da8');
+            if (selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly) {
+                attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
+                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+            }
+            if (selectedArmy.heroKey) {
+                attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
+                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+            }
+            if (bonusTower) {
+                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+            }
+            if (castleDefense) {
+                defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
+            }
+            army.append(
+                $('<div>')
+                    .addClass('row')
+                    .append($('<div>').addClass('nr').html(numberOfUnits))
+                    .append($('<div>').addClass('img').html(
+                        $('<img>').attr({
+                            'src': Unit.getImageByName(img, selectedArmy.color),
+                            'id': 'unit' + selectedArmy.soldiers[i].soldierId
                         })
-                        .append(
-                            $('<div>').addClass('left')
-                                .append($('<a>').addClass('button cancel').html('Cancel').click(function () {
-                                    Message.remove()
-                                }))
-                        )
-                        .append(
-                            $('<div>').addClass('right')
-                                .append($('<a>').addClass('button submit').html('Select units').click(function () {
-                                    wsSplitArmy(selectedArmy.armyId)
-                                }))
-                        )
-                )
-                .css({
-                    'height': height + 'px',
-                    'left': Message.left + 'px',
-                    'overflow-y': overflow
-                }));
-    }
+                    ))
+                    .append(
+                        $('<div>').addClass('left')
+                            .append($('<p>').html('Current moves: '))
+                            .append($('<p>').html('Default moves: '))
+                            .append($('<p>').html('Attack points: '))
+                            .append($('<p>').html('Defense points: '))
+                    )
+                    .append(
+                        $('<div>').addClass('left')
+                            .append($('<p>').html(selectedArmy.soldiers[i].movesLeft).css('color', '#da8'))
+                            .append($('<p>').html(units[selectedArmy.soldiers[i].unitId].numberOfMoves).css('color', '#da8'))
+                            .append(attackPoints)
+                            .append(defensePoints)
+                    )
+            );
+        }
+        for (i in selectedArmy.heroes) {
+            numberOfUnits++;
+            attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color', '#da8');
+            defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color', '#da8');
+            if (bonusTower) {
+                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+            }
+            if (castleDefense) {
+                defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
+            }
+            army.append(
+                $('<div>')
+                    .addClass('row')
+                    .append($('<div>').addClass('nr').html(numberOfUnits))
+                    .append($('<div>').addClass('img').html(
+                        $('<img>').attr({
+                            'src': Hero.getImage(selectedArmy.color),
+                            'id': 'hero' + selectedArmy.heroes[i].heroId
+                        })
+                    ))
+                    .append(
+                        $('<div>').addClass('left')
+                            .append($('<p>').html('Current moves: '))
+                            .append($('<p>').html('Default moves: '))
+                            .append($('<p>').html('Attack points: '))
+                            .append($('<p>').html('Defense points: '))
+                    )
+                    .append(
+                        $('<div>').addClass('left')
+                            .append($('<p>').html(selectedArmy.heroes[i].movesLeft).css('color', '#da8'))
+                            .append($('<p>').html(selectedArmy.heroes[i].numberOfMoves).css('color', '#da8'))
+                            .append(attackPoints)
+                            .append(defensePoints)
+                    )
+
+            );
+        }
+        var height = numberOfUnits * 60 + 40;
+        if (height > documentHeigh - 100) {
+            height = documentHeigh - 100;
+            overflow = 'auto';
+        } else {
+            overflow = 'hidden';
+        }
+
+        this.show(army);
+        this.ok();
 
 
-}
-
-
-function armyStatusM() {
-    if (typeof selectedArmy == 'undefined') {
-        return;
-    }
-    Message.remove();
-    var army = $('<div>').addClass('status');
-    var numberOfUnits = 0;
-    var bonusTower = 0;
-    var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
-    var attackPoints;
-    var defensePoints;
-
-    if (isTowerAtPosition(selectedArmy.x, selectedArmy.y)) {
-        bonusTower = 1;
-    }
-    for (i in selectedArmy.soldiers) {
-        numberOfUnits++;
-        var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
-        attackPoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].attackPoints).css('color', '#da8');
-        defensePoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].defensePoints).css('color', '#da8');
-        if (selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly) {
-            attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
-            defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
-        }
-        if (selectedArmy.heroKey) {
-            attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
-            defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
-        }
-        if (bonusTower) {
-            defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
-        }
-        if (castleDefense) {
-            defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
-        }
-        army.append(
-            $('<div>')
-                .addClass('row')
-                .append($('<div>').addClass('nr').html(numberOfUnits))
-                .append($('<div>').addClass('img').html(
-                    $('<img>').attr({
-                        'src': Unit.getImageByName(img, selectedArmy.color),
-                        'id': 'unit' + selectedArmy.soldiers[i].soldierId
-                    })
-                ))
-                .append(
-                    $('<div>').addClass('left')
-                        .append($('<p>').html('Current moves: '))
-                        .append($('<p>').html('Default moves: '))
-                        .append($('<p>').html('Attack points: '))
-                        .append($('<p>').html('Defense points: '))
-                )
-                .append(
-                    $('<div>').addClass('left')
-                        .append($('<p>').html(selectedArmy.soldiers[i].movesLeft).css('color', '#da8'))
-                        .append($('<p>').html(units[selectedArmy.soldiers[i].unitId].numberOfMoves).css('color', '#da8'))
-                        .append(attackPoints)
-                        .append(defensePoints)
-                )
-        );
-    }
-    for (i in selectedArmy.heroes) {
-        numberOfUnits++;
-        attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color', '#da8');
-        defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color', '#da8');
-        if (bonusTower) {
-            defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
-        }
-        if (castleDefense) {
-            defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
-        }
-        army.append(
-            $('<div>')
-                .addClass('row')
-                .append($('<div>').addClass('nr').html(numberOfUnits))
-                .append($('<div>').addClass('img').html(
-                    $('<img>').attr({
-                        'src': Hero.getImage(selectedArmy.color),
-                        'id': 'hero' + selectedArmy.heroes[i].heroId
-                    })
-                ))
-                .append(
-                    $('<div>').addClass('left')
-                        .append($('<p>').html('Current moves: '))
-                        .append($('<p>').html('Default moves: '))
-                        .append($('<p>').html('Attack points: '))
-                        .append($('<p>').html('Defense points: '))
-                )
-                .append(
-                    $('<div>').addClass('left')
-                        .append($('<p>').html(selectedArmy.heroes[i].movesLeft).css('color', '#da8'))
-                        .append($('<p>').html(selectedArmy.heroes[i].numberOfMoves).css('color', '#da8'))
-                        .append(attackPoints)
-                        .append(defensePoints)
-                )
-
-        );
-    }
-    var height = numberOfUnits * 60 + 40;
-    if (height > documentHeigh - 100) {
-        height = documentHeigh - 100;
-        overflow = 'auto';
-    } else {
-        overflow = 'hidden';
-    }
-    Message.element().after(
-        $('<div>')
-            .addClass('message')
-            .addClass('center')
-            .append(army)
-            .append($('<div>')
-                .css({
-                    'margin-top': '15px'
+//        Message.element().after(
+//            $('<div>')
+//                .addClass('message')
+//                .addClass('center')
+//                .append(army)
+//                .append($('<div>')
+//                    .css({
+//                        'margin-top': '15px'
+//                    })
+//                    .append($('<div>')
+//                        .addClass('button cancel')
+//                        .html('Ok')
+//                        .click(function () {
+//                            Message.remove()
+//                        }))
+//                )
+//                .css({
+//                    'height': height + 'px',
+//                    'left': Message.left + 'px',
+//                    'overflow': overflow
+//                })
+//        );
+    },
+    battle: function (data, clb) {
+        var battle = data.battle;
+        var attackerColor = data.attackerColor;
+        var defenderColor = data.defenderColor;
+        var newBattle = new Array();
+        var attack = $('<div>').addClass('battle attack');
+        for (i in battle.attack.soldiers) {
+            if (battle.attack.soldiers[i].succession) {
+                newBattle[battle.attack.soldiers[i].succession] = {
+                    'soldierId': battle.attack.soldiers[i].soldierId
+                };
+            }
+            attack.append(
+                $('<img>').attr({
+                    'src': Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor),
+                    'id': 'unit' + battle.attack.soldiers[i].soldierId
                 })
-                .append($('<div>')
-                    .addClass('button cancel')
-                    .html('Ok')
-                    .click(function () {
-                        Message.remove()
-                    }))
-            )
-            .css({
-                'height': height + 'px',
-                'left': Message.left + 'px',
-                'overflow': overflow
-            })
-    );
-}
+            );
+        }
+        for (i in battle.attack.heroes) {
+            if (battle.attack.heroes[i].succession) {
+                newBattle[battle.attack.heroes[i].succession] = {
+                    'heroId': battle.attack.heroes[i].heroId
+                };
+            }
+            attack.append(
+                $('<img>').attr({
+                    'src': Hero.getImage(attackerColor),
+                    'id': 'hero' + battle.attack.heroes[i].heroId
+                })
+            );
+        }
+//        Message.element().after(
+//            $('<div>')
+//                .addClass('message')
+//                .css({
+//                    'left': Message.left + 'px',
+//                    'display': 'none'
+//                })
+//                .append(attack)
+//                .append($('<p id="vs">').html('VS').addClass('center'))
+//        );
 
-function battleM(data, clb) {
-    var battle = data.battle;
-    var attackerColor = data.attackerColor;
-    var defenderColor = data.defenderColor;
-    var newBattle = new Array();
-    var attack = $('<div>').addClass('battle attack');
-    for (i in battle.attack.soldiers) {
-        if (battle.attack.soldiers[i].succession) {
-            newBattle[battle.attack.soldiers[i].succession] = {
-                'soldierId': battle.attack.soldiers[i].soldierId
-            };
+        var defense = $('<div>').addClass('battle defense');
+
+        for (i in battle.defense.soldiers) {
+            if (battle.defense.soldiers[i].succession) {
+                newBattle[battle.defense.soldiers[i].succession] = {
+                    'soldierId': battle.defense.soldiers[i].soldierId
+                };
+            }
+            defense.append(
+                $('<img>').attr({
+                    'src': Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor),
+                    'id': 'unit' + battle.defense.soldiers[i].soldierId
+                })
+            );
         }
-        attack.append(
-            $('<img>').attr({
-                'src': Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor),
-                'id': 'unit' + battle.attack.soldiers[i].soldierId
-            })
-        );
-    }
-    for (i in battle.attack.heroes) {
-        if (battle.attack.heroes[i].succession) {
-            newBattle[battle.attack.heroes[i].succession] = {
-                'heroId': battle.attack.heroes[i].heroId
-            };
+
+        for (i in battle.defense.heroes) {
+            if (battle.defense.heroes[i].succession) {
+                newBattle[battle.defense.heroes[i].succession] = {
+                    'heroId': battle.defense.heroes[i].heroId
+                };
+            }
+            defense.append(
+                $('<img>').attr({
+                    'src': Hero.getImage(defenderColor),
+                    'id': 'hero' + battle.defense.heroes[i].heroId
+                })
+            );
         }
-        attack.append(
-            $('<img>').attr({
-                'src': Hero.getImage(attackerColor),
-                'id': 'hero' + battle.attack.heroes[i].heroId
-            })
-        );
-    }
-    Message.element().after(
-        $('<div>')
-            .addClass('message')
-            .css({
-                'left': Message.left + 'px',
-                'display': 'none'
-            })
+
+//        $('.message')
+//            .addClass('center')
+//            .append(defense)
+//            .append($('<div>').addClass('battle defense'))
+//            .append($('<div id="battleOk">').addClass('button go').html('OK'));
+
+        var div = $('<div>')
             .append(attack)
             .append($('<p id="vs">').html('VS').addClass('center'))
-    );
+            .append(defense)
+            .append($('<div>').addClass('battle defense'))
+            .append($('<div id="battleOk">').addClass('button go').html('OK'));
 
-    var defense = $('<div>').addClass('battle defense');
+        this.show(div);
 
-    for (i in battle.defense.soldiers) {
-        if (battle.defense.soldiers[i].succession) {
-            newBattle[battle.defense.soldiers[i].succession] = {
-                'soldierId': battle.defense.soldiers[i].soldierId
-            };
+        if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
+            $('#battleOk').click(function () {
+                Message.castle(data.castleId, data.attackerColor);
+            });
+        } else {
+            $('#battleOk').click(function () {
+                Message.remove();
+            });
         }
-        defense.append(
-            $('<img>').attr({
-                'src': Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor),
-                'id': 'unit' + battle.defense.soldiers[i].soldierId
+        if (newBattle) {
+            $('.message').fadeIn(100, function () {
+                Message.kill(newBattle, clb, data);
             })
-        );
-    }
-
-    for (i in battle.defense.heroes) {
-        if (battle.defense.heroes[i].succession) {
-            newBattle[battle.defense.heroes[i].succession] = {
-                'heroId': battle.defense.heroes[i].heroId
-            };
         }
-        defense.append(
-            $('<img>').attr({
-                'src': Hero.getImage(defenderColor),
-                'id': 'hero' + battle.defense.heroes[i].heroId
-            })
-        );
-    }
-
-    $('.message')
-        .addClass('center')
-        .append(defense)
-        .append($('<div>').addClass('battle defense'))
-        .append($('<div id="battleOk">').addClass('button go').html('OK'));
-
-    if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
-        $('#battleOk').click(function () {
-            Message.castle(data.castleId, data.attackerColor);
-        });
-    } else {
-        $('#battleOk').click(function () {
-            Message.remove();
-        });
-    }
-    if (newBattle) {
-        $('.message').fadeIn(100, function () {
-            killM(newBattle, clb, data);
-        })
-    }
-}
-
-function killM(b, clb, data) {
-    for (i in b) {
-        break;
-    }
-    if (typeof b[i] == 'undefined') {
-        clb();
-        if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
-            if (isTruthful(data.victory)) {
-                for (i in data.defenderArmy) {
-                    deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
-                }
-            } else {
-                for (i in data.defenderArmy) {
-                    players[data.defenderColor].armies['army' + data.defenderArmy[i].armyId] = new army(data.defenderArmy[i], data.defenderColor);
+    },
+    kill: function (b, clb, data) {
+        for (i in b) {
+            break;
+        }
+        if (typeof b[i] == 'undefined') {
+            clb();
+            if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
+                if (isTruthful(data.victory)) {
+                    for (i in data.defenderArmy) {
+                        deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
+                    }
+                } else {
+                    for (i in data.defenderArmy) {
+                        players[data.defenderColor].armies['army' + data.defenderArmy[i].armyId] = new army(data.defenderArmy[i], data.defenderColor);
+                    }
                 }
             }
+
+            if (isDigit(data.castleId) && isTruthful(data.victory)) {
+                castleOwner(data.castleId, data.attackerColor);
+            }
+
+            return;
         }
 
-        if (isDigit(data.castleId) && isTruthful(data.victory)) {
-            castleOwner(data.castleId, data.attackerColor);
+        if (typeof b[i].soldierId != 'undefined') {
+            $('#unit' + b[i].soldierId).fadeOut(1500, function () {
+                delete b[i];
+                Message.kill(b, clb, data);
+            });
+        } else if (typeof b[i].heroId != 'undefined') {
+            $('#hero' + b[i].heroId).fadeOut(1500, function () {
+                delete b[i];
+                Message.kill(b, clb, data);
+            });
+        } else {
+            console.log('zonk');
         }
-
-        return;
     }
 
-    if (typeof b[i].soldierId != 'undefined') {
-        $('#unit' + b[i].soldierId).fadeOut(1500, function () {
-            delete b[i];
-            killM(b, clb, data);
-        });
-    } else if (typeof b[i].heroId != 'undefined') {
-        $('#hero' + b[i].heroId).fadeOut(1500, function () {
-            delete b[i];
-            killM(b, clb, data);
-        });
-    } else {
-        console.log('zonk');
-    }
+
 }
-
-
-
-
