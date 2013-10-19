@@ -54,7 +54,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
 
     protected function indexEnding($className)
     {
-        $this->params['id_lang'] = 1;
+        $this->params['id_lang'] = Zend_Registry::get('config')->id_lang;
         $m = new $className($this->params);
 
         $this->view->kolumny = $m->getColumnsAll();

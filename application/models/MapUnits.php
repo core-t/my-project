@@ -41,9 +41,14 @@ class Application_Model_MapUnits extends Game_Db_Table_Abstract
             ->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), 'name')
             ->order($this->_primary);
 
-        $result = $this->selectAll($select);
+        foreach ($this->selectAll($select) as $unit) {
+            $select = $this->_db->select()
+                ->from($this->_name . '_Lang', 'name')
+                ->where('id_lang = ?', Zend_Registry::get('config')->id_lang)
+                ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $unit[$this->_primary]);
 
-        foreach ($result as $unit) {
+            $unit['name_lang'] = $this->selectOne($select);
+
             $units[$unit[$this->_primary]] = $unit;
         }
 
