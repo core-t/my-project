@@ -160,7 +160,7 @@ function army(obj, color) {
 
     if (this.canSwim) {
         this.name = units[6].name;
-        this.img = 'units/' + this.name.replace(' ', '_').toLowerCase();
+        this.img = Unit.getImage(6, color);
         this.attack = units[6].attackPoints;
         this.defense = units[6].defensePoints;
     } else if (typeof this.heroes[this.heroKey] != 'undefined') {
@@ -173,8 +173,12 @@ function army(obj, color) {
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
     } else if (typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
-        this.name = units[this.soldiers[this.soldierKey].unitId].name;
-        this.img = Unit.getImageByName(this.name.replace(' ', '_').toLowerCase(), color);
+        if (units[this.soldiers[this.soldierKey].unitId].name_lang) {
+            this.name = units[this.soldiers[this.soldierKey].unitId].name_lang;
+        } else {
+            this.name = units[this.soldiers[this.soldierKey].unitId].name;
+        }
+        this.img = Unit.getImage(this.soldiers[this.soldierKey].unitId, color);
         this.attack = attack;
         this.defense = defense;
     } else {

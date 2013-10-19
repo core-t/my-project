@@ -3,8 +3,11 @@
 class Zend_View_Helper_GoogleAnalytics extends Zend_View_Helper_Abstract {
 
     public function googleAnalytics() {
-        $script = "
+        if (APPLICATION_ENV != 'production') {
+            return;
+        }
 
+        $script = "
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-38324299-1']);
   _gaq.push(['_trackPageview']);

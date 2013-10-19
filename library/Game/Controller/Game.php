@@ -10,7 +10,7 @@ abstract class Game_Controller_Game extends Game_Controller_Action {
         }
 
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css?v=' . Zend_Registry::get('config')->version);
-        $this->view->headScript()->prependFile($this->view->baseUrl() . '/js/jquery.js');
+        $this->view->jquery();
 
         $this->view->Logout($this->_namespace->player);
         $this->view->Websocket();
