@@ -7,13 +7,13 @@ class Coret_Form_Lang extends Zend_Form
     {
         $options = array();
 
-        $language = new Coret_Model_Language(null);
+        $language = new Coret_Model_Language(array());
 
         foreach ($language->getList() as $row) {
-            if ($row['id_language'] == 1) {
+            if ($row['languageId'] == 1) {
                 continue;
             }
-            $options[$row['id_language']] = $row['skrot'];
+            $options[$row['languageId']] = $row['countryCode'];
         }
 
         $f = new Coret_Form_Select(array('name' => 'id_lang', 'label' => 'Język', 'opt' => $options));

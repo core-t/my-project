@@ -32,6 +32,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $this->_id = intval($id);
         $this->_params = $params;
         $this->_db = $this->getDefaultAdapter();
+
         if (Zend_Registry::get('config')->resources->db->adapter == 'pdo_mysql') {
             $this->_db->query("SET NAMES 'utf8'");
             $this->_db->query("set character set 'utf8'");
@@ -264,7 +265,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
             foreach (array_keys($this->_columns_lang) as $column) {
                 $columns_lang[] = $column;
             }
-            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_name . '_Lang . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
+            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
         }
         return $select;
     }
@@ -309,7 +310,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     protected function addSelectWhereLang($select)
     {
         if (isset($this->_columns_lang) && $this->_columns_lang && isset($this->_params['id_lang']) && $this->_params['id_lang']) {
-            $select->where($this->_name . '_Lang . id_lang = ?', $this->_params['id_lang']);
+            $select->where($this->_db->quoteIdentifier($this->_name . '_Lang') . ' . id_lang = ?', $this->_params['id_lang']);
         }
 
         return $select;
