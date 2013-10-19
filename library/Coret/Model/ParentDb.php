@@ -54,6 +54,9 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
                 case 'checkbox':
                     $sql .= '`' . $columnName . '` bool NOT NULL,';
                     break;
+                case 'numeric':
+                    $sql .= '`' . $columnName . '` integer NOT NULL,';
+                    break;
             }
         }
         $sql .= 'PRIMARY KEY(`' . $this->_primary . '`),
@@ -89,18 +92,20 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         } else {
             $dane['data'] = $this->addDataInsert($dane['data']);
             $id = $this->insertElement($dane['data']);
-            if ($id) {
-                $this->_id = $id;
-                $dane['data'] = $this->handleImg($dane, $id);
-                if ($dane['data']) {
-                    $this->updateElement($dane['data']);
-                }
-                if ($dane['data_lang']) {
-                    $dane['data_lang'][$this->_primary] = $id;
-                    return $this->insertElementLang($dane['data_lang']);
-                }
-                return true;
+            if (!$id) {
+                throw new Exception('error');
             }
+
+            $this->_id = $id;
+            $dane['data'] = $this->handleImg($dane, $id);
+            if ($dane['data']) {
+                $this->updateElement($dane['data']);
+            }
+            if ($dane['data_lang']) {
+                $dane['data_lang'][$this->_primary] = $id;
+                return $this->insertElementLang($dane['data_lang']);
+            }
+            return true;
         }
     }
 
@@ -140,7 +145,11 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function insertElement($dane)
     {
         $this->_db->insert($this->_name, $dane);
-        return $this->_db->lastInsertId();
+        if (isset($this->_sequence)) {
+            return $this->_db->lastSequenceId($this->_sequence);
+        } else {
+            return $this->_db->lastInsertId();
+        }
     }
 
     /**

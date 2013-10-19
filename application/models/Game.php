@@ -32,8 +32,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract
         );
 
         $this->_db->insert($this->_name, $data);
-        $seq = $this->_db->quoteIdentifier($this->_sequence);
-        $this->_gameId = $this->_db->lastSequenceId($seq);
+        $this->_gameId = $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
         return $this->_gameId;
     }
 

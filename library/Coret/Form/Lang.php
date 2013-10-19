@@ -7,7 +7,7 @@ class Coret_Form_Lang extends Zend_Form
     {
         $options = array();
 
-        $language = new Coret_Model_Language(array());
+        $language = new Admin_Model_Language(array());
 
         foreach ($language->getList() as $row) {
             if ($row['languageId'] == 1) {
