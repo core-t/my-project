@@ -269,7 +269,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     protected function addJoin($select, $columns_lang = array())
     {
         if ($columns_lang) {
-            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_name . '_Lang . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
+            return $select->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), $columns_lang);
         } elseif (isset($this->_columns_lang) && $this->_columns_lang) {
             $columns_lang = array();
             foreach (array_keys($this->_columns_lang) as $column) {

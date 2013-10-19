@@ -37,6 +37,8 @@ class Application_Model_MapUnits extends Game_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name)
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->where('id_lang = 1')
+            ->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), 'name')
             ->order($this->_primary);
 
         $result = $this->selectAll($select);
