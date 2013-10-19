@@ -72,6 +72,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
     public function save($post)
     {
         $dane = $this->prepareData($post);
+
         if (isset($post['id']) && $post['id']) {
             $this->_id = $post['id'];
             $dane['data'] = $this->handleImg($dane, $post['id']);
@@ -520,7 +521,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name . '_Lang', $this->_primary)
             ->where('id_lang = ?', $id_lang)
-            ->where($this->_primary . ' = ?', $id);
+            ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $id);
 
         return $this->_db->fetchOne($select);
     }

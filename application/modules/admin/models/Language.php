@@ -13,6 +13,5 @@ class Admin_Model_Language extends Coret_Model_ParentDb
     protected $_columns_lang = array(
         'name' => array('label' => 'Nazwa', 'type' => 'varchar')
     );
-
 }
 

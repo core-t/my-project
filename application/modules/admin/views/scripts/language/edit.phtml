@@ -23,7 +23,7 @@
             var data = {
                 'id': $('#id').val(),
                 'id_lang': $('#lang #id_lang').val(),
-                'text': $('#lang #text').val(),
+                'name': $('#lang #name').val(),
                 'c': '<?php echo $this->controllerName?>'
             };
             $.ajax({
@@ -52,7 +52,7 @@
             data: data,
             success: function (result) {
                 result = jQuery.parseJSON(result);
-                $('#lang #text').val(result.text);
+                $('#lang #name').val(result.name);
             }
         });
 
