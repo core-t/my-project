@@ -3,6 +3,7 @@ var Gui = {
     chatBox: {'close': 0},
     playerBox: {'close': 0},
     timerBox: {'close': 0},
+    zoomPadLayout: {'close': 0},
     doKey: function (event) {
         var key = event.keyCode || event.charCode;
         switch (key) {
@@ -97,7 +98,19 @@ var Gui = {
         $('#disbandArmy').addClass('buttonOff');
         $('#searchRuins').addClass('buttonOff');
 
-        $('#timerBox #close').click(function () {
+        $('.zoomPadLayout .close').click(function () {
+            var left = parseInt($('.zoomPadLayout').css('left'));
+            var move = -220;
+
+            if (Gui.zoomPadLayout['close']) {
+                move = -move;
+            }
+
+            $('.zoomPadLayout').animate({'left': left + move + 'px'}, 1000, function () {
+                Gui.zoomPadLayout['close'] = !Gui.zoomPadLayout['close'];
+            });
+        });
+        $('#timerBox .close').click(function () {
             var left = parseInt($('#timerBox').css('left'));
             var move = -220;
 
@@ -109,7 +122,7 @@ var Gui = {
                 Gui.timerBox['close'] = !Gui.timerBox['close'];
             });
         });
-        $('#playersBox #close').click(function () {
+        $('#playersBox .close').click(function () {
             var left = parseInt($('#playersBox').css('left'));
             var move = 220;
 
@@ -120,7 +133,7 @@ var Gui = {
                 Gui.playerBox['close'] = !Gui.playerBox['close'];
             });
         });
-        $('#chatBox #close').click(function () {
+        $('#chatBox .close').click(function () {
             var left = parseInt($('#chatBox').css('left'));
             var move = 490;
 
@@ -131,7 +144,7 @@ var Gui = {
                 Gui.chatBox['close'] = !Gui.chatBox['close'];
             });
         });
-        $('#armyBox #close').click(function () {
+        $('#armyBox .close').click(function () {
             var left = parseInt($('#armyBox').css('left'));
             var move = 220;
 
@@ -152,16 +165,6 @@ var Gui = {
         var chatLeft = documentWidth - 507;
         var chatTop = documentHeigh - 169;
 
-//        console.log(parseInt($('#chatBox').css('height')));
-//        console.log(parseInt($('#chatBox').css('height')) + parseInt($('#playersBox').css('height')) + parseInt($('#armyBox').css('height')));
-//        console.log(documentHeigh);
-//        console.log(chatTop);
-//        if (documentHeigh < parseInt($('#chatBox').css('height')) + parseInt($('#playersBox').css('height')) + parseInt($('#armyBox').css('height')) + 100) {
-//            chatLeft = chatLeft - parseInt($('#playersBox').css('width')) - 50;
-//            chatTop = documentHeigh - parseInt($('#chatBox').css('height')) - 200;
-//        }
-
-
         $('#chatBox').css({
             'left': chatLeft + 'px',
             'top': chatTop + 'px'
@@ -176,9 +179,6 @@ var Gui = {
         $('#armyBox').css({
             'left': left + 'px'
         });
-//    $('#timerBox').css({
-//        'left': left + 'px'
-//    });
 
         var zoomPadLayoutHeight = parseInt($('#map').css('height'));
 
@@ -187,7 +187,15 @@ var Gui = {
             height: zoomPadLayoutHeight + 40 + 'px'
         });
 
-        $('#terrain').css('top', zoomPadLayoutHeight + 5 + 'px');
+        $('#terrain').css('top', zoomPadLayoutHeight + 19 + 'px');
+
+        $('.zoomPadLayout .close').css({
+            left: parseInt($('#map').css('width')) + 16 + 'px'
+        });
+
+        $('#timerBox').css({
+            top: zoomPadLayoutHeight + 52 + 'px'
+        });
 
         if (!zoomer) {
             zoomer = new zoom(documentWidth, documentHeigh);

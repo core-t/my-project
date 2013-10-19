@@ -1,6 +1,6 @@
 var Message = {
     element: function () {
-        return $('#terrain');
+        return $('#goldBox');
     },
     remove: function () {
         if (typeof $('.message') != 'undefined') {

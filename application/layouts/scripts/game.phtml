@@ -13,13 +13,14 @@
     <div id="game">
         <!-- ZOOM WINDOW -->
         <div class="zoomWindow">
-            <div class="zoomPadLayout">
+            <div class="zoomPadLayout box">
                 <div class="zoomPad">
                     <div class="zoomPup"></div>
                     <?php echo $this->placeholder('map') ?>
                 </div>
+                <div class="close">X</div>
+                <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
             </div>
-            <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
             </div>
             <div class="message"></div>
             <div id="goldBox" class="box">
@@ -47,11 +48,11 @@
                         <a id="nextTurn" class="button"><?php echo $this->translate('Next turn') ?> &raquo;</a>
                     </div>
                 </div>
-                <div id="close">X</div>
+                <div class="close">X</div>
             </div>
             <div id="armyBox" class="box">
-                <div id="close">X</div>
-                <div id="nameBox"><?php echo $this->translate('Name') ?>: <span id="name" class="font-yellow"></span>
+                <div class="close">X</div>
+                <div id="nameBox"><span id="name" class="font-yellow"></span>
                 </div>
                 <div id="attrBox">
                     <div class="left"><?php echo $this->translate('Moves') ?>: <span id="moves"
@@ -88,7 +89,8 @@
                                class="button buttonOff"><?php echo $this->translate('Army status') ?></a>
                         </div>
                         <div class="left armyButton">
-                            <a id="quitArmy" class="button buttonOff">(f) <?php echo $this->translate('Fortify army') ?></a>
+                            <a id="quitArmy"
+                               class="button buttonOff">(f) <?php echo $this->translate('Fortify army') ?></a>
                         </div>
                         <div class="left armyButton">
                             <a id="skipArmy"
@@ -102,7 +104,7 @@
                 </div>
             </div>
             <div id="timerBox" class="box">
-                <div id="close">X</div>
+                <div class="close">X</div>
                 <table>
                     <tr>
                         <th><?php echo $this->translate('Color') ?></th>
@@ -112,7 +114,7 @@
                 </table>
             </div>
             <div id="chatBox" class="box">
-                <div id="close">X</div>
+                <div class="close">X</div>
                 <div id="chatWindow">
                     <div></div>
                 </div>

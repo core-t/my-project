@@ -33,13 +33,7 @@
 }
 
 .zoomPadLayout {
-    position: absolute;
-    cursor: default;
-    z-index: 21000;
-    background: transparent url('../img/game/message_bg.png');
     border-bottom-right-radius: 10px;
-    border: 1px solid #555;
-    box-shadow: 5px 5px 20px #000;
     top: -10px;
     left: -10px;
 }
@@ -710,8 +704,10 @@
 }
 
 #armyBox #nameBox {
+    height: 14px;
     line-height: 14px;
     margin: 5px;
+    text-align: center;
     /*background: url("../img/bg_0.jpg");*/
 }
 
@@ -733,7 +729,7 @@
     position: absolute;
     color: white;
     z-index: 27000;
-    left: 3px;
+    left: 13px;
 }
 
 #nextTurn {
@@ -805,36 +801,49 @@ html {
     background: #000;
 }
 
-#close {
+.close {
     position: absolute;
-    cursor: pointer;
     width: 20px;
     height: 20px;
-    background: transparent url('../img/game/message_bg.png');
+    background: transparent url('../img/game/message_bg.png') !important;
     border: 1px solid #555;
     box-shadow: 5px 5px 20px #000;
     border-radius: 10px;
     line-height: 20px;
     text-align: center;
-    cursor: pointer;
+    text-shadow: none;
+    color: #ffffff;
 }
 
-#timerBox #close {
+.close:hover {
+    color: black;
+    background: yellow;
+}
+
+.zoomPadLayout .close {
+    top: 12px;
+}
+
+#timerBox .close {
     left: 225px;
     top: -10px;
 }
 
-#playersBox #close {
+#playersBox .close {
     left: -10px;
     /*top: -10px;*/
 }
 
-#chatBox #close {
+#chatBox .close {
     left: -10px;
     top: -10px;
 }
 
-#armyBox #close {
+#armyBox .close {
     left: -10px;
     top: -10px;
+}
+
+.font-yellow {
+    color: yellow;
 }
