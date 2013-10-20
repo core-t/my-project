@@ -258,7 +258,7 @@ function myArmyClick(obj, e) {
         if (my.turn) {
             if (selectedArmy) {
                 if (selectedArmy != players[my.color].armies[obj.id]) { // klikam na siebie
-                    wsJoinArmy(players[my.color].armies[obj.id].armyId);
+                    Websocket.joinArmy(players[my.color].armies[obj.id].armyId);
                 }
             } else {
                 unselectArmy();
@@ -374,7 +374,7 @@ function selectArmy(a) {
 function unselectArmy(skipJoin) {
     if (typeof skipJoin == 'undefined' && parentArmy && selectedArmy) {
         if (selectedArmy.x == parentArmy.x && selectedArmy.y == parentArmy.y) {
-            wsJoinArmy(selectedArmy.armyId);
+            Websocket.joinArmy(selectedArmy.armyId);
         }
     }
 
@@ -543,7 +543,7 @@ function fortifyArmy() {
         return;
     }
     if (selectedArmy) {
-        wsFortifyArmy(selectedArmy.armyId);
+        Websocket.fortifyArmy(selectedArmy.armyId);
         quitedArmies.push(selectedArmy.armyId);
         unselectArmy();
         findNextArmy();
@@ -556,7 +556,7 @@ function unfortifyArmy(armyId) {
     }
     var index = $.inArray(armyId, quitedArmies);
     if (index != -1) {
-        wsFortifyArmy(armyId);
+        Websocket.fortifyArmy(armyId);
         quitedArmies.splice(index, 1);
     }
 }
@@ -569,7 +569,7 @@ function computerArmiesUpdate(armies, color) {
     }
 
     if (typeof armies[i] == 'undefined') {
-        wsComputer();
+        Websocket.computer();
         return;
     }
 

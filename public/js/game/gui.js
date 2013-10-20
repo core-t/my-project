@@ -23,7 +23,7 @@ var Gui = {
                 findNextArmy();
                 break;
             case 82: //r
-                wsSearchRuins();
+                Websocket.searchRuins()
                 break;
             case 83: //s
                 skipArmy();
@@ -41,11 +41,11 @@ var Gui = {
         });
 
         $('#send').click(function () {
-            wsChat();
+            Websocket.chat();
         });
         $('#msg').keypress(function (e) {
             if (e.which == 13) {
-                wsChat();
+                Websocket.chat();
             }
         });
         $('#nextTurn').click(function () {
@@ -82,13 +82,13 @@ var Gui = {
             }
         });
         $('#searchRuins').click(function () {
-            wsSearchRuins()
+            Websocket.searchRuins()
         });
         $('#razeCastle').click(function () {
-            wsSearchRuins()
+            Message.razeCastle();
         });
         $('#showArtifacts').click(function () {
-            Message.razeCastle();
+            Message.showArtifacts();
         });
         $('#test').click(function () {
             test()

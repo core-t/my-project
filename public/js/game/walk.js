@@ -73,7 +73,7 @@ function walkEnd(r, computer) {
     }
 
     if (typeof computer != 'undefined') {
-        wsComputer();
+        Websocket.computer();
     }
 
     if (r.attackerColor == my.color) {

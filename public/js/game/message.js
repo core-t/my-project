@@ -32,6 +32,15 @@ var Message = {
                         Message.remove();
                     }
                 })
+                .keypress(function (e) {
+                    if (e.which == 13) {
+                        if (typeof func != 'undefined') {
+                            func();
+                        } else {
+                            Message.remove();
+                        }
+                    }
+                })
         )
     },
     cancel: function (func) {
@@ -50,7 +59,7 @@ var Message = {
     },
     surrender: function () {
         this.show('Surrender. Are you sure?');
-        this.ok('wsSurrender');
+        this.ok('surrender');
         this.cancel();
     },
     lost: function (color) {

@@ -29,7 +29,7 @@ function startWebSocket() {
                     if (typeof r.path != 'undefined' && r.path) {
                         move(r, 1);
                     } else {
-                        wsComputer();
+                        Websocket.computer();
                     }
                     break;
 
@@ -39,7 +39,7 @@ function startWebSocket() {
 
                 case 'computerGameover':
                     console.log(r);
-                    wsComputer();
+                    Websocket.computer();
                     break;
 
                 case 'nextTurn':
@@ -51,7 +51,7 @@ function startWebSocket() {
                         winM(r.color);
                     } else {
                         changeTurn(r.color, r.nr);
-                        wsComputer();
+                        Websocket.computer();
                     }
                     break;
 
@@ -402,116 +402,6 @@ function wsDisbandArmy() {
     ws.send(JSON.stringify(token));
 }
 
-function wsJoinArmy(armyId) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-
-    if (!my.turn) {
-        return;
-    }
-
-    var token = {
-        type: 'joinArmy',
-        armyId: armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsFortifyArmy(armyId) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    if (!my.turn) {
-        return;
-    }
-
-    var token = {
-        type: 'fortifyArmy',
-        armyId: armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsSearchRuins() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    if (!my.turn) {
-        return;
-    }
-    if (selectedArmy == null) {
-        return;
-    }
-    unselectArmy();
-    var token = {
-        type: 'ruin',
-        armyId: unselectedArmy.armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsComputer() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    if (!my.game) {
-        return
-    }
-    if (!players[turn.color].computer) {
-        return;
-    }
-
-    var token = {
-        type: 'computer'
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsChat() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var msg = $('#msg').val();
-
-    if (msg) {
-        $('#msg').val('');
-
-        var token = {
-            type: 'chat',
-            msg: msg
-        };
-
-        ws.send(JSON.stringify(token));
-    }
-}
-
-function wsSurrender() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'surrender'
-    };
-
-    ws.send(JSON.stringify(token));
-}
 
 Websocket = {
     open: function () {
@@ -573,6 +463,111 @@ Websocket = {
         var token = {
             type: 'tower',
             towerId: towerId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    surrender: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var token = {
+            type: 'surrender'
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    chat: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var msg = $('#msg').val();
+
+        if (msg) {
+            $('#msg').val('');
+
+            var token = {
+                type: 'chat',
+                msg: msg
+            };
+
+            ws.send(JSON.stringify(token));
+        }
+    },
+    computer: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.game) {
+            return
+        }
+        if (!players[turn.color].computer) {
+            return;
+        }
+
+        var token = {
+            type: 'computer'
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    searchRuins: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
+        }
+        if (selectedArmy == null) {
+            return;
+        }
+        unselectArmy();
+        var token = {
+            type: 'ruin',
+            armyId: unselectedArmy.armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    fortifyArmy: function (armyId) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
+        }
+
+        var token = {
+            type: 'fortifyArmy',
+            armyId: armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    joinArmy: function (armyId) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+
+        if (!my.turn) {
+            return;
+        }
+
+        var token = {
+            type: 'joinArmy',
+            armyId: armyId
         };
 
         ws.send(JSON.stringify(token));
