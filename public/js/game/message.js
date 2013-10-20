@@ -224,12 +224,17 @@ var Message = {
             } else {
                 travelBy = 'ground';
             }
+            if (units[unitId].name_lang) {
+                var name = units[unitId].name_lang;
+            } else {
+                var name = units[unitId].name;
+            }
             td[j] = $('<td>')
                 .addClass('unit')
                 .append(
                     $('<p>')
                         .append($('<input>').attr(attr))
-                        .append(' ' + units[unitId].name + ' (' + travelBy + ')')
+                        .append(' ' + name + ' (' + travelBy + ')')
                 )
                 .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, color))))
                 .append(
@@ -289,42 +294,12 @@ var Message = {
                         )
                         .append(' cost 100g')
                 )
-//            var buttonResurrection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
-//            var cssResurrection;
-//            if ($('#gold').html() < 100) {
-//                cssResurrection = {
-//                    'color': '#d00000'
-//                };
-//            } else {
-//                buttonResurrection.click(function () {
-//                    wsHeroResurrection(castleId)
-//                });
-//                cssResurrection = {};
-//            }
-//            resurrectionElement = $('<p>')
-//                .addClass('h')
-//                .css(cssResurrection)
-//                .append(
-//                    $('<input>').attr({
-//                        type: 'checkbox',
-//                        name: 'resurrection',
-//                        value: castleId
-//                    })
-//                )
-//                .append(buttonResurrection);
         }
         var buttonBuildDefense;
         var costBuildDefense = 0;
         for (i = 1; i <= castles[castleId].defense; i++) {
             costBuildDefense += i * 100;
         }
-//        if ($('#gold').html() < costBuildDefense) {
-//            buttonBuildDefense = $('<div>').addClass('button right buttonOff').html('Build defense (cost ' + costBuildDefense + 'g)');
-//        } else {
-//            buttonBuildDefense = $('<div>').addClass('button right').html('Build defense (cost ' + costBuildDefense + 'g)').click(function () {
-//                wsCastleBuildDefense();
-//            });
-//        }
 
         var div = $('<div>')
             .append($('<h3>').append(castles[castleId].name).append(capital))

@@ -3,12 +3,17 @@
 class Cli_Model_CastleRaze
 {
 
-    public function __construct($castleId, $user, $db, $gameHandler)
+    public function __construct($armyId, $user, $db, $gameHandler)
     {
-        if ($castleId == null) {
-            $gameHandler->sendError($user, 'No "castleId"!');
+        if ($armyId == null) {
+            $gameHandler->sendError($user, 'No "armyId"!');
             return;
         }
+
+        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+        $mArmy->g
+
+        Application_Model_Board::isCastleAtPosition();
 
         $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
         $mCastlesInGame->razeCastle($castleId, $user->parameters['playerId']);
