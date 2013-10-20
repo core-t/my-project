@@ -281,13 +281,13 @@
     top: 225px;
 }
 
-.nr {
-    position: absolute;
-    text-shadow: 2px 2px 0 #000;
-    color: white;
-    line-height: 30px;
-    font-size: 20px;
-}
+/*.nr {*/
+/*position: absolute;*/
+/*text-shadow: 2px 2px 0 #000;*/
+/*color: white;*/
+/*line-height: 30px;*/
+/*font-size: 20px;*/
+/*}*/
 
 #exit {
     position: absolute;
@@ -600,6 +600,7 @@
     height: 124px;
     border: none;
     overflow: hidden;
+    overflow-y: scroll;
     color: #fff;
     text-shadow: none;
     margin: 2px;
@@ -607,7 +608,6 @@
 
 #chatBox #chatWindow div {
     position: relative;
-    top: 85px;
     left: 0;
     width: 100%;
     border: none;
@@ -640,15 +640,44 @@
 }
 
 #timerBox {
-    top: 602px;
     left: -1px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     width: 230px;
 }
 
-#timerBox table {
-    width: 100%;
+#timerBox .row {
+    height: 30px;
+}
+
+#timerBox .left {
+    padding: 1px;
+    background: none;
+    text-align: center;
+    line-height: 30px;
+}
+
+#timerBox #timerScroll {
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 230px;
+    margin-bottom: 5px;
+}
+
+#timerBox #timerRows {
+    width: 230px;
+}
+
+#timerBox .color {
+    width: 37px;
+}
+
+#timerBox .nr {
+    width: 86px;
+}
+
+#timerBox .time {
+    width: 75px;
 }
 
 #timerBox #time {
@@ -657,15 +686,6 @@
 
 #timerBox #time div {
     float: right;
-}
-
-#timerBox table td, #timerBox table th {
-    padding: 1px;
-    background: none;
-}
-
-#timerBox td {
-    border: none;
 }
 
 #timerBox #second {

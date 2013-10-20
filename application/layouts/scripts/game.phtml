@@ -19,8 +19,9 @@
                     <?php echo $this->placeholder('map') ?>
                 </div>
                 <div class="close">X</div>
-                <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord" class="font-yellow"></span>
-            </div>
+                <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord"
+                                                                                    class="font-yellow"></span>
+                </div>
             </div>
             <div class="message"></div>
             <div id="goldBox" class="box">
@@ -109,13 +110,14 @@
             </div>
             <div id="timerBox" class="box">
                 <div class="close">X</div>
-                <table>
-                    <tr>
-                        <th><?php echo $this->translate('Color') ?></th>
-                        <th><?php echo $this->translate('Turn nr') ?></th>
-                        <th><?php echo $this->translate('Time spend') ?></th>
-                    </tr>
-                </table>
+                <div class="row">
+                    <div class="left color"><?php echo $this->translate('Color') ?></div>
+                    <div class="left nr"><?php echo $this->translate('Turn nr') ?></div>
+                    <div class="left time"><?php echo $this->translate('Time spend') ?></div>
+                </div>
+                <div id="timerScroll">
+                    <div id="timerRows"></div>
+                </div>
             </div>
             <div id="chatBox" class="box">
                 <div class="close">X</div>

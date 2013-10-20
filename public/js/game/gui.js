@@ -28,8 +28,8 @@ var Gui = {
             case 83: //s
                 skipArmy();
                 break;
-            default:
-                console.log(key);
+//            default:
+//                console.log(key);
         }
     },
     prepareButtons: function () {

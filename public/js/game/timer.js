@@ -3,28 +3,22 @@ var timer = {
     timestamp: 0,
     start: function () {
         timer.timeStart = Math.round((new Date()).getTime() / 1000);
-//        timer.clear();
-        $('#timerBox table')
-            .append($('<tr>')
-                .append($('<td>').html($('<img>').attr('src', Hero.getImage(turn.color))))
-                .append($('<td>').html(turn.nr))
+        $('#timerRows')
+            .append($('<div class="row">')
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(turn.color))))
+                .append($('<div class="left nr">').html(turn.nr))
                 .append(
-                    $('<td id="time">')
+                    $('<div class="left time" id="time">')
                         .append($('<div>').attr('id', 'second'))
                         .append($('<div>').html(':'))
                         .append($('<div>').attr('id', 'minute'))
                         .append($('<div>').html(':'))
                         .append($('<div>').attr('id', 'hour'))
                 )
-            )
+            );
+        $('#timerScroll').css('height', Players.length * 30 + 'px');
         timer.countdown();
     },
-//    clear: function () {
-//        var count = $('#timerBox table').children().length;
-//        if (count > 1) {
-//            $('#timerBox table').last().remove();
-//        }
-//    },
     countdown: function () {
         var timestamp = Math.round((new Date()).getTime() / 1000) - timer.timeStart;
 
@@ -62,30 +56,19 @@ var timer = {
         $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
         $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
-        $('#timerBox table')
-            .append($('<tr>')
-                .append($('<td>').html($('<img>').attr('src', Hero.getImage(turn.color))))
-                .append($('<td>').html(turn.nr))
+        $('#timerRows')
+            .append($('<div class="row">')
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(turn.color))))
+                .append($('<div class="left nr">').html(turn.nr))
                 .append(
-                    $('<td id="time">')
+                    $('<div class="left time" id="time">')
                         .append($('<div>').attr('id', 'second'))
                         .append($('<div>').html(':'))
                         .append($('<div>').attr('id', 'minute'))
                         .append($('<div>').html(':'))
                         .append($('<div>').attr('id', 'hour'))
                 )
-            )
-
-        var count = $('#timerBox tr').length - 1;
-
-        if (count > Players.length) {
-            var i = 0;
-            $('#timerBox tr').each(function () {
-                i++;
-                if (i == 2) {
-                    this.remove();
-                }
-            });
-        }
+            );
+        $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
     }
 }
