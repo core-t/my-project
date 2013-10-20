@@ -42,6 +42,7 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             $mMapUnits = new Application_Model_MapUnits($mapId, $db);
             $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
+            Zend_Registry::set('id_lang', $user->parameters['langId']);
             $units = $mMapUnits->getUnits($db);
             Zend_Registry::set('units', $units);
             Zend_Registry::set('fields', $mMapFields->getMapFields());

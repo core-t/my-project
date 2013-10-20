@@ -260,15 +260,22 @@ function wsCastleBuildDefense(castleId) {
     ws.send(JSON.stringify(token));
 }
 
-function wsRazeCastle(castleId) {
+function wsRazeCastle() {
     if (wsClosed) {
         simpleM('Sorry, server is disconnected.');
         return;
     }
 
+    var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
+
+    if (!castleId) {
+        simpleM('No castle to destroy.');
+        return;
+    }
+
     var token = {
         type: 'razeCastle',
-        castleId: castleId
+        armyId: selectedArmy.armyId
     };
 
     ws.send(JSON.stringify(token));
@@ -506,49 +513,13 @@ function wsSurrender() {
     ws.send(JSON.stringify(token));
 }
 
-function wsAddTower(towerId) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'tower',
-        towerId: towerId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsProduction(castleId, name) {
-    var unitId
-
-    if (name == 'stop') {
-        unitId = -1;
-    } else {
-        unitId = Unit.getId(name);
-    }
-
-    if (!unitId) {
-        console.log('Brak unitId!');
-        return;
-    }
-
-    var token = {
-        type: 'production',
-        castleId: castleId,
-        unitId: unitId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
 Websocket = {
     open: function () {
         var token = {
             type: 'open',
             gameId: gameId,
             playerId: my.id,
+            langId: langId,
             accessKey: accessKey
         };
 
@@ -570,5 +541,41 @@ Websocket = {
         };
 
         ws.send(JSON.stringify(token));
+    },
+    production: function (castleId, name) {
+        var unitId
+
+        if (name == 'stop') {
+            unitId = -1;
+        } else {
+            unitId = Unit.getId(name);
+        }
+
+        if (!unitId) {
+            console.log('Brak unitId!');
+            return;
+        }
+
+        var token = {
+            type: 'production',
+            castleId: castleId,
+            unitId: unitId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    addTower: function (towerId) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var token = {
+            type: 'tower',
+            towerId: towerId
+        };
+
+        ws.send(JSON.stringify(token));
     }
+
 }

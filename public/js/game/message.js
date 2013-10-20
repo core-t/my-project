@@ -266,18 +266,18 @@ var Message = {
         }
         if (resurrection) {
             var resurrectionElement = $('<fieldset>')
-                    .append($('<label>').html('Hero resurrection'))
-                    .append(
-                        $('<div>')
-                            .append(
-                                $('<input>').attr({
-                                    type: 'checkbox',
-                                    name: 'resurrection',
-                                    value: castleId
-                                })
-                            )
-                            .append(' cost 100g')
-                    )
+                .append($('<label>').html('Hero resurrection'))
+                .append(
+                    $('<div>')
+                        .append(
+                            $('<input>').attr({
+                                type: 'checkbox',
+                                name: 'resurrection',
+                                value: castleId
+                            })
+                        )
+                        .append(' cost 100g')
+                )
 //            var buttonResurrection = $('<div>').addClass('button right buttonOff').html('Hero resurrection (cost 100g)');
 //            var cssResurrection;
 //            if ($('#gold').html() < 100) {
@@ -725,6 +725,11 @@ var Message = {
         } else {
             console.log('zonk');
         }
+    },
+    razeCastle: function () {
+        this.show('Destroy castle. Are you sure?');
+        this.ok('wsRazeCastle');
+        this.cancel();
     }
 
 

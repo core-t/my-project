@@ -7,8 +7,8 @@ class Cli_Model_Open
 
     public function __construct($dataIn, $user, $db, $gameHandler)
     {
-        if (!isset($dataIn['gameId']) || !isset($dataIn['playerId'])) {
-            $gameHandler->sendError($user, 'Brak "gameId" lub "playerId"');
+        if (!isset($dataIn['gameId']) || !isset($dataIn['playerId']) || !isset($dataIn['langId'])) {
+            $gameHandler->sendError($user, 'Brak "gameId" lub "playerId" lub "langId');
             return;
         }
 
@@ -29,7 +29,8 @@ class Cli_Model_Open
 
         $this->_parameters = array(
             'gameId' => $dataIn['gameId'],
-            'playerId' => $dataIn['playerId']
+            'playerId' => $dataIn['playerId'],
+            'langId' => $dataIn['langId']
         );
     }
 

@@ -84,8 +84,11 @@ var Gui = {
         $('#searchRuins').click(function () {
             wsSearchRuins()
         });
+        $('#razeCastle').click(function () {
+            wsSearchRuins()
+        });
         $('#showArtifacts').click(function () {
-            Message.showArtifacts();
+            Message.razeCastle();
         });
         $('#test').click(function () {
             test()

@@ -21,7 +21,7 @@ var Castle = {
         var name = $('input:radio[name=production]:checked').val();
 
         if (name) {
-            wsProduction(castleId, name);
+            Websocket.production(castleId, name);
             return;
         }
     }

@@ -363,7 +363,11 @@ function selectArmy(a) {
         }
         $('#showArtifacts').removeClass('buttonOff');
     }
-//    zoomer.lensSetCenter(a.x * 40, a.y * 40);
+
+    if (isMyCastle(a.x, a.y)) {
+        $('#razeCastle').removeClass('buttonOff');
+    }
+
     zoomer.setCenterIfOutOfScreen(a.x * 40, a.y * 40);
 }
 
@@ -402,6 +406,7 @@ function tmpUnselectArmy() {
     $('#skipArmy').addClass('buttonOff');
     $('#quitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
+    $('#razeCastle').addClass('buttonOff');
     $('#showArtifacts').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     Message.remove();
