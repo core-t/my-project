@@ -185,7 +185,7 @@ function startWebSocket() {
                     for (i in players[r.color].castles) {
                         razeCastle(i);
                     }
-                    wsNextTurn();
+                    Websocket.nextTurn();
                     break;
 
                 case 'inventoryAdd':
@@ -219,189 +219,6 @@ function startWebSocket() {
     };
 
 }
-
-function wsNextTurn() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'nextTurn'
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsStartMyTurn() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'startTurn'
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsCastleBuildDefense(castleId) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var token = {
-        type: 'castleBuildDefense',
-        castleId: castleId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsRazeCastle() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
-
-    if (!castleId) {
-        simpleM('No castle to destroy.');
-        return;
-    }
-
-    var token = {
-        type: 'razeCastle',
-        armyId: selectedArmy.armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsHeroResurrection(castleId) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-
-    if (!my.turn) {
-        return;
-    }
-    unselectArmy();
-
-    var token = {
-        type: 'heroResurrection',
-        castleId: castleId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsArmyMove(movesSpend) {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-//    if (selectedArmy.moves == 0) {
-//        unselectArmy();
-//        simpleM('Not enough moves left.');
-//        return;
-//    }
-//
-////    if (movesSpend === null) {
-////        unselectArmy();
-////        return;
-////    }
-
-    if (!my.turn) {
-        simpleM('It is not your turn.');
-        return;
-    }
-
-    var x = newX / 40;
-    var y = newY / 40;
-
-    tmpUnselectArmy();
-
-    if (unselectedArmy.x == x && unselectedArmy.y == y) {
-        return;
-    }
-
-    setLock();
-
-    var token = {
-        type: 'move',
-        x: x,
-        y: y,
-        armyId: unselectedArmy.armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsSplitArmy() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    if (!my.turn) {
-        return;
-    }
-    var h = '';
-    var s = '';
-
-    $('.message input[type="checkbox"]:checked').each(function () {
-        if ($(this).attr('name') == 'heroId') {
-            if (h) {
-                h += ',';
-            }
-            h += $(this).val();
-        } else {
-            if (s) {
-                s += ',';
-            }
-            s += $(this).val();
-        }
-    });
-
-    var token = {
-        type: 'splitArmy',
-        armyId: selectedArmy.armyId,
-        s: s,
-        h: h
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
-function wsDisbandArmy() {
-    if (wsClosed) {
-        simpleM('Sorry, server is disconnected.');
-        return;
-    }
-
-    if (!my.turn) {
-        return;
-    }
-    if (selectedArmy == null) {
-        return;
-    }
-    unselectArmy(1);
-
-    var token = {
-        type: 'disbandArmy',
-        armyId: unselectedArmy.armyId
-    };
-
-    ws.send(JSON.stringify(token));
-}
-
 
 Websocket = {
     open: function () {
@@ -568,6 +385,180 @@ Websocket = {
         var token = {
             type: 'joinArmy',
             armyId: armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    disbandArmy: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
+        }
+        if (selectedArmy == null) {
+            return;
+        }
+        unselectArmy(1);
+
+        var token = {
+            type: 'disbandArmy',
+            armyId: unselectedArmy.armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    armyMove: function (movesSpend) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+//    if (selectedArmy.moves == 0) {
+//        unselectArmy();
+//        simpleM('Not enough moves left.');
+//        return;
+//    }
+//
+////    if (movesSpend === null) {
+////        unselectArmy();
+////        return;
+////    }
+
+        if (!my.turn) {
+            simpleM('It is not your turn.');
+            return;
+        }
+
+        var x = newX / 40;
+        var y = newY / 40;
+
+        tmpUnselectArmy();
+
+        if (unselectedArmy.x == x && unselectedArmy.y == y) {
+            return;
+        }
+
+        setLock();
+
+        var token = {
+            type: 'move',
+            x: x,
+            y: y,
+            armyId: unselectedArmy.armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    splitArmy: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
+        }
+        var h = '';
+        var s = '';
+
+        $('.message input[type="checkbox"]:checked').each(function () {
+            if ($(this).attr('name') == 'heroId') {
+                if (h) {
+                    h += ',';
+                }
+                h += $(this).val();
+            } else {
+                if (s) {
+                    s += ',';
+                }
+                s += $(this).val();
+            }
+        });
+
+        var token = {
+            type: 'splitArmy',
+            armyId: selectedArmy.armyId,
+            s: s,
+            h: h
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    heroResurrection: function (castleId) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+
+        if (!my.turn) {
+            return;
+        }
+        unselectArmy();
+
+        var token = {
+            type: 'heroResurrection',
+            castleId: castleId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    razeCastle: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
+
+        if (!castleId) {
+            simpleM('No castle to destroy.');
+            return;
+        }
+
+        var token = {
+            type: 'razeCastle',
+            armyId: selectedArmy.armyId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    castleBuildDefense: function (castleId) {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var token = {
+            type: 'castleBuildDefense',
+            castleId: castleId
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    startMyTurn: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var token = {
+            type: 'startTurn'
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    nextTurn: function () {
+        if (wsClosed) {
+            simpleM('Sorry, server is disconnected.');
+            return;
+        }
+
+        var token = {
+            type: 'nextTurn'
         };
 
         ws.send(JSON.stringify(token));

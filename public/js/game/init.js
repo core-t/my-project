@@ -133,7 +133,7 @@ function startGame() {
             turnOff();
         }
         if (my.turn && !players[my.color].turnActive) {
-            wsStartMyTurn();
+            Websocket.startMyTurn();
         } else if (my.game && players[turn.color].computer) {
             setTimeout('Websocket.computer()', 1000);
         }

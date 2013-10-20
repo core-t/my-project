@@ -9,12 +9,12 @@ var Castle = {
 //        }
 
         if ($('input[name=defense]').is(':checked')) {
-            wsCastleBuildDefense(castleId);
+            Websocket.castleBuildDefense(castleId);
             return;
         }
 
         if ($('input[name=resurrection]').is(':checked')) {
-            wsHeroResurrection(castleId);
+            Websocket.heroResurrection(castleId);
             return;
         }
 

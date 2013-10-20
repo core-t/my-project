@@ -355,7 +355,7 @@ var Message = {
     nextTurn: function () {
         var div = $('<div>').html('Next turn. Are you sure?');
         Message.show(div);
-        this.ok(wsNextTurn);
+        this.ok(Websocket.nextTurn);
         this.cancel();
     },
     win: function (color) {
@@ -391,7 +391,7 @@ var Message = {
         }
 
         this.show($('<div>').html('Are you sure?'));
-        this.ok(wsDisbandArmy);
+        this.ok(Websocket.disbandArmy);
         this.cancel();
     },
     splitArmy: function (a) {
@@ -452,7 +452,7 @@ var Message = {
         }
 
         this.show(army);
-        this.ok(wsSplitArmy);
+        this.ok(Websocket.splitArmy);
         this.cancel();
 
 //                .css({
@@ -737,7 +737,7 @@ var Message = {
     },
     razeCastle: function () {
         this.show('Destroy castle. Are you sure?');
-        this.ok('wsRazeCastle');
+        this.ok(Websocket.razeCastle);
         this.cancel();
     }
 

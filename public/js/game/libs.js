@@ -43,7 +43,7 @@ function changeTurn(color, nr) {
 
     if (turn.color == my.color) {
         turnOn();
-        wsStartMyTurn();
+        Websocket.startMyTurn();
         return;
     } else {
         turnOff();
