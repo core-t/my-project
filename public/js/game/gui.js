@@ -5,10 +5,14 @@ var Gui = {
     timerBox: {'close': 0},
     zoomPadLayout: {'close': 0},
     doKey: function (event) {
+        if ($(event.target).attr('id') == 'msg') {
+            return;
+        }
         var key = event.keyCode || event.charCode;
         switch (key) {
             case 27: //ESC
                 Message.remove();
+                unselectArmy();
                 break;
             case 68: //d
                 Message.disbandArmy();
