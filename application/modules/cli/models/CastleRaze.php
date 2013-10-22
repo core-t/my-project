@@ -11,18 +11,22 @@ class Cli_Model_CastleRaze
         }
 
         $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
-        $mArmy->g
+        $position = $mArmy->getArmyPosition($armyId);
 
-        Application_Model_Board::isCastleAtPosition();
+        $mapCastles = Zend_Registry::get('castles');
+        $castleId = Application_Model_Board::isCastleAtPosition($position['x'], $position['y'], $mapCastles);
 
         $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
-        $mCastlesInGame->razeCastle($castleId, $user->parameters['playerId']);
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
-        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']) + 1000;
 
-        $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
-//        $token = Cli_Model_Database::getCastle($user->parameters['gameId'], $castleId, $db);
+        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
+
+        if ($mCastlesInGame->razeCastle($castleId, $user->parameters['playerId'])) {
+            $defense = $mapCastles[$castleId]['defense'] + $mCastlesInGame->getCastleDefenseModifier($castleId);
+            $gold = $defense * 200;
+            $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
+        }
 
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 

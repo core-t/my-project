@@ -104,5 +104,16 @@ class Application_Model_Army extends Game_Db_Table_Abstract
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $this->_gameId);
     }
+
+    public function getArmyPosition($armyId)
+    {
+        $select = $this->db->select()
+            ->from('army', array('x', 'y'))
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('destroyed = false')
+            ->where('"armyId" = ?', $armyId);
+
+        return $this->selectRow($select);
+    }
 }
 
