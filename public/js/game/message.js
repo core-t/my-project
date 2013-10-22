@@ -713,7 +713,7 @@ var Message = {
         }
     },
     razeCastle: function () {
-        this.show('Destroy castle. Are you sure?');
+        this.show($('<div>').html('Destroy castle. Are you sure?'));
         this.ok(Websocket.razeCastle);
         this.cancel();
     }

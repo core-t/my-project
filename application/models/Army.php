@@ -107,7 +107,7 @@ class Application_Model_Army extends Game_Db_Table_Abstract
 
     public function getArmyPosition($armyId)
     {
-        $select = $this->db->select()
+        $select = $this->_db->select()
             ->from('army', array('x', 'y'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('destroyed = false')

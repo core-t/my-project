@@ -221,6 +221,7 @@ function showFirstCastle() {
 }
 
 function razeCastle(castleId) {
+    $('#razeCastle').addClass('buttonOff');
     castleFields(castleId, 'g')
     $('#castle' + castleId).remove();
     $('#c' + castleId).remove();
