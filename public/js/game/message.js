@@ -459,18 +459,18 @@ var Message = {
             attackPoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].attackPoints).css('color', '#da8');
             defensePoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].defensePoints).css('color', '#da8');
             if (selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly) {
-                attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
-                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+                attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
+                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
             }
             if (selectedArmy.heroKey) {
-                attackPoints.append($('<span>').html(' +1').css('color', '#d00000'));
-                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+                attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
+                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
             }
             if (bonusTower) {
-                defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
+                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
             }
             if (castleDefense) {
-                defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
+                defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#00ff00'));
             }
             army.append(
                 $('<div>')
