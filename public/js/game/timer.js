@@ -2,7 +2,7 @@ var timer = {
     timeStart: 0,
     timestamp: 0,
     start: function () {
-        timer.timeStart = Math.round((new Date()).getTime() / 1000);
+        this.setTimeStart();
         $('#timerRows')
             .append($('<div class="row">')
                 .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(turn.color))))
@@ -20,14 +20,15 @@ var timer = {
         timer.countdown();
     },
     countdown: function () {
-        var timestamp = Math.round((new Date()).getTime() / 1000) - timer.timeStart;
+        var timestamp = (new Date()).getTime() - timer.timeStart;
 
         if (timer.timestamp != timestamp) {
             timer.timestamp = timestamp;
 
-            var seconds = Math.round(timestamp % 60);
-            var minutes = Math.round(timestamp / 60);
-            var hours = Math.round(minutes / 60);
+            var time = new Date(timestamp),
+                hours = time.getHours(),
+                minutes = time.getMinutes(),
+                seconds = time.getSeconds();
 
 
             if (seconds < 10) {
@@ -52,7 +53,7 @@ var timer = {
         }, 10);
     },
     update: function () {
-        timer.timeStart = Math.round((new Date()).getTime() / 1000);
+        this.setTimeStart();
         $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
         $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
@@ -70,5 +71,8 @@ var timer = {
                 )
             );
         $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
+    },
+    setTimeStart: function () {
+        this.timeStart = (new Date()).getTime() + 3600000;
     }
 }

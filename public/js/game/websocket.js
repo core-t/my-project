@@ -113,7 +113,7 @@ function startWebSocket() {
                     setParentArmy(players[r.color].armies['army' + r.parentArmy.armyId]);
                     players[r.color].armies['army' + r.childArmy.armyId] = new army(r.childArmy, r.color);
                     if (my.color == turn.color) {
-                        selectArmy(players[r.color].armies['army' + r.childArmy.armyId]);
+                        selectArmy(players[r.color].armies['army' + r.childArmy.armyId], 0);
                     } else {
                         zoomer.lensSetCenter(r.parentArmy.x * 40, r.parentArmy.y * 40);
                     }

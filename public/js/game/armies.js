@@ -262,7 +262,7 @@ function myArmyClick(obj, e) {
                 }
             } else {
                 unselectArmy();
-                selectArmy(players[my.color].armies[obj.id]);
+                selectArmy(players[my.color].armies[obj.id], 0);
             }
         }
     }
@@ -333,7 +333,7 @@ function setParentArmy(army) {
     parentArmy = army;
 }
 
-function selectArmy(a) {
+function selectArmy(a, center) {
     castlesAddCursorWhenSelectedArmy();
     armiesAddCursorWhenSelectedArmy();
     myCastlesRemoveCursor();
@@ -368,7 +368,9 @@ function selectArmy(a) {
         $('#razeCastle').removeClass('buttonOff');
     }
 
-    zoomer.setCenterIfOutOfScreen(a.x * 40, a.y * 40);
+    if (typeof center == 'undefined') {
+        zoomer.setCenterIfOutOfScreen(a.x * 40, a.y * 40);
+    }
 }
 
 function unselectArmy(skipJoin) {

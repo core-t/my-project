@@ -343,15 +343,15 @@ function zoom(gameWidth, gameHeight) {
         var lensTop = parseInt($('.zoomPup').css('top'));
         var lensHeight = parseInt($('.zoomPup').css('height'));
 
-        var maxTop = lensTop + lensHeight - 1;
-        var minTop = lensTop + 1;
+        var maxTop = lensTop + lensHeight - 10;
+        var minTop = lensTop + 10;
 
         var left = parseInt((parseInt(x)) / el.scale.x);
         var lensLeft = parseInt($('.zoomPup').css('left'));
         var lensWidth = parseInt($('.zoomPup').css('width'));
 
-        var maxLeft = lensLeft + lensWidth - 1;
-        var minLeft = lensLeft + 1;
+        var maxLeft = lensLeft + lensWidth - 20;
+        var minLeft = lensLeft + 20;
 
         if ((top >= maxTop) || (top <= minTop)) {
             lens.setcenter(x, y);
