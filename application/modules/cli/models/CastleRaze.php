@@ -24,7 +24,7 @@ class Cli_Model_CastleRaze
 
         if ($mCastlesInGame->razeCastle($castleId, $user->parameters['playerId'])) {
             $defense = $mapCastles[$castleId]['defense'] + $mCastlesInGame->getCastleDefenseModifier($castleId);
-            $gold = $defense * 200;
+            $gold = $gold + $defense * 200;
             $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
         }
 

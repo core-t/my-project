@@ -149,6 +149,11 @@ function getColor(color) {
 function makeTime() {
     var d = new Date();
     var minutes = d.getMinutes();
+
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+
     if (minutes.length == 1) {
         minutes = '0' + minutes
     }
