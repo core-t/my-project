@@ -181,33 +181,33 @@ function zoom(gameWidth, gameHeight) {
             var lenstop = 0;
 
             function overleft(lens) {
-                return el.mousepos.x - (lens.w) / 2 < smallimage.pos.l;
+                return el.mousepos.x < smallimage.pos.l;
             }
 
             function overright(lens) {
-                return el.mousepos.x + (lens.w) / 2 > smallimage.pos.r;
+                return el.mousepos.x > smallimage.pos.r;
 
             }
 
             function overtop(lens) {
-                return el.mousepos.y - (lens.h) / 2 < smallimage.pos.t;
+                return el.mousepos.y < smallimage.pos.t;
             }
 
             function overbottom(lens) {
-                return el.mousepos.y + (lens.h) / 2 > smallimage.pos.b;
+                return el.mousepos.y > smallimage.pos.b;
             }
 
             lensleft = el.mousepos.x + smallimage.bleft - smallimage.pos.l - (this.node.w + 2) / 2;
             lenstop = el.mousepos.y + smallimage.btop - smallimage.pos.t - (this.node.h + 2) / 2;
             if (overleft(this.node)) {
-                lensleft = smallimage.bleft - 1;
+                lensleft = smallimage.bleft - this.node.w / 2;
             } else if (overright(this.node)) {
-                lensleft = smallimage.w + smallimage.bleft - this.node.w - 1;
+                lensleft = smallimage.w + smallimage.bleft - this.node.w / 2;
             }
             if (overtop(this.node)) {
-                lenstop = smallimage.btop - 1;
+                lenstop = smallimage.btop - this.node.h / 2;
             } else if (overbottom(this.node)) {
-                lenstop = smallimage.h + smallimage.btop - this.node.h - 1;
+                lenstop = smallimage.h + smallimage.btop - this.node.h / 2;
             }
 
             this.node.left = lensleft;
@@ -339,6 +339,9 @@ function zoom(gameWidth, gameHeight) {
     }
 
     this.setCenterIfOutOfScreen = function (x, y) {
+        if (!show) {
+            return;
+        }
         var top = parseInt(parseInt(y) / el.scale.y);
         var lensTop = parseInt($('.zoomPup').css('top'));
         var lensHeight = parseInt($('.zoomPup').css('height'));

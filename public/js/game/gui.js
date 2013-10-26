@@ -44,6 +44,10 @@ var Gui = {
             window.location = '/' + lang + '/index';
         });
 
+        $('#show').click(function () {
+            show = !show;
+        });
+
         $('#send').click(function () {
             Websocket.chat();
         });

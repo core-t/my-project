@@ -21,6 +21,8 @@ var gameId = <?php echo $this->gameId ?>;
 var lang = '<?php echo Zend_Registry::get('lang') ?>';
 var langId = <?php echo Zend_Registry::get('id_lang') ?>;
 var accessKey = '<?php echo $this->accessKey ?>';
+var show = true;
+
 $(document).ready(function() {
     goldUpdate(<?php echo $this->gold ?>);
 });
