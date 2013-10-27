@@ -416,6 +416,7 @@ function tmpUnselectArmy() {
 
 function deleteArmy(armyId, color, quiet) {
     if (typeof players[color].armies[armyId] == 'undefined') {
+        stop = 1;
         console.log('Brak armi o armyId = ' + armyId + ' i kolorze = ' + color);
         return;
     }
@@ -558,7 +559,7 @@ function unfortifyArmy(armyId) {
     }
     var index = $.inArray(armyId, quitedArmies);
     if (index != -1) {
-        Websocket.fortifyArmy(armyId);
+        Websocket.fortifyArmy(armyId, 0);
         quitedArmies.splice(index, 1);
     }
 }

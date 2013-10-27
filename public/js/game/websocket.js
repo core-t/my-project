@@ -324,7 +324,12 @@ Websocket = {
         if (!my.game) {
             return
         }
+
         if (!players[turn.color].computer) {
+            return;
+        }
+
+        if (stop) {
             return;
         }
 
@@ -354,7 +359,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    fortifyArmy: function (armyId) {
+    fortifyArmy: function (armyId, fortify) {
         if (wsClosed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -364,9 +369,16 @@ Websocket = {
             return;
         }
 
+        if (typeof fortify == 'undefined' || fortify) {
+            fortify = 1;
+        } else {
+            fortify = 0;
+        }
+
         var token = {
             type: 'fortifyArmy',
-            armyId: armyId
+            armyId: armyId,
+            fortify: fortify
         };
 
         ws.send(JSON.stringify(token));

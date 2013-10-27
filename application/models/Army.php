@@ -115,5 +115,29 @@ class Application_Model_Army extends Game_Db_Table_Abstract
 
         return $this->selectRow($select);
     }
+
+    public function fortify($armyId, $fortify, $playerId = null)
+    {
+        if ($fortify) {
+            $data = array(
+                'fortified' => 't'
+            );
+        } else {
+            $data = array(
+                'fortified' => 'f'
+            );
+        }
+
+        $where = array(
+            $this->_db->quoteInto('"armyId" = ?', $armyId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+        );
+
+        if ($playerId) {
+            $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
+        }
+
+        return $this->update($data, $where);
+    }
 }
 

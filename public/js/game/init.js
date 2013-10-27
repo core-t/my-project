@@ -49,6 +49,7 @@ var documentHeight;
 
 var show = true;
 
+var stop = 0;
 
 $(document).ready(function () {
     $(window).resize(function () {

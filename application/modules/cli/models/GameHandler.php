@@ -141,7 +141,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     return;
                 }
 
-                Cli_Model_Database::fortifyArmy($user->parameters['gameId'], $user->parameters['playerId'], $armyId, $db);
+                $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+                $mArmy2->fortify($armyId, $dataIn['fortify'], $user->parameters['playerId']);
                 break;
 
             case 'disbandArmy':

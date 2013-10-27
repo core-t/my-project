@@ -1562,40 +1562,6 @@ Brak y
         }
     }
 
-    static public function fortifyArmy($gameId, $playerId, $armyId, $db)
-    {
-        $select = $db->select()
-            ->from('army', 'fortified')
-            ->where('"armyId" = ?', $armyId)
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId);
-
-        try {
-            $fortified = $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-            return;
-        }
-
-        if ($fortified == 't') {
-            $data = array(
-                'fortified' => 'f'
-            );
-        } else {
-            $data = array(
-                'fortified' => 't'
-            );
-        }
-        $where = array(
-            $db->quoteInto('"armyId" = ?', $armyId),
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId),
-        );
-
-        return self::update('army', $data, $where, $db);
-    }
-
     static public function unfortifyComputerArmies($gameId, $playerId, $db)
     {
         $data = array(
