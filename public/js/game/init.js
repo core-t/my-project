@@ -47,7 +47,6 @@ var enemyCastles = false;
 var documentWidth;
 var documentHeight;
 
-var capitalId;
 var show = true;
 
 
@@ -63,6 +62,18 @@ $(document).ready(function () {
     Gui.prepareButtons();
     startWebSocket();
 
+    for (i in castles) {
+        new createNeutralCastle(i);
+    }
+
+    for (i in ruins) {
+        new ruinCreate(i);
+    }
+
+    for (i in towers) {
+        new towerCreate(i);
+    }
+
     Players.init();
     Players.draw();
     Players.turn();
@@ -72,58 +83,6 @@ function startGame() {
     if (!largeimageloaded) {
         setTimeout('startGame()', 1000);
         return;
-    }
-
-    for (i in castles) {
-        new createNeutralCastle(i);
-    }
-
-    for (i in ruins) {
-        new ruinCreate(i);
-    }
-    for (i in towers) {
-        new towerCreate(i);
-    }
-    for (color in players) {
-        players[color].active = 0;
-
-        $('.' + color + ' .color').addClass(color + 'bg');
-
-        for (i in players[color].armies) {
-            players[color].armies[i] = new army(players[color].armies[i], color);
-            if (color == my.color) {
-                for (s in players[color].armies[i].soldiers) {
-                    costs += units[players[color].armies[i].soldiers[s].unitId].cost;
-                }
-                myArmies = true;
-            } else {
-                enemyArmies = true;
-            }
-        }
-
-        if (players[color].armies == "" && players[color].castles == "") {
-            $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-        }
-
-        for (i in players[color].castles) {
-            updateCastleDefense(i, players[color].castles[i].defenseMod);
-            castleOwner(i, color);
-
-            if (color == my.color) {
-                if (players[color].castles[i].capital) {
-                    capitalId = i;
-                }
-
-                income += castles[i].income;
-                if (firstCastleId > i) {
-                    firstCastleId = i;
-                }
-                myCastles = true;
-                setMyCastleProduction(i);
-            } else {
-                enemyCastles = true;
-            }
-        }
     }
 
     showFirstCastle();

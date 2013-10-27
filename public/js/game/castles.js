@@ -212,8 +212,8 @@ function getMyCastleDefenseFromPosition(x, y) {
 }
 
 function showFirstCastle() {
-    if (typeof capitalId != 'undefined' && $('#castle' + capitalId).length) {
-        var sp = $('#castle' + capitalId);
+    if ($('#castle' + capitals[my.color]).length) {
+        var sp = $('#castle' + capitals[my.color]);
         zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
     } else if ($('#castle' + firstCastleId).length) {
         var sp = $('#castle' + firstCastleId);

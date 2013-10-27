@@ -10,6 +10,44 @@ var Players = {
         this.canvas = $('#playersCanvas');
         this.ctx = this.canvas[0].getContext('2d');
         this.length = Object.size(players);
+
+        for (color in players) {
+            players[color].active = 0;
+
+            $('.' + color + ' .color').addClass(color + 'bg');
+
+            for (i in players[color].armies) {
+                players[color].armies[i] = new army(players[color].armies[i], color);
+                if (color == my.color) {
+                    for (s in players[color].armies[i].soldiers) {
+                        costs += units[players[color].armies[i].soldiers[s].unitId].cost;
+                    }
+                    myArmies = true;
+                } else {
+                    enemyArmies = true;
+                }
+            }
+
+            if (players[color].armies == "" && players[color].castles == "") {
+                $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
+            }
+
+            for (i in players[color].castles) {
+                updateCastleDefense(i, players[color].castles[i].defenseMod);
+                castleOwner(i, color);
+
+                if (color == my.color) {
+                    income += castles[i].income;
+                    if (firstCastleId > i) {
+                        firstCastleId = i;
+                    }
+                    myCastles = true;
+                    setMyCastleProduction(i);
+                } else {
+                    enemyCastles = true;
+                }
+            }
+        }
     },
     draw: function () {
         var r_length = 100;

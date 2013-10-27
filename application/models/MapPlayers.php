@@ -82,5 +82,21 @@ class Application_Model_MapPlayers extends Game_Db_Table_Abstract
 
         return $this->selectAll($select);
     }
+
+    public function getCapitals()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('mapCastleId', 'shortName'))
+            ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
+            ->order('startOrder');
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $row) {
+            $array[$row['shortName']] = $row['mapCastleId'];
+        }
+
+        return $array;
+    }
 }
 
