@@ -189,9 +189,9 @@ class Cli_Model_Move
                 Cli_Model_Database::updateArmyPosition($user->parameters['gameId'], $user->parameters['playerId'], $move['path'], $fields, $army, $db);
                 $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
                 $victory = true;
-                foreach ($enemy['ids'] as $id) {
-                    $defender[]['armyId'] = $id;
-                }
+//                foreach ($enemy['ids'] as $id) {
+//                    $defender[]['armyId'] = $id;
+//                }
             } else {
                 $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
                 $mArmy2->destroyArmy($army['armyId'], $user->parameters['playerId']);
