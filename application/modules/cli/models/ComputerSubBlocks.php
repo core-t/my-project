@@ -27,9 +27,9 @@ class Cli_Model_ComputerSubBlocks
                     Cli_Model_Database::updateArmyPosition($gameId, $playerId, $path, $fields, $army, $db);
                     $result['attackerArmy'] = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $army['armyId'], $playerId, $db);
                     $result['victory'] = true;
-                    foreach ($enemy['ids'] as $id) {
-                        $defender[]['armyId'] = $id;
-                    }
+//                    foreach ($enemy['ids'] as $id) {
+//                        $defender[]['armyId'] = $id;
+//                    }
                     echo('
 Castle defender: ');
                     print_r($defender);

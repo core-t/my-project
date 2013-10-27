@@ -40,14 +40,14 @@ class Cli_Model_ComputerMainBlocks
                                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                             } else {
-                                $l->log('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ DO ZAMKU!');
+                                $l->log('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ W KIERUNKU ZAMKU!');
                                 Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
                                 $mArmy2 = new Application_Model_Army($gameId, $db);
                                 $mArmy2->fortify($army['armyId'], 1);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                             }
                         } else {
-                            $l->log('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ DO ZAMKU!');
+                            $l->log('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ W KIERUNKU ZAMKU!');
                             Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
                             $mArmy2 = new Application_Model_Army($gameId, $db);
                             $mArmy2->fortify($army['armyId'], 1);

@@ -19,14 +19,13 @@ class LoadController extends Game_Controller_Gui
         if (empty($gameId)) {
             throw new Exception('Brak gameId!');
         }
-        $modelGame = new Application_Model_Game($gameId);
-        if ($modelGame->playerIsAlive($this->_namespace->player['playerId'])) {
+//        $modelGame = new Application_Model_Game($gameId);
+//        if ($modelGame->playerIsAlive($this->_namespace->player['playerId'])) {
             $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
-//            $this->_namespace->player['color'] = $modelGame->getPlayerColor($this->_namespace->player['playerId']);
-            $this->_redirect('/' . Zend_Registry::get('lang') . '/game');
-        } else {
-            throw new Exception('Nie powinno Cię tu być!');
-        }
+            $this->_redirect('/' . Zend_Registry::get('lang') . '/game/id/' . $gameId);
+//        } else {
+//            throw new Exception('Nie powinno Cię tu być!');
+//        }
     }
 
 }
