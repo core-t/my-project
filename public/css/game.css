@@ -891,3 +891,19 @@ html {
 .font-yellow {
     color: yellow;
 }
+
+.button, #submit {
+    border-radius: 5px;
+    border: 1px solid #fff;
+    background: none;
+    color: #fff;
+}
+
+.button:hover, #submit:hover {
+    color: #000;
+}
+
+.buttonOff {
+    border: 1px solid #444;
+    color: #444;
+}
