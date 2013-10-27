@@ -173,8 +173,14 @@ var Gui = {
         });
     },
     adjust: function () {
+        this.armyBox.close = 0;
+        this.chatBox.close = 0;
+        this.playerBox.close = 0;
+        this.timerBox.close = 0;
+        this.zoomPadLayout.close = 0;
         documentWidth = $(document).width();
-        documentHeight = $(document).height();
+        documentHeight = $(window).height();//$(document).height();
+
         $('.zoomWindow').css('height', documentHeight + 'px');
 
         var left = documentWidth - 237;
