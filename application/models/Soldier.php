@@ -63,22 +63,14 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
 
     public function getForBattle($ids)
     {
-//        $units = Zend_Registry::get('units');
-
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('soldierId', 'unitId'))
-            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'name'))
+            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
-        $soldiers = $this->selectAll($select);
-
-//        foreach($soldiers as $soldier){
-//
-//        }
-
-        return $soldiers;
+        return $this->selectAll($select);
     }
 
     public function getForArmyPosition($armyId)
@@ -94,7 +86,7 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('movesLeft', 'soldierId', 'unitId'))
-            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', array(''))
+            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId)
             ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));

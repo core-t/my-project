@@ -230,18 +230,21 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      */
     public function getPath($key)
     {
-        if (!isset($this->close[$key])) {
-            $l = new Coret_Model_Logger();
-            $l->log('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
-            return;
+//        if (!isset($this->close[$key])) {
+//            $l = new Coret_Model_Logger();
+//            $l->log('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
+//            return;
+//        }
+//        $path = array();
+//        while (!empty($this->close[$key]['parent'])) {
+//            $path[] = $this->close[$key];
+//            $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
+//        }
+        $path = $this->getReturnPath($key);
+        if (is_array($path)) {
+            $path = array_reverse($path);
+            return $path;
         }
-        $path = array();
-        while (!empty($this->close[$key]['parent'])) {
-            $path[] = $this->close[$key];
-            $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
-        }
-        $path = array_reverse($path);
-        return $path;
     }
 
     /**
