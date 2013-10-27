@@ -169,12 +169,12 @@ var Gui = {
     },
     adjust: function () {
         documentWidth = $(document).width();
-        documentHeigh = $(document).height();
-        $('.zoomWindow').css('height', documentHeigh + 'px');
+        documentHeight = $(document).height();
+        $('.zoomWindow').css('height', documentHeight + 'px');
 
         var left = documentWidth - 237;
         var chatLeft = documentWidth - 507;
-        var chatTop = documentHeigh - 169;
+        var chatTop = documentHeight - 169;
 
         $('#chatBox').css({
             'left': chatLeft + 'px',
@@ -209,7 +209,7 @@ var Gui = {
         });
 
         if (!zoomer) {
-            zoomer = new zoom(documentWidth, documentHeigh);
+            zoomer = new zoom(documentWidth, documentHeight);
         } else {
             zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
             zoomer.lens.setdimensions();

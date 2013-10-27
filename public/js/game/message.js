@@ -15,7 +15,9 @@ var Message = {
                 .append(txt)
         );
         var left = documentWidth / 2 - parseInt($('.message').css('width')) / 2;
+        var maxHeight = documentHeight - 120;
         $('.message').css({
+            'max-height': maxHeight + 'px',
             'left': left + 'px',
             'display': 'block'
         })
@@ -421,8 +423,8 @@ var Message = {
             );
         }
         var height = numberOfUnits * 39 + 40;
-        if (height > documentHeigh - 100) {
-            height = documentHeigh - 100;
+        if (height > documentHeight - 100) {
+            height = documentHeight - 100;
             overflow = 'auto';
         } else {
             overflow = 'hidden';
@@ -536,8 +538,8 @@ var Message = {
             );
         }
         var height = numberOfUnits * 60 + 40;
-        if (height > documentHeigh - 100) {
-            height = documentHeigh - 100;
+        if (height > documentHeight - 100) {
+            height = documentHeight - 100;
             overflow = 'auto';
         } else {
             overflow = 'hidden';

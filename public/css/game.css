@@ -466,6 +466,11 @@
     margin: 5px 6px;
 }
 
+.message .split {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 .message .split div.row {
     clear: both;
     height: 31px;
@@ -512,9 +517,14 @@
     left: 0px;
 }
 
+.message .status {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 .message .status div.row {
     clear: both;
-    height: 52px;
+    height: 60px;
     margin: 1px;
     padding: 3px;
     border: 1px solid #222;

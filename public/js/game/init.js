@@ -44,9 +44,12 @@ var myCastles = false;
 var enemyArmies = false;
 var enemyCastles = false;
 
-var messageLeft;
 var documentWidth;
-var documentHeigh;
+var documentHeight;
+
+var capitalId;
+var show = true;
+
 
 $(document).ready(function () {
     $(window).resize(function () {
@@ -105,7 +108,12 @@ function startGame() {
         for (i in players[color].castles) {
             updateCastleDefense(i, players[color].castles[i].defenseMod);
             castleOwner(i, color);
+
             if (color == my.color) {
+                if (players[color].castles[i].capital) {
+                    capitalId = i;
+                }
+
                 income += castles[i].income;
                 if (firstCastleId > i) {
                     firstCastleId = i;
@@ -122,7 +130,7 @@ function startGame() {
 
     if (!enemyArmies && !enemyCastles) {
         turnOff();
-        winM(my.color);
+        Message.win(my.color);
     } else if (!myArmies && !myCastles) {
         turnOff();
         Message.lost(my.color);
