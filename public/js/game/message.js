@@ -658,7 +658,11 @@ var Message = {
             .append($('<div>').addClass('battle defense'))
             .append($('<div id="battleOk">').addClass('button go').html('OK'));
 
-        this.show(div);
+//        if (!my.turn && show) {
+            this.show(div);
+//        } else if (my.turn) {
+//            this.show(div);
+//        }
 
         if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
             $('#battleOk').click(function () {

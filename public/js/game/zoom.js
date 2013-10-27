@@ -152,22 +152,12 @@ function zoom(gameWidth, gameHeight) {
             this.node.left = (smallimage.ow - this.node.w - 2) / 2;
         };
         this.setcenter = function (x, y) {
-//            console.log(x);
-//            console.log(y);
+            if (!my.turn && !show) {
+                return;
+            }
+
             this.node.top = parseInt((parseInt(y) - settings.gameHeight / 2) / el.scale.y);
-//            console.log(this.node.top);
             this.node.left = parseInt((parseInt(x) - settings.gameWidth / 2) / el.scale.x);
-//            console.log(this.node.left);
-//            if (this.node.top > smallimage.h) {
-//                this.node.top = smallimage.h;
-//            } else if (this.node.top < -1) {
-//                this.node.top = -1;
-//            }
-//            if (this.node.left > smallimage.w + this.node.w) {
-//                this.node.left = smallimage.w + this.node.w;
-//            } else if (this.node.left < -1) {
-//                this.node.left = -1;
-//            }
             this.node.css({
                 top: this.node.top,
                 left: this.node.left
@@ -339,9 +329,6 @@ function zoom(gameWidth, gameHeight) {
     }
 
     this.setCenterIfOutOfScreen = function (x, y) {
-        if (!show) {
-            return;
-        }
         var top = parseInt(parseInt(y) / el.scale.y);
         var lensTop = parseInt($('.zoomPup').css('top'));
         var lensHeight = parseInt($('.zoomPup').css('height'));

@@ -50,7 +50,7 @@ var Players = {
         }
     },
     draw: function () {
-        var r_length = 100;
+        var r_length = 90;
         var r_angle = Math.PI * 2 / this.length;
 
         var i = 0;
