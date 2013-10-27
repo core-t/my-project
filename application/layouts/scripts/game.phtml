@@ -41,14 +41,12 @@
             <div id="playersBox" class="box">
                 <!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->
                 <div id="turn"><span id="turnNumber"></span></div>
-                <div id="exit" title="<?php echo $this->translate('Exit game') ?>"></div>
-                <div id="show" title="<?php echo $this->translate('Show others') ?>"></div>
+                <div id="exit" class="iconButton" title="<?php echo $this->translate('Exit game') ?>"></div>
+                <div id="show" class="iconButton" title="<?php echo $this->translate('Show others') ?>"></div>
+                <div id="surrender" class="iconButton" title="<?php echo $this->translate('Surrender') ?>"></div>
                 <canvas id="playersCanvas" width="180px" height="180px"></canvas>
                 <div id="turnBox">
-                    <div id="surrender" title="<?php echo $this->translate('Surrender') ?>"></div>
-                    <div>
-                        <a id="nextTurn" class="button"><?php echo $this->translate('Next turn') ?> &raquo;</a>
-                    </div>
+                    <a id="nextTurn" class="button"><?php echo $this->translate('Next turn') ?> &raquo;</a>
                 </div>
                 <div class="close">X</div>
             </div>

@@ -291,26 +291,32 @@
 
 #exit {
     position: absolute;
-    top: 10px;
-    left: 200px;
+    top: 4px;
+    left: 198px;
     background: url('/img/game/exit.png') no-repeat center center;
     width: 32px;
     height: 32px;
     cursor: pointer;
-    border: 1px solid #fff;
-    border-radius: 5px;
 }
 
 #show {
     position: absolute;
-    top: 45px;
-    left: 200px;
+    top: 41px;
+    left: 198px;
     background: url('/img/game/show.png') no-repeat center center;
     width: 32px;
     height: 32px;
     cursor: pointer;
-    border: 1px solid #fff;
-    border-radius: 5px;
+}
+
+#surrender {
+    position: absolute;
+    top: 78px;
+    left: 198px;
+    background: url("/img/game/white_flag.png") no-repeat center center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
 }
 
 #turn {
@@ -642,8 +648,9 @@
 
 #chatBox input {
     width: 382px;
-    line-height: 23px;
+    line-height: 25px;
     border: 1px solid #000;
+    border-radius: 5px;
     margin: 2px;
 
     -webkit-touch-callout: text;
@@ -660,7 +667,8 @@
 
 #chatBox .button {
     margin: 0;
-    width: 28px;
+    padding: 0;
+    width: 92px;
 }
 
 #timerBox {
@@ -780,16 +788,6 @@
     /*margin-top: 10px;*/
 }
 
-#surrender {
-    /*position: absolute;*/
-    background: url("/img/game/white_flag.png");
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    float: right;
-    /*margin-right: 10px;*/
-}
-
 .message #income {
     position: absolute;
     top: 10px;
@@ -892,7 +890,7 @@ html {
     color: yellow;
 }
 
-.button, #submit {
+.iconButton, .button, #submit {
     border-radius: 5px;
     border: 1px solid #fff;
     background: none;
