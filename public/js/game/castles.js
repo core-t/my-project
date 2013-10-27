@@ -79,19 +79,19 @@ function castleOnMouse(id, type) {
 }
 
 function castlesAddCursorWhenSelectedArmy() {
-    $('.castle:not(.' + my.color + ')').css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+    $('.castle:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
 }
 
 function castlesAddCursorWhenUnselectedArmy() {
-    $('.castle:not(.' + my.color + ')').css('cursor', 'url(../img/game/cursor.png), default');
+    $('.castle:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor.png), default');
 }
 
 function myCastlesAddCursor() {
-    $('.castle.' + my.color).css('cursor', 'url(../img/game/cursor_castle.png), crosshair');
+    $('.castle.' + my.color).css('cursor', 'url(/img/game/cursor_castle.png), crosshair');
 }
 
 function myCastlesRemoveCursor() {
-    $('.castle.' + my.color).css('cursor', 'url(../img/game/cursor.png), default');
+    $('.castle.' + my.color).css('cursor', 'url(/img/game/cursor.png), default');
 }
 
 function castleOwner(castleId, color) {
@@ -116,7 +116,7 @@ function castleOwner(castleId, color) {
         castleFields(castleId, 'c');
         castle
             .css({
-                'cursor': 'url(../img/game/cursor_castle.png), default'
+                'cursor': 'url(/img/game/cursor_castle.png), default'
             })
             .unbind('mouseover')
             .unbind('mousemove')
@@ -146,7 +146,7 @@ function castleOwner(castleId, color) {
     castle.removeClass()
         .addClass('castle ' + color)
         .html('')
-        .css('background', 'url(../img/game/castles/' + color + '.png) center center no-repeat');
+        .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
 
     castles[castleId].color = color;
 
@@ -157,7 +157,7 @@ function setMyCastleProduction(castleId) {
     castles[castleId].currentProduction = players[my.color].castles[castleId].production;
     castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
     if (castles[castleId].currentProduction) {
-        $('#castle' + castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
+        $('#castle' + castleId).html($('<img>').attr('src', '/img/game/castle_production.png').css('float', 'right'));
     }
 }
 
@@ -235,7 +235,7 @@ function updateProduction(unitId, castleId) {
     if (unitId === null) {
         $('#castle' + castleId).html('');
     } else {
-        $('#castle' + castleId).html($('<img>').attr('src', '../img/game/castle_production.png').css('float', 'right'));
+        $('#castle' + castleId).html($('<img>').attr('src', '/img/game/castle_production.png').css('float', 'right'));
     }
     Message.remove();
     castles[castleId].currentProduction = unitId;

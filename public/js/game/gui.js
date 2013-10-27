@@ -47,9 +47,9 @@ var Gui = {
         $('#show').click(function () {
             show = !show;
             if (show) {
-                $(this).css('background', 'url(\'../img/game/show.png\') no-repeat center center')
+                $(this).css('background', 'url(\'/img/game/show.png\') no-repeat center center')
             } else {
-                $(this).css('background', 'url(\'../img/game/show_off.png\') no-repeat center center')
+                $(this).css('background', 'url(\'/img/game/show_off.png\') no-repeat center center')
             }
         });
 

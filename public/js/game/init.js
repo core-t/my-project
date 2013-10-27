@@ -1,13 +1,13 @@
 Image1 = new Image(27, 32);
-Image1.src = '../img/game/cursor_attack.png';
+Image1.src = '/img/game/cursor_attack.png';
 Image2 = new Image(14, 46);
-Image2.src = '../img/game/cursor_castle.png';
+Image2.src = '/img/game/cursor_castle.png';
 Image3 = new Image(25, 26);
-Image3.src = '../img/game/cursor_select.png';
+Image3.src = '/img/game/cursor_select.png';
 Image4 = new Image(9, 20);
-Image4.src = '../img/game/cursor.png';
+Image4.src = '/img/game/cursor.png';
 Image4 = new Image(20, 9);
-Image4.src = '../img/game/cursor_pointer.png';
+Image4.src = '/img/game/cursor_pointer.png';
 
 var newX = 0;
 var newY = 0;

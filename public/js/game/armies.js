@@ -221,7 +221,7 @@ function army(obj, color) {
             id: 'army' + obj.armyId,
             title: this.name
         }).css({
-            background: 'url(../img/game/flags/' + color + '_' + numberOfUnits + '.png) top left no-repeat',
+            background: 'url(/img/game/flags/' + color + '_' + numberOfUnits + '.png) top left no-repeat',
             left: (this.x * 40) + 'px',
             top: (this.y * 40) + 'px'
         });
@@ -273,23 +273,23 @@ function myArmyMouse(id) {
         return;
     }
     if (my.turn && !selectedArmy) {
-        $('#' + id + ' *').css('cursor', 'url(../img/game/cursor_select.png), default');
-        $('#' + id).css('cursor', 'url(../img/game/cursor_select.png), default');
+        $('#' + id + ' *').css('cursor', 'url(/img/game/cursor_select.png), default');
+        $('#' + id).css('cursor', 'url(/img/game/cursor_select.png), default');
     }
     else {
-        $('#' + id + ' *').css('cursor', 'url(../img/game/cursor.png), default');
-        $('#' + id).css('cursor', 'url(../img/game/cursor.png), default');
+        $('#' + id + ' *').css('cursor', 'url(/img/game/cursor.png), default');
+        $('#' + id).css('cursor', 'url(/img/game/cursor.png), default');
     }
 }
 
 function armiesAddCursorWhenSelectedArmy() {
-    $('.army:not(.' + my.color + ')').css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
-    $('.army:not(.' + my.color + ') img').css('cursor', 'url(../img/game/cursor_attack.png), crosshair');
+    $('.army:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
+    $('.army:not(.' + my.color + ') img').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
 }
 
 function armiesAddCursorWhenUnselectedArmy() {
-    $('.army:not(.' + my.color + ')').css('cursor', 'url(../img/game/cursor.png), default');
-    $('.army:not(.' + my.color + ') img').css('cursor', 'url(../img/game/cursor.png), default');
+    $('.army:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor.png), default');
+    $('.army:not(.' + my.color + ') img').css('cursor', 'url(/img/game/cursor.png), default');
 }
 
 function enemyArmyMouse(army) {
@@ -398,7 +398,7 @@ function tmpUnselectArmy() {
             'box-shadow': 'none',
             'border': 'none'
         });
-        board.css('cursor', 'url(../img/game/cursor.png), default');
+        board.css('cursor', 'url(/img/game/cursor.png), default');
     }
     selectedArmy = null;
     $('.path').remove();

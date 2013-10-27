@@ -84,30 +84,30 @@ function unlock() {
 }
 
 function makeMyCursorUnlock() {
-    $('body *').css('cursor', 'url(../img/game/cursor.png), auto');
+    $('body *').css('cursor', 'url(/img/game/cursor.png), auto');
     $('#chatBox #msg').css('cursor', 'auto');
-    $('.close').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('#exit').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('.button').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('#surrender').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('.zoomPup').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('#map').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('.c').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('.close').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('#exit').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('.button').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('#surrender').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('.zoomPup').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('#map').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('.c').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('.a').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
     myCastlesAddCursor();
 }
 
 function makeMyCursorLock() {
-    $('body *').css('cursor', 'url(../img/game/cursor_hourglass.png), wait');
-    $('#chatBox *').css('cursor', 'url(../img/game/cursor.png), auto');
+    $('body *').css('cursor', 'url(/img/game/cursor_hourglass.png), wait');
+    $('#chatBox *').css('cursor', 'url(/img/game/cursor.png), auto');
     $('#chatBox #msg').css('cursor', 'auto');
-    $('#chatBox #send').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('.close').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('#exit').css('cursor', 'url(../img/game/cursor_pointer.png), pointer');
-    $('.zoomPup').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('#map').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('.c').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
-    $('.a').css('cursor', 'url(../img/game/lupa.png) 13 13, crosshair');
+    $('#chatBox #send').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('.close').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('#exit').css('cursor', 'url(/img/game/cursor_pointer.png), pointer');
+    $('.zoomPup').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('#map').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('.c').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
+    $('.a').css('cursor', 'url(/img/game/lupa.png) 13 13, crosshair');
 }
 
 function titleBlink(msg) {

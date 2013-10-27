@@ -22,7 +22,7 @@ class LoadController extends Game_Controller_Gui
 //        $modelGame = new Application_Model_Game($gameId);
 //        if ($modelGame->playerIsAlive($this->_namespace->player['playerId'])) {
             $this->_namespace->gameId = $gameId; // zapisuję gemeId do sesji
-            $this->_redirect('/' . Zend_Registry::get('lang') . '/game/id/' . $gameId);
+            $this->_redirect('/' . Zend_Registry::get('lang') . '/game/index/id/' . $gameId);
 //        } else {
 //            throw new Exception('Nie powinno Cię tu być!');
 //        }

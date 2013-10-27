@@ -21,7 +21,7 @@ function ruinCreate(ruinId){
         .css({
             left: (ruins[ruinId].x*40) + 'px',
             top: (ruins[ruinId].y*40) + 'px',
-            background:'url(../img/game/ruin'+css+'.png) center center no-repeat'
+            background:'url(/img/game/ruin'+css+'.png) center center no-repeat'
         })
         );
 }
@@ -38,7 +38,7 @@ function ruinUpdate(ruinId, empty){
         css = '';
     }
     $('#ruin'+ruinId).attr('title',title)
-    .css('background','url(../img/game/ruin'+css+'.png) center center no-repeat');
+    .css('background','url(/img/game/ruin'+css+'.png) center center no-repeat');
 }
 
 function getRuinId(a){

@@ -30,7 +30,7 @@ function refresh() {
                     .append($('<td>').append($('<a>').html(result[i].begin.split('.')[0])).css('cursor', 'pointer'))
                     .bind('click', { gameId: result[i].gameId }, makeUrl)
                     .mouseover(function () {
-                        $(this).css('background', 'transparent url(../img/nav_bg.png) repeat')
+                        $(this).css('background', 'transparent url(/img/nav_bg.png) repeat')
                     })
                     .mouseleave(function () {
                         $(this).css('background', 'transparent')
