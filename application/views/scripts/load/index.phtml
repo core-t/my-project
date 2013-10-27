@@ -17,7 +17,7 @@
         <?php if (count($this->myGames)): ?>
             <?php foreach ($this->myGames as $game): ?>
                 <tr id="gid<?php echo $game['gameId'] ?>"
-                    onclick="window.location.href = '<?php echo '/' . Zend_Registry::get('lang') . '/load/load/gameId/' . $game['gameId'] ?>';"
+                    onclick="window.location.href = '<?php echo '/' . Zend_Registry::get('lang') . '/game/index/gameId/' . $game['gameId'] ?>';"
                     class="trlink">
                     <td>
                         <div><?php echo $game['players'][$game['gameMasterId']]['firstName'] . ' ' . $game['players'][$game['gameMasterId']]['lastName'] ?></div>
