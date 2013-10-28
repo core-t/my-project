@@ -27,7 +27,7 @@ function startWebSocket() {
                 case 'computer':
                     //                    console.log(r);
                     if (typeof r.path != 'undefined' && r.path) {
-                        stop = 1;
+//                        stop = 1;
                         move(r, 1);
                     } else {
                         Websocket.computer();
