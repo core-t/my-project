@@ -303,7 +303,7 @@ castleId: ' . $castleId . '
             $mHeuristics = new Cli_Model_Heuristics($army['x'], $army['y']);
             $h = $mHeuristics->calculateH($position['x'], $position['y']);
             if ($h < $army['movesLeft']) {
-                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'E');
+//                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'E');
                 try {
                     $aStar = new Cli_Model_Astar($army, $position['x'], $position['y'], $fields);
                 } catch (Exception $e) {
@@ -321,7 +321,7 @@ castleId: ' . $castleId . '
                     return array_merge($castle, $move);
                 }
 
-                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'e');
+//                $fields = Application_Model_Board::changeCasteFields($fields, $position['x'], $position['y'], 'e');
             }
         }
     }
