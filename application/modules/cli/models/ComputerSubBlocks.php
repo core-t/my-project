@@ -207,6 +207,7 @@ castleId: ' . $castleId . '
             $mHeuristics = new Cli_Model_Heuristics($castlePosition['x'], $castlePosition['y']);
             $h = $mHeuristics->calculateH($enemy['x'], $enemy['y']);
             if ($h < ($enemy['movesLeft'])) {
+                var_dump($enemy);
                 $mArmy = new Cli_Model_Army($enemy);
                 $enemy = $mArmy->getArmy();
                 $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'E');
