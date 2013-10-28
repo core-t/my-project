@@ -345,7 +345,7 @@ class Cli_Model_Army
         }
 
         foreach ($soldiersMovesLeft as $s) {
-            if (s >= 0) {
+            if ($s >= 0) {
                 return true;
             }
         }
