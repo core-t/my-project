@@ -24,7 +24,15 @@ var Castle = {
             Websocket.production(castleId, name);
             return;
         }
+    },
+    addCrown: function (castleId) {
+        $('#castle' + castleId).append($('<img>').attr('src', '/img/game/crown.png').addClass('crown'));
+    },
+    addHammer: function (castleId) {
+        $('#castle' + castleId).append($('<img>').attr('src', '/img/game/castle_production.png').addClass('hammer'));
     }
+
+
 }
 
 function castleFields(castleId, type) {
@@ -148,6 +156,11 @@ function castleOwner(castleId, color) {
         .html('')
         .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
 
+    if (castles[castleId].capital && capitals[color] == castleId) {
+        Castle.addCrown(castleId);
+    }
+
+
     castles[castleId].color = color;
 
     $('#c' + castleId).css('background', getColor(color));
@@ -157,7 +170,7 @@ function setMyCastleProduction(castleId) {
     castles[castleId].currentProduction = players[my.color].castles[castleId].production;
     castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
     if (castles[castleId].currentProduction) {
-        $('#castle' + castleId).html($('<img>').attr('src', '/img/game/castle_production.png').css('float', 'right'));
+        Castle.addHammer(castleId);
     }
 }
 

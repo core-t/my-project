@@ -5,12 +5,13 @@
     function refresh() {
         $.getJSON('/en/setupajax/allarmiesready', function (result) {
             if (result.all) {
-                top.location.assign('/<?php echo  Zend_Registry::get('lang') ?>/game');
+                top.location.assign('/<?php echo  Zend_Registry::get('lang') ?>/game/index/id/<?php echo $this->gameId ?>');
             }
         });
     }
     $(document).ready(function () {
-        setInterval('refresh()', 5000);
+        refresh();
+        setInterval('refresh()', 1000);
     });
 
 </script>

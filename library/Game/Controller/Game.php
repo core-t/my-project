@@ -17,7 +17,7 @@ abstract class Game_Controller_Game extends Game_Controller_Action {
         $this->view->googleAnalytics();
 //        $this->view->Version();
 
-        $this->_namespace->gameId = $this->_request->getParam('gameId');
+        $this->_namespace->gameId = $this->_request->getParam('id');
 
         if (empty($this->_namespace->gameId)) {
             throw new Exception('Brak "gameId"!');

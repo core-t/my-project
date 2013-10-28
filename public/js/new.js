@@ -24,6 +24,7 @@ function refresh() {
             myGames.append(
                 $('<tr>')
                     .addClass('gid' + result[i].gameId)
+                    .append($('<td>').append($('<a>').html(result[i].name)).css('cursor', 'pointer'))
                     .append($('<td>').append($('<a>').html(result[i].gameMaster)).css('cursor', 'pointer'))
                     .append($('<td>').append($('<a>').html(result[i].playersingame)).css('cursor', 'pointer'))
                     .append($('<td>').append($('<a>').html(result[i].numberOfPlayers)).css('cursor', 'pointer'))

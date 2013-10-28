@@ -16,6 +16,8 @@
         <a class="button" href="javascript:refresh()"><?php echo $this->translate('Refresh') ?></a>
     </li>
 </ul>
-<script type="text/javascript">
-    var info = '<?php echo $this->translate('There are no open games') ?>';
-</script>
+<?php $this->headScript()->captureStart() ?>
+var th = '<th><?php echo $this->translate('Map name') ?></th><th><?php echo $this->translate('Game master') ?></th><th><?php echo $this->translate('Current number of players') ?></th><th><?php echo $this->translate('Max number of players') ?></th><th><?php echo $this->translate('Date') ?></th>';
+var lang = '<?php echo Zend_Registry::get('lang') ?>';
+var info = '<?php echo $this->translate('There are no open games') ?>';
+<?php $this->headScript()->captureEnd() ?>

@@ -49,13 +49,12 @@ class SetupController extends Game_Controller_Gui
             throw new Exception('Brak gameId!');
         }
 
-        $mPlayersInGame = new Application_Model_PlayersInGame($this->_namespace->gameId);
+        $this->view->gameId = $this->_namespace->gameId;
+//        $mPlayersInGame = new Application_Model_PlayersInGame($this->_namespace->gameId);
 
-        if (!$mPlayersInGame->isPlayerReady($this->_namespace->player['playerId'])) {
-            $this->_redirect('/' . Zend_Registry::get('lang') . '/new');
-        }
-
-//        $this->_namespace->player['color'] = $mPlayersInGame->getPlayerColor($this->_namespace->player['playerId']);
+//        if (!$mPlayersInGame->isPlayerReady($this->_namespace->player['playerId'])) {
+//            $this->_redirect('/' . Zend_Registry::get('lang') . '/new');
+//        }
     }
 
 }

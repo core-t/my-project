@@ -51,6 +51,7 @@ class Application_Model_Game extends Game_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from($this->_name)
+            ->join('map', $this->_name . '.' . $this->_db->quoteIdentifier('mapId') . '=map.' . $this->_db->quoteIdentifier('mapId'), 'name')
             ->where('"isOpen" = true')
             ->order('begin DESC');
         $result = $this->_db->query($select)->fetchAll();
@@ -60,9 +61,9 @@ class Application_Model_Game extends Game_Db_Table_Abstract
                 ->from('playersingame', 'count(*)')
                 ->where('"gameId" = ?', $game['gameId'])
                 ->where('"webSocketServerUserId" IS NOT NULL');
-            $playersingame = $this->_db->query($select)->fetchAll();
-            if ($playersingame[0]['count'] > 0) {
-                $result[$k]['playersingame'] = $playersingame[0]['count'];
+            $playersInGame = $this->_db->query($select)->fetchAll();
+            if ($playersInGame[0]['count'] > 0) {
+                $result[$k]['playersingame'] = $playersInGame[0]['count'];
                 $select = $this->_db->select()
                     ->from('player', array('firstName', 'lastName'))
                     ->where('"playerId" = ?', $result[$k]['gameMasterId']);
