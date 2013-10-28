@@ -130,7 +130,7 @@ function army(obj, color) {
         };
     } else if (this.canFly > 0) {
         this.terrainCosts = {
-            'b': 2,
+            'b': 1,
             'c': 0,
             'e': null,
             'f': 2,

@@ -77,7 +77,7 @@ class Cli_Model_Army
     {
         return array(
             'flying' => array(
-                'b' => 2,
+                'b' => 1,
                 'c' => 0,
                 'e' => null,
                 'E' => 2,
