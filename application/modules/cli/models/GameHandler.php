@@ -253,8 +253,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
 
     public function sendToChannel($db, $token, $gameId, $debug = null)
     {
-        $l = new Coret_Model_Logger();
-        $l->log($token);
+//        $l = new Coret_Model_Logger();
+//        $l->log($token);
         parent::sendToChannel($db, $token, $gameId, $debug);
 
         if ($token['type'] == 'chat') {

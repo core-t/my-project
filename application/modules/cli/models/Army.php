@@ -54,9 +54,9 @@ class Cli_Model_Army
 
         $terrainCosts = self::getTerrainCosts();
 
-        if ($this->army['canSwim']) {
+        if ($this->canSwim()) {
             $this->army['terrainCosts'] = $terrainCosts['swimming'];
-        } elseif ($this->army['canFly'] > 0) {
+        } elseif ($this->canFly()) {
             $this->army['attackModifier']++;
             $this->army['terrainCosts'] = $terrainCosts['flying'];
         } else {
@@ -153,7 +153,9 @@ class Cli_Model_Army
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
 
-                if ($this->army['canFly'] <= 0) {
+                if ($this->canFly()) {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                } else {
                     if ($path[$i]['tt'] == 'f') {
 //                        var_dump('f');
                         $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
@@ -167,9 +169,6 @@ class Cli_Model_Army
 //                        var_dump('def');
                         $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                     }
-                } else {
-//                    var_dump('def');
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
 //                var_dump('$soldiersMovesLeft[$soldier[\'soldierId\']]');
 //                var_dump($soldiersMovesLeft[$soldier['soldierId']]);
@@ -279,11 +278,83 @@ class Cli_Model_Army
 
     public function canSwim()
     {
-        return $this->army['canSwim'];
+        if ($this->army['canSwim'] > 0) {
+            return true;
+        }
     }
 
     public function canFly()
     {
-        return $this->army['canFly'];
+        if ($this->army['canFly'] > 0) {
+            return true;
+        }
     }
+
+    public function unitsHaveRange($path)
+    {
+        $soldiersMovesLeft = array();
+        $heroesMovesLeft = array();
+        $realPath = array();
+        $stop = false;
+        $skip = false;
+
+        for ($i = 0; $i < count($path); $i++) {
+            $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
+
+            foreach ($this->army['soldiers'] as $soldier) {
+                if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
+                    $soldiersMovesLeft[$soldier['soldierId']] = $this->units[$soldier['unitId']]['numberOfMoves'];
+                    if ($soldier['movesLeft'] <= 2) {
+                        $soldiersMovesLeft[$soldier['soldierId']] += $soldier['movesLeft'];
+                    } elseif ($soldier['movesLeft'] > 2) {
+                        $soldiersMovesLeft[$soldier['soldierId']] += 2;
+                    }
+                }
+
+                if ($this->canFly()) {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                } else {
+                    if ($path[$i]['tt'] == 'f') {
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
+                    } elseif ($path[$i]['tt'] == 's') {
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
+                    } elseif ($path[$i]['tt'] == 'm') {
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
+                    } else {
+                        $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                    }
+                }
+            }
+
+            foreach ($this->army['heroes'] as $hero) {
+                if (!isset($heroesMovesLeft[$hero['heroId']])) {
+                    $heroesMovesLeft[$hero['heroId']] = $hero['numberOfMoves'];
+                    if ($hero['movesLeft'] <= 2) {
+                        $heroesMovesLeft[$hero['heroId']] += $hero['movesLeft'];
+                    } elseif ($hero['movesLeft'] > 2) {
+                        $heroesMovesLeft[$hero['heroId']] += 2;
+                    }
+                }
+
+                $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+            }
+
+            if ($path[$i]['tt'] == 'E') {
+                break;
+            }
+        }
+
+        foreach ($soldiersMovesLeft as $s) {
+            if (s >= 0) {
+                return true;
+            }
+        }
+
+        foreach ($heroesMovesLeft as $h) {
+            if ($h >= 0) {
+                return true;
+            }
+        }
+    }
+
 }

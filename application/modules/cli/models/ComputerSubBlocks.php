@@ -207,10 +207,11 @@ castleId: ' . $castleId . '
             $mHeuristics = new Cli_Model_Heuristics($castlePosition['x'], $castlePosition['y']);
             $h = $mHeuristics->calculateH($enemy['x'], $enemy['y']);
             if ($h < ($enemy['movesLeft'])) {
-                var_dump($enemy);
                 $mArmy = new Cli_Model_Army($enemy);
                 $enemy = $mArmy->getArmy();
+
                 $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'E');
+
                 try {
                     $aStar = new Cli_Model_Astar($enemy, $castlePosition['x'], $castlePosition['y'], $castlesAndFields['fields']);
                 } catch (Exception $e) {
@@ -220,11 +221,7 @@ castleId: ' . $castleId . '
 
                 $castlesAndFields['fields'] = Application_Model_Board::changeCasteFields($castlesAndFields['fields'], $castlePosition['x'], $castlePosition['y'], 'e');
 
-                $move = $mArmy->calculateMovesSpend($aStar->getPath($castlePosition['x'] . '_' . $castlePosition['y']));
-                if ($move['currentPosition']['x'] == $castlePosition['x'] && $move['currentPosition']['y'] == $castlePosition['y']) {
-                    $enemy['aStar'] = $aStar;
-                    $enemy['key'] = $castlePosition['x'] . '_' . $castlePosition['y'];
-                    $enemy['currentPosition'] = $move['currentPosition'];
+                if ($mArmy->unitsHaveRange($aStar->getPath($castlePosition['x'] . '_' . $castlePosition['y']))) {
                     $enemiesHaveRange[] = $enemy;
                 }
             }
@@ -343,8 +340,7 @@ castleId: ' . $castleId . '
                     return;
                 }
 
-                $move = $mArmy->calculateMovesSpend($aStar->getPath($myEmptyCastle['x'] . '_' . $myEmptyCastle['y']));
-                if ($move['currentPosition']['x'] == $myEmptyCastle['x'] && $move['currentPosition']['y'] == $myEmptyCastle['y']) {
+                if ($mArmy->unitsHaveRange($aStar->getPath($myEmptyCastle['x'] . '_' . $myEmptyCastle['y']))) {
                     return true;
                 }
 
