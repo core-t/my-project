@@ -51,6 +51,8 @@ var show = true;
 
 var stop = 0;
 
+var shipId;
+
 $(document).ready(function () {
     $(window).resize(function () {
         Gui.adjust();
@@ -75,9 +77,11 @@ $(document).ready(function () {
         new towerCreate(i);
     }
 
+    shipId = Unit.getShipId();
     Players.init();
     Players.draw();
     Players.turn();
+
 });
 
 function startGame() {

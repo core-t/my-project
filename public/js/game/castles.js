@@ -29,7 +29,7 @@ var Castle = {
         $('#castle' + castleId).append($('<img>').attr('src', '/img/game/crown.png').addClass('crown'));
     },
     addHammer: function (castleId) {
-        $('#castle' + castleId).append($('<img>').attr('src', '/img/game/castle_production.png').addClass('hammer'));
+        $('#castle' + castleId).append($('<img>').attr('src', '/img/game/hammer.png').addClass('hammer'));
     }
 
 

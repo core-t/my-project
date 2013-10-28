@@ -159,10 +159,14 @@ function army(obj, color) {
     }
 
     if (this.canSwim) {
-        this.name = units[6].name;
-        this.img = Unit.getImage(6, color);
-        this.attack = units[6].attackPoints;
-        this.defense = units[6].defensePoints;
+        if (units[shipId].name_lang) {
+            this.name = units[shipId].name_lang;
+        } else {
+            this.name = units[shipId].name;
+        }
+        this.img = Unit.getImage(shipId, color);
+        this.attack = units[shipId].attackPoints;
+        this.defense = units[shipId].defensePoints;
     } else if (typeof this.heroes[this.heroKey] != 'undefined') {
         if (this.heroes[this.heroKey].name) {
             this.name = this.heroes[this.heroKey].name;
@@ -611,6 +615,16 @@ var Unit = {
     },
     getImageByName: function (name, color) {
         return '/img/game/units/' + color + '/' + name + '.png';
+    },
+    getShipId: function () {
+        for (i in units) {
+            if (units[i] == null) {
+                continue;
+            }
+            if (units[i].canSwim) {
+                return i;
+            }
+        }
     }
 }
 
