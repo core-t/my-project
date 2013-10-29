@@ -35,17 +35,17 @@ var Message = {
                     }
                 })
         );
-        $('<body>').keypress(function (event) {
-            console.log(event);
-            var key = event.keyCode || event.charCode;
-            if (key == 13) {
-                if (typeof func != 'undefined') {
-                    func();
-                } else {
-                    Message.remove();
-                }
-            }
-        });
+//        $('<body>').keypress(function (event) {
+//            console.log(event);
+//            var key = event.keyCode || event.charCode;
+//            if (key == 13) {
+//                if (typeof func != 'undefined') {
+//                    func();
+//                } else {
+//                    Message.remove();
+//                }
+//            }
+//        });
     },
     cancel: function (func) {
         $('.message').append(

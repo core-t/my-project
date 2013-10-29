@@ -213,6 +213,7 @@ Brak y
 //        $soldiers = $mSoldier->getForArmyPosition($army['armyId']);
 
         $soldiers = $army['soldiers'];
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
 
         foreach ($soldiers as $soldier) {
             $movesSpend = 0;
@@ -236,7 +237,7 @@ Brak y
                 $movesLeft = 0;
             }
 
-            updateMovesLeft($movesLeft,$soldier['soldierId']);
+            $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
         }
 
         $end = end($path);

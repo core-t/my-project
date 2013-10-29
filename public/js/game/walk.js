@@ -1,9 +1,10 @@
 function move(r, computer) {
     Message.remove();
-    armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
     if (typeof r.path[1] == 'undefined') {
+
         zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
     } else {
+        armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
         zoomer.lensSetCenter(r.path[1].x * 40, r.path[1].y * 40);
     }
 
