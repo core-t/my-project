@@ -40,7 +40,7 @@ function cursorPosition(x, y, force) {
         open[startX + '_' + startY] = start;
         aStar(close, open, destX, destY, 1);
 
-        return showPath(close, destX + '_' + destY, selectedArmy.moves);
+        return showPath(close, destX + '_' + destY);
     }
     return null;
 }
@@ -60,82 +60,19 @@ function showPath(close, key) {
         return 0;
     }
 
-    var className = 'path1';
     var soldiersMovesLeft = {};
     var heroesMovesLeft = {};
 
     var path = getPath(close, key);
 
-    for (i in path) {
-        var pX = path[i].x * 40;
-        var pY = path[i].y * 40;
-
-//        console.log(path[i]);
-
-        for (s in selectedArmy.soldiers) {
-            var soldier = selectedArmy.soldiers[s];
-            if (notSet(soldiersMovesLeft[soldier.soldierId])) {
-                soldiersMovesLeft[soldier.soldierId] = soldier.movesLeft;
-            }
-
-            if (selectedArmy.canFly > 0) {
-                if (path[i].tt == 'r') {
-                    soldiersMovesLeft[soldier.soldierId] -= 1;
-                } else if (path[i].tt != 'c') {
-                    soldiersMovesLeft[soldier.soldierId] -= 2;
-                }
-            } else if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
-                soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
-            } else {
-                soldiersMovesLeft[soldier.soldierId] -= selectedArmy.terrainCosts[path[i].tt];
-            }
-
-            if (soldiersMovesLeft[soldier.soldierId] < 0) {
-                className = 'path2';
-            }
-
-            if (soldiersMovesLeft[soldier.soldierId] <= 0) {
-                if (typeof set == 'undefined') {
-                    var set = new Object();
-                    set.x = pX;
-                    set.y = pY;
-                }
-                break;
-            }
-        }
-
-        for (h in selectedArmy.heroes) {
-            var hero = selectedArmy.heroes[h];
-            if (notSet(heroesMovesLeft[hero.heroId])) {
-                heroesMovesLeft[hero.heroId] = hero.movesLeft;
-            }
-
-            heroesMovesLeft[hero.heroId] -= selectedArmy.terrainCosts[path[i].tt];
-
-            if (heroesMovesLeft[hero.heroId] < 0) {
-                className = 'path2';
-            }
-
-            if (heroesMovesLeft[hero.heroId] <= 0) {
-                if (typeof set == 'undefined') {
-                    var set = new Object();
-                    set.x = pX;
-                    set.y = pY;
-                }
-                break;
-            }
-        }
-
-        board.append(
-            $('<div>')
-                .addClass('path ' + className)
-                .css({
-                    left: pX + 'px',
-                    top: pY + 'px'
-                })
-                .html(path[i].G)
-        );
+    if (selectedArmy.canSwim) {
+        var set = swimming(path);
+    } else if (selectedArmy.canFly > 0) {
+        var set = flying(path);
+    } else {
+        var set = walking(path);
     }
+
     if (typeof set == 'undefined') {
         return;
     } else {

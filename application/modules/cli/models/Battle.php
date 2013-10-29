@@ -68,6 +68,7 @@ class Cli_Model_Battle
     {
         $units = Zend_Registry::get('units');
         $hits = array('attack' => 2, 'defense' => 2);
+
         foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
             $unitAttacking['attackPoints'] = $units[$unitAttacking['unitId']]['attackPoints'];
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
