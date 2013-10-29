@@ -91,20 +91,6 @@ class Cli_Model_Army
                 'w' => 2
             ),
             'swimming' => array(
-                'b' => 0,
-                'c' => 0,
-                'e' => null,
-                'E' => 2,
-                'f' => 300,
-                'g' => 200,
-                'm' => 500,
-                'M' => 1000,
-                'r' => 100,
-                's' => 400,
-                'S' => 0,
-                'w' => 0
-            ),
-            'ship' => array(
                 'b' => 1,
                 'c' => 0,
                 'e' => null,
@@ -137,6 +123,108 @@ class Cli_Model_Army
 
     public function calculateMovesSpend($path)
     {
+        if ($this->canFly()) {
+            $realPath = $this->calculateMovesSpendFlying($path);
+        } elseif ($this->canSwim()) {
+            $realPath = $this->calculateMovesSpendSwimming($path);
+        } else {
+            $realPath = $this->calculateMovesSpendWalking($path);
+        }
+
+        return array(
+            'path' => $realPath,
+            'currentPosition' => end($realPath)
+        );
+    }
+
+    private function calculateMovesSpendFlying($path)
+    {
+        $realPath = array();
+
+        foreach ($this->army['soldiers'] as $soldier) {
+            if (!$this->units[$soldier['unitId']]['canFly']) {
+                continue;
+            }
+
+            if (!isset($movesLeft)) {
+                $movesLeft = $soldier['movesLeft'];
+                continue;
+            }
+
+            if ($movesLeft > $soldier['movesLeft']) {
+                $movesLeft = $soldier['movesLeft'];
+            }
+        }
+
+
+        for ($i = 0; $i < count($path); $i++) {
+            $movesLeft -= $this->army['terrainCosts'][$path[$i]['tt']];
+
+            if ($movesLeft < 0) {
+                break;
+            }
+            $realPath[] = array(
+                'x' => $path[$i]['x'],
+                'y' => $path[$i]['y']
+            );
+
+            if ($path[$i]['tt'] == 'E') {
+                break;
+            }
+
+            if ($movesLeft == 0) {
+                break;
+            }
+        }
+
+        return $realPath;
+    }
+
+    private function calculateMovesSpendSwimming($path)
+    {
+        $realPath = array();
+
+        foreach ($this->army['soldiers'] as $soldier) {
+            if (!$this->units[$soldier['unitId']]['canSwim']) {
+                continue;
+            }
+
+            if (!isset($movesLeft)) {
+                $movesLeft = $soldier['movesLeft'];
+                continue;
+            }
+
+            if ($movesLeft > $soldier['movesLeft']) {
+                $movesLeft = $soldier['movesLeft'];
+            }
+        }
+
+
+        for ($i = 0; $i < count($path); $i++) {
+            $movesLeft -= $this->army['terrainCosts'][$path[$i]['tt']];
+
+            if ($movesLeft < 0) {
+                break;
+            }
+            $realPath[] = array(
+                'x' => $path[$i]['x'],
+                'y' => $path[$i]['y']
+            );
+
+            if ($path[$i]['tt'] == 'E') {
+                break;
+            }
+
+            if ($movesLeft == 0) {
+                break;
+            }
+        }
+
+        return $realPath;
+    }
+
+    private function calculateMovesSpendWalking($path)
+    {
         $soldiersMovesLeft = array();
         $heroesMovesLeft = array();
         $realPath = array();
@@ -145,24 +233,22 @@ class Cli_Model_Army
 
         for ($i = 0; $i < count($path); $i++) {
             $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
+
             foreach ($this->army['soldiers'] as $soldier) {
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {
                     $soldiersMovesLeft[$soldier['soldierId']] = $soldier['movesLeft'];
                 }
 
-                if ($this->canFly() || $this->canSwim()) {
-                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
+                if ($path[$i]['tt'] == 'f') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
+                } elseif ($path[$i]['tt'] == 's') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
+                } elseif ($path[$i]['tt'] == 'm') {
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
                 } else {
-                    if ($path[$i]['tt'] == 'f') {
-                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesForest'];
-                    } elseif ($path[$i]['tt'] == 's') {
-                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
-                    } elseif ($path[$i]['tt'] == 'm') {
-                        $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
-                    } else {
-                        $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
-                    }
+                    $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
+
                 if ($soldiersMovesLeft[$soldier['soldierId']] < 0) {
                     $skip = true;
                 }
@@ -206,21 +292,9 @@ class Cli_Model_Army
             if ($stop) {
                 break;
             }
-
         }
 
-        return array(
-            'path' => $realPath,
-            'currentPosition' => end($realPath)
-        );
-    }
-
-    private function calculateMovesSpendFlying($path){
-
-    }
-
-    private function calculateMovesSpendSwimming($path){
-
+        return $realPath;
     }
 
     static public function setCombatDefenseModifiers($army)

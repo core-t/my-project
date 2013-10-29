@@ -61,6 +61,17 @@ class Application_Model_Soldier extends Game_Db_Table_Abstract
         }
     }
 
+    public function updateMovesLeft($movesLeft, $soldierId)
+    {
+        $data = array(
+            'movesLeft' => $movesLeft
+        );
+
+        $where = $this->_db->quoteInto('"soldierId" = ?', $soldierId);
+
+        $this->update($data, $where);
+    }
+
     public function getForBattle($ids)
     {
         $select = $this->_db->select()

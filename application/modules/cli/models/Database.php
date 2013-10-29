@@ -168,21 +168,24 @@ Brak y
         }
 
         $units = Zend_Registry::get('units');
-
-        $selectHeroes = $db->select()
-            ->from('heroesingame', array('movesLeft', 'heroId'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $army['armyId']);
-        try {
-            $heroes = $db->query($selectHeroes)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($selectHeroes->__toString());
-
-            return;
-        }
-
         $terrainCosts = Cli_Model_Army::getTerrainCosts();
+
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+//        $selectHeroes = $db->select()
+//            ->from('heroesingame', array('movesLeft', 'heroId'))
+//            ->where('"gameId" = ?', $gameId)
+//            ->where('"armyId" = ?', $army['armyId']);
+//        try {
+//            $heroes = $db->query($selectHeroes)->fetchAll();
+//        } catch (Exception $e) {
+//            echo($e);
+//            echo($selectHeroes->__toString());
+//
+//            return;
+//        }
+
+        $heroes = $army['heroes'];
 
         foreach ($heroes as $hero) {
             $movesSpend = 0;
@@ -198,43 +201,42 @@ Brak y
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
             }
 
-            $data2 = array(
-                'movesLeft' => $hero['movesLeft'] - $movesSpend
-            );
-            $where1 = array(
-                $db->quoteInto('"heroId" = ?', $hero['heroId']),
-                $db->quoteInto('"gameId" = ?', $gameId)
-            );
+            $movesLeft = $hero['movesLeft'] - $movesSpend;
+            if ($movesLeft < 0) {
+                $movesLeft = 0;
+            }
 
-            self::update('heroesingame', $data2, $where1, $db);
+            $mHeroesInGame->updateMovesLeft($movesLeft, $hero['heroId']);
         }
 
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
-        $soldiers = $mSoldier->getForArmyPosition($army['armyId']);
+//        $mSoldier = new Application_Model_Soldier($gameId, $db);
+//        $soldiers = $mSoldier->getForArmyPosition($army['armyId']);
+
+        $soldiers = $army['soldiers'];
 
         foreach ($soldiers as $soldier) {
             $movesSpend = 0;
-            if ($army['canSwim'] && $units[$soldier['unitId']]['canSwim']) {
-                $type = 'ship';
-            } elseif ($army['canSwim'] && !$units[$soldier['unitId']]['canSwim']) {
-                $type = 'swimming';
-            } elseif ($army['canFly'] > 0) {
+            if ($army['canFly'] > 0) {
                 $type = 'flying';
+            } elseif ($army['canSwim']) {
+                $type = 'swimming';
             } else {
                 $type = 'walking';
                 $terrainCosts[$type]['f'] = $units[$soldier['unitId']]['modMovesForest'];
                 $terrainCosts[$type]['m'] = $units[$soldier['unitId']]['modMovesHills'];
                 $terrainCosts[$type]['s'] = $units[$soldier['unitId']]['modMovesSwamp'];
             }
+
             foreach ($path as $step) {
                 $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
             }
-            $data2 = array(
-                'movesLeft' => $soldier['movesLeft'] - $movesSpend
-            );
-            $where1 = $db->quoteInto('"soldierId" = ?', $soldier['soldierId']);
 
-            self::update('soldier', $data2, $where1, $db);
+            $movesLeft = $soldier['movesLeft'] - $movesSpend;
+            if ($movesLeft < 0) {
+                $movesLeft = 0;
+            }
+
+            updateMovesLeft($movesLeft,$soldier['soldierId']);
         }
 
         $end = end($path);

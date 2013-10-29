@@ -43,5 +43,18 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
+    public function updateMovesLeft($movesLeft, $heroId)
+    {
+        $data = array(
+            'movesLeft' => $movesLeft
+        );
+
+        $where = array(
+            $this->_db->quoteInto('"heroId" = ?', $heroId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        $this->update($data, $where);
+    }
 }
 
