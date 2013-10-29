@@ -29,8 +29,7 @@ body {
 }
 
 #content {
-    padding: 10px 20px;
-
+    /*padding: 10px 20px;*/
 }
 
 hr {
@@ -88,7 +87,7 @@ input {
     line-height: 29px;
     /*font-weight: bold;*/
     font-family: "Alpine", Verdana, Tahoma;
-    /*font-size: 16px;*/
+    font-size: 16px;
     color: #000;
     text-shadow: none;
     background: #ddd;
@@ -152,9 +151,11 @@ h1 {
 }
 
 h1#title {
+    line-height: 214px;
     font-size: 101px;
     color: yellow;
     text-align: center;
+    background: url("/img/sword.png");
 }
 
 h2 {
@@ -210,7 +211,7 @@ td {
 }
 
 #content form {
-    background: url('../img/nav_bg.png');
+    background: url('../img/form_bg.jpg') no-repeat;
     border-radius: 20px;
     /*padding: 40px;*/
     padding: 100px;
@@ -227,6 +228,25 @@ td {
 
 .errors {
     color: orange;
+}
+
+#login .errors {
+    color: orchid;
+    text-shadow: 1px 1px 0 #000;
+}
+
+#login form {
+    background: url('../img/login_bg.jpg') no-repeat;
+    border-radius: 20px;
+    padding: 100px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#login label {
+    color: #000000;
+    text-shadow: 0 0 5px #fff;
 }
 
 label {

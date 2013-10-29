@@ -30,8 +30,10 @@ var Castle = {
     },
     addHammer: function (castleId) {
         $('#castle' + castleId).append($('<img>').attr('src', '/img/game/hammer.png').addClass('hammer'));
+    },
+    removeHammer: function (castleId) {
+        $('#castle' + castleId + ' .hammer').remove();
     }
-
 
 }
 
@@ -246,9 +248,9 @@ function razeCastle(castleId) {
 
 function updateProduction(unitId, castleId) {
     if (unitId === null) {
-        $('#castle' + castleId).html('');
+        Castle.removeHammer(castleId);
     } else {
-        $('#castle' + castleId).html($('<img>').attr('src', '/img/game/castle_production.png').css('float', 'right'));
+        Castle.addHammer(castleId);
     }
     Message.remove();
     castles[castleId].currentProduction = unitId;
