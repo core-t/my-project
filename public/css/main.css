@@ -151,7 +151,7 @@ h1 {
 }
 
 h1#title {
-    line-height: 214px;
+    line-height: 192px;
     font-size: 101px;
     color: yellow;
     text-align: center;
@@ -211,7 +211,7 @@ td {
 }
 
 #content form {
-    background: url('../img/form_bg.jpg') no-repeat;
+    background: url('../img/login_bg.jpg') no-repeat;
     border-radius: 20px;
     /*padding: 40px;*/
     padding: 100px;

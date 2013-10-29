@@ -1,9 +1,9 @@
 function move(r, computer) {
     Message.remove();
+    armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
     if (typeof r.path[1] == 'undefined') {
         zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
     } else {
-        armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
         zoomer.lensSetCenter(r.path[1].x * 40, r.path[1].y * 40);
     }
 
@@ -58,6 +58,8 @@ function walkEnd(r, computer) {
     players[r.attackerColor].armies['army' + r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
     newX = players[r.attackerColor].armies['army' + r.attackerArmy.armyId].x;
     newY = players[r.attackerColor].armies['army' + r.attackerArmy.armyId].y;
+
+    searchTower(newX, newY);
 
     if (isDigit(r.ruinId)) {
         ruinUpdate(r.ruinId, 1);

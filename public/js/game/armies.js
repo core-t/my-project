@@ -37,7 +37,9 @@ function army(obj, color) {
     var modMovesHills = 5;
 
     for (hero in this.heroes) {
-        this.heroKey = hero;
+        if (typeof this.heroKey == 'undefined') {
+            this.heroKey = hero;
+        }
         if (typeof this.moves == 'undefined') {
             this.moves = this.heroes[hero].movesLeft;
         }
@@ -54,50 +56,46 @@ function army(obj, color) {
     this.soldiers = obj.soldiers;
 
     for (soldier in this.soldiers) {
-        numberOfSoldiers++;
-        if (numberOfSoldiers == 1) {
-            if (numberOfHeroes == 0) {
-                modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
-                modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
-                modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
-            }
-            this.moves = this.soldiers[soldier].movesLeft;
-            var attack = units[this.soldiers[soldier].unitId].attackPoints;
-            var defense = units[this.soldiers[soldier].unitId].defensePoints;
-            var moves = units[this.soldiers[soldier].unitId].numberOfMoves;
+        if (typeof this.soldierKey == 'undefined') {
             this.soldierKey = soldier;
-        } else {
-            if (units[this.soldiers[soldier].unitId].modMovesForest > modMovesForest) {
-                modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
-            }
-            if (units[this.soldiers[soldier].unitId].modMovesSwamp > modMovesSwamp) {
-                modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
-            }
-            if (units[this.soldiers[soldier].unitId].modMovesHills > modMovesHills) {
-                modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
-            }
+        }
+        if (typeof this.moves == 'undefined') {
+            this.moves = this.soldiers[soldier].movesLeft;
+        }
+        if (this.soldiers[soldier].movesLeft < this.moves) {
+            this.moves = this.soldiers[soldier].movesLeft
+        }
+        numberOfSoldiers++;
+        if (units[this.soldiers[soldier].unitId].modMovesForest > modMovesForest) {
+            modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
+        }
+        if (units[this.soldiers[soldier].unitId].modMovesSwamp > modMovesSwamp) {
+            modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
+        }
+        if (units[this.soldiers[soldier].unitId].modMovesHills > modMovesHills) {
+            modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
+        }
 
-            if (units[this.soldiers[soldier].unitId].attackPoints > attack) {
-                attack = units[this.soldiers[soldier].unitId].attackPoints;
+        if (units[this.soldiers[soldier].unitId].attackPoints > attack) {
+            attack = units[this.soldiers[soldier].unitId].attackPoints;
+            this.soldierKey = soldier;
+        }
+        if (units[this.soldiers[soldier].unitId].defensePoints > defense) {
+            defense = units[this.soldiers[soldier].unitId].defensePoints;
+            if (defense > units[this.soldiers[this.soldierKey].unitId].defensePoints) {
                 this.soldierKey = soldier;
             }
-            if (units[this.soldiers[soldier].unitId].defensePoints > defense) {
-                defense = units[this.soldiers[soldier].unitId].defensePoints;
-                if (defense > units[this.soldiers[this.soldierKey].unitId].defensePoints) {
-                    this.soldierKey = soldier;
-                }
-            }
-            if (units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
-                moves = units[this.soldiers[soldier].unitId].numberOfMoves;
-                if (moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves) {
-                    this.soldierKey = soldier;
-                }
-            }
-
-            if (!this.canSwim && this.soldiers[soldier].movesLeft < this.moves) {
-                this.moves = this.soldiers[soldier].movesLeft;
+        }
+        if (units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
+            moves = units[this.soldiers[soldier].unitId].numberOfMoves;
+            if (moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves) {
+                this.soldierKey = soldier;
             }
         }
+
+//            if (!this.canSwim && this.soldiers[soldier].movesLeft < this.moves) {
+//                this.moves = this.soldiers[soldier].movesLeft;
+//            }
 
         if (units[this.soldiers[soldier].unitId].canFly) {
             this.canFly++;
@@ -485,7 +483,6 @@ function findNextArmy() {
             continue;
         }
         if (players[my.color].armies[i].moves == 0) {
-
             continue;
         }
         if ($.inArray(players[my.color].armies[i].armyId, skippedArmies) != -1) {

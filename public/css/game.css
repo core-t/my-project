@@ -164,63 +164,6 @@
     /*opacity: 0.33;*/
 }
 
-#gameMenu {
-    height: 145px;
-}
-
-#gameMenu span {
-    color: #eee;
-}
-
-.gameMenu {
-    float: left;
-    overflow: hidden;
-}
-
-.gameMenu.one {
-    float: right;
-}
-
-.gameMenu.two {
-    width: 170px;
-}
-
-.gameMenu.three {
-    border-left: 1px solid #555;
-}
-
-.gameMenu p {
-    height: 15px;
-}
-
-#gameMenu .button {
-    line-height: 12px;
-    padding: 1px;
-    margin: 1px;
-    background: #800;
-    color: #ccc;
-}
-
-#gameMenu .button:hover {
-    color: #fff;
-}
-
-#gameMenu .button:active {
-    color: #f00;
-    text-shadow: -1px -1px 1px #000;
-}
-
-#gameMenu .buttonOff {
-    background: #555;
-    color: #444;
-}
-
-#gameMenu .buttonOff:hover {
-    background: #555;
-    color: #444;
-    text-shadow: none;
-}
-
 #playersBox {
     border-top: none;
     border-bottom-left-radius: 10px;
@@ -742,7 +685,7 @@
 }
 
 #goldBox div div {
-    width: 56px;
+    /*width: 56px;*/
     height: 14px;
     padding: 2px;
     text-align: center;
@@ -895,6 +838,7 @@ html {
     border: 1px solid #fff;
     background: none;
     color: #fff;
+    font-size: 14px;
 }
 
 .button:hover, #submit:hover {
