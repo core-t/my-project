@@ -16,10 +16,26 @@ class Cli_Model_Battle
     private $attacker;
     private $defender;
     private $succession = 0;
+    private $units;
 
     public function __construct($attacker, $defender)
     {
+        $this->units = Zend_Registry::get('units');
+
+        foreach ($defender['soldiers'] as $k => $soldier) {
+            if ($this->units[$soldier['unitId']]['canSwim']) {
+                $defender['ships'][] = $soldier;
+                unset($defender['soldiers'][$k]);
+            }
+        }
         $this->defender = $defender;
+
+        foreach ($attacker['soldiers'] as $k => $soldier) {
+            if ($this->units[$soldier['unitId']]['canSwim']) {
+                $attacker['ships'][] = $soldier;
+                unset($attacker['soldiers'][$k]);
+            }
+        }
         $this->attacker = $attacker;
     }
 
@@ -66,13 +82,12 @@ class Cli_Model_Battle
 
     public function fight()
     {
-        $units = Zend_Registry::get('units');
         $hits = array('attack' => 2, 'defense' => 2);
 
         foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
-            $unitAttacking['attackPoints'] = $units[$unitAttacking['unitId']]['attackPoints'];
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
-                $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
                 $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
@@ -83,7 +98,7 @@ class Cli_Model_Battle
             }
         }
         foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
-            $unitAttacking['attackPoints'] = $units[$unitAttacking['unitId']]['attackPoints'];
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
             foreach ($this->defender['heroes'] as $d => $unitDefending) {
                 $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
@@ -96,7 +111,7 @@ class Cli_Model_Battle
         }
         foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
-                $unitDefending['defensePoints'] = $units[$unitDefending['unitId']]['defensePoints'];
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
                 $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['soldiers'][$d]);
@@ -113,6 +128,44 @@ class Cli_Model_Battle
                     unset($this->defender['heroes'][$d]);
                 } else {
                     unset($this->attacker['heroes'][$a]);
+                    break;
+                }
+            }
+        }
+        foreach ($this->attacker['ships'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
+            foreach ($this->defender['soldiers'] as $d => $unitDefending) {
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
+                if ($hits['attack'] > $hits['defense']) {
+                    unset($this->defender['soldiers'][$d]);
+                } else {
+                    unset($this->attacker['ships'][$a]);
+                    break;
+                }
+            }
+        }
+        foreach ($this->attacker['ships'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
+            foreach ($this->defender['heroes'] as $d => $unitDefending) {
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
+                if ($hits['attack'] > $hits['defense']) {
+                    unset($this->defender['heroes'][$d]);
+                } else {
+                    unset($this->attacker['ships'][$a]);
+                    break;
+                }
+            }
+        }
+        foreach ($this->attacker['ships'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
+            foreach ($this->defender['ships'] as $d => $unitDefending) {
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
+                if ($hits['attack'] > $hits['defense']) {
+                    unset($this->defender['ships'][$d]);
+                } else {
+                    unset($this->attacker['ships'][$a]);
                     break;
                 }
             }
