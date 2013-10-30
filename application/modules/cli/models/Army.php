@@ -78,7 +78,7 @@ class Cli_Model_Army
         return array(
             'flying' => array(
                 'b' => 1,
-                'c' => 0,
+                'c' => 1,
                 'e' => null,
                 'E' => 2,
                 'f' => 2,
@@ -92,7 +92,7 @@ class Cli_Model_Army
             ),
             'swimming' => array(
                 'b' => 1,
-                'c' => 0,
+                'c' => 1,
                 'e' => null,
                 'E' => 2,
                 'f' => 300,
@@ -106,7 +106,7 @@ class Cli_Model_Army
             ),
             'walking' => array(
                 'b' => 1,
-                'c' => 0,
+                'c' => 1,
                 'e' => null,
                 'E' => 2,
                 'f' => 3,

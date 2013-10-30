@@ -36,6 +36,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     private $terrainCosts;
     private $movesLeft;
     private $limit;
+    private $itWasMyCastle = false;
 
 
     /**
@@ -155,7 +156,18 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
                     continue;
                 }
 
-                $g = $this->terrainCosts[$terrainType];
+//                if ($terrainType == 'c') {
+//                    if (!$this->itWasMyCastle) {
+//                        $this->itWasMyCastle = true;
+//                        $g = 1;
+//                    } else {
+//                        $this->itWasMyCastle = false;
+//                        $g = 0;
+//                    }
+//                } else {
+//                    $this->itWasMyCastle = false;
+                    $g = $this->terrainCosts[$terrainType];
+//                }
 
                 // jeżeli koszt ruchu większy od 99 to pomiń to pole
                 if ($g > 6) {

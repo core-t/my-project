@@ -112,9 +112,10 @@ function army(obj, color) {
                 shipMoves = this.soldiers[soldier].movesLeft
             }
         }
+
         this.terrainCosts = {
             'b': 1,
-            'c': 0,
+            'c': 1,
             'e': null,
             'f': 300,
             'g': 200,
@@ -142,7 +143,7 @@ function army(obj, color) {
 
         this.terrainCosts = {
             'b': 1,
-            'c': 0,
+            'c': 1,
             'e': null,
             'f': 2,
             'g': 2,
@@ -156,7 +157,7 @@ function army(obj, color) {
     } else {
         this.terrainCosts = {
             'b': 1,
-            'c': 0,
+            'c': 1,
             'e': null,
             'f': 3,
             'g': 2,
