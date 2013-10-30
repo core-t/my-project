@@ -50,26 +50,32 @@ function army(obj, color) {
     this.soldiers = obj.soldiers;
 
     for (soldier in this.soldiers) {
+        numberOfSoldiers++;
+
         if (typeof this.soldierKey == 'undefined') {
             this.soldierKey = soldier;
         }
+
         if (typeof this.moves == 'undefined') {
             this.moves = this.soldiers[soldier].movesLeft;
         }
+
         if (this.soldiers[soldier].movesLeft < this.moves) {
             this.moves = this.soldiers[soldier].movesLeft
         }
-        numberOfSoldiers++;
+
         if (units[this.soldiers[soldier].unitId].attackPoints > attack) {
             attack = units[this.soldiers[soldier].unitId].attackPoints;
             this.soldierKey = soldier;
         }
+
         if (units[this.soldiers[soldier].unitId].defensePoints > defense) {
             defense = units[this.soldiers[soldier].unitId].defensePoints;
             if (defense > units[this.soldiers[this.soldierKey].unitId].defensePoints) {
                 this.soldierKey = soldier;
             }
         }
+
         if (units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
             moves = units[this.soldiers[soldier].unitId].numberOfMoves;
             if (moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves) {
@@ -89,6 +95,20 @@ function army(obj, color) {
         if (units[this.soldiers[soldier].unitId].canSwim) {
             this.canSwim++;
             this.moves = this.soldiers[soldier].movesLeft;
+        }
+    }
+
+    for (soldier in this.soldiers) {
+        if (this.soldiers[soldier].unitId != shipId) {
+            continue;
+        }
+
+        if (typeof shipMoves == 'undefined') {
+            var shipMoves = this.soldiers[soldier].movesLeft;
+        }
+
+        if (this.soldiers[soldier].movesLeft < shipMoves) {
+            shipMoves = this.soldiers[soldier].movesLeft
         }
     }
 
@@ -145,6 +165,7 @@ function army(obj, color) {
         this.img = Unit.getImage(shipId, color);
         this.attack = units[shipId].attackPoints;
         this.defense = units[shipId].defensePoints;
+        this.moves = shipMoves;
     } else if (typeof this.heroes[this.heroKey] != 'undefined') {
         if (this.heroes[this.heroKey].name) {
             this.name = this.heroes[this.heroKey].name;
@@ -169,6 +190,8 @@ function army(obj, color) {
         delete players[color].armies[obj.armyId];
         return;
     }
+
+
     this.element = $('<div>');
     if (color == my.color) { // moja armia
         this.element.click(function (e) {
