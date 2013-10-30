@@ -98,21 +98,20 @@ function army(obj, color) {
         }
     }
 
-    for (soldier in this.soldiers) {
-        if (this.soldiers[soldier].unitId != shipId) {
-            continue;
-        }
-
-        if (typeof shipMoves == 'undefined') {
-            var shipMoves = this.soldiers[soldier].movesLeft;
-        }
-
-        if (this.soldiers[soldier].movesLeft < shipMoves) {
-            shipMoves = this.soldiers[soldier].movesLeft
-        }
-    }
-
     if (this.canSwim) {
+        for (soldier in this.soldiers) {
+            if (this.soldiers[soldier].unitId != shipId) {
+                continue;
+            }
+
+            if (typeof shipMoves == 'undefined') {
+                var shipMoves = this.soldiers[soldier].movesLeft;
+            }
+
+            if (this.soldiers[soldier].movesLeft < shipMoves) {
+                shipMoves = this.soldiers[soldier].movesLeft
+            }
+        }
         this.terrainCosts = {
             'b': 1,
             'c': 0,
@@ -127,6 +126,20 @@ function army(obj, color) {
             'w': 1
         };
     } else if (this.canFly > 0) {
+        for (soldier in this.soldiers) {
+            if (!units[this.soldiers[soldier].unitId].canFly) {
+                continue;
+            }
+
+            if (typeof flyMoves == 'undefined') {
+                var flyMoves = this.soldiers[soldier].movesLeft;
+            }
+
+            if (this.soldiers[soldier].movesLeft < flyMoves) {
+                flyMoves = this.soldiers[soldier].movesLeft
+            }
+        }
+
         this.terrainCosts = {
             'b': 1,
             'c': 0,
@@ -175,6 +188,10 @@ function army(obj, color) {
         this.img = Hero.getImage(color);
         this.attack = this.heroes[this.heroKey].attackPoints;
         this.defense = this.heroes[this.heroKey].defensePoints;
+
+        if (this.canFly > 0) {
+            this.moves = flyMoves;
+        }
     } else if (typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
         if (units[this.soldiers[this.soldierKey].unitId].name_lang) {
             this.name = units[this.soldiers[this.soldierKey].unitId].name_lang;
@@ -255,80 +272,26 @@ function army(obj, color) {
 
 }
 
-function swimming(path) {
+function swimmingOrFlying(path) {
     var className = 'path1';
 
     for (i in path) {
         var pX = path[i].x * 40;
         var pY = path[i].y * 40;
 
-        for (s in selectedArmy.soldiers) {
-            var soldier = selectedArmy.soldiers[s];
-
-            if (!units[soldier.unitId].canSwim) {
-                continue;
-            }
-
-            if (notSet(soldiersMovesLeft)) {
-                var soldiersMovesLeft = soldier.movesLeft;
-            }
-
-            soldiersMovesLeft -= selectedArmy.terrainCosts[path[i].tt];
-
-            if (soldiersMovesLeft < 0) {
-                className = 'path2';
-            }
-
-            if (soldiersMovesLeft <= 0) {
-                if (typeof set == 'undefined') {
-                    var set = {'x': pX, 'y': pY};
-                }
-                break;
-            }
+        if (notSet(armyMovesLeft)) {
+            var armyMovesLeft = selectedArmy.moves;
         }
 
-        board.append(
-            $('<div>')
-                .addClass('path ' + className)
-                .css({
-                    left: pX + 'px',
-                    top: pY + 'px'
-                })
-                .html(path[i].G)
-        );
-    }
-    return set;
-}
+        armyMovesLeft -= selectedArmy.terrainCosts[path[i].tt];
 
-function flying(path) {
-    var className = 'path1';
+        if (armyMovesLeft < 0) {
+            className = 'path2';
+        }
 
-    for (i in path) {
-        var pX = path[i].x * 40;
-        var pY = path[i].y * 40;
-
-        for (s in selectedArmy.soldiers) {
-            var soldier = selectedArmy.soldiers[s];
-
-            if (units[soldier.unitId].canFly < 1) {
-                continue;
-            }
-
-            if (notSet(soldiersMovesLeft)) {
-                var soldiersMovesLeft = soldier.movesLeft;
-            }
-
-            soldiersMovesLeft -= selectedArmy.terrainCosts[path[i].tt];
-
-            if (soldiersMovesLeft < 0) {
-                className = 'path2';
-            }
-
-            if (soldiersMovesLeft <= 0) {
-                if (typeof set == 'undefined') {
-                    var set = {'x': pX, 'y': pY};
-                }
-                break;
+        if (armyMovesLeft <= 0) {
+            if (typeof set == 'undefined') {
+                var set = {'x': pX, 'y': pY};
             }
         }
 

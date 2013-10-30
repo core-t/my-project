@@ -62,10 +62,8 @@ function showPath(close, key) {
 
     var path = getPath(close, key);
 
-    if (selectedArmy.canSwim) {
-        var set = swimming(path);
-    } else if (selectedArmy.canFly > 0) {
-        var set = flying(path);
+    if (selectedArmy.canSwim || selectedArmy.canFly > 0) {
+        var set = swimmingOrFlying(path);
     } else {
         var set = walking(path);
     }
