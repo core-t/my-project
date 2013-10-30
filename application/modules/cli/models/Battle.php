@@ -49,8 +49,9 @@ class Cli_Model_Battle
 
     private function updateHeroes($heroes, $gameId, $db)
     {
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         foreach ($heroes as $v) {
-            Cli_Model_Database::armyRemoveHero($gameId, $v['heroId'], $db);
+            $mHeroesInGame->armyRemoveHero($v['heroId']);
         }
     }
 
@@ -67,18 +68,20 @@ class Cli_Model_Battle
 
     public function getDefender()
     {
-        if (empty($this->_result['defense']['soldiers']) && empty($this->_result['defense']['heroes'])) {
+        if (empty($this->defender['soldiers']) && empty($this->defender['heroes']) && empty($this->defender['ships'])) {
             return null;
         }
-        // only neutral castle garrison
+        // only neutral castle garrison (ships?)
         return $this->defender;
     }
 
     public function getAttacker()
     {
-        if (!empty($this->attacker['soldiers']) || !empty($this->attacker['heroes'])) {
-            return $this->attacker;
+        if (empty($this->attacker['soldiers']) && empty($this->attacker['heroes']) && empty($this->attacker['ships'])) {
+            return null;
         }
+        // (ships?)
+        return $this->attacker;
     }
 
     public function fight()
@@ -221,13 +224,11 @@ class Cli_Model_Battle
             $maxDie = $unitAttacking['attackPoints'] + $unitDefending['defensePoints'];
             $dieAttacking = $this->rollDie($maxDie);
             $dieDefending = $this->rollDie($maxDie);
-//            $dieAttacking = $this->rollDie($unitAttacking['attackPoints']);
-//            $dieDefending = $this->rollDie($unitDefending['defensePoints']);
 
-//            echo '$unitAttacking[\'attackPoints\']=' . $unitAttacking['attackPoints'] . "\n";
-//            echo '$dieDefending=' . $dieDefending . "\n";
-//            echo '$unitDefending[\'defensePoints\']=' . $unitDefending['defensePoints'] . "\n";
-//            echo '$dieAttacking=' . $dieAttacking . "\n\n";
+            echo '$unitAttacking[\'attackPoints\']=' . $unitAttacking['attackPoints'] . "\n";
+            echo '$dieDefending=' . $dieDefending . "\n";
+            echo '$unitDefending[\'defensePoints\']=' . $unitDefending['defensePoints'] . "\n";
+            echo '$dieAttacking=' . $dieAttacking . "\n\n";
 
             if ($unitAttacking['attackPoints'] > $dieDefending AND $unitDefending['defensePoints'] <= $dieAttacking) {
                 $defenseHits--;

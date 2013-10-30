@@ -19,7 +19,8 @@ class Cli_Model_HeroResurrection
             Cli_Model_Database::connectHero($user->parameters['gameId'], $user->parameters['playerId'], $db);
         }
 
-        $heroId = Cli_Model_Database::getDeadHeroId($user->parameters['gameId'], $user->parameters['playerId'], $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+        $heroId = $mHeroesInGame->getDeadHeroId($user->parameters['playerId']);
 
         if (!$heroId) {
             $gameHandler->sendError($user, 'Twój heros żyje! ' . $heroId);
@@ -35,7 +36,7 @@ class Cli_Model_HeroResurrection
         }
 
         $mapCastles = Zend_Registry::get('castles');
-        $armyId = Cli_Model_Database::heroResurection($user->parameters['gameId'], $heroId, $mapCastles[$castleId]['position'], $user->parameters['playerId'], $db);
+        $armyId = Cli_Model_Database::heroResurrection($user->parameters['gameId'], $heroId, $mapCastles[$castleId]['position'], $user->parameters['playerId'], $db);
         $gold -= 100;
         $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
 
@@ -52,5 +53,6 @@ class Cli_Model_HeroResurrection
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
+
 
 }

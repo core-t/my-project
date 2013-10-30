@@ -13,8 +13,6 @@ class Cli_Model_Database
         ));
     }
 
-    static $playerColors = array('white', 'yellow', 'green', 'red', 'orange');
-
     static public function update($name, $data, $where, $db, $quiet = false)
     {
         try {
@@ -704,20 +702,6 @@ Brak y
         return $result;
     }
 
-    static public function armyRemoveHero($gameId, $heroId, $db)
-    {
-
-        $data = array(
-            'armyId' => null
-        );
-        $where = array(
-            $db->quoteInto('"heroId" = ?', $heroId),
-            $db->quoteInto('"gameId" = ?', $gameId),
-        );
-
-        return self::update('heroesingame', $data, $where, $db);
-    }
-
     static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db)
     {
         $select = $db->select()
@@ -1013,26 +997,7 @@ Brak y
         }
     }
 
-    static public function getDeadHeroId($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'heroId')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId);
-        try {
-            $result = $db->fetchRow($select);
-            if (!isset($result['armyId'])) {
-                return $result['heroId'];
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function heroResurection($gameId, $heroId, $position, $playerId, $db)
+    static public function heroResurrection($gameId, $heroId, $position, $playerId, $db)
     {
 
         $armyId = self::getArmyIdFromPosition($gameId, $position, $db);

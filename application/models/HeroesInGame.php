@@ -56,5 +56,33 @@ class Application_Model_HeroesInGame extends Game_Db_Table_Abstract
 
         $this->update($data, $where);
     }
+
+    public function getDeadHeroId($playerId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'armyId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"', 'heroId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId);
+
+        $result = $this->selectRow($select);
+        if (!isset($result['armyId'])) {
+            return $result['heroId'];
+        }
+    }
+
+    public function armyRemoveHero($heroId)
+    {
+        $data = array(
+            'armyId' => null
+        );
+
+        $where = array(
+            $this->_db->quoteInto('"heroId" = ?', $heroId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+        );
+
+        return $this->update($data, $where);
+    }
 }
 

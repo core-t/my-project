@@ -75,7 +75,8 @@ class Cli_Model_SearchRuin
                 Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
             } else {
                 $find = array('death', 1);
-                Cli_Model_Database::armyRemoveHero($gameId, $heroId, $db);
+                $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+                $mHeroesInGame->armyRemoveHero($heroId);
             }
         } elseif ($random < 55) { //45%
 //kasa
