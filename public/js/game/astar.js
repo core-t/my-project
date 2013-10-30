@@ -60,9 +60,6 @@ function showPath(close, key) {
         return 0;
     }
 
-    var soldiersMovesLeft = {};
-    var heroesMovesLeft = {};
-
     var path = getPath(close, key);
 
     if (selectedArmy.canSwim) {

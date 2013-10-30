@@ -32,9 +32,6 @@ function army(obj, color) {
     var numberOfUnits = 0;
     var numberOfHeroes = 0;
     var numberOfSoldiers = 0;
-    var modMovesForest = 3;
-    var modMovesSwamp = 4;
-    var modMovesHills = 5;
 
     for (hero in this.heroes) {
         if (typeof this.heroKey == 'undefined') {
@@ -49,9 +46,6 @@ function army(obj, color) {
         }
         this.canFly--;
         numberOfHeroes++;
-        modMovesForest = 3;
-        modMovesSwamp = 4;
-        modMovesHills = 5;
     }
     this.soldiers = obj.soldiers;
 
@@ -66,16 +60,6 @@ function army(obj, color) {
             this.moves = this.soldiers[soldier].movesLeft
         }
         numberOfSoldiers++;
-        if (units[this.soldiers[soldier].unitId].modMovesForest > modMovesForest) {
-            modMovesForest = units[this.soldiers[soldier].unitId].modMovesForest;
-        }
-        if (units[this.soldiers[soldier].unitId].modMovesSwamp > modMovesSwamp) {
-            modMovesSwamp = units[this.soldiers[soldier].unitId].modMovesSwamp;
-        }
-        if (units[this.soldiers[soldier].unitId].modMovesHills > modMovesHills) {
-            modMovesHills = units[this.soldiers[soldier].unitId].modMovesHills;
-        }
-
         if (units[this.soldiers[soldier].unitId].attackPoints > attack) {
             attack = units[this.soldiers[soldier].unitId].attackPoints;
             this.soldierKey = soldier;
@@ -92,10 +76,6 @@ function army(obj, color) {
                 this.soldierKey = soldier;
             }
         }
-
-//            if (!this.canSwim && this.soldiers[soldier].movesLeft < this.moves) {
-//                this.moves = this.soldiers[soldier].movesLeft;
-//            }
 
         if (units[this.soldiers[soldier].unitId].canFly) {
             this.canFly++;
@@ -145,12 +125,12 @@ function army(obj, color) {
             'b': 1,
             'c': 0,
             'e': null,
-            'f': modMovesForest,
+            'f': 3,
             'g': 2,
-            'm': modMovesHills,
+            'm': 5,
             'M': 1000,
             'r': 1,
-            's': modMovesSwamp,
+            's': 4,
             'S': 1,
             'w': 50
         };
@@ -343,6 +323,10 @@ function flying(path) {
 }
 
 function walking(path) {
+    var className = 'path1',
+        soldiersMovesLeft = {},
+        heroesMovesLeft = {};
+
     for (i in path) {
         var pX = path[i].x * 40;
         var pY = path[i].y * 40;
@@ -353,13 +337,7 @@ function walking(path) {
                 soldiersMovesLeft[soldier.soldierId] = soldier.movesLeft;
             }
 
-            if (selectedArmy.canFly > 0) {
-                if (path[i].tt == 'r') {
-                    soldiersMovesLeft[soldier.soldierId] -= 1;
-                } else if (path[i].tt != 'c') {
-                    soldiersMovesLeft[soldier.soldierId] -= 2;
-                }
-            } else if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
+            if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
                 soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
             } else {
                 soldiersMovesLeft[soldier.soldierId] -= selectedArmy.terrainCosts[path[i].tt];
