@@ -67,9 +67,10 @@ class Cli_Model_Battle
 
     public function getDefender()
     {
-        if (empty($this->defender['soldiers']) && empty($this->defender['heroes'])) {
+        if (empty($this->_result['defense']['soldiers']) && empty($this->_result['defense']['heroes'])) {
             return null;
         }
+        // only neutral castle garrison
         return $this->defender;
     }
 
@@ -109,6 +110,19 @@ class Cli_Model_Battle
                 }
             }
         }
+        foreach ($this->attacker['soldiers'] as $a => $unitAttacking) {
+            $unitAttacking['attackPoints'] = $this->units[$unitAttacking['unitId']]['attackPoints'];
+            foreach ($this->defender['ships'] as $d => $unitDefending) {
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
+                if ($hits['attack'] > $hits['defense']) {
+                    unset($this->defender['ships'][$d]);
+                } else {
+                    unset($this->attacker['soldiers'][$a]);
+                    break;
+                }
+            }
+        }
         foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
             foreach ($this->defender['soldiers'] as $d => $unitDefending) {
                 $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
@@ -126,6 +140,18 @@ class Cli_Model_Battle
                 $hits = $this->combat($unitAttacking, $unitDefending, $hits);
                 if ($hits['attack'] > $hits['defense']) {
                     unset($this->defender['heroes'][$d]);
+                } else {
+                    unset($this->attacker['heroes'][$a]);
+                    break;
+                }
+            }
+        }
+        foreach ($this->attacker['heroes'] as $a => $unitAttacking) {
+            foreach ($this->defender['ships'] as $d => $unitDefending) {
+                $unitDefending['defensePoints'] = $this->units[$unitDefending['unitId']]['defensePoints'];
+                $hits = $this->combat($unitAttacking, $unitDefending, $hits);
+                if ($hits['attack'] > $hits['defense']) {
+                    unset($this->defender['ships'][$d]);
                 } else {
                     unset($this->attacker['heroes'][$a]);
                     break;

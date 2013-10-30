@@ -684,10 +684,10 @@ Brak y
 
             $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
             $heroes = $mHeroesInGame->getArmyHeroes($army['armyId']);
-            foreach ($heroes as $k => $row) {
-                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
-                $heroes[$k]['artifacts'] = $mInventory->getAll();
-            }
+//            foreach ($heroes as $k => $row) {
+//                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
+//                $heroes[$k]['artifacts'] = $mInventory->getAll();
+//            }
 
             $mSoldier = new Application_Model_Soldier($gameId, $db);
             $soldiers = $mSoldier->getSoldiers($army['armyId']);
