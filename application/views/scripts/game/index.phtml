@@ -2,7 +2,7 @@
 var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
 var units = <?php echo Zend_Json::encode($this->units); ?>;
 var towers = <?php echo Zend_Json::encode($this->towers); ?>;
-var artifacts = <?php echo Zend_Json::encode($this->artifacts); ?>;
+<!--var artifacts = --><?php //echo Zend_Json::encode($this->artifacts); ?><!--;-->
 var players = <?php echo Zend_Json::encode($this->players); ?>;
 var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
 var capitals = <?php echo Zend_Json::encode($this->capitals); ?>;
@@ -26,5 +26,6 @@ var accessKey = '<?php echo $this->accessKey ?>';
 $(document).ready(function() {
     goldUpdate(<?php echo $this->gold ?>);
 });
-var fieldsOryginal = <?php echo $this->fields; ?>;
+var terrain = <?php echo Zend_Json::encode($this->terrain); ?>;
+var fieldsOryginal = <?php echo Zend_Json::encode($this->fields); ?>;
 <?php $this->headScript()->captureEnd() ?>

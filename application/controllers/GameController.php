@@ -46,6 +46,8 @@ class GameController extends Game_Controller_Game
         $this->view->capitals = $mMapPlayers->getCapitals();
         $mUnit = new Application_Model_MapUnits($game['mapId']);
         $this->view->units = $mUnit->getUnits();
+        $mTerrain = new Application_Model_MapTerrain($game['mapId']);
+        $this->view->terrain = $mTerrain->getTerrain();
         $mMapTowers = new Application_Model_MapTowers($game['mapId']);
         $neutralTowers = $mMapTowers->getMapTowers();
         $playersTowers = $mTower->getTowers();
@@ -141,7 +143,7 @@ class GameController extends Game_Controller_Game
         foreach (array_keys($emptyRuins) as $id) {
             $this->view->ruins[$id]['e'] = 1;
         }
-        $this->view->fields = Zend_Json::encode($mMapFields->getMapFields());
+        $this->view->fields = $mMapFields->getMapFields();
         foreach ($mMapCastles->getMapCastles() as $id => $castle) {
             if (!isset($razed[$id])) {
                 $this->view->castlesSchema[$id] = $castle;
