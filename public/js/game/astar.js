@@ -1,18 +1,18 @@
 // *** A* ***
 
-var terrain = {
-    'b': 'Bridge',
-    'c': 'Castle',
-    'e': 'Enemy',
-    'f': 'Forest',
-    'g': 'Grassland',
-    'm': 'Hills',
-    'M': 'Mountains',
-    'r': 'Road',
-    's': 'Swamp',
-    'S': 'Ship',
-    'w': 'Water'
-}
+//var terrain = {
+//    'b': 'Bridge',
+//    'c': 'Castle',
+//    'e': 'Enemy',
+//    'f': 'Forest',
+//    'g': 'Grassland',
+//    'm': 'Hills',
+//    'M': 'Mountains',
+//    'r': 'Road',
+//    's': 'Swamp',
+//    'S': 'Ship',
+//    'w': 'Water'
+//}
 
 var AStar = {
 //    inMyCastle: true,
@@ -23,7 +23,7 @@ var AStar = {
         var destX = Math.round(X / 40);
         var destY = Math.round(Y / 40);
 
-        coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]]);
+        coord.html(destX + ' - ' + destY + ' ' + terrain.name[fields[destY][destX]]);
 
         if (selectedArmy) {
             var tmpX = destX * 40;

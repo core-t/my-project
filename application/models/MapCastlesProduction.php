@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_MapCastlesProduction extends Game_Db_Table_Abstract
+class Application_Model_MapCastlesProduction extends Coret_Db_Table_Abstract
 {
     protected $_name = 'mapcastlesproduction';
     protected $_primary = 'mapCastleProductionId';

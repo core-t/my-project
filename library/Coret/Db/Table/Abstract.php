@@ -1,6 +1,6 @@
 <?php
 
-abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
+abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
 {
 
     protected $_db;
@@ -26,10 +26,13 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
         $this->_cli = $cli;
     }
 
-    public function update(array $data, $where)
+    public function update(array $data, $where, $name = null)
     {
+        if (!$name) {
+            $name = $this->_name;
+        }
         try {
-            $updateResult = $this->_db->update($this->_name, $data, $where);
+            $updateResult = $this->_db->update($name, $data, $where);
         } catch (Exception $e) {
             if ($this->_cli) {
                 $l = new Coret_Model_Logger();
@@ -79,10 +82,13 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    public function insert(array $data)
+    public function insert(array $data, $name = null)
     {
+        if (!$name) {
+            $name = $this->_name;
+        }
         try {
-            return $this->_db->insert($this->_name, $data);
+            return $this->_db->insert($name, $data);
         } catch (Exception $e) {
             if ($this->_cli) {
                 $l = new Coret_Model_Logger();

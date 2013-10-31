@@ -1,6 +1,6 @@
 <?php
 
-class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
+class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
 {
 
     /**
@@ -29,9 +29,10 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      */
     public function __construct(Array $params = array(), $id = 0)
     {
+        parent::__construct();
+
         $this->_id = intval($id);
         $this->_params = $params;
-        $this->_db = $this->getDefaultAdapter();
 
         if (Zend_Registry::get('config')->resources->db->adapter == 'pdo_mysql') {
             $this->_db->query("SET NAMES 'utf8'");
@@ -145,7 +146,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
      */
     public function insertElement($dane)
     {
-        $this->_db->insert($this->_name, $dane);
+        $this->insert($dane);
         if (isset($this->_sequence)) {
             return $this->_db->lastSequenceId($this->_sequence);
         } else {
@@ -162,8 +163,12 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
         if (!isset($dane['id_lang']) || !$dane['id_lang']) {
             $dane['id_lang'] = 1;
         }
-        $this->_db->insert($this->_name . '_Lang', $dane);
-        return $this->_db->lastInsertId();
+        return $this->insert($dane, $this->_name . '_Lang');
+//        if (isset($this->_sequence)) {
+//            return $this->_db->lastSequenceId($this->_sequence);
+//        } else {
+//            return $this->_db->lastInsertId();
+//        }
     }
 
     /**
@@ -176,7 +181,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
             $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_id)
         );
         $where = $this->addWhere($where);
-        return $this->_db->update($this->_name, $dane, $where);
+        return $this->update($dane, $where);
     }
 
     /**
@@ -191,7 +196,7 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
 
         $where = $this->addWhereLang($where, $dane);
 
-        return $this->_db->update($this->_name . '_Lang', $dane, $where);
+        return $this->update($dane, $where, $this->_name . '_Lang');
     }
 
     /**
@@ -423,14 +428,23 @@ class Coret_Model_ParentDb extends Zend_Db_Table_Abstract
                     next($this->_columns);
                     continue;
                 }
-                if ($this->_columns[$column]['type'] == 'image') {
-                    if ($post[$column]) {
-                        $data_img[$column] = $post[$column];
-                    }
-                    next($this->_columns);
-                    continue;
+
+                switch ($this->_columns[$column]['type']) {
+                    case 'image':
+                        if ($post[$column]) {
+                            $data_img[$column] = $post[$column];
+                        }
+                        next($this->_columns);
+                        continue;
+                        break;
+                    case 'number':
+                        if ($post[$column]) {
+                            $data[$column] = $post[$column];
+                        }
+                        break;
+                    default:
+                        $data[$column] = $post[$column];
                 }
-                $data[$column] = $post[$column];
             }
 
             next($this->_columns);

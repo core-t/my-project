@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_MapRuins extends Game_Db_Table_Abstract
+class Application_Model_MapRuins extends Coret_Db_Table_Abstract
 {
     protected $_name = 'mapruins';
     protected $_primary = 'mapRuinId';

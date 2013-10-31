@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_TowersInGame extends Game_Db_Table_Abstract
+class Application_Model_TowersInGame extends Coret_Db_Table_Abstract
 {
     protected $_name = 'towersingame';
     protected $_primary = 'towerId';
