@@ -250,7 +250,7 @@ function zoom(gameWidth, gameHeight) {
                         switch (e.which) {
                             case 1:
                                 if (selectedArmy) {
-                                    Websocket.armyMove(cursorPosition(e.pageX, e.pageY, 1));
+                                    Websocket.armyMove(AStar.cursorPosition(e.pageX, e.pageY, 1));
                                 } else {
                                     var pageX = e.pageX;
                                     var pageY = e.pageY;
@@ -281,7 +281,7 @@ function zoom(gameWidth, gameHeight) {
                 })
                 .mousemove(function (e) {
                     if (!lock) {
-                        cursorPosition(e.pageX, e.pageY);
+                        AStar.cursorPosition(e.pageX, e.pageY);
                     }
                 })
                 .mouseleave(function () {
@@ -290,7 +290,7 @@ function zoom(gameWidth, gameHeight) {
                         .unbind('mousemove')
                         .mousemove(function (e) {
                             if (!lock) {
-                                cursorPosition(e.pageX, e.pageY);
+                                AStar.cursorPosition(e.pageX, e.pageY);
                             }
                         });
                 })
@@ -299,7 +299,7 @@ function zoom(gameWidth, gameHeight) {
                         .unbind('mousemove')
                         .mousemove(function (e) {
                             if (!lock) {
-                                cursorPosition(e.pageX, e.pageY);
+                                AStar.cursorPosition(e.pageX, e.pageY);
                             }
                         });
                 });

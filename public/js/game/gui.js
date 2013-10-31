@@ -37,8 +37,9 @@ var Gui = {
         }
     },
     prepareButtons: function () {
-        zoomPad = $(".zoomPad");
-        board = $("#board");
+        zoomPad = $('.zoomPad');
+        board = $('#board');
+        coord = $('#coord');
 
         $('#exit').click(function () {
             window.location = '/' + lang + '/index';

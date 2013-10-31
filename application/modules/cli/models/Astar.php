@@ -36,7 +36,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     private $terrainCosts;
     private $movesLeft;
     private $limit;
-    private $itWasMyCastle = false;
+    private $inMyCastle = true;
 
 
     /**
@@ -157,15 +157,14 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
                 }
 
 //                if ($terrainType == 'c') {
-//                    if (!$this->itWasMyCastle) {
-//                        $this->itWasMyCastle = true;
+//                    if (!$this->inMyCastle) {
+//                        $this->inMyCastle = true;
 //                        $g = 1;
 //                    } else {
-//                        $this->itWasMyCastle = false;
 //                        $g = 0;
 //                    }
 //                } else {
-//                    $this->itWasMyCastle = false;
+//                    $this->inMyCastle = false;
                     $g = $this->terrainCosts[$terrainType];
 //                }
 

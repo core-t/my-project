@@ -33,6 +33,7 @@ var firstCastleId = 1000;
 var zoomer;
 var zoomPad;
 var board;
+var coord;
 
 var documentTitle = document.title;
 var timeoutId = null;

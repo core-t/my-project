@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 21:51+0100\n"
-"PO-Revision-Date: 2013-10-28 21:53+0100\n"
+"POT-Creation-Date: 2013-10-31 01:00+0100\n"
+"PO-Revision-Date: 2013-10-31 01:01+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -109,25 +109,6 @@ msgstr "Nieprawidłowy e-mail lub hasło!"
 #: application/controllers/ProfileController.php:16
 msgid "Submit"
 msgstr "Potwierdź"
-
-#: library/Coret/View/Helper/Language.php:12
-#: library/Coret/View/Helper/Language.php:26
-msgid "niemiecki"
-msgstr ""
-
-#: library/Coret/View/Helper/Language.php:15
-#: library/Coret/View/Helper/Language.php:33
-msgid "angielski"
-msgstr ""
-
-#: library/Coret/View/Helper/Language.php:18
-#: library/Coret/View/Helper/Language.php:29
-msgid "polski"
-msgstr ""
-
-#: library/Coret/View/Helper/Language.php:40
-msgid "Wybierz język"
-msgstr ""
 
 #: library/Coret/View/Helper/Copyright.php:6
 msgid "Wszelkie prawa zastrzeżone"
