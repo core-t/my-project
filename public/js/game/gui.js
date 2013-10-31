@@ -14,6 +14,9 @@ var Gui = {
                 Message.remove();
                 unselectArmy();
                 break;
+            case 67: //c
+                Castle.show();
+                break;
             case 68: //d
                 Message.disbandArmy();
                 break;
@@ -100,6 +103,9 @@ var Gui = {
         });
         $('#razeCastle').click(function () {
             Message.razeCastle();
+        });
+        $('#showCastle').click(function () {
+            Castle.show();
         });
         $('#showArtifacts').click(function () {
             Message.showArtifacts();

@@ -33,8 +33,17 @@ var Castle = {
     },
     removeHammer: function (castleId) {
         $('#castle' + castleId + ' .hammer').remove();
+    },
+    show: function () {
+        if (selectedArmy == null) {
+            return;
+        }
+        var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
+        if (castleId) {
+            unselectArmy();
+            Message.castle(castleId);
+        }
     }
-
 }
 
 function castleFields(castleId, type) {
@@ -133,7 +142,7 @@ function castleOwner(castleId, color) {
             .unbind('mouseout')
             .unbind('click')
             .click(function () {
-                Message.castle(castleId, color)
+                Message.castle(castleId)
             });
     } else {
         castleFields(castleId, 'e');

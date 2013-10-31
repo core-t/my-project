@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-31 01:00+0100\n"
-"PO-Revision-Date: 2013-10-31 01:01+0100\n"
+"POT-Creation-Date: 2013-10-31 04:29+0100\n"
+"PO-Revision-Date: 2013-10-31 04:30+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -122,15 +122,15 @@ msgstr "Pierwszy"
 msgid "Back"
 msgstr "Cofnij"
 
+#: application/modules/admin/views/scripts/mapterrain/delete.phtml:5
 #: application/modules/admin/views/scripts/artifact/delete.phtml:5
 #: application/modules/admin/views/scripts/language/delete.phtml:5
-#: application/modules/admin/views/scripts/artifactinventoryposition/delete.phtml:5
 msgid "Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
 msgstr ""
 
+#: application/modules/admin/views/scripts/mapterrain/delete.phtml:6
 #: application/modules/admin/views/scripts/artifact/delete.phtml:6
 #: application/modules/admin/views/scripts/language/delete.phtml:6
-#: application/modules/admin/views/scripts/artifactinventoryposition/delete.phtml:6
 msgid "Tak"
 msgstr ""
 
@@ -284,7 +284,6 @@ msgid "Treasure"
 msgstr "Skarbiec"
 
 #: application/layouts/scripts/game.phtml:44
-#, fuzzy
 msgid "Exit game"
 msgstr "Opuść grę"
 
@@ -317,7 +316,7 @@ msgid "Disband army"
 msgstr "Rozwiąż armię"
 
 #: application/layouts/scripts/game.phtml:73
-msgid "Unselect army"
+msgid "Deselect army"
 msgstr "Odznacz armię"
 
 #: application/layouts/scripts/game.phtml:77
@@ -325,38 +324,42 @@ msgid "Search ruins"
 msgstr "Przeszukaj ruiny"
 
 #: application/layouts/scripts/game.phtml:81
+msgid "Show castle"
+msgstr "Pokaż zamek"
+
+#: application/layouts/scripts/game.phtml:85
 msgid "Raze castle"
 msgstr "Zburz zamek"
 
-#: application/layouts/scripts/game.phtml:89
+#: application/layouts/scripts/game.phtml:93
 msgid "Split army"
 msgstr "Podziel amię"
 
-#: application/layouts/scripts/game.phtml:93
+#: application/layouts/scripts/game.phtml:97
 msgid "Army status"
 msgstr "Status armii"
 
-#: application/layouts/scripts/game.phtml:97
+#: application/layouts/scripts/game.phtml:101
 msgid "Fortify army"
 msgstr "Fortyfikuj armię"
 
-#: application/layouts/scripts/game.phtml:101
+#: application/layouts/scripts/game.phtml:105
 msgid "Skip in this turn"
 msgstr "Pomiń w tej turze"
 
-#: application/layouts/scripts/game.phtml:105
+#: application/layouts/scripts/game.phtml:109
 msgid "Find next army"
 msgstr "Znajdź następną"
 
-#: application/layouts/scripts/game.phtml:113
+#: application/layouts/scripts/game.phtml:117
 msgid "Color"
 msgstr "Kolor"
 
-#: application/layouts/scripts/game.phtml:115
+#: application/layouts/scripts/game.phtml:119
 msgid "Time spend"
 msgstr "Czas"
 
-#: application/layouts/scripts/game.phtml:128
+#: application/layouts/scripts/game.phtml:132
 msgid "Send"
 msgstr "Wyślij"
 

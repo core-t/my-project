@@ -167,13 +167,13 @@ var Message = {
     turn: function () {
         this.remove();
         if (my.turn && turn.nr == 1) {
-            Message.castle(firstCastleId, my.color);
+            Message.castle(firstCastleId);
         } else {
             this.show($('<div>').html('Your turn.'));
             this.ok();
         }
     },
-    castle: function (castleId, color) {
+    castle: function (castleId) {
         if (lock) {
             return;
         }
@@ -238,7 +238,7 @@ var Message = {
                         .append($('<input>').attr(attr))
                         .append(' ' + name + ' (' + travelBy + ')')
                 )
-                .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, color))))
+                .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, my.color))))
                 .append(
                     $('<div>')
                         .addClass('attributes')
@@ -666,7 +666,7 @@ var Message = {
 
         if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
             $('#battleOk').click(function () {
-                Message.castle(data.castleId, data.attackerColor);
+                Message.castle(data.castleId);
             });
         } else {
             $('#battleOk').click(function () {
@@ -719,6 +719,9 @@ var Message = {
         }
     },
     razeCastle: function () {
+        if (selectedArmy == null) {
+            return;
+        }
         this.show($('<div>').html('Destroy castle. Are you sure?'));
         this.ok(Websocket.razeCastle);
         this.cancel();

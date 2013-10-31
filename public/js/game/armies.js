@@ -493,6 +493,7 @@ function selectArmy(a, center) {
 
     if (isMyCastle(a.x, a.y)) {
         $('#razeCastle').removeClass('buttonOff');
+        $('#showCastle').removeClass('buttonOff');
     }
 
     if (typeof center == 'undefined') {
@@ -536,6 +537,7 @@ function tmpUnselectArmy() {
     $('#quitArmy').addClass('buttonOff');
     $('#searchRuins').addClass('buttonOff');
     $('#razeCastle').addClass('buttonOff');
+    $('#showCastle').addClass('buttonOff');
     $('#showArtifacts').addClass('buttonOff');
     $('#disbandArmy').addClass('buttonOff');
     Message.remove();
