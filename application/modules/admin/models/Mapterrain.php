@@ -4,6 +4,8 @@ class Admin_Model_Mapterrain extends Coret_Model_ParentDb
 {
     protected $_name = 'mapterrain';
     protected $_primary = 'mapTerrainId';
+    protected $_sequence = 'mapterrain_mapTerrainId_seq';
+
     protected $_columns = array(
         'mapTerrainId' => array('label' => 'Terrain ID', 'type' => 'number', 'active' => array('form' => false)),
         'mapId' => array('label' => 'Map ID', 'type' => 'number'),

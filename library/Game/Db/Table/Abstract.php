@@ -14,19 +14,6 @@ abstract class Game_Db_Table_Abstract extends Zend_Db_Table_Abstract
         $this->_db = $this->getDefaultAdapter();
         $this->_cli = false;
 
-        $this->logActivity();
-    }
-
-    protected function logActivity()
-    {
-        $activity = new Game_Player_Activity();
-        $activity->logActivity();
-    }
-
-    protected function logRequest()
-    {
-        $activity = new Game_Player_Request();
-//        $activity->logRequest();
     }
 
     protected function setQuiet($quiet)
