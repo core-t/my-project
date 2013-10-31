@@ -191,7 +191,7 @@ class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
     public function updateElementLang($dane, $id)
     {
         $where = array(
-            $this->_db->quoteInto($this->_primary . ' = ?', $id)
+            $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $id)
         );
 
         $where = $this->addWhereLang($where, $dane);

@@ -33,10 +33,11 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @var array
      */
     private $fields;
-    private $terrainCosts;
+    private $terrain;
     private $movesLeft;
     private $limit;
     private $inMyCastle = true;
+    private $movementType;
 
 
     /**
@@ -54,7 +55,14 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         parent::__construct($destX, $destY);
         $this->limit = $limit;
         $this->fields = $fields;
-        $this->terrainCosts = $army['terrainCosts'];
+        $this->terrain = Zend_Registry::get('terrain');
+        if ($army['canFly'] > 0) {
+            $this->movementType = 'flying';
+        } elseif ($army['canSwim']) {
+            $this->movementType = 'swimming';
+        } else {
+            $this->movementType = 'walking';
+        }
         $this->movesLeft = $army['movesLeft'];
 
         $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null, 'c');
@@ -165,7 +173,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
 //                    }
 //                } else {
 //                    $this->inMyCastle = false;
-                    $g = $this->terrainCosts[$terrainType];
+                $g = $this->terrain[$terrainType][$this->movementType];
 //                }
 
                 // jeżeli koszt ruchu większy od 99 to pomiń to pole

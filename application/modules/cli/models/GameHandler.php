@@ -41,9 +41,11 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             $mMapTowers = new Application_Model_MapTowers($mapId, $db);
             $mMapUnits = new Application_Model_MapUnits($mapId, $db);
             $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
+            $mMapTerrain = new Application_Model_MapTerrain($mapId, $db);
 
             Zend_Registry::set('id_lang', $user->parameters['langId']);
-            $units = $mMapUnits->getUnits($db);
+            $units = $mMapUnits->getUnits();
+            Zend_Registry::set('terrain', $mMapTerrain->getTerrain());
             Zend_Registry::set('units', $units);
             Zend_Registry::set('fields', $mMapFields->getMapFields());
             Zend_Registry::set('castles', $mMapCastles->getMapCastles());

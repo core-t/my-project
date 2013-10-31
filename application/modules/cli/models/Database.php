@@ -166,37 +166,25 @@ Brak y
         }
 
         $units = Zend_Registry::get('units');
-        $terrainCosts = Cli_Model_Army::getTerrainCosts();
+        $terrain = Zend_Registry::get('terrain');
+
+        if ($army['canFly'] > 0) {
+            $type = 'flying';
+        } elseif ($army['canSwim']) {
+            $type = 'swimming';
+        } else {
+            $type = 'walking';
+        }
 
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
-
-//        $selectHeroes = $db->select()
-//            ->from('heroesingame', array('movesLeft', 'heroId'))
-//            ->where('"gameId" = ?', $gameId)
-//            ->where('"armyId" = ?', $army['armyId']);
-//        try {
-//            $heroes = $db->query($selectHeroes)->fetchAll();
-//        } catch (Exception $e) {
-//            echo($e);
-//            echo($selectHeroes->__toString());
-//
-//            return;
-//        }
 
         $heroes = $army['heroes'];
 
         foreach ($heroes as $hero) {
             $movesSpend = 0;
-            if ($army['canFly'] > 0) {
-                $type = 'flying';
-            } elseif ($army['canSwim']) {
-                $type = 'swimming';
-            } else {
-                $type = 'walking';
-            }
 
             foreach ($path as $step) {
-                $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
+                $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
             }
 
             $movesLeft = $hero['movesLeft'] - $movesSpend;
@@ -207,36 +195,45 @@ Brak y
             $mHeroesInGame->updateMovesLeft($movesLeft, $hero['heroId']);
         }
 
-//        $mSoldier = new Application_Model_Soldier($gameId, $db);
-//        $soldiers = $mSoldier->getForArmyPosition($army['armyId']);
-
         $soldiers = $army['soldiers'];
         $mSoldier = new Application_Model_Soldier($gameId, $db);
 
-        foreach ($soldiers as $soldier) {
-            $movesSpend = 0;
-            if ($army['canFly'] > 0) {
-                $type = 'flying';
-            } elseif ($army['canSwim']) {
-                $type = 'swimming';
-            } else {
-                $type = 'walking';
-                $terrainCosts[$type]['f'] = $units[$soldier['unitId']]['modMovesForest'];
-                $terrainCosts[$type]['m'] = $units[$soldier['unitId']]['modMovesHills'];
-                $terrainCosts[$type]['s'] = $units[$soldier['unitId']]['modMovesSwamp'];
-            }
+        if ($army['canFly'] > 0 || $army['canSwim']) {
+            foreach ($soldiers as $soldier) {
+                $movesSpend = 0;
 
-            foreach ($path as $step) {
-                $movesSpend += $terrainCosts[$type][$fields[$step['y']][$step['x']]];
-            }
+                foreach ($path as $step) {
+                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                }
 
-            $movesLeft = $soldier['movesLeft'] - $movesSpend;
-            if ($movesLeft < 0) {
-                $movesLeft = 0;
-            }
+                $movesLeft = $soldier['movesLeft'] - $movesSpend;
+                if ($movesLeft < 0) {
+                    $movesLeft = 0;
+                }
 
-            $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
+                $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
+            }
+        } else {
+            foreach ($soldiers as $soldier) {
+                $movesSpend = 0;
+
+                $terrain['f'][$type] = $units[$soldier['unitId']]['modMovesForest'];
+                $terrain['m'][$type] = $units[$soldier['unitId']]['modMovesHills'];
+                $terrain['s'][$type] = $units[$soldier['unitId']]['modMovesSwamp'];
+
+                foreach ($path as $step) {
+                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                }
+
+                $movesLeft = $soldier['movesLeft'] - $movesSpend;
+                if ($movesLeft < 0) {
+                    $movesLeft = 0;
+                }
+
+                $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
+            }
         }
+
 
         $end = end($path);
         $data = array(
@@ -245,9 +242,9 @@ Brak y
             'fortified' => 'false'
         );
         $where = array(
-            $db->quoteInto('"armyId" = ?', $army['armyId']),
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId)
+            $db->quoteInto($db->quoteIdentifier('armyId') . ' = ?', $army['armyId']),
+            $db->quoteInto($db->quoteIdentifier('gameId') . ' = ?', $gameId),
+            $db->quoteInto($db->quoteIdentifier('playerId') . ' = ?', $playerId)
         );
 
         return self::update('army', $data, $where, $db);
