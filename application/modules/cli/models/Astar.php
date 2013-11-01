@@ -36,7 +36,8 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
     private $terrain;
     private $movesLeft;
     private $limit;
-    private $inMyCastle = true;
+    private $myCastleId;
+    private $myCastles;
     private $movementType;
 
 
@@ -47,13 +48,15 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      * @param int $destY
      * @param array $fields
      */
-    public function __construct($army, $destX, $destY, $fields, $limit = null)
+    public function __construct($army, $destX, $destY, $fields, $params = null)
     {
         if ($army['x'] == $destX && $army['y'] == $destY) {
             return;
         }
         parent::__construct($destX, $destY);
-        $this->limit = $limit;
+        if (isset($params['limit'])) {
+            $this->limit = $params['limit'];
+        }
         $this->fields = $fields;
         $this->terrain = Zend_Registry::get('terrain');
         if ($army['canFly'] > 0) {
@@ -66,6 +69,16 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         $this->movesLeft = $army['movesLeft'];
 
         $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null, 'c');
+
+        if ($params['myCastles']) {
+            $this->myCastles = $params['myCastles'];
+            $this->myCastleId = array();
+            $castleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $params['myCastles']);
+            if ($castleId) {
+                $this->myCastleId[$castleId] = true;
+            }
+        }
+
         $this->aStar();
     }
 
@@ -164,15 +177,15 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
                     continue;
                 }
 
-//                if ($terrainType == 'c') {
-//                    if (!$this->inMyCastle) {
-//                        $this->inMyCastle = true;
-//                        $g = 1;
-//                    } else {
+//                if ($terrainType == 'c' && $this->myCastles) {
+//                    $castleId = Application_Model_Board::isCastleAtPosition($i, $j, $this->myCastles);
+//                    if ($this->myCastleId[$castleId]) {
 //                        $g = 0;
+//                    } else {
+//                        $this->myCastleId[$castleId] = true;
+//                        $g = 1;
 //                    }
 //                } else {
-//                    $this->inMyCastle = false;
                 $g = $this->terrain[$terrainType][$this->movementType];
 //                }
 
@@ -249,19 +262,25 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
      */
     public function getPath($key)
     {
-//        if (!isset($this->close[$key])) {
-//            $l = new Coret_Model_Logger();
-//            $l->log('W ścieżce nie ma podanego jako parametr klucza: ' . $key . ' (getPath)');
-//            return;
-//        }
-//        $path = array();
-//        while (!empty($this->close[$key]['parent'])) {
-//            $path[] = $this->close[$key];
-//            $key = $this->close[$key]['parent']['x'] . '_' . $this->close[$key]['parent']['y'];
-//        }
+        $i = 0;
         $path = $this->getReturnPath($key);
+
         if (is_array($path)) {
             $path = array_reverse($path);
+
+            foreach ($path as $k => $v) {
+                if ($v['tt'] == 'c' && $this->myCastles) {
+                    $castleId = Application_Model_Board::isCastleAtPosition($v['x'], $v['y'], $this->myCastles);
+                    if (isset($this->myCastleId[$castleId])) {
+                        $i++;
+                    } else {
+                        $this->myCastleId[$castleId] = true;
+                    }
+                }
+                $path[$k]['F'] += $i;
+                $path[$k]['G'] += $i;
+            }
+var_dump($path);
             return $path;
         }
     }

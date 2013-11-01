@@ -525,7 +525,7 @@ Websocket = {
             return;
         }
 
-        var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
+        var castleId = Castle.isMyCastle(selectedArmy.x, selectedArmy.y);
 
         if (!castleId) {
             Message.simple('No castle to destroy.');

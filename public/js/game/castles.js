@@ -38,11 +38,23 @@ var Castle = {
         if (selectedArmy == null) {
             return;
         }
-        var castleId = isMyCastle(selectedArmy.x, selectedArmy.y);
+        var castleId = this.isMyCastle(selectedArmy.x, selectedArmy.y);
         if (castleId) {
             unselectArmy();
             Message.castle(castleId);
         }
+    },
+    isMyCastle: function (x, y) {
+        for (castleId in castles) {
+            if (castles[castleId].color != my.color) {
+                continue;
+            }
+            var pos = castles[castleId].position;
+            if ((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
+                return castleId;
+            }
+        }
+        return false;
     }
 }
 
@@ -208,19 +220,6 @@ function isEnemyCastle(x, y) {
         }
     }
     return null;
-}
-
-function isMyCastle(x, y) {
-    for (castleId in castles) {
-        if (castles[castleId].color != my.color) {
-            continue;
-        }
-        var pos = castles[castleId].position;
-        if ((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
-            return castleId;
-        }
-    }
-    return false;
 }
 
 function getMyCastleDefenseFromPosition(x, y) {

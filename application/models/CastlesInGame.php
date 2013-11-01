@@ -231,5 +231,19 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
         return $this->update($data, $where);
     }
+
+    public function getAllCastles()
+    {
+        $castles = array();
+
+        $select = $this->_db->select()
+            ->from($this->_name)
+            ->where('"gameId" = ?', $this->_gameId);
+        foreach ($this->_db->query($select)->fetchAll() as $val) {
+            $castles[$val['castleId']] = $val;
+        }
+
+        return $castles;
+    }
 }
 

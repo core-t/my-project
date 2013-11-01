@@ -275,7 +275,7 @@ castleId: ' . $castleId . '
             $h = $mHeuristics->calculateH($army['x'], $army['y']);
             if ($h < $army['movesLeft']) {
                 try {
-                    $aStar = new Cli_Model_Astar($army, $ruin['x'], $ruin['y'], $fields, true);
+                    $aStar = new Cli_Model_Astar($army, $ruin['x'], $ruin['y'], $fields, array('limit' => true));
                 } catch (Exception $e) {
                     echo($e);
                     return;

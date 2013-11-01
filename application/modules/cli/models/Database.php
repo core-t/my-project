@@ -184,7 +184,11 @@ Brak y
             $movesSpend = 0;
 
             foreach ($path as $step) {
-                $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                if ($step['tt'] == 'c') {
+                    $movesSpend += $step['G'];
+                } else {
+                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                }
             }
 
             $movesLeft = $hero['movesLeft'] - $movesSpend;
@@ -203,7 +207,11 @@ Brak y
                 $movesSpend = 0;
 
                 foreach ($path as $step) {
-                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                    if ($step['tt'] == 'c') {
+                        $movesSpend += $step['G'];
+                    } else {
+                        $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                    }
                 }
 
                 $movesLeft = $soldier['movesLeft'] - $movesSpend;
@@ -222,7 +230,11 @@ Brak y
                 $terrain['s'][$type] = $units[$soldier['unitId']]['modMovesSwamp'];
 
                 foreach ($path as $step) {
-                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                    if ($step['tt'] == 'c') {
+                        $movesSpend += $step['G'];
+                    } else {
+                        $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
+                    }
                 }
 
                 $movesLeft = $soldier['movesLeft'] - $movesSpend;
@@ -1223,25 +1235,6 @@ Brak y
             ->where('razed = false');
         try {
             return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getAllCastles($gameId, $db)
-    {
-
-        $castles = array();
-        $select = $db->select()
-            ->from('castlesingame')
-            ->where('"gameId" = ?', $gameId);
-        try {
-            foreach ($db->query($select)->fetchAll() as $val) {
-                $castles[$val['castleId']] = $val;
-            }
-
-            return $castles;
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());

@@ -103,7 +103,9 @@ class Cli_Model_Army
             }
             $realPath[] = array(
                 'x' => $path[$i]['x'],
-                'y' => $path[$i]['y']
+                'y' => $path[$i]['y'],
+                'tt' => $path[$i]['tt'],
+                'G' => $path[$i]['G']
             );
 
             if ($path[$i]['tt'] == 'E') {
@@ -147,7 +149,9 @@ class Cli_Model_Army
             }
             $realPath[] = array(
                 'x' => $path[$i]['x'],
-                'y' => $path[$i]['y']
+                'y' => $path[$i]['y'],
+                'tt' => $path[$i]['tt'],
+                'G' => $path[$i]['G']
             );
 
             if ($path[$i]['tt'] == 'E') {
@@ -222,7 +226,9 @@ class Cli_Model_Army
 
             $realPath[] = array(
                 'x' => $path[$i]['x'],
-                'y' => $path[$i]['y']
+                'y' => $path[$i]['y'],
+                'tt' => $path[$i]['tt'],
+                'G' => $path[$i]['G']
             );
 
             if ($path[$i]['tt'] == 'E') {

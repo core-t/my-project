@@ -1,7 +1,7 @@
 // *** A* ***
 
 var AStar = {
-//    inMyCastle: true,
+    myCastleId: {},
     cursorPosition: function (x, y, force) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
@@ -12,6 +12,7 @@ var AStar = {
         coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
 
         if (selectedArmy) {
+            this.myCastleId = {};
             var tmpX = destX * 40;
             var tmpY = destY * 40;
             if (newX == tmpX && newY == tmpY && force != 1) {
@@ -26,6 +27,12 @@ var AStar = {
             var close = {};
             var start = new node(startX, startY, destX, destY, 0);
             open[startX + '_' + startY] = start;
+
+            var castleId = Castle.isMyCastle(startX, startY);
+            if (castleId) {
+                this.myCastleId[castleId] = true;
+            }
+
             this.aStar(close, open, destX, destY, 1);
 
             return this.showPath(close, destX + '_' + destY);
@@ -34,12 +41,25 @@ var AStar = {
     },
     getPath: function (close, key) {
         var path = new Array();
-
+        var i = 0;
         while (isSet(close[key].parent)) {
             path[path.length] = close[key];
             key = close[key].parent.x + '_' + close[key].parent.y;
         }
-        return path.reverse();
+        path = path.reverse();
+        for(k in path){
+            if (path[k].tt == 'c') {
+                var castleId = Castle.isMyCastle(path[k].x, path[k].y);
+                if (this.myCastleId[castleId]) {
+                    i++;
+                } else {
+                    this.myCastleId[castleId] = true;
+                }
+            }
+            path[k].F -= i;
+            path[k].G -= i;
+        }
+        return path;
     },
     showPath: function (close, key) {
         if (notSet(close[key])) {
@@ -137,16 +157,16 @@ var AStar = {
                 }
 
 //                if (terrainType == 'c') {
-//                    console.log(open[Object.keys(open)[Object.keys(open).length - 1]]);
-//                    if (!this.inMyCastle) {
-//                        this.inMyCastle = true;
-//                        g = 1;
-//                    } else {
+//                    var castleId = Castle.isMyCastle(i, j);
+//
+//                    if (this.myCastleId[castleId]) {
 //                        g = 0;
+//                    } else {
+//                        this.myCastleId[castleId] = true;
+//                        g = 1;
 //                    }
 //                } else {
-//                    this.inMyCastle = false;
-                    g = selectedArmy.terrainCosts[terrainType];
+                g = selectedArmy.terrainCosts[terrainType];
 //                }
 
                 if (g > 6) {

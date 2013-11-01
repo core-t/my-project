@@ -59,7 +59,16 @@ class Cli_Model_Move
         }
 
         $castlesSchema = Zend_Registry::get('castles');
-        $allCastles = Cli_Model_Database::getAllCastles($user->parameters['gameId'], $db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        $allCastles = $mCastlesInGame->getAllCastles();
+        $myCastles = array();
+        foreach ($allCastles as $castle) {
+            if ($castle['playerId'] == $user->parameters['playerId']) {
+                $castle['position'] = $castlesSchema[$castle['castleId']]['position'];
+                $myCastles[] = $castle;
+            }
+        }
+
 
         $aP = array(
             'x' => $x,
@@ -111,7 +120,7 @@ class Cli_Model_Move
 
 
         try {
-            $A_Star = new Cli_Model_Astar($army, $x, $y, $fields);
+            $A_Star = new Cli_Model_Astar($army, $x, $y, $fields, array('myCastles' => $myCastles));
             $move = $mArmy->calculateMovesSpend($A_Star->getPath($x . '_' . $y));
         } catch (Exception $e) {
             echo($e);
@@ -179,7 +188,6 @@ class Cli_Model_Move
             if (!$battle->getDefender()) {
                 if (Zend_Validate::is($castleId, 'Digits')) {
 
-                    $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
                     if ($defenderColor == 'neutral') {
                         $mCastlesInGame->addCastle($castleId, $user->parameters['playerId']);
                     } else {

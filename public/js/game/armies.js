@@ -225,7 +225,7 @@ function army(obj, color) {
             //            if(fields[this.y][this.x] != 'S'){
             //                this.fieldType = fields[this.y][this.x];
             //            }
-            if (!isMyCastle(this.x, this.y)) {
+            if (!Castle.isMyCastle(this.x, this.y)) {
                 fields[this.y][this.x] = 'S';
             }
         }
@@ -491,7 +491,7 @@ function selectArmy(a, center) {
         $('#showArtifacts').removeClass('buttonOff');
     }
 
-    if (isMyCastle(a.x, a.y)) {
+    if (Castle.isMyCastle(a.x, a.y)) {
         $('#razeCastle').removeClass('buttonOff');
         $('#showCastle').removeClass('buttonOff');
     }
@@ -502,7 +502,7 @@ function selectArmy(a, center) {
 }
 
 function unselectArmy(skipJoin) {
-    if (typeof skipJoin == 'undefined' && parentArmy && selectedArmy) {
+    if (notSet(skipJoin) && parentArmy && selectedArmy) {
         if (selectedArmy.x == parentArmy.x && selectedArmy.y == parentArmy.y) {
             Websocket.joinArmy(selectedArmy.armyId);
         }

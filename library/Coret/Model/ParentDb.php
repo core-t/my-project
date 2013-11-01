@@ -438,7 +438,8 @@ class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
                         continue;
                         break;
                     case 'number':
-                        if ($post[$column]) {
+                        $validator = new Zend_Validate_Digits();
+                        if ($validator->isValid($post[$column])) {
                             $data[$column] = $post[$column];
                         }
                         break;
