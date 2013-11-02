@@ -79,7 +79,7 @@ class Application_Model_Soldier extends Coret_Db_Table_Abstract
             ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
-            ->order(array('canSwim', 'canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
+            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
 
         return $this->selectAll($select);
     }
