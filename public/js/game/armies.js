@@ -29,9 +29,14 @@ function army(obj, color) {
     this.canFly = 1;
     this.canSwim = 0;
     this.heroes = obj.heroes;
-    var numberOfUnits = 0;
-    var numberOfHeroes = 0;
-    var numberOfSoldiers = 0;
+    this.soldiers = obj.soldiers;
+
+    var numberOfUnits = 0,
+        numberOfHeroes = 0,
+        numberOfSoldiers = 0,
+
+        attack = 0,
+        defense = 0;
 
     for (hero in this.heroes) {
         if (typeof this.heroKey == 'undefined') {
@@ -47,12 +52,11 @@ function army(obj, color) {
         this.canFly--;
         numberOfHeroes++;
     }
-    this.soldiers = obj.soldiers;
 
     for (soldier in this.soldiers) {
         numberOfSoldiers++;
 
-        if (typeof this.soldierKey == 'undefined') {
+        if (notSet(this.soldierKey)) {
             this.soldierKey = soldier;
         }
 
@@ -72,13 +76,6 @@ function army(obj, color) {
         if (units[this.soldiers[soldier].unitId].defensePoints > defense) {
             defense = units[this.soldiers[soldier].unitId].defensePoints;
             if (defense > units[this.soldiers[this.soldierKey].unitId].defensePoints) {
-                this.soldierKey = soldier;
-            }
-        }
-
-        if (units[this.soldiers[soldier].unitId].numberOfMoves > moves) {
-            moves = units[this.soldiers[soldier].unitId].numberOfMoves;
-            if (moves > units[this.soldiers[this.soldierKey].unitId].numberOfMoves) {
                 this.soldierKey = soldier;
             }
         }
@@ -157,7 +154,7 @@ function army(obj, color) {
         if (this.canFly > 0) {
             this.moves = flyMoves;
         }
-    } else if (typeof units[this.soldiers[this.soldierKey].unitId] != 'undefined') {
+    } else if (isSet(units[this.soldiers[this.soldierKey].unitId])) {
         if (units[this.soldiers[this.soldierKey].unitId].name_lang) {
             this.name = units[this.soldiers[this.soldierKey].unitId].name_lang;
         } else {
