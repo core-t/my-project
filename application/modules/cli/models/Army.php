@@ -101,12 +101,21 @@ class Cli_Model_Army
             if ($movesLeft < 0) {
                 break;
             }
-            $realPath[] = array(
-                'x' => $path[$i]['x'],
-                'y' => $path[$i]['y'],
-                'tt' => $path[$i]['tt'],
-                'G' => $path[$i]['G']
-            );
+
+            if (isset($path[$i]['cc'])) {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt'],
+                    'myCastleCosts' => true
+                );
+            } else {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt']
+                );
+            }
 
             if ($path[$i]['tt'] == 'E') {
                 break;
@@ -147,12 +156,21 @@ class Cli_Model_Army
             if ($movesLeft < 0) {
                 break;
             }
-            $realPath[] = array(
-                'x' => $path[$i]['x'],
-                'y' => $path[$i]['y'],
-                'tt' => $path[$i]['tt'],
-                'G' => $path[$i]['G']
-            );
+
+            if (isset($path[$i]['cc'])) {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt'],
+                    'myCastleCosts' => true
+                );
+            } else {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt']
+                );
+            }
 
             if ($path[$i]['tt'] == 'E') {
                 break;
@@ -224,12 +242,21 @@ class Cli_Model_Army
                 break;
             }
 
-            $realPath[] = array(
-                'x' => $path[$i]['x'],
-                'y' => $path[$i]['y'],
-                'tt' => $path[$i]['tt'],
-                'G' => $path[$i]['G']
-            );
+            if (isset($path[$i]['cc'])) {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt'],
+                    'myCastleCosts' => true
+                );
+            } else {
+                $realPath[] = array(
+                    'x' => $path[$i]['x'],
+                    'y' => $path[$i]['y'],
+                    'tt' => $path[$i]['tt']
+                );
+            }
+
 
             if ($path[$i]['tt'] == 'E') {
                 break;

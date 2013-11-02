@@ -47,6 +47,7 @@ var AStar = {
             key = close[key].parent.x + '_' + close[key].parent.y;
         }
         path = path.reverse();
+        console.log(path);
         for(k in path){
             if (path[k].tt == 'c') {
                 var castleId = Castle.isMyCastle(path[k].x, path[k].y);
@@ -59,6 +60,7 @@ var AStar = {
             path[k].F -= i;
             path[k].G -= i;
         }
+
         return path;
     },
     showPath: function (close, key) {
@@ -156,18 +158,7 @@ var AStar = {
                     continue;
                 }
 
-//                if (terrainType == 'c') {
-//                    var castleId = Castle.isMyCastle(i, j);
-//
-//                    if (this.myCastleId[castleId]) {
-//                        g = 0;
-//                    } else {
-//                        this.myCastleId[castleId] = true;
-//                        g = 1;
-//                    }
-//                } else {
-                g = selectedArmy.terrainCosts[terrainType];
-//                }
+                g = terrain[terrainType][selectedArmy.movementType];
 
                 if (g > 6) {
                     continue;

@@ -177,17 +177,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
                     continue;
                 }
 
-//                if ($terrainType == 'c' && $this->myCastles) {
-//                    $castleId = Application_Model_Board::isCastleAtPosition($i, $j, $this->myCastles);
-//                    if ($this->myCastleId[$castleId]) {
-//                        $g = 0;
-//                    } else {
-//                        $this->myCastleId[$castleId] = true;
-//                        $g = 1;
-//                    }
-//                } else {
                 $g = $this->terrain[$terrainType][$this->movementType];
-//                }
 
                 // jeżeli koszt ruchu większy od 99 to pomiń to pole
                 if ($g > 6) {
@@ -268,19 +258,22 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
         if (is_array($path)) {
             $path = array_reverse($path);
 
-            foreach ($path as $k => $v) {
-                if ($v['tt'] == 'c' && $this->myCastles) {
-                    $castleId = Application_Model_Board::isCastleAtPosition($v['x'], $v['y'], $this->myCastles);
-                    if (isset($this->myCastleId[$castleId])) {
-                        $i++;
-                    } else {
-                        $this->myCastleId[$castleId] = true;
+            if ($this->myCastles) {
+                foreach ($path as $k => $v) {
+                    if ($v['tt'] == 'c') {
+                        $castleId = Application_Model_Board::isCastleAtPosition($v['x'], $v['y'], $this->myCastles);
+                        if (isset($this->myCastleId[$castleId])) {
+                            $path[$k]['cc'] = true;
+                            $i++;
+                        } else {
+                            $this->myCastleId[$castleId] = true;
+                        }
                     }
+                    $path[$k]['F'] -= $i;
+                    $path[$k]['G'] -= $i;
                 }
-                $path[$k]['F'] += $i;
-                $path[$k]['G'] += $i;
             }
-var_dump($path);
+
             return $path;
         }
     }

@@ -184,9 +184,7 @@ Brak y
             $movesSpend = 0;
 
             foreach ($path as $step) {
-                if ($step['tt'] == 'c') {
-                    $movesSpend += $step['G'];
-                } else {
+                if (!isset($step['myCastleCosts'])) {
                     $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
                 }
             }
@@ -207,9 +205,7 @@ Brak y
                 $movesSpend = 0;
 
                 foreach ($path as $step) {
-                    if ($step['tt'] == 'c') {
-                        $movesSpend += $step['G'];
-                    } else {
+                    if (!isset($step['myCastleCosts'])) {
                         $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
                     }
                 }
@@ -230,9 +226,7 @@ Brak y
                 $terrain['s'][$type] = $units[$soldier['unitId']]['modMovesSwamp'];
 
                 foreach ($path as $step) {
-                    if ($step['tt'] == 'c') {
-                        $movesSpend += $step['G'];
-                    } else {
+                    if (!isset($step['myCastleCosts'])) {
                         $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
                     }
                 }

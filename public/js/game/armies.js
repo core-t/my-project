@@ -113,19 +113,7 @@ function army(obj, color) {
             }
         }
 
-        this.terrainCosts = {
-            'b': 1,
-            'c': 1,
-            'e': null,
-            'f': 300,
-            'g': 200,
-            'm': 500,
-            'M': 1000,
-            'r': 100,
-            's': 400,
-            'S': 1,
-            'w': 1
-        };
+        this.movementType = 'swimming';
     } else if (this.canFly > 0) {
         for (soldier in this.soldiers) {
             if (!units[this.soldiers[soldier].unitId].canFly) {
@@ -141,33 +129,9 @@ function army(obj, color) {
             }
         }
 
-        this.terrainCosts = {
-            'b': 1,
-            'c': 1,
-            'e': null,
-            'f': 2,
-            'g': 2,
-            'm': 2,
-            'M': 2,
-            'r': 1,
-            's': 2,
-            'S': 2,
-            'w': 2
-        };
+        this.movementType = 'flying';
     } else {
-        this.terrainCosts = {
-            'b': 1,
-            'c': 1,
-            'e': null,
-            'f': 3,
-            'g': 2,
-            'm': 5,
-            'M': 1000,
-            'r': 1,
-            's': 4,
-            'S': 1,
-            'w': 50
-        };
+        this.movementType = 'walking';
     }
 
     if (this.canSwim) {
@@ -284,7 +248,7 @@ function swimmingOrFlying(path) {
             var armyMovesLeft = selectedArmy.moves;
         }
 
-        armyMovesLeft -= selectedArmy.terrainCosts[path[i].tt];
+        armyMovesLeft -= terrain[path[i].tt][selectedArmy.movementType];
 
         if (armyMovesLeft < 0) {
             className = 'path2';
@@ -327,7 +291,7 @@ function walking(path) {
             if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
                 soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
             } else {
-                soldiersMovesLeft[soldier.soldierId] -= selectedArmy.terrainCosts[path[i].tt];
+                soldiersMovesLeft[soldier.soldierId] -= terrain[path[i].tt][selectedArmy.movementType];
             }
 
             if (soldiersMovesLeft[soldier.soldierId] < 0) {
@@ -348,7 +312,7 @@ function walking(path) {
                 heroesMovesLeft[hero.heroId] = hero.movesLeft;
             }
 
-            heroesMovesLeft[hero.heroId] -= selectedArmy.terrainCosts[path[i].tt];
+            heroesMovesLeft[hero.heroId] -= terrain[path[i].tt][selectedArmy.movementType];
 
             if (heroesMovesLeft[hero.heroId] < 0) {
                 className = 'path2';
