@@ -1527,20 +1527,6 @@ Brak y
         return self::update('army', $data, $where, $db, true);
     }
 
-    static public function insertChatMessage($gameId, $playerId, $message, $db)
-    {
-        $data = array(
-            'message' => $message,
-            'playerId' => $playerId,
-            'gameId' => $gameId
-        );
-        try {
-            return $db->insert('chat', $data);
-        } catch (Exception $e) {
-            echo($e);
-        }
-    }
-
     /**
      * @param Zend_Db_Adapter_Pdo_Pgsql $db
      * @param int $gameId

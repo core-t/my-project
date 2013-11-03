@@ -1,9 +1,12 @@
 <?php
 
-class Cli_Model_Chat {
+class Cli_Model_Chat
+{
 
-    public function __construct($msg, $user, $db, $gameHandler) {
-        Cli_Model_Database::insertChatMessage($user->parameters['gameId'], $user->parameters['playerId'], $msg, $db);
+    public function __construct($msg, $user, $db, $gameHandler)
+    {
+        $mChat = new Application_Model_Chat($user->parameters['gameId'], $db);
+        $mChat->insertChatMessage($user->parameters['playerId'], $msg);
 
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
