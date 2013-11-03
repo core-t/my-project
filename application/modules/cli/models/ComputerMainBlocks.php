@@ -344,7 +344,7 @@ class Cli_Model_ComputerMainBlocks
         );
     }
 
-    static public function startTurn($gameId, $playerId, $db = null)
+    static public function startTurn($gameId, $playerId, $db)
     {
         $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
         $mPlayersInGame->turnActivate($playerId);

@@ -47,7 +47,7 @@ class Cli_Model_Turn
         return $response;
     }
 
-    static public function start($gameId, $playerId, $db = null)
+    static public function start($gameId, $playerId, $db)
     {
         if (!$db) {
             $db = self::getDb();
@@ -64,10 +64,7 @@ class Cli_Model_Turn
         $mSoldier = new Application_Model_Soldier($gameId, $db);
         $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
         $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
-
-//        if (Cli_Database::getTurnNumber($gameId, $db) > 0) {
 
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
         $castles = $mCastlesInGame->getPlayerCastles($playerId);
@@ -92,35 +89,26 @@ class Cli_Model_Turn
                 AND $boardCastle['production'][$unitId]['cost'] <= $gold
             ) {
                 if (!$armyId) {
-                    $mArmy = new Application_Model_Army($gameId, $db);
                     $armyId = $mArmy->createArmy($boardCastle['position'], $playerId);
                 }
 
                 $mCastlesInGame->resetProductionTurn($castleId, $playerId);
-
-                if (!isset($mSoldier)) {
-                    $mSoldier = new Application_Model_Soldier($gameId, $db);
-                }
                 $mSoldier->add($armyId, $castleInGame['production']);
             }
         }
-//        }
         $armies = Cli_Model_Database::getPlayerArmies($gameId, $playerId, $db);
         if (empty($castles) && empty($armies)) {
             return array('gameover' => 1);
         } else {
-            if (!isset($mSoldier)) {
-                $mSoldier = new Application_Model_Soldier($gameId, $db);
-            }
-            if (!isset($mArmy)) {
-                $mArmy = new Application_Model_Army($gameId, $db);
-            }
             $costs = $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
             $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
             $gold = $gold + $income - $costs;
 
             $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
+
+            $mTurn = new Application_Model_Turn($gameId, $db);
+            $mTurn->insertTurn($playerId, Cli_Database::getTurnNumber($gameId, $db));
 
             $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
