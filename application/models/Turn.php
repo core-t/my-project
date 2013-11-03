@@ -1,10 +1,10 @@
 <?php
 
-class Application_Model_Chat extends Coret_Db_Table_Abstract
+class Application_Model_Turn extends Coret_Db_Table_Abstract
 {
 
-    protected $_name = 'chat';
-    protected $_primary = 'chatId';
+    protected $_name = 'turn';
+    protected $_primary = 'turnId';
 
     public function __construct($gameId, $db = null)
     {
@@ -16,19 +16,20 @@ class Application_Model_Chat extends Coret_Db_Table_Abstract
         }
     }
 
-    public function getChatHistory()
+    public function getTurnHistory()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('date', 'message', 'playerId'))
+            ->from($this->_name)
             ->where('"gameId" = ?', $this->_gameId)
             ->order($this->_primary);
         return $this->selectAll($select);
     }
 
-    public function insertChatMessage($playerId, $message)
+    public function insertTurn($playerId, $number)
     {
         $data = array(
-            'message' => $message,
+            'number' => $number,
+            'date' => new Zend_Db_Expr('now()'),
             'playerId' => $playerId,
             'gameId' => $this->_gameId
         );

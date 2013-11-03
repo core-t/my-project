@@ -14,7 +14,7 @@ var Message = {
                 .addClass('message center')
                 .append(txt)
         );
-        var left = documentWidth / 2 - parseInt($('.message').css('width')) / 2;
+        var left = documentWidth / 2 - $('.message').outerWidth() / 2;
         var maxHeight = documentHeight - 120;
         $('.message').css({
             'max-height': maxHeight + 'px',

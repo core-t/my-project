@@ -18,9 +18,20 @@
                     <div class="zoomPup"></div>
                     <?php echo $this->placeholder('map') ?>
                 </div>
-                <div class="close">X</div>
+                <div class="close">&#x25C0</div>
                 <div id="terrain"> <?php echo $this->translate('Terrain') ?>: <span id="coord"
                                                                                     class="font-yellow"></span>
+                </div>
+            </div>
+            <div id="timerBox" class="box">
+                <div class="close">&#x25C0</div>
+                <div class="row">
+                    <div class="left color"><?php echo $this->translate('Color') ?></div>
+                    <div class="left nr"><?php echo $this->translate('Turn nr') ?></div>
+                    <div class="left time"><?php echo $this->translate('Time spend') ?></div>
+                </div>
+                <div id="timerScroll">
+                    <div id="timerRows"></div>
                 </div>
             </div>
             <div class="message"></div>
@@ -48,12 +59,11 @@
                 <div id="turnBox">
                     <a id="nextTurn" class="button"><?php echo $this->translate('Next turn') ?> &raquo;</a>
                 </div>
-                <div class="close">X</div>
+                <div class="close">&#x25B6</div>
             </div>
             <div id="armyBox" class="box">
-                <div class="close">X</div>
-                <div id="nameBox"><span id="name" class="font-yellow"></span>
-                </div>
+                <div class="close">&#x25B6</div>
+                <div id="nameBox"><span id="name" class="font-yellow"></span></div>
                 <div id="attrBox">
                     <div class="left"><?php echo $this->translate('Moves') ?>: <span id="moves"
                                                                                      class="font-yellow"></span></div>
@@ -62,6 +72,7 @@
                     <div class="left"><?php echo $this->translate('Defense') ?>: <span id="defense"
                                                                                        class="font-yellow"></span></div>
                 </div>
+                <div id="bonusBox"><span id="name" class="font-yellow"></span></div>
                 <div id="armyButtonsBox">
                     <div class="armyButtons">
                         <div class="left armyButton">
@@ -111,19 +122,8 @@
                     </div>
                 </div>
             </div>
-            <div id="timerBox" class="box">
-                <div class="close">X</div>
-                <div class="row">
-                    <div class="left color"><?php echo $this->translate('Color') ?></div>
-                    <div class="left nr"><?php echo $this->translate('Turn nr') ?></div>
-                    <div class="left time"><?php echo $this->translate('Time spend') ?></div>
-                </div>
-                <div id="timerScroll">
-                    <div id="timerRows"></div>
-                </div>
-            </div>
             <div id="chatBox" class="box">
-                <div class="close">X</div>
+                <div class="close">&#x25B6</div>
                 <div id="chatWindow">
                     <div></div>
                 </div>

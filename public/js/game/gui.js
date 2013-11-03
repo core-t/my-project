@@ -124,60 +124,97 @@ var Gui = {
         $('.zoomPadLayout .close').click(function () {
             var left = parseInt($('.zoomPadLayout').css('left'));
             var move = -220;
+            Gui.zoomPadLayout['el'] = this;
 
             if (Gui.zoomPadLayout['close']) {
                 move = -move;
             }
 
+            Gui.zoomPadLayout['move'] = move;
+
             $('.zoomPadLayout').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.zoomPadLayout['close'] = !Gui.zoomPadLayout['close'];
+                Gui.changeCloseArrowLR(Gui.zoomPadLayout['move'], Gui.zoomPadLayout['el']);
             });
         });
         $('#timerBox .close').click(function () {
             var left = parseInt($('#timerBox').css('left'));
             var move = -220;
+            Gui.timerBox['el'] = this;
 
             if (Gui.timerBox['close']) {
                 move = -move;
             }
 
+            Gui.timerBox['move'] = move;
+
             $('#timerBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.timerBox['close'] = !Gui.timerBox['close'];
+                Gui.changeCloseArrowLR(Gui.timerBox['move'], Gui.timerBox['el']);
             });
         });
         $('#playersBox .close').click(function () {
             var left = parseInt($('#playersBox').css('left'));
             var move = 220;
+            Gui.playerBox['el'] = this;
 
             if (Gui.playerBox['close']) {
                 move = -move;
             }
+
+            Gui.playerBox['move'] = move;
+
             $('#playersBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.playerBox['close'] = !Gui.playerBox['close'];
+                Gui.changeCloseArrowLR(Gui.playerBox['move'], Gui.playerBox['el']);
             });
         });
         $('#chatBox .close').click(function () {
             var left = parseInt($('#chatBox').css('left'));
             var move = 490;
+            Gui.chatBox['el'] = this;
 
             if (Gui.chatBox['close']) {
                 move = -move;
             }
+
+            Gui.chatBox['move'] = move;
+
             $('#chatBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.chatBox['close'] = !Gui.chatBox['close'];
+                Gui.changeCloseArrowUD(Gui.chatBox['move'], Gui.chatBox['el']);
             });
         });
         $('#armyBox .close').click(function () {
             var left = parseInt($('#armyBox').css('left'));
             var move = 220;
+            Gui.armyBox['el'] = this;
 
             if (Gui.armyBox['close']) {
                 move = -move;
             }
-            $('#armyBox').animate({'left': left + move + 'px'}, 1000, function () {
+
+            Gui.armyBox['move'] = move;
+
+            $('#armyBox').animate({'left': left + Gui.armyBox['move'] + 'px'}, 1000, function () {
                 Gui.armyBox['close'] = !Gui.armyBox['close'];
+                Gui.changeCloseArrowLR(Gui.armyBox['move'], Gui.armyBox['el']);
             });
         });
+    },
+    changeCloseArrowLR: function (move, el) {
+        if (move > 0) {
+            $(el).html('&#x25C0');
+        } else {
+            $(el).html('&#x25B6');
+        }
+    },
+    changeCloseArrowUD: function (move, el) {
+        if (move > 0) {
+            $(el).html('&#x25C1');
+        } else {
+            $(el).html('&#x25B7');
+        }
     },
     adjust: function () {
         this.armyBox.close = 0;
@@ -200,7 +237,7 @@ var Gui = {
         });
 
         $('#goldBox').css({
-            'left': documentWidth / 2 - parseInt($('#goldBox').css('width')) / 2 + 'px'
+            'left': documentWidth / 2 - $('#goldBox').outerWidth() / 2 + 'px'
         });
         $('#playersBox').css({
             'left': left + 'px'
@@ -224,6 +261,10 @@ var Gui = {
 
         $('#timerBox').css({
             top: zoomPadLayoutHeight + 52 + 'px'
+        });
+
+        $('.message').css({
+            'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
         });
 
         if (!zoomer) {

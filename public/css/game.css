@@ -302,6 +302,7 @@
     border-radius: 10px;
     box-shadow: 5px 5px 20px #000;
     text-shadow: 2px 2px 0 #000;
+    color: #fff;
     padding: 10px;
 }
 
@@ -519,9 +520,9 @@
     /*height: 24px;*/
 }
 
-#gameMenu .message .button {
-    height: 13px;
-}
+/*#gameMenu .message .button {*/
+/*height: 13px;*/
+/*}*/
 
 .message .go {
     margin: 20px auto;
@@ -679,6 +680,7 @@
 }
 
 #goldBox {
+    min-width: 200px;
     border-top: none;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -801,8 +803,7 @@ html {
 }
 
 .close:hover {
-    color: black;
-    background: yellow;
+    color: yellow;
 }
 
 .zoomPadLayout .close {
@@ -833,16 +834,25 @@ html {
     color: yellow;
 }
 
+/*.armyButton .button {*/
+    /*background: transparent url('/img/game/message_bg.png');*/
+/*}*/
+/**/
+.armyButton .button.buttonOff {
+    background: none;
+}
+
 .iconButton, .button, #submit {
     border-radius: 5px;
-    border: 1px solid #fff;
+    border: 1px solid yellowgreen;
     background: none;
-    color: #fff;
+    color: yellowgreen;
     font-size: 14px;
 }
 
 .button:hover, #submit:hover {
     color: #000;
+    background: #fff;
 }
 
 .buttonOff {
