@@ -62,13 +62,12 @@ var Message = {
         )
     },
     surrender: function () {
-        this.show('Surrender. Are you sure?');
+        this.show($('<div>').html('Surrender. Are you sure?'));
         this.ok('surrender');
         this.cancel();
     },
     lost: function (color) {
-        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-
+//        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
         var msg;
 
         if (color == my.color) {
@@ -77,7 +76,8 @@ var Message = {
             msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
         }
 
-        this.show(msg, '');
+        this.show($('<div>').html(msg));
+        this.ok();
     },
     showArtifacts: function () {
         Message.remove();
@@ -142,7 +142,6 @@ var Message = {
             );
         }
 
-//        this.show('Surrender. Are you sure?', 'wsSurrender');
         this.element().after(
             $('<div>')
                 .addClass('message')
@@ -332,8 +331,7 @@ var Message = {
         this.cancel();
     },
     nextTurn: function () {
-        var div = $('<div>').html('Next turn. Are you sure?');
-        Message.show(div);
+        this.show($('<div>').html('Next turn. Are you sure?'));
         this.ok(Websocket.nextTurn);
         this.cancel();
     },
@@ -349,11 +347,11 @@ var Message = {
             msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
         }
 
-        this.show(msg);
+        this.show($('<div>').html(msg));
         this.ok(Message.remove);
     },
     simple: function (message) {
-        this.show(message);
+        this.show($('<div>').html(message));
         this.ok(Message.remove);
     },
     disbandArmy: function () {
@@ -535,6 +533,20 @@ var Message = {
         var defenderColor = data.defenderColor;
         var newBattle = new Array();
         var attack = $('<div>').addClass('battle attack');
+
+        if (isSet(data.castleId)) {
+            board.append($('<div>').addClass('castleWar').css({
+                top: 40 * castles[data.castleId].y - 12 + 'px',
+                left: 40 * castles[data.castleId].x - 11 + 'px'
+            }));
+        } else {
+//            board.append($('<div>').addClass('armyWar').css({
+//                top: 40 * castles[data.castleId].y + 'px',
+//                left: 40 * castles[data.castleId].x + 'px'
+//            }));
+        }
+
+
         for (i in battle.attack.soldiers) {
             if (battle.attack.soldiers[i].succession) {
                 newBattle[battle.attack.soldiers[i].succession] = {
@@ -637,6 +649,10 @@ var Message = {
             if (isDigit(data.castleId) && isTruthful(data.victory)) {
                 castleOwner(data.castleId, data.attackerColor);
             }
+
+            setTimeout('$(".castleWar").remove()', 1000);
+//            $('.castleWar').remove();
+//            $('.armyWar').remove();
 
             return;
         }

@@ -182,7 +182,7 @@ var Gui = {
 
             $('#chatBox').animate({'left': left + move + 'px'}, 1000, function () {
                 Gui.chatBox['close'] = !Gui.chatBox['close'];
-                Gui.changeCloseArrowUD(Gui.chatBox['move'], Gui.chatBox['el']);
+                Gui.changeCloseArrowLR(Gui.chatBox['move'], Gui.chatBox['el']);
             });
         });
         $('#armyBox .close').click(function () {

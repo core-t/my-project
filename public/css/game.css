@@ -799,11 +799,11 @@ html {
     line-height: 20px;
     text-align: center;
     text-shadow: none;
-    color: #ffffff;
+    color: yellowgreen;
 }
 
 .close:hover {
-    color: yellow;
+    color: #fff;
 }
 
 .zoomPadLayout .close {
@@ -860,13 +860,21 @@ html {
     color: #444;
 }
 
-.crown {
+.castle .crown {
     position: absolute;
     top: -10px;
 }
 
-.hammer {
+.castle .hammer {
     position: absolute;
     top: -10px;
     left: 76px;
+}
+
+.castleWar {
+    position: absolute;
+    background: url("/img/game/war.png");
+    width: 111px;
+    height: 120px;
+    z-index: 99999;
 }

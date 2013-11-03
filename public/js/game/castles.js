@@ -128,7 +128,7 @@ function myCastlesRemoveCursor() {
 function castleOwner(castleId, color) {
     var castle = $('#castle' + castleId);
 
-    if (typeof castles[castleId] != 'undefined' && castles[castleId].razed) {
+    if (isSet(castles[castleId]) && castles[castleId].razed) {
         castle.remove();
         $('#c' + castleId).remove();
         delete castles[castleId];
@@ -176,8 +176,10 @@ function castleOwner(castleId, color) {
 
     castle.removeClass()
         .addClass('castle ' + color)
-        .html('')
         .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
+
+    $('#castle' + castleId + ' .crown').remove();
+    $('#castle' + castleId + ' .hammer').remove();
 
     if (castles[castleId].capital && capitals[color] == castleId) {
         Castle.addCrown(castleId);
