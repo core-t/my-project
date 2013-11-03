@@ -22,6 +22,7 @@ class Cli_Model_Battle
     {
         $this->units = Zend_Registry::get('units');
 
+        $defender['ships'] = array();
         foreach ($defender['soldiers'] as $k => $soldier) {
             if ($this->units[$soldier['unitId']]['canSwim']) {
                 $defender['ships'][] = $soldier;
@@ -30,6 +31,7 @@ class Cli_Model_Battle
         }
         $this->defender = $defender;
 
+        $attacker['ships'] = array();
         foreach ($attacker['soldiers'] as $k => $soldier) {
             if ($this->units[$soldier['unitId']]['canSwim']) {
                 $attacker['ships'][] = $soldier;
