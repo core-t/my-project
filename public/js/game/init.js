@@ -64,7 +64,7 @@ $(document).ready(function () {
     unitsReformat();
     artifactsReformat()
     Gui.prepareButtons();
-    startWebSocket();
+    Websocket.init();
 
     for (i in castles) {
         new createNeutralCastle(i);

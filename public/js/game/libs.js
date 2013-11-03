@@ -14,7 +14,6 @@ function turnOn() {
     showFirstCastle();
     Message.turn();
     titleBlink('Your turn!');
-//    test();
 }
 
 function turnOff() {
@@ -62,10 +61,6 @@ function costsUpdate(gold) {
 function incomeUpdate(gold) {
     $('#income').html(gold);
 }
-
-//function updatePlayers(color) {
-//    players[color].active = 2;
-//}
 
 function setLock() {
     lock = true;
@@ -126,11 +121,6 @@ function titleBlink(msg) {
         document.title = documentTitle;
         window.onmousemove = null;
     });
-//    window.onmousemove = function () {
-//        clearInterval(timeoutId);
-//        document.title = documentTitle;
-//        window.onmousemove = null;
-//    };
 }
 
 function getColor(color) {

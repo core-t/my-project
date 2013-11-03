@@ -13,11 +13,6 @@ class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
      */
     protected $_params;
 
-    /**
-     * @var Zend_Db_Adapter_Abstract
-     */
-    protected $_db;
-
     protected $_name;
     protected $_primary;
     protected $_columns;
@@ -203,7 +198,7 @@ class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
      * @param array $columns
      * @return mixed
      */
-    protected function getSelect(array $columns, array $columns_lang)
+    protected function getSelect(array $columns = array(), array $columns_lang = array())
     {
         $select = $this->_db->select();
 
@@ -419,6 +414,9 @@ class Coret_Model_ParentDb extends Coret_Db_Table_Abstract
         );
         $data_lang = array();
         $data_img = array();
+
+        reset($this->_columns);
+        reset($this->_columns_lang);
 
         for ($i = 0; $i < count($this->_columns); $i++) {
             $column = key($this->_columns);

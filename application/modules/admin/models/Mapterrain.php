@@ -15,7 +15,31 @@ class Admin_Model_Mapterrain extends Coret_Model_ParentDb
         'walking' => array('label' => 'Chodzenie', 'type' => 'number'),
     );
     protected $_columns_lang = array(
-        'name' => array('label' => 'Nazwa', 'type' => 'varchar')
+        'name' => array('label' => 'Nazwa', 'type' => 'varchar'),
+//        'id_lang' => array('label' => 'Language ID', 'type' => 'number', 'active' => array('db' => true, 'form' => false, 'table' => false))
     );
+
+    public function copy()
+    {
+        $select = $this->getSelect(array_keys($this->_columns), array_keys($this->_columns_lang));
+
+//        Zend_Debug::dump($this->selectAll($select));
+        foreach ($this->selectAll($select) as $v) {
+            if ($v['id_lang'] == 2) {
+                continue;
+            }
+            $data = array(
+                'mapId' => 7,
+                'type' => $v['type'],
+                'flying' => $v['flying'],
+                'swimming' => $v['swimming'],
+                'walking' => $v['walking'],
+                'name' => $v['name'],
+                'id_lang' => $v['id_lang'],
+            );
+            $this->save($data);
+
+        }
+    }
 }
 

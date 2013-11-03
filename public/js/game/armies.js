@@ -284,13 +284,11 @@ function walking(path) {
             if (notSet(soldiersMovesLeft[soldier.soldierId])) {
                 soldiersMovesLeft[soldier.soldierId] = soldier.movesLeft;
             }
-console.log(soldiersMovesLeft);
+
             if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
                 soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
-                console.log(soldiersMovesLeft);
             } else {
                 soldiersMovesLeft[soldier.soldierId] -= terrain[path[i].tt][selectedArmy.movementType];
-                console.log(soldiersMovesLeft);
             }
 
             if (soldiersMovesLeft[soldier.soldierId] < 0) {

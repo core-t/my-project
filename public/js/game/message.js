@@ -378,7 +378,7 @@ var Message = {
             return;
         }
         Message.remove();
-        var army = $('<div>').addClass('split');
+        var army = $('<div>').addClass('split').css('max-height', documentHeight - 200 + 'px');
         var numberOfUnits = 0;
 
         for (i in selectedArmy.soldiers) {
@@ -422,30 +422,18 @@ var Message = {
                     })))
             );
         }
-        var height = numberOfUnits * 39 + 40;
-        if (height > documentHeight - 100) {
-            height = documentHeight - 100;
-            overflow = 'auto';
-        } else {
-            overflow = 'hidden';
-        }
 
         this.show(army);
         this.ok(Websocket.splitArmy);
         this.cancel();
 
-//                .css({
-//                    'height': height + 'px',
-//                    'left': Message.left + 'px',
-//                    'overflow-y': overflow
-//                }));
     },
     armyStatus: function () {
         if (typeof selectedArmy == 'undefined') {
             return;
         }
 
-        var army = $('<div>').addClass('status');
+        var army = $('<div>').addClass('status').css('max-height', documentHeight - 200 + 'px');
         var numberOfUnits = 0;
         var bonusTower = 0;
         var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
@@ -537,40 +525,9 @@ var Message = {
 
             );
         }
-        var height = numberOfUnits * 60 + 40;
-        if (height > documentHeight - 100) {
-            height = documentHeight - 100;
-            overflow = 'auto';
-        } else {
-            overflow = 'hidden';
-        }
 
         this.show(army);
         this.ok();
-
-
-//        Message.element().after(
-//            $('<div>')
-//                .addClass('message')
-//                .addClass('center')
-//                .append(army)
-//                .append($('<div>')
-//                    .css({
-//                        'margin-top': '15px'
-//                    })
-//                    .append($('<div>')
-//                        .addClass('button cancel')
-//                        .html('Ok')
-//                        .click(function () {
-//                            Message.remove()
-//                        }))
-//                )
-//                .css({
-//                    'height': height + 'px',
-//                    'left': Message.left + 'px',
-//                    'overflow': overflow
-//                })
-//        );
     },
     battle: function (data, clb) {
         var battle = data.battle;
@@ -604,16 +561,6 @@ var Message = {
                 })
             );
         }
-//        Message.element().after(
-//            $('<div>')
-//                .addClass('message')
-//                .css({
-//                    'left': Message.left + 'px',
-//                    'display': 'none'
-//                })
-//                .append(attack)
-//                .append($('<p id="vs">').html('VS').addClass('center'))
-//        );
 
         var defense = $('<div>').addClass('battle defense');
 
@@ -645,12 +592,6 @@ var Message = {
             );
         }
 
-//        $('.message')
-//            .addClass('center')
-//            .append(defense)
-//            .append($('<div>').addClass('battle defense'))
-//            .append($('<div id="battleOk">').addClass('button go').html('OK'));
-
         var div = $('<div>')
             .append(attack)
             .append($('<p id="vs">').html('VS').addClass('center'))
@@ -658,11 +599,7 @@ var Message = {
             .append($('<div>').addClass('battle defense'))
             .append($('<div id="battleOk">').addClass('button go').html('OK'));
 
-//        if (!my.turn && show) {
-            this.show(div);
-//        } else if (my.turn) {
-//            this.show(div);
-//        }
+        this.show(div);
 
         if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
             $('#battleOk').click(function () {
@@ -683,7 +620,7 @@ var Message = {
         for (i in b) {
             break;
         }
-        if (typeof b[i] == 'undefined') {
+        if (notSet(b[i])) {
             clb();
             if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
                 if (isTruthful(data.victory)) {
@@ -704,12 +641,12 @@ var Message = {
             return;
         }
 
-        if (typeof b[i].soldierId != 'undefined') {
+        if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).fadeOut(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
-        } else if (typeof b[i].heroId != 'undefined') {
+        } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).fadeOut(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);

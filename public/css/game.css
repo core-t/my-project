@@ -298,7 +298,6 @@
     background: transparent url('/img/game/message_bg.png');
     position: absolute;
     top: 60px;
-    overflow-x: hidden;
     display: none;
     border-radius: 10px;
     box-shadow: 5px 5px 20px #000;
@@ -448,9 +447,10 @@
 }
 
 .message .split div.row span {
-    position: relative;
-    top: 17px;
-    left: 0px;
+    /*position: relative;*/
+    /*top: 17px;*/
+    /*left: 0px;*/
+    line-height: 30px;
 }
 
 .message .split div.row img {

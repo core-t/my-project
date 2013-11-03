@@ -3,7 +3,11 @@
 abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
 {
 
+    /**
+     * @var Zend_Db_Adapter_Abstract
+     */
     protected $_db;
+
     protected $_quiet = false;
     protected $_cli = true;
 
@@ -93,10 +97,12 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             if ($this->_cli) {
                 $l = new Coret_Model_Logger();
                 $l->log($e);
+                $l->log($data);
                 echo($e);
             } else {
                 $l = new Coret_Model_Logger('www');
                 $l->log($e);
+                $l->log($data);
                 throw $e;
             }
         }
