@@ -40,12 +40,13 @@ class Cli_Model_HeroResurrection
         $gold -= 100;
         $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
 
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'heroResurrection',
             'data' => array(
-                'army' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $armyId, $db),
+                'army' => $mArmy2->getArmyByArmyId($armyId),
                 'gold' => $gold
             ),
             'color' => $playersInGameColors[$user->parameters['playerId']]

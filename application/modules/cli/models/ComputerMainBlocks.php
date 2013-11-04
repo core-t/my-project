@@ -32,24 +32,23 @@ class Cli_Model_ComputerMainBlocks
                     } else {
                         $l->log('BRAK SŁABSZEJ ARMII WROGA W ZASIĘGU');
                         $enemy = Cli_Model_ComputerSubBlocks::getStrongerEnemyArmyInRange($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $db);
+                        $mArmy2 = new Application_Model_Army($gameId, $db);
                         if ($enemy) {
                             $l->log('JEST SILNIEJSZA ARMIA WROGA W ZASIĘGU');
                             $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
                             if ($join) {
                                 $l->log('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
-                                Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
+                                $mArmy2->updateArmyPosition($playerId, $join['path'], $castlesAndFields['fields'], $army);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                             } else {
                                 $l->log('BRAK MOJEJ ARMII W ZASIĘGU - IDŹ W KIERUNKU ZAMKU!');
-                                Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
-                                $mArmy2 = new Application_Model_Army($gameId, $db);
+                                $mArmy2->updateArmyPosition($playerId, $castleRange['path'], $castlesAndFields['fields'], $army);
                                 $mArmy2->fortify($army['armyId'], 1);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                             }
                         } else {
                             $l->log('BRAK SILNIEJSZEJ ARMII WROGA W ZASIĘGU - IDŹ W KIERUNKU ZAMKU!');
-                            Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castleRange['path'], $castlesAndFields['fields'], $army, $db);
-                            $mArmy2 = new Application_Model_Army($gameId, $db);
+                            $mArmy2->updateArmyPosition($playerId, $castleRange['path'], $castlesAndFields['fields'], $army);
                             $mArmy2->fortify($army['armyId'], 1);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], $castleRange['currentPosition'], $castleRange['path']);
                         }
@@ -93,30 +92,29 @@ class Cli_Model_ComputerMainBlocks
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path'], $fightEnemy);
                 } else {
                     $l->log('SŁABSZY WRÓG POZA ZASIĘGIEM - IDŹ DO WROGA');
-                    Cli_Model_Database::updateArmyPosition($gameId, $playerId, $range['path'], $castlesAndFields['fields'], $army, $db);
                     $mArmy2 = new Application_Model_Army($gameId, $db);
+                    $mArmy2->updateArmyPosition($playerId, $range['path'], $castlesAndFields['fields'], $army);
                     $mArmy2->fortify($army['armyId'], 1);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $range['currentPosition'], $range['path']);
                 }
             } else {
                 $l->log('WRÓG JEST SILNIEJSZY');
                 $join = Cli_Model_ComputerSubBlocks::getMyArmyInRange($gameId, $playerId, $mArmy, $castlesAndFields['fields'], $db);
+                $mArmy2 = new Application_Model_Army($gameId, $db);
                 if ($join) {
                     $l->log('JEST MOJA ARMIA W ZASIĘGU - DOŁĄCZ!');
-                    Cli_Model_Database::updateArmyPosition($gameId, $playerId, $join['path'], $castlesAndFields['fields'], $army, $db);
+                    $mArmy2->updateArmyPosition($playerId, $join['path'], $castlesAndFields['fields'], $army);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $join['currentPosition'], $join['path']);
                 } else {
                     $l->log('BRAK MOJEJ ARMII W ZASIĘGU');
                     $castle = Cli_Model_ComputerSubBlocks::getMyCastleNearEnemy($enemies, $mArmy, $castlesAndFields['fields'], $myCastles);
                     if ($castle) {
                         $l->log('JEST MÓJ ZAMEK W POBLIŻU WROGA - IDŹ DO ZAMKU');
-                        Cli_Model_Database::updateArmyPosition($gameId, $playerId, $castle['path'], $castlesAndFields['fields'], $army, $db);
-                        $mArmy2 = new Application_Model_Army($gameId, $db);
+                        $mArmy2->updateArmyPosition($playerId, $castle['path'], $castlesAndFields['fields'], $army);
                         $mArmy2->fortify($army['armyId'], 1);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $castle['currentPosition'], $castle['path']);
                     } else {
                         $l->log('NIE MA MOJEGO ZAMKU W POBLIŻU WROGA - ZOSTAŃ');
-                        $mArmy2 = new Application_Model_Army($gameId, $db);
                         $mArmy2->fortify($army['armyId'], 1);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
@@ -144,7 +142,8 @@ class Cli_Model_ComputerMainBlocks
             } else {
                 //idź do ruin
                 $l->log('IDŹ DO RUIN');
-                Cli_Model_Database::updateArmyPosition($gameId, $playerId, $ruin['path'], $castlesAndFields['fields'], $army, $db);
+                $mArmy2 = new Application_Model_Army($gameId, $db);
+                $mArmy2->updateArmyPosition($playerId, $ruin['path'], $castlesAndFields['fields'], $army);
                 Cli_Model_SearchRuin::search($gameId, $ruin['ruinId'], $army['heroes'][0]['heroId'], $army['armyId'], $playerId, $db);
 
                 $mArmy2 = new Application_Model_Army($gameId, $db);
@@ -172,7 +171,9 @@ class Cli_Model_ComputerMainBlocks
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
         $razed = Cli_Model_Database::getRazedCastles($gameId, $db);
         $castlesAndFields = Application_Model_Board::prepareCastlesAndFields($fields, $razed, $myCastles);
-        $enemies = Cli_Model_Database::getAllEnemiesArmies($gameId, $playerId, $db);
+
+        $mArmy2 = new Application_Model_Army($gameId, $db);
+        $enemies = $mArmy2->getAllEnemiesArmies($playerId);
 
         if ($myCastleId !== null) {
             $l->log('W ZAMKU');
@@ -212,7 +213,6 @@ class Cli_Model_ComputerMainBlocks
                     } else {
                         $l->log('WRÓG JEST SILNIEJSZY - ZOSTAŃ!');
 
-                        $mArmy2 = new Application_Model_Army($gameId, $db);
                         $mArmy2->fortify($army['armyId'], 1);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     }
@@ -223,7 +223,6 @@ class Cli_Model_ComputerMainBlocks
                 if (!$enemiesInRange) {
                     $l->log('BRAK WROGA W ZASIĘGU - ZOSTAŃ!');
 
-                    $mArmy2 = new Application_Model_Army($gameId, $db);
                     $mArmy2->fortify($army['armyId'], 1);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                 } else {
@@ -232,7 +231,6 @@ class Cli_Model_ComputerMainBlocks
                     if (count($enemiesHaveRange) > 1) {
                         $l->log('WRÓGÓW Z ZASIĘGIEM > WRÓGÓW W ZASIĘGU - ZOSTAŃ!');
 
-                        $mArmy2 = new Application_Model_Army($gameId, $db);
                         $mArmy2->fortify($army['armyId'], 1);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                     } else {
@@ -242,7 +240,6 @@ class Cli_Model_ComputerMainBlocks
                         if (!$enemy) {
                             $l->log('NIE MOGĘ ZAATAKOWAĆ WRÓGÓW Z ZASIĘGIEM - ZOSTAŃ!');
 
-                            $mArmy2 = new Application_Model_Army($gameId, $db);
                             $mArmy2->fortify($army['armyId'], 1);
                             return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                         } else {
@@ -255,7 +252,6 @@ class Cli_Model_ComputerMainBlocks
                             } else {
                                 $l->log('WRÓG Z ZASIĘGIEM POZA ZASIĘGIEM - ZOSTAŃ!');
 
-                                $mArmy2 = new Application_Model_Army($gameId, $db);
                                 $mArmy2->fortify($army['armyId'], 1);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                             }
@@ -297,7 +293,7 @@ class Cli_Model_ComputerMainBlocks
                     //idź do zamku
                     $l->log('WRÓG MA ZASIĘG NA PUSTY ZAMEK - IDŹ DO ZAMKU!');
 
-                    Cli_Model_Database::updateArmyPosition($gameId, $playerId, $myEmptyCastle['path'], $castlesAndFields['fields'], $army, $db);
+                    $mArmy2->updateArmyPosition($playerId, $myEmptyCastle['path'], $castlesAndFields['fields'], $army);
                     return self::endMove($playerId, $db, $gameId, $army['armyId'], $myEmptyCastle['currentPosition'], $myEmptyCastle['path']);
                 }
             }
@@ -306,8 +302,8 @@ class Cli_Model_ComputerMainBlocks
 
     static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null)
     {
-
-        $armiesIds = Cli_Model_Database::joinArmiesAtPosition($gameId, $position, $playerId, $db);
+        $mArmy2 = new Application_Model_Army($gameId, $db);
+        $armiesIds = $mArmy2->joinArmiesAtPosition($position, $playerId);
         $armyId = $armiesIds['armyId'];
 
         if (!$armyId) {
@@ -344,103 +340,98 @@ class Cli_Model_ComputerMainBlocks
         );
     }
 
-    static public function startTurn($gameId, $playerId, $db)
-    {
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
-        $mPlayersInGame->turnActivate($playerId);
+//    static public function startTurn($gameId, $playerId, $db)
+//    {
+//        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+//        $mPlayersInGame->turnActivate($playerId);
+//
+//        Cli_Model_Database::unfortifyComputerArmies($gameId, $playerId, $db);
+//        Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
+//
+//        $mArmy = new Application_Model_Army($gameId, $db);
+//        $mSoldier = new Application_Model_Soldier($gameId, $db);
+//        $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
+//
+//        $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
+//
+//        $income = 0;
+//        $color = null;
+//        $turnNumber = Cli_Model_Database::getTurnNumber($gameId, $db);
+//
+//        $mapCastles = Zend_Registry::get('castles');
+//
+//        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+//
+//        $castlesId = Cli_Model_Database::getPlayerCastlesIds($gameId, $playerId, $db);
+//        foreach ($castlesId as $id) {
+//            $castleId = $id['castleId'];
+//            $castles[$castleId] = $mapCastles[$castleId];
+//            $castle = $castles[$castleId];
+//            $income += $castle['income'];
+//
+//            if ($turnNumber < 10) {
+//                $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
+//            } else {
+//                $unitId = Application_Model_Board::getCastleOptimalProduction($castle['production']);
+//            }
+//
+//            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
+//
+//            if ($unitId != $castleProduction['production']) {
+//                $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
+//                $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
+//                $unitId = $castleProduction['production'];
+//            }
+//            $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
+//
+//            if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
+//                if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
+//                    $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
+//                    if (!$armyId) {
+//                        $mArmy = new Application_Model_Army($gameId, $db);
+//                        $armyId = $mArmy->createArmy($castle['position'], $playerId);
+//                    }
+//                    $mSoldier = new Application_Model_Soldier($gameId, $db);
+//                    $mSoldier->add($armyId, $castleProduction['production']);
+//                }
+//            }
+//        }
+//        if (isset($castle['position'])) {
+//            $gold = self::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
+//        }
+//
+//        $armies = Cli_Model_Database::getPlayerArmies($gameId, $playerId, $db);
+//
+//        if (empty($castles) && empty($armies)) {
+//            $action = 'gameover';
+//        } else {
+//            $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
+//            $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
+////            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
+//            if (!isset($mSoldier)) {
+//                $mSoldier = new Application_Model_Soldier($gameId, $db);
+//            }
+//            if (!isset($mArmy)) {
+//                $mArmy = new Application_Model_Army($gameId, $db);
+//            }
+//            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
+//            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
+//
+//            $action = 'start';
+//
+//            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+//
+//            $color = $playersInGameColors[$playerId];
+//        }
+//
+//        return array(
+//            'action' => $action,
+//            'armies' => $armies,
+//            'color' => $color
+//        );
+//    }
 
-        Cli_Model_Database::unfortifyComputerArmies($gameId, $playerId, $db);
-        Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
-
-        $mArmy = new Application_Model_Army($gameId, $db);
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
-        $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
-
-        $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
-
-        $income = 0;
-        $castles = array();
-        $color = null;
-        $turnNumber = Cli_Model_Database::getTurnNumber($gameId, $db);
-
-        if ($turnNumber == 0) {
-            var_dump('??????????????????????');
-            return;
-        }
-
-        $mapCastles = Zend_Registry::get('castles');
-
-        $castlesId = Cli_Model_Database::getPlayerCastlesIds($gameId, $playerId, $db);
-        foreach ($castlesId as $id) {
-            $castleId = $id['castleId'];
-            $castles[$castleId] = $mapCastles[$castleId];
-            $castle = $castles[$castleId];
-            $income += $castle['income'];
-
-            if ($turnNumber < 10) {
-                $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
-            } else {
-                $unitId = Application_Model_Board::getCastleOptimalProduction($castle['production']);
-            }
-
-            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
-            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
-
-            if ($unitId != $castleProduction['production']) {
-                $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
-                $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
-                $unitId = $castleProduction['production'];
-            }
-            $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-
-            if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
-                if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
-                    $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
-                    if (!$armyId) {
-                        $mArmy = new Application_Model_Army($gameId, $db);
-                        $armyId = $mArmy->createArmy($castle['position'], $playerId);
-                    }
-                    $mSoldier = new Application_Model_Soldier($gameId, $db);
-                    $mSoldier->add($armyId, $castleProduction['production']);
-                }
-            }
-        }
-        if (isset($castle['position'])) {
-            $gold = self::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
-        }
-
-        $armies = Cli_Model_Database::getPlayerArmies($gameId, $playerId, $db);
-
-        if (empty($castles) && empty($armies)) {
-            $action = 'gameover';
-        } else {
-            $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
-            $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
-//            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
-            if (!isset($mSoldier)) {
-                $mSoldier = new Application_Model_Soldier($gameId, $db);
-            }
-            if (!isset($mArmy)) {
-                $mArmy = new Application_Model_Army($gameId, $db);
-            }
-            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
-            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
-
-            $action = 'start';
-
-            $playersInGameColors = Zend_Registry::get('playersInGameColors');
-
-            $color = $playersInGameColors[$playerId];
-        }
-
-        return array(
-            'action' => $action,
-            'armies' => $armies,
-            'color' => $color
-        );
-    }
-
-    static private function handleHeroResurrection($gameId, $gold, $position, $playerId, $db = null)
+    static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db = null)
     {
         if (!Cli_Model_Database::isHeroInGame($gameId, $playerId, $db)) {
             Cli_Model_Database::connectHero($gameId, $playerId, $db);

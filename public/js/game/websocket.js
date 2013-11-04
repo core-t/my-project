@@ -59,7 +59,7 @@ Websocket = {
 
                     case 'startTurn':
                         //                    console.log(r);
-                        if (typeof r.gameover != 'undefined') {
+                        if (r.action == 'gameover') {
                             Message.lost(r.color);
                         } else if (r.color == my.color) {
                             goldUpdate(r.gold);
@@ -152,6 +152,8 @@ Websocket = {
                         if (loading) {
                             startGame();
                             loading = false;
+                        } else if (my.game && players[turn.color].computer) {
+                            setTimeout('Websocket.computer()', 1000);
                         }
                         break;
 

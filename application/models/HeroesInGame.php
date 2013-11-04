@@ -50,8 +50,8 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         );
 
         $where = array(
-            $this->_db->quoteInto('"heroId" = ?', $heroId),
-            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+            $this->_db->quoteInto($this->_db->quoteIdentifier('heroId') . ' = ?', $heroId),
+            $this->_db->quoteInto($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
         );
 
         $this->update($data, $where);
@@ -62,7 +62,7 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), 'armyId')
             ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"', 'heroId')
-            ->where('"gameId" = ?', $this->_gameId)
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId);
 
         $result = $this->selectRow($select);
@@ -78,8 +78,22 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         );
 
         $where = array(
-            $this->_db->quoteInto('"heroId" = ?', $heroId),
-            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto($this->_db->quoteIdentifier('heroId') . ' = ?', $heroId),
+            $this->_db->quoteInto($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId),
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function heroesUpdateArmyId($oldArmyId, $newArmyId)
+    {
+        $data = array(
+            'armyId' => $newArmyId
+        );
+
+        $where = array(
+            $this->_db->quoteInto($this->_db->quoteIdentifier('armyId') . ' = ?', $oldArmyId),
+            $this->_db->quoteInto($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
         );
 
         return $this->update($data, $where);

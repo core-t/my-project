@@ -245,5 +245,37 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
         return $castles;
     }
+
+    public function increaseAllCastlesProductionTurn($playerId)
+    {
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId)
+        );
+        $data = array(
+            'productionTurn' => new Zend_Db_Expr('"productionTurn" + 1')
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function getColorByCastleId($castleId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'playerId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"castleId" = ?', $castleId);
+
+        $playerId = $this->selectOne($select);
+
+        if ($playerId) {
+            $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
+            return $mPlayersInGame->getColorByPlayerId($playerId);
+        } else {
+            print_r(debug_backtrace(0, 2));
+        }
+    }
+
+
 }
 

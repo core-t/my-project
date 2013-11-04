@@ -1,8 +1,10 @@
 <?php
 
-class Cli_Model_SplitArmy {
+class Cli_Model_SplitArmy
+{
 
-    function __construct($parentArmyId, $s, $h, $user, $db, $gameHandler) {
+    function __construct($parentArmyId, $s, $h, $user, $db, $gameHandler)
+    {
         if (empty($parentArmyId) || (empty($h) && empty($s))) {
             $gameHandler->sendError($user, 'Brak "armyId", "s" lub "h"!');
             return;
@@ -14,8 +16,7 @@ class Cli_Model_SplitArmy {
         $childArmyId = null;
 
         if ((isset($heroesIds[0]) && !empty($heroesIds[0])) || (isset($soldiersIds) && !empty($soldiersIds))) {
-            foreach ($heroesIds as $heroId)
-            {
+            foreach ($heroesIds as $heroId) {
                 if (!Zend_Validate::is($heroId, 'Digits')) {
                     continue;
                 }
@@ -30,8 +31,7 @@ class Cli_Model_SplitArmy {
                 }
                 Cli_Model_Database::heroUpdateArmyId($user->parameters['gameId'], $heroId, $childArmyId, $db);
             }
-            foreach ($soldiersIds as $soldierId)
-            {
+            foreach ($soldiersIds as $soldierId) {
                 if (!Zend_Validate::is($soldierId, 'Digits')) {
                     continue;
                 }
@@ -53,12 +53,13 @@ class Cli_Model_SplitArmy {
             return;
         }
 
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'splitArmy',
-            'parentArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $parentArmyId, $db),
-            'childArmy' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $childArmyId, $db),
+            'parentArmy' => $mArmy2->getArmyByArmyId($parentArmyId),
+            'childArmy' => $mArmy2->getArmyByArmyId($childArmyId),
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 

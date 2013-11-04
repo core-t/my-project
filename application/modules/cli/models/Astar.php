@@ -70,7 +70,7 @@ class Cli_Model_Astar extends Cli_Model_Heuristics
 
         $this->open[$army['x'] . '_' . $army['y']] = $this->node($army['x'], $army['y'], 0, null, 'c');
 
-        if ($params['myCastles']) {
+        if (isset($params['myCastles']) && $params['myCastles']) {
             $this->myCastles = $params['myCastles'];
             $this->myCastleId = array();
             $castleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $params['myCastles']);

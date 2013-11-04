@@ -22,11 +22,8 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name)
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
-        try {
-            $castles = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
+
+        $castles = $this->selectAll($select);
 
         $mMapCastlesProduction = new Application_Model_MapCastlesProduction($this->_db);
         $mapCastles = array();

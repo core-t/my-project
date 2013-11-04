@@ -651,8 +651,7 @@ var Message = {
             }
 
             setTimeout('$(".castleWar").remove()', 1000);
-//            $('.castleWar').remove();
-//            $('.armyWar').remove();
+            setTimeout('$(".armyWar").remove()', 1000);
 
             return;
         }

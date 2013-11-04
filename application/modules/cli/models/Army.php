@@ -338,14 +338,13 @@ class Cli_Model_Army
 
     public function unitsHaveRange($path)
     {
+        $terrain = Zend_Registry::get('terrain');
+
         $soldiersMovesLeft = array();
         $heroesMovesLeft = array();
-        $realPath = array();
-        $stop = false;
-        $skip = false;
 
         for ($i = 0; $i < count($path); $i++) {
-            $defaultMoveCost = $this->army['terrainCosts'][$path[$i]['tt']];
+            $defaultMoveCost = $terrain[$path[$i]['tt']]['walking'];
 
             foreach ($this->army['soldiers'] as $soldier) {
                 if (!isset($soldiersMovesLeft[$soldier['soldierId']])) {

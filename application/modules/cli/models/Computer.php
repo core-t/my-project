@@ -19,9 +19,10 @@ class Cli_Model_Computer
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
         if (!$mPlayersInGame->playerTurnActive($playerId)) {
-            $token = Cli_Model_ComputerMainBlocks::startTurn($user->parameters['gameId'], $playerId, $db);
+            $token = Cli_Model_Turn::start($user->parameters['gameId'], $playerId, $db, true);
         } else {
-            $army = Cli_Model_Database::getComputerArmyToMove($user->parameters['gameId'], $playerId, $db);
+            $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+            $army = $mArmy2->getComputerArmyToMove($playerId);
             if (!empty($army['armyId'])) {
                 $token = Cli_Model_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, new Cli_Model_Army($army), $db);
             } else {

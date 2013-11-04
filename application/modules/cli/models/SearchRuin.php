@@ -46,11 +46,12 @@ class Cli_Model_SearchRuin
             );
         }
 
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'ruin',
-            'army' => Cli_Model_Database::getArmyByArmyId($user->parameters['gameId'], $armyId, $db),
+            'army' => $mArmy2->getArmyByArmyId($armyId),
             'ruin' => $ruin,
             'find' => $find,
             'color' => $playersInGameColors[$user->parameters['playerId']]

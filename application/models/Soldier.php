@@ -189,5 +189,21 @@ class Application_Model_Soldier extends Coret_Db_Table_Abstract
 
         $this->delete($where);
     }
+
+    public function soldiersUpdateArmyId($oldArmyId, $newArmyId)
+    {
+        $data = array(
+            'armyId' => $newArmyId
+        );
+
+        $where = array(
+            $this->_db->quoteInto('"armyId" = ?', $oldArmyId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        return $this->update($data, $where);
+    }
+
+
 }
 
