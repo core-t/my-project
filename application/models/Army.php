@@ -345,8 +345,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             if (empty($army['heroes']) AND empty($army['soldiers'])) {
                 $this->destroyArmy($army['armyId'], $playerId);
             }
-            $army['movesLeft'] = self::calculateArmyMovesLeft($this->_gameId, $army['armyId'], $this->_db);
-
+            $army['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($army);
             return $army;
         }
     }
@@ -427,8 +426,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             return $result;
         } else {
             unset($result['playerId']);
-            $result['movesLeft'] = self::calculateArmyMovesLeft($this->_gameId, $result['armyId'], $this->_db);
-
+            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
             return $result;
         }
     }
@@ -464,5 +462,21 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         }
 
         return $armies;
+    }
+
+    public function getColorByArmyId($armyId)
+    {
+        $select = $this->_db->select()
+            ->from('army', 'playerId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"armyId" = ?', $armyId);
+
+        $playerId = $this->selectOne($select);
+        if ($playerId) {
+            $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
+            return $mPlayersInGame->getColorByPlayerId($playerId);
+        } else {
+            print_r(debug_backtrace(0, 2));
+        }
     }
 }

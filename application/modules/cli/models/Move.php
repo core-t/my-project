@@ -145,6 +145,7 @@ class Cli_Model_Move
 //        }
 
         $fight = false;
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
 
         if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleField($move['currentPosition'], $castlesSchema[$castleId]['position'])) { // castle
             $fight = true;
@@ -157,7 +158,7 @@ class Cli_Model_Move
             }
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $enemy['ids']) { // enemy army
             $fight = true;
-            $defenderColor = Cli_Model_Database::getColorByArmyId($user->parameters['gameId'], $enemy['ids'][0], $db);
+            $defenderColor = $mArmy2->getColorByArmyId($enemy['ids'][0]);
             $enemy['x'] = $x;
             $enemy['y'] = $y;
             $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
@@ -170,7 +171,6 @@ class Cli_Model_Move
          *
          * ------------------------------------ */
 
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         if ($fight) {
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();

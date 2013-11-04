@@ -193,7 +193,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
     {
         $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
         $token = $mPlayersInGame->getPlayersWaitingForGame();
-        $token['gameMasterId'] = Cli_Model_Database::getGameMasterId($gameId, $db);
+        $mGame = new Application_Model_Game($gameId, $db);
+        $token['gameMasterId'] = $mGame->getGameMasterId();
         $token['type'] = 'update';
 
         $this->sendToChannel($db, $token, $gameId);

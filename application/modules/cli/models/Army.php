@@ -402,4 +402,40 @@ class Cli_Model_Army
         }
     }
 
+    public function calculateMaxArmyMoves($army)
+    {
+        foreach ($army['heroes'] as $hero) {
+            if (!isset($heroMoves)) {
+                $heroMoves = $hero['movesLeft'];
+            }
+
+            if ($hero['movesLeft'] < $heroMoves) {
+                $heroMoves = $hero['movesLeft'];
+            }
+        }
+
+        foreach ($army['soldiers'] as $soldier) {
+            if (!isset($soldierMoves)) {
+                $soldierMoves = $soldier['movesLeft'];
+            }
+
+            if ($soldier['movesLeft'] < $soldierMoves) {
+                $soldierMoves = $soldier['movesLeft'];
+            }
+        }
+
+        if (!isset($heroMoves)) {
+            $heroMoves = 0;
+        }
+
+        if (!isset($soldierMoves)) {
+            $soldierMoves = 0;
+        }
+
+        if ($heroMoves > $soldierMoves) {
+            return $heroMoves;
+        } else {
+            return $soldierMoves;
+        }
+    }
 }

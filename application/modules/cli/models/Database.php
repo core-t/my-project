@@ -132,7 +132,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             }
 
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
-            $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
+            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
         }
 
         return $result;
@@ -164,7 +164,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
             }
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
-            $result['movesLeft'] = self::calculateArmyMovesLeft($gameId, $armyId, $db);
+            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
 
             return $result;
         }
@@ -238,26 +238,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             echo($e);
             echo($select->__toString());
         }
-    }
-
-    static public function calculateArmyMovesLeft($gameId, $armyId, $db)
-    {
-        $heroMovesLeft = self::getMinHeroesMovesLeft($gameId, $armyId, $db);
-        $soldierMovesLeft = self::getMinSoldiersMovesLeft($gameId, $armyId, $db);
-
-        if ($soldierMovesLeft && $heroMovesLeft) {
-            if ($heroMovesLeft > $soldierMovesLeft) {
-                return $soldierMovesLeft;
-            } else {
-                return $heroMovesLeft;
-            }
-        } elseif ($soldierMovesLeft === null) {
-            return (int)$heroMovesLeft;
-        } elseif ($heroMovesLeft === null) {
-            return (int)$soldierMovesLeft;
-        }
-
-        return 0;
     }
 
     static private function getMinHeroesMovesLeft($gameId, $armyId, $db)
@@ -875,19 +855,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function calculateMaxArmyMoves($gameId, $armyId, $db)
-    {
-        $heroMoves = self::getMaxHeroesMoves($gameId, $armyId, $db);
-
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
-        $soldierMoves = $mSoldier->getMaximumMoves($armyId);
-        if ($heroMoves > $soldierMoves) {
-            return $heroMoves;
-        } else {
-            return $soldierMoves;
-        }
-    }
-
     static private function getMaxHeroesMoves($gameId, $armyId, $db)
     {
 
@@ -957,15 +924,11 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         return self::update('game', $data, $where, $db);
     }
 
-    static private function isFirstColor($color)
-    {
-        $playerColors = Zend_Registry::get('colors');
-        return $playerColors[0] == $color;
-    }
-
     static public function updateTurnNumber($gameId, $nextPlayer, $db)
     {
-        if (self::isFirstColor($nextPlayer['color'])) {
+        $playerColors = Zend_Registry::get('colors');
+
+        if ($playerColors[0] == $nextPlayer['color']) { //first color
             $select = $db->select()
                 ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
                 ->where('"gameId" = ?', $gameId);
@@ -989,41 +952,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
 
         self::updateGame($gameId, $data, $db);
-    }
-
-    static public function getColorByArmyId($gameId, $armyId, $db)
-    {
-
-        $select = $db->select()
-            ->from('army', 'playerId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $armyId);
-
-        try {
-            $playerId = $db->fetchOne($select);
-            if ($playerId) {
-                $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
-                return $mPlayersInGame->getColorByPlayerId($playerId);
-            } else {
-                print_r(debug_backtrace(0, 2));
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getGameMasterId($gameId, $db)
-    {
-        $select = $db->select()
-            ->from('game', 'gameMasterId')
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
     }
 
     static public function isGameStarted($gameId, $db)

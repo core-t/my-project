@@ -217,14 +217,10 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
 
     public function getGameMasterId()
     {
-        try {
             $select = $this->_db->select()
                 ->from($this->_name, 'gameMasterId')
                 ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            return $this->_db->fetchOne($select);
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+            return $this->selectOne($select);
     }
 
     public function updateGameMaster($playerId)
@@ -548,5 +544,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_gameId);
         return $this->_db->fetchOne($select);
     }
+
 }
 

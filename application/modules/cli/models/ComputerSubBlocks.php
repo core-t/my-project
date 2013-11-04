@@ -92,7 +92,7 @@ castleId: ' . $castleId . '
                 );
                 $mArmy2->destroyArmy($army['armyId'], $playerId);
             }
-            $result['defenderColor'] = Cli_Model_Database::getColorByArmyId($gameId, $enemy['armyId'], $db);
+            $result['defenderColor'] = $mArmy2->getColorByArmyId($enemy['armyId']);
         }
 
         $result['defenderArmy'] = $defender;
