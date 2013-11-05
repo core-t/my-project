@@ -27,6 +27,21 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         return $this->insert($data);
     }
 
+    public function addToArmy($armyId, $heroId, $movesLeft)
+    {
+
+        $data = array(
+            'armyId' => $armyId,
+            'movesLeft' => $movesLeft
+        );
+        $where = array(
+            $this->_db->quoteInto('"heroId" = ?', $heroId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        return $this->update($data, $where);
+    }
+
     public function resetMovesLeft($playerId)
     {
     }

@@ -439,4 +439,16 @@ class Cli_Model_Army
         }
     }
 
+    static public function heroResurrection($gameId, $heroId, $position, $playerId, $db)
+    {
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $armyId = $mArmy->getArmyIdFromPosition($position);
+        if (!$armyId) {
+            $armyId = $mArmy->createArmy($position, $playerId);
+        }
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $mHeroesInGame->addToArmy($armyId, $heroId, 0);
+
+        return $armyId;
+    }
 }

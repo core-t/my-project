@@ -57,7 +57,9 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
 
         switch ($dataIn['type']) {
             case 'start':
-                if (!Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+                $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+
+                if (!$mGame->isGameMaster($user->parameters['playerId'])) {
                     echo('Not game master!');
                     return;
                 }
@@ -65,17 +67,15 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
                 $mPlayersInGame->disconnectNotActive();
 
-                $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
-
                 $mGame->startGame($mPlayersInGame->getPlayerIdByColor('white'));
                 $players = $mPlayersInGame->getAll();
 
                 $mapId = $mGame->getMapId();
 
                 $mMapCastles = new Application_Model_MapCastles($mapId, $db);
-                $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
+//                $mMapPlayers = new Application_Model_MapPlayers($mapId, $db);
 
-                $playerColors = $mMapPlayers->getMapPlayerIds();
+//                $playerColors = $mMapPlayers->getMapPlayerIds();
                 $startPositions = $mMapCastles->getDefaultStartPositions();
 
                 foreach ($players as $player) {
@@ -110,6 +110,7 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                 }
 
                 $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
+                $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
 
                 if ($mPlayersInGame->getMapPlayerIdByPlayerId($user->parameters['gameId'], $user->parameters['playerId'], $db) == $mapPlayerId) { // unselect
                     $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $mapPlayerId);
@@ -118,7 +119,7 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                         $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByMapPlayerId($mapPlayerId), $mapPlayerId);
                     }
                     $mPlayersInGame->updatePlayerReady($user->parameters['playerId'], $mapPlayerId);
-                } elseif (Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) { // kick
+                } elseif ($mGame->isGameMaster($user->parameters['playerId'])) { // kick
                     $mPlayersInGame->updatePlayerReady($mPlayersInGame->getPlayerIdByMapPlayerId($mapPlayerId), $mapPlayerId);
                 } else {
                     echo('Błąd!');
@@ -136,7 +137,8 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
                     return;
                 }
 
-                if (!Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+                $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+                if (!$mGame->isGameMaster($user->parameters['playerId'])) {
                     echo('Brak uprawnień!');
                     return;
                 }

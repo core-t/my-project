@@ -441,7 +441,7 @@ class Cli_Model_ComputerMainBlocks
         $heroId = $mHeroesInGame->getDeadHeroId($playerId);
         if ($heroId) {
             if ($gold >= 100) {
-                $armyId = Cli_Model_Database::heroResurrection($gameId, $heroId, $position, $playerId, $db);
+                $armyId = Cli_Model_Army::heroResurrection($gameId, $heroId, $position, $playerId, $db);
                 if ($armyId) {
                     return $gold - 100;
                 }

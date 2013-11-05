@@ -5,12 +5,13 @@ class Cli_Model_Computer
 
     public function __construct($user, $db, $gameHandler)
     {
-        if (!Cli_Model_Database::isGameMaster($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+        $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+        if (!$mGame->isGameMaster($user->parameters['playerId'])) {
             $gameHandler->sendError($user, 'Nie Twoja gra!');
             return;
         }
 
-        $playerId = Cli_Model_Database::getTurnPlayerId($user->parameters['gameId'], $db);
+        $playerId = $mGame->getTurnPlayerId();
 
         if (!Cli_Model_Database::isComputer($playerId, $db)) {
             $gameHandler->sendError($user, 'To nie komputer!');

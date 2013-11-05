@@ -519,6 +519,17 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         if (count($result)) {
             return true;
         }
+    }
 
+    public function getArmyIdFromPosition($position)
+    {
+        $select = $this->_db->select()
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('destroyed = false')
+            ->where('x = ?', $position['x'])
+            ->where('y = ?', $position['y']);
+
+        return $this->selectOne($select);
     }
 }

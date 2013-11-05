@@ -244,12 +244,8 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->from($this->_name, array('gameMasterId'))
             ->where('"' . $this->_primary . '" = ?', $this->_gameId)
             ->where('"gameMasterId" = ?', $playerId);
-        $result = $this->_db->query($select)->fetchAll();
-        if (isset($result[0]['gameMasterId'])) {
-            if ($playerId == $result[0]['gameMasterId']) {
-                return true;
-            }
-        }
+
+        return $this->selectOne($select);
     }
 
     public function isGameStarted()
@@ -376,8 +372,8 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name, 'turnPlayerId')
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        $result = $this->_db->query($select)->fetchAll();
-        return $result[0]['turnPlayerId'];
+
+        return $this->selectOne($select);
     }
 
     public function updateTurnNumber($nextPlayer)
@@ -481,11 +477,8 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name, 'turnNumber')
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        try {
-            return $this->_db->fetchOne($select);
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+
+        return $this->selectOne($select);
     }
 
     public function getPlayerInGameGold($playerId)

@@ -70,7 +70,9 @@ class Cli_Model_Turn
 
         $income = 0;
         $color = null;
-        $turnNumber = Cli_Model_Database::getTurnNumber($gameId, $db);
+
+        $mGame = new Application_Model_Game($gameId, $db);
+        $turnNumber = $mGame->getTurnNumber();
 
         $mapCastles = Zend_Registry::get('castles');
 
@@ -101,7 +103,7 @@ class Cli_Model_Turn
 
             if ($mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $mapCastles[$castleId]['production'][$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
-                    $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $mapCastles[$castleId]['position'], $db);
+                    $armyId = $mArmy->getArmyIdFromPosition($mapCastles[$castleId]['position']);
                     if (!$armyId) {
                         $armyId = $mArmy->createArmy($mapCastles[$castleId]['position'], $playerId);
                     }
