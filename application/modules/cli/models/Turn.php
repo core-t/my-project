@@ -20,22 +20,23 @@ class Cli_Model_Turn
         );
 
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        $mGame = new Application_Model_Game($gameId, $db);
+        $mArmy = new Application_Model_Army($gameId, $db);
 
         while (empty($response)) {
             $nextPlayer = self::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
-            $playerCastlesExists = Cli_Model_Database::playerCastlesExists($gameId, $nextPlayer['playerId'], $db);
-            $playerArmiesExists = Cli_Model_Database::playerArmiesExists($gameId, $nextPlayer['playerId'], $db);
+            $playerCastlesExists = $mCastlesInGame->playerCastlesExists($nextPlayer['playerId']);
+            $playerArmiesExists = $mArmy->playerArmiesExists($nextPlayer['playerId']);
             if ($playerCastlesExists || $playerArmiesExists) {
                 $response['color'] = $nextPlayer['color'];
 
                 if ($nextPlayer['playerId'] == $playerId) { // następny gracz to ten sam gracz, który zainicjował zmianę tury
                     $response['win'] = true;
-                    Cli_Model_Database::endGame($gameId, $db); // koniec gry
+                    $mGame->endGame(); // koniec gry
                 } else { // zmieniam turę
-                    Cli_Model_Database::updateTurnNumber($gameId, $nextPlayer, $db);
+                    $mGame->updateTurnNumber($nextPlayer);
                     $mCastlesInGame->increaseAllCastlesProductionTurn($playerId);
 
-                    $mGame = new Application_Model_Game($gameId, $db);
                     $turn = $mGame->getTurn();
 
                     $response['lost'] = $turn['lost'];
@@ -60,7 +61,7 @@ class Cli_Model_Turn
 
         $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
         if ($computer) {
-            Cli_Model_Database::unfortifyComputerArmies($gameId, $playerId, $db);
+            $mArmy->unfortifyComputerArmies($playerId);
             if (isset($castle['position'])) {
                 $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
             }

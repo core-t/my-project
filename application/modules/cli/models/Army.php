@@ -438,4 +438,5 @@ class Cli_Model_Army
             return $soldierMoves;
         }
     }
+
 }

@@ -276,6 +276,19 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         }
     }
 
+    public function playerCastlesExists($playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_primary)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('razed = false');
 
+        $result = $this->selectAll($select);
+
+        if (count($result)) {
+            return true;
+        }
+    }
 }
 

@@ -217,10 +217,10 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
 
     public function getGameMasterId()
     {
-            $select = $this->_db->select()
-                ->from($this->_name, 'gameMasterId')
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            return $this->selectOne($select);
+        $select = $this->_db->select()
+            ->from($this->_name, 'gameMasterId')
+            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+        return $this->selectOne($select);
     }
 
     public function updateGameMaster($playerId)
@@ -255,21 +255,17 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
     public function isGameStarted()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('isOpen'))
+            ->from($this->_name, $this->_primary)
             ->where('"isOpen" = false')
-            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        $result = $this->_db->query($select)->fetchAll();
-        if (isset($result[0]['isOpen'])) {
-            return true;
-        } else {
-            return false;
-        }
+            ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_gameId);
+
+        return $this->selectOne($select);
     }
 
     public function updateGame($data)
     {
-        $where = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        return $this->_db->update($this->_name, $data, $where);
+        $where = $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->_gameId);
+        return $this->update($data, $where);
     }
 
     public function getComputerPlayerId()
@@ -384,27 +380,29 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         return $result[0]['turnPlayerId'];
     }
 
-    public function updateTurnNumber($playerId)
+    public function updateTurnNumber($nextPlayer)
     {
-        if ($this->isGameMaster($playerId)) {
+        $playerColors = Zend_Registry::get('colors');
+
+        if ($playerColors[0] == $nextPlayer['color']) { //first color
             $select = $this->_db->select()
-                ->from($this->_name, array('turnNumber' => '("turnNumber" + 1)'))
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->fetchRow($select);
+                ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
+                ->where('"gameId" = ?', $this->_gameId);
+
+            $turnNumber = $this->selectOne($select);
+
             $data = array(
-                'turnNumber' => $result['turnNumber'],
-                'end' => new Zend_Db_Expr('now()')
+                'turnNumber' => $turnNumber,
+                'end' => new Zend_Db_Expr('now()'),
+                'turnPlayerId' => $nextPlayer['playerId']
+            );
+        } else {
+            $data = array(
+                'turnPlayerId' => $nextPlayer['playerId']
             );
         }
-        $data['turnPlayerId'] = $playerId;
 
-        if ($this->updateGame($data) == 1) {
-            if (isset($data['turnNumber']) && Zend_Validate::is($data['turnNumber'], 'Digits')) {
-                return $data['turnNumber'];
-            }
-        } else {
-            throw new Exception('Błąd zapytania!');
-        }
+        $this->updateGame($data);
     }
 
     public function endGame()

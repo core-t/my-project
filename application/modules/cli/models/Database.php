@@ -855,130 +855,12 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static private function getMaxHeroesMoves($gameId, $armyId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'max("numberOfMoves")')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" = ?', $armyId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function playerCastlesExists($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('castlesingame', 'castleId')
-            ->where('"playerId" = ?', $playerId)
-            ->where('"gameId" = ?', $gameId)
-            ->where('razed = false');
-        try {
-            $result = $db->query($select)->fetchAll();
-            if (count($result)) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function playerArmiesExists($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('destroyed = false')
-            ->where('"playerId" = ?', $playerId);
-        try {
-            $result = $db->query($select)->fetchAll();
-            if (count($result)) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function endGame($gameId, $db)
-    {
-        $data['isActive'] = 'false';
-
-        self::updateGame($gameId, $data, $db);
-    }
-
     static public function updateGame($gameId, $data, $db)
     {
 
         $where = $db->quoteInto('"gameId" = ?', $gameId);
 
         return self::update('game', $data, $where, $db);
-    }
-
-    static public function updateTurnNumber($gameId, $nextPlayer, $db)
-    {
-        $playerColors = Zend_Registry::get('colors');
-
-        if ($playerColors[0] == $nextPlayer['color']) { //first color
-            $select = $db->select()
-                ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
-                ->where('"gameId" = ?', $gameId);
-            try {
-                $turnNumber = $db->fetchOne($select);
-            } catch (Exception $e) {
-                echo($e);
-                echo($select->__toString());
-
-                return;
-            }
-            $data = array(
-                'turnNumber' => $turnNumber,
-                'end' => new Zend_Db_Expr('now()'),
-                'turnPlayerId' => $nextPlayer['playerId']
-            );
-        } else {
-            $data = array(
-                'turnPlayerId' => $nextPlayer['playerId']
-            );
-        }
-
-        self::updateGame($gameId, $data, $db);
-    }
-
-    static public function isGameStarted($gameId, $db)
-    {
-        $select = $db->select()
-            ->from('game', 'gameId')
-            ->where('"isOpen" = false')
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function unfortifyComputerArmies($gameId, $playerId, $db)
-    {
-        $data = array(
-            'fortified' => 'false'
-        );
-        $where = array(
-            $db->quoteInto('"gameId" = ?', $gameId),
-            $db->quoteInto('"playerId" = ?', $playerId),
-        );
-
-        return self::update('army', $data, $where, $db, true);
     }
 
     /**
@@ -1081,20 +963,5 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function isOtherArmyAtPosition($gameId, $armyId, $x, $y, $db)
-    {
-        $select = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" != ?', $armyId)
-            ->where('destroyed = false')
-            ->where('x = ?', $x)
-            ->where('y = ?', $y);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
+
 }

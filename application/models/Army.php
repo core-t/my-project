@@ -479,4 +479,46 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             print_r(debug_backtrace(0, 2));
         }
     }
+
+
+    public function isOtherArmyAtPosition($armyId, $x, $y)
+    {
+        $select = $this->_db->select()
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"armyId" != ?', $armyId)
+            ->where('destroyed = false')
+            ->where('x = ?', $x)
+            ->where('y = ?', $y);
+
+        return $this->selectOne($select);
+    }
+
+    public function unfortifyComputerArmies($playerId)
+    {
+        $data = array(
+            'fortified' => 'false'
+        );
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId),
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function playerArmiesExists($playerId)
+    {
+        $select = $this->_db->select()
+            ->from('army', 'armyId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('destroyed = false')
+            ->where('"playerId" = ?', $playerId);
+
+        $result = $this->selectAll($select);
+        if (count($result)) {
+            return true;
+        }
+
+    }
 }

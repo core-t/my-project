@@ -176,15 +176,17 @@ class Cli_Model_PublicHandler extends Cli_WofHandler
         if (!Zend_Validate::is($user->parameters['gameId'], 'Digits') || !Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
             return;
         }
+
         $db = Cli_Model_Database::getDb();
-        if (Cli_Model_Database::isGameStarted($user->parameters['gameId'], $db)) {
+
+        $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+        if ($mGame->isGameStarted()) {
             return;
         }
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
         $mPlayersInGame->disconnectFromGame($user->parameters['playerId']);
 
-        $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
         $mGame->setNewGameMaster($mPlayersInGame->findNewGameMaster());
         $this->update($user->parameters['gameId'], $db);
     }

@@ -31,10 +31,11 @@ class Cli_Model_Move
         }
 
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
 
         if ($fields[$army['y']][$army['x']] == 'w') {
             if ($army['canSwim'] || $army['canFly']) {
-                $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $army['x'], $army['y'], $db);
+                $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
                 if ($otherArmyId) {
                     $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
                     $mOtherArmy = new Cli_Model_Army($otherArmy);
@@ -46,7 +47,7 @@ class Cli_Model_Move
                 }
             }
         } elseif ($fields[$army['y']][$army['x']] == 'M') {
-            $otherArmyId = Cli_Model_Database::isOtherArmyAtPosition($user->parameters['gameId'], $attackerArmyId, $army['x'], $army['y'], $db);
+            $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
             if ($otherArmyId) {
                 $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
                 $mOtherArmy = new Cli_Model_Army($otherArmy);
@@ -145,7 +146,6 @@ class Cli_Model_Move
 //        }
 
         $fight = false;
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
 
         if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleField($move['currentPosition'], $castlesSchema[$castleId]['position'])) { // castle
             $fight = true;
