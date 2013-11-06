@@ -10,7 +10,8 @@ class Cli_Model_HeroResurrection
             return;
         }
 
-        if (!Cli_Model_Database::isPlayerCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db)) {
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        if (!$mCastlesInGame->isPlayerCastle($castleId, $user->parameters['playerId'])) {
             $gameHandler->sendError($user, 'To nie jest Twój zamek! ' . $castleId);
             return;
         }

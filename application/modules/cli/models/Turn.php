@@ -66,7 +66,8 @@ class Cli_Model_Turn
                 $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
             }
         }
-        Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $mHeroesInGame->resetHeroesMovesLeft($playerId);
 
         $income = 0;
         $color = null;

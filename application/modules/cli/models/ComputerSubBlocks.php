@@ -15,8 +15,9 @@ class Cli_Model_ComputerSubBlocks
         $mArmy2 = new Application_Model_Army($gameId, $db);
 
         if ($castleId !== null) { // castle
-            if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) { // enemy castle
-                $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+
+            if ($mCastlesInGame->isEnemyCastle($castleId, $playerId)) { // enemy castle
                 $result['defenderColor'] = $mCastlesInGame->getColorByCastleId($castleId);
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $mapCastles[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
@@ -107,7 +108,9 @@ castleId: ' . $castleId . '
         $attackerCourage = 2;
 
         $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
-        if ($castleId !== null && Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+
+        if ($castleId !== null && $mCastlesInGame->isEnemyCastle($castleId, $playerId)) {
             $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
         } else {
             $enemy = Cli_Model_Army::addTowerDefenseModifier($enemy);
@@ -140,7 +143,8 @@ castleId: ' . $castleId . '
 
         foreach (array_keys($heuristics) as $castleId) {
             $position = $castles[$castleId]['position'];
-            if (Cli_Model_Database::isEnemyCastle($gameId, $castleId, $playerId, $db)) {
+            $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+            if ($mCastlesInGame->isEnemyCastle($castleId, $playerId)) {
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $position, $db);
             } else {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($gameId, $db);

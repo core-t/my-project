@@ -10,7 +10,8 @@ class Cli_Model_CastleBuildDefense
             return;
         }
 
-        if (!Cli_Model_Database::isPlayerCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db)) {
+        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+        if (!$mCastlesInGame->isPlayerCastle($castleId, $user->parameters['playerId'])) {
             $gameHandler->sendError($user, 'To nie jest Twój zamek.');
             return;
         }
@@ -18,7 +19,6 @@ class Cli_Model_CastleBuildDefense
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
         $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
 
-        $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
         $defenseModifier = $mCastlesInGame->getCastleDefenseModifier($castleId);
 
 //        $defensePoints = Application_Model_Board::getCastleDefense($castleId);

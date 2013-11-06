@@ -29,7 +29,8 @@ class Cli_Model_SplitArmy
                     $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
-                Cli_Model_Database::heroUpdateArmyId($user->parameters['gameId'], $heroId, $childArmyId, $db);
+                $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+                $mHeroesInGame->heroUpdateArmyId($heroId, $childArmyId);
             }
             foreach ($soldiersIds as $soldierId) {
                 if (!Zend_Validate::is($soldierId, 'Digits')) {
@@ -44,7 +45,8 @@ class Cli_Model_SplitArmy
                     $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
-                Cli_Model_Database::soldierUpdateArmyId($user->parameters['gameId'], $soldierId, $childArmyId, $db);
+                $mSoldier = new Application_Model_Soldier($user->parameters['gameId'], $db);
+                $mSoldier->soldierUpdateArmyId($user->parameters['gameId'], $soldierId, $childArmyId, $db);
             }
         }
 

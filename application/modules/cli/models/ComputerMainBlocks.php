@@ -7,7 +7,8 @@ class Cli_Model_ComputerMainBlocks
     {
         $l = new Coret_Model_Logger();
         $army = $mArmy->getArmy();
-        if (!Cli_Model_Database::enemiesCastlesExist($gameId, $playerId, $db)) {
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        if (!$mCastlesInGame->enemiesCastlesExist($playerId)) {
             $l->log('BRAK ZAMKÓW WROGA');
             return self::secondBlock($gameId, $playerId, $enemies, $mArmy, $castlesAndFields, $myCastles, $db);
         } else {
@@ -169,7 +170,7 @@ class Cli_Model_ComputerMainBlocks
         }
         $myCastleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $myCastles);
         $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
-        $razed = Cli_Model_Database::getRazedCastles($gameId, $db);
+        $razed = $mCastlesInGame->getRazedCastles();
         $castlesAndFields = Application_Model_Board::prepareCastlesAndFields($fields, $razed, $myCastles);
 
         $mArmy2 = new Application_Model_Army($gameId, $db);

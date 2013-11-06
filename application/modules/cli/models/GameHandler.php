@@ -188,7 +188,8 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                 }
 
 
-                if (!Cli_Model_Database::isPlayerCastle($user->parameters['gameId'], $castleId, $user->parameters['playerId'], $db)) {
+                $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
+                if (!$mCastlesInGame->isPlayerCastle($castleId, $user->parameters['playerId'])) {
                     $this->sendError($user, 'To nie jest Twój zamek!');
                     return;
                 }
@@ -204,7 +205,6 @@ class Cli_Model_GameHandler extends Cli_WofHandler
                     $unitId = null;
                 }
 
-                $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
 
                 if ($mCastlesInGame->setProduction($castleId, $user->parameters['playerId'], $unitId)) {
                     $token = array(

@@ -10,7 +10,8 @@ class Cli_Model_SearchRuin
             return;
         }
 
-        $heroId = Cli_Model_Database::getHeroIdByArmyIdPlayerId($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+        $heroId = $mHeroesInGame->getHeroIdByArmyIdPlayerId($armyId, $user->parameters['playerId']);
 
         if (empty($heroId)) {
             $gameHandler->sendError($user, 'Tylko Hero może przeszukiwać ruiny!');
@@ -65,6 +66,14 @@ class Cli_Model_SearchRuin
         $mGame = new Application_Model_Game($gameId, $db);
         $turn = $mGame->getTurn();
 
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+        if (!$mHeroesInGame->isThisCorrectHero($playerId, $heroId)) {
+            echo('HeroId jest inny');
+
+            return;
+        }
+
         $random = rand(0, 100);
 
         if ($random < 10) { //10%
@@ -73,10 +82,10 @@ class Cli_Model_SearchRuin
                 $find = array('null', 1);
                 $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
                 $mRuinsInGame->add($ruinId);
-                Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+                $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             } else {
                 $find = array('death', 1);
-                $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
                 $mHeroesInGame->armyRemoveHero($heroId);
             }
         } elseif ($random < 55) { //45%
@@ -89,7 +98,7 @@ class Cli_Model_SearchRuin
 
             $mPlayersInGame->updatePlayerInGameGold($playerId, $gold + $inGameGold);
 
-            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
         } elseif ($random < 85) { //30%
@@ -136,7 +145,7 @@ class Cli_Model_SearchRuin
             for ($i = 0; $i < $numberOfUnits; $i++) {
                 $mSoldier->add($armyId, $unitId);
             }
-            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
 
@@ -144,7 +153,7 @@ class Cli_Model_SearchRuin
         } else {
 //nic
             $find = array('null', 1);
-            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
+            $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
 

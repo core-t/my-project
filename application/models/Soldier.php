@@ -204,6 +204,18 @@ class Application_Model_Soldier extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
+     public function soldierUpdateArmyId( $soldierId, $newArmyId)
+    {
+        $data = array(
+            'armyId' => $newArmyId
+        );
 
+        $where = array(
+            $this->_db->quoteInto('"soldierId" = ?', $soldierId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        return $this->update($data, $where);
+    }
 }
 

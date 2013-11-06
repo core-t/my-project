@@ -85,7 +85,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('razed = true');
 
-        foreach ($this->selectAll($select) as $key => $val) {
+        foreach ($this->selectAll($select) as $val) {
             $castles[$val['castleId']] = $val;
         }
 
@@ -290,5 +290,44 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
             return true;
         }
     }
+
+    public function isPlayerCastle($castleId, $playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'castleId')
+            ->where('razed = false')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"castleId" = ?', $castleId);
+
+        return $this->selectOne($select);
+    }
+
+    public function isEnemyCastle($castleId, $playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'castleId')
+            ->where('razed = false')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('"castleId" = ?', $castleId);
+
+        return $this->selectOne($select);
+    }
+
+    public function enemiesCastlesExist($playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'castleId')
+            ->where('"playerId" != ?', $playerId)
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('razed = false');
+
+        $result = $this->selectAll($select);
+        if (count($result)) {
+            return true;
+        }
+    }
+
 }
 

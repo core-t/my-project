@@ -113,5 +113,88 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 
         return $this->update($data, $where);
     }
+
+    public function resetHeroesMovesLeft($playerId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), array('movesLeft', 'heroId'))
+            ->join(array('b' => 'hero'), 'a."heroId"=b."heroId"', '')
+            ->where('"playerId" = ?', $playerId)
+            ->where('a."gameId" = ?', $this->_gameId);
+
+        foreach ($this->selectAll($select) as $hero) {
+            if ($hero['movesLeft'] > 2) {
+                $hero['movesLeft'] = 2;
+            }
+
+            $select = $this->_db->select()
+                ->from('hero', new Zend_Db_Expr('"numberOfMoves" + ' . $hero['movesLeft']))
+                ->where('"playerId" = ?', $playerId)
+                ->where('"heroId" = ?', $hero['heroId']);
+
+            $data = array(
+                'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
+            );
+
+            $where = array(
+                $this->_db->quoteInto('"heroId" = ?', $hero['heroId']),
+                $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+            );
+
+            $this->update($data, $where);
+        }
+    }
+
+    public function heroUpdateArmyId($heroId, $newArmyId)
+    {
+        $data = array(
+            'armyId' => $newArmyId
+        );
+        $where = array(
+            $this->_db->quoteInto('"heroId" = ?', $heroId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function zeroHeroMovesLeft($armyId, $heroId, $playerId)
+    {
+        $data = array(
+            'movesLeft' => 0
+        );
+
+        $where = array(
+            $this->_db->quoteInto('"armyId" = ?', $armyId),
+            $this->_db->quoteInto('"heroId" = ?', $heroId),
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId)
+        );
+
+        return $this->update($data, $where);
+    }
+
+    public function isThisCorrectHero($playerId, $heroId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'heroId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('a."heroId" = ?', $heroId);
+
+        return $this->selectOne($select);
+    }
+
+    public function getHeroIdByArmyIdPlayerId($armyId, $playerId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'heroId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"armyId" = ?', $armyId);
+
+        return $this->selectOne($select);
+    }
 }
 

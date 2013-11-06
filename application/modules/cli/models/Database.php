@@ -57,26 +57,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function isPlayerCastle($gameId, $castleId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('castlesingame', 'castleId')
-            ->where('razed = false')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('"castleId" = ?', $castleId);
-        try {
-            $id = $db->fetchOne($select);
-
-            if ($castleId == $id) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function getEnemyArmiesFieldsPositions($gameId, $playerId, $db)
     {
         $fields = Zend_Registry::get('fields');
@@ -239,26 +219,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
     }
 
-    static public function isEnemyCastle($gameId, $castleId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('castlesingame', 'castleId')
-            ->where('razed = false')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" != ?', $playerId)
-            ->where('"castleId" = ?', $castleId);
-        try {
-            $id = $db->fetchOne($select);
-            if ($castleId == $id) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function getAllEnemyUnitsFromCastlePosition($gameId, $position, $db)
     {
         $xs = array(
@@ -376,59 +336,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         return $mSoldier->getSwimmingFromArmiesIds($ids);
     }
 
-    static public function zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db)
-    {
-
-        if ($heroId != self::getHeroIdByPlayerId($gameId, $playerId, $db)) {
-            echo('HeroId jest inny');
-
-            return;
-        }
-        $data = array(
-            'movesLeft' => 0
-        );
-        $where = array(
-            $db->quoteInto('"armyId" = ?', $armyId),
-            $db->quoteInto('"heroId" = ?', $heroId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-
-        return self::update('heroesingame', $data, $where, $db);
-    }
-
-    static public function getHeroIdByPlayerId($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'heroId')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getHeroIdByArmyIdPlayerId($gameId, $armyId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'heroId')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('"armyId" = ?', $armyId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
     static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db)
     {
         $select = $db->select()
@@ -478,32 +385,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             echo($e);
             echo($select->__toString());
         }
-    }
-
-    static public function heroUpdateArmyId($gameId, $heroId, $newArmyId, $db)
-    {
-        $data = array(
-            'armyId' => $newArmyId
-        );
-        $where = array(
-            $db->quoteInto('"heroId" = ?', $heroId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-
-        return self::update('heroesingame', $data, $where, $db);
-    }
-
-    static public function soldierUpdateArmyId($gameId, $soldierId, $newArmyId, $db)
-    {
-        $data = array(
-            'armyId' => $newArmyId
-        );
-        $where = array(
-            $db->quoteInto('"soldierId" = ?', $soldierId),
-            $db->quoteInto('"gameId" = ?', $gameId)
-        );
-
-        return self::update('soldier', $data, $where, $db);
     }
 
     static public function isHeroInGame($gameId, $playerId, $db)
@@ -596,90 +477,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             echo($e);
             echo($select->__toString());
         }
-    }
-
-    static public function resetHeroesMovesLeft($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'heroesingame'), array('movesLeft', 'heroId'))
-            ->join(array('b' => 'hero'), 'a."heroId"=b."heroId"', '')
-            ->where('"playerId" = ?', $playerId)
-            ->where('a."gameId" = ?', $gameId);
-
-        try {
-            $heroesingame = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        foreach ($heroesingame as $hero) {
-            if ($hero['movesLeft'] > 2) {
-                $hero['movesLeft'] = 2;
-            }
-            $select = $db->select()
-                ->from('hero', new Zend_Db_Expr('"numberOfMoves" + ' . $hero['movesLeft']))
-                ->where('"playerId" = ?', $playerId)
-                ->where('"heroId" = ?', $hero['heroId']);
-            $data = array(
-                'movesLeft' => new Zend_Db_Expr('(' . $select->__toString() . ')')
-            );
-            $where = array(
-                $db->quoteInto('"heroId" = ?', $hero['heroId']),
-                $db->quoteInto('"gameId" = ?', $gameId)
-            );
-            self::update('heroesingame', $data, $where, $db);
-        }
-    }
-
-    static public function enemiesCastlesExist($gameId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('castlesingame', 'castleId')
-            ->where('"playerId" != ?', $playerId)
-            ->where('"gameId" = ?', $gameId)
-            ->where('razed = false');
-        try {
-            $result = $db->query($select)->fetchAll();
-            if (count($result)) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getRazedCastles($gameId, $db)
-    {
-
-        $castles = array();
-        $select = $db->select()
-            ->from('castlesingame')
-            ->where('"gameId" = ?', $gameId)
-            ->where('razed = true');
-        try {
-            $result = $db->query($select)->fetchAll();
-            foreach ($result as $val) {
-                $castles[$val['castleId']] = $val;
-            }
-
-            return $castles;
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function updateGame($gameId, $data, $db)
-    {
-
-        $where = $db->quoteInto('"gameId" = ?', $gameId);
-
-        return self::update('game', $data, $where, $db);
     }
 
     /**
