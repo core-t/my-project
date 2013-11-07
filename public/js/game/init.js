@@ -86,7 +86,6 @@ $(document).ready(function () {
 });
 
 function startGame() {
-    console.log('aaa');
     if (!largeimageloaded) {
         setTimeout('startGame()', 1000);
         return;

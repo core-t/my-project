@@ -287,6 +287,8 @@ function walking(path) {
 
             if (path[i].tt == 'f' || path[i].tt == 's' || path[i].tt == 'm') {
                 soldiersMovesLeft[soldier.soldierId] -= units[soldier.unitId][path[i].tt];
+            } else if (path[i].tt == 'c') {
+                soldiersMovesLeft[soldier.soldierId] -= path[i].G;
             } else {
                 soldiersMovesLeft[soldier.soldierId] -= terrain[path[i].tt][selectedArmy.movementType];
             }
@@ -296,7 +298,7 @@ function walking(path) {
             }
 
             if (soldiersMovesLeft[soldier.soldierId] <= 0) {
-                if (typeof set == 'undefined') {
+                if (notSet(set)) {
                     var set = {'x': pX, 'y': pY};
                 }
             }
@@ -308,17 +310,19 @@ function walking(path) {
                 heroesMovesLeft[hero.heroId] = hero.movesLeft;
             }
 
-            heroesMovesLeft[hero.heroId] -= terrain[path[i].tt][selectedArmy.movementType];
+            if (path[i].tt == 'c') {
+                heroesMovesLeft[hero.heroId] -= path[i].G;
+            } else {
+                heroesMovesLeft[hero.heroId] -= terrain[path[i].tt][selectedArmy.movementType];
+            }
 
             if (heroesMovesLeft[hero.heroId] < 0) {
                 className = 'path2';
             }
 
             if (heroesMovesLeft[hero.heroId] <= 0) {
-                if (typeof set == 'undefined') {
-                    var set = new Object();
-                    set.x = pX;
-                    set.y = pY;
+                if (notSet(set)) {
+                    var set = {'x': pX, 'y': pY};
                 }
                 break;
             }

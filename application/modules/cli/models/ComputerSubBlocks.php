@@ -33,12 +33,12 @@ class Cli_Model_ComputerSubBlocks
 //                    foreach ($enemy['ids'] as $id) {
 //                        $defender[]['armyId'] = $id;
 //                    }
-                    echo('
-Castle defender: ');
-                    print_r($defender);
-                    echo('
-castleId: ' . $castleId . '
-');
+//                    echo('
+//Castle defender: ');
+//                    print_r($defender);
+//                    echo('
+//castleId: ' . $castleId . '
+//');
                     $mCastlesInGame->changeOwner($mapCastles[$castleId], $playerId);
                 } else {
                     $result['attackerArmy'] = array(

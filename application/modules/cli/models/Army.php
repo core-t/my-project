@@ -207,7 +207,7 @@ class Cli_Model_Army
                     $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesSwamp'];
                 } elseif ($path[$i]['tt'] == 'm') {
                     $soldiersMovesLeft[$soldier['soldierId']] -= $this->units[$soldier['unitId']]['modMovesHills'];
-                } else {
+                } elseif (!isset($path[$i]['cc'])) {
                     $soldiersMovesLeft[$soldier['soldierId']] -= $defaultMoveCost;
                 }
 
@@ -226,7 +226,9 @@ class Cli_Model_Army
                     $heroesMovesLeft[$hero['heroId']] = $hero['movesLeft'];
                 }
 
-                $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+                if (!isset($path[$i]['cc'])) {
+                    $heroesMovesLeft[$hero['heroId']] -= $defaultMoveCost;
+                }
 
                 if ($heroesMovesLeft[$hero['heroId']] < 0) {
                     $skip = true;
@@ -256,7 +258,6 @@ class Cli_Model_Army
                     'tt' => $path[$i]['tt']
                 );
             }
-
 
             if ($path[$i]['tt'] == 'E') {
                 break;
