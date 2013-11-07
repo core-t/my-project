@@ -27,7 +27,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         );
 
         $data = array(
-            'production' => $unitId,
+            'productionId' => $unitId,
             'productionTurn' => 0
         );
 
@@ -37,7 +37,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
     public function getProduction($castleId, $playerId)
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('production', 'productionTurn'))
+            ->from($this->_name, array('productionId', 'productionTurn'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"castleId" = ?', $castleId)
             ->where('"playerId" = ?', $playerId);
@@ -69,7 +69,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
         $data = array(
             'razed' => 'true',
-            'production' => null,
+            'productionId' => null,
             'productionTurn' => 0,
         );
 
@@ -97,7 +97,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         $playersCastles = array();
 
         $select = $this->_db->select()
-            ->from($this->_name, array('production', 'productionTurn', 'defenseMod', 'castleId'))
+            ->from($this->_name, array('productionId', 'productionTurn', 'defenseMod', 'castleId'))
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('razed = false');
@@ -174,7 +174,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         $data = array(
             'defenseMod' => $defenseMod,
             'playerId' => $playerId,
-            'production' => null,
+            'productionId' => null,
             'productionTurn' => 0,
         );
 

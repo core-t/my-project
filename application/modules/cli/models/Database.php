@@ -112,7 +112,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             }
 
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
-            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
+            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
         }
 
         return $result;
@@ -144,7 +144,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
             }
             $result['soldiers'] = $mSoldier->getForWalk($armyId);
-            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
+            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
 
             return $result;
         }

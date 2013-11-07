@@ -402,7 +402,7 @@ class Cli_Model_Army
         }
     }
 
-    public function calculateMaxArmyMoves($army)
+    static public function calculateMaxArmyMoves($army)
     {
         foreach ($army['heroes'] as $hero) {
             if (!isset($heroMoves)) {

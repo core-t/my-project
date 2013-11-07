@@ -8,7 +8,7 @@ abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
      */
     protected $_db;
 
-    protected $_quiet = false;
+    protected $_quiet = true;
     protected $_cli = true;
 
     public function __construct($config = null)

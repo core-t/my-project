@@ -314,7 +314,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
                 $this->destroyArmy($armies['army' . $army['armyId']]['armyId'], $playerId);
                 unset($armies['army' . $army['armyId']]);
             } else {
-                $armies['army' . $army['armyId']]['movesLeft'] = self::calculateMaxArmyMoves($this->_gameId, $army['armyId'], $this->_db);
+                $armies['army' . $army['armyId']]['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($armies['army' . $army['armyId']]);
             }
         }
 
@@ -345,7 +345,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             if (empty($army['heroes']) AND empty($army['soldiers'])) {
                 $this->destroyArmy($army['armyId'], $playerId);
             }
-            $army['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($army);
+            $army['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($army);
             return $army;
         }
     }
@@ -426,7 +426,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             return $result;
         } else {
             unset($result['playerId']);
-            $result['movesLeft'] = Cli_Model_Army::calculateArmyMovesLeft($result);
+            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
             return $result;
         }
     }

@@ -91,13 +91,12 @@ class Cli_Model_Turn
                 } else {
                     $unitId = Application_Model_Board::getCastleOptimalProduction($mapCastles[$castleId]['production']);
                 }
-                if ($unitId != $castleProduction['production']) {
+                if ($unitId != $castleProduction['productionId']) {
                     $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
                     $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
-                    $unitId = $castleProduction['production'];
                 }
             } else {
-                $unitId = $castleProduction['production'];
+                $unitId = $castleProduction['productionId'];
             }
 
             $castlesInGame[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
@@ -109,7 +108,7 @@ class Cli_Model_Turn
                         $armyId = $mArmy->createArmy($mapCastles[$castleId]['position'], $playerId);
                     }
                     $mSoldier = new Application_Model_Soldier($gameId, $db);
-                    $mSoldier->add($armyId, $castleProduction['production']);
+                    $mSoldier->add($armyId, $unitId);
                 }
             }
         }
