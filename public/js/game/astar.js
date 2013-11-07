@@ -60,7 +60,7 @@ var AStar = {
             path[k].F -= i;
             path[k].G -= i;
         }
-
+//console.log(path);
         return path;
     },
     showPath: function (close, key) {
@@ -70,11 +70,11 @@ var AStar = {
 
         var path = this.getPath(close, key);
 
-        if (selectedArmy.canSwim || selectedArmy.canFly > 0) {
+//        if (selectedArmy.canSwim || selectedArmy.canFly > 0) {
             var set = swimmingOrFlying(path);
-        } else {
-            var set = walking(path);
-        }
+//        } else {
+//            var set = walking(path);
+//        }
 
         if (notSet(set)) {
             return;
