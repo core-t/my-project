@@ -192,7 +192,7 @@ function castleOwner(castleId, color) {
 }
 
 function setMyCastleProduction(castleId) {
-    castles[castleId].currentProduction = players[my.color].castles[castleId].production;
+    castles[castleId].currentProduction = players[my.color].castles[castleId].productionId;
     castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
     if (castles[castleId].currentProduction) {
         Castle.addHammer(castleId);

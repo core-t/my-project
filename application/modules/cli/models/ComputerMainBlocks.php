@@ -308,9 +308,8 @@ class Cli_Model_ComputerMainBlocks
         if ($position['tt'] != 'E') {
             $armiesIds = $mArmy2->joinArmiesAtPosition($position, $playerId);
             $armyId = $armiesIds['armyId'];
-        }
-
-        if (!$armyId) {
+        } else {
+            $armiesIds = null;
             $armyId = $oldArmyId;
         }
 

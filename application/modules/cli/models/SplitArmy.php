@@ -47,7 +47,7 @@ class Cli_Model_SplitArmy
                     continue;
                 }
 
-                if (!Cli_Model_Database::isSoldierInArmy($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $soldierId, $db)) {
+                if (!$mSoldier->isSoldierInArmy($parentArmyId, $user->parameters['playerId'], $soldierId)) {
                     continue;
                 }
 
@@ -56,7 +56,7 @@ class Cli_Model_SplitArmy
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
 
-                $mSoldier->soldierUpdateArmyId($user->parameters['gameId'], $soldierId, $childArmyId, $db);
+                $mSoldier->soldierUpdateArmyId($soldierId, $childArmyId);
             }
         }
 
