@@ -35,6 +35,7 @@ abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
         if (!$name) {
             $name = $this->_name;
         }
+
         try {
             $updateResult = $this->_db->update($name, $data, $where);
         } catch (Exception $e) {
@@ -51,6 +52,7 @@ abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
             }
             return;
         }
+
         switch ($updateResult) {
             case 1:
                 return $updateResult;
@@ -70,7 +72,19 @@ Zapytanie wykonane poprawnie lecz 0 rekordów zostało zaktualizowane
                 echo('
 Zapytanie zwróciło błąd
 ');
-                Coret_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+                $e = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+                if ($this->_cli) {
+                    $l = new Coret_Model_Logger();
+                    $l->log($e);
+
+                    echo($e);
+                } else {
+                    $l = new Coret_Model_Logger('www');
+                    $l->log($e);
+
+                    throw new Exception($e);
+                }
+                Coret_Model_Logger::debug($e);
                 break;
 
             default:
