@@ -878,3 +878,11 @@ html {
     height: 120px;
     z-index: 99999;
 }
+
+.ruinSearch{
+    position: absolute;
+    background: url("/img/game/ruinSearch.png");
+    width: 38px;
+    height: 40px;
+    z-index: 99999;
+}

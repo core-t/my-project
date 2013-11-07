@@ -96,7 +96,9 @@ class Cli_Model_Army
 
 
         for ($i = 0; $i < count($path); $i++) {
-            $movesLeft -= $terrain[$path[$i]['tt']]['flying'];
+            if (!isset($path[$i]['cc'])) {
+                $movesLeft -= $terrain[$path[$i]['tt']]['flying'];
+            }
 
             if ($movesLeft < 0) {
                 break;
@@ -151,7 +153,9 @@ class Cli_Model_Army
 
 
         for ($i = 0; $i < count($path); $i++) {
-            $movesLeft -= $terrain[$path[$i]['tt']]['swimming'];
+            if (!isset($path[$i]['cc'])) {
+                $movesLeft -= $terrain[$path[$i]['tt']]['swimming'];
+            }
 
             if ($movesLeft < 0) {
                 break;

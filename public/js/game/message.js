@@ -534,7 +534,7 @@ var Message = {
         var newBattle = new Array();
         var attack = $('<div>').addClass('battle attack');
 
-        if (isSet(data.castleId)) {
+        if (isTruthful(data.castleId)) {
             board.append($('<div>').addClass('castleWar').css({
                 top: 40 * castles[data.castleId].y - 12 + 'px',
                 left: 40 * castles[data.castleId].x - 11 + 'px'

@@ -62,9 +62,6 @@ class Cli_Model_Turn
         $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
         if ($computer) {
             $mArmy->unfortifyComputerArmies($playerId);
-            if (isset($castle['position'])) {
-                $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
-            }
         }
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         $mHeroesInGame->resetHeroesMovesLeft($playerId);
@@ -86,6 +83,9 @@ class Cli_Model_Turn
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
 
             if ($computer) {
+                if (isset($mapCastles[$castleId]['position'])) {
+                    $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $db);
+                }
                 if ($turnNumber < 10) {
                     $unitId = Application_Model_Board::getMinProductionTimeUnit($mapCastles[$castleId]['production']);
                 } else {

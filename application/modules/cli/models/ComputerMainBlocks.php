@@ -304,12 +304,10 @@ class Cli_Model_ComputerMainBlocks
     static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null)
     {
         $mArmy2 = new Application_Model_Army($gameId, $db);
+        $armiesIds = $mArmy2->joinArmiesAtPosition($position, $playerId);
+        $armyId = $armiesIds['armyId'];
 
-        if ($position['tt'] != 'E') {
-            $armiesIds = $mArmy2->joinArmiesAtPosition($position, $playerId);
-            $armyId = $armiesIds['armyId'];
-        } else {
-            $armiesIds = null;
+        if (!$armyId) {
             $armyId = $oldArmyId;
         }
 
@@ -434,7 +432,7 @@ class Cli_Model_ComputerMainBlocks
 //        );
 //    }
 
-    static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db = null)
+    static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db)
     {
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 

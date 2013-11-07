@@ -185,7 +185,7 @@ function isDigit(val) {
 }
 
 function isTruthful(val) {
-    if (typeof val != 'undefined' && val) {
+    if (isSet(val) && val) {
         return true;
     }
     return false;

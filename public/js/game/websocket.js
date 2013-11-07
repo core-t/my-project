@@ -107,6 +107,9 @@ Websocket = {
 
                             }
                         }
+                        $('.ruinSearch').animate({'display': 'none'}, 1000, function () {
+                            $('.ruinSearch').remove();
+                        });
                         break;
 
                     case 'splitArmy':
@@ -353,7 +356,11 @@ Websocket = {
         if (selectedArmy == null) {
             return;
         }
+
         unselectArmy();
+
+        board.append($('<div>').addClass('ruinSearch').css({'top': 40 * unselectedArmy.y + 'px', 'left': 40 * unselectedArmy.x + 'px'}));
+
         var token = {
             type: 'ruin',
             armyId: unselectedArmy.armyId

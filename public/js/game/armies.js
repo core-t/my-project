@@ -257,12 +257,9 @@ function swimmingOrFlying(path) {
 //            }
 //        }
 
-        if (selectedArmy.moves <= path[i].G) {
-            className = 'path2';
-        }
-
         if (selectedArmy.moves < path[i].G) {
-            if (typeof set == 'undefined') {
+            className = 'path2';
+            if (notSet(set)) {
                 var set = {'x': pX, 'y': pY};
             }
         }

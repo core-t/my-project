@@ -15,7 +15,7 @@ var AStar = {
             this.myCastleId = {};
             var tmpX = destX * 40;
             var tmpY = destY * 40;
-            if (newX == tmpX && newY == tmpY && force != 1) {
+            if (newX == tmpX && newY == tmpY && force != 1) {  //przerobić dla całego pola 40x40
                 return null;
             }
             $('.path').remove();
