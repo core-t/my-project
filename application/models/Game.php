@@ -356,15 +356,11 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
     public function isPlayerTurn($playerId)
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('turnPlayerId'))
+            ->from($this->_name, 'turnPlayerId')
             ->where('"turnPlayerId" = ?', $playerId)
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        $result = $this->_db->query($select)->fetchAll();
-        if (isset($result[0]['turnPlayerId'])) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $this->selectOne($select);
     }
 
     public function getTurnPlayerId()

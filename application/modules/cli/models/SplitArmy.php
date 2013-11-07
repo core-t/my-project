@@ -15,37 +15,47 @@ class Cli_Model_SplitArmy
 
         $childArmyId = null;
 
-        if ((isset($heroesIds[0]) && !empty($heroesIds[0])) || (isset($soldiersIds) && !empty($soldiersIds))) {
+        $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
+
+        if (isset($heroesIds[0]) && !empty($heroesIds[0])) {
+
+            $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+
             foreach ($heroesIds as $heroId) {
                 if (!Zend_Validate::is($heroId, 'Digits')) {
                     continue;
                 }
-                if (!Cli_Model_Database::isHeroInArmy($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $heroId, $db)) {
+                if (!$mHeroesInGame->isHeroInArmy($parentArmyId, $user->parameters['playerId'], $heroId)) {
                     continue;
                 }
 
                 if (empty($childArmyId)) {
                     $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
-                    $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
-                $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+
                 $mHeroesInGame->heroUpdateArmyId($heroId, $childArmyId);
             }
+        }
+
+        if (isset($soldiersIds) && !empty($soldiersIds)) {
+
+            $mSoldier = new Application_Model_Soldier($user->parameters['gameId'], $db);
+
             foreach ($soldiersIds as $soldierId) {
                 if (!Zend_Validate::is($soldierId, 'Digits')) {
                     continue;
                 }
+
                 if (!Cli_Model_Database::isSoldierInArmy($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $soldierId, $db)) {
                     continue;
                 }
 
                 if (empty($childArmyId)) {
                     $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
-                    $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
-                $mSoldier = new Application_Model_Soldier($user->parameters['gameId'], $db);
+
                 $mSoldier->soldierUpdateArmyId($user->parameters['gameId'], $soldierId, $childArmyId, $db);
             }
         }
@@ -55,13 +65,12 @@ class Cli_Model_SplitArmy
             return;
         }
 
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'splitArmy',
-            'parentArmy' => $mArmy2->getArmyByArmyId($parentArmyId),
-            'childArmy' => $mArmy2->getArmyByArmyId($childArmyId),
+            'parentArmy' => $mArmy->getArmyByArmyId($parentArmyId),
+            'childArmy' => $mArmy->getArmyByArmyId($childArmyId),
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 

@@ -16,11 +16,12 @@ class Cli_Model_HeroResurrection
             return;
         }
 
-        if (!Cli_Model_Database::isHeroInGame($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
-            Cli_Model_Database::connectHero($user->parameters['gameId'], $user->parameters['playerId'], $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
+
+        if (!$mHeroesInGame->isHeroInGame($user->parameters['playerId'])) {
+            $mHeroesInGame->connectHero($user->parameters['playerId']);
         }
 
-        $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
         $heroId = $mHeroesInGame->getDeadHeroId($user->parameters['playerId']);
 
         if (!$heroId) {

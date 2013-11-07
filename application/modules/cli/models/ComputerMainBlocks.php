@@ -434,12 +434,14 @@ class Cli_Model_ComputerMainBlocks
 
     static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db = null)
     {
-        if (!Cli_Model_Database::isHeroInGame($gameId, $playerId, $db)) {
-            Cli_Model_Database::connectHero($gameId, $playerId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+        if (!$mHeroesInGame->isHeroInGame($playerId)) {
+            $mHeroesInGame->connectHero($playerId);
         }
 
-        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         $heroId = $mHeroesInGame->getDeadHeroId($playerId);
+
         if ($heroId) {
             if ($gold >= 100) {
                 $armyId = Cli_Model_Army::heroResurrection($gameId, $heroId, $position, $playerId, $db);

@@ -72,20 +72,6 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         $this->update($data, $where);
     }
 
-    public function getDeadHeroId($playerId)
-    {
-        $select = $this->_db->select()
-            ->from(array('a' => $this->_name), 'armyId')
-            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"', 'heroId')
-            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
-            ->where('"playerId" = ?', $playerId);
-
-        $result = $this->selectRow($select);
-        if (!isset($result['armyId'])) {
-            return $result['heroId'];
-        }
-    }
-
     public function armyRemoveHero($heroId)
     {
         $data = array(
@@ -196,5 +182,63 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 
         return $this->selectOne($select);
     }
+
+    public function isHeroInArmy($armyId, $playerId, $heroId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'heroId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('"armyId" = ?', $armyId)
+            ->where('a."heroId" = ?', $heroId);
+
+        return $this->selectOne($select);
+    }
+
+    public function isHeroInGame($playerId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'heroId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId);
+
+        return $this->selectOne($select);
+    }
+
+    public function connectHero($playerId)
+    {
+        $select = $this->_db->select()
+            ->from('hero', 'heroId')
+            ->where('"playerId" = ?', $playerId);
+
+        $heroId = $this->selectOne($select);
+
+        $data = array(
+            'armyId' => null,
+            'gameId' => $this->_gameId,
+            'heroId' => $heroId
+        );
+
+        return $this->insert($data);
+    }
+
+    public function getDeadHeroId($playerId)
+    {
+        $select = $this->_db->select()
+            ->from(array('a' => $this->_name), 'armyId')
+            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"', 'heroId')
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId);
+
+        $result = $this->selectRow($select);
+
+        if (!isset($result['armyId'])) {
+            return $result['heroId'];
+        }
+    }
+
+
 }
 

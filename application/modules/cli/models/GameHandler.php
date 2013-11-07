@@ -19,8 +19,12 @@ class Cli_Model_GameHandler extends Cli_WofHandler
     {
 
         $dataIn = Zend_Json::decode($msg->getData());
-        print_r('ZAPYTANIE ');
-        print_r($dataIn);
+
+        if (Zend_Registry::get('config')->debug) {
+            print_r('ZAPYTANIE ');
+            print_r($dataIn);
+        }
+
         $l = new Coret_Model_Logger();
         $l->log($dataIn);
 
@@ -63,10 +67,9 @@ class Cli_Model_GameHandler extends Cli_WofHandler
         }
 
         if (!Zend_Validate::is($user->parameters['gameId'], 'Digits') || !Zend_Validate::is($user->parameters['playerId'], 'Digits')) {
-            $this->sendError($user, 'No "gameId" or "playerId". No authorized.');
+            $this->sendError($user, 'No "gameId" or "playerId". Not authorized.');
             return;
         }
-
 
         if ($dataIn['type'] == 'chat') {
             new Cli_Model_Chat($dataIn['msg'], $user, $db, $this);
@@ -100,7 +103,11 @@ class Cli_Model_GameHandler extends Cli_WofHandler
             return;
         }
 
-        if (!Cli_Model_Database::isPlayerTurn($user->parameters['gameId'], $user->parameters['playerId'], $db)) {
+        if (!isset($mGame)) {
+            $mGame = new Application_Model_Game($user->parameters['gameId'], $db);
+        }
+
+        if (!$mGame->isPlayerTurn($user->parameters['playerId'])) {
             $this->sendError($user, 'Not your turn.');
 
             if (Zend_Registry::get('config')->exitOnErrors) {

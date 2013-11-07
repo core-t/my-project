@@ -178,47 +178,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         return $result;
     }
 
-    static private function getArmyHeroes($gameId, $armyId, $in, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'hero'), array('heroId', 'name', 'numberOfMoves', 'attackPoints', 'defensePoints'))
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', array('movesLeft'))
-            ->where('"gameId" = ?', $gameId)
-            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
-        if ($in) {
-            $select->where('"armyId" IN (?)', new Zend_Db_Expr($armyId));
-        } else {
-            $select->where('"armyId" = ?', $armyId);
-        }
-        try {
-            $result = $db->query($select)->fetchAll();
-            foreach ($result as $k => $row) {
-                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
-                $result[$k]['artefacts'] = $mInventory->getAll();
-//                $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isPlayerTurn($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('game', array('turnPlayerId'))
-            ->where('"turnPlayerId" = ?', $playerId)
-            ->where('"gameId" = ?', $gameId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($select->__toString());
-            echo($e);
-        }
-    }
-
     static public function getAllEnemyUnitsFromCastlePosition($gameId, $position, $db)
     {
         $xs = array(
@@ -346,79 +305,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             ->where('"armyId" = ?', $armyId);
         try {
             return $db->fetchRow($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isHeroInArmy($gameId, $armyId, $playerId, $heroId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'heroId')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('"armyId" = ?', $armyId)
-            ->where('a."heroId" = ?', $heroId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isSoldierInArmy($gameId, $armyId, $playerId, $soldierId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'soldier'), 'soldierId')
-            ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
-            ->where('a."gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('a."armyId" = ?', $armyId)
-            ->where('"soldierId" = ?', $soldierId)
-            ->where('destroyed = false');
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isHeroInGame($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'hero'), 'heroId')
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId);
-        try {
-            $heroId = $db->fetchOne($select);
-            if ($heroId !== null) {
-                return true;
-            }
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function connectHero($gameId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('hero', 'heroId')
-            ->where('"playerId" = ?', $playerId);
-        try {
-            $heroId = $db->fetchOne($select);
-            $data = array(
-                'armyId' => null,
-                'gameId' => $gameId,
-                'heroId' => $heroId
-            );
-
-            return $db->insert('heroesingame', $data);
         } catch (Exception $e) {
             echo($e);
             echo($select->__toString());
