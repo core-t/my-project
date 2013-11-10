@@ -7,7 +7,7 @@
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_Model_GameHandler extends Cli_WofHandler
+class Cli_GameHandler extends Cli_WofHandler
 {
 
     public function __construct()

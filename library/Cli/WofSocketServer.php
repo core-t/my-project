@@ -1,6 +1,7 @@
 <?php
 
-interface IWebSocketServerObserver {
+interface IWebSocketServerObserver
+{
 
     public function onConnect(IWebSocketConnection $user);
 
@@ -18,43 +19,54 @@ interface IWebSocketServerObserver {
  * @author Bartosz Krzeszewski
  *
  */
-class Cli_WofSocketServer implements IWebSocketServerObserver {
+class Cli_WofSocketServer implements IWebSocketServerObserver
+{
 
     protected $debug = true;
     protected $server;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->server = new WebSocket_Server('tcp://' . Zend_Registry::get('config')->websockets->aHost . ':' . Zend_Registry::get('config')->websockets->aPort, 'superdupersecretkey');
         $this->server->addObserver($this);
 
-        $this->server->addUriHandler('game', new Cli_Model_GameHandler());
-        $this->server->addUriHandler('public', new Cli_Model_PublicHandler());
+        include_once(APPLICATION_PATH . '/modules/cli/handlers/GameHandler.php');
+        include_once(APPLICATION_PATH . '/modules/cli/handlers/PublicHandler.php');
+
+        $this->server->addUriHandler('game', new Cli_GameHandler());
+        $this->server->addUriHandler('public', new Cli_PublicHandler());
     }
 
-    public function onConnect(IWebSocketConnection $user) {
+    public function onConnect(IWebSocketConnection $user)
+    {
 //        $this->say("[DEMO] {$user->getId()} connected");
     }
 
-    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
+    public function onMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
+    {
 //        $this->say("[DEMO] {$user->getId()} says '{$msg->getData()}'");
     }
 
-    public function onDisconnect(IWebSocketConnection $user) {
+    public function onDisconnect(IWebSocketConnection $user)
+    {
 //        $this->say("[DEMO] {$user->getId()} disconnected");
     }
 
-    public function onAdminMessage(IWebSocketConnection $user, IWebSocketMessage $msg) {
+    public function onAdminMessage(IWebSocketConnection $user, IWebSocketMessage $msg)
+    {
         $this->say("[DEMO] Admin Message received!");
 
         $frame = WebSocketFrame::create(WebSocketOpcode::PongFrame);
         $user->sendFrame($frame);
     }
 
-    public function say($msg) {
+    public function say($msg)
+    {
         echo "$msg \r\n";
     }
 
-    public function run() {
+    public function run()
+    {
         $this->server->run();
     }
 

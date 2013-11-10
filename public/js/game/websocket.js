@@ -212,6 +212,10 @@ Websocket = {
                         }
                         break;
 
+                    case 'getConquered':
+                        console.log(r);
+                        break;
+
                     default:
                         console.log(r);
 
@@ -583,5 +587,8 @@ Websocket = {
         };
 
         ws.send(JSON.stringify(token));
+    },
+    getConquered: function () {
+
     }
 }
