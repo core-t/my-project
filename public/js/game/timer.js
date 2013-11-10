@@ -5,8 +5,8 @@ var timer = {
         this.setTimeStart();
         $('#timerRows')
             .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(turn.color))))
-                .append($('<div class="left nr">').html(turn.nr))
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.shortName))))
+                .append($('<div class="left nr">').html(Turn.number))
                 .append(
                     $('<div class="left time" id="time">')
                         .append($('<div>').attr('id', 'second'))
@@ -59,8 +59,8 @@ var timer = {
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
         $('#timerRows')
             .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(turn.color))))
-                .append($('<div class="left nr">').html(turn.nr))
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.shortName))))
+                .append($('<div class="left nr">').html(Turn.number))
                 .append(
                     $('<div class="left time" id="time">')
                         .append($('<div>').attr('id', 'second'))

@@ -165,7 +165,7 @@ var Message = {
     },
     turn: function () {
         this.remove();
-        if (my.turn && turn.nr == 1 && notSet(castles[firstCastleId].currentProduction)) {
+        if (my.turn && Turn.number == 1 && notSet(castles[firstCastleId].currentProduction)) {
             Message.castle(firstCastleId);
         } else {
             this.show($('<div>').html('Your turn.'));

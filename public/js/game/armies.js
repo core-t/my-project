@@ -566,7 +566,7 @@ function fortifyArmy() {
 }
 
 function unfortifyArmy(armyId) {
-    if (isComputer(turn.color)) {
+    if (isComputer(Turn.shortName)) {
         return;
     }
     var index = $.inArray(armyId, quitedArmies);

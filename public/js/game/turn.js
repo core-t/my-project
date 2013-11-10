@@ -1,7 +1,15 @@
 // *** TURN ***
 
 var Turn = {
-    nr:null,
-    color:null
+    number:null,
+    shortName:null,
+    init:function(){
+        for(i in turnHistory){
+
+        }
+
+        this.number = turnHistory[i].number;
+        this.shortName = turnHistory[i].shortName;
+    }
 
 }

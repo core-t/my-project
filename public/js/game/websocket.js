@@ -117,7 +117,7 @@ Websocket = {
                         players[r.color].armies['army' + r.parentArmy.armyId] = new army(r.parentArmy, r.color);
                         setParentArmy(players[r.color].armies['army' + r.parentArmy.armyId]);
                         players[r.color].armies['army' + r.childArmy.armyId] = new army(r.childArmy, r.color);
-                        if (my.color == turn.color) {
+                        if (my.color == Turn.shortName) {
                             selectArmy(players[r.color].armies['army' + r.childArmy.armyId], 0);
                         } else {
                             zoomer.lensSetCenter(r.parentArmy.x * 40, r.parentArmy.y * 40);
@@ -145,7 +145,7 @@ Websocket = {
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                         players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
-                        if (my.color == turn.color) {
+                        if (my.color == Turn.shortName) {
                             goldUpdate(r.data.gold);
                         }
                         break;
@@ -155,7 +155,7 @@ Websocket = {
                         if (loading) {
                             startGame();
                             loading = false;
-                        } else if (my.game && players[turn.color].computer) {
+                        } else if (my.game && players[Turn.shortName].computer) {
                             setTimeout('Websocket.computer()', 1000);
                         }
                         break;
@@ -330,7 +330,7 @@ Websocket = {
             return
         }
 
-        if (!players[turn.color].computer) {
+        if (!players[Turn.shortName].computer) {
             return;
         }
 

@@ -59,10 +59,11 @@ $(document).ready(function () {
         Gui.adjust();
     });
 
+    Turn.init();
     Gui.adjust();
     fieldsCopy();
     unitsReformat();
-    artifactsReformat()
+//    artifactsReformat();
     Gui.prepareButtons();
     Websocket.init();
 
@@ -90,7 +91,7 @@ function startGame() {
         setTimeout('startGame()', 1000);
         return;
     }
-console.log(turnHistory);exit;
+
     showFirstCastle();
 
     if (!enemyArmies && !enemyCastles) {
@@ -107,7 +108,7 @@ console.log(turnHistory);exit;
         }
         if (my.turn && !players[my.color].turnActive) {
             Websocket.startMyTurn();
-        } else if (my.game && players[turn.color].computer) {
+        } else if (my.game && players[Turn.shortName].computer) {
             setTimeout('Websocket.computer()', 1000);
         }
     }

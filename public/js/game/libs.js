@@ -30,17 +30,17 @@ function changeTurn(color, nr) {
         return;
     }
 
-    turn.color = color;
+    Turn.shortName = color;
 
     if (typeof nr != 'undefined') {
-        turn.nr = nr;
+        Turn.number = nr;
     }
 
     Players.turn();
 
     timer.update();
 
-    if (turn.color == my.color) {
+    if (Turn.shortName == my.color) {
         turnOn();
         Websocket.startMyTurn();
         return;

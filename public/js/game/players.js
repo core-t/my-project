@@ -96,10 +96,10 @@ var Players = {
     turn: function () {
         this.ctx.beginPath();
         this.ctx.arc(this.circle_center_x, this.circle_center_y, 50, 0, Math.PI * 2, true);
-        this.ctx.fillStyle = players[turn.color].backgroundColor;
+        this.ctx.fillStyle = players[Turn.shortName].backgroundColor;
         this.ctx.fill();
 
-        $('#turnNumber').css('color', players[turn.color].textColor).html(turn.nr);
+        $('#turnNumber').css('color', players[Turn.shortName].textColor).html(Turn.number);
     },
     rotate: function () {
         this.ctx.rotate(20 * Math.PI / 180);
