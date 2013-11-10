@@ -95,16 +95,17 @@ function startGame() {
     showFirstCastle();
 
     if (!enemyArmies && !enemyCastles) {
-        turnOff();
+        Turn.off();
         Message.win(my.color);
     } else if (!myArmies && !myCastles) {
-        turnOff();
+        Turn.off();
         Message.lost(my.color);
     } else {
+        console.log(my.turn);
         if (my.turn) {
-            turnOn();
+            Turn.on();
         } else {
-            turnOff();
+            Turn.off();
         }
         if (my.turn && !players[my.color].turnActive) {
             Websocket.startMyTurn();

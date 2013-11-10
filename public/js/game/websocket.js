@@ -52,7 +52,7 @@ Websocket = {
                         } else if (typeof r.win != 'undefined') {
                             winM(r.color);
                         } else {
-                            changeTurn(r.color, r.nr);
+                            Turn.change(r.color, r.nr);
                             Websocket.computer();
                         }
                         break;

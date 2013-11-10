@@ -5,51 +5,6 @@ $(document)[0].oncontextmenu = function () {
 
 // *** OTHER ***
 
-function turnOn() {
-    makeMyCursorUnlock();
-    skippedArmies = new Array();
-    my.turn = true;
-    $('#nextTurn').removeClass('buttonOff');
-    $('#nextArmy').removeClass('buttonOff');
-    showFirstCastle();
-    Message.turn();
-    titleBlink('Your turn!');
-}
-
-function turnOff() {
-    my.turn = false;
-    unselectArmy();
-    $('#nextTurn').addClass('buttonOff');
-    $('#nextArmy').addClass('buttonOff');
-    makeMyCursorLock();
-}
-
-function changeTurn(color, nr) {
-    if (!color) {
-        console.log('Turn "color" not set');
-        return;
-    }
-
-    Turn.shortName = color;
-
-    if (typeof nr != 'undefined') {
-        Turn.number = nr;
-    }
-
-    Players.turn();
-
-    timer.update();
-
-    if (Turn.shortName == my.color) {
-        turnOn();
-        Websocket.startMyTurn();
-        return;
-    } else {
-        turnOff();
-        return;
-    }
-}
-
 function goldUpdate(gold) {
     $('#gold').html(gold);
 }
