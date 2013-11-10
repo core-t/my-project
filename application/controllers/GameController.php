@@ -53,7 +53,7 @@ class GameController extends Game_Controller_Game
         $playersTowers = $mTower->getTowers();
 
         $mTurn = new Application_Model_Turn($this->_namespace->gameId);
-        $this->view->turn = $mTurn->getTurnHistory();
+        $this->view->turnHistory = $mTurn->getTurnHistory();
 
         $towers = array();
 

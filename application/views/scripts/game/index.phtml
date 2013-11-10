@@ -7,16 +7,13 @@ var players = <?php echo Zend_Json::encode($this->players); ?>;
 var castles = <?php echo Zend_Json::encode($this->castlesSchema); ?>;
 var capitals = <?php echo Zend_Json::encode($this->capitals); ?>;
 var chatHistory = <?php echo Zend_Json::encode($this->chatHistory); ?>;
+var turnHistory = <?php echo Zend_Json::encode($this->turnHistory); ?>;
 
 var my = {
     color: '<?php echo $this->color ?>',
     id: <?php echo $this->id ?>,
     turn: <?php echo $this->myTurn ?>,
     game: <?php echo $this->myGame ?>
-}
-var turn = {
-    color: '<?php echo $this->turn['color'] ?>',
-    nr: <?php echo $this->turn['nr'] ?>
 }
 var gameId = <?php echo $this->gameId ?>;
 var lang = '<?php echo Zend_Registry::get('lang') ?>';

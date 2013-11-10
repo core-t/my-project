@@ -19,8 +19,10 @@ class Application_Model_Turn extends Coret_Db_Table_Abstract
     public function getTurnHistory()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
-            ->where('"gameId" = ?', $this->_gameId)
+            ->from(array('a' => $this->_name), array('number', 'date'))
+            ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', null)
+            ->join(array('c' => 'mapplayers'), 'b."mapPlayerId" = c."mapPlayerId"', array('shortName'))
+            ->where('a."gameId" = ?', $this->_gameId)
             ->order($this->_primary);
         return $this->selectAll($select);
     }

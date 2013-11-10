@@ -90,7 +90,7 @@ function startGame() {
         setTimeout('startGame()', 1000);
         return;
     }
-
+console.log(turnHistory);exit;
     showFirstCastle();
 
     if (!enemyArmies && !enemyCastles) {
