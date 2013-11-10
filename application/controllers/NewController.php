@@ -38,7 +38,7 @@ class NewController extends Game_Controller_Gui
         if ($this->_namespace->gameId) {
             unset($this->_namespace->gameId);
         }
-        $modelGame = new Application_Model_Game();
+
         $this->view->player = $this->_namespace->player;
     }
 

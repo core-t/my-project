@@ -23,6 +23,7 @@ class Application_Model_Turn extends Coret_Db_Table_Abstract
             ->join(array('b' => 'playersingame'), 'a."playerId" = b."playerId"', null)
             ->join(array('c' => 'mapplayers'), 'b."mapPlayerId" = c."mapPlayerId"', array('shortName'))
             ->where('a."gameId" = ?', $this->_gameId)
+            ->where('b."gameId" = ?', $this->_gameId)
             ->order($this->_primary);
         return $this->selectAll($select);
     }

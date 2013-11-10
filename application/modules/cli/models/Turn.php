@@ -47,6 +47,9 @@ class Cli_Model_Turn
             }
         }
 
+        $mTurn = new Application_Model_Turn($gameId, $db);
+        $mTurn->insertTurn($playerId, $response['nr']);
+
         return $response;
     }
 
@@ -69,9 +72,6 @@ class Cli_Model_Turn
         $income = 0;
         $color = null;
 
-        $mGame = new Application_Model_Game($gameId, $db);
-        $turnNumber = $mGame->getTurnNumber();
-
         $mapCastles = Zend_Registry::get('castles');
 
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
@@ -86,6 +86,10 @@ class Cli_Model_Turn
                 if (isset($mapCastles[$castleId]['position'])) {
                     $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $db);
                 }
+
+                $mGame = new Application_Model_Game($gameId, $db);
+                $turnNumber = $mGame->getTurnNumber();
+
                 if ($turnNumber < 10) {
                     $unitId = Application_Model_Board::getMinProductionTimeUnit($mapCastles[$castleId]['production']);
                 } else {
@@ -124,9 +128,6 @@ class Cli_Model_Turn
             $gold = $gold + $income - $costs;
 
             $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
-
-            $mTurn = new Application_Model_Turn($gameId, $db);
-            $mTurn->insertTurn($playerId, $turnNumber);
 
             $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
