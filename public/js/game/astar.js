@@ -48,7 +48,7 @@ var AStar = {
         }
         path = path.reverse();
 
-        for(k in path){
+        for (k in path) {
             if (path[k].tt == 'c') {
                 var castleId = Castle.isMyCastle(path[k].x, path[k].y);
                 if (this.myCastleId[castleId]) {
@@ -60,7 +60,7 @@ var AStar = {
             path[k].F -= i;
             path[k].G -= i;
         }
-//console.log(path);
+
         return path;
     },
     showPath: function (close, key) {
@@ -70,11 +70,7 @@ var AStar = {
 
         var path = this.getPath(close, key);
 
-//        if (selectedArmy.canSwim || selectedArmy.canFly > 0) {
-            var set = swimmingOrFlying(path);
-//        } else {
-//            var set = walking(path);
-//        }
+        var set = walking(path);
 
         if (notSet(set)) {
             return;

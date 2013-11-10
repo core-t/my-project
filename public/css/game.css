@@ -233,33 +233,23 @@
 /*}*/
 
 #exit {
-    position: absolute;
     top: 4px;
-    left: 198px;
     background: url('/img/game/exit.png') no-repeat center center;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
 }
 
 #show {
-    position: absolute;
     top: 41px;
-    left: 198px;
     background: url('/img/game/show.png') no-repeat center center;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
 }
 
 #surrender {
-    position: absolute;
     top: 78px;
-    left: 198px;
     background: url("/img/game/white_flag.png") no-repeat center center;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
+}
+
+#statistics {
+    top: 115px;
+    background: url("/img/game/statistics.png") no-repeat center center;
 }
 
 #turn {
@@ -291,7 +281,7 @@
 }
 
 .message {
-    width: 321px;
+    min-width: 321px;
     min-height: 70px;
     border: 1px solid #555;
     z-index: 27000;
@@ -835,7 +825,7 @@ html {
 }
 
 /*.armyButton .button {*/
-    /*background: transparent url('/img/game/message_bg.png');*/
+/*background: transparent url('/img/game/message_bg.png');*/
 /*}*/
 /**/
 .armyButton .button.buttonOff {
@@ -848,6 +838,14 @@ html {
     background: none;
     color: yellowgreen;
     font-size: 14px;
+}
+
+.iconButton {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    position: absolute;
+    left: 198px;
 }
 
 .button:hover, #submit:hover {
@@ -879,7 +877,7 @@ html {
     z-index: 99999;
 }
 
-.ruinSearch{
+.ruinSearch {
     position: absolute;
     background: url("/img/game/ruinSearch.png");
     width: 38px;

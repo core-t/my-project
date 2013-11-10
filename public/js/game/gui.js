@@ -57,6 +57,10 @@ var Gui = {
             }
         });
 
+        $('#statistics').click(function () {
+            Message.statistics();
+        });
+
         $('#send').click(function () {
             Websocket.chat();
         });

@@ -677,7 +677,24 @@ var Message = {
         this.show($('<div>').html('Destroy castle. Are you sure?'));
         this.ok(Websocket.razeCastle);
         this.cancel();
+    },
+    statistics: function () {
+        var statistics = $('<div>')
+            .append($('<h3>').html('Statistics'));
+        var table = $('<table>')
+            .append($('<tr>')
+                .append($('<td>').html('Players'))
+                .append($('<td>').html('Castles conquered'))
+                .append($('<td>').html('Castles razed'))
+                .append($('<td>').html('Units killed'))
+                .append($('<td>').html('Heroes killed'))
+            );
+        for (i in players) {
+            table.append($('<tr>').append($('<td>').html(i)));
+        }
+        statistics.append(table);
+        this.show(statistics);
+        this.ok();
     }
-
 
 }
