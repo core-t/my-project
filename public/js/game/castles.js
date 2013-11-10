@@ -55,58 +55,56 @@ var Castle = {
             }
         }
         return false;
+    },
+    changeFields: function (castleId, type) {
+        x = castles[castleId].x;
+        y = castles[castleId].y;
+        fields[y][x] = type;
+        fields[y + 1][x] = type;
+        fields[y][x + 1] = type;
+        fields[y + 1][x + 1] = type;
+    },
+    createNeutral: function (castleId) {
+        castles[castleId].defense = castles[castleId].defensePoints;
+        castles[castleId].color = null;
+
+        board.append(
+            $('<div>')
+                .addClass('castle')
+                .attr({
+                    id: 'castle' + castleId,
+                    title: castles[castleId].name + ' (' + castles[castleId].defense + ')'
+                })
+                .css({
+                    left: (castles[castleId].x * 40) + 'px',
+                    top: (castles[castleId].y * 40) + 'px'
+                })
+                .mouseover(function () {
+                    castleOnMouse(this.id, 'g');
+                })
+                .mousemove(function () {
+                    castleOnMouse(this.id, 'g')
+                })
+                .mouseout(function () {
+                    castleOnMouse(this.id, 'e')
+                })
+        );
+        Castle.changeFields(castleId, 'e');
+        mX = castles[castleId].x * 2;
+        mY = castles[castleId].y * 2;
+        zoomPad.append(
+            $('<div>').css({
+                'left': mX + 'px',
+                'top': mY + 'px'
+            })
+                .attr('id', 'c' + castleId)
+                .addClass('c')
+        );
     }
 }
 
-function castleFields(castleId, type) {
-    x = castles[castleId].x;
-    y = castles[castleId].y;
-    fields[y][x] = type;
-    fields[y + 1][x] = type;
-    fields[y][x + 1] = type;
-    fields[y + 1][x + 1] = type;
-}
-
-function createNeutralCastle(castleId) {
-    castles[castleId].defense = castles[castleId].defensePoints;
-    castles[castleId].color = null;
-
-    board.append(
-        $('<div>')
-            .addClass('castle')
-            .attr({
-                id: 'castle' + castleId,
-                title: castles[castleId].name + ' (' + castles[castleId].defense + ')'
-            })
-            .css({
-                left: (castles[castleId].x * 40) + 'px',
-                top: (castles[castleId].y * 40) + 'px'
-            })
-            .mouseover(function () {
-                castleOnMouse(this.id, 'g');
-            })
-            .mousemove(function () {
-                castleOnMouse(this.id, 'g')
-            })
-            .mouseout(function () {
-                castleOnMouse(this.id, 'e')
-            })
-    );
-    castleFields(castleId, 'e');
-    mX = castles[castleId].x * 2;
-    mY = castles[castleId].y * 2;
-    zoomPad.append(
-        $('<div>').css({
-            'left': mX + 'px',
-            'top': mY + 'px'
-        })
-            .attr('id', 'c' + castleId)
-            .addClass('c')
-    );
-}
-
 function castleOnMouse(id, type) {
-    castleFields(id.substring(6), type);
+    Castle.changeFields(id.substring(6), type);
 }
 
 function castlesAddCursorWhenSelectedArmy() {
@@ -144,7 +142,7 @@ function castleOwner(castleId, color) {
     }
 
     if (color == my.color) {
-        castleFields(castleId, 'c');
+        Castle.changeFields(castleId, 'c');
         castle
             .css({
                 'cursor': 'url(/img/game/cursor_castle.png), default'
@@ -157,7 +155,7 @@ function castleOwner(castleId, color) {
                 Message.castle(castleId)
             });
     } else {
-        castleFields(castleId, 'e');
+        Castle.changeFields(castleId, 'e');
         castle
             .unbind('mouseover')
             .unbind('mousemove')
@@ -250,7 +248,7 @@ function showFirstCastle() {
 
 function razeCastle(castleId) {
     $('#razeCastle').addClass('buttonOff');
-    castleFields(castleId, 'g')
+    Castle.changeFields(castleId, 'g')
     $('#castle' + castleId).remove();
     $('#c' + castleId).remove();
     delete castles[castleId];

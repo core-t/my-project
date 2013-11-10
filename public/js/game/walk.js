@@ -63,7 +63,7 @@ function walkEnd(r, computer) {
     searchTower(newX, newY);
 
     if (isDigit(r.ruinId)) {
-        ruinUpdate(r.ruinId, 1);
+        Ruin.update(r.ruinId, 1);
     }
 
     if (typeof r.deletedIds == 'undefined') {

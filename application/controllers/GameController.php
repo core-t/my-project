@@ -51,7 +51,12 @@ class GameController extends Game_Controller_Game
         $mMapTowers = new Application_Model_MapTowers($game['mapId']);
         $neutralTowers = $mMapTowers->getMapTowers();
         $playersTowers = $mTower->getTowers();
+
+        $mTurn = new Application_Model_Turn($this->_namespace->gameId);
+        $this->view->turn = $mTurn->getTurnHistory();
+
         $towers = array();
+
         foreach (array_keys($neutralTowers) as $k) {
             $towers[$k] = $neutralTowers[$k];
             if (isset($playersTowers[$k])) {
@@ -66,7 +71,6 @@ class GameController extends Game_Controller_Game
         $players = $mPlayersInGame->getPlayersInGameReady();
 
         $this->view->players = array();
-        $this->view->turn = array();
         $colors = array();
 
         $mMapFields = new Application_Model_MapFields($game['mapId']);
@@ -107,12 +111,12 @@ class GameController extends Game_Controller_Game
             $this->view->players[$player['color']]['backgroundColor'] = $player['backgroundColor'];
             $this->view->players[$player['color']]['textColor'] = $player['textColor'];
 
-            if ($game['turnPlayerId'] == $player['playerId']) {
-                $this->view->turn['playerId'] = $player['playerId'];
-                $this->view->turn['color'] = $player['color'];
-                $this->view->turn['nr'] = $game['turnNumber'];
-                $this->_namespace->turn = $this->view->turn;
-            }
+//            if ($game['turnPlayerId'] == $player['playerId']) {
+//                $this->view->turn['playerId'] = $player['playerId'];
+//                $this->view->turn['color'] = $player['color'];
+//                $this->view->turn['nr'] = $game['turnNumber'];
+//                $this->_namespace->turn = $this->view->turn;
+//            }
 
             if ($this->_namespace->player['playerId'] == $player['playerId']) {
                 $this->view->gold = $player['gold'];

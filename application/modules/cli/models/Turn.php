@@ -101,7 +101,7 @@ class Cli_Model_Turn
 
             $castlesInGame[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
-            if ($mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $mapCastles[$castleId]['production'][$unitId]['cost'] <= $gold) {
+            if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $mapCastles[$castleId]['production'][$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
                     $armyId = $mArmy->getArmyIdFromPosition($mapCastles[$castleId]['position']);
                     if (!$armyId) {

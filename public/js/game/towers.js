@@ -1,20 +1,23 @@
 // *** TOWERS ***
 
-function towerCreate(towerId) {
-    var title = 'Tower';
-    board.append(
-        $('<div>')
-            .addClass('tower')
-            .attr({
-                id: 'tower' + towerId,
-                title: title
-            })
-            .css({
-                left: (towers[towerId].x * 40) + 'px',
-                top: (towers[towerId].y * 40) + 'px',
-                background: 'url(/img/game/towers/' + towers[towerId].color + '.png) center center no-repeat'
-            })
-    );
+var Tower = {
+    create: function (towerId) {
+        var title = 'Tower';
+        board.append(
+            $('<div>')
+                .addClass('tower')
+                .attr({
+                    id: 'tower' + towerId,
+                    title: title
+                })
+                .css({
+                    left: (towers[towerId].x * 40) + 'px',
+                    top: (towers[towerId].y * 40) + 'px',
+                    background: 'url(/img/game/towers/' + towers[towerId].color + '.png) center center no-repeat'
+                })
+        );
+    }
+
 }
 
 function isTowerAtPosition(x, y) {
@@ -80,11 +83,6 @@ function changeTower(x, y, towerId) {
     } else {
         return false;
     }
-}
-
-function changeEnemyTower(towerId, color) {
-    towers[towerId].color = color;
-    $('#tower' + towerId).css('background', 'url(/img/game/towers/' + color + '.png) center center no-repeat');
 }
 
 function countPlayerTowers(color) {

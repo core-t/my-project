@@ -313,7 +313,7 @@ function enemyArmyMouse(army) {
                 selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
                 var castleId = isEnemyCastle(army.x, army.y);
                 if (castleId !== null) {
-                    castleFields(castleId, 'g');
+                    Castle.changeFields(castleId, 'g');
                 }
                 fields[army.y][army.x] = 'g';
             }
@@ -326,7 +326,7 @@ function enemyArmyMouse(army) {
                 selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
                 var castleId = isEnemyCastle(army.x, army.y);
                 if (castleId !== null) {
-                    castleFields(castleId, 'g');
+                    Castle.changeFields(castleId, 'g');
                 }
                 fields[army.y][army.x] = 'g';
             }
@@ -334,7 +334,7 @@ function enemyArmyMouse(army) {
         .mouseout(function () {
             var castleId = isEnemyCastle(army.x, army.y);
             if (castleId !== null) {
-                castleFields(castleId, 'e');
+                Castle.changeFields(castleId, 'e');
             }
             fields[army.y][army.x] = 'e';
         });
@@ -369,7 +369,7 @@ function selectArmy(a, center) {
     $('#quitArmy').removeClass('buttonOff');
     selectedArmy = a;
     if (typeof selectedArmy.heroKey != 'undefined') {
-        if (getRuinId(selectedArmy) !== null) {
+        if (Ruin.getId(selectedArmy) !== null) {
             $('#searchRuins').removeClass('buttonOff');
         }
         $('#showArtifacts').removeClass('buttonOff');

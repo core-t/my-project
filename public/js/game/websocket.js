@@ -80,7 +80,7 @@ Websocket = {
                         //                    console.log(r);
                         zoomer.lensSetCenter(players[r.color].armies['army' + r.army.armyId].x * 40, players[r.color].armies['army' + r.army.armyId].y * 40);
                         players[r.color].armies['army' + r.army.armyId] = new army(r.army, r.color);
-                        ruinUpdate(r.ruin.ruinId, r.ruin.empty);
+                        Ruin.update(r.ruin.ruinId, r.ruin.empty);
                         if (my.color == r.color) {
                             switch (r.find[0]) {
                                 case 'gold':

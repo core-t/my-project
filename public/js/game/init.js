@@ -67,15 +67,15 @@ $(document).ready(function () {
     Websocket.init();
 
     for (i in castles) {
-        new createNeutralCastle(i);
+        Castle.createNeutral(i);
     }
 
     for (i in ruins) {
-        new ruinCreate(i);
+        Ruin.create(i);
     }
 
     for (i in towers) {
-        new towerCreate(i);
+        Tower.create(i);
     }
 
     shipId = Unit.getShipId();
