@@ -53,7 +53,7 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    cursor: url('../img/game/lupa.png') 13 13, crosshair;
+    cursor: url('/img/game/lupa.png') 13 13, crosshair;
     border-bottom-right-radius: 3px;
 }
 
@@ -555,7 +555,7 @@
 }
 
 #chatBox {
-    width: 500px;
+    width: 502px;
     border-top-left-radius: 10px;
     text-transform: none;
 }
@@ -733,7 +733,7 @@
     position: absolute;
     z-index: 27000;
     background: transparent url('/img/game/message_bg.png');
-    border: 1px solid #555;
+    border: 1px solid green;
     box-shadow: 5px 5px 20px #000;
     padding: 3px;
     color: #fff;
@@ -783,9 +783,9 @@ html {
     width: 20px;
     height: 20px;
     background: transparent url('/img/game/message_bg.png') !important;
-    border: 1px solid #555;
+    border: 2px solid green;
     box-shadow: 5px 5px 20px #000;
-    border-radius: 10px;
+    border-radius: 12px;
     line-height: 20px;
     text-align: center;
     text-shadow: none;
@@ -793,7 +793,9 @@ html {
 }
 
 .close:hover {
-    color: #fff;
+    color: grey;
+    border: 2px solid grey;
+    background: #fff !important;
 }
 
 .zoomPadLayout .close {
@@ -830,14 +832,17 @@ html {
 /**/
 .armyButton .button.buttonOff {
     background: none;
+    border: 2px solid gray;
+    color: gray;
 }
 
 .iconButton, .button, #submit {
     border-radius: 5px;
-    border: 1px solid yellowgreen;
+    border: 2px solid green;
     background: none;
     color: yellowgreen;
     font-size: 14px;
+    line-height: 27px;
 }
 
 .iconButton {
@@ -849,8 +854,9 @@ html {
 }
 
 .button:hover, #submit:hover {
-    color: #000;
-    background: #fff;
+    color: green;
+    background: greenyellow;
+    /*border: 2px solid gray;*/
 }
 
 .buttonOff {

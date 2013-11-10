@@ -101,7 +101,6 @@ function startGame() {
         Turn.off();
         Message.lost(my.color);
     } else {
-        console.log(my.turn);
         if (my.turn) {
             Turn.on();
         } else {

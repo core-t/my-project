@@ -132,7 +132,7 @@ class GameController extends Game_Controller_Game
         }
 
         $this->view->id = $this->_namespace->player['playerId'];
-        if ($this->view->turn['playerId'] == $this->_namespace->player['playerId']) {
+        if ($game['turnPlayerId'] == $this->_namespace->player['playerId']) {
             $this->view->myTurn = 'true';
         } else {
             $this->view->myTurn = 'false';

@@ -44,8 +44,6 @@ var Turn = {
 
         timer.update();
 
-        console.log(Turn.shortName);
-
         if (Turn.shortName == my.color) {
             Turn.on();
             Websocket.startMyTurn();
