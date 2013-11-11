@@ -174,7 +174,7 @@ class Cli_Model_Move
         if ($fight) {
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
-            $battle->updateArmies($user->parameters['gameId'], $db);
+            $battle->updateArmies($user->parameters['gameId'], $db, $user->parameters['playerId'], 0);
 
             if (Zend_Validate::is($castleId, 'Digits')) {
                 if ($defenderColor == 'neutral') {

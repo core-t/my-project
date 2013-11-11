@@ -41,32 +41,32 @@ class Cli_Model_Battle
         $this->attacker = $attacker;
     }
 
-    public function updateArmies($gameId, $db)
+    public function updateArmies($gameId, $db, $attackerId = null, $defenderId = null)
     {
-        $this->updateHeroes($this->_result['defense']['heroes'], $gameId, $db);
-        $this->updateSoldiers($this->_result['defense']['soldiers'], $gameId, $db);
-        $this->updateHeroes($this->_result['attack']['heroes'], $gameId, $db);
-        $this->updateSoldiers($this->_result['attack']['soldiers'], $gameId, $db);
+        $this->deleteHeroes($this->_result['defense']['heroes'], $gameId, $db, $attackerId, $defenderId);
+        $this->deleteSoldiers($this->_result['defense']['soldiers'], $gameId, $db, $attackerId, $defenderId);
+        $this->deleteHeroes($this->_result['attack']['heroes'], $gameId, $db, $attackerId, $defenderId);
+        $this->deleteSoldiers($this->_result['attack']['soldiers'], $gameId, $db, $attackerId, $defenderId);
     }
 
-    private function updateHeroes($heroes, $gameId, $db)
+    private function deleteHeroes($heroes, $gameId, $db, $attackerId, $defenderId)
     {
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         foreach ($heroes as $v) {
-            echo 'updateHeroes:';
-                var_dump($v);
+//            echo 'updateHeroes:';
+//                var_dump($v);
             $mHeroesInGame->armyRemoveHero($v['heroId']);
         }
     }
 
-    private function updateSoldiers($soldiers, $gameId, $db)
+    private function deleteSoldiers($soldiers, $gameId, $db, $attackerId, $defenderId)
     {
         $mSoldier = new Application_Model_Soldier($gameId, $db);
 
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {
-                echo 'updateSoldiers:';
-                var_dump($v);
+//                echo 'updateSoldiers:';
+//                var_dump($v);
                 $mSoldier->destroy($v['soldierId']);
             }
         }
@@ -254,6 +254,7 @@ class Cli_Model_Battle
             } else {
                 $this->_result['defense']['soldiers'][] = array(
                     'soldierId' => $unitDefending['soldierId'],
+                    'unitId' => $unitDefending['unitId'],
                     'succession' => $this->succession
                 );
             }
@@ -266,6 +267,7 @@ class Cli_Model_Battle
             } else {
                 $this->_result['attack']['soldiers'][] = array(
                     'soldierId' => $unitAttacking['soldierId'],
+                    'unitId' => $unitAttacking['unitId'],
                     'succession' => $this->succession
                 );
             }
