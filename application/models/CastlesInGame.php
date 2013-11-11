@@ -151,20 +151,8 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"castleId" = ?', $castle['castleId']);
 
-        $data = array(
-            'mapCastleId' => $castle['castleId'],
-            'gameId' => $this->_gameId,
-            'winnerId' => $playerId,
-            'loserId' => new Zend_Db_Expr('(' . $select->__toString() . ')')
-        );
-
-        try {
-            $this->_db->insert('castlesconquered', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
+        $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
+        $mCastlesConquered->add($castle['castleId'], $playerId, new Zend_Db_Expr('(' . $select->__toString() . ')'));
 
         $where = array(
             $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
@@ -193,20 +181,8 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
     public function addCastle($castleId, $playerId)
     {
-        $data = array(
-            'mapCastleId' => $castleId,
-            'gameId' => $this->_gameId,
-            'winnerId' => $playerId,
-            'loserId' => 0
-        );
-
-        try {
-            $this->_db->insert('castlesconquered', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
+        $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
+        $mCastlesConquered->add($castleId, $playerId, 0);
 
         $data = array(
             'castleId' => $castleId,

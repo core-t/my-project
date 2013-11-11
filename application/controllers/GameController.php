@@ -61,6 +61,12 @@ class GameController extends Game_Controller_Game
             $this->view->turnHistory = $mTurn->getTurnHistory();
         }
 
+        $mCastlesConquered = new Application_Model_CastlesConquered($this->_namespace->gameId);
+        $this->view->castlesConquered = array(
+            'winners' => $mCastlesConquered->countConquered(),
+            'losers' => $mCastlesConquered->countLost()
+        );
+
         $towers = array();
 
         foreach (array_keys($neutralTowers) as $k) {

@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
+class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
 {
     protected $_name = 'castlesconquered';
     protected $_primary = 'castlesconqueredId';
@@ -42,6 +42,18 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->group('loserId');
         return $this->selectAll($select);
+    }
+
+    public function add($castleId, $winnerId, $loserId)
+    {
+        $data = array(
+            'mapCastleId' => $castleId,
+            'gameId' => $this->_gameId,
+            'winnerId' => $winnerId,
+            'loserId' => $loserId
+        );
+
+        $this->insert($data);
     }
 }
 
