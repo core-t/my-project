@@ -35,10 +35,10 @@ class Application_Model_SoldiersKilled extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
-    public function add($soldierId, $winnerId, $loserId)
+    public function add($unitId, $winnerId, $loserId)
     {
         $data = array(
-            'soldierId' => $soldierId,
+            'unitId' => $unitId,
             'gameId' => $this->_gameId,
             'winnerId' => $winnerId,
             'loserId' => $loserId

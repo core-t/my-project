@@ -53,6 +53,8 @@ class Cli_Model_Battle
     {
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
         foreach ($heroes as $v) {
+            echo 'updateHeroes:';
+                var_dump($v);
             $mHeroesInGame->armyRemoveHero($v['heroId']);
         }
     }
@@ -63,6 +65,8 @@ class Cli_Model_Battle
 
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {
+                echo 'updateSoldiers:';
+                var_dump($v);
                 $mSoldier->destroy($v['soldierId']);
             }
         }

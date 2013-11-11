@@ -47,19 +47,8 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
     public function razeCastle($castleId, $playerId)
     {
-        $data = array(
-            'mapCastleId' => $castleId,
-            'gameId' => $this->_gameId,
-            'playerId' => $playerId
-        );
-
-        try {
-            $this->_db->insert('castlesdestoyed', $data);
-        } catch (Exception $e) {
-            echo($e);
-
-            return;
-        }
+        $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_gameId, $this->_db);
+        $mCastlesDestroyed->add($castleId, $playerId);
 
         $where = array(
             $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
