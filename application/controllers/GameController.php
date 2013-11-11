@@ -53,11 +53,11 @@ class GameController extends Game_Controller_Game
         $neutralTowers = $mMapTowers->getMapTowers();
         $playersTowers = $mTower->getTowers();
 
-        $mTurn = new Application_Model_Turn($this->_namespace->gameId);
+        $mTurn = new Application_Model_TurnHistory($this->_namespace->gameId);
         $this->view->turnHistory = $mTurn->getTurnHistory();
 
         if (empty($this->view->turnHistory)) {
-            $mTurn->insertTurn($game['turnPlayerId'], $game['turnNumber']);
+            $mTurn->add($game['turnPlayerId'], $game['turnNumber']);
             $this->view->turnHistory = $mTurn->getTurnHistory();
         }
 

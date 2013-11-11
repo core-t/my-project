@@ -47,8 +47,8 @@ class Cli_Model_Turn
             }
         }
 
-        $mTurn = new Application_Model_Turn($gameId, $db);
-        $mTurn->insertTurn($playerId, $response['nr']);
+        $mTurn = new Application_Model_TurnHistory($gameId, $db);
+        $mTurn->add($nextPlayer['playerId'], $response['nr']);
 
         return $response;
     }

@@ -19,7 +19,7 @@ class Application_Model_MapTerrain extends Coret_Db_Table_Abstract
 
     public function getTerrain()
     {
-        $terrain = array(null);
+        $terrain = array();
 
         $select = $this->_db->select()
             ->from($this->_name, array('flying', 'swimming', 'walking', 'type'))

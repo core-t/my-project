@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_Turn extends Coret_Db_Table_Abstract
+class Application_Model_TurnHistory extends Coret_Db_Table_Abstract
 {
 
     protected $_name = 'turn';
@@ -28,7 +28,7 @@ class Application_Model_Turn extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
-    public function insertTurn($playerId, $number)
+    public function add($playerId, $number)
     {
         $data = array(
             'number' => $number,
