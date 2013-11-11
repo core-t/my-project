@@ -782,7 +782,7 @@ html {
     position: absolute;
     width: 20px;
     height: 20px;
-    background: transparent url('/img/game/message_bg.png') !important;
+    background: #000 !important;
     border: 2px solid green;
     box-shadow: 5px 5px 20px #000;
     border-radius: 12px;
@@ -839,7 +839,7 @@ html {
 .iconButton, .button, #submit {
     border-radius: 5px;
     border: 2px solid green;
-    background: none;
+    background: #000;
     color: yellowgreen;
     font-size: 14px;
     line-height: 27px;
