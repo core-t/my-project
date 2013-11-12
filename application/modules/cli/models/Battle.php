@@ -45,28 +45,27 @@ class Cli_Model_Battle
     {
         $this->deleteHeroes($this->_result['defense']['heroes'], $gameId, $db, $attackerId, $defenderId);
         $this->deleteSoldiers($this->_result['defense']['soldiers'], $gameId, $db, $attackerId, $defenderId);
-        $this->deleteHeroes($this->_result['attack']['heroes'], $gameId, $db, $attackerId, $defenderId);
-        $this->deleteSoldiers($this->_result['attack']['soldiers'], $gameId, $db, $attackerId, $defenderId);
+        $this->deleteHeroes($this->_result['attack']['heroes'], $gameId, $db, $defenderId, $attackerId);
+        $this->deleteSoldiers($this->_result['attack']['soldiers'], $gameId, $db, $defenderId, $attackerId);
     }
 
-    private function deleteHeroes($heroes, $gameId, $db, $attackerId, $defenderId)
+    private function deleteHeroes($heroes, $gameId, $db, $winnerId, $loserId)
     {
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $mHeroesKilled = new Application_Model_HeroesKilled($gameId, $db);
         foreach ($heroes as $v) {
-//            echo 'updateHeroes:';
-//                var_dump($v);
+            $mHeroesKilled->add($v['heroId'], $winnerId, $loserId);
             $mHeroesInGame->armyRemoveHero($v['heroId']);
         }
     }
 
-    private function deleteSoldiers($soldiers, $gameId, $db, $attackerId, $defenderId)
+    private function deleteSoldiers($soldiers, $gameId, $db, $winnerId, $loserId)
     {
         $mSoldier = new Application_Model_Soldier($gameId, $db);
-
+        $mSoldiersKilled = new Application_Model_SoldiersKilled($gameId, $db);
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {
-//                echo 'updateSoldiers:';
-//                var_dump($v);
+                $mSoldiersKilled->add($v['unitId'], $winnerId, $loserId);
                 $mSoldier->destroy($v['soldierId']);
             }
         }

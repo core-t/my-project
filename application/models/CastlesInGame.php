@@ -241,6 +241,16 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         }
     }
 
+    public function getPlayerIdByCastleId($castleId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'playerId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"castleId" = ?', $castleId);
+
+        return $this->selectOne($select);
+    }
+
     public function playerCastlesExists($playerId)
     {
         $select = $this->_db->select()

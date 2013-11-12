@@ -105,8 +105,8 @@ class Cli_Model_Move
         }
 
         if ($castleId === null) {
-            $enemy = Cli_Model_Database::getAllEnemyUnitsFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db);
-            if ($enemy['ids']) { // enemy army
+            $defenderId = $mArmy2->getPlayerIdFromPosition(array('x' => $x, 'y' => $y));
+            if ($defenderId) { // enemy army
                 $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'E');
             } else { // idziemy nie walczymy
                 if (Cli_Model_Database::areMySwimmingUnitsAtPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db)) {
@@ -147,18 +147,22 @@ class Cli_Model_Move
 
         $fight = false;
 
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
         if (Zend_Validate::is($castleId, 'Digits') && Application_Model_Board::isCastleField($move['currentPosition'], $castlesSchema[$castleId]['position'])) { // castle
             $fight = true;
             if ($defenderColor == 'neutral') {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
-                $defenderColor = $mCastlesInGame->getColorByCastleId($castleId);
+                $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
+                $defenderColor = $playersInGameColors[$defenderId];
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], $castlesSchema[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $enemy['ids']) { // enemy army
             $fight = true;
-            $defenderColor = $mArmy2->getColorByArmyId($enemy['ids'][0]);
+            $defenderColor = $playersInGameColors[$defenderId];
+            $enemy = Cli_Model_Database::getAllEnemyUnitsFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db);
             $enemy['x'] = $x;
             $enemy['y'] = $y;
             $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);
@@ -174,7 +178,7 @@ class Cli_Model_Move
         if ($fight) {
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
-            $battle->updateArmies($user->parameters['gameId'], $db, $user->parameters['playerId'], 0);
+            $battle->updateArmies($user->parameters['gameId'], $db, $user->parameters['playerId'], $defenderId);
 
             if (Zend_Validate::is($castleId, 'Digits')) {
                 if ($defenderColor == 'neutral') {
@@ -219,8 +223,6 @@ class Cli_Model_Move
             $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $newArmyId, $user->parameters['playerId'], $db);
             $deletedIds = $armiesIds['deletedIds'];
         }
-
-        $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'move',
