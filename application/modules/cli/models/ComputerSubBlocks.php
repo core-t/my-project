@@ -18,12 +18,14 @@ class Cli_Model_ComputerSubBlocks
             $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
 
             if ($mCastlesInGame->isEnemyCastle($castleId, $playerId)) { // enemy castle
-                $result['defenderColor'] = $mCastlesInGame->getColorByCastleId($castleId);
+                $playersInGameColors = Zend_Registry::get('playersInGameColors');
+                $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
+                $result['defenderColor'] = $playersInGameColors[$defenderId];
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($gameId, $mapCastles[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
                 $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->fight();
-                $battle->updateArmies($gameId, $db);
+                $battle->updateArmies($gameId, $db, $playerId, $defenderId);
                 $defender = $mArmy2->getDefender($enemy['ids']);
 
                 if (!$battle->getDefender()) {
@@ -52,7 +54,7 @@ class Cli_Model_ComputerSubBlocks
                 $battle = new Cli_Model_Battle($army, $enemy);
 //                $battle->setCombatAttackModifiers($army);
                 $battle->fight();
-                $battle->updateArmies($gameId, $db);
+                $battle->updateArmies($gameId, $db, $playerId);
                 $defender = $battle->getDefender();
 
                 if (!$battle->getDefender()) {
@@ -78,6 +80,7 @@ class Cli_Model_ComputerSubBlocks
             $enemy['ids'][] = $enemy['armyId'];
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
+            var_dump($enemy);
             $battle->updateArmies($gameId, $db);
             $defender = $mArmy2->getDefender($enemy['ids']);
 
