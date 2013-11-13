@@ -54,7 +54,7 @@ class Cli_Model_ComputerSubBlocks
                 $battle = new Cli_Model_Battle($army, $enemy);
 //                $battle->setCombatAttackModifiers($army);
                 $battle->fight();
-                $battle->updateArmies($gameId, $db, $playerId);
+                $battle->updateArmies($gameId, $db, $playerId, 0);
                 $defender = $battle->getDefender();
 
                 if (!$battle->getDefender()) {
@@ -80,8 +80,8 @@ class Cli_Model_ComputerSubBlocks
             $enemy['ids'][] = $enemy['armyId'];
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
-            var_dump($enemy);
-            $battle->updateArmies($gameId, $db);
+            $defenderId = $mArmy2->getPlayerIdFromPosition($enemy);
+            $battle->updateArmies($gameId, $db, $playerId, $defenderId);
             $defender = $mArmy2->getDefender($enemy['ids']);
 
             if (!$battle->getDefender()) {
@@ -96,7 +96,8 @@ class Cli_Model_ComputerSubBlocks
                 );
                 $mArmy2->destroyArmy($army['armyId'], $playerId);
             }
-            $result['defenderColor'] = $mArmy2->getColorByArmyId($enemy['armyId']);
+            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+            $result['defenderColor'] = $playersInGameColors[$defenderId];
         }
 
         $result['defenderArmy'] = $defender;
