@@ -66,6 +66,8 @@ class GameController extends Game_Controller_Game
             'winners' => $mCastlesConquered->countConquered(),
             'losers' => $mCastlesConquered->countLost()
         );
+        $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_namespace->gameId);
+        $this->view->castlesDestroyed = $mCastlesDestroyed->countAll();
         $mHeroesKilled = new Application_Model_HeroesKilled($this->_namespace->gameId);
         $this->view->heroesKilled = array(
             'winners' => $mHeroesKilled->countKilled(),
