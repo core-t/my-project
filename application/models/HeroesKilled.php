@@ -17,10 +17,10 @@ class Application_Model_HeroesKilled extends Coret_Db_Table_Abstract
         }
     }
 
-    public function countConquered()
+    public function countKilled()
     {
         $select = $this->_db->select()
-            ->from($this->_name, 'count(*)')
+            ->from($this->_name, array('count(*)', 'winnerId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->group('winnerId');
         return $this->selectAll($select);
@@ -29,7 +29,7 @@ class Application_Model_HeroesKilled extends Coret_Db_Table_Abstract
     public function countLost()
     {
         $select = $this->_db->select()
-            ->from($this->_name, 'count(*)')
+            ->from($this->_name, array('count(*)', 'loserId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->group('loserId');
         return $this->selectAll($select);
