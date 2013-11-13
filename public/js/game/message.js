@@ -683,14 +683,15 @@ var Message = {
             .append($('<h3>').html('Statistics'));
         var table = $('<table>')
             .append($('<tr>')
-                .append($('<td>').html('Players'))
-                .append($('<td>').html('Castles conquered'))
-                .append($('<td>').html('Castles lost'))
-                .append($('<td>').html('Castles razed'))
-                .append($('<td>').html('Units killed'))
-                .append($('<td>').html('Units lost'))
-                .append($('<td>').html('Heroes killed'))
-                .append($('<td>').html('Heroes lost'))
+                .append($('<th>').html('Players'))
+                .append($('<th>').html('Castles conquered'))
+                .append($('<th>').html('Castles lost'))
+                .append($('<th>').html('Castles razed'))
+                .append($('<th>').html('Units created'))
+                .append($('<th>').html('Units killed'))
+                .append($('<th>').html('Units lost'))
+                .append($('<th>').html('Heroes killed'))
+                .append($('<th>').html('Heroes lost'))
             );
         for (i in players) {
             var tr = $('<tr>');

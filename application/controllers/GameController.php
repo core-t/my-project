@@ -79,6 +79,8 @@ class GameController extends Game_Controller_Game
             'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
             'losers' => $mSoldiersKilled->countLost($playersInGameColors)
         );
+        $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_namespace->gameId);
+        $this->view->soldiersCreated = $mSoldiersCreated->countCreated($playersInGameColors);
 
         $towers = array();
 
