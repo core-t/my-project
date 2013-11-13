@@ -80,7 +80,7 @@ class Cli_Model_ComputerSubBlocks
             $enemy['ids'][] = $enemy['armyId'];
             $battle = new Cli_Model_Battle($army, $enemy);
             $battle->fight();
-            $defenderId = $mArmy2->getPlayerIdFromPosition($enemy);
+            $defenderId = $mArmy2->getPlayerIdFromPosition($playerId, $enemy);
             $battle->updateArmies($gameId, $db, $playerId, $defenderId);
             $defender = $mArmy2->getDefender($enemy['ids']);
 

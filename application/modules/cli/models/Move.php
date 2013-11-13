@@ -105,7 +105,7 @@ class Cli_Model_Move
         }
 
         if ($castleId === null) {
-            $defenderId = $mArmy2->getPlayerIdFromPosition(array('x' => $x, 'y' => $y));
+            $defenderId = $mArmy2->getPlayerIdFromPosition($user->parameters['playerId'], array('x' => $x, 'y' => $y));
             if ($defenderId) { // enemy army
                 $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'E');
             } else { // idziemy nie walczymy
@@ -159,7 +159,7 @@ class Cli_Model_Move
                 $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], $castlesSchema[$castleId]['position'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
-        } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $enemy['ids']) { // enemy army
+        } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $defenderId) { // enemy army
             $fight = true;
             $defenderColor = $playersInGameColors[$defenderId];
             $enemy = Cli_Model_Database::getAllEnemyUnitsFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db);

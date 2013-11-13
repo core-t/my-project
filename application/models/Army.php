@@ -464,23 +464,6 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         return $armies;
     }
 
-    public function getColorByArmyId($armyId)
-    {
-        $select = $this->_db->select()
-            ->from('army', 'playerId')
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('"armyId" = ?', $armyId);
-
-        $playerId = $this->selectOne($select);
-        if ($playerId) {
-            $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
-            return $mPlayersInGame->getColorByPlayerId($playerId);
-        } else {
-            print_r(debug_backtrace(0, 2));
-        }
-    }
-
-
     public function isOtherArmyAtPosition($armyId, $x, $y)
     {
         $select = $this->_db->select()
@@ -533,11 +516,12 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         return $this->selectOne($select);
     }
 
-    public function getPlayerIdFromPosition($position)
+    public function getPlayerIdFromPosition($playerId, $position)
     {
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from('army', 'playerId')
             ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" != ?', $playerId)
             ->where('destroyed = false')
             ->where('x = ?', $position['x'])
             ->where('y = ?', $position['y']);
