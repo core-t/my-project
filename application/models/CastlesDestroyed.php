@@ -2,9 +2,9 @@
 
 class Application_Model_CastlesDestroyed extends Coret_Db_Table_Abstract
 {
-    protected $_name = '';
-    protected $_primary = '';
-    protected $_sequence = '';
+    protected $_name = 'castlesdestroyed';
+    protected $_primary = 'castlesdestroyedId';
+    protected $_sequence = 'castlesdestroyed_castlesdestroyedId_seq';
     protected $_gameId;
 
     public function __construct($gameId, $db = null)
