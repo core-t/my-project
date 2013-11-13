@@ -26,23 +26,37 @@ class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
-    public function countConquered()
+    public function countConquered($playersInGameColors)
     {
         $select = $this->_db->select()
             ->from($this->_name, array('count(*)', 'winnerId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->group('winnerId');
-        return $this->selectAll($select);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$playersInGameColors[$v['winnerId']]] = $v['count'];
+        }
+
+        return $array;
     }
 
-    public function countLost()
+    public function countLost($playersInGameColors)
     {
         $select = $this->_db->select()
             ->from($this->_name, array('count(*)', 'loserId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"loserId" != 0')
             ->group('loserId');
-        return $this->selectAll($select);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$playersInGameColors[$v['loserId']]] = $v['count'];
+        }
+
+        return $array;
     }
 
     public function add($castleId, $winnerId, $loserId)

@@ -39,6 +39,7 @@ class GameController extends Game_Controller_Game
 //        $mArtifact = new Application_Model_Artifact();
         $mChat = new Application_Model_Chat($this->_namespace->gameId);
         $mPlayersInGame = new Application_Model_PlayersInGame($this->_namespace->gameId);
+        $playersInGameColors = $mPlayersInGame->getAllColors();
 
         $game = $mGame->getGame();
 
@@ -63,20 +64,20 @@ class GameController extends Game_Controller_Game
 
         $mCastlesConquered = new Application_Model_CastlesConquered($this->_namespace->gameId);
         $this->view->castlesConquered = array(
-            'winners' => $mCastlesConquered->countConquered(),
-            'losers' => $mCastlesConquered->countLost()
+            'winners' => $mCastlesConquered->countConquered($playersInGameColors),
+            'losers' => $mCastlesConquered->countLost($playersInGameColors)
         );
         $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_namespace->gameId);
-        $this->view->castlesDestroyed = $mCastlesDestroyed->countAll();
+        $this->view->castlesDestroyed = $mCastlesDestroyed->countAll($playersInGameColors);
         $mHeroesKilled = new Application_Model_HeroesKilled($this->_namespace->gameId);
         $this->view->heroesKilled = array(
-            'winners' => $mHeroesKilled->countKilled(),
-            'losers' => $mHeroesKilled->countLost()
+            'winners' => $mHeroesKilled->countKilled($playersInGameColors),
+            'losers' => $mHeroesKilled->countLost($playersInGameColors)
         );
         $mSoldiersKilled = new Application_Model_SoldiersKilled($this->_namespace->gameId);
         $this->view->soldiersKilled = array(
-            'winners' => $mSoldiersKilled->countKilled(),
-            'losers' => $mSoldiersKilled->countLost()
+            'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
+            'losers' => $mSoldiersKilled->countLost($playersInGameColors)
         );
 
         $towers = array();

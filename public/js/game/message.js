@@ -25,7 +25,7 @@ var Message = {
     ok: function (func) {
         $('.message').append(
             $('<div>')
-                .addClass('button go')
+                .addClass('button buttonColors go')
                 .html('Ok')
                 .click(function () {
                     if (typeof func != 'undefined') {
@@ -50,7 +50,7 @@ var Message = {
     cancel: function (func) {
         $('.message').append(
             $('<div>')
-                .addClass('button cancel')
+                .addClass('button buttonColors cancel')
                 .html('Cancel')
                 .click(function () {
                     if (typeof func != 'undefined') {
@@ -151,7 +151,7 @@ var Message = {
                 .append($('<h3>').html('Inventory'))
                 .append(htmlInventory)
                 .append($('<div>')
-                    .addClass('button go')
+                    .addClass('button buttonColors go')
                     .html('Ok')
                     .click(function () {
                         Message.remove();
@@ -609,7 +609,7 @@ var Message = {
             .append($('<p id="vs">').html('VS').addClass('center'))
             .append(defense)
             .append($('<div>').addClass('battle defense'))
-            .append($('<div id="battleOk">').addClass('button go').html('OK'));
+            .append($('<div id="battleOk">').addClass('button buttonColors go').html('OK'));
 
         this.show(div);
 
@@ -685,12 +685,53 @@ var Message = {
             .append($('<tr>')
                 .append($('<td>').html('Players'))
                 .append($('<td>').html('Castles conquered'))
+                .append($('<td>').html('Castles lost'))
                 .append($('<td>').html('Castles razed'))
                 .append($('<td>').html('Units killed'))
+                .append($('<td>').html('Units lost'))
                 .append($('<td>').html('Heroes killed'))
+                .append($('<td>').html('Heroes lost'))
             );
         for (i in players) {
-            table.append($('<tr>').append($('<td>').html(i)));
+            var tr = $('<tr>');
+            tr.append($('<td>').html(i))
+            if (isSet(castlesConquered.winners[i])) {
+                tr.append($('<td>').html(castlesConquered.winners[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(castlesConquered.losers[i])) {
+                tr.append($('<td>').html(castlesConquered.losers[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(castlesDestroyed[i])) {
+                tr.append($('<td>').html(castlesConquered[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(soldiersKilled.winners[i])) {
+                tr.append($('<td>').html(soldiersKilled.winners[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(soldiersKilled.losers[i])) {
+                tr.append($('<td>').html(soldiersKilled.losers[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(heroesKilled.winners[i])) {
+                tr.append($('<td>').html(heroesKilled.winners[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+            if (isSet(heroesKilled.losers[i])) {
+                tr.append($('<td>').html(heroesKilled.losers[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
+
+            table.append(tr);
         }
         statistics.append(table);
         this.show(statistics);

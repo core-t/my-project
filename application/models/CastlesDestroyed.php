@@ -26,13 +26,20 @@ class Application_Model_CastlesDestroyed extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
-    public function countAll()
+    public function countAll($playersInGameColors)
     {
         $select = $this->_db->select()
             ->from($this->_name, array('count(*)', 'playerId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->group('playerId');
-        return $this->selectAll($select);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$playersInGameColors[$v['playerId']]] = $v['count'];
+        }
+
+        return $array;
     }
 
     public function add($castleId, $playerId)

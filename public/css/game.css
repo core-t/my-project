@@ -234,22 +234,22 @@
 
 #exit {
     top: 4px;
-    background: url('/img/game/exit.png') no-repeat center center;
 }
 
 #show {
     top: 41px;
-    background: url('/img/game/show.png') no-repeat center center;
+}
+
+#show img {
+    margin-top: 5px;
 }
 
 #surrender {
     top: 78px;
-    background: url("/img/game/white_flag.png") no-repeat center center;
 }
 
 #statistics {
     top: 115px;
-    background: url("/img/game/statistics.png") no-repeat center center;
 }
 
 #turn {
@@ -780,22 +780,13 @@ html {
 
 .close {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #000 !important;
-    border: 2px solid green;
+    width: 19px;
+    height: 19px;
     box-shadow: 5px 5px 20px #000;
     border-radius: 12px;
     line-height: 20px;
     text-align: center;
     text-shadow: none;
-    color: yellowgreen;
-}
-
-.close:hover {
-    color: grey;
-    border: 2px solid grey;
-    background: #fff !important;
 }
 
 .zoomPadLayout .close {
@@ -830,33 +821,49 @@ html {
 /*background: transparent url('/img/game/message_bg.png');*/
 /*}*/
 /**/
+
+.buttonColors {
+    border: 1px solid lime;
+    background: #000 !important;
+    color: lime;
+}
+
+.buttonColors:hover {
+    color: #000;
+    background: lime !important;
+}
+
 .armyButton .button.buttonOff {
-    background: none;
-    border: 2px solid gray;
+    background: none !important;
+    border: 1px solid gray;
     color: gray;
 }
 
 .iconButton, .button, #submit {
     border-radius: 5px;
-    border: 2px solid green;
-    background: #000;
-    color: yellowgreen;
     font-size: 14px;
     line-height: 27px;
 }
 
 .iconButton {
     width: 32px;
+    line-height: 32px;
     height: 32px;
     cursor: pointer;
     position: absolute;
     left: 198px;
+    text-align: center;
 }
 
-.button:hover, #submit:hover {
-    color: green;
-    background: greenyellow;
-    /*border: 2px solid gray;*/
+.iconButton img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.iconButton .Centerer {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }
 
 .buttonOff {
