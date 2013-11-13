@@ -711,6 +711,11 @@ var Message = {
             } else {
                 tr.append($('<td>').html('0'))
             }
+            if (isSet(soldiersCreated[i])) {
+                tr.append($('<td>').html(soldiersCreated[i]))
+            } else {
+                tr.append($('<td>').html('0'))
+            }
             if (isSet(soldiersKilled.winners[i])) {
                 tr.append($('<td>').html(soldiersKilled.winners[i]))
             } else {

@@ -77,6 +77,9 @@ class Cli_Model_Turn
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
         $castlesInGame = $mCastlesInGame->getPlayerCastles($playerId);
 
+        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldiersCreated = new Application_Model_SoldiersCreated($gameId, $db);
+
         foreach ($castlesInGame as $castleId => $castleInGame) {
             $income += $mapCastles[$castleId]['income'];
 
@@ -111,8 +114,8 @@ class Cli_Model_Turn
                     if (!$armyId) {
                         $armyId = $mArmy->createArmy($mapCastles[$castleId]['position'], $playerId);
                     }
-                    $mSoldier = new Application_Model_Soldier($gameId, $db);
                     $mSoldier->add($armyId, $unitId);
+                    $mSoldiersCreated->add($unitId, $playerId);
                 }
             }
         }
