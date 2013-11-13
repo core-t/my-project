@@ -29,7 +29,7 @@ class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
     public function countConquered()
     {
         $select = $this->_db->select()
-            ->from($this->_name, 'count(*)')
+            ->from($this->_name, array('count(*)', 'winnerId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->group('winnerId');
         return $this->selectAll($select);
@@ -38,8 +38,9 @@ class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
     public function countLost()
     {
         $select = $this->_db->select()
-            ->from($this->_name, 'count(*)')
+            ->from($this->_name, array('count(*)', 'loserId'))
             ->where('"gameId" = ?', $this->_gameId)
+            ->where('"loserId" != 0')
             ->group('loserId');
         return $this->selectAll($select);
     }
