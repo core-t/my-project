@@ -63,7 +63,7 @@ var Message = {
     },
     surrender: function () {
         this.show($('<div>').html('Surrender. Are you sure?'));
-        this.ok('surrender');
+        this.ok(Websocket.surrender);
         this.cancel();
     },
     lost: function (color) {

@@ -34,7 +34,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     public function resetMovesLeft($subSelect)
     {
         $select = $this->_db->select()
-            ->from('soldier', array('movesLeft', 'soldierId', 'unitId'))
+            ->from($this->_name, array('movesLeft', 'soldierId', 'unitId'))
             ->where('"armyId" IN (?)', new Zend_Db_Expr($subSelect->__toString()))
             ->where('"gameId" = ?', $this->_gameId);
 
@@ -108,7 +108,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     public function getSoldiers($armyId)
     {
         $select = $this->_db->select()
-            ->from('soldier', 'unitId')
+            ->from($this->_name, 'unitId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId);
 
@@ -221,7 +221,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     public function isSoldierInArmy($armyId, $playerId, $soldierId)
     {
         $select = $this->_db->select()
-            ->from(array('a' => 'soldier'), 'soldierId')
+            ->from(array('a' => $this->_name), 'soldierId')
             ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
             ->where('a."gameId" = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId)

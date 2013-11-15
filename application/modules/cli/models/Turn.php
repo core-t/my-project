@@ -63,18 +63,18 @@ class Cli_Model_Turn
 
     public function start($playerId, $computer = null)
     {
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
         $mPlayersInGame->turnActivate($playerId);
 
-        $mArmy = new Application_Model_Army($gameId, $db);
-        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+        $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
         $gold = $mPlayersInGame->getPlayerGold($playerId);
         if ($computer) {
             $mArmy->unfortifyComputerArmies($playerId);
         }
-        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
         $mHeroesInGame->resetHeroesMovesLeft($playerId);
 
         $income = 0;
@@ -82,11 +82,11 @@ class Cli_Model_Turn
 
         $mapCastles = Zend_Registry::get('castles');
 
-        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
         $castlesInGame = $mCastlesInGame->getPlayerCastles($playerId);
 
-        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
-        $mSoldiersCreated = new Application_Model_SoldiersCreated($gameId, $db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+        $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_gameId, $this->_db);
 
         foreach ($castlesInGame as $castleId => $castleInGame) {
             $income += $mapCastles[$castleId]['income'];
@@ -95,10 +95,10 @@ class Cli_Model_Turn
 
             if ($computer) {
                 if (isset($mapCastles[$castleId]['position'])) {
-                    $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $db);
+                    $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($this->_gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $this->_db);
                 }
 
-                $mGame = new Application_Model_Game($gameId, $db);
+                $mGame = new Application_Model_Game($this->_gameId, $this->_db);
                 $turnNumber = $mGame->getTurnNumber();
 
                 if ($turnNumber < 10) {
@@ -134,7 +134,7 @@ class Cli_Model_Turn
             return array('action' => 'gameover');
         } else {
             $costs = $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
-            $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
+            $mTowersInGame = new Application_Model_TowersInGame($this->_gameId, $this->_db);
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
             $gold = $gold + $income - $costs;
 
