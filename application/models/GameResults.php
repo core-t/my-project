@@ -17,7 +17,7 @@ class Application_Model_GameResults extends Coret_Db_Table_Abstract
         }
     }
 
-    public function add($playerId, $castlesConquered, $castlesLost, $castlesDestroyed, $soldiersCreated, $soldiersKilled, $soldiersLost, $gold, $soldiers, $castles)
+    public function add($playerId, $castlesConquered, $castlesLost, $castlesDestroyed, $soldiersCreated, $soldiersKilled, $soldiersLost, $heroesKilled, $heroesLost, $gold, $soldiers, $castles)
     {
         $data = array(
             'gameId' => $this->_gameId,
@@ -28,6 +28,8 @@ class Application_Model_GameResults extends Coret_Db_Table_Abstract
             'soldiersCreated' => $soldiersCreated,
             'soldiersKilled' => $soldiersKilled,
             'soldiersLost' => $soldiersLost,
+            'heroesKilled' => $heroesKilled,
+            'heroesLost' => $heroesLost,
             'gold' => $gold,
             'soldiers' => $soldiers,
             'castles' => $castles,

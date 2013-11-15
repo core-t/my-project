@@ -2,10 +2,15 @@
 
 class Cli_Model_Turn
 {
-
-    static public function next($gameId, $playerId, $db)
+    public function __construct($gameId, $db)
     {
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $this->_gameId = $gameId;
+        $this->_db = $db;
+    }
+
+    public function next($playerId)
+    {
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
 
         if ($mPlayersInGame->playerLost($playerId)) {
             return;
@@ -19,12 +24,12 @@ class Cli_Model_Turn
             'color' => $playersInGameColors[$playerId]
         );
 
-        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
-        $mGame = new Application_Model_Game($gameId, $db);
-        $mArmy = new Application_Model_Army($gameId, $db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
+        $mGame = new Application_Model_Game($this->_gameId, $this->_db);
+        $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
 
         while (empty($response)) {
-            $nextPlayer = self::getExpectedNextTurnPlayer($gameId, $nextPlayer['color'], $db);
+            $nextPlayer = $this->getExpectedNextTurnPlayer($nextPlayer['color']);
             $playerCastlesExists = $mCastlesInGame->playerCastlesExists($nextPlayer['playerId']);
             $playerArmiesExists = $mArmy->playerArmiesExists($nextPlayer['playerId']);
             if ($playerCastlesExists || $playerArmiesExists) {
@@ -34,11 +39,7 @@ class Cli_Model_Turn
                     $response['win'] = true;
                     $mGame->endGame(); // koniec gry
 
-                    $mGameResults = new Application_Model_GameResults($gameId, $db);
-                    foreach ($playersInGameColors as $playerColor) {
-                        $mGameResults->add();
-                    }
-
+                    $this->saveResults();
                 } else { // zmieniam turę
                     $mGame->updateTurnNumber($nextPlayer);
                     $mCastlesInGame->increaseAllCastlesProductionTurn($playerId);
@@ -53,13 +54,14 @@ class Cli_Model_Turn
             }
         }
 
-        $mTurn = new Application_Model_TurnHistory($gameId, $db);
-        $mTurn->add($nextPlayer['playerId'], $response['nr']);
+        $mTurnHistory = new Application_Model_TurnHistory($this->_gameId, $this->_db);
+        $mTurnHistory->add($nextPlayer['playerId'], $response['nr']);
 
         return $response;
     }
 
-    static public function start($gameId, $playerId, $db, $computer = null)
+
+    public function start($playerId, $computer = null)
     {
         $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
         $mPlayersInGame->turnActivate($playerId);
@@ -152,7 +154,7 @@ class Cli_Model_Turn
         }
     }
 
-    static public function getExpectedNextTurnPlayer($gameId, $playerColor, $db)
+    public function getExpectedNextTurnPlayer($playerColor)
     {
 
         $find = false;
@@ -178,7 +180,7 @@ class Cli_Model_Turn
             $nextPlayerColor = $playerColors[0];
         }
 
-        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
         $playersInGame = $mPlayersInGame->getPlayersInGameReady();
 
         /* przypisuję playerId do koloru */
@@ -217,4 +219,14 @@ class Cli_Model_Turn
         );
     }
 
+    public function saveResults()
+    {
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
+        $mGameResults = new Application_Model_GameResults($this->_gameId, $this->_db);
+        foreach ($playersInGameColors as $playerId => $shortName) {
+            $mGameResults->add($playerId);
+        }
+
+    }
 }
