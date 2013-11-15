@@ -153,6 +153,7 @@ class Cli_Model_Move
             $fight = true;
             if ($defenderColor == 'neutral') {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($user->parameters['gameId'], $db);
+                $defenderId = 0;
             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
                 $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
                 $defenderColor = $playersInGameColors[$defenderId];

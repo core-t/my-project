@@ -46,6 +46,8 @@ class GameController extends Game_Controller_Game
 //        $this->view->artifacts = $mArtifact->getArtifacts();
         $mMapPlayers = new Application_Model_MapPlayers($game['mapId']);
         $this->view->capitals = $mMapPlayers->getCapitals();
+        $this->view->mapPlayersColors = $mMapPlayers->getAllColors();
+
         $mUnit = new Application_Model_MapUnits($game['mapId']);
         $this->view->units = $mUnit->getUnits();
         $mTerrain = new Application_Model_MapTerrain($game['mapId']);

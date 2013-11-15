@@ -1,4 +1,22 @@
 <?php $this->headScript()->captureStart() ?>
+
+var lang = '<?php echo Zend_Registry::get('lang') ?>';
+var langId = <?php echo Zend_Registry::get('id_lang') ?>;
+
+$(document).ready(function() {
+    goldUpdate(<?php echo $this->gold ?>);
+});
+
+var gameId = <?php echo $this->gameId ?>;
+var accessKey = '<?php echo $this->accessKey ?>';
+
+var my = {
+    color: '<?php echo $this->color ?>',
+    id: <?php echo $this->id ?>,
+    turn: <?php echo $this->myTurn ?>,
+    game: <?php echo $this->myGame ?>
+}
+
 var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
 var units = <?php echo Zend_Json::encode($this->units); ?>;
 var towers = <?php echo Zend_Json::encode($this->towers); ?>;
@@ -13,21 +31,7 @@ var castlesDestroyed = <?php echo Zend_Json::encode($this->castlesDestroyed); ?>
 var heroesKilled = <?php echo Zend_Json::encode($this->heroesKilled); ?>;
 var soldiersKilled = <?php echo Zend_Json::encode($this->soldiersKilled); ?>;
 var soldiersCreated = <?php echo Zend_Json::encode($this->soldiersCreated); ?>;
-
-var my = {
-    color: '<?php echo $this->color ?>',
-    id: <?php echo $this->id ?>,
-    turn: <?php echo $this->myTurn ?>,
-    game: <?php echo $this->myGame ?>
-}
-var gameId = <?php echo $this->gameId ?>;
-var lang = '<?php echo Zend_Registry::get('lang') ?>';
-var langId = <?php echo Zend_Registry::get('id_lang') ?>;
-var accessKey = '<?php echo $this->accessKey ?>';
-
-$(document).ready(function() {
-    goldUpdate(<?php echo $this->gold ?>);
-});
+var mapPlayersColors = <?php echo Zend_Json::encode($this->mapPlayersColors); ?>;
 var terrain = <?php echo Zend_Json::encode($this->terrain); ?>;
 var fieldsOryginal = <?php echo Zend_Json::encode($this->fields); ?>;
 <?php $this->headScript()->captureEnd() ?>
