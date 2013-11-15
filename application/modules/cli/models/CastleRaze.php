@@ -20,12 +20,12 @@ class Cli_Model_CastleRaze
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
 
-        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
+        $gold = $mPlayersInGame->getPlayerGold($user->parameters['playerId']);
 
         if ($mCastlesInGame->razeCastle($castleId, $user->parameters['playerId'])) {
             $defense = $mapCastles[$castleId]['defense'] + $mCastlesInGame->getCastleDefenseModifier($castleId);
             $gold = $gold + $defense * 200;
-            $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
+            $mPlayersInGame->updatePlayerGold($user->parameters['playerId'], $gold);
         }
 
         $playersInGameColors = Zend_Registry::get('playersInGameColors');

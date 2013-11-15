@@ -40,7 +40,7 @@ class Cli_Model_SplitArmy
 
         if (isset($soldiersIds) && !empty($soldiersIds)) {
 
-            $mSoldier = new Application_Model_Soldier($user->parameters['gameId'], $db);
+            $mSoldier = new Application_Model_UnitsInGame($user->parameters['gameId'], $db);
 
             foreach ($soldiersIds as $soldierId) {
                 if (!Zend_Validate::is($soldierId, 'Digits')) {

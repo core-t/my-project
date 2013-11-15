@@ -67,10 +67,10 @@ class Cli_Model_Turn
         $mPlayersInGame->turnActivate($playerId);
 
         $mArmy = new Application_Model_Army($gameId, $db);
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
         $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
 
-        $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
+        $gold = $mPlayersInGame->getPlayerGold($playerId);
         if ($computer) {
             $mArmy->unfortifyComputerArmies($playerId);
         }
@@ -85,7 +85,7 @@ class Cli_Model_Turn
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
         $castlesInGame = $mCastlesInGame->getPlayerCastles($playerId);
 
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
         $mSoldiersCreated = new Application_Model_SoldiersCreated($gameId, $db);
 
         foreach ($castlesInGame as $castleId => $castleInGame) {
@@ -138,7 +138,7 @@ class Cli_Model_Turn
             $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
             $gold = $gold + $income - $costs;
 
-            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
+            $mPlayersInGame->updatePlayerGold($playerId, $gold);
 
             $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
@@ -224,8 +224,51 @@ class Cli_Model_Turn
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $mGameResults = new Application_Model_GameResults($this->_gameId, $this->_db);
+        $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
+        $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_gameId, $this->_db);
+        $mHeroesKilled = new Application_Model_HeroesKilled($this->_gameId, $this->_db);
+        $mSoldiersKilled = new Application_Model_SoldiersKilled($this->_gameId, $this->_db);
+        $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_gameId, $this->_db);
+        $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
+
+        $castlesConquered = array(
+            'winners' => $mCastlesConquered->countConquered($playersInGameColors),
+            'losers' => $mCastlesConquered->countLost($playersInGameColors)
+        );
+
+        $heroesKilled = array(
+            'winners' => $mHeroesKilled->countKilled($playersInGameColors),
+            'losers' => $mHeroesKilled->countLost($playersInGameColors)
+        );
+
+        $soldiersKilled = array(
+            'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
+            'losers' => $mSoldiersKilled->countLost($playersInGameColors)
+        );
+
+        $soldiersCreated = $mSoldiersCreated->countCreated($playersInGameColors);
+
+        $castlesDestroyed = $mCastlesDestroyed->countAll($playersInGameColors);
+
+        $playersGold = $mPlayersInGame->getAllPlayersGold();
+
         foreach ($playersInGameColors as $playerId => $shortName) {
-            $mGameResults->add($playerId);
+
+            $mGameResults->add(
+                $playerId,
+                $castlesConquered['winners'][$playerId],
+                $castlesConquered['losers'][$playerId],
+                $castlesDestroyed[$playerId],
+                $soldiersCreated[$playerId],
+                $soldiersKilled['winners'][$playerId],
+                $soldiersKilled['losers'][$playerId],
+                $heroesKilled['winners'][$playerId],
+                $heroesKilled['losers'][$playerId],
+                $playersGold[$playerId],
+
+            );
         }
 
     }

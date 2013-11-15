@@ -101,7 +101,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
 
         if (isset($result['armyId'])) {
-            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
             $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
@@ -136,7 +136,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
 
         if (isset($result['armyId'])) {
-            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
             $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
             foreach ($result['heroes'] as $k => $row) {
@@ -206,7 +206,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $ids[] = $id['armyId'];
         }
         if ($ids) {
-            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             return array(
                 'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
                 'soldiers' => $mSoldier->getForBattle($ids),
@@ -247,7 +247,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
 
         if ($ids) {
-            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             return array(
                 'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
                 'soldiers' => $mSoldier->getForBattle($ids),
@@ -290,7 +290,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return;
         }
 
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
 
         return $mSoldier->getSwimmingFromArmiesIds($ids);
     }

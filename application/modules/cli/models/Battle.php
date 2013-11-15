@@ -61,7 +61,7 @@ class Cli_Model_Battle
 
     private function deleteSoldiers($soldiers, $gameId, $db, $winnerId, $loserId)
     {
-        $mSoldier = new Application_Model_Soldier($gameId, $db);
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
         $mSoldiersKilled = new Application_Model_SoldiersKilled($gameId, $db);
         foreach ($soldiers as $v) {
             if (strpos($v['soldierId'], 's') === false) {

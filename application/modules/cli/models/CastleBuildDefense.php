@@ -17,7 +17,7 @@ class Cli_Model_CastleBuildDefense
         }
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
-        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
+        $gold = $mPlayersInGame->getPlayerGold($user->parameters['playerId']);
 
         $defenseModifier = $mCastlesInGame->getCastleDefenseModifier($castleId);
 
@@ -56,7 +56,7 @@ class Cli_Model_CastleBuildDefense
         );
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
-        $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $token['gold']);
+        $mPlayersInGame->updatePlayerGold($user->parameters['playerId'], $token['gold']);
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }

@@ -112,7 +112,7 @@ class GameController extends Game_Controller_Game
             $this->view->players[$player['color']]['armies'] = array();
 
             $mHeroesInGame = new Application_Model_HeroesInGame($this->_namespace->gameId);
-            $mSoldier = new Application_Model_Soldier($this->_namespace->gameId);
+            $mSoldier = new Application_Model_UnitsInGame($this->_namespace->gameId);
 
             foreach ($mArmy->getPlayerArmies($player['playerId']) as $army) {
                 $this->view->players[$player['color']]['armies']['army' . $army['armyId']] = $army;

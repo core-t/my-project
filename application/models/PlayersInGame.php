@@ -263,7 +263,22 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
 
     }
 
-    public function getPlayerInGameGold($playerId)
+    public function getAllPlayersGold()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('playerId', 'gold'))
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $row) {
+            $array[$row['playerId']] = $row['gold'];
+        }
+
+        return $array;
+    }
+
+    public function getPlayerGold($playerId)
     {
         $select = $this->_db->select()
             ->from($this->_name, 'gold')
@@ -273,7 +288,7 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
         return $this->selectOne($select);
     }
 
-    public function updatePlayerInGameGold($playerId, $gold)
+    public function updatePlayerGold($playerId, $gold)
     {
         $data['gold'] = $gold;
         $where = array(
@@ -378,16 +393,6 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
 
         return $this->selectOne($select);
     }
-
-//    public function getPlayerColor($playerId)
-//    {
-//        $select = $this->_db->select()
-//            ->from($this->_name, 'mapPlayerId')
-//            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
-//            ->where($this->_db->quoteIdentifier('playerId') . ' = ?', $playerId);
-//
-//        return $this->selectOne($select);
-//    }
 
     public function getNumberOfPlayers()
     {

@@ -170,7 +170,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         }
 
         $soldiers = $army['soldiers'];
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
 
         if ($army['canFly'] > 0 || $army['canSwim']) {
             foreach ($soldiers as $soldier) {
@@ -267,7 +267,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         unset($result[0]);
         $count = count($result);
 
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
 
         for ($i = 1; $i <= $count; $i++) {
@@ -297,7 +297,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
 
         $armies = array();
 
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
 
         foreach ($result as $army) {
@@ -332,7 +332,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
 
         $result = $this->selectAll($select);
 
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
 
         foreach ($result as $army) {
@@ -377,7 +377,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
 //                $heroes[$k]['artifacts'] = $mInventory->getAll();
 //            }
 
-            $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+            $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
             $soldiers = $mSoldier->getSoldiers($army['armyId']);
 
             if (empty($heroes) AND empty($soldiers)) {
@@ -415,7 +415,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
 //            $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
 //        }
 
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $result['soldiers'] = $mSoldier->getForWalk($result['armyId']);
 
         if (empty($result['heroes']) && empty($result['soldiers'])) {
@@ -444,7 +444,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         $armies = array();
 
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
-        $mSoldier = new Application_Model_Soldier($this->_gameId, $this->_db);
+        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
 
         foreach ($result as $army) {
             $armies['army' . $army['armyId']] = $army;

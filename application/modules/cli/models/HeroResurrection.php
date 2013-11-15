@@ -30,7 +30,7 @@ class Cli_Model_HeroResurrection
         }
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
-        $gold = $mPlayersInGame->getPlayerInGameGold($user->parameters['playerId']);
+        $gold = $mPlayersInGame->getPlayerGold($user->parameters['playerId']);
 
         if ($gold < 100) {
             $gameHandler->sendError($user, 'Za mało złota!');
@@ -40,7 +40,7 @@ class Cli_Model_HeroResurrection
         $mapCastles = Zend_Registry::get('castles');
         $armyId = Cli_Model_Army::heroResurrection($user->parameters['gameId'], $heroId, $mapCastles[$castleId]['position'], $user->parameters['playerId'], $db);
         $gold -= 100;
-        $mPlayersInGame->updatePlayerInGameGold($user->parameters['playerId'], $gold);
+        $mPlayersInGame->updatePlayerGold($user->parameters['playerId'], $gold);
 
         $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');

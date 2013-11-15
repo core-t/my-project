@@ -94,9 +94,9 @@ class Cli_Model_SearchRuin
             $find = array('gold', $gold);
 
             $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
-            $inGameGold = $mPlayersInGame->getPlayerInGameGold($playerId);
+            $inGameGold = $mPlayersInGame->getPlayerGold($playerId);
 
-            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold + $inGameGold);
+            $mPlayersInGame->updatePlayerGold($playerId, $gold + $inGameGold);
 
             $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
@@ -141,7 +141,7 @@ class Cli_Model_SearchRuin
             $unitId = rand($fistUnitId + 10, $max1);
             $numberOfUnits = rand($min2, $max2);
             $find = array('alies', $numberOfUnits);
-            $mSoldier = new Application_Model_Soldier($gameId, $db);
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             for ($i = 0; $i < $numberOfUnits; $i++) {
                 $mSoldier->add($armyId, $unitId);
             }
