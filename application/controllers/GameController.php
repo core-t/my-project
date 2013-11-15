@@ -64,26 +64,6 @@ class GameController extends Game_Controller_Game
             $this->view->turnHistory = $mTurn->getTurnHistory();
         }
 
-        $mCastlesConquered = new Application_Model_CastlesConquered($this->_namespace->gameId);
-        $this->view->castlesConquered = array(
-            'winners' => $mCastlesConquered->countConquered($playersInGameColors),
-            'losers' => $mCastlesConquered->countLost($playersInGameColors)
-        );
-        $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_namespace->gameId);
-        $this->view->castlesDestroyed = $mCastlesDestroyed->countAll($playersInGameColors);
-        $mHeroesKilled = new Application_Model_HeroesKilled($this->_namespace->gameId);
-        $this->view->heroesKilled = array(
-            'winners' => $mHeroesKilled->countKilled($playersInGameColors),
-            'losers' => $mHeroesKilled->countLost($playersInGameColors)
-        );
-        $mSoldiersKilled = new Application_Model_SoldiersKilled($this->_namespace->gameId);
-        $this->view->soldiersKilled = array(
-            'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
-            'losers' => $mSoldiersKilled->countLost($playersInGameColors)
-        );
-        $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_namespace->gameId);
-        $this->view->soldiersCreated = $mSoldiersCreated->countCreated($playersInGameColors);
-
         $towers = array();
 
         foreach (array_keys($neutralTowers) as $k) {

@@ -54,6 +54,13 @@ var stop = 0;
 
 var shipId;
 
+var castlesConquered = null;
+var castlesDestroyed = null;
+var heroesKilled = null;
+var soldiersKilled = null;
+var soldiersCreated = null;
+
+
 $(document).ready(function () {
     $(window).resize(function () {
         Gui.adjust();
