@@ -33,6 +33,12 @@ class Cli_Model_Turn
                 if ($nextPlayer['playerId'] == $playerId) { // następny gracz to ten sam gracz, który zainicjował zmianę tury
                     $response['win'] = true;
                     $mGame->endGame(); // koniec gry
+
+                    $mGameResults = new Application_Model_GameResults($gameId, $db);
+                    foreach ($playersInGameColors as $playerColor) {
+                        $mGameResults->add();
+                    }
+
                 } else { // zmieniam turę
                     $mGame->updateTurnNumber($nextPlayer);
                     $mCastlesInGame->increaseAllCastlesProductionTurn($playerId);
