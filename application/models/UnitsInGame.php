@@ -2,7 +2,7 @@
 
 class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
 {
-    protected $_name = 'soldier';
+    protected $_name = 'unitsingame';
     protected $_primary = 'soldierId';
     protected $gameId;
     protected $_mapUnits = 'mapunits';

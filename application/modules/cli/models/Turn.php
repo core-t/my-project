@@ -230,8 +230,9 @@ class Cli_Model_Turn
         $mSoldiersKilled = new Application_Model_SoldiersKilled($this->_gameId, $this->_db);
         $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_gameId, $this->_db);
         $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
-        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+        $mUnitsInGame = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
 
         $castlesConquered = array(
             'winners' => $mCastlesConquered->countConquered($playersInGameColors),
@@ -266,7 +267,7 @@ class Cli_Model_Turn
                 $soldiersKilled['losers'][$playerId],
                 $heroesKilled['winners'][$playerId],
                 $heroesKilled['losers'][$playerId],
-                $playersGold[$playerId],
+                $playersGold[$playerId], 0, 0, 0
 
             );
         }
