@@ -16,7 +16,9 @@ var Message = {
         );
         var left = documentWidth / 2 - $('.message').outerWidth() / 2;
         var maxHeight = documentHeight - 120;
+        var maxWidth = documentWidth - 500;
         $('.message').css({
+            'max-width': +'px',
             'max-height': maxHeight + 'px',
             'left': left + 'px',
             'display': 'block'

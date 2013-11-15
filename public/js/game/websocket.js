@@ -59,6 +59,9 @@ Websocket = {
 
                     case 'startTurn':
                         //                    console.log(r);
+
+                        quitedArmies = new Array();
+
                         if (r.action == 'gameover') {
                             Message.lost(r.color);
                         } else if (r.color == my.color) {

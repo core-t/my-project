@@ -269,14 +269,16 @@ var Gui = {
 
         $('.message').css({
             'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
-        });
-
-        if (!zoomer) {
-            zoomer = new zoom(documentWidth, documentHeight);
-        } else {
-            zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
-            zoomer.lens.setdimensions();
-        }
     }
+)
+;
+
+if (!zoomer) {
+    zoomer = new zoom(documentWidth, documentHeight);
+} else {
+    zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
+    zoomer.lens.setdimensions();
+}
+}
 
 }
