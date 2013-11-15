@@ -284,7 +284,7 @@
     min-width: 321px;
     min-height: 70px;
     border: 1px solid #555;
-    z-index: 27000;
+    z-index: 27001;
     background: transparent url('/img/game/message_bg.png');
     position: absolute;
     top: 60px;
@@ -898,13 +898,33 @@ html {
     z-index: 99999;
 }
 
+.message div.overflow {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.message div.overflow div {
+    margin-right: 15px;
+}
+
 table.statistics td {
     border: none;
     text-shadow: none;
+    padding: 4px;
 }
 
 table.statistics th {
     background: none;
     border: 1px solid #fff;
     border-radius: 5px;
+}
+
+table.statistics td.shortName {
+    background: none;
+    border: 1px solid #fff;
+    height: 38px;
+}
+
+table.statistics th.Players {
+    border: none;
 }

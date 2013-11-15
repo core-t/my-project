@@ -686,7 +686,8 @@ var Message = {
         var table = $('<table>')
             .addClass('statistics')
             .append($('<tr>')
-                .append($('<th>').html('Players'))
+//                .append($('<th>').html('Players'))
+                .append($('<th>').addClass('Players'))
                 .append($('<th>').html('Castles conquered'))
                 .append($('<th>').html('Castles lost'))
                 .append($('<th>').html('Castles razed'))
@@ -699,10 +700,7 @@ var Message = {
         for (i in players) {
             var tr = $('<tr>');
 
-            var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+            var td = $('<td>').addClass('shortName');
             tr.append(td.html(mapPlayersColors[i].longName))
 
             var td = $('<td>').css({
@@ -788,8 +786,15 @@ var Message = {
             table.append(tr);
         }
         statistics.append(table);
-        this.show(statistics);
+
+        var div = $('<div>')
+            .addClass('overflow')
+            .append(statistics);
+        this.show(div);
         this.ok();
+
+        var divHeight = parseInt($('.message').css('height')) - 60;
+        $('.message div.overflow').css('height', divHeight + 'px')
     }
 
 }
