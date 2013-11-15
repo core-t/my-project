@@ -2,6 +2,9 @@
 
 class Cli_Model_Turn
 {
+    private $_gameId;
+    private $_db;
+
     public function __construct($gameId, $db)
     {
         $this->_gameId = $gameId;

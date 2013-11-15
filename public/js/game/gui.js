@@ -58,7 +58,7 @@ var Gui = {
         });
 
         $('#statistics').click(function () {
-            Message.statistics();
+            Websocket.getStatistics();
         });
 
         $('#send').click(function () {

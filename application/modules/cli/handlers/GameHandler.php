@@ -83,6 +83,38 @@ class Cli_GameHandler extends Cli_WofHandler
             return;
         }
 
+        if ($dataIn['type'] == 'statistics') {
+            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+
+            $mCastlesConquered = new Application_Model_CastlesConquered($user->parameters['gameId'], $db);
+            $mCastlesDestroyed = new Application_Model_CastlesDestroyed($user->parameters['gameId'], $db);
+            $mHeroesKilled = new Application_Model_HeroesKilled($user->parameters['gameId'], $db);
+            $mSoldiersKilled = new Application_Model_SoldiersKilled($user->parameters['gameId'], $db);
+            $mSoldiersCreated = new Application_Model_SoldiersCreated($user->parameters['gameId'], $db);
+
+            $token = array(
+                'type' => $dataIn['type'],
+                'castlesConquered' => array(
+                    'winners' => $mCastlesConquered->countConquered($playersInGameColors),
+                    'losers' => $mCastlesConquered->countLost($playersInGameColors)
+                ),
+                'heroesKilled' => array(
+                    'winners' => $mHeroesKilled->countKilled($playersInGameColors),
+                    'losers' => $mHeroesKilled->countLost($playersInGameColors)
+                ),
+                'soldiersKilled' => array(
+                    'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
+                    'losers' => $mSoldiersKilled->countLost($playersInGameColors)
+                ),
+                'soldiersCreated' => $mSoldiersCreated->countCreated($playersInGameColors),
+                'castlesDestroyed' => $mCastlesDestroyed->countAll($playersInGameColors)
+            );
+
+            $this->sendToChannel($db, $token, $user->parameters['gameId']);
+
+            return;
+        }
+
         if ($dataIn['type'] == 'tower') {
             $towerId = $dataIn['towerId'];
             if ($towerId === null) {

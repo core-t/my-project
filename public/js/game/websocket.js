@@ -212,8 +212,13 @@ Websocket = {
                         }
                         break;
 
-                    case 'getConquered':
-                        console.log(r);
+                    case 'statistics':
+                        castlesConquered = r.castlesConquered;
+                        castlesDestroyed = r.castlesDestroyed;
+                        heroesKilled = r.heroesKilled;
+                        soldiersCreated = r.soldiersCreated;
+                        soldiersKilled = r.soldiersKilled;
+                        Message.statistics();
                         break;
 
                     default:
@@ -588,7 +593,16 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    getConquered: function () {
+    getStatistics: function () {
+        if (wsClosed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
 
+        var token = {
+            type: 'statistics'
+        };
+
+        ws.send(JSON.stringify(token));
     }
 }
