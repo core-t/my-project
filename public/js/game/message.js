@@ -542,10 +542,10 @@ var Message = {
                 left: 40 * castles[data.castleId].x - 11 + 'px'
             }));
         } else {
-//            board.append($('<div>').addClass('armyWar').css({
-//                top: 40 * castles[data.castleId].y + 'px',
-//                left: 40 * castles[data.castleId].x + 'px'
-//            }));
+            board.append($('<div>').addClass('armyWar').css({
+                top: 40 * selectedArmy.y - 42 + 'px',
+                left: 40 * selectedArmy.x - 41 + 'px'
+            }));
         }
 
 

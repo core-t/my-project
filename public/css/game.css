@@ -887,7 +887,15 @@ html {
     background: url("/img/game/war.png");
     width: 111px;
     height: 120px;
-    z-index: 99999;
+    z-index: 26999;
+}
+
+.armyWar {
+    position: absolute;
+    background: url("/img/game/war.png");
+    width: 111px;
+    height: 120px;
+    z-index: 26999;
 }
 
 .ruinSearch {
