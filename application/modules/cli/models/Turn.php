@@ -279,16 +279,16 @@ class Cli_Model_Turn
 
             $mGameResults->add(
                 $playerId,
-                $castlesConquered['winners'][$playerId],
-                $castlesConquered['losers'][$playerId],
-                $castlesDestroyed[$playerId],
-                $soldiersCreated[$playerId],
-                $soldiersKilled['winners'][$playerId],
-                $soldiersKilled['losers'][$playerId],
-                $heroesKilled['winners'][$playerId],
-                $heroesKilled['losers'][$playerId],
-                $playersGold[$playerId], 0, 0, 0
-
+                $castlesConquered['winners'][$playersInGameColors[$playerId]],
+                $castlesConquered['losers'][$playersInGameColors[$playerId]],
+                $castlesDestroyed[$playersInGameColors[$playerId]],
+                $soldiersCreated[$playersInGameColors[$playerId]],
+                $soldiersKilled['winners'][$playersInGameColors[$playerId]],
+                $soldiersKilled['losers'][$playersInGameColors[$playerId]],
+                $heroesKilled['winners'][$playersInGameColors[$playerId]],
+                $heroesKilled['losers'][$playersInGameColors[$playerId]],
+                $playersGold[$playerId],
+                0, 0, 0
             );
         }
 

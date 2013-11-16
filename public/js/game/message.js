@@ -542,9 +542,16 @@ var Message = {
                 left: 40 * castles[data.castleId].x - 11 + 'px'
             }));
         } else {
+            if (isSet(data.attackerArmy.x)) {
+                var x = data.attackerArmy.x;
+                var y = data.attackerArmy.y;
+            } else if (isSet(data.defenderArmy.x)) {
+                var x = data.attackerArmy.x;
+                var y = data.defenderArmy.y;
+            }
             board.append($('<div>').addClass('armyWar').css({
-                top: 40 * selectedArmy.y - 42 + 'px',
-                left: 40 * selectedArmy.x - 41 + 'px'
+                top: 40 * y - 42 + 'px',
+                left: 40 * x - 41 + 'px'
             }));
         }
 

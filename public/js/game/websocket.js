@@ -39,13 +39,7 @@ Websocket = {
                         computerArmiesUpdate(r.armies, r.color);
                         break;
 
-                    case 'computerGameover':
-                        console.log(r);
-                        Websocket.computer();
-                        break;
-
                     case 'nextTurn':
-                        console.log(r);
                         unselectArmy();
                         if (r.lost) {
                             Message.lost(r.color);
