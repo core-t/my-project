@@ -110,22 +110,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         return $paginator;
     }
 
-    public function playerIsAlive($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame', 'playerId')
-                ->where('lost = false')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            if ($this->_db->fetchOne($select)) {
-                return true;
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
     public function startGame($turnPlayerId)
     {
         $data = array(
@@ -152,19 +136,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->from($this->_name)
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
         return $this->_db->fetchRow($select);
-    }
-
-    public function getPlayerIdByColor($color)
-    {
-        $select = $this->_db->select()
-            ->from('playersingame', 'playerId')
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('color = ?', $color);
-        try {
-            return $this->_db->fetchOne($select);
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
     }
 
     public function isPlayerInGame($playerId)
@@ -264,95 +235,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-    public function getComputerPlayerId()
-    {
-        $select = $this->_db->select()
-            ->from(array('a' => 'playersingame'), 'min(b."playerId")')
-            ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-            ->where('a."gameId" != ?', $this->_gameId)
-            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' is not null')
-            ->where('computer = true'); //throw new Exception($select->__toString());
-        try {
-            $ids = $this->getComputerPlayersIds();
-            if ($ids) {
-                $select->where('a."playerId" NOT IN (?)', new Zend_Db_Expr($ids));
-            }
-            $result = $this->_db->query($select)->fetchAll();
-            return $result[0]['min'];
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function getComputerPlayersIds()
-    {
-        $ids = '';
-        try {
-            $select = $this->_db->select()
-                ->from(array('a' => 'playersingame'), 'playerId')
-                ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', null)
-                ->where('a."gameId" = ?', $this->_gameId)
-                ->where($this->_db->quoteIdentifier('mapPlayerId') . ' is not null')
-                ->where('computer = true');
-            $result = $this->_db->query($select)->fetchAll();
-            foreach ($result as $row) {
-                if ($ids) {
-                    $ids .= ',';
-                }
-                $ids .= $row['playerId'];
-            }
-            return $ids;
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function getPlayerInGame($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"playerId" = ?', $playerId);
-            $result = $this->_db->query($select)->fetchAll();
-            return $result[0];
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function isColorInGame($playerId, $mapPlayerId)
-    {
-        $select = $this->_db->select()
-            ->from('playersingame', 'mapPlayerId')
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('"playerId" != ?', $playerId)
-            ->where($this->_db->quoteIdentifier('mapPlayerId') . ' = ?', $mapPlayerId);
-        try {
-            return $this->_db->fetchOne($select);
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function updatePlayerReady($playerId, $mapPlayerId)
-    {
-        if ($this->isColorInGame($playerId, $mapPlayerId)) {
-            return false;
-        }
-        $player = $this->getPlayerInGame($playerId);
-        if ($player['mapPlayerId'] == $mapPlayerId) {
-            $data['mapPlayerId'] = null;
-        } else {
-            $data['mapPlayerId'] = $mapPlayerId;
-        }
-
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-
-        $this->_db->update('playersingame', $data, $where);
-    }
-
     public function isPlayerTurn($playerId)
     {
         $select = $this->_db->select()
@@ -404,69 +286,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         $this->updateGame($data);
     }
 
-    public function getTurn()
-    {
-        $select = $this->_db->select()
-            ->from(array('a' => $this->_name), 'turnNumber')
-            ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', 'lost')
-            ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
-
-        return $this->selectRow($select);
-    }
-
-    public function playerTurnActive($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame', 'turnActive')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"turnActive" = ?', true)
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0]['turnActive'])) {
-                return true;
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function playerLost($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame', 'lost')
-                ->where('"playerId" = ?', $playerId)
-                ->where('lost = ?', true)
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0]['lost'])) {
-                return true;
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function turnActivate($playerId)
-    {
-        $data = array(
-            'turnActive' => 'true'
-        );
-        $where = array(
-            $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId),
-            $this->_db->quoteInto('"playerId" = ?', $playerId)
-        );
-        $this->_db->update('playersingame', $data, $where);
-        $data['turnActive'] = 'false';
-        $where = array(
-            $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId),
-            $this->_db->quoteInto('"turnActive" = ?', 'true'),
-            $this->_db->quoteInto('"playerId" != ?', $playerId)
-        );
-        $this->_db->update('playersingame', $data, $where);
-    }
-
     public function getTurnNumber()
     {
         $select = $this->_db->select()
@@ -474,36 +293,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
 
         return $this->selectOne($select);
-    }
-
-    public function getPlayerInGameGold($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame', 'gold')
-                ->where('"playerId" = ?', $playerId)
-                ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-            $result = $this->_db->query($select)->fetchAll();
-            return $result[0]['gold'];
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function updatePlayerInGameGold($playerId, $gold)
-    {
-        $data['gold'] = $gold;
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        $this->_db->update('playersingame', $data, $where);
-    }
-
-    public function setPlayerLostGame($playerId)
-    {
-        $data['lost'] = 'true';
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $this->_gameId);
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        $this->_db->update('playersingame', $data, $where);
     }
 
     public function getAccessKey($playerId)

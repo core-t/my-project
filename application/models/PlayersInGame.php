@@ -428,5 +428,6 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
         }
         return $players;
     }
+
 }
 

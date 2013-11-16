@@ -40,7 +40,7 @@ abstract class Coret_Db_Table_Abstract extends Zend_Db_Table_Abstract
             $updateResult = $this->_db->update($name, $data, $where);
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
 
                 echo($e);
@@ -74,7 +74,7 @@ Zapytanie zwróciło błąd
 ');
                 $e = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
                 if ($this->_cli) {
-                    $l = new Coret_Model_Logger();
+                    $l = new Coret_Model_Logger('cli');
                     $l->log($e);
 
                     echo($e);
@@ -109,7 +109,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return $this->_db->insert($name, $data);
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
                 $l->log($data);
                 echo($e);
@@ -128,7 +128,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return $this->_db->query($select)->fetchAll();
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
                 $l->log($select->__toString());
 
@@ -150,7 +150,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return $this->_db->fetchRow($select);
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
                 $l->log($select->__toString());
 
@@ -172,7 +172,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             return $this->_db->fetchOne($select);
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
                 $l->log($select->__toString());
 
@@ -194,7 +194,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             $this->_db->delete($this->_name, $where);
         } catch (Exception $e) {
             if ($this->_cli) {
-                $l = new Coret_Model_Logger();
+                $l = new Coret_Model_Logger('cli');
                 $l->log($e);
                 echo($e);
             } else {

@@ -42,7 +42,7 @@ class Cli_Model_Turn
         $mGame = new Application_Model_Game($this->_gameId, $this->_db);
 
         while (empty($loop)) {
-            $nextPlayerId = $this->getExpectedNextTurnPlayer($nextPlayerId);
+            $nextPlayerId = $this->getExpectedNextTurnPlayer($playersInGameColors[$nextPlayerId]);
             $playerCastlesExists = $mCastlesInGame->playerCastlesExists($nextPlayerId);
             $playerArmiesExists = $mArmy->playerArmiesExists($nextPlayerId);
             if ($playerCastlesExists || $playerArmiesExists) {
@@ -86,7 +86,6 @@ class Cli_Model_Turn
             }
         }
     }
-
 
     public function start($playerId, $computer = null)
     {
@@ -183,9 +182,7 @@ class Cli_Model_Turn
 
     public function getExpectedNextTurnPlayer($playerColor)
     {
-
         $find = false;
-
         $playerColors = Zend_Registry::get('colors');
 
         /* szukam następnego koloru w dostępnych kolorach */
@@ -211,7 +208,7 @@ class Cli_Model_Turn
         $playersInGame = $mPlayersInGame->getPlayersInGameReady();
 
         /* przypisuję playerId do koloru */
-        foreach ($playersInGame as $k => $player) {
+        foreach ($playersInGame as $player) {
             if ($player['color'] == $nextPlayerColor) {
                 $nextPlayerId = $player['playerId'];
                 break;
@@ -224,10 +221,8 @@ class Cli_Model_Turn
                 if ($player['color'] == $playerColors[0]) {
                     if ($player['lost']) {
                         $nextPlayerId = $playersInGame[$k + 1]['playerId'];
-                        $nextPlayerColor = $playersInGame[$k + 1]['color'];
                     } else {
                         $nextPlayerId = $player['playerId'];
-                        $nextPlayerColor = $player['color'];
                     }
                     break;
                 }
@@ -235,15 +230,13 @@ class Cli_Model_Turn
         }
 
         if (!isset($nextPlayerId)) {
-            echo('Błąd! Nie znalazłem gracza');
+            $l = new Coret_Model_Logger('cli');
+            $l->log('Błąd! Nie znalazłem gracza');
 
             return;
         }
 
-        return array(
-            'playerId' => $nextPlayerId,
-            'color' => $nextPlayerColor
-        );
+        return $nextPlayerId;
     }
 
     public function saveResults()
