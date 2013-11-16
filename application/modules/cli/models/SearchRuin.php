@@ -64,7 +64,7 @@ class Cli_Model_SearchRuin
     static public function search($gameId, $ruinId, $heroId, $armyId, $playerId, $db)
     {
         $mGame = new Application_Model_Game($gameId, $db);
-        $turn = $mGame->getTurn();
+        $turnNumber = $mGame->getTurnNumber();
 
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
@@ -78,7 +78,7 @@ class Cli_Model_SearchRuin
 
         if ($random < 10) { //10%
 //śmierć
-            if ($turn['nr'] <= 7) {
+            if ($turnNumber <= 7) {
                 $find = array('null', 1);
                 $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
                 $mRuinsInGame->add($ruinId);
@@ -105,31 +105,31 @@ class Cli_Model_SearchRuin
 //jednostki
             $fistUnitId = Zend_Registry::get('fistUnitId');
 
-            if ($turn['nr'] <= 7) {
+            if ($turnNumber <= 7) {
                 $max1 = $fistUnitId + 10;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turn['nr'] <= 12) {
+            } elseif ($turnNumber <= 12) {
                 $max1 = $fistUnitId + 12;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turn['nr'] <= 16) {
+            } elseif ($turnNumber <= 16) {
                 $max1 = $fistUnitId + 13;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turn['nr'] <= 19) {
+            } elseif ($turnNumber <= 19) {
                 $max1 = $fistUnitId + 14;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turn['nr'] <= 21) {
+            } elseif ($turnNumber <= 21) {
                 $max1 = $fistUnitId + 14;
                 $min2 = 1;
                 $max2 = 2;
-            } elseif ($turn['nr'] <= 23) {
+            } elseif ($turnNumber <= 23) {
                 $max1 = $fistUnitId + 14;
                 $min2 = 1;
                 $max2 = 3;
-            } elseif ($turn['nr'] <= 25) {
+            } elseif ($turnNumber <= 25) {
                 $max1 = $fistUnitId + 14;
                 $min2 = 2;
                 $max2 = 3;

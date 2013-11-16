@@ -5,10 +5,11 @@ class Cli_Model_Turn
     private $_gameId;
     private $_db;
 
-    public function __construct($gameId, $db)
+    public function __construct($gameId, $db, $gameHandler)
     {
         $this->_gameId = $gameId;
         $this->_db = $db;
+        $this->_gameHandler = $gameHandler;
     }
 
     public function next($playerId)
@@ -19,48 +20,71 @@ class Cli_Model_Turn
             return;
         }
 
-        $response = array();
-
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
-
-        $nextPlayer = array(
-            'color' => $playersInGameColors[$playerId]
-        );
-
-        $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
-        $mGame = new Application_Model_Game($this->_gameId, $this->_db);
         $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
+        $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
 
-        while (empty($response)) {
-            $nextPlayer = $this->getExpectedNextTurnPlayer($nextPlayer['color']);
-            $playerCastlesExists = $mCastlesInGame->playerCastlesExists($nextPlayer['playerId']);
-            $playerArmiesExists = $mArmy->playerArmiesExists($nextPlayer['playerId']);
-            if ($playerCastlesExists || $playerArmiesExists) {
-                $response['color'] = $nextPlayer['color'];
-
-                if ($nextPlayer['playerId'] == $playerId) { // następny gracz to ten sam gracz, który zainicjował zmianę tury
-                    $response['win'] = true;
-                    $mGame->endGame(); // koniec gry
-
-                    $this->saveResults();
-                } else { // zmieniam turę
-                    $mGame->updateTurnNumber($nextPlayer);
-                    $mCastlesInGame->increaseAllCastlesProductionTurn($playerId);
-
-                    $turn = $mGame->getTurn();
-
-                    $response['lost'] = $turn['lost'];
-                    $response['nr'] = $turn['nr'];
-                }
-            } else {
-                $mPlayersInGame->setPlayerLostGame($nextPlayer['playerId']);
-            }
+        $playerCastlesExists = $mCastlesInGame->playerCastlesExists($playerId);
+        $playerArmiesExists = $mArmy->playerArmiesExists($playerId);
+        if (!$playerCastlesExists || !$playerArmiesExists) {
+            $token = array(
+                'type' => 'dead',
+                'color' => $playersInGameColors[$playerId]
+            );
+            $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
+            $mPlayersInGame->setPlayerLostGame($playerId);
+            sleep(3);
         }
 
-        $mTurnHistory = new Application_Model_TurnHistory($this->_gameId, $this->_db);
-        $mTurnHistory->add($nextPlayer['playerId'], $response['nr']);
+        $nextPlayerId = $playerId;
+        $loop = null;
 
-        return $response;
+        $mGame = new Application_Model_Game($this->_gameId, $this->_db);
+
+        while (empty($loop)) {
+            $nextPlayerId = $this->getExpectedNextTurnPlayer($nextPlayerId);
+            $playerCastlesExists = $mCastlesInGame->playerCastlesExists($nextPlayerId);
+            $playerArmiesExists = $mArmy->playerArmiesExists($nextPlayerId);
+            if ($playerCastlesExists || $playerArmiesExists) {
+                if ($nextPlayerId == $playerId) { // następny gracz to ten sam gracz, który zainicjował zmianę tury
+                    $loop = true;
+
+                    $mGame->endGame(); // koniec gry
+                    $this->saveResults();
+
+                    $token = array(
+                        'type' => 'end'
+                    );
+
+                    $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
+                } else { // zmieniam turę
+                    $loop = true;
+
+                    $mGame->updateTurnNumber($nextPlayerId, $playersInGameColors[$nextPlayerId]);
+                    $mCastlesInGame->increaseAllCastlesProductionTurn($playerId);
+
+                    $turnNumber = $mGame->getTurnNumber();
+
+                    $token = array(
+                        'type' => 'nextTurn',
+                        'nr' => $turnNumber,
+                        'color' => $playersInGameColors[$nextPlayerId]
+                    );
+                    $mTurnHistory = new Application_Model_TurnHistory($this->_gameId, $this->_db);
+                    $mTurnHistory->add($nextPlayerId, $token['nr']);
+
+                    $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
+                }
+            } else {
+                $token = array(
+                    'type' => 'dead',
+                    'color' => $playersInGameColors[$nextPlayerId]
+                );
+                $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
+                $mPlayersInGame->setPlayerLostGame($nextPlayerId);
+                sleep(3);
+            }
+        }
     }
 
 
@@ -76,6 +100,9 @@ class Cli_Model_Turn
         $gold = $mPlayersInGame->getPlayerGold($playerId);
         if ($computer) {
             $mArmy->unfortifyComputerArmies($playerId);
+            $type = 'computerStart';
+        } else {
+            $type = 'startTurn';
         }
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
         $mHeroesInGame->resetHeroesMovesLeft($playerId);
@@ -133,28 +160,25 @@ class Cli_Model_Turn
 
         $armies = $mArmy->getPlayerArmiesWithUnits($playerId);
 
-        if (empty($castlesInGame) && empty($armies)) {
-            return array('action' => 'gameover');
-        } else {
-            $costs = $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
-            $mTowersInGame = new Application_Model_TowersInGame($this->_gameId, $this->_db);
-            $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
-            $gold = $gold + $income - $costs;
+        $costs = $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
+        $mTowersInGame = new Application_Model_TowersInGame($this->_gameId, $this->_db);
+        $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
+        $gold = $gold + $income - $costs;
 
-            $mPlayersInGame->updatePlayerGold($playerId, $gold);
+        $mPlayersInGame->updatePlayerGold($playerId, $gold);
 
-            $playersInGameColors = Zend_Registry::get('playersInGameColors');
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
-            return array(
-                'action' => 'start',
-                'gold' => $gold,
-                'costs' => $costs,
-                'income' => $income,
-                'armies' => $armies,
-                'castles' => $castlesInGame,
-                'color' => $playersInGameColors[$playerId]
-            );
-        }
+        $token = array(
+            'type' => $type,
+            'gold' => $gold,
+            'costs' => $costs,
+            'income' => $income,
+            'armies' => $armies,
+            'castles' => $castlesInGame,
+            'color' => $playersInGameColors[$playerId]
+        );
+        $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
     }
 
     public function getExpectedNextTurnPlayer($playerColor)

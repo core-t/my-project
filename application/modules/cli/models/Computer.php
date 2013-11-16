@@ -20,36 +20,20 @@ class Cli_Model_Computer
 
         $mPlayersInGame = new Application_Model_PlayersInGame($user->parameters['gameId'], $db);
         if (!$mPlayersInGame->playerTurnActive($playerId)) {
-            $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db);
-            $token = $mTurn->start($playerId, true);
+            $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db, $gameHandler);
+            $mTurn->start($playerId, true);
         } else {
             $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
             $army = $mArmy2->getComputerArmyToMove($playerId);
             if (!empty($army['armyId'])) {
                 $token = Cli_Model_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, new Cli_Model_Army($army), $db);
+                $token['type'] = 'computer';
+                $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
             } else {
-                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db);
-                $token = $mTurn->next($playerId);
-                $token['action'] = 'end';
+                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db, $gameHandler);
+                $mTurn->next($playerId);
             }
         }
-
-        switch ($token['action']) {
-            case 'continue':
-                $token['type'] = 'computer';
-                break;
-            case 'start':
-                $token['type'] = 'computerStart';
-                break;
-            case 'end':
-                $token['type'] = 'nextTurn';
-                break;
-            case 'gameover':
-                $token['type'] = 'computerGameover';
-                break;
-        }
-
-        $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
     }
 
 }

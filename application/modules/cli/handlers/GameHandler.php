@@ -200,19 +200,13 @@ class Cli_GameHandler extends Cli_WofHandler
                 break;
 
             case 'nextTurn':
-                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db);
-                $token = $mTurn->next($user->parameters['playerId']);
-                $token['type'] = $dataIn['type'];
-
-                $this->sendToChannel($db, $token, $user->parameters['gameId']);
+                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db, $this);
+                $mTurn->next($user->parameters['playerId']);
                 break;
 
             case 'startTurn':
-                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db);
-                $token = $mTurn->start($user->parameters['playerId']);
-                $token['type'] = $dataIn['type'];
-
-                $this->sendToChannel($db, $token, $user->parameters['gameId']);
+                $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db, $this);
+                $mTurn->start($user->parameters['playerId']);
                 break;
 
             case 'production':

@@ -372,11 +372,11 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         return $this->selectOne($select);
     }
 
-    public function updateTurnNumber($nextPlayer)
+    public function updateTurnNumber($nextPlayerId, $nextPlayerColor)
     {
         $playerColors = Zend_Registry::get('colors');
 
-        if ($playerColors[0] == $nextPlayer['color']) { //first color
+        if ($playerColors[0] == $nextPlayerColor) { //first color, turn number increment
             $select = $this->_db->select()
                 ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
                 ->where('"gameId" = ?', $this->_gameId);
@@ -384,13 +384,13 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             $turnNumber = $this->selectOne($select);
 
             $data = array(
-                'turnNumber' => $turnNumber,
+                'turnNumber' => $turnNumber, // zamienić na new Zend_Db_Expr($select->_toString()),
                 'end' => new Zend_Db_Expr('now()'),
-                'turnPlayerId' => $nextPlayer['playerId']
+                'turnPlayerId' => $nextPlayerId
             );
         } else {
             $data = array(
-                'turnPlayerId' => $nextPlayer['playerId']
+                'turnPlayerId' => $nextPlayerId
             );
         }
 
@@ -407,9 +407,8 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
     public function getTurn()
     {
         $select = $this->_db->select()
-            ->from(array('a' => $this->_name), array('nr' => 'turnNumber'))
-            ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', array('lost'))
-            ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', array('color' => 'shortName'))
+            ->from(array('a' => $this->_name), 'turnNumber')
+            ->join(array('b' => 'playersingame'), 'a."turnPlayerId" = b."playerId" AND a."gameId" = b."gameId"', 'lost')
             ->where('a."' . $this->_primary . '" = ?', $this->_gameId);
 
         return $this->selectRow($select);
