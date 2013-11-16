@@ -138,54 +138,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         return $this->_db->fetchRow($select);
     }
 
-    public function isPlayerInGame($playerId)
-    {
-        try {
-            $select = $this->_db->select()
-                ->from('playersingame', 'gameId')
-                ->where('"gameId" = ?', $this->_gameId)
-                ->where('"playerId" = ?', $playerId);
-            $result = $this->_db->query($select)->fetchAll();
-            if (isset($result[0]['gameId'])) {
-                return true;
-            }
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-    }
-
-    public function joinGame($playerId)
-    {
-        $data = array(
-            'gameId' => $this->_gameId,
-            'playerId' => $playerId,
-            'accessKey' => $this->generateKey()
-        );
-        $this->_db->insert('playersingame', $data);
-    }
-
-    public function disconnectFromGame($gameId, $playerId)
-    {
-        if (empty($gameId)) {
-            $gameId = $this->_gameId;
-        }
-        $where[] = $this->_db->quoteInto('"' . $this->_primary . '" = ?', $gameId);
-        $where[] = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        $this->_db->delete('playersingame', $where);
-    }
-
-    public function disconnectNotActive()
-    {
-        $select = $this->_db->select()
-            ->from('playersingame', 'playerId')
-            ->where('"' . $this->_primary . '" = ?', $this->_gameId)
-            ->where('"webSocketServerUserId" IS NULL');
-        $where = array(
-            $this->_db->quoteInto('"playerId" IN (?)', new Zend_Db_Expr($select->__toString()))
-        );
-        $this->_db->delete('playersingame', $where);
-    }
-
     public function getGameMasterId()
     {
         $select = $this->_db->select()
@@ -201,6 +153,7 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" = ?', $this->getGameMasterId())
             ->where('"webSocketServerUserId" IS NOT NULL');
+
         if (!$this->_db->fetchOne($select)) {
             $data = array(
                 'gameMasterId' => $playerId
@@ -293,15 +246,6 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
 
         return $this->selectOne($select);
-    }
-
-    public function getAccessKey($playerId)
-    {
-        $select = $this->_db->select()
-            ->from('playersingame', 'accessKey')
-            ->where('"playerId" = ?', $playerId)
-            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        return $this->_db->fetchOne($select);
     }
 
     public function getNumberOfPlayers()

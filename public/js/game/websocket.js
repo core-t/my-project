@@ -224,6 +224,14 @@ Websocket = {
                         Message.statistics();
                         break;
 
+                    case 'dead':
+                        console.log('dead');
+                        break;
+
+                    case 'end':
+                        console.log('end');
+                        break;
+
                     default:
                         console.log(r);
 

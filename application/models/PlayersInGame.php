@@ -415,18 +415,30 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
 
     public function getGamePlayers()
     {
-        $players = array();
-
         $select = $this->_db->select()
             ->from(array('b' => $this->_name), 'playerId')
             ->join(array('a' => 'player'), 'a."playerId" = b."playerId"', array('firstName', 'lastName'))
             ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', array('color' => 'shortName', 'longName', 'backgroundColor', 'textColor'))
             ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
             ->where('b . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' is not null');
+
+        $players = array();
+
         foreach ($this->selectAll($select) as $v) {
             $players[$v['playerId']] = $v;
         }
+
         return $players;
+    }
+
+    public function getAccessKey($playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'accessKey')
+            ->where('"playerId" = ?', $playerId)
+            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+
+        return $this->_db->fetchOne($select);
     }
 
 }
