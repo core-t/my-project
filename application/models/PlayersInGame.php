@@ -436,7 +436,7 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name, 'accessKey')
             ->where('"playerId" = ?', $playerId)
-            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
+            ->where('"gameId" = ?', $this->_gameId);
 
         return $this->_db->fetchOne($select);
     }

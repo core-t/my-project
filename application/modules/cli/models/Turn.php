@@ -277,16 +277,64 @@ class Cli_Model_Turn
 
         foreach ($playersInGameColors as $playerId => $shortName) {
 
+            if (isset($castlesConquered['winners'][$playersInGameColors[$playerId]])) {
+                $playerCastlesConquered = $castlesConquered['winners'][$playersInGameColors[$playerId]];
+            } else {
+                $playerCastlesConquered = 0;
+            }
+
+            if (isset($castlesConquered['losers'][$playersInGameColors[$playerId]])) {
+                $playerCastlesLost = $castlesConquered['losers'][$playersInGameColors[$playerId]];
+            } else {
+                $playerCastlesLost = 0;
+            }
+
+            if (isset($castlesDestroyed[$playersInGameColors[$playerId]])) {
+                $playerCastlesDestroyed = $castlesDestroyed[$playersInGameColors[$playerId]];
+            } else {
+                $playerCastlesDestroyed = 0;
+            }
+
+            if (isset($soldiersCreated[$playersInGameColors[$playerId]])) {
+                $playerSoldiersCreated = $soldiersCreated[$playersInGameColors[$playerId]];
+            } else {
+                $playerSoldiersCreated = 0;
+            }
+
+            if (isset($soldiersKilled['winners'][$playersInGameColors[$playerId]])) {
+                $playerSoldiersKilled = $soldiersKilled['winners'][$playersInGameColors[$playerId]];
+            } else {
+                $playerSoldiersKilled = 0;
+            }
+
+            if (isset($soldiersKilled['losers'][$playersInGameColors[$playerId]])) {
+                $playerSoldiersLost = $soldiersKilled['losers'][$playersInGameColors[$playerId]];
+            } else {
+                $playerSoldiersLost = 0;
+            }
+
+            if (isset($heroesKilled['winners'][$playersInGameColors[$playerId]])) {
+                $playerHeroesKilled = $heroesKilled['winners'][$playersInGameColors[$playerId]];
+            } else {
+                $playerHeroesKilled = 0;
+            }
+
+            if (isset($heroesKilled['losers'][$playersInGameColors[$playerId]])) {
+                $playerHeroesLost = $heroesKilled['losers'][$playersInGameColors[$playerId]];
+            } else {
+                $playerHeroesLost = 0;
+            }
+
             $mGameResults->add(
                 $playerId,
-                $castlesConquered['winners'][$playersInGameColors[$playerId]],
-                $castlesConquered['losers'][$playersInGameColors[$playerId]],
-                $castlesDestroyed[$playersInGameColors[$playerId]],
-                $soldiersCreated[$playersInGameColors[$playerId]],
-                $soldiersKilled['winners'][$playersInGameColors[$playerId]],
-                $soldiersKilled['losers'][$playersInGameColors[$playerId]],
-                $heroesKilled['winners'][$playersInGameColors[$playerId]],
-                $heroesKilled['losers'][$playersInGameColors[$playerId]],
+                $playerCastlesConquered,
+                $playerCastlesLost,
+                $playerCastlesDestroyed,
+                $playerSoldiersCreated,
+                $playerSoldiersKilled,
+                $playerSoldiersLost,
+                $playerHeroesKilled,
+                $playerHeroesLost,
                 $playersGold[$playerId],
                 0, 0, 0
             );

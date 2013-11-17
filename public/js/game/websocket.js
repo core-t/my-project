@@ -41,14 +41,8 @@ Websocket = {
 
                     case 'nextTurn':
                         unselectArmy();
-                        if (r.lost) {
-                            Message.lost(r.color);
-                        } else if (typeof r.win != 'undefined') {
-                            winM(r.color);
-                        } else {
-                            Turn.change(r.color, r.nr);
-                            Websocket.computer();
-                        }
+                        Turn.change(r.color, r.nr);
+                        Websocket.computer();
                         break;
 
                     case 'startTurn':
@@ -220,10 +214,12 @@ Websocket = {
 
                     case 'dead':
                         console.log('dead');
+                        Message.simple(mapPlayersColors[r.color].longName + ' have been defeated')
                         break;
 
                     case 'end':
                         console.log('end');
+
                         break;
 
                     default:
@@ -235,7 +231,6 @@ Websocket = {
 
         ws.onclose = function () {
             wsClosed = true;
-//            $("#wsStatus").html("connection closed");
             setTimeout('Websocket.init()', 1000);
         };
 
