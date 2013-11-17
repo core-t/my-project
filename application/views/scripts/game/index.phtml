@@ -1,4 +1,7 @@
-<?php $this->headScript()->captureStart() ?>
+<?php
+$a = new Application_Model_SoldiersCreated(538);
+$b=$a->getCreated();
+$this->headScript()->captureStart() ?>
 
 var lang = '<?php echo Zend_Registry::get('lang') ?>';
 var langId = <?php echo Zend_Registry::get('id_lang') ?>;
@@ -18,6 +21,7 @@ var my = {
 }
 
 var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;
+var bbb = <?php echo Zend_Json::encode($b); ?>;
 var units = <?php echo Zend_Json::encode($this->units); ?>;
 var towers = <?php echo Zend_Json::encode($this->towers); ?>;
 <!--var artifacts = --><?php //echo Zend_Json::encode($this->artifacts); ?><!--;-->

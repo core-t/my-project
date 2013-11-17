@@ -33,6 +33,21 @@ class Application_Model_SoldiersCreated extends Coret_Db_Table_Abstract
         return $array;
     }
 
+    public function getCreated()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('unitId', 'playerId'))
+            ->where('"gameId" = ?', $this->_gameId);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$v['playerId']][] = $v['unitId'];
+        }
+
+        return $array;
+    }
+
     public function add($unitId, $playerId)
     {
         $data = array(
