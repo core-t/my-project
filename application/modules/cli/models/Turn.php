@@ -245,6 +245,9 @@ class Cli_Model_Turn
         $units = Zend_Registry::get('units');
 
         $mGameResults = new Application_Model_GameResults($this->_gameId, $this->_db);
+        $mGameScore = new Application_Model_GameScore($this->_gameId, $this->_db);
+        $mPlayer = new Application_Model_Player($this->_db);
+
         $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
         $mCastlesDestroyed = new Application_Model_CastlesDestroyed($this->_gameId, $this->_db);
         $mHeroesKilled = new Application_Model_HeroesKilled($this->_gameId, $this->_db);
@@ -271,9 +274,9 @@ class Cli_Model_Turn
 
         $playersGold = $mPlayersInGame->getAllPlayersGold();
 
-        $points = array();
-
         foreach ($playersInGameColors as $playerId => $shortName) {
+            $points = array();
+            $sumPoints = 0;
 
             if (isset($castlesConquered[$shortName])) {
                 $playerCastlesConquered = $castlesConquered[$shortName];
@@ -281,7 +284,8 @@ class Cli_Model_Turn
                 $playerCastlesConquered = 0;
             }
 
-            $points[$playerId]['castlesConquered'] = $playerCastlesConquered * 100;
+            $points['castlesConquered'] = $playerCastlesConquered * 100;
+            $sumPoints += $points['castlesConquered'];
 
             if (isset($castlesLost[$shortName])) {
                 $playerCastlesLost = $castlesLost[$shortName];
@@ -289,7 +293,8 @@ class Cli_Model_Turn
                 $playerCastlesLost = 0;
             }
 
-            $points[$playerId]['castlesLost'] = -($playerCastlesLost * 100);
+            $points['castlesLost'] = -($playerCastlesLost * 100);
+            $sumPoints += $points['castlesLost'];
 
             if (isset($castlesDestroyed[$shortName])) {
                 $playerCastlesDestroyed = $castlesDestroyed[$shortName];
@@ -297,32 +302,35 @@ class Cli_Model_Turn
                 $playerCastlesDestroyed = 0;
             }
 
-            $points[$playerId]['castlesDestroyed'] = -($playerCastlesDestroyed * 100);
+            $points['castlesDestroyed'] = -($playerCastlesDestroyed * 100);
+            $sumPoints += $points['castlesDestroyed'];
 
             $playerSoldiersCreated = 0;
-            $points[$playerId]['soldiersCreated'] = 0;
+            $points['soldiersCreated'] = 0;
             if (isset($soldiersCreated[$playerId])) {
                 foreach ($soldiersCreated[$playerId] as $unitId) {
                     $playerSoldiersCreated++;
-                    $points[$playerId]['soldiersCreated'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
+                    $points['soldiersCreated'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
                 }
             }
+            $sumPoints += $points['soldiersCreated'];
 
             $playerSoldiersKilled = 0;
-            $points[$playerId]['soldiersKilled'] = 0;
+            $points['soldiersKilled'] = 0;
             if (isset($soldiersKilled[$playerId])) {
                 foreach ($soldiersKilled[$playerId] as $unitId) {
                     $playerSoldiersKilled++;
-                    $points[$playerId]['soldiersKilled'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
+                    $points['soldiersKilled'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
                 }
             }
+            $sumPoints += $points['soldiersKilled'];
 
             $playerSoldiersLost = 0;
-            $points[$playerId]['soldiersLost'] = 0;
+            $points['soldiersLost'] = 0;
             if (isset($soldiersLost[$playerId])) {
                 foreach ($soldiersLost[$playerId] as $unitId) {
                     $playerSoldiersLost++;
-                    $points[$playerId]['soldiersLost'] -= $units[$unitId]['attackPoints'];
+                    $points['soldiersLost'] -= $units[$unitId]['attackPoints'];
                 }
             }
 
@@ -332,7 +340,8 @@ class Cli_Model_Turn
                 $playerHeroesKilled = 0;
             }
 
-            $points[$playerId]['heroesKilled'] = $playerHeroesKilled * 10;
+            $points['heroesKilled'] = $playerHeroesKilled * 10;
+            $sumPoints += $points['heroesKilled'];
 
             if (isset($heroesLost[$shortName])) {
                 $playerHeroesLost = $heroesLost[$shortName];
@@ -340,9 +349,11 @@ class Cli_Model_Turn
                 $playerHeroesLost = 0;
             }
 
-            $points[$playerId]['heroesLost'] = -($playerHeroesLost * 10);
+            $points['heroesLost'] = -($playerHeroesLost * 10);
+            $sumPoints += $points['heroesLost'];
 
-            $points[$playerId]['gold'] = $playersGold[$playerId];
+            $points['gold'] = $playersGold[$playerId];
+            $sumPoints += $points['gold'];
 
             $mGameResults->add(
                 $playerId,
@@ -357,6 +368,10 @@ class Cli_Model_Turn
                 $playersGold[$playerId],
                 0, 0, 0
             );
+
+            $mGameScore->add($playerId, $points);
+
+            $mPlayer->addScore($playerId, $sumPoints);
         }
 
     }

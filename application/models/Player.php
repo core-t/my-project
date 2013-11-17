@@ -24,15 +24,7 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
             ->where('login = ?', $login)
             ->where('password = ?', md5($password));
 
-        try {
-            $result = $this->_db->query($select)->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
-
-        if (isset($result[0][$this->_primary])) {
-            return $result[0][$this->_primary];
-        }
+        return $this->selectOne($select);
     }
 
     public function noPlayer()
@@ -40,6 +32,7 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name, $this->_primary)
             ->where('"fbId" = ?', $this->fbid);
+
         $result = $this->_db->query($select)->fetchAll();
         if (empty($result[0][$this->_primary]))
             return true;
@@ -78,13 +71,15 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
     public function updateFacebookData($data)
     {
         $where = $this->_db->quoteInto('"fbId" = ?', $this->fbid);
-        return $this->_db->update($this->_name, $data, $where);
+
+        return $this->update($data, $where);
     }
 
     public function updatePlayer($data, $playerId)
     {
         $where = $this->_db->quoteInto('"playerId" = ?', $playerId);
-        return $this->_db->update($this->_name, $data, $where);
+
+        return $this->update($data, $where);
     }
 
 //    public function isComputer($playerId)
@@ -96,5 +91,15 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
 //        return $result[0]['computer'];
 //    }
 
+    public function addScore($playerId, $score)
+    {
+        $data = array(
+            'score' => new Zend_Db_Expr('score + ' . $score)
+        );
+
+        $where = $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $playerId);
+
+        $this->update($data, $where);
+    }
 }
 

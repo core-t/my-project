@@ -1,7 +1,4 @@
-<?php
-$a = new Application_Model_SoldiersCreated(538);
-$b=$a->getCreated();
-$this->headScript()->captureStart() ?>
+<?php $this->headScript()->captureStart() ?>
 
 var lang = '<?php echo Zend_Registry::get('lang') ?>';
 var langId = <?php echo Zend_Registry::get('id_lang') ?>;
