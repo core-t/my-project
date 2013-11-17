@@ -241,11 +241,13 @@ class Cli_Model_Turn
 
     public function saveResults()
     {
-        $playersInGameColors = Zend_Registry::get('playersInGameColors');
-        $units = Zend_Registry::get('units');
+        $mGameScore = new Application_Model_GameScore($this->_gameId, $this->_db);
+
+        if ($mGameScore->gameScoreExists()) {
+            return;
+        }
 
         $mGameResults = new Application_Model_GameResults($this->_gameId, $this->_db);
-        $mGameScore = new Application_Model_GameScore($this->_gameId, $this->_db);
         $mPlayer = new Application_Model_Player($this->_db);
 
         $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
@@ -257,6 +259,9 @@ class Cli_Model_Turn
         $mUnitsInGame = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
         $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
+
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+        $units = Zend_Registry::get('units');
 
         $castlesConquered = $mCastlesConquered->countConquered($playersInGameColors);
         $castlesLost = $mCastlesConquered->countLost($playersInGameColors);
@@ -354,6 +359,7 @@ class Cli_Model_Turn
 
             $points['gold'] = $playersGold[$playerId];
             $sumPoints += $points['gold'];
+            $points['score'] = $sumPoints;
 
             $mGameResults->add(
                 $playerId,

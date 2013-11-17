@@ -41,7 +41,7 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
     public function createPlayer($data)
     {
         $this->insert($data);
-        
+
         return $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
     }
 
@@ -94,9 +94,20 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
         $this->update($data, $where);
     }
 
-    public function hallOfFame()
+    public function hallOfFame($pageNumber)
     {
+        $select = $this->_db->select()
+            ->from($this->_name, array('firstName', 'lastName', 'score'))
+            ->where('computer = false')
+            ->where('score > 0')
+            ->where('"playerId" > 0')
+            ->order('score desc');
 
+        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($select));
+        $paginator->setCurrentPageNumber($pageNumber);
+        $paginator->setItemCountPerPage(20);
+
+        return $paginator;
     }
 }
 

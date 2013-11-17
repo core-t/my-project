@@ -30,10 +30,20 @@ class Application_Model_GameScore extends Coret_Db_Table_Abstract
             'soldiersLost' => $playerScore['soldiersLost'],
             'heroesKilled' => $playerScore['heroesKilled'],
             'heroesLost' => $playerScore['heroesLost'],
-            'gold' => $playerScore['gold']
+            'gold' => $playerScore['gold'],
+            'score' => $playerScore['score']
         );
 
         $this->insert($data);
+    }
+
+    public function gameScoreExists()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_primary)
+            ->where('"gameId" = ?', $this->_gameId);
+
+        return $this->selectOne($select);
     }
 }
 

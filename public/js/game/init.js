@@ -101,13 +101,13 @@ function startGame() {
 
     showFirstCastle();
 
-    if (!enemyArmies && !enemyCastles) {
-        Turn.off();
-        Message.win(my.color);
-    } else if (!myArmies && !myCastles) {
-        Turn.off();
-        Message.lost(my.color);
-    } else {
+//    if (!enemyArmies && !enemyCastles) {
+//        Turn.off();
+//        Message.win(my.color);
+//    } else if (!myArmies && !myCastles) {
+//        Turn.off();
+//        Message.lost(my.color);
+//    } else {
         if (my.turn) {
             Turn.on();
         } else {
@@ -118,7 +118,7 @@ function startGame() {
         } else if (my.game && players[Turn.shortName].computer) {
             setTimeout('Websocket.computer()', 1000);
         }
-    }
+//    }
 
     renderChatHistory();
     costsUpdate(costs);

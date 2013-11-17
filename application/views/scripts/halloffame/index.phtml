@@ -1,1 +1,25 @@
 <h1><?php echo $this->translate('Hall of Fame') ?></h1>
+<h2><?php echo $this->translate('') ?></h2>
+<div class="table">
+    <table>
+        <tr>
+            <th><?php echo $this->translate('Player name') ?></th>
+            <th><?php echo $this->translate('Score') ?></th>
+        </tr>
+        <?php if (count($this->hallOfFame)): ?>
+            <?php foreach ($this->hallOfFame as $row): ?>
+                <tr class="trlink">
+                    <td><?php echo $row['firstName'] . ' ' . $row['lastName'] ?></td>
+                    <td><?php echo $row['score'] ?></td>
+                </tr>
+            <?php endforeach ?>
+        <?php endif ?>
+    </table>
+</div>
+<br/>
+<?php echo $this->paginationControl($this->hallOfFame, 'Sliding', 'pagination_control.phtml'); ?>
+<ul>
+    <li>
+        <a href="/" class="button">&laquo; <?php echo $this->translate('Back') ?></a>
+    </li>
+</ul>

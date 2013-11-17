@@ -82,7 +82,7 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('gameMasterId', 'turnNumber', $this->_primary, 'numberOfPlayers', 'begin', 'turnPlayerId'))
             ->join(array('b' => 'playersingame'), 'a."gameId" = b."gameId"', null)
-            ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', null)
+//            ->join(array('c' => 'mapplayers'), 'b . "mapPlayerId" = c . "mapPlayerId"', null)
             ->where('"isOpen" = false')
             ->where('"isActive" = true')
             ->where('a."gameId" IN ?', $mPlayersInGame->getSelectForMyGames($playerId))
@@ -135,7 +135,8 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from($this->_name)
             ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        return $this->_db->fetchRow($select);
+
+        return $this->selectRow($select);
     }
 
     public function getGameMasterId()
