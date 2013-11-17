@@ -41,6 +41,7 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
     public function createPlayer($data)
     {
         $this->insert($data);
+        
         return $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
     }
 
@@ -64,8 +65,8 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
         } elseif ($this->fbid) {
             $select->where('"fbId" = ?', $this->fbid);
         }
-        $result = $this->_db->query($select)->fetchAll();
-        return $result[0];
+
+        return $this->selectRow($select);
     }
 
     public function updateFacebookData($data)
@@ -82,15 +83,6 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-//    public function isComputer($playerId)
-//    {
-//        $select = $this->_db->select()
-//            ->from($this->_name, 'computer')
-//            ->where('"' . $this->_primary . '" = ?', $playerId);
-//        $result = $this->_db->query($select)->fetchAll();
-//        return $result[0]['computer'];
-//    }
-
     public function addScore($playerId, $score)
     {
         $data = array(
@@ -100,6 +92,11 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
         $where = $this->_db->quoteInto($this->_db->quoteIdentifier($this->_primary) . ' = ?', $playerId);
 
         $this->update($data, $where);
+    }
+
+    public function hallOfFame()
+    {
+
     }
 }
 
