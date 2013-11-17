@@ -214,12 +214,12 @@ Websocket = {
 
                     case 'dead':
                         console.log('dead');
-                        Message.simple(mapPlayersColors[r.color].longName + ' have been defeated')
+                        Message.simple(mapPlayersColors[r.color].longName + ' have been defeated');
                         break;
 
                     case 'end':
                         console.log('end');
-
+                        Message.end();
                         break;
 
                     default:

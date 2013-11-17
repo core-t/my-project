@@ -802,6 +802,8 @@ var Message = {
 
         var divHeight = parseInt($('.message').css('height')) - 60;
         $('.message div.overflow').css('height', divHeight + 'px')
-    }
+    },
+    end: function () {
 
+    }
 }
