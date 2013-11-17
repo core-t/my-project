@@ -33,6 +33,21 @@ class Application_Model_SoldiersKilled extends Coret_Db_Table_Abstract
         return $array;
     }
 
+    public function getKilled()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('unitId', 'winnerId'))
+            ->where('"gameId" = ?', $this->_gameId);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$v['winnerId']][] = $v['unitId'];
+        }
+
+        return $array;
+    }
+
     public function countLost($playersInGameColors)
     {
         $select = $this->_db->select()
@@ -44,6 +59,21 @@ class Application_Model_SoldiersKilled extends Coret_Db_Table_Abstract
 
         foreach ($this->selectAll($select) as $v) {
             $array[$playersInGameColors[$v['loserId']]] = $v['count'];
+        }
+
+        return $array;
+    }
+
+    public function getLost()
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, array('unitId', 'loserId'))
+            ->where('"gameId" = ?', $this->_gameId);
+
+        $array = array();
+
+        foreach ($this->selectAll($select) as $v) {
+            $array[$v['loserId']][] = $v['unitId'];
         }
 
         return $array;

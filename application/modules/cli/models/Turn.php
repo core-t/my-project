@@ -242,6 +242,7 @@ class Cli_Model_Turn
     public function saveResults()
     {
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
+        $units = Zend_Registry::get('units');
 
         $mGameResults = new Application_Model_GameResults($this->_gameId, $this->_db);
         $mCastlesConquered = new Application_Model_CastlesConquered($this->_gameId, $this->_db);
@@ -254,76 +255,94 @@ class Cli_Model_Turn
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
         $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
 
-        $castlesConquered = array(
-            'winners' => $mCastlesConquered->countConquered($playersInGameColors),
-            'losers' => $mCastlesConquered->countLost($playersInGameColors)
-        );
+        $castlesConquered = $mCastlesConquered->countConquered($playersInGameColors);
+        $castlesLost = $mCastlesConquered->countLost($playersInGameColors);
 
-        $heroesKilled = array(
-            'winners' => $mHeroesKilled->countKilled($playersInGameColors),
-            'losers' => $mHeroesKilled->countLost($playersInGameColors)
-        );
+        $heroesKilled = $mHeroesKilled->countKilled($playersInGameColors);
+        $heroesLost = $mHeroesKilled->countLost($playersInGameColors);
 
-        $soldiersKilled = array(
-            'winners' => $mSoldiersKilled->countKilled($playersInGameColors),
-            'losers' => $mSoldiersKilled->countLost($playersInGameColors)
-        );
 
-        $soldiersCreated = $mSoldiersCreated->countCreated($playersInGameColors);
+        $soldiersKilled = $mSoldiersKilled->countKilled($playersInGameColors);
+        $soldiersLost = $mSoldiersKilled->countLost($playersInGameColors);
+
+        $soldiersCreated = $mSoldiersCreated->getCreated();
 
         $castlesDestroyed = $mCastlesDestroyed->countAll($playersInGameColors);
 
         $playersGold = $mPlayersInGame->getAllPlayersGold();
 
+        $points = array();
+
         foreach ($playersInGameColors as $playerId => $shortName) {
 
-            if (isset($castlesConquered['winners'][$playersInGameColors[$playerId]])) {
-                $playerCastlesConquered = $castlesConquered['winners'][$playersInGameColors[$playerId]];
+            if (isset($castlesConquered[$shortName])) {
+                $playerCastlesConquered = $castlesConquered[$shortName];
             } else {
                 $playerCastlesConquered = 0;
             }
 
-            if (isset($castlesConquered['losers'][$playersInGameColors[$playerId]])) {
-                $playerCastlesLost = $castlesConquered['losers'][$playersInGameColors[$playerId]];
+            $points[$playerId]['castlesConquered'] = $playerCastlesConquered * 100;
+
+            if (isset($castlesLost[$shortName])) {
+                $playerCastlesLost = $castlesLost[$shortName];
             } else {
                 $playerCastlesLost = 0;
             }
 
-            if (isset($castlesDestroyed[$playersInGameColors[$playerId]])) {
-                $playerCastlesDestroyed = $castlesDestroyed[$playersInGameColors[$playerId]];
+            $points[$playerId]['castlesLost'] = -($playerCastlesLost * 100);
+
+            if (isset($castlesDestroyed[$shortName])) {
+                $playerCastlesDestroyed = $castlesDestroyed[$shortName];
             } else {
                 $playerCastlesDestroyed = 0;
             }
 
-            if (isset($soldiersCreated[$playersInGameColors[$playerId]])) {
-                $playerSoldiersCreated = $soldiersCreated[$playersInGameColors[$playerId]];
-            } else {
-                $playerSoldiersCreated = 0;
+            $points[$playerId]['castlesDestroyed'] = -($playerCastlesDestroyed * 100);
+
+            $playerSoldiersCreated = 0;
+            $points[$playerId]['soldiersCreated'] = 0;
+            if (isset($soldiersCreated[$playerId])) {
+                foreach ($soldiersCreated[$playerId] as $unitId) {
+                    $playerSoldiersCreated++;
+                    $points[$playerId]['soldiersCreated'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
+                }
             }
 
-            if (isset($soldiersKilled['winners'][$playersInGameColors[$playerId]])) {
-                $playerSoldiersKilled = $soldiersKilled['winners'][$playersInGameColors[$playerId]];
-            } else {
-                $playerSoldiersKilled = 0;
+            $playerSoldiersKilled = 0;
+            $points[$playerId]['soldiersKilled'] = 0;
+            if (isset($soldiersKilled[$playerId])) {
+                foreach ($soldiersKilled[$playerId] as $unitId) {
+                    $playerSoldiersKilled++;
+                    $points[$playerId]['soldiersKilled'] += $units[$unitId]['attackPoints'] + $units[$unitId]['defensePoints'];
+                }
             }
 
-            if (isset($soldiersKilled['losers'][$playersInGameColors[$playerId]])) {
-                $playerSoldiersLost = $soldiersKilled['losers'][$playersInGameColors[$playerId]];
-            } else {
-                $playerSoldiersLost = 0;
+            $playerSoldiersLost = 0;
+            $points[$playerId]['soldiersLost'] = 0;
+            if (isset($soldiersLost[$playerId])) {
+                foreach ($soldiersLost[$playerId] as $unitId) {
+                    $playerSoldiersLost++;
+                    $points[$playerId]['soldiersLost'] -= $units[$unitId]['attackPoints'];
+                }
             }
 
-            if (isset($heroesKilled['winners'][$playersInGameColors[$playerId]])) {
-                $playerHeroesKilled = $heroesKilled['winners'][$playersInGameColors[$playerId]];
+            if (isset($heroesKilled[$shortName])) {
+                $playerHeroesKilled = $heroesKilled[$shortName];
             } else {
                 $playerHeroesKilled = 0;
             }
 
-            if (isset($heroesKilled['losers'][$playersInGameColors[$playerId]])) {
-                $playerHeroesLost = $heroesKilled['losers'][$playersInGameColors[$playerId]];
+            $points[$playerId]['heroesKilled'] = $playerHeroesKilled * 10;
+
+            if (isset($heroesLost[$shortName])) {
+                $playerHeroesLost = $heroesLost[$shortName];
             } else {
                 $playerHeroesLost = 0;
             }
+
+            $points[$playerId]['heroesLost'] = -($playerHeroesLost * 10);
+
+            $points[$playerId]['gold'] = $playersGold[$playerId];
 
             $mGameResults->add(
                 $playerId,
