@@ -804,6 +804,6 @@ var Message = {
         $('.message div.overflow').css('height', divHeight + 'px')
     },
     end: function () {
-
+        this.simple('GAME OVER');
     }
 }
