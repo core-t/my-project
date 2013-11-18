@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-31 04:29+0100\n"
-"PO-Revision-Date: 2013-10-31 04:30+0100\n"
+"POT-Creation-Date: 2013-11-19 00:10+0100\n"
+"PO-Revision-Date: 2013-11-19 00:10+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -19,21 +19,29 @@ msgstr ""
 "X-Poedit-SearchPath-2: library/Coret\n"
 "X-Poedit-SearchPath-3: library/Cli\n"
 
+#: application/modules/admin/views/helpers/Delete.php:10
+msgid "Deleting an item needs to be confirmed. Are you sure you want to delete it?"
+msgstr "Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
+
+#: application/modules/admin/views/helpers/Delete.php:12
+msgid "Yes"
+msgstr "Tak"
+
 #: application/views/helpers/Logout.php:8
 msgid "Logout"
 msgstr "Wyloguj"
 
 #: application/views/helpers/MainMenu.php:14
-msgid "Home"
-msgstr "Start"
-
-#: application/views/helpers/MainMenu.php:17
 msgid "Play"
 msgstr "Graj"
 
-#: application/views/helpers/MainMenu.php:20
+#: application/views/helpers/MainMenu.php:17
 msgid "Load game"
 msgstr "Wczytaj grę"
+
+#: application/views/helpers/MainMenu.php:20
+msgid "Hall of Fame"
+msgstr "Sala sław"
 
 #: application/views/helpers/MainMenu.php:23
 msgid "Hero"
@@ -111,8 +119,8 @@ msgid "Submit"
 msgstr "Potwierdź"
 
 #: library/Coret/View/Helper/Copyright.php:6
-msgid "Wszelkie prawa zastrzeżone"
-msgstr ""
+msgid "All rights reserved"
+msgstr "Wszelkie prawa zastrzeżone"
 
 #: application/modules/admin/views/scripts/pagination_control.phtml:6
 msgid "First"
@@ -121,18 +129,6 @@ msgstr "Pierwszy"
 #: application/modules/admin/views/scripts/pagination_control.phtml:7
 msgid "Back"
 msgstr "Cofnij"
-
-#: application/modules/admin/views/scripts/mapterrain/delete.phtml:5
-#: application/modules/admin/views/scripts/artifact/delete.phtml:5
-#: application/modules/admin/views/scripts/language/delete.phtml:5
-msgid "Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
-msgstr ""
-
-#: application/modules/admin/views/scripts/mapterrain/delete.phtml:6
-#: application/modules/admin/views/scripts/artifact/delete.phtml:6
-#: application/modules/admin/views/scripts/language/delete.phtml:6
-msgid "Tak"
-msgstr ""
 
 #: application/views/scripts/pagination_control.phtml:6
 msgid "Previous"
@@ -192,6 +188,7 @@ msgid "Map name"
 msgstr "Nazwa mapy"
 
 #: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/load/index.phtml:7
 msgid "Game master"
 msgstr "Mistrz gry"
 
@@ -267,101 +264,112 @@ msgstr "Data rozpoczęcia"
 msgid "There are no games to load"
 msgstr "Brak gry do załadowania"
 
-#: application/layouts/scripts/game.phtml:22
+#: application/views/scripts/halloffame/index.phtml:7
+msgid "Score"
+msgstr "Punkty"
+
+#: application/layouts/scripts/game.phtml:27
 msgid "Terrain"
 msgstr "Teren"
 
-#: application/layouts/scripts/game.phtml:29
-msgid "Income"
-msgstr "Przychód"
-
 #: application/layouts/scripts/game.phtml:33
-msgid "Upkeep"
-msgstr "Utrzymanie"
-
-#: application/layouts/scripts/game.phtml:37
-msgid "Treasure"
-msgstr "Skarbiec"
-
-#: application/layouts/scripts/game.phtml:44
-msgid "Exit game"
-msgstr "Opuść grę"
-
-#: application/layouts/scripts/game.phtml:45
-msgid "Show others"
-msgstr "Pokaż innych"
-
-#: application/layouts/scripts/game.phtml:46
-msgid "Surrender"
-msgstr "Poddaj się"
-
-#: application/layouts/scripts/game.phtml:49
-msgid "Next turn"
-msgstr "Następna tura"
-
-#: application/layouts/scripts/game.phtml:58
-msgid "Moves"
-msgstr "Ruchy"
-
-#: application/layouts/scripts/game.phtml:60
-msgid "Attack"
-msgstr "Atak"
-
-#: application/layouts/scripts/game.phtml:62
-msgid "Defense"
-msgstr "Obrona"
-
-#: application/layouts/scripts/game.phtml:69
-msgid "Disband army"
-msgstr "Rozwiąż armię"
-
-#: application/layouts/scripts/game.phtml:73
-msgid "Deselect army"
-msgstr "Odznacz armię"
-
-#: application/layouts/scripts/game.phtml:77
-msgid "Search ruins"
-msgstr "Przeszukaj ruiny"
-
-#: application/layouts/scripts/game.phtml:81
-msgid "Show castle"
-msgstr "Pokaż zamek"
-
-#: application/layouts/scripts/game.phtml:85
-msgid "Raze castle"
-msgstr "Zburz zamek"
-
-#: application/layouts/scripts/game.phtml:93
-msgid "Split army"
-msgstr "Podziel amię"
-
-#: application/layouts/scripts/game.phtml:97
-msgid "Army status"
-msgstr "Status armii"
-
-#: application/layouts/scripts/game.phtml:101
-msgid "Fortify army"
-msgstr "Fortyfikuj armię"
-
-#: application/layouts/scripts/game.phtml:105
-msgid "Skip in this turn"
-msgstr "Pomiń w tej turze"
-
-#: application/layouts/scripts/game.phtml:109
-msgid "Find next army"
-msgstr "Znajdź następną"
-
-#: application/layouts/scripts/game.phtml:117
 msgid "Color"
 msgstr "Kolor"
 
-#: application/layouts/scripts/game.phtml:119
+#: application/layouts/scripts/game.phtml:35
 msgid "Time spend"
 msgstr "Czas"
 
-#: application/layouts/scripts/game.phtml:132
+#: application/layouts/scripts/game.phtml:44
+msgid "Income"
+msgstr "Przychód"
+
+#: application/layouts/scripts/game.phtml:48
+msgid "Upkeep"
+msgstr "Utrzymanie"
+
+#: application/layouts/scripts/game.phtml:52
+msgid "Treasure"
+msgstr "Skarbiec"
+
+#: application/layouts/scripts/game.phtml:61
+msgid "Exit game"
+msgstr "Opuść grę"
+
+#: application/layouts/scripts/game.phtml:64
+msgid "Show others"
+msgstr "Pokaż innych"
+
+#: application/layouts/scripts/game.phtml:67
+msgid "Surrender"
+msgstr "Poddaj się"
+
+#: application/layouts/scripts/game.phtml:70
+msgid "Statistics"
+msgstr "Statystyki"
+
+#: application/layouts/scripts/game.phtml:74
+msgid "Next turn"
+msgstr "Następna tura"
+
+#: application/layouts/scripts/game.phtml:83
+msgid "Moves"
+msgstr "Ruchy"
+
+#: application/layouts/scripts/game.phtml:86
+msgid "Attack"
+msgstr "Atak"
+
+#: application/layouts/scripts/game.phtml:89
+msgid "Defense"
+msgstr "Obrona"
+
+#: application/layouts/scripts/game.phtml:97
+msgid "Disband army"
+msgstr "Rozwiąż armię"
+
+#: application/layouts/scripts/game.phtml:101
+msgid "Deselect army"
+msgstr "Odznacz armię"
+
+#: application/layouts/scripts/game.phtml:105
+msgid "Search ruins"
+msgstr "Przeszukaj ruiny"
+
+#: application/layouts/scripts/game.phtml:109
+msgid "Show castle"
+msgstr "Pokaż zamek"
+
+#: application/layouts/scripts/game.phtml:113
+msgid "Raze castle"
+msgstr "Zburz zamek"
+
+#: application/layouts/scripts/game.phtml:122
+msgid "Split army"
+msgstr "Podziel amię"
+
+#: application/layouts/scripts/game.phtml:126
+msgid "Army status"
+msgstr "Status armii"
+
+#: application/layouts/scripts/game.phtml:130
+msgid "Fortify army"
+msgstr "Fortyfikuj armię"
+
+#: application/layouts/scripts/game.phtml:134
+msgid "Skip in this turn"
+msgstr "Pomiń w tej turze"
+
+#: application/layouts/scripts/game.phtml:138
+msgid "Find next army"
+msgstr "Znajdź następną"
+
+#: application/layouts/scripts/game.phtml:151
 msgid "Send"
 msgstr "Wyślij"
+
+#~ msgid "Home"
+#~ msgstr "Start"
 
 #~ msgid "Artifacts"
 #~ msgstr "Artefakty"

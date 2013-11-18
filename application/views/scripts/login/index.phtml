@@ -1,11 +1,3 @@
-<?php echo $this->form; ?>
-
-<?php
-if ($this->active) {
-    echo 'Wciąż jesteś zalogowany w innej przeglądarce!<br>Jakoś zrobie wylogowanie tamtego za potrwierdzeniem.';
-}
-?>
-<br/><br/>
 <div id="view-content">
     <p>
         <a href="<?php echo $this->url(array('action' => 'registration')) ?>"
@@ -13,3 +5,4 @@ if ($this->active) {
         <!--<a href="http://apps.facebook.com/testcore-t">Facebook</a>-->
     </p>
 </div>
+<?php echo $this->form; ?>
