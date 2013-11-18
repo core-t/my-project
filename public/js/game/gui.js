@@ -49,6 +49,7 @@ var Gui = {
         });
 
         $('#show').click(function () {
+            $('#slash').get(0).play();
             show = !show;
             if (show) {
                 $(this).children().attr('src', '/img/game/show.png')
