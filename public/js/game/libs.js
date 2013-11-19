@@ -170,6 +170,10 @@ function fieldsCopy() {
     }
 }
 
+function play(name) {
+    $('#' + name).get(0).play();
+}
+
 function artifactsReformat() {
 //    for (i in artifacts) {
 //        for (j in artifacts[i]) {

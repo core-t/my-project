@@ -345,6 +345,8 @@ function setParentArmy(army) {
 }
 
 function selectArmy(a, center) {
+    play('slash');
+
     castlesAddCursorWhenSelectedArmy();
     armiesAddCursorWhenSelectedArmy();
     myCastlesRemoveCursor();

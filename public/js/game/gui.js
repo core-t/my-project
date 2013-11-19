@@ -49,7 +49,7 @@ var Gui = {
         });
 
         $('#show').click(function () {
-            $('#slash').get(0).play();
+
             show = !show;
             if (show) {
                 $(this).children().attr('src', '/img/game/show.png')
@@ -269,17 +269,17 @@ var Gui = {
         });
 
         $('.message').css({
-            'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
-    }
-)
-;
+                'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
+            }
+        )
+        ;
 
-if (!zoomer) {
-    zoomer = new zoom(documentWidth, documentHeight);
-} else {
-    zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
-    zoomer.lens.setdimensions();
-}
-}
+        if (!zoomer) {
+            zoomer = new zoom(documentWidth, documentHeight);
+        } else {
+            zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
+            zoomer.lens.setdimensions();
+        }
+    }
 
 }
