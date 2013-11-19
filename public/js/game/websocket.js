@@ -375,7 +375,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    fortifyArmy: function (armyId, fortify) {
+    fortifyArmy: function (armyId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -385,16 +385,28 @@ Websocket = {
             return;
         }
 
-        if (typeof fortify == 'undefined' || fortify) {
-            fortify = 1;
-        } else {
-            fortify = 0;
+        var token = {
+            type: 'fortifyArmy',
+            armyId: armyId,
+            fortify: 1
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    unfortifyArmy: function (armyId) {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
         }
 
         var token = {
             type: 'fortifyArmy',
             armyId: armyId,
-            fortify: fortify
+            fortify: 0
         };
 
         ws.send(JSON.stringify(token));

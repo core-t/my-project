@@ -1,5 +1,237 @@
 // *** ARMIES ***
 
+var Army = {
+    init: function (obj, color) {
+        if (obj.destroyed) {
+//            if (isSet(players[color].armies[obj.armyId])) {
+            armyFields(players[color].armies[obj.armyId]);
+            delete players[color].armies[obj.armyId];
+//            }
+            return;
+        }
+
+        if (obj.fortified) {
+            quitedArmies.push(obj.armyId);
+        }else{
+            unfortifyArmy(armyId);
+        }
+
+        this.armyId = obj.armyId;
+
+        this.x = obj.x;
+        this.y = obj.y;
+
+        this.flyBonus = 0;
+        this.canFly = 1;
+        this.canSwim = 0;
+        this.heroes = obj.heroes;
+        this.soldiers = obj.soldiers;
+
+        var numberOfUnits = 0,
+            numberOfHeroes = 0,
+            numberOfSoldiers = 0,
+
+            attack = 0,
+            defense = 0;
+
+        for (hero in this.heroes) {
+            if (typeof this.heroKey == 'undefined') {
+                this.heroKey = hero;
+            }
+            if (typeof this.moves == 'undefined') {
+                this.moves = this.heroes[hero].movesLeft;
+            }
+            if (this.heroes[hero].movesLeft < this.moves) {
+                this.moves = this.heroes[hero].movesLeft;
+                this.heroKey = hero;
+            }
+            this.canFly--;
+            numberOfHeroes++;
+        }
+
+        for (soldier in this.soldiers) {
+            numberOfSoldiers++;
+
+            if (notSet(this.soldierKey)) {
+                this.soldierKey = soldier;
+            }
+
+            if (typeof this.moves == 'undefined') {
+                this.moves = this.soldiers[soldier].movesLeft;
+            }
+
+            if (this.soldiers[soldier].movesLeft < this.moves) {
+                this.moves = this.soldiers[soldier].movesLeft
+            }
+
+            if (units[this.soldiers[soldier].unitId].attackPoints > attack) {
+                attack = units[this.soldiers[soldier].unitId].attackPoints;
+                this.soldierKey = soldier;
+            }
+
+            if (units[this.soldiers[soldier].unitId].defensePoints > defense) {
+                defense = units[this.soldiers[soldier].unitId].defensePoints;
+                if (defense > units[this.soldiers[this.soldierKey].unitId].defensePoints) {
+                    this.soldierKey = soldier;
+                }
+            }
+
+            if (units[this.soldiers[soldier].unitId].canFly) {
+                this.canFly++;
+                if (!this.flyBonus) {
+                    this.flyBonus = 1;
+                }
+            } else {
+                this.canFly -= 200;
+            }
+
+            if (units[this.soldiers[soldier].unitId].canSwim) {
+                this.canSwim++;
+                this.moves = this.soldiers[soldier].movesLeft;
+            }
+        }
+
+        if (this.canSwim) {
+            for (soldier in this.soldiers) {
+                if (this.soldiers[soldier].unitId != shipId) {
+                    continue;
+                }
+
+                if (typeof shipMoves == 'undefined') {
+                    var shipMoves = this.soldiers[soldier].movesLeft;
+                }
+
+                if (this.soldiers[soldier].movesLeft < shipMoves) {
+                    shipMoves = this.soldiers[soldier].movesLeft
+                }
+            }
+
+            this.movementType = 'swimming';
+        } else if (this.canFly > 0) {
+            for (soldier in this.soldiers) {
+                if (!units[this.soldiers[soldier].unitId].canFly) {
+                    continue;
+                }
+
+                if (typeof flyMoves == 'undefined') {
+                    var flyMoves = this.soldiers[soldier].movesLeft;
+                }
+
+                if (this.soldiers[soldier].movesLeft < flyMoves) {
+                    flyMoves = this.soldiers[soldier].movesLeft
+                }
+            }
+
+            this.movementType = 'flying';
+        } else {
+            this.movementType = 'walking';
+        }
+
+        if (this.canSwim) {
+            if (units[shipId].name_lang) {
+                this.name = units[shipId].name_lang;
+            } else {
+                this.name = units[shipId].name;
+            }
+            this.img = Unit.getImage(shipId, color);
+            this.attack = units[shipId].attackPoints;
+            this.defense = units[shipId].defensePoints;
+            this.moves = shipMoves;
+        } else if (typeof this.heroes[this.heroKey] != 'undefined') {
+            if (this.heroes[this.heroKey].name) {
+                this.name = this.heroes[this.heroKey].name;
+            } else {
+                this.name = 'Anonymous hero';
+            }
+            this.img = Hero.getImage(color);
+            this.attack = this.heroes[this.heroKey].attackPoints;
+            this.defense = this.heroes[this.heroKey].defensePoints;
+
+            if (this.canFly > 0) {
+                this.moves = flyMoves;
+            }
+        } else if (isSet(units[this.soldiers[this.soldierKey].unitId])) {
+            if (units[this.soldiers[this.soldierKey].unitId].name_lang) {
+                this.name = units[this.soldiers[this.soldierKey].unitId].name_lang;
+            } else {
+                this.name = units[this.soldiers[this.soldierKey].unitId].name;
+            }
+            this.img = Unit.getImage(this.soldiers[this.soldierKey].unitId, color);
+            this.attack = attack;
+            this.defense = defense;
+        } else {
+            console.log('Armia nie posiada jednostek:');
+            console.log(obj);
+            delete players[color].armies[obj.armyId];
+            return;
+        }
+
+
+        this.element = $('<div>');
+        if (color == my.color) { // moja armia
+            this.element.click(function (e) {
+                myArmyClick(this, e)
+            });
+            this.element.mouseover(function () {
+                myArmyMouse(this.id)
+            });
+            this.element.mousemove(function () {
+                myArmyMouse(this.id)
+            });
+            if (this.canSwim) {
+                //            if(fields[this.y][this.x] != 'S'){
+                //                this.fieldType = fields[this.y][this.x];
+                //            }
+                if (!Castle.isMyCastle(this.x, this.y)) {
+                    fields[this.y][this.x] = 'S';
+                }
+            }
+        } else { // nie moja armia
+            fields[this.y][this.x] = 'e';
+            enemyArmyMouse(this);
+        }
+        numberOfUnits = numberOfHeroes + numberOfSoldiers;
+        if (numberOfUnits > 8) {
+            numberOfUnits = 8;
+        }
+
+
+        this.element
+            .addClass('army')
+            .addClass(color)
+            .attr({
+                id: 'army' + this.armyId,
+                title: this.name
+            }).css({
+                background: 'url(/img/game/flags/' + color + '_' + numberOfUnits + '.png) top left no-repeat',
+                left: (this.x * 40) + 'px',
+                top: (this.y * 40) + 'px'
+            });
+        this.element.append(
+            $('<img>')
+                .addClass('unit')
+                .attr('src', this.img)
+        );
+        board.append(this.element);
+
+        this.color = color;
+        var mX = this.x * 2;
+        var mY = this.y * 2;
+
+        zoomPad.append(
+            $('<div>').css({
+                'left': mX + 'px',
+                'top': mY + 'px',
+                'background': getColor(color),
+                'z-index': 10
+            })
+                .attr('id', this.armyId)
+                .addClass('a')
+        );
+        players[color].armies[this.armyId] = this;
+    }
+}
+
 function showFirstArmy(color) {
     for (i in players[color].armies) {
         zoomer.lensSetCenter(players[color].armies[i].x * 40, players[color].armies[i].y * 40);
@@ -575,26 +807,24 @@ function unfortifyArmy(armyId) {
     }
     var index = $.inArray(armyId, quitedArmies);
     if (index != -1) {
-        Websocket.fortifyArmy(armyId, 0);
+        Websocket.unfortifyArmy(armyId, 0);
         quitedArmies.splice(index, 1);
     }
 }
 
 function computerArmiesUpdate(armies, color) {
-    var i;
-
-    for (i in armies) {
+    for (armyId in armies) {
         break;
     }
 
-    if (typeof armies[i] == 'undefined') {
+    if (notSet(armies[armyId])) {
         Websocket.computer();
         return;
     }
 
-    players[color].armies[i] = new army(armies[i], color);
+    Army.init(armies[armyId], color, armyId);
 
-    delete armies[i];
+    delete armies[armyId]; // potrzebne do pętli
 
     computerArmiesUpdate(armies, color);
 }
