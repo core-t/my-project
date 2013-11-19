@@ -125,5 +125,7 @@ function walkEnd(r, computer) {
             unlock();
         }
     }
+
+    setTimeout('$(".war").remove()', 1000);
 }
 

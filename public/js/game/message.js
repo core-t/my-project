@@ -545,7 +545,7 @@ var Message = {
             attack.append(
                 $('<div>')
                     .attr('id', 'unit' + battle.attack.soldiers[i].soldierId)
-                    .css('background', Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor))
+                    .css('background', 'url(' + Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor) + ') no-repeat')
                     .addClass('battleUnit')
             );
         }
@@ -558,7 +558,7 @@ var Message = {
             attack.append(
                 $('<div>')
                     .attr('id', 'hero' + battle.attack.heroes[i].heroId)
-                    .css('background', Hero.getImage(attackerColor))
+                    .css('background', 'url(' + Hero.getImage(attackerColor) + ') no-repeat')
                     .addClass('battleUnit')
             );
         }
@@ -572,9 +572,9 @@ var Message = {
                 };
             }
             defense.append(
-                 $('<div>')
+                $('<div>')
                     .attr('id', 'unit' + battle.defense.soldiers[i].soldierId)
-                    .css('background', Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor))
+                    .css('background', 'url(' + Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor) + ') no-repeat')
                     .addClass('battleUnit')
             );
         }
@@ -588,7 +588,7 @@ var Message = {
             defense.append(
                 $('<div>')
                     .attr('id', 'hero' + battle.defense.heroes[i].heroId)
-                    .css('background', Hero.getImage(defenderColor))
+                    .css('background', 'url(' + Hero.getImage(defenderColor) + ') no-repeat')
                     .addClass('battleUnit')
             );
         }
@@ -623,10 +623,6 @@ var Message = {
         }
         if (notSet(b[i])) {
             clb();
-
-            setTimeout('$(".castleWar").remove()', 1000);
-            setTimeout('$(".armyWar").remove()', 1000);
-
             return;
         }
 
@@ -634,13 +630,13 @@ var Message = {
 
         if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
-            $('#unit' + b[i].soldierId + ' .killed').fadeOut(1500, function () {
+            $('#unit' + b[i].soldierId + ' .killed').fadeIn(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
-            $('#hero' + b[i].heroId + ' .killed').fadeOut(1500, function () {
+            $('#hero' + b[i].heroId + ' .killed').fadeIn(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
