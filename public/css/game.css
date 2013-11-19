@@ -882,15 +882,16 @@ html {
     left: 76px;
 }
 
-.castleWar {
+.killed {
     position: absolute;
-    background: url("/img/game/war.png");
-    width: 111px;
-    height: 120px;
-    z-index: 26999;
+    background: url("/img/game/killed.png");
+    width: 25px;
+    height: 28px;
+    z-index: 27003;
+    display: none;
 }
 
-.armyWar {
+.war {
     position: absolute;
     background: url("/img/game/war.png");
     width: 111px;

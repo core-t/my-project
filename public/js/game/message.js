@@ -536,26 +536,6 @@ var Message = {
         var newBattle = new Array();
         var attack = $('<div>').addClass('battle attack');
 
-        if (isTruthful(data.castleId)) {
-            board.append($('<div>').addClass('castleWar').css({
-                top: 40 * castles[data.castleId].y - 12 + 'px',
-                left: 40 * castles[data.castleId].x - 11 + 'px'
-            }));
-        } else {
-            if (isSet(data.attackerArmy.x)) {
-                var x = data.attackerArmy.x;
-                var y = data.attackerArmy.y;
-            } else if (isSet(data.defenderArmy.x)) {
-                var x = data.attackerArmy.x;
-                var y = data.defenderArmy.y;
-            }
-            board.append($('<div>').addClass('armyWar').css({
-                top: 40 * y - 42 + 'px',
-                left: 40 * x - 41 + 'px'
-            }));
-        }
-
-
         for (i in battle.attack.soldiers) {
             if (battle.attack.soldiers[i].succession) {
                 newBattle[battle.attack.soldiers[i].succession] = {
@@ -643,21 +623,6 @@ var Message = {
         }
         if (notSet(b[i])) {
             clb();
-            if (isTruthful(data.defenderArmy) && isTruthful(data.defenderColor)) {
-                if (isTruthful(data.victory)) {
-                    for (i in data.defenderArmy) {
-                        deleteArmy('army' + data.defenderArmy[i].armyId, data.defenderColor, 1);
-                    }
-                } else {
-                    for (i in data.defenderArmy) {
-                        players[data.defenderColor].armies['army' + data.defenderArmy[i].armyId] = new army(data.defenderArmy[i], data.defenderColor);
-                    }
-                }
-            }
-
-            if (isDigit(data.castleId) && isTruthful(data.victory)) {
-                castleOwner(data.castleId, data.attackerColor);
-            }
 
             setTimeout('$(".castleWar").remove()', 1000);
             setTimeout('$(".armyWar").remove()', 1000);
@@ -665,13 +630,17 @@ var Message = {
             return;
         }
 
+        play('killed');
+
         if (isSet(b[i].soldierId)) {
-            $('#unit' + b[i].soldierId).fadeOut(1500, function () {
+            $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
+            $('#unit' + b[i].soldierId + ' .killed').fadeOut(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
         } else if (isSet(b[i].heroId)) {
-            $('#hero' + b[i].heroId).fadeOut(1500, function () {
+            $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
+            $('#hero' + b[i].heroId + ' .killed').fadeOut(1500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
