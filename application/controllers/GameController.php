@@ -31,6 +31,7 @@ class GameController extends Game_Controller_Game
         $this->view->headScript()->appendFile('/js/game/turn.js?v=' . Zend_Registry::get('config')->version);
 
         $this->_helper->layout->setLayout('game');
+        $this->view->sound();
 
         $mCastlesInGame = new Application_Model_CastlesInGame($this->_namespace->gameId);
         $mArmy = new Application_Model_Army($this->_namespace->gameId);

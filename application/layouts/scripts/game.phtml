@@ -9,10 +9,7 @@
     ?>
 </head>
 <body onkeydown="Gui.doKey(arguments[0] || window.event)">
-<audio preload id="slash">
-    <source src="/sound/slash.mp3" type="audio/mpeg">
-    <source src="/sound/slash.ogg" type="audio/ogg">
-</audio>
+<?php echo $this->placeholder('sound') ?>
 <div id="page">
     <div id="game">
         <!-- ZOOM WINDOW -->
