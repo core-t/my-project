@@ -543,10 +543,10 @@ var Message = {
                 };
             }
             attack.append(
-                $('<img>').attr({
-                    'src': Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor),
-                    'id': 'unit' + battle.attack.soldiers[i].soldierId
-                })
+                $('<div>')
+                    .attr('id', 'unit' + battle.attack.soldiers[i].soldierId)
+                    .css('background', Unit.getImage(battle.attack.soldiers[i].unitId, attackerColor))
+                    .addClass('battleUnit')
             );
         }
         for (i in battle.attack.heroes) {
@@ -556,10 +556,10 @@ var Message = {
                 };
             }
             attack.append(
-                $('<img>').attr({
-                    'src': Hero.getImage(attackerColor),
-                    'id': 'hero' + battle.attack.heroes[i].heroId
-                })
+                $('<div>')
+                    .attr('id', 'hero' + battle.attack.heroes[i].heroId)
+                    .css('background', Hero.getImage(attackerColor))
+                    .addClass('battleUnit')
             );
         }
 
@@ -572,10 +572,10 @@ var Message = {
                 };
             }
             defense.append(
-                $('<img>').attr({
-                    'src': Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor),
-                    'id': 'unit' + battle.defense.soldiers[i].soldierId
-                })
+                 $('<div>')
+                    .attr('id', 'unit' + battle.defense.soldiers[i].soldierId)
+                    .css('background', Unit.getImage(battle.defense.soldiers[i].unitId, defenderColor))
+                    .addClass('battleUnit')
             );
         }
 
@@ -586,10 +586,10 @@ var Message = {
                 };
             }
             defense.append(
-                $('<img>').attr({
-                    'src': Hero.getImage(defenderColor),
-                    'id': 'hero' + battle.defense.heroes[i].heroId
-                })
+                $('<div>')
+                    .attr('id', 'hero' + battle.defense.heroes[i].heroId)
+                    .css('background', Hero.getImage(defenderColor))
+                    .addClass('battleUnit')
             );
         }
 

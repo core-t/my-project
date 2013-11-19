@@ -882,12 +882,17 @@ html {
     left: 76px;
 }
 
+.battleUnit {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+
 .killed {
     position: absolute;
     background: url("/img/game/killed.png");
     width: 25px;
     height: 28px;
-    z-index: 27003;
     display: none;
 }
 
