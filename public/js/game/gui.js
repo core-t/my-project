@@ -49,7 +49,7 @@ var Gui = {
         });
 
         $('#show').click(function () {
-
+            play('click');
             show = !show;
             if (show) {
                 $(this).children().attr('src', '/img/game/show.png')
@@ -77,7 +77,8 @@ var Gui = {
             Message.surrender()
         });
         $('#nextArmy').click(function () {
-            findNextArmy()
+            play('slash');
+            findNextArmy();
         });
         $('#skipArmy').click(function () {
             skipArmy()

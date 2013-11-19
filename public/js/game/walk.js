@@ -1,4 +1,5 @@
 function move(r, computer) {
+    play('move');
     Message.remove();
     if (typeof r.path[1] == 'undefined') {
 
