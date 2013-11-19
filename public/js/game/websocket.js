@@ -68,14 +68,17 @@ Websocket = {
                         if (my.color == r.color) {
                             switch (r.find[0]) {
                                 case 'gold':
+                                    play('gold1');
                                     var gold = r.find[1] + parseInt($('#gold').html());
                                     goldUpdate(gold);
                                     Message.simple('You have found ' + r.find[1] + ' gold.');
                                     break;
                                 case 'death':
+                                    play('death');
                                     Message.simple('You have found death.');
                                     break
                                 case 'alies':
+
                                     Message.simple(r.find[1] + ' alies joined your army.');
                                     break
                                 case 'null':
@@ -125,6 +128,7 @@ Websocket = {
                         break;
 
                     case 'heroResurrection':
+                        play('resurrection');
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                         players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
