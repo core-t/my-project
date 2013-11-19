@@ -16,6 +16,7 @@ Websocket = {
                 switch (r.type) {
 
                     case 'error':
+                        play('error');
                         Message.simple(r.msg);
                         unlock();
                         break;
@@ -47,6 +48,7 @@ Websocket = {
                         quitedArmies = new Array();
 
                         if (r.color == my.color) {
+                            play('startturn');
                             goldUpdate(r.gold);
                             $('#costs').html(r.costs);
                             $('#income').html(r.income);
@@ -78,7 +80,7 @@ Websocket = {
                                     Message.simple('You have found death.');
                                     break
                                 case 'allies':
-play('allies');
+                                    play('allies');
                                     Message.simple(r.find[1] + ' alies joined your army.');
                                     break
                                 case 'null':

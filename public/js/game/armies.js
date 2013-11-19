@@ -514,7 +514,8 @@ function findNextArmy() {
             if (nextArmySelected == false) {
                 nextArmySelected = true;
                 unselectArmy();
-                if (typeof players[my.color].armies[nextArmy].armyId != 'undefined') {
+                if (isSet(players[my.color].armies[nextArmy].armyId)) {
+                    play('slash');
                     selectArmy(players[my.color].armies[nextArmy]);
                 } else {
                     console.log(players[my.color].armies[nextArmy]);

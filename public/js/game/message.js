@@ -630,13 +630,13 @@ var Message = {
 
         if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
-            $('#unit' + b[i].soldierId + ' .killed').fadeIn(1500, function () {
+            $('#unit' + b[i].soldierId + ' .killed').fadeIn(500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
-            $('#hero' + b[i].heroId + ' .killed').fadeIn(1500, function () {
+            $('#hero' + b[i].heroId + ' .killed').fadeIn(500, function () {
                 delete b[i];
                 Message.kill(b, clb, data);
             });

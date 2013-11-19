@@ -77,7 +77,6 @@ var Gui = {
             Message.surrender()
         });
         $('#nextArmy').click(function () {
-            play('slash');
             findNextArmy();
         });
         $('#skipArmy').click(function () {
