@@ -77,8 +77,8 @@ Websocket = {
                                     play('death');
                                     Message.simple('You have found death.');
                                     break
-                                case 'alies':
-
+                                case 'allies':
+play('allies');
                                     Message.simple(r.find[1] + ' alies joined your army.');
                                     break
                                 case 'null':

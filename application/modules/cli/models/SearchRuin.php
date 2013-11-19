@@ -140,7 +140,7 @@ class Cli_Model_SearchRuin
             }
             $unitId = rand($fistUnitId + 10, $max1);
             $numberOfUnits = rand($min2, $max2);
-            $find = array('alies', $numberOfUnits);
+            $find = array('allies', $numberOfUnits);
             $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             for ($i = 0; $i < $numberOfUnits; $i++) {
                 $mSoldier->add($armyId, $unitId);
