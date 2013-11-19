@@ -49,7 +49,7 @@ var Gui = {
         });
 
         $('#show').click(function () {
-            play('click');
+            Sound.play('click');
             show = !show;
             if (show) {
                 $(this).children().attr('src', '/img/game/show.png')

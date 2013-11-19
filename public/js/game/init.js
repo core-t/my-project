@@ -99,7 +99,7 @@ function startGame() {
         return;
     }
 
-    play('gamestart');
+    Sound.play('gamestart');
 
     showFirstCastle();
 

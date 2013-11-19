@@ -16,19 +16,18 @@ Websocket = {
                 switch (r.type) {
 
                     case 'error':
-                        play('error');
+                        Sound.play('error');
                         Message.simple(r.msg);
                         unlock();
                         break;
 
                     case 'move':
-                        move(r);
+                        Move.start(r);
                         break;
 
                     case 'computer':
-                        if (typeof r.path != 'undefined' && r.path) {
-//                        stop = 1;
-                            move(r, 1);
+                        if (isTruthful(r.path)) {
+                            Move.start(r, 1);
                         } else {
                             Websocket.computer();
                         }
@@ -48,7 +47,7 @@ Websocket = {
                         quitedArmies = new Array();
 
                         if (r.color == my.color) {
-                            play('startturn');
+                            Sound.play('startturn');
                             goldUpdate(r.gold);
                             $('#costs').html(r.costs);
                             $('#income').html(r.income);
@@ -70,17 +69,17 @@ Websocket = {
                         if (my.color == r.color) {
                             switch (r.find[0]) {
                                 case 'gold':
-                                    play('gold1');
+                                    Sound.play('gold1');
                                     var gold = r.find[1] + parseInt($('#gold').html());
                                     goldUpdate(gold);
                                     Message.simple('You have found ' + r.find[1] + ' gold.');
                                     break;
                                 case 'death':
-                                    play('death');
+                                    Sound.play('death');
                                     Message.simple('You have found death.');
                                     break
                                 case 'allies':
-                                    play('allies');
+                                    Sound.play('allies');
                                     Message.simple(r.find[1] + ' alies joined your army.');
                                     break
                                 case 'null':
@@ -130,7 +129,7 @@ Websocket = {
                         break;
 
                     case 'heroResurrection':
-                        play('resurrection');
+                        Sound.play('resurrection');
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                         players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
@@ -156,11 +155,11 @@ Websocket = {
                     case 'raze':
                         razeCastle(r.castleId);
                         if (r.color == my.color) {
-                            play('gold1');
+                            Sound.play('gold1');
                             Message.remove();
                             goldUpdate(r.gold);
-                        }else{
-                            play('raze');
+                        } else {
+                            Sound.play('raze');
                         }
                         break;
 

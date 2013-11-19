@@ -529,7 +529,7 @@ var Message = {
         this.show(army);
         this.ok();
     },
-    battle: function (data, clb) {
+    battle: function (data, computer) {
         var battle = data.battle;
         var attackerColor = data.attackerColor;
         var defenderColor = data.defenderColor;
@@ -613,32 +613,32 @@ var Message = {
         }
         if (newBattle) {
             $('.message').fadeIn(100, function () {
-                Message.kill(newBattle, clb, data);
+                Message.kill(newBattle, data, computer);
             })
         }
     },
-    kill: function (b, clb, data) {
+    kill: function (b, data, computer) {
         for (i in b) {
             break;
         }
         if (notSet(b[i])) {
-            clb();
+            Move.end(data, computer);
             return;
         }
 
-        play('killed');
+        Sound.play('error');
 
         if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1500, function () {
                 delete b[i];
-                Message.kill(b, clb, data);
+                Message.kill(b, data, computer);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
             $('#hero' + b[i].heroId + ' .killed').fadeIn(1500, function () {
                 delete b[i];
-                Message.kill(b, clb, data);
+                Message.kill(b, data, computer);
             });
         } else {
             console.log('zonk');

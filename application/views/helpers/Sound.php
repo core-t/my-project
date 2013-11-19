@@ -17,7 +17,7 @@ class Zend_View_Helper_Sound extends Zend_View_Helper_Abstract
                 }
 
                 if ($file_parts['extension'] == 'mp3') {
-                    $this->view->placeholder('sound')->append('<audio preload id="' . $file_parts['filename'] . '"><source src="/sound/' . $file_parts['filename'] . '.mp3" type="audio/mpeg"><source src="/sound/' . $file_parts['filename'] . '.ogg" type="audio/ogg"></audio>');
+                    $this->view->placeholder('sound')->append('<audio preload id="' . $file_parts['filename'] . '"><source src="/sound/' . $file_parts['filename'] . '.mp3?v=' . Zend_Registry::get('config')->version . '" type="audio/mpeg"><source src="/sound/' . $file_parts['filename'] . '.ogg?v=' . Zend_Registry::get('config')->version . '" type="audio/ogg"></audio>');
                 }
 
             }

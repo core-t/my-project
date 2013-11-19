@@ -515,7 +515,7 @@ function findNextArmy() {
                 nextArmySelected = true;
                 unselectArmy();
                 if (isSet(players[my.color].armies[nextArmy].armyId)) {
-                    play('slash');
+                    Sound.play('slash');
                     selectArmy(players[my.color].armies[nextArmy]);
                 } else {
                     console.log(players[my.color].armies[nextArmy]);
@@ -540,7 +540,7 @@ function skipArmy() {
     }
 
     if (selectedArmy) {
-        play('skip');
+        Sound.play('skip');
         skippedArmies.push(selectedArmy.armyId);
         unselectArmy();
         findNextArmy();
