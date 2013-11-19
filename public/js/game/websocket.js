@@ -156,8 +156,11 @@ Websocket = {
                     case 'raze':
                         razeCastle(r.castleId);
                         if (r.color == my.color) {
+                            play('gold1');
                             Message.remove();
                             goldUpdate(r.gold);
+                        }else{
+                            play('raze');
                         }
                         break;
 

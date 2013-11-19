@@ -534,10 +534,13 @@ function skipArmy() {
     if (!my.turn) {
         return;
     }
+
     if (lock) {
         return;
     }
+
     if (selectedArmy) {
+        play('skip');
         skippedArmies.push(selectedArmy.armyId);
         unselectArmy();
         findNextArmy();

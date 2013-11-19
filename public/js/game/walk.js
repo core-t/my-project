@@ -1,8 +1,13 @@
 function move(r, computer) {
-    play('move');
+    if (players[r.attackerColor].armies['army' + r.attackerArmy.armyId].canFly > 0) {
+        play('fly');
+    } else if (players[r.attackerColor].armies['army' + r.attackerArmy.armyId].canSwim) {
+        play('swim');
+    } else {
+        play('walk');
+    }
     Message.remove();
     if (typeof r.path[1] == 'undefined') {
-
         zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
     } else {
         armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
