@@ -301,20 +301,20 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
 
         foreach ($result as $army) {
-            $armies['army' . $army['armyId']] = $army;
-            $armies['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+            $armies[$army['armyId']] = $army;
+            $armies[$army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
 
-//            foreach ($armies['army' . $army['armyId']]['heroes'] as $k => $row) {
+//            foreach ($armies[$army['armyId']]['heroes'] as $k => $row) {
 //                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
-//                $armies['army' . $army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
+//                $armies[$army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
 //            }
 
-            $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
-            if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
-                $this->destroyArmy($armies['army' . $army['armyId']]['armyId'], $playerId);
-                unset($armies['army' . $army['armyId']]);
+            $armies[$army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
+            if (empty($armies[$army['armyId']]['heroes']) AND empty($armies[$army['armyId']]['soldiers'])) {
+                $this->destroyArmy($armies[$army['armyId']]['armyId'], $playerId);
+                unset($armies[$army['armyId']]);
             } else {
-                $armies['army' . $army['armyId']]['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($armies['army' . $army['armyId']]);
+                $armies[$army['armyId']]['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($armies[$army['armyId']]);
             }
         }
 
@@ -447,17 +447,17 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
 
         foreach ($result as $army) {
-            $armies['army' . $army['armyId']] = $army;
-            $armies['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
-//            foreach ($armies['army' . $army['armyId']]['heroes'] as $k => $row) {
+            $armies[$army['armyId']] = $army;
+            $armies[$army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+//            foreach ($armies[$army['armyId']]['heroes'] as $k => $row) {
 //                $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
-//                $armies['army' . $army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
+//                $armies[$army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
 //            }
 
-            $armies['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
-            if (empty($armies['army' . $army['armyId']]['heroes']) AND empty($armies['army' . $army['armyId']]['soldiers'])) {
-                $this->destroyArmy($armies['army' . $army['armyId']]['armyId'], $playerId);
-                unset($armies['army' . $army['armyId']]);
+            $armies[$army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
+            if (empty($armies[$army['armyId']]['heroes']) AND empty($armies[$army['armyId']]['soldiers'])) {
+                $this->destroyArmy($armies[$army['armyId']]['armyId'], $playerId);
+                unset($armies[$army['armyId']]);
             }
         }
 

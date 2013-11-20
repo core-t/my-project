@@ -99,19 +99,19 @@ class GameController extends Game_Controller_Game
             $mSoldier = new Application_Model_UnitsInGame($this->_namespace->gameId);
 
             foreach ($mArmy->getPlayerArmies($player['playerId']) as $army) {
-                $this->view->players[$player['color']]['armies']['army' . $army['armyId']] = $army;
-                $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+                $this->view->players[$player['color']]['armies'][$army['armyId']] = $army;
+                $this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
 
 
-                foreach ($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'] as $k => $row) {
+                foreach ($this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'] as $k => $row) {
                     $mInventory = new Application_Model_Inventory($row['heroId'], $this->_namespace->gameId);
-                    $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
+                    $this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
                 }
 
-                $this->view->players[$player['color']]['armies']['army' . $army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
-                if (empty($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['heroes']) AND empty($this->view->players[$player['color']]['armies']['army' . $army['armyId']]['soldiers'])) {
+                $this->view->players[$player['color']]['armies'][$army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
+                if (empty($this->view->players[$player['color']]['armies'][$army['armyId']]['heroes']) AND empty($this->view->players[$player['color']]['armies'][$army['armyId']]['soldiers'])) {
                     $mArmy->destroyArmy($army['armyId'], $player['playerId']);
-                    unset($this->view->players[$player['color']]['armies']['army' . $army['armyId']]);
+                    unset($this->view->players[$player['color']]['armies'][$army['armyId']]);
                 }
             }
 

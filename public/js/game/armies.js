@@ -188,7 +188,7 @@ var Army = {
             }
         } else { // nie moja armia
             fields[army.y][army.x] = 'e';
-            enemyArmyMouse(army);
+            enemyArmyMouse(element);
         }
         numberOfUnits = numberOfHeroes + numberOfSoldiers;
         if (numberOfUnits > 8) {
@@ -516,19 +516,19 @@ function armiesAddCursorWhenUnselectedArmy() {
     $('.army:not(.' + my.color + ') img').css('cursor', 'url(/img/game/cursor.png), default');
 }
 
-function enemyArmyMouse(army) {
-    army.element
+function enemyArmyMouse(element, x, y) {
+    element
         .mouseover(function () {
             if (lock) {
                 return;
             }
             if (my.turn && selectedArmy) {
                 selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-                var castleId = isEnemyCastle(army.x, army.y);
+                var castleId = isEnemyCastle(x, y);
                 if (castleId !== null) {
                     Castle.changeFields(castleId, 'g');
                 }
-                fields[army.y][army.x] = 'g';
+                fields[y][x] = 'g';
             }
         })
         .mousemove(function () {
@@ -537,19 +537,19 @@ function enemyArmyMouse(army) {
             }
             if (my.turn && selectedArmy) {
                 selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-                var castleId = isEnemyCastle(army.x, army.y);
+                var castleId = isEnemyCastle(x, y);
                 if (castleId !== null) {
                     Castle.changeFields(castleId, 'g');
                 }
-                fields[army.y][army.x] = 'g';
+                fields[y][x] = 'g';
             }
         })
         .mouseout(function () {
-            var castleId = isEnemyCastle(army.x, army.y);
+            var castleId = isEnemyCastle(x, y);
             if (castleId !== null) {
                 Castle.changeFields(castleId, 'e');
             }
-            fields[army.y][army.x] = 'e';
+            fields[y][x] = 'e';
         });
 }
 
