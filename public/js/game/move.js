@@ -27,13 +27,24 @@ var Move = {
         this.loop(r, null, computer);
     },
     loop: function (r, xy, computer) {
-        var i;
-
         for (i in r.path) {
             break;
         }
 
-        if (notSet(r.path[i])) {
+        if (isSet(r.path[i])) {
+            zoomer.setCenterIfOutOfScreen(r.path[i].x * 40, r.path[i].y * 40);
+
+            $('#army' + r.oldArmyId)
+                .animate({
+                    left: (r.path[i].x * 40) + 'px',
+                    top: (r.path[i].y * 40) + 'px'
+                }, 200, function () {
+                    searchTower(r.path[i].x, r.path[i].y);
+                    xy = r.path[i];
+                    delete r.path[i];
+                    Move.loop(r, xy, computer);
+                });
+        } else {
             if (xy) {
                 zoomer.lensSetCenter(xy.x * 40, xy.y * 40);
             }
@@ -84,18 +95,6 @@ var Move = {
             }
 
             return;
-        } else {
-            zoomer.setCenterIfOutOfScreen(r.path[i].x * 40, r.path[i].y * 40);
-            $('#army' + r.oldArmyId).animate({
-                    left: (r.path[i].x * 40) + 'px',
-                    top: (r.path[i].y * 40) + 'px'
-                }, 200,
-                function () {
-                    searchTower(r.path[i].x, r.path[i].y);
-                    xy = r.path[i];
-                    delete r.path[i];
-                    Move.loop(r, xy, computer);
-                });
         }
     },
     end: function (r, computer) {
@@ -115,7 +114,7 @@ var Move = {
 //        }
 
         for (i in r.deletedIds) {
-            Army.delete(r.deletedIds[i]['armyId'], r.attackerColor, 1);
+            Army.delete(r.deletedIds[i].armyId, r.attackerColor, 1);
         }
 
         if (isSet(computer)) {

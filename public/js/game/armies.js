@@ -10,10 +10,9 @@ var Army = {
     isNextSelected: null,
     init: function (obj, shortName) {
         if (obj.destroyed) {
-//            if (isSet(players[shortName].armies[obj.armyId])) {
             armyFields(players[shortName].armies[obj.armyId]);
             delete players[shortName].armies[obj.armyId];
-//            }
+
             return;
         }
 
@@ -206,18 +205,19 @@ var Army = {
             .addClass('army')
             .addClass(shortName)
             .attr({
-                id: army.armyId,
+                id: 'army' + army.armyId,
                 title: army.name
-            }).css({
+            })
+            .css({
                 background: 'url(/img/game/flags/' + shortName + '_' + numberOfUnits + '.png) top left no-repeat',
                 left: (army.x * 40) + 'px',
                 top: (army.y * 40) + 'px'
-            });
-        element.append(
-            $('<img>')
-                .addClass('unit')
-                .attr('src', army.img)
-        );
+            })
+            .append(
+                $('<img>')
+                    .addClass('unit')
+                    .attr('src', army.img)
+            );
         board.append(element);
 
         army.color = shortName;
