@@ -35,10 +35,10 @@ var Castle = {
         $('#castle' + castleId + ' .hammer').remove();
     },
     show: function () {
-        if (selectedArmy == null) {
+        if (Army.selected == null) {
             return;
         }
-        var castleId = this.isMyCastle(selectedArmy.x, selectedArmy.y);
+        var castleId = this.isMyCastle(Army.selected.x, Army.selected.y);
         if (castleId) {
             Army.deselect();
             Message.castle(castleId);

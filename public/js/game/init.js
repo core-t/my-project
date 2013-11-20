@@ -6,8 +6,8 @@ Image3 = new Image(25, 26);
 Image3.src = '/img/game/cursor_select.png';
 Image4 = new Image(9, 20);
 Image4.src = '/img/game/cursor.png';
-Image4 = new Image(20, 9);
-Image4.src = '/img/game/cursor_pointer.png';
+Image5 = new Image(20, 9);
+Image5.src = '/img/game/cursor_pointer.png';
 
 var newX = 0;
 var newY = 0;
@@ -19,14 +19,7 @@ var lock = true;
 var costs = 0;
 var income = 0;
 
-var selectedArmy = null;
-var unselectedArmy = null;
-var parentArmy = null;
-var selectedEnemyArmy = null;
-var nextArmy = null;
-var nextArmySelected = false;
-var skippedArmies = new Array();
-var quitedArmies = new Array();
+//var selectedEnemyArmy = null;
 
 var firstCastleId = 1000;
 

@@ -99,7 +99,7 @@ var Gui = {
             .addClass('buttonOff');
         $('#splitArmy')
             .click(function () {
-                if (!selectedArmy) {
+                if (!Army.selected) {
                     return;
                 }
 
@@ -107,7 +107,7 @@ var Gui = {
             })
             .addClass('buttonOff');
         $('#armyStatus').click(function () {
-            if (!selectedArmy) {
+            if (!Army.selected) {
                 return;
             }
 
@@ -119,7 +119,7 @@ var Gui = {
             })
             .addClass('buttonOff');
         $('#deselectArmy').click(function () {
-            if (!selectedArmy) {
+            if (!Army.selected) {
                 return;
             }
 

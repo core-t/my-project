@@ -249,7 +249,7 @@ function zoom(gameWidth, gameHeight) {
                     if (!lock) {
                         switch (e.which) {
                             case 1:
-                                if (selectedArmy) {
+                                if (Army.selected) {
                                     Websocket.move(AStar.cursorPosition(e.pageX, e.pageY, 1));
                                 } else {
                                     var pageX = e.pageX;
@@ -270,7 +270,7 @@ function zoom(gameWidth, gameHeight) {
 //                        alert('Middle mouse button pressed');
                                 break;
                             case 3:
-                                if (selectedArmy) {
+                                if (Army.selected) {
                                     Army.deselect();
                                 }
                                 break;

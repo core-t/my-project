@@ -91,7 +91,7 @@ var Message = {
                     .attr('id', players[my.color].chest[i].artifactId)
                     .html(artifacts[players[my.color].chest[i].artifactId].name + ' ' + players[my.color].chest[i].quantity)
                     .click(function () {
-                        Websocket.inventoryAdd(selectedArmy.heroes[0].heroId, $(this).attr('id'));
+                        Websocket.inventoryAdd(Army.selected.heroes[0].heroId, $(this).attr('id'));
                     })
                     .mousemove(function (e) {
                         $('.zoomWindow #des' + $(this).attr('id')).remove();
@@ -117,13 +117,13 @@ var Message = {
 
         var htmlInventory = $('<div>').attr('id', 'inventory');
 
-        for (i in selectedArmy.heroes[0].artifacts) {
+        for (i in Army.selected.heroes[0].artifacts) {
             htmlInventory.append(
                 $('<div>')
-                    .attr('id', selectedArmy.heroes[0].artifacts[i].artifactId)
-                    .html(artifacts[selectedArmy.heroes[0].artifacts[i].artifactId].name)
+                    .attr('id', Army.selected.heroes[0].artifacts[i].artifactId)
+                    .html(artifacts[Army.selected.heroes[0].artifacts[i].artifactId].name)
                     .click(function () {
-                        Websocket.inventoryDel(selectedArmy.heroes[0].heroId, $(this).attr('id'));
+                        Websocket.inventoryDel(Army.selected.heroes[0].heroId, $(this).attr('id'));
                     })
                     .mousemove(function (e) {
                         $('.zoomWindow #des' + $(this).attr('id')).remove();
@@ -181,7 +181,7 @@ var Message = {
         if (!my.turn) {
             return;
         }
-        if (selectedArmy) {
+        if (Army.selected) {
             return;
         }
 
@@ -357,7 +357,7 @@ var Message = {
         this.ok(Message.remove);
     },
     disbandArmy: function () {
-        if (typeof selectedArmy == 'undefined') {
+        if (typeof Army.selected == 'undefined') {
             return;
         }
 
@@ -365,7 +365,7 @@ var Message = {
             return;
         }
 
-        if (!selectedArmy) {
+        if (!Army.selected) {
             return;
         }
 
@@ -374,15 +374,15 @@ var Message = {
         this.cancel();
     },
     splitArmy: function (a) {
-        if (typeof selectedArmy == 'undefined') {
+        if (typeof Army.selected == 'undefined') {
             return;
         }
         Message.remove();
         var army = $('<div>').addClass('split').css('max-height', documentHeight - 200 + 'px');
         var numberOfUnits = 0;
 
-        for (i in selectedArmy.soldiers) {
-            var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
+        for (i in Army.selected.soldiers) {
+            var img = units[Army.selected.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
             numberOfUnits++;
             army.append(
                 $('<div>')
@@ -390,19 +390,19 @@ var Message = {
                     .append($('<div>').addClass('nr').html(numberOfUnits))
                     .append($('<div>').addClass('img').html(
                         $('<img>').attr({
-                            'src': Unit.getImageByName(img, selectedArmy.color),
-                            'id': 'unit' + selectedArmy.soldiers[i].soldierId
+                            'src': Unit.getImageByName(img, Army.selected.color),
+                            'id': 'unit' + Army.selected.soldiers[i].soldierId
                         })
                     ))
-                    .append($('<span>').html(' Moves left: ' + selectedArmy.soldiers[i].movesLeft + ' '))
+                    .append($('<span>').html(' Moves left: ' + Army.selected.soldiers[i].movesLeft + ' '))
                     .append($('<div>').addClass('right').html($('<input>').attr({
                         type: 'checkbox',
                         name: 'soldierId',
-                        value: selectedArmy.soldiers[i].soldierId
+                        value: Army.selected.soldiers[i].soldierId
                     })))
             );
         }
-        for (i in selectedArmy.heroes) {
+        for (i in Army.selected.heroes) {
             numberOfUnits++;
             army.append(
                 $('<div>')
@@ -410,15 +410,15 @@ var Message = {
                     .append($('<div>').addClass('nr').html(numberOfUnits))
                     .append($('<div>').addClass('img').html(
                         $('<img>').attr({
-                            'src': Hero.getImage(selectedArmy.color),
-                            'id': 'hero' + selectedArmy.heroes[i].heroId
+                            'src': Hero.getImage(Army.selected.color),
+                            'id': 'hero' + Army.selected.heroes[i].heroId
                         })
                     ))
-                    .append($('<span>').html(' Moves left: ' + selectedArmy.heroes[i].movesLeft + ' '))
+                    .append($('<span>').html(' Moves left: ' + Army.selected.heroes[i].movesLeft + ' '))
                     .append($('<div>').addClass('right').html($('<input>').attr({
                         type: 'checkbox',
                         name: 'heroId',
-                        value: selectedArmy.heroes[i].heroId
+                        value: Army.selected.heroes[i].heroId
                     })))
             );
         }
@@ -429,30 +429,30 @@ var Message = {
 
     },
     armyStatus: function () {
-        if (typeof selectedArmy == 'undefined') {
+        if (typeof Army.selected == 'undefined') {
             return;
         }
 
         var army = $('<div>').addClass('status').css('max-height', documentHeight - 200 + 'px');
         var numberOfUnits = 0;
         var bonusTower = 0;
-        var castleDefense = getMyCastleDefenseFromPosition(selectedArmy.x, selectedArmy.y);
+        var castleDefense = getMyCastleDefenseFromPosition(Army.selected.x, Army.selected.y);
         var attackPoints;
         var defensePoints;
 
-        if (isTowerAtPosition(selectedArmy.x, selectedArmy.y)) {
+        if (isTowerAtPosition(Army.selected.x, Army.selected.y)) {
             bonusTower = 1;
         }
-        for (i in selectedArmy.soldiers) {
+        for (i in Army.selected.soldiers) {
             numberOfUnits++;
-            var img = units[selectedArmy.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
-            attackPoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].attackPoints).css('color', '#da8');
-            defensePoints = $('<p>').html(units[selectedArmy.soldiers[i].unitId].defensePoints).css('color', '#da8');
-            if (selectedArmy.flyBonus && !selectedArmy.soldiers[i].canFly) {
+            var img = units[Army.selected.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
+            attackPoints = $('<p>').html(units[Army.selected.soldiers[i].unitId].attackPoints).css('color', '#da8');
+            defensePoints = $('<p>').html(units[Army.selected.soldiers[i].unitId].defensePoints).css('color', '#da8');
+            if (Army.selected.flyBonus && !Army.selected.soldiers[i].canFly) {
                 attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
                 defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
             }
-            if (selectedArmy.heroKey) {
+            if (Army.selected.heroKey) {
                 attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
                 defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
             }
@@ -468,8 +468,8 @@ var Message = {
                     .append($('<div>').addClass('nr').html(numberOfUnits))
                     .append($('<div>').addClass('img').html(
                         $('<img>').attr({
-                            'src': Unit.getImageByName(img, selectedArmy.color),
-                            'id': 'unit' + selectedArmy.soldiers[i].soldierId
+                            'src': Unit.getImageByName(img, Army.selected.color),
+                            'id': 'unit' + Army.selected.soldiers[i].soldierId
                         })
                     ))
                     .append(
@@ -481,17 +481,17 @@ var Message = {
                     )
                     .append(
                         $('<div>').addClass('left')
-                            .append($('<p>').html(selectedArmy.soldiers[i].movesLeft).css('color', '#da8'))
-                            .append($('<p>').html(units[selectedArmy.soldiers[i].unitId].numberOfMoves).css('color', '#da8'))
+                            .append($('<p>').html(Army.selected.soldiers[i].movesLeft).css('color', '#da8'))
+                            .append($('<p>').html(units[Army.selected.soldiers[i].unitId].numberOfMoves).css('color', '#da8'))
                             .append(attackPoints)
                             .append(defensePoints)
                     )
             );
         }
-        for (i in selectedArmy.heroes) {
+        for (i in Army.selected.heroes) {
             numberOfUnits++;
-            attackPoints = $('<p>').html(selectedArmy.heroes[i].attackPoints).css('color', '#da8');
-            defensePoints = $('<p>').html(selectedArmy.heroes[i].defensePoints).css('color', '#da8');
+            attackPoints = $('<p>').html(Army.selected.heroes[i].attackPoints).css('color', '#da8');
+            defensePoints = $('<p>').html(Army.selected.heroes[i].defensePoints).css('color', '#da8');
             if (bonusTower) {
                 defensePoints.append($('<span>').html(' +1').css('color', '#d00000'));
             }
@@ -504,8 +504,8 @@ var Message = {
                     .append($('<div>').addClass('nr').html(numberOfUnits))
                     .append($('<div>').addClass('img').html(
                         $('<img>').attr({
-                            'src': Hero.getImage(selectedArmy.color),
-                            'id': 'hero' + selectedArmy.heroes[i].heroId
+                            'src': Hero.getImage(Army.selected.color),
+                            'id': 'hero' + Army.selected.heroes[i].heroId
                         })
                     ))
                     .append(
@@ -517,8 +517,8 @@ var Message = {
                     )
                     .append(
                         $('<div>').addClass('left')
-                            .append($('<p>').html(selectedArmy.heroes[i].movesLeft).css('color', '#da8'))
-                            .append($('<p>').html(selectedArmy.heroes[i].numberOfMoves).css('color', '#da8'))
+                            .append($('<p>').html(Army.selected.heroes[i].movesLeft).css('color', '#da8'))
+                            .append($('<p>').html(Army.selected.heroes[i].numberOfMoves).css('color', '#da8'))
                             .append(attackPoints)
                             .append(defensePoints)
                     )
@@ -645,7 +645,7 @@ var Message = {
         }
     },
     razeCastle: function () {
-        if (selectedArmy == null) {
+        if (Army.selected == null) {
             return;
         }
         this.show($('<div>').html('Destroy castle. Are you sure?'));

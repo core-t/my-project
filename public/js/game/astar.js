@@ -12,7 +12,7 @@ var AStar = {
 //        coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
         coord.html(terrain[fields[destY][destX]].name);
 
-        if (selectedArmy) {
+        if (Army.selected) {
             this.myCastleId = {};
             var tmpX = destX * 40;
             var tmpY = destY * 40;
@@ -22,8 +22,8 @@ var AStar = {
             $('.path').remove();
             newX = tmpX;
             newY = tmpY;
-            var startX = selectedArmy.x;
-            var startY = selectedArmy.y;
+            var startX = Army.selected.x;
+            var startY = Army.selected.y;
             var open = {};
             var close = {};
             var start = new node(startX, startY, destX, destY, 0);
@@ -155,7 +155,7 @@ var AStar = {
                     continue;
                 }
 
-                g = terrain[terrainType][selectedArmy.movementType];
+                g = terrain[terrainType][Army.selected.movementType];
 
                 if (g > 6) {
                     continue;

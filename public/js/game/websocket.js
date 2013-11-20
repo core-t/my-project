@@ -44,7 +44,7 @@ Websocket = {
                         break;
 
                     case 'startTurn':
-                        quitedArmies = new Array();
+                        Army.quitedArmies = new Array();
 
                         if (r.color == my.color) {
                             Sound.play('startturn');
@@ -105,7 +105,7 @@ Websocket = {
                         Army.init(r.parentArmy, r.color);
                         Army.init(r.childArmy, r.color);
 
-                        setParentArmy(players[r.color].armies[r.parentArmy.armyId]);
+                        Army.parent = players[r.color].armies[r.parentArmy.armyId];
 
                         if (my.color == Turn.shortName) {
                             Army.select(players[r.color].armies[r.childArmy.armyId], 0);
@@ -124,7 +124,7 @@ Websocket = {
                         break;
 
                     case 'disband':
-                        if (typeof r.armyId != 'undefined' && r.color != 'undefined') {
+                        if (isSet(r.armyId) && isSet(r.color)) {
                             Message.remove();
                             Army.delete(r.armyId, r.color);
                         }
@@ -193,7 +193,7 @@ Websocket = {
                             $('<div>')
                                 .html(artifacts[r.artifactId].name)
                                 .click(function () {
-                                    Websocket.inventoryDel(selectedArmy.heroes[0].heroId);
+                                    Websocket.inventoryDel(Army.selected.heroes[0].heroId);
                                 })
                         );
                         for (a in players[my.color].armies) {
@@ -363,17 +363,17 @@ Websocket = {
         if (!my.turn) {
             return;
         }
-        if (selectedArmy == null) {
+        if (Army.selected == null) {
             return;
         }
 
         Army.deselect();
 
-        board.append($('<div>').addClass('ruinSearch').css({'top': 40 * unselectedArmy.y + 'px', 'left': 40 * unselectedArmy.x + 'px'}));
+        board.append($('<div>').addClass('ruinSearch').css({'top': 40 * Army.deselected.y + 'px', 'left': 40 * Army.deselected.x + 'px'}));
 
         var token = {
             type: 'ruin',
-            armyId: unselectedArmy.armyId
+            armyId: Army.deselected.armyId
         };
 
         ws.send(JSON.stringify(token));
@@ -441,14 +441,14 @@ Websocket = {
         if (!my.turn) {
             return;
         }
-        if (selectedArmy == null) {
+        if (Army.selected == null) {
             return;
         }
         Army.deselect(1);
 
         var token = {
             type: 'disband',
-            armyId: unselectedArmy.armyId
+            armyId: Army.deselected.armyId
         };
 
         ws.send(JSON.stringify(token));
@@ -459,7 +459,7 @@ Websocket = {
             return;
         }
 
-//    if (selectedArmy.moves == 0) {
+//    if (Army.selected.moves == 0) {
 //        unselectArmy();
 //        Message.simple('Not enough moves left.');
 //        return;
@@ -480,7 +480,7 @@ Websocket = {
 
         Army.halfDeselect();
 
-        if (unselectedArmy.x == x && unselectedArmy.y == y) {
+        if (Army.deselected.x == x && Army.deselected.y == y) {
             return;
         }
 
@@ -490,7 +490,7 @@ Websocket = {
             type: 'move',
             x: x,
             y: y,
-            armyId: unselectedArmy.armyId
+            armyId: Army.deselected.armyId
         };
 
         ws.send(JSON.stringify(token));
@@ -523,7 +523,7 @@ Websocket = {
 
         var token = {
             type: 'split',
-            armyId: selectedArmy.armyId,
+            armyId: Army.selected.armyId,
             s: s,
             h: h
         };
@@ -555,7 +555,7 @@ Websocket = {
             return;
         }
 
-        var castleId = Castle.isMyCastle(selectedArmy.x, selectedArmy.y);
+        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
 
         if (!castleId) {
             Message.simple('No castle to destroy.');
@@ -564,7 +564,7 @@ Websocket = {
 
         var token = {
             type: 'raze',
-            armyId: selectedArmy.armyId
+            armyId: Army.selected.armyId
         };
 
         ws.send(JSON.stringify(token));

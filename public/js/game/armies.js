@@ -1,6 +1,13 @@
 // *** ARMIES ***
 
 var Army = {
+    selected: null,
+    deselected: null,
+    parent: null,
+    skippedArmies: new Array(),
+    quitedArmies: new Array(),
+    nextArmyId: null,
+    isNextSelected: null,
     init: function (obj, shortName) {
         if (obj.destroyed) {
 //            if (isSet(players[shortName].armies[obj.armyId])) {
@@ -23,7 +30,7 @@ var Army = {
         }
 
         if (army.fortified) {
-            quitedArmies.push(army.armyId);
+            Army.quitedArmies.push(army.armyId);
         } else {
             this.unfortify(army.armyId);
         }
@@ -173,10 +180,10 @@ var Army = {
                 myArmyClick(army, e)
             });
             element.mouseover(function () {
-                myArmyMouse(army.id)
+                myArmyMouse(army.armyId)
             });
             element.mousemove(function () {
-                myArmyMouse(army.id)
+                myArmyMouse(army.armyId)
             });
             if (army.canSwim) {
                 //            if(fields[army.y][army.x] != 'S'){
@@ -238,9 +245,9 @@ var Army = {
         zoomer.lensSetCenter(30, 30);
     },
     removeFromSkipped: function (armyId) {
-        var index = $.inArray(armyId, skippedArmies);
+        var index = $.inArray(armyId, Army.skippedArmies);
         if (index != -1) {
-            skippedArmies.splice(index, 1);
+            Army.skippedArmies.splice(index, 1);
         }
     },
     skip: function () {
@@ -252,9 +259,9 @@ var Army = {
             return;
         }
 
-        if (selectedArmy) {
+        if (Army.selected) {
             Sound.play('skip');
-            skippedArmies.push(selectedArmy.armyId);
+            Army.skippedArmies.push(Army.selected.armyId);
             Army.deselect();
             this.findNext();
         }
@@ -279,37 +286,37 @@ var Army = {
             if (players[my.color].armies[armyId].moves == 0) {
                 continue;
             }
-            if ($.inArray(armyId, skippedArmies) != -1) {
+            if ($.inArray(armyId, Army.skippedArmies) != -1) {
                 continue;
             }
-            if ($.inArray(armyId, quitedArmies) != -1) {
+            if ($.inArray(armyId, Army.quitedArmies) != -1) {
                 continue;
             }
 
-            if (nextArmySelected) {
-                nextArmy = armyId;
+            if (Army.isNextSelected) {
+                Army.nextArmyId = armyId;
                 reset = false;
                 break;
             }
 
-            if (!nextArmy) {
-                nextArmy = armyId;
+            if (!Army.nextArmyId) {
+                Army.nextArmyId = armyId;
             }
 
-            if (nextArmy == armyId) {
-                if (nextArmySelected == false) {
-                    nextArmySelected = true;
+            if (Army.nextArmyId == armyId) {
+                if (!Army.isNextSelected) {
+                    Army.isNextSelected = true;
                     this.deselect();
                     Sound.play('slash');
-                    Army.select(players[my.color].armies[nextArmy]);
+                    Army.select(players[my.color].armies[Army.nextArmyId]);
                 }
             }
         }
 
-        nextArmySelected = false;
+        Army.isNextSelected = false;
 
         if (reset) {
-            nextArmy = null;
+            Army.nextArmyId = null;
         }
     },
     delete: function (armyId, color, quiet) {
@@ -359,10 +366,10 @@ var Army = {
         $('#skipArmy').removeClass('buttonOff');
         $('#quitArmy').removeClass('buttonOff');
 
-        selectedArmy = a;
+        Army.selected = a;
 
-        if (isSet(selectedArmy.heroKey)) {
-            if (Ruin.getId(selectedArmy) !== null) {
+        if (isSet(Army.selected.heroKey)) {
+            if (Ruin.getId(Army.selected) !== null) {
                 $('#searchRuins').removeClass('buttonOff');
             }
             $('#showArtifacts').removeClass('buttonOff');
@@ -378,9 +385,9 @@ var Army = {
         }
     },
     deselect: function (skipJoin) {
-        if (notSet(skipJoin) && parentArmy && selectedArmy) {
-            if (selectedArmy.x == parentArmy.x && selectedArmy.y == parentArmy.y) {
-                Websocket.join(selectedArmy.armyId);
+        if (notSet(skipJoin) && Army.parent && Army.selected) {
+            if (Army.selected.x == Army.parent.x && Army.selected.y == Army.parent.y) {
+                Websocket.join(Army.selected.armyId);
             }
         }
 
@@ -396,15 +403,15 @@ var Army = {
         this.halfDeselect();
     },
     halfDeselect: function () {
-        if (selectedArmy) {
-            unselectedArmy = selectedArmy;
-            $('#army' + selectedArmy.armyId).css({
+        if (Army.selected) {
+            Army.deselected = Army.selected;
+            $('#army' + Army.selected.armyId).css({
                 'box-shadow': 'none',
                 'border': 'none'
             });
             board.css('cursor', 'url(/img/game/cursor.png), default');
         }
-        selectedArmy = null;
+        Army.selected = null;
         $('.path').remove();
         $('#splitArmy').addClass('buttonOff');
         $('#unselectArmy').addClass('buttonOff');
@@ -425,9 +432,9 @@ var Army = {
         if (lock) {
             return;
         }
-        if (selectedArmy) {
-            Websocket.fortify(selectedArmy.armyId);
-            quitedArmies.push(selectedArmy.armyId);
+        if (Army.selected) {
+            Websocket.fortify(Army.selected.armyId);
+            Army.quitedArmies.push(Army.selected.armyId);
             Army.deselect();
             Army.findNext();
         }
@@ -436,10 +443,10 @@ var Army = {
         if (isComputer(Turn.shortName)) {
             return;
         }
-        var index = $.inArray(armyId, quitedArmies);
+        var index = $.inArray(armyId, Army.quitedArmies);
         if (index != -1) {
             Websocket.unfortify(armyId, 0);
-            quitedArmies.splice(index, 1);
+            Army.quitedArmies.splice(index, 1);
         }
     }
 
@@ -455,7 +462,7 @@ function walking(path) {
         var pX = path[i].x * 40;
         var pY = path[i].y * 40;
 
-        if (selectedArmy.moves < path[i].G) {
+        if (Army.selected.moves < path[i].G) {
             className = 'path2';
             if (notSet(set)) {
                 var set = {'x': pX, 'y': pY};
@@ -485,24 +492,24 @@ function myArmyClick(army, e) {
             return;
         }
 
-        if (!selectedArmy) {
+        if (!Army.selected) {
             Army.deselect();
             Army.select(players[my.color].armies[army.armyId], 0);
         }
     }
 }
 
-function myArmyMouse(id) {
+function myArmyMouse(armyId) {
     if (lock) {
         return;
     }
-    if (my.turn && !selectedArmy) {
-        $('#' + id + ' *').css('cursor', 'url(/img/game/cursor_select.png), default');
-        $('#' + id).css('cursor', 'url(/img/game/cursor_select.png), default');
+    if (my.turn && !Army.selected) {
+        $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor_select.png), default');
+        $('#army' + armyId).css('cursor', 'url(/img/game/cursor_select.png), default');
     }
     else {
-        $('#' + id + ' *').css('cursor', 'url(/img/game/cursor.png), default');
-        $('#' + id).css('cursor', 'url(/img/game/cursor.png), default');
+        $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor.png), default');
+        $('#army' + armyId).css('cursor', 'url(/img/game/cursor.png), default');
     }
 }
 
@@ -522,8 +529,8 @@ function enemyArmyMouse(element, x, y) {
             if (lock) {
                 return;
             }
-            if (my.turn && selectedArmy) {
-                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
+            if (my.turn && Army.selected) {
+//                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
                 var castleId = isEnemyCastle(x, y);
                 if (castleId !== null) {
                     Castle.changeFields(castleId, 'g');
@@ -535,8 +542,8 @@ function enemyArmyMouse(element, x, y) {
             if (lock) {
                 return;
             }
-            if (my.turn && selectedArmy) {
-                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
+            if (my.turn && Army.selected) {
+//                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
                 var castleId = isEnemyCastle(x, y);
                 if (castleId !== null) {
                     Castle.changeFields(castleId, 'g');
@@ -551,10 +558,6 @@ function enemyArmyMouse(element, x, y) {
             }
             fields[y][x] = 'e';
         });
-}
-
-function setParentArmy(army) {
-    parentArmy = army;
 }
 
 function armyFields(a) {
