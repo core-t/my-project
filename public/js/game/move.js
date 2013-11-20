@@ -1,21 +1,28 @@
 var Move = {
     start: function (r, computer) {
-        if (players[r.attackerColor].armies['army' + r.attackerArmy.armyId].canFly > 0) {
-            Sound.play('fly');
-        } else if (players[r.attackerColor].armies['army' + r.attackerArmy.armyId].canSwim) {
-            Sound.play('swim');
-        } else {
-            Sound.play('walk');
+
+        switch (players[r.attackerColor].armies[r.attackerArmy.armyId].movementType) {
+            case 'flying':
+                Sound.play('fly');
+                break;
+            case 'swimming':
+                Sound.play('swim');
+                break;
+            default:
+                Sound.play('walk');
+                break;
         }
+
         Message.remove();
+
         if (notSet(r.path[1])) {
             zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
         } else {
-            armyFields(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
+            armyFields(players[r.attackerColor].armies[r.attackerArmy.armyId]);
             zoomer.lensSetCenter(r.path[1].x * 40, r.path[1].y * 40);
         }
 
-        unfortifyArmy(r.attackerArmy.armyId);
+        Army.unfortify(r.attackerArmy.armyId);
 
         this.loop(r, null, computer);
     },
@@ -56,7 +63,7 @@ var Move = {
                 if (isTruthful(r.defenderArmy) && isTruthful(r.defenderColor)) {
                     if (isTruthful(r.victory)) {
                         for (i in r.defenderArmy) {
-                            Army.delete('army' + r.defenderArmy[i].armyId, r.defenderColor, 1);
+                            Army.delete(r.defenderArmy[i].armyId, r.defenderColor, 1);
                         }
                     } else {
                         for (i in r.defenderArmy) {
@@ -108,15 +115,15 @@ var Move = {
 //        }
 
         for (i in r.deletedIds) {
-            Army.delete('army' + r.deletedIds[i]['armyId'], r.attackerColor, 1);
+            Army.delete(r.deletedIds[i]['armyId'], r.attackerColor, 1);
         }
 
         if (isSet(computer)) {
             Websocket.computer();
         } else if (r.attackerColor == my.color) {
-            if (!r.castleId && players[r.attackerColor].armies['army' + r.attackerArmy.armyId].moves) {
+            if (!r.castleId && players[r.attackerColor].armies[r.attackerArmy.armyId].moves) {
                 unlock();
-                Army.select(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
+                Army.select(players[r.attackerColor].armies[r.attackerArmy.armyId]);
             } else {
                 unlock();
             }

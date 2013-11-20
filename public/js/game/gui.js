@@ -24,7 +24,7 @@ var Gui = {
                 Message.nextTurn();
                 break;
             case 70: //f
-                fortifyArmy();
+                Army.fortify();
                 break;
             case 78: //n
                 Army.findNext();
@@ -58,6 +58,10 @@ var Gui = {
             }
         });
 
+        $('#surrender').click(function () {
+            Message.surrender()
+        });
+
         $('#statistics').click(function () {
             Websocket.statistics();
         });
@@ -65,66 +69,80 @@ var Gui = {
         $('#send').click(function () {
             Websocket.chat();
         });
+
         $('#msg').keypress(function (e) {
             if (e.which == 13) {
                 Websocket.chat();
             }
         });
-        $('#nextTurn').click(function () {
-            Message.nextTurn();
-        });
-        $('#surrender').click(function () {
-            Message.surrender()
-        });
-        $('#nextArmy').click(function () {
-            Army.findNext();
-        });
-        $('#skipArmy').click(function () {
-            Army.skip()
-        });
-        $('#quitArmy').click(function () {
-            fortifyArmy()
-        });
-        $('#splitArmy').click(function () {
-            if (selectedArmy) {
-                Message.split()
-            }
-        });
+
+        $('#nextTurn')
+            .click(function () {
+                Message.nextTurn();
+            })
+            .addClass('buttonOff');
+
+        $('#nextArmy')
+            .click(function () {
+                Army.findNext();
+            })
+            .addClass('buttonOff');
+        $('#skipArmy')
+            .click(function () {
+                Army.skip();
+            })
+            .addClass('buttonOff');
+        $('#quitArmy')
+            .click(function () {
+                Army.fortify();
+            })
+            .addClass('buttonOff');
+        $('#splitArmy')
+            .click(function () {
+                if (!selectedArmy) {
+                    return;
+                }
+
+                Message.split();
+            })
+            .addClass('buttonOff');
         $('#armyStatus').click(function () {
-            if (selectedArmy) {
-                Message.armyStatus()
+            if (!selectedArmy) {
+                return;
             }
+
+            Message.armyStatus();
         });
-        $('#disbandArmy').click(function () {
-            Message.disband()
-        });
+        $('#disbandArmy')
+            .click(function () {
+                Message.disband();
+            })
+            .addClass('buttonOff');
         $('#deselectArmy').click(function () {
-            if (selectedArmy) {
-                Army.deselect();
+            if (!selectedArmy) {
+                return;
             }
+
+            Army.deselect();
         });
-        $('#searchRuins').click(function () {
-            Websocket.ruin()
-        });
+
+        $('#searchRuins')
+            .click(function () {
+                Websocket.ruin()
+            })
+            .addClass('buttonOff');
+
         $('#razeCastle').click(function () {
             Message.raze();
         });
+
         $('#showCastle').click(function () {
             Castle.show();
         });
+
         $('#showArtifacts').click(function () {
             Message.showArtifacts();
         });
-        $('#test').click(function () {
-            test()
-        });
-        $('#nextTurn').addClass('buttonOff');
-        $('#nextArmy').addClass('buttonOff');
-        $('#skipArmy').addClass('buttonOff');
-        $('#quitArmy').addClass('buttonOff');
-        $('#splitArmy').addClass('buttonOff');
-        $('#disbandArmy').addClass('buttonOff');
-        $('#searchRuins').addClass('buttonOff');
 
         $('.zoomPadLayout .close').click(function () {
             var left = parseInt($('.zoomPadLayout').css('left'));

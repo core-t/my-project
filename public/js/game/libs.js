@@ -77,19 +77,6 @@ function titleBlink(msg) {
     });
 }
 
-function getColor(color) {
-    switch (color) {
-        case 'green':
-            return '#00db00';
-        case 'selentines':
-            return '#000CFF';
-        case 'horse_lords':
-            return '#00BFFF';
-        default:
-            return color;
-    }
-}
-
 function makeTime() {
     var d = new Date();
     var minutes = d.getMinutes();

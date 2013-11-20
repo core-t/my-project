@@ -63,7 +63,7 @@ Websocket = {
                         break;
 
                     case 'ruin':
-                        zoomer.lensSetCenter(players[r.color].armies['army' + r.army.armyId].x * 40, players[r.color].armies['army' + r.army.armyId].y * 40);
+                        zoomer.lensSetCenter(r.army.x * 40, r.army.y * 40);
                         Army.init(r.army, r.color);
                         Ruin.update(r.ruin.ruinId, r.ruin.empty);
                         if (my.color == r.color) {
@@ -103,10 +103,12 @@ Websocket = {
                     case 'split':
                         Message.remove();
                         Army.init(r.parentArmy, r.color);
-                        setParentArmy(players[r.color].armies['army' + r.parentArmy.armyId]);
                         Army.init(r.childArmy, r.color);
+
+                        setParentArmy(players[r.color].armies[r.parentArmy.armyId]);
+
                         if (my.color == Turn.shortName) {
-                            Army.select(players[r.color].armies['army' + r.childArmy.armyId], 0);
+                            Army.select(players[r.color].armies[r.childArmy.armyId], 0);
                         } else {
                             zoomer.lensSetCenter(r.parentArmy.x * 40, r.parentArmy.y * 40);
                         }
@@ -116,7 +118,7 @@ Websocket = {
                         Message.remove();
                         zoomer.lensSetCenter(r.army.x * 40, r.army.y * 40);
                         for (i in r.deletedIds) {
-                            Army.delete('army' + r.deletedIds[i].armyId, r.color);
+                            Army.delete(r.deletedIds[i].armyId, r.color);
                         }
                         Army.init(r.army, r.color);
                         break;
@@ -124,7 +126,7 @@ Websocket = {
                     case 'disband':
                         if (typeof r.armyId != 'undefined' && r.color != 'undefined') {
                             Message.remove();
-                            Army.delete('army' + r.armyId, r.color);
+                            Army.delete(r.armyId, r.color);
                         }
                         break;
 

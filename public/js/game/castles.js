@@ -186,7 +186,7 @@ function castleOwner(castleId, color) {
 
     castles[castleId].color = color;
 
-    $('#c' + castleId).css('background', getColor(color));
+    $('#c' + castleId).css('background', mapPlayersColors[color].backgroundColor);
 }
 
 function setMyCastleProduction(castleId) {
