@@ -74,7 +74,7 @@ function changeTower(x, y, towerId) {
     if (fields[y][x] != 'e') {
         if (towers[towerId].color != Turn.shortName) {
             if (Turn.shortName == my.color || (my.game && players[Turn.shortName].computer)) {
-                Websocket.addTower(towerId);
+                Websocket.tower(towerId);
             }
             towers[towerId].color = Turn.shortName;
             $('#tower' + towerId).css('background', 'url(/img/game/towers/' + Turn.shortName + '.png) center center no-repeat');

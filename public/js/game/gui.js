@@ -12,13 +12,13 @@ var Gui = {
         switch (key) {
             case 27: //ESC
                 Message.remove();
-                unselectArmy();
+                Army.deselect();
                 break;
             case 67: //c
                 Castle.show();
                 break;
             case 68: //d
-                Message.disbandArmy();
+                Message.disband();
                 break;
             case 69: //t
                 Message.nextTurn();
@@ -27,13 +27,13 @@ var Gui = {
                 fortifyArmy();
                 break;
             case 78: //n
-                findNextArmy();
+                Army.findNext();
                 break;
             case 82: //r
-                Websocket.searchRuins()
+                Websocket.ruin()
                 break;
             case 83: //s
-                skipArmy();
+                Army.skip();
                 break;
 //            default:
 //                console.log(key);
@@ -59,7 +59,7 @@ var Gui = {
         });
 
         $('#statistics').click(function () {
-            Websocket.getStatistics();
+            Websocket.statistics();
         });
 
         $('#send').click(function () {
@@ -77,17 +77,17 @@ var Gui = {
             Message.surrender()
         });
         $('#nextArmy').click(function () {
-            findNextArmy();
+            Army.findNext();
         });
         $('#skipArmy').click(function () {
-            skipArmy()
+            Army.skip()
         });
         $('#quitArmy').click(function () {
             fortifyArmy()
         });
         $('#splitArmy').click(function () {
             if (selectedArmy) {
-                Message.splitArmy()
+                Message.split()
             }
         });
         $('#armyStatus').click(function () {
@@ -96,18 +96,18 @@ var Gui = {
             }
         });
         $('#disbandArmy').click(function () {
-            Message.disbandArmy()
+            Message.disband()
         });
-        $('#unselectArmy').click(function () {
+        $('#deselectArmy').click(function () {
             if (selectedArmy) {
-                unselectArmy();
+                Army.deselect();
             }
         });
         $('#searchRuins').click(function () {
-            Websocket.searchRuins()
+            Websocket.ruin()
         });
         $('#razeCastle').click(function () {
-            Message.razeCastle();
+            Message.raze();
         });
         $('#showCastle').click(function () {
             Castle.show();

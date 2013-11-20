@@ -370,7 +370,7 @@ var Message = {
         }
 
         this.show($('<div>').html('Are you sure?'));
-        this.ok(Websocket.disbandArmy);
+        this.ok(Websocket.disband);
         this.cancel();
     },
     splitArmy: function (a) {
@@ -424,7 +424,7 @@ var Message = {
         }
 
         this.show(army);
-        this.ok(Websocket.splitArmy);
+        this.ok(Websocket.split);
         this.cancel();
 
     },
@@ -649,7 +649,7 @@ var Message = {
             return;
         }
         this.show($('<div>').html('Destroy castle. Are you sure?'));
-        this.ok(Websocket.razeCastle);
+        this.ok(Websocket.raze);
         this.cancel();
     },
     statistics: function () {

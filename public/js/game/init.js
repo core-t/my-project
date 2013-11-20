@@ -110,11 +110,13 @@ function startGame() {
 //        Turn.off();
 //        Message.lost(my.color);
 //    } else {
+
     if (my.turn) {
         Turn.on();
     } else {
         Turn.off();
     }
+
     if (my.turn && !players[my.color].turnActive) {
         Websocket.startMyTurn();
     } else if (my.game && players[Turn.shortName].computer) {

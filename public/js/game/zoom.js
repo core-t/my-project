@@ -250,7 +250,7 @@ function zoom(gameWidth, gameHeight) {
                         switch (e.which) {
                             case 1:
                                 if (selectedArmy) {
-                                    Websocket.armyMove(AStar.cursorPosition(e.pageX, e.pageY, 1));
+                                    Websocket.move(AStar.cursorPosition(e.pageX, e.pageY, 1));
                                 } else {
                                     var pageX = e.pageX;
                                     var pageY = e.pageY;
@@ -271,7 +271,7 @@ function zoom(gameWidth, gameHeight) {
                                 break;
                             case 3:
                                 if (selectedArmy) {
-                                    unselectArmy();
+                                    Army.deselect();
                                 }
                                 break;
                             default:

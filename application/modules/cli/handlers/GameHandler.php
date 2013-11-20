@@ -168,15 +168,15 @@ class Cli_GameHandler extends Cli_WofHandler
                 new Cli_Model_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
                 break;
 
-            case 'splitArmy':
+            case 'split':
                 new Cli_Model_SplitArmy($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $this);
                 break;
 
-            case 'joinArmy':
+            case 'join':
                 new Cli_Model_JoinArmy($dataIn['armyId'], $user, $db, $this);
                 break;
 
-            case 'fortifyArmy':
+            case 'fortify':
                 $armyId = $dataIn['armyId'];
                 if (empty($armyId)) {
                     $this->sendError($user, 'No "armyId"!');
@@ -187,11 +187,11 @@ class Cli_GameHandler extends Cli_WofHandler
                 $mArmy2->fortify($armyId, $dataIn['fortify'], $user->parameters['playerId']);
                 break;
 
-            case 'disbandArmy':
+            case 'disband':
                 new Cli_Model_DisbandArmy($dataIn['armyId'], $user, $db, $this);
                 break;
 
-            case 'heroResurrection':
+            case 'resurrection':
                 new Cli_Model_HeroResurrection($dataIn['castleId'], $user, $db, $this);
                 break;
 
@@ -252,11 +252,11 @@ class Cli_GameHandler extends Cli_WofHandler
                 }
                 break;
 
-            case 'razeCastle':
+            case 'raze':
                 new Cli_Model_CastleRaze($dataIn['armyId'], $user, $db, $this);
                 break;
 
-            case 'castleBuildDefense':
+            case 'defense':
                 new Cli_Model_CastleBuildDefense($dataIn['castleId'], $user, $db, $this);
                 break;
 

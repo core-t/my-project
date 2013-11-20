@@ -38,7 +38,7 @@ Websocket = {
                         break;
 
                     case 'nextTurn':
-                        unselectArmy();
+                        Army.deselect();
                         Turn.change(r.color, r.nr);
                         Websocket.computer();
                         break;
@@ -55,7 +55,7 @@ Websocket = {
                         }
 
                         for (i in r.armies) {
-                            players[r.color].armies[i] = new army(r.armies[i], r.color);
+                            Army.init(r.armies[i], r.color);
                         }
                         for (i in r.castles) {
                             updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
@@ -64,7 +64,7 @@ Websocket = {
 
                     case 'ruin':
                         zoomer.lensSetCenter(players[r.color].armies['army' + r.army.armyId].x * 40, players[r.color].armies['army' + r.army.armyId].y * 40);
-                        players[r.color].armies['army' + r.army.armyId] = new army(r.army, r.color);
+                        Army.init(r.army, r.color);
                         Ruin.update(r.ruin.ruinId, r.ruin.empty);
                         if (my.color == r.color) {
                             switch (r.find[0]) {
@@ -100,39 +100,39 @@ Websocket = {
                         });
                         break;
 
-                    case 'splitArmy':
+                    case 'split':
                         Message.remove();
-                        players[r.color].armies['army' + r.parentArmy.armyId] = new army(r.parentArmy, r.color);
+                        Army.init(r.parentArmy, r.color);
                         setParentArmy(players[r.color].armies['army' + r.parentArmy.armyId]);
-                        players[r.color].armies['army' + r.childArmy.armyId] = new army(r.childArmy, r.color);
+                        Army.init(r.childArmy, r.color);
                         if (my.color == Turn.shortName) {
-                            selectArmy(players[r.color].armies['army' + r.childArmy.armyId], 0);
+                            Army.select(players[r.color].armies['army' + r.childArmy.armyId], 0);
                         } else {
                             zoomer.lensSetCenter(r.parentArmy.x * 40, r.parentArmy.y * 40);
                         }
                         break;
 
-                    case 'joinArmy':
+                    case 'join':
                         Message.remove();
                         zoomer.lensSetCenter(r.army.x * 40, r.army.y * 40);
                         for (i in r.deletedIds) {
-                            deleteArmy('army' + r.deletedIds[i].armyId, r.color);
+                            Army.delete('army' + r.deletedIds[i].armyId, r.color);
                         }
-                        players[r.color].armies['army' + r.army.armyId] = new army(r.army, r.color);
+                        Army.init(r.army, r.color);
                         break;
 
-                    case 'disbandArmy':
+                    case 'disband':
                         if (typeof r.armyId != 'undefined' && r.color != 'undefined') {
                             Message.remove();
-                            deleteArmy('army' + r.armyId, r.color);
+                            Army.delete('army' + r.armyId, r.color);
                         }
                         break;
 
-                    case 'heroResurrection':
+                    case 'resurrection':
                         Sound.play('resurrection');
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
-                        players[r.color].armies['army' + r.data.army.armyId] = new army(r.data.army, r.color);
+                        Army.init(r.data.army, r.color);
                         if (my.color == Turn.shortName) {
                             goldUpdate(r.data.gold);
                         }
@@ -176,9 +176,9 @@ Websocket = {
                         break;
 
                     case 'surrender':
-                        unselectArmy();
+                        Army.deselect();
                         for (i in players[r.color].armies) {
-                            deleteArmy(i, r.color, 1);
+                            Army.delete(i, r.color, 1);
                         }
                         for (i in players[r.color].castles) {
                             razeCastle(i);
@@ -217,6 +217,7 @@ Websocket = {
                         break;
 
                     case 'end':
+                        Turn.off();
                         Message.end();
                         break;
 
@@ -283,7 +284,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    addTower: function (towerId) {
+    tower: function (towerId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -351,7 +352,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    searchRuins: function () {
+    ruin: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -364,7 +365,7 @@ Websocket = {
             return;
         }
 
-        unselectArmy();
+        Army.deselect();
 
         board.append($('<div>').addClass('ruinSearch').css({'top': 40 * unselectedArmy.y + 'px', 'left': 40 * unselectedArmy.x + 'px'}));
 
@@ -375,7 +376,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    fortifyArmy: function (armyId) {
+    fortify: function (armyId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -386,14 +387,14 @@ Websocket = {
         }
 
         var token = {
-            type: 'fortifyArmy',
+            type: 'fortify',
             armyId: armyId,
             fortify: 1
         };
 
         ws.send(JSON.stringify(token));
     },
-    unfortifyArmy: function (armyId) {
+    unfortify: function (armyId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -404,14 +405,14 @@ Websocket = {
         }
 
         var token = {
-            type: 'fortifyArmy',
+            type: 'fortify',
             armyId: armyId,
             fortify: 0
         };
 
         ws.send(JSON.stringify(token));
     },
-    joinArmy: function (armyId) {
+    join: function (armyId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -423,13 +424,13 @@ Websocket = {
         }
 
         var token = {
-            type: 'joinArmy',
+            type: 'join',
             armyId: armyId
         };
 
         ws.send(JSON.stringify(token));
     },
-    disbandArmy: function () {
+    disband: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -441,16 +442,16 @@ Websocket = {
         if (selectedArmy == null) {
             return;
         }
-        unselectArmy(1);
+        Army.deselect(1);
 
         var token = {
-            type: 'disbandArmy',
+            type: 'disband',
             armyId: unselectedArmy.armyId
         };
 
         ws.send(JSON.stringify(token));
     },
-    armyMove: function (movesSpend) {
+    move: function (movesSpend) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -475,7 +476,7 @@ Websocket = {
         var x = newX / 40;
         var y = newY / 40;
 
-        tmpUnselectArmy();
+        Army.halfDeselect();
 
         if (unselectedArmy.x == x && unselectedArmy.y == y) {
             return;
@@ -492,7 +493,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    splitArmy: function () {
+    split: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -519,7 +520,7 @@ Websocket = {
         });
 
         var token = {
-            type: 'splitArmy',
+            type: 'split',
             armyId: selectedArmy.armyId,
             s: s,
             h: h
@@ -527,7 +528,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    heroResurrection: function (castleId) {
+    resurrection: function (castleId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -537,16 +538,16 @@ Websocket = {
         if (!my.turn) {
             return;
         }
-        unselectArmy();
+        Army.deselect();
 
         var token = {
-            type: 'heroResurrection',
+            type: 'resurrection',
             castleId: castleId
         };
 
         ws.send(JSON.stringify(token));
     },
-    razeCastle: function () {
+    raze: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -560,20 +561,20 @@ Websocket = {
         }
 
         var token = {
-            type: 'razeCastle',
+            type: 'raze',
             armyId: selectedArmy.armyId
         };
 
         ws.send(JSON.stringify(token));
     },
-    castleBuildDefense: function (castleId) {
+    defense: function (castleId) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
         }
 
         var token = {
-            type: 'castleBuildDefense',
+            type: 'defense',
             castleId: castleId
         };
 
@@ -603,7 +604,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    getStatistics: function () {
+    statistics: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;

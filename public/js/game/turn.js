@@ -23,7 +23,7 @@ var Turn = {
     },
     off: function () {
         my.turn = false;
-        unselectArmy();
+        Army.deselect();
         $('#nextTurn').addClass('buttonOff');
         $('#nextArmy').addClass('buttonOff');
         makeMyCursorLock();

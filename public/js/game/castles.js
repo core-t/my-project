@@ -9,12 +9,12 @@ var Castle = {
 //        }
 
         if ($('input[name=defense]').is(':checked')) {
-            Websocket.castleBuildDefense(castleId);
+            Websocket.defense(castleId);
             return;
         }
 
         if ($('input[name=resurrection]').is(':checked')) {
-            Websocket.heroResurrection(castleId);
+            Websocket.resurrection(castleId);
             return;
         }
 
@@ -40,7 +40,7 @@ var Castle = {
         }
         var castleId = this.isMyCastle(selectedArmy.x, selectedArmy.y);
         if (castleId) {
-            unselectArmy();
+            Army.deselect();
             Message.castle(castleId);
         }
     },
@@ -242,7 +242,7 @@ function showFirstCastle() {
         var sp = $('#castle' + firstCastleId);
         zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
     } else {
-        showFirstArmy(my.color);
+        Army.showFirst(my.color);
     }
 }
 

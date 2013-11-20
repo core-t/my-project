@@ -56,11 +56,11 @@ var Move = {
                 if (isTruthful(r.defenderArmy) && isTruthful(r.defenderColor)) {
                     if (isTruthful(r.victory)) {
                         for (i in r.defenderArmy) {
-                            deleteArmy('army' + r.defenderArmy[i].armyId, r.defenderColor, 1);
+                            Army.delete('army' + r.defenderArmy[i].armyId, r.defenderColor, 1);
                         }
                     } else {
                         for (i in r.defenderArmy) {
-                            players[r.defenderColor].armies['army' + r.defenderArmy[i].armyId] = new army(r.defenderArmy[i], r.defenderColor);
+                            Army.init(r.defenderArmy[i], r.defenderColor);
                         }
                     }
                 }
@@ -92,9 +92,9 @@ var Move = {
         }
     },
     end: function (r, computer) {
-        players[r.attackerColor].armies['army' + r.attackerArmy.armyId] = new army(r.attackerArmy, r.attackerColor);
-        newX = players[r.attackerColor].armies['army' + r.attackerArmy.armyId].x;
-        newY = players[r.attackerColor].armies['army' + r.attackerArmy.armyId].y;
+        Army.init(r.attackerArmy, r.attackerColor);
+        newX = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
+        newY = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 
         searchTower(newX, newY);
 
@@ -108,7 +108,7 @@ var Move = {
 //        }
 
         for (i in r.deletedIds) {
-            deleteArmy('army' + r.deletedIds[i]['armyId'], r.attackerColor, 1);
+            Army.delete('army' + r.deletedIds[i]['armyId'], r.attackerColor, 1);
         }
 
         if (isSet(computer)) {
@@ -116,7 +116,7 @@ var Move = {
         } else if (r.attackerColor == my.color) {
             if (!r.castleId && players[r.attackerColor].armies['army' + r.attackerArmy.armyId].moves) {
                 unlock();
-                selectArmy(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
+                Army.select(players[r.attackerColor].armies['army' + r.attackerArmy.armyId]);
             } else {
                 unlock();
             }

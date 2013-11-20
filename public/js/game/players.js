@@ -17,7 +17,7 @@ var Players = {
             $('.' + color + ' .color').addClass(color + 'bg');
 
             for (i in players[color].armies) {
-                players[color].armies[i] = new army(players[color].armies[i], color);
+                Army.init(players[color].armies[i], color);
                 if (color == my.color) {
                     for (s in players[color].armies[i].soldiers) {
                         costs += units[players[color].armies[i].soldiers[s].unitId].cost;
