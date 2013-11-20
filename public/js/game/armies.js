@@ -9,6 +9,9 @@ var Army = {
     nextArmyId: null,
     isNextSelected: null,
     init: function (obj, shortName) {
+
+        $('#army' + obj.armyId).remove();
+
         if (obj.destroyed) {
             armyFields(players[shortName].armies[obj.armyId]);
             delete players[shortName].armies[obj.armyId];
@@ -201,7 +204,7 @@ var Army = {
             numberOfUnits = 8;
         }
 
-        element
+        board.append(element
             .addClass('army')
             .addClass(shortName)
             .attr({
@@ -217,8 +220,8 @@ var Army = {
                 $('<img>')
                     .addClass('unit')
                     .attr('src', army.img)
-            );
-        board.append(element);
+            )
+        );
 
         army.color = shortName;
         var mX = army.x * 2;
@@ -235,6 +238,7 @@ var Army = {
                 .attr('id', army.armyId)
                 .addClass('a')
         );
+
         players[shortName].armies[army.armyId] = army;
     },
     showFirst: function (shortName) {
@@ -567,11 +571,11 @@ function armyFields(a) {
         }
         return;
     }
-    if (typeof fields[a.y] == 'undefined') {
+    if (notSet(fields[a.y])) {
         console.log('Y error');
         return;
     }
-    if (typeof fields[a.y][a.x] == 'undefined') {
+    if (notSet(fields[a.y][a.x])) {
         console.log('X error');
         return;
     }

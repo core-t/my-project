@@ -9,8 +9,8 @@ var AStar = {
         var destX = Math.round(X / 40);
         var destY = Math.round(Y / 40);
 
-//        coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
-        coord.html(terrain[fields[destY][destX]].name);
+        coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
+//        coord.html(terrain[fields[destY][destX]].name);
 
         if (Army.selected) {
             this.myCastleId = {};
