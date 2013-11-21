@@ -68,7 +68,7 @@ class Cli_Model_SplitArmy
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
-            'type' => 'splitArmy',
+            'type' => 'split',
             'parentArmy' => $mArmy->getArmyByArmyId($parentArmyId),
             'childArmy' => $mArmy->getArmyByArmyId($childArmyId),
             'color' => $playersInGameColors[$user->parameters['playerId']]

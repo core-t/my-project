@@ -68,19 +68,19 @@ var Message = {
         this.ok(Websocket.surrender);
         this.cancel();
     },
-    lost: function (color) {
-//        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-        var msg;
-
-        if (color == my.color) {
-            msg = '<br/>GAME OVER<br/><br/>You lose!';
-        } else {
-            msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
-        }
-
-        this.show($('<div>').html(msg));
-        this.ok();
-    },
+//    lost: function (color) {
+////        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
+//        var msg;
+//
+//        if (color == my.color) {
+//            msg = '<br/>GAME OVER<br/><br/>You lose!';
+//        } else {
+//            msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
+//        }
+//
+//        this.show($('<div>').html(msg));
+//        this.ok();
+//    },
     showArtifacts: function () {
         Message.remove();
 
@@ -337,26 +337,26 @@ var Message = {
         this.ok(Websocket.nextTurn);
         this.cancel();
     },
-    win: function (color) {
-        setLock();
-
-        var msg;
-
-        if (color == my.color) {
-            msg = '<br/>GAME OVER<br/><br/>You won!';
-
-        } else {
-            msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
-        }
-
-        this.show($('<div>').html(msg));
-        this.ok(Message.remove);
-    },
+//    win: function (color) {
+//        setLock();
+//
+//        var msg;
+//
+//        if (color == my.color) {
+//            msg = '<br/>GAME OVER<br/><br/>You won!';
+//
+//        } else {
+//            msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
+//        }
+//
+//        this.show($('<div>').html(msg));
+//        this.ok(Message.remove);
+//    },
     simple: function (message) {
         this.show($('<div>').html(message));
         this.ok(Message.remove);
     },
-    disbandArmy: function () {
+    disband: function () {
         if (typeof Army.selected == 'undefined') {
             return;
         }
@@ -373,7 +373,7 @@ var Message = {
         this.ok(Websocket.disband);
         this.cancel();
     },
-    splitArmy: function (a) {
+    split: function (a) {
         if (typeof Army.selected == 'undefined') {
             return;
         }
@@ -644,7 +644,7 @@ var Message = {
             console.log('zonk');
         }
     },
-    razeCastle: function () {
+    raze: function () {
         if (Army.selected == null) {
             return;
         }

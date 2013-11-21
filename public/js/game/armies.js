@@ -28,7 +28,8 @@ var Army = {
             canSwim: 0,
             heroes: obj.heroes,
             soldiers: obj.soldiers,
-            fortified: obj.fortified
+            fortified: obj.fortified,
+            color: shortName
         }
 
         if (army.fortified) {
@@ -204,34 +205,34 @@ var Army = {
             numberOfUnits = 8;
         }
 
-        board.append(element
-            .addClass('army')
-            .addClass(shortName)
-            .attr({
-                id: 'army' + army.armyId,
-                title: army.name
-            })
-            .css({
-                background: 'url(/img/game/flags/' + shortName + '_' + numberOfUnits + '.png) top left no-repeat',
-                left: (army.x * 40) + 'px',
-                top: (army.y * 40) + 'px'
-            })
-            .append(
-                $('<img>')
-                    .addClass('unit')
-                    .attr('src', army.img)
-            )
+        board.append(
+            $('<div>')
+                .append(
+                    element
+                        .addClass('flag')
+                        .css('background', 'url(/img/game/flags/' + shortName + '_' + numberOfUnits + '.png) top left no-repeat')
+                        .append(
+                            $('<img>')
+                                .addClass('unit')
+                                .attr('src', army.img)
+                        )
+                )
+                .addClass('army ' + shortName)
+                .attr({
+                    id: 'army' + army.armyId,
+                    title: army.name
+                })
+                .css({
+                    left: (army.x * 40 - 1) + 'px',
+                    top: (army.y * 40 - 1) + 'px'
+                })
         );
-
-        army.color = shortName;
-        var mX = army.x * 2;
-        var mY = army.y * 2;
 
         zoomPad.append(
             $('<div>')
                 .css({
-                    'left': mX + 'px',
-                    'top': mY + 'px',
+                    'left': army.x * 2 + 'px',
+                    'top': army.y * 2 + 'px',
                     'background': mapPlayersColors[shortName].backgroundColor,
                     'z-index': 10
                 })
@@ -353,10 +354,9 @@ var Army = {
 
         this.unfortify(a.armyId);
 
-        $('#army' + a.armyId).css({
-            'box-shadow': '0 0 10px #fff',
-            'border': '1px solid #fff'
-        });
+        $('#army' + a.armyId)
+            .css('background', 'url(/img/game/units/' + a.color + '/border.gif)');
+
 
         $('#name').html(a.name);
         $('#moves').html(a.moves);
@@ -409,10 +409,8 @@ var Army = {
     halfDeselect: function () {
         if (Army.selected) {
             Army.deselected = Army.selected;
-            $('#army' + Army.selected.armyId).css({
-                'box-shadow': 'none',
-                'border': 'none'
-            });
+            $('#army' + Army.selected.armyId)
+                .css('background', 'none');
             board.css('cursor', 'url(/img/game/cursor.png), default');
         }
         Army.selected = null;
