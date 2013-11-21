@@ -1,6 +1,13 @@
 <h1><?php echo $this->translate('Play') ?></h1>
 <h2><?php echo $this->translate('Create new game') ?>:</h2>
-<?php echo $this->form; ?>
+<div id="new">
+    <div id="form">
+        <?php echo $this->form; ?>
+    </div>
+    <div id="img">
+        <img id="map"/>
+    </div>
+</div>
 
 <h2><?php echo $this->translate('Join one of the games listed below') ?>:</h2>
 <div class="table">

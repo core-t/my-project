@@ -6,10 +6,17 @@ $().ready(function () {
     refresh();
     setInterval('refresh()', 5000);
 
+    changeMap()
+
     $('#mapId').change(function () {
+        changeMap();
         getNumberOfPlayersForm();
     });
 });
+
+function changeMap() {
+    $('#map').attr('src', '/img/maps/' + $('#mapId').children(':selected').attr('value') + '.png');
+}
 
 function refresh() {
     $.getJSON("/' + lang + '/newajax/refresh", function (result) {
@@ -41,7 +48,7 @@ function refresh() {
                 $('#mygames td').css('cursor', 'pointer')
             });
         }
-        if(j==0 ){
+        if (j == 0) {
             $('#info').html(info);
         }
     });
