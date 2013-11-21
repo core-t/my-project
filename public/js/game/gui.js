@@ -136,14 +136,20 @@ var Gui = {
             Army.deselect();
         });
 
-        $('#searchRuins')
-            .click(function () {
-                Websocket.ruin()
-            })
-            .addClass('buttonOff');
+        $('#searchRuins').click(function () {
+            Websocket.ruin()
+        });
+
+        $('#heroResurrection').click(function () {
+
+        });
 
         $('#razeCastle').click(function () {
             Message.raze();
+        });
+
+        $('#buildCastleDefense').click(function () {
+            Message.build();
         });
 
         $('#showCastle').click(function () {

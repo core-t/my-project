@@ -384,6 +384,7 @@ var Army = {
 
         if (Castle.isMyCastle(a.x, a.y)) {
             $('#razeCastle').removeClass('buttonOff');
+            $('#buildCastleDefense').removeClass('buttonOff');
             $('#showCastle').removeClass('buttonOff');
         }
 
@@ -425,6 +426,7 @@ var Army = {
         $('#quitArmy').addClass('buttonOff');
         $('#searchRuins').addClass('buttonOff');
         $('#razeCastle').addClass('buttonOff');
+        $('#buildCastleDefense').addClass('buttonOff');
         $('#showCastle').addClass('buttonOff');
         $('#showArtifacts').addClass('buttonOff');
         $('#disbandArmy').addClass('buttonOff');

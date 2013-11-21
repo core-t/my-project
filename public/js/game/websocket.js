@@ -264,24 +264,22 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    production: function (castleId, name) {
-        var unitId
-
-        if (name == 'stop') {
+    production: function (castleId, unitId, relocationCastleId) {
+        if (unitId == 'stop') {
             unitId = -1;
-        } else {
-            unitId = Unit.getId(name);
         }
 
         if (!unitId) {
-            console.log('Brak unitId!');
+            Sound.play('error');
+            Message.simple('Error');
             return;
         }
 
         var token = {
             type: 'production',
             castleId: castleId,
-            unitId: unitId
+            unitId: unitId,
+            relocationCastleId: relocationCastleId
         };
 
         ws.send(JSON.stringify(token));
@@ -569,9 +567,16 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    defense: function (castleId) {
+    defense: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
+        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
+
+        if (!castleId) {
+            Message.simple('No castle to build defense.');
             return;
         }
 

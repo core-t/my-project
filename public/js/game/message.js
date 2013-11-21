@@ -207,7 +207,7 @@ var Message = {
                 attr = {
                     type: 'radio',
                     name: 'production',
-                    value: units[unitId].name,
+                    value: unitId,
                     checked: 'checked'
                 }
                 time = castles[castleId].currentProductionTurn + '/';
@@ -215,7 +215,7 @@ var Message = {
                 attr = {
                     type: 'radio',
                     name: 'production',
-                    value: units[unitId].name
+                    value: unitId
                 }
                 time = '';
             }
@@ -234,6 +234,7 @@ var Message = {
             }
             td[j] = $('<td>')
                 .addClass('unit')
+                .attr('id', unitId)
                 .append(
                     $('<p>')
                         .append($('<input>').attr(attr))
@@ -266,6 +267,7 @@ var Message = {
                 .append(
                     $('<td>')
                         .addClass('unit')
+                        .attr('id', 'stop')
                         .append(
                             $('<input>').attr({
                                 type: 'radio',
@@ -275,62 +277,77 @@ var Message = {
                         )
                         .append(' Stop production')
                 )
-        );
-        var resurrectionElement;
-        var resurrection = true;
-        for (armyId in players[my.color].armies) {
-            for (j in players[my.color].armies[armyId].heroes) {
-                resurrection = false;
-            }
-        }
-        if (resurrection) {
-            var resurrectionElement = $('<fieldset>')
-                .append($('<label>').html('Hero resurrection'))
                 .append(
-                    $('<div>')
+                    $('<td>')
+                        .addClass('unit')
+                        .attr('id', 'relocation')
                         .append(
                             $('<input>').attr({
                                 type: 'checkbox',
-                                name: 'resurrection',
-                                value: castleId
+                                name: 'relocation',
+                                value: 1
                             })
                         )
-                        .append(' cost 100g')
+                        .append(' Production relocation')
                 )
-        }
-        var buttonBuildDefense;
-        var costBuildDefense = 0;
-        for (i = 1; i <= castles[castleId].defense; i++) {
-            costBuildDefense += i * 100;
-        }
+        );
+//        var resurrectionElement;
+//        var resurrection = true;
+//        for (armyId in players[my.color].armies) {
+//            for (j in players[my.color].armies[armyId].heroes) {
+//                resurrection = false;
+//            }
+//        }
+//        if (resurrection) {
+//            var resurrectionElement = $('<fieldset>')
+//                .append($('<label>').html('Hero resurrection'))
+//                .append(
+//                    $('<div>')
+//                        .append(
+//                            $('<input>').attr({
+//                                type: 'checkbox',
+//                                name: 'resurrection',
+//                                value: castleId
+//                            })
+//                        )
+//                        .append(' cost 100g')
+//                )
+//        }
 
         var div = $('<div>')
             .append($('<h3>').append(castles[castleId].name).append(capital))
             .append($('<h5>').append('Castle defense: ' + castles[castleId].defense))
             .append($('<h5>').append('Income: ' + castles[castleId].income + ' gold/turn'))
-            .append(
-                $('<fieldset>')
-                    .append($('<label>').html('Build castle defense'))
-                    .append(
-                        $('<div>')
-                            .append(
-                                $('<input>').attr({
-                                    type: 'checkbox',
-                                    name: 'defense',
-                                    value: castleId
-                                })
-                            )
-                            .append(' cost ' + costBuildDefense + 'g')
-                    )
-            )
             .append($('<br>'))
-            .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table))
+            .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table).attr('id', castleId))
             .append($('<br>'))
-            .append(resurrectionElement);
+//            .append(resurrectionElement);
 
         Message.show(div.html());
         this.ok(Castle.handle);
         this.cancel();
+
+
+        $('.production .unit').click(function () {
+            if ($(this).attr('id') == 'relocation') {
+                if ($('td#' + $(this).attr('id') + '.unit input').is(':checked')) {
+                    $('td#' + $(this).attr('id') + '.unit input').prop('checked', false);
+                } else {
+                    $('td#' + $(this).attr('id') + '.unit input').prop('checked', true);
+                }
+            } else {
+                $('.production .unit :radio').each(function () {
+                    $(this).prop('checked', false);
+                })
+
+                if ($(this).attr('id') == 'stop') {
+                    $('td#relocation.unit input').prop('checked', false);
+                }
+
+                $('td#' + $(this).attr('id') + '.unit input').prop('checked', true);
+            }
+
+        });
     },
     nextTurn: function () {
         this.show($('<div>').html('Next turn. Are you sure?'));
@@ -652,6 +669,29 @@ var Message = {
         this.ok(Websocket.raze);
         this.cancel();
     },
+    build: function () {
+        if (Army.selected == null) {
+            return;
+        }
+
+        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
+
+        var costBuildDefense = 0;
+        for (i = 1; i <= castles[castleId].defense; i++) {
+            costBuildDefense += i * 100;
+        }
+        var newDefense = castles[castleId].defense + 1;
+
+        var div = $('<div>')
+            .html('Do you want to build castle defense?')
+            .append($('<div>').html('Current defense: ' + castles[castleId].defense))
+            .append($('<div>').html('New defense: ' + newDefense))
+            .append($('<div>').html('Cost: ' + costBuildDefense + 'gold'))
+
+        this.show(div);
+        this.ok(Websocket.defense);
+        this.cancel();
+    },
     statistics: function () {
         var statistics = $('<div>')
             .append($('<h3>').html('Statistics'));
@@ -770,5 +810,8 @@ var Message = {
     },
     end: function () {
         this.simple('GAME OVER');
+    },
+    resurrection: function () {
+
     }
 }

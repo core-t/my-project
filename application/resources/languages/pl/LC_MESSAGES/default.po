@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-19 00:10+0100\n"
-"PO-Revision-Date: 2013-11-19 00:10+0100\n"
+"POT-Creation-Date: 2013-11-21 19:03+0100\n"
+"PO-Revision-Date: 2013-11-21 19:03+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -175,36 +175,35 @@ msgstr "Lista osób, które nie wybrały koloru"
 msgid "Create new game"
 msgstr "Utwórz nową grę"
 
-#: application/views/scripts/new/index.phtml:5
+#: application/views/scripts/new/index.phtml:12
 msgid "Join one of the games listed below"
 msgstr "Dołącz do jednej z gier z listy poniżej"
 
-#: application/views/scripts/new/index.phtml:16
+#: application/views/scripts/new/index.phtml:23
 msgid "Refresh"
 msgstr "Odśwież"
 
-#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/new/index.phtml:27
 msgid "Map name"
 msgstr "Nazwa mapy"
 
-#: application/views/scripts/new/index.phtml:20
-#: application/views/scripts/load/index.phtml:7
+#: application/views/scripts/new/index.phtml:27
 msgid "Game master"
 msgstr "Mistrz gry"
 
-#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/new/index.phtml:27
 msgid "Current number of players"
 msgstr "Aktualna ilość graczy"
 
-#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/new/index.phtml:27
 msgid "Max number of players"
 msgstr "Max ilość graczy"
 
-#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/new/index.phtml:27
 msgid "Date"
 msgstr "Data"
 
-#: application/views/scripts/new/index.phtml:22
+#: application/views/scripts/new/index.phtml:29
 msgid "There are no open games"
 msgstr "Brak otwartych gier"
 
@@ -241,6 +240,7 @@ msgid "Player turn"
 msgstr "Tura gracza"
 
 #: application/views/scripts/load/index.phtml:11
+#: application/layouts/scripts/game.phtml:31
 msgid "Turn nr"
 msgstr "Numer tury"
 
@@ -249,6 +249,7 @@ msgid "Number of Players"
 msgstr "Ilość graczy"
 
 #: application/views/scripts/load/index.phtml:13
+#: application/views/scripts/halloffame/index.phtml:6
 msgid "Player name"
 msgstr "Nazwa gracza"
 
@@ -268,37 +269,41 @@ msgstr "Brak gry do załadowania"
 msgid "Score"
 msgstr "Punkty"
 
-#: application/layouts/scripts/game.phtml:27
+#: application/layouts/scripts/game.phtml:24
 msgid "Terrain"
 msgstr "Teren"
 
-#: application/layouts/scripts/game.phtml:33
+#: application/layouts/scripts/game.phtml:30
 msgid "Color"
 msgstr "Kolor"
 
-#: application/layouts/scripts/game.phtml:35
+#: application/layouts/scripts/game.phtml:32
 msgid "Time spend"
 msgstr "Czas"
 
-#: application/layouts/scripts/game.phtml:44
+#: application/layouts/scripts/game.phtml:41
 msgid "Income"
 msgstr "Przychód"
 
-#: application/layouts/scripts/game.phtml:48
+#: application/layouts/scripts/game.phtml:45
 msgid "Upkeep"
 msgstr "Utrzymanie"
 
-#: application/layouts/scripts/game.phtml:52
+#: application/layouts/scripts/game.phtml:49
 msgid "Treasure"
 msgstr "Skarbiec"
 
-#: application/layouts/scripts/game.phtml:61
+#: application/layouts/scripts/game.phtml:58
 msgid "Exit game"
 msgstr "Opuść grę"
 
-#: application/layouts/scripts/game.phtml:64
+#: application/layouts/scripts/game.phtml:61
 msgid "Show others"
 msgstr "Pokaż innych"
+
+#: application/layouts/scripts/game.phtml:64
+msgid "Sound"
+msgstr "Dźwięk"
 
 #: application/layouts/scripts/game.phtml:67
 msgid "Surrender"
@@ -337,34 +342,42 @@ msgid "Search ruins"
 msgstr "Przeszukaj ruiny"
 
 #: application/layouts/scripts/game.phtml:109
+msgid "Resurrect hero"
+msgstr "Wskrześ herosa"
+
+#: application/layouts/scripts/game.phtml:113
 msgid "Show castle"
 msgstr "Pokaż zamek"
 
-#: application/layouts/scripts/game.phtml:113
+#: application/layouts/scripts/game.phtml:117
+msgid "Build defense"
+msgstr "Podnieś obronę"
+
+#: application/layouts/scripts/game.phtml:121
 msgid "Raze castle"
 msgstr "Zburz zamek"
 
-#: application/layouts/scripts/game.phtml:122
+#: application/layouts/scripts/game.phtml:128
 msgid "Split army"
 msgstr "Podziel amię"
 
-#: application/layouts/scripts/game.phtml:126
+#: application/layouts/scripts/game.phtml:132
 msgid "Army status"
 msgstr "Status armii"
 
-#: application/layouts/scripts/game.phtml:130
+#: application/layouts/scripts/game.phtml:136
 msgid "Fortify army"
 msgstr "Fortyfikuj armię"
 
-#: application/layouts/scripts/game.phtml:134
+#: application/layouts/scripts/game.phtml:140
 msgid "Skip in this turn"
 msgstr "Pomiń w tej turze"
 
-#: application/layouts/scripts/game.phtml:138
+#: application/layouts/scripts/game.phtml:144
 msgid "Find next army"
 msgstr "Znajdź następną"
 
-#: application/layouts/scripts/game.phtml:151
+#: application/layouts/scripts/game.phtml:157
 msgid "Send"
 msgstr "Wyślij"
 

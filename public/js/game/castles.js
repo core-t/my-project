@@ -2,14 +2,11 @@
 
 var Castle = {
     handle: function () {
-        var castleId = $('input[name=defense]').val();
+        var castleId = $('.production').attr('id');
 
-//        if (!castleId) {
-//            return;
-//        }
-
-        if ($('input[name=defense]').is(':checked')) {
-            Websocket.defense(castleId);
+        if (!castleId) {
+            Sound.play('error');
+            Message.simple('Error');
             return;
         }
 
@@ -18,10 +15,29 @@ var Castle = {
             return;
         }
 
-        var name = $('input:radio[name=production]:checked').val();
+        var unitId = $('input:radio[name=production]:checked').val();
 
-        if (name) {
-            Websocket.production(castleId, name);
+        if ($('input[name=relocation]').is(':checked')) {
+            Message.simple('Select castle to which you want to relocate this production');
+            $('.castle.' + my.color)
+                .unbind('click')
+                .click(function () {
+
+                    var relocationCastleId = $(this).attr('id').substring(6);
+
+                    Websocket.production(castleId, unitId, relocationCastleId);
+
+                    $(this)
+                        .unbind('click')
+                        .click(function () {
+                            Message.castle(castleId)
+                        });
+                });
+            return;
+        }
+
+        if (unitId) {
+            Websocket.production(castleId, unitId);
             return;
         }
     },
