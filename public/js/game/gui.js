@@ -58,6 +58,16 @@ var Gui = {
             }
         });
 
+        $('#sound').click(function () {
+            Sound.play('click');
+            Sound.mute = !Sound.mute;
+            if (Sound.mute) {
+                $(this).children().attr('src', '/img/game/sound_off.png')
+            } else {
+                $(this).children().attr('src', '/img/game/sound_on.png')
+            }
+        });
+
         $('#surrender').click(function () {
             Message.surrender()
         });

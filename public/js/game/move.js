@@ -102,12 +102,12 @@ var Move = {
         }
     },
     end: function (r, computer) {
-        Army.init(r.attackerArmy, r.attackerColor);
-
         newX = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
         newY = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 
         searchTower(newX, newY);
+
+        Army.init(r.attackerArmy, r.attackerColor);
 
         if (isDigit(r.ruinId)) {
             Ruin.update(r.ruinId, 1);

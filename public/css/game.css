@@ -141,7 +141,7 @@
     padding: 2px;
     border: none;
     border-radius: 3px;
-    z-index: 2203;
+    z-index: 2200;
     color: white;
     text-shadow: none;
     background: #000;
@@ -238,11 +238,11 @@
 /*font-size: 20px;*/
 /*}*/
 
-#exit {
+#exit.iconButton {
     top: 4px;
 }
 
-#show {
+#show.iconButton {
     top: 41px;
 }
 
@@ -250,12 +250,16 @@
     margin-top: 5px;
 }
 
-#surrender {
+#sound.iconButton {
     top: 78px;
 }
 
-#statistics.iconButton {
+#surrender.iconButton {
     top: 115px;
+}
+
+#statistics.iconButton {
+    top: 152px;
 }
 
 #turn {

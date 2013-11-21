@@ -285,9 +285,9 @@ var Army = {
         var reset = true;
 
         for (armyId in players[my.color].armies) {
-            if (notSet(players[my.color].armies[armyId].armyId)) {
-                continue;
-            }
+//            if (notSet(players[my.color].armies[armyId].armyId)) {
+//                continue;
+//            }
             if (players[my.color].armies[armyId].moves == 0) {
                 continue;
             }
@@ -321,6 +321,9 @@ var Army = {
         Army.isNextSelected = false;
 
         if (reset) {
+            if (!Army.selected) {
+                Sound.play('error');
+            }
             Army.nextArmyId = null;
         }
     },
@@ -496,6 +499,7 @@ function myArmyClick(army, e) {
 
         if (!Army.selected) {
             Army.deselect();
+            Sound.play('slash');
             Army.select(players[my.color].armies[army.armyId], 0);
         }
     }
