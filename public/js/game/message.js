@@ -291,28 +291,28 @@ var Message = {
                         .append(' Production relocation')
                 )
         );
-//        var resurrectionElement;
-//        var resurrection = true;
-//        for (armyId in players[my.color].armies) {
-//            for (j in players[my.color].armies[armyId].heroes) {
-//                resurrection = false;
-//            }
-//        }
-//        if (resurrection) {
-//            var resurrectionElement = $('<fieldset>')
-//                .append($('<label>').html('Hero resurrection'))
-//                .append(
-//                    $('<div>')
-//                        .append(
-//                            $('<input>').attr({
-//                                type: 'checkbox',
-//                                name: 'resurrection',
-//                                value: castleId
-//                            })
-//                        )
-//                        .append(' cost 100g')
-//                )
-//        }
+        var resurrectionElement;
+        var resurrection = true;
+        for (armyId in players[my.color].armies) {
+            for (j in players[my.color].armies[armyId].heroes) {
+                resurrection = false;
+            }
+        }
+        if (resurrection) {
+            var resurrectionElement = $('<fieldset>')
+                .append($('<label>').html('Hero resurrection'))
+                .append(
+                    $('<div>')
+                        .append(
+                            $('<input>').attr({
+                                type: 'checkbox',
+                                name: 'resurrection',
+                                value: castleId
+                            })
+                        )
+                        .append(' cost 100g')
+                )
+        }
 
         if (isSet(castles[castleId].relocatedProduction)) {
             var relocatedProductionElement = $('<table>');
@@ -344,7 +344,8 @@ var Message = {
             .append($('<br>'))
             .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table).attr('id', castleId))
             .append($('<br>'))
-            .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement));
+            .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement))
+            .append(resurrectionElement)
 
         this.show(div.html());
         this.ok(Castle.handle);

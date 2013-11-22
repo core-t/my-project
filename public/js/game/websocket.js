@@ -452,7 +452,7 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    move: function (movesSpend) {
+    move: function (x, y, movesSpend) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
@@ -474,14 +474,7 @@ Websocket = {
             return;
         }
 
-        var x = newX / 40;
-        var y = newY / 40;
-
         Army.halfDeselect();
-
-        if (Army.deselected.x == x && Army.deselected.y == y) {
-            return;
-        }
 
         setLock();
 

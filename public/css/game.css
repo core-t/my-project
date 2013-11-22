@@ -115,7 +115,7 @@
 }
 
 .flag {
-    width: 38px;
+    width: 37px;
     height: 37px;
     border: none;
     margin: 3px 3px 3px 4px;
@@ -128,9 +128,13 @@
     cursor: url('/img/game/lupa.png') 13 13, crosshair;
 }
 
-.unit {
-    margin-top: 10px;
-    margin-left: 12px;
+.army .unit {
+    position: relative;
+    top: 6px;
+    left: 8px;
+    width: 31px;
+    height: 31px;
+    text-align: center;
 }
 
 .path {
@@ -889,7 +893,7 @@ html {
     width: 100px;
     text-align: center;
     color: #000;
-    text-shadow: 2px 2px 0 grey;
+    text-shadow: 1px 1px 1px #fff;
     text-transform: uppercase;
 }
 

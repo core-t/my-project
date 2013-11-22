@@ -86,36 +86,30 @@ var Gui = {
             }
         });
 
-        $('#nextTurn')
-            .click(function () {
+        $('#nextTurn').click(function () {
                 Message.nextTurn();
-            })
-            .addClass('buttonOff');
+            });
 
-        $('#nextArmy')
-            .click(function () {
+        $('#nextArmy').click(function () {
                 Army.findNext();
             })
-            .addClass('buttonOff');
-        $('#skipArmy')
-            .click(function () {
+        ;
+        $('#skipArmy').click(function () {
                 Army.skip();
-            })
-            .addClass('buttonOff');
-        $('#quitArmy')
-            .click(function () {
+            });
+
+        $('#quitArmy').click(function () {
                 Army.fortify();
-            })
-            .addClass('buttonOff');
-        $('#splitArmy')
-            .click(function () {
+            });
+
+        $('#splitArmy').click(function () {
                 if (!Army.selected) {
                     return;
                 }
 
                 Message.split();
-            })
-            .addClass('buttonOff');
+            });
+
         $('#armyStatus').click(function () {
             if (!Army.selected) {
                 return;
@@ -123,11 +117,11 @@ var Gui = {
 
             Message.armyStatus();
         });
-        $('#disbandArmy')
-            .click(function () {
+
+        $('#disbandArmy').click(function () {
                 Message.disband();
-            })
-            .addClass('buttonOff');
+            });
+
         $('#deselectArmy').click(function () {
             if (!Army.selected) {
                 return;
