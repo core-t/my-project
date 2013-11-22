@@ -652,9 +652,9 @@ var Message = {
             });
         }
         if (newBattle) {
-            $('.message').fadeIn(100, function () {
+            setTimeout(function () {
                 Message.kill(newBattle, data, computer);
-            })
+            }, 2500);
         }
     },
     kill: function (b, data, computer) {
@@ -666,17 +666,17 @@ var Message = {
             return;
         }
 
-        Sound.play('error');
-
         if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1500, function () {
+                Sound.play('error');
                 delete b[i];
                 Message.kill(b, data, computer);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
             $('#hero' + b[i].heroId + ' .killed').fadeIn(1500, function () {
+                Sound.play('error');
                 delete b[i];
                 Message.kill(b, data, computer);
             });

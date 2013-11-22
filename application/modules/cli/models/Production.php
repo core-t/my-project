@@ -6,7 +6,11 @@ class Cli_Model_Production
     {
         $castleId = $dataIn['castleId'];
         $unitId = $dataIn['unitId'];
-        $relocationCastleId = $dataIn['relocationCastleId'];
+        if (isset($dataIn['relocationCastleId'])) {
+            $relocationCastleId = $dataIn['relocationCastleId'];
+        } else {
+            $relocationCastleId = null;
+        }
 
         if ($castleId === null) {
             $gameHandler->sendError($user, 'No "castleId"!');

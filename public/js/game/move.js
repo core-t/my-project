@@ -91,9 +91,10 @@ var Move = {
                     Castle.owner(r.castleId, r.attackerColor);
                 }
 
-                setTimeout(function () {
-                    Message.battle(r, computer);
-                }, 2500);
+                Message.battle(r, computer);
+//                setTimeout(function () {
+//                    Message.battle(r, computer);
+//                }, 2500);
             } else {
                 Move.end(r, computer);
             }

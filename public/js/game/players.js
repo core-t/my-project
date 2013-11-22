@@ -33,7 +33,7 @@ var Players = {
             }
 
             for (i in players[color].castles) {
-                updateCastleDefense(i, players[color].castles[i].defenseMod);
+                Castle.updateDefense(i, players[color].castles[i].defenseMod);
                 Castle.owner(i, color);
 
                 if (color == my.color) {

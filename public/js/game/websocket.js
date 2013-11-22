@@ -58,7 +58,7 @@ Websocket = {
                             Army.init(r.armies[i], r.color);
                         }
                         for (i in r.castles) {
-                            updateCastleCurrentProductionTurn(i, r.castles[i].productionTurn);
+                            Castle.updateCurrentProductionTurn(i, r.castles[i].productionTurn);
                         }
                         break;
 
@@ -167,7 +167,7 @@ Websocket = {
                         break;
 
                     case 'defense':
-                        updateCastleDefense(r.castleId, r.defenseMod);
+                        Castle.updateDefense(r.castleId, r.defenseMod);
                         if (r.color == my.color) {
                             Message.remove();
                             goldUpdate(r.gold);

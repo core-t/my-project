@@ -259,6 +259,17 @@ var Castle = {
     },
     onMouse: function (id, type) {
         Castle.changeFields(id.substring(6), type);
+    },
+    updateDefense: function (castleId, defenseMod) {
+        castles[castleId].defense = castles[castleId].defensePoints + defenseMod;
+        if (castles[castleId].defense < 1) {
+            castles[castleId].defense = 1;
+        }
+        $('#castle' + castleId).attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
+        $('#castle' + castleId + ' .shield').html(castles[castleId].defense);
+    },
+    updateCurrentProductionTurn: function (castleId, productionTurn) {
+        castles[castleId].currentProductionTurn = productionTurn;
     }
 }
 
@@ -277,18 +288,6 @@ function myCastlesAddCursor() {
 
 function myCastlesRemoveCursor() {
     $('.castle.' + my.color).css('cursor', 'url(/img/game/cursor.png), default');
-}
-
-function updateCastleCurrentProductionTurn(castleId, productionTurn) {
-    castles[castleId].currentProductionTurn = productionTurn;
-}
-
-function updateCastleDefense(castleId, defenseMod) {
-    castles[castleId].defense = castles[castleId].defensePoints + defenseMod;
-    if (castles[castleId].defense < 1) {
-        castles[castleId].defense = 1;
-    }
-    $('#castle' + castleId).attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
 }
 
 function isEnemyCastle(x, y) {
