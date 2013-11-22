@@ -833,13 +833,13 @@ html {
 /**/
 
 .buttonColors {
-    border: 1px solid lime;
+    border: 1px solid lime !important;
     background: #000 !important;
-    color: lime;
+    color: lime !important;
 }
 
 .buttonColors:hover {
-    color: #000;
+    color: #000 !important;
     background: lime !important;
 }
 
@@ -853,6 +853,7 @@ html {
     border-radius: 5px;
     font-size: 14px;
     line-height: 27px;
+    height: 27px;
 }
 
 .iconButton {
@@ -877,8 +878,8 @@ html {
 }
 
 .buttonOff {
-    border: 1px solid #444;
-    color: #444;
+    border: 1px solid #444 !important;
+    color: #444 !important;
 }
 
 .castle .crown {
@@ -950,5 +951,16 @@ table.statistics td.shortName {
 }
 
 table.statistics th.Players {
+    border: none;
+}
+
+.relocatedProduction table {
+    padding: 2px;
+    width: 100%;
+}
+
+.relocatedProduction td {
+    line-height: 30px;
+    background: #CECEb0;
     border: none;
 }

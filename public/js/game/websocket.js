@@ -155,7 +155,8 @@ Websocket = {
                         break;
 
                     case 'raze':
-                        razeCastle(r.castleId);
+                        $('#razeCastle').addClass('buttonOff');
+                        Castle.raze(r.castleId);
                         if (r.color == my.color) {
                             Sound.play('gold1');
                             Message.remove();
@@ -174,7 +175,7 @@ Websocket = {
                         break;
 
                     case 'production':
-                        updateProduction(r.unitId, r.castleId);
+                        Castle.updateMyProduction(r.unitId, r.castleId, r.relocationCastleId);
                         break;
 
                     case 'surrender':
@@ -183,7 +184,7 @@ Websocket = {
                             Army.delete(i, r.color, 1);
                         }
                         for (i in players[r.color].castles) {
-                            razeCastle(i);
+                            Castle.raze(i);
                         }
                         Websocket.nextTurn();
                         break;

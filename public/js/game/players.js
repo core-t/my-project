@@ -34,7 +34,7 @@ var Players = {
 
             for (i in players[color].castles) {
                 updateCastleDefense(i, players[color].castles[i].defenseMod);
-                castleOwner(i, color);
+                Castle.owner(i, color);
 
                 if (color == my.color) {
                     income += castles[i].income;
@@ -42,7 +42,7 @@ var Players = {
                         firstCastleId = i;
                     }
                     myCastles = true;
-                    setMyCastleProduction(i);
+                    Castle.initMyProduction(i);
                 } else {
                     enemyCastles = true;
                 }

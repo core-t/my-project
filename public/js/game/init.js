@@ -94,7 +94,7 @@ function startGame() {
 
     Sound.play('gamestart');
 
-    showFirstCastle();
+    Castle.showFirst();
 
 //    if (!enemyArmies && !enemyCastles) {
 //        Turn.off();

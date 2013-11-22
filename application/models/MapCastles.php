@@ -4,7 +4,7 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
 {
     protected $_name = 'mapcastles';
     protected $_primary = 'mapCastleId';
-    protected $_sequence = '';
+    protected $_sequence = 'mapcastles_mapCastleId_seq';
     protected $mapId;
 
     public function __construct($mapId, $db = null)

@@ -22,16 +22,8 @@ var Castle = {
             $('.castle.' + my.color)
                 .unbind('click')
                 .click(function () {
-
                     var relocationCastleId = $(this).attr('id').substring(6);
-
                     Websocket.production(castleId, unitId, relocationCastleId);
-
-                    $(this)
-                        .unbind('click')
-                        .click(function () {
-                            Message.castle(castleId)
-                        });
                 });
             return;
         }
@@ -39,6 +31,66 @@ var Castle = {
         if (unitId) {
             Websocket.production(castleId, unitId);
             return;
+        }
+    },
+    updateMyProduction: function (unitId, castleId, relocationCastleId) {
+        if (!my.turn) {
+            return;
+        }
+
+        Message.remove();
+
+        if (unitId === null) {
+            Castle.removeHammer(castleId);
+        } else {
+            Castle.addHammer(castleId);
+        }
+
+        castles[castleId].currentProductionId = unitId;
+        castles[castleId].currentProductionTurn = 0;
+
+        if (relocationCastleId) {
+            $('.castle.' + my.color).each(function () {
+                var castleId = $(this).attr('id').substring(6);
+
+                $(this)
+                    .unbind('click')
+                    .click(function () {
+                        Message.castle(castleId)
+                    });
+
+                if (isSet(castles[relocationCastleId].relocatedProduction[castleId])) {
+                    delete castles[relocationCastleId].relocatedProduction[castleId];
+                }
+            })
+
+            if (notSet(castles[relocationCastleId].relocatedProduction)) {
+                castles[relocationCastleId].relocatedProduction = {};
+            }
+            castles[relocationCastleId].relocatedProduction[castleId] = {
+                'currentProductionId': castles[castleId].currentProductionId,
+                'currentProductionTurn': castles[castleId].currentProductionTurn
+            }
+        }
+    },
+    initMyProduction: function (castleId) {
+        castles[castleId].currentProductionId = players[my.color].castles[castleId].productionId;
+        castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
+
+        var relocationCastleId = players[my.color].castles[castleId].relocationCastleId;
+
+        if (relocationCastleId) {
+            if (notSet(castles[relocationCastleId].relocatedProduction)) {
+                castles[relocationCastleId].relocatedProduction = {};
+            }
+            castles[relocationCastleId].relocatedProduction[castleId] = {
+                'currentProductionId': castles[castleId].currentProductionId,
+                'currentProductionTurn': castles[castleId].currentProductionTurn
+            }
+        }
+
+        if (castles[castleId].currentProductionId) {
+            Castle.addHammer(castleId);
         }
     },
     addCrown: function (castleId) {
@@ -96,13 +148,13 @@ var Castle = {
                     top: (castles[castleId].y * 40) + 'px'
                 })
                 .mouseover(function () {
-                    castleOnMouse(this.id, 'g');
+                    Castle.onMouse(this.id, 'g');
                 })
                 .mousemove(function () {
-                    castleOnMouse(this.id, 'g')
+                    Castle.onMouse(this.id, 'g')
                 })
                 .mouseout(function () {
-                    castleOnMouse(this.id, 'e')
+                    Castle.onMouse(this.id, 'e')
                 })
         );
         Castle.changeFields(castleId, 'e');
@@ -116,12 +168,92 @@ var Castle = {
                 .attr('id', 'c' + castleId)
                 .addClass('c')
         );
+    },
+    owner: function (castleId, color) {
+        var castle = $('#castle' + castleId);
+
+        if (isSet(castles[castleId]) && castles[castleId].razed) {
+            this.raze(castleId)
+            return;
+        }
+
+        if (castles[castleId].color) {
+            castles[castleId].defense -= 1;
+            if (castles[castleId].defense < 1) {
+                castles[castleId].defense = 1;
+            }
+            castle.attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
+        }
+
+        if (color == my.color) {
+            Castle.changeFields(castleId, 'c');
+            castle
+                .css({
+                    'cursor': 'url(/img/game/cursor_castle.png), default'
+                })
+                .unbind('mouseover')
+                .unbind('mousemove')
+                .unbind('mouseout')
+                .unbind('click')
+                .click(function () {
+                    Message.castle(castleId)
+                });
+        } else {
+            Castle.changeFields(castleId, 'e');
+            castle
+                .unbind('mouseover')
+                .unbind('mousemove')
+                .unbind('mouseout')
+                .unbind('click')
+                .mouseover(function () {
+                    Castle.onMouse(this.id, 'g');
+                })
+                .mousemove(function () {
+                    Castle.onMouse(this.id, 'g')
+                })
+                .mouseout(function () {
+                    Castle.onMouse(this.id, 'e');
+                })
+        }
+
+        castle.removeClass()
+            .addClass('castle ' + color)
+            .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
+
+        $('#castle' + castleId + ' .crown').remove();
+        $('#castle' + castleId + ' .hammer').remove();
+
+        if (castles[castleId].capital && capitals[color] == castleId) {
+            Castle.addCrown(castleId);
+        }
+
+
+        castles[castleId].color = color;
+
+        $('#c' + castleId).css('background', mapPlayersColors[color].backgroundColor);
+    },
+    raze: function (castleId) {
+        Castle.changeFields(castleId, 'g')
+        $('#castle' + castleId).remove();
+        $('#c' + castleId).remove();
+        delete castles[castleId];
+    },
+    showFirst: function () {
+        if ($('#castle' + capitals[my.color]).length) {
+            var sp = $('#castle' + capitals[my.color]);
+            zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
+        } else if ($('#castle' + firstCastleId).length) {
+            var sp = $('#castle' + firstCastleId);
+            zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
+        } else {
+            Army.showFirst(my.color);
+        }
+    },
+    onMouse: function (id, type) {
+        Castle.changeFields(id.substring(6), type);
     }
 }
 
-function castleOnMouse(id, type) {
-    Castle.changeFields(id.substring(6), type);
-}
 
 function castlesAddCursorWhenSelectedArmy() {
     $('.castle:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
@@ -137,80 +269,6 @@ function myCastlesAddCursor() {
 
 function myCastlesRemoveCursor() {
     $('.castle.' + my.color).css('cursor', 'url(/img/game/cursor.png), default');
-}
-
-function castleOwner(castleId, color) {
-    var castle = $('#castle' + castleId);
-
-    if (isSet(castles[castleId]) && castles[castleId].razed) {
-        castle.remove();
-        $('#c' + castleId).remove();
-        delete castles[castleId];
-        return;
-    }
-
-    if (castles[castleId].color) {
-        castles[castleId].defense -= 1;
-        if (castles[castleId].defense < 1) {
-            castles[castleId].defense = 1;
-        }
-        castle.attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
-    }
-
-    if (color == my.color) {
-        Castle.changeFields(castleId, 'c');
-        castle
-            .css({
-                'cursor': 'url(/img/game/cursor_castle.png), default'
-            })
-            .unbind('mouseover')
-            .unbind('mousemove')
-            .unbind('mouseout')
-            .unbind('click')
-            .click(function () {
-                Message.castle(castleId)
-            });
-    } else {
-        Castle.changeFields(castleId, 'e');
-        castle
-            .unbind('mouseover')
-            .unbind('mousemove')
-            .unbind('mouseout')
-            .unbind('click')
-            .mouseover(function () {
-                castleOnMouse(this.id, 'g');
-            })
-            .mousemove(function () {
-                castleOnMouse(this.id, 'g')
-            })
-            .mouseout(function () {
-                castleOnMouse(this.id, 'e');
-            })
-    }
-
-    castle.removeClass()
-        .addClass('castle ' + color)
-        .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
-
-    $('#castle' + castleId + ' .crown').remove();
-    $('#castle' + castleId + ' .hammer').remove();
-
-    if (castles[castleId].capital && capitals[color] == castleId) {
-        Castle.addCrown(castleId);
-    }
-
-
-    castles[castleId].color = color;
-
-    $('#c' + castleId).css('background', mapPlayersColors[color].backgroundColor);
-}
-
-function setMyCastleProduction(castleId) {
-    castles[castleId].currentProductionId = players[my.color].castles[castleId].productionId;
-    castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
-    if (castles[castleId].currentProductionId) {
-        Castle.addHammer(castleId);
-    }
 }
 
 function updateCastleCurrentProductionTurn(castleId, productionTurn) {
@@ -250,33 +308,4 @@ function getMyCastleDefenseFromPosition(x, y) {
     return 0;
 }
 
-function showFirstCastle() {
-    if ($('#castle' + capitals[my.color]).length) {
-        var sp = $('#castle' + capitals[my.color]);
-        zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
-    } else if ($('#castle' + firstCastleId).length) {
-        var sp = $('#castle' + firstCastleId);
-        zoomer.lensSetCenter(sp.css('left'), sp.css('top'));
-    } else {
-        Army.showFirst(my.color);
-    }
-}
 
-function razeCastle(castleId) {
-    $('#razeCastle').addClass('buttonOff');
-    Castle.changeFields(castleId, 'g')
-    $('#castle' + castleId).remove();
-    $('#c' + castleId).remove();
-    delete castles[castleId];
-}
-
-function updateProduction(unitId, castleId) {
-    if (unitId === null) {
-        Castle.removeHammer(castleId);
-    } else {
-        Castle.addHammer(castleId);
-    }
-    Message.remove();
-    castles[castleId].currentProductionId = unitId;
-    castles[castleId].currentProductionTurn = 0;
-}

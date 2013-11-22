@@ -185,7 +185,7 @@ var Message = {
             return;
         }
 
-        if (typeof castles[castleId] == 'undefined') {
+        if (notSet(castles[castleId])) {
             return;
         }
 
@@ -314,6 +314,29 @@ var Message = {
 //                )
 //        }
 
+        if (isSet(castles[castleId].relocatedProduction)) {
+            var relocatedProductionElement = $('<table>');
+            for (relocatedCastleId in castles[castleId].relocatedProduction) {
+                relocatedProductionElement.append(
+                    $('<tr>')
+                        .append(
+                            $('<td>').append(
+                                $('<img>').attr('src', Unit.getImage(castles[castleId].relocatedProduction[relocatedCastleId].currentProductionId, my.color))
+                            )
+                        )
+                        .append(
+                            $('<td>')
+                                .html(castles[relocatedCastleId].name)
+                                .addClass('button buttonColors')
+                                .click(function () {
+                                    console.log(relocatedCastleId);
+                                    Message.castle(relocatedCastleId);
+                                })
+                        )
+                )
+            }
+        }
+
         var div = $('<div>')
             .append($('<h3>').append(castles[castleId].name).append(capital))
             .append($('<h5>').append('Castle defense: ' + castles[castleId].defense))
@@ -321,9 +344,9 @@ var Message = {
             .append($('<br>'))
             .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table).attr('id', castleId))
             .append($('<br>'))
-//            .append(resurrectionElement);
+            .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement));
 
-        Message.show(div.html());
+        this.show(div.html());
         this.ok(Castle.handle);
         this.cancel();
 

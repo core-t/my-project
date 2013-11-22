@@ -88,7 +88,7 @@ var Move = {
                 }
 
                 if (isDigit(r.castleId) && isTruthful(r.victory)) {
-                    castleOwner(r.castleId, r.attackerColor);
+                    Castle.owner(r.castleId, r.attackerColor);
                 }
 
                 setTimeout(function () {
