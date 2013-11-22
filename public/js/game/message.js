@@ -167,7 +167,7 @@ var Message = {
     },
     turn: function () {
         this.remove();
-        if (my.turn && Turn.number == 1 && notSet(castles[firstCastleId].currentProduction)) {
+        if (my.turn && Turn.number == 1 && notSet(castles[firstCastleId].currentProductionId)) {
             Message.castle(firstCastleId);
         } else {
             this.show($('<div>').html('Your turn.'));
@@ -203,7 +203,7 @@ var Message = {
         for (unitId in castles[castleId].production) {
             var img = units[unitId].name.replace(' ', '_').toLowerCase();
             var travelBy = '';
-            if (unitId == castles[castleId].currentProduction) {
+            if (unitId == castles[castleId].currentProductionId) {
                 attr = {
                     type: 'radio',
                     name: 'production',

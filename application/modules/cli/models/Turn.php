@@ -136,7 +136,7 @@ class Cli_Model_Turn
                     $unitId = Application_Model_Board::getCastleOptimalProduction($mapCastles[$castleId]['production']);
                 }
                 if ($unitId != $castleProduction['productionId']) {
-                    $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
+                    $mCastlesInGame->setProduction($playerId, $castleId, $unitId);
                     $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
                 }
             } else {
@@ -147,10 +147,18 @@ class Cli_Model_Turn
 
             if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $mapCastles[$castleId]['production'][$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
-                    $armyId = $mArmy->getArmyIdFromPosition($mapCastles[$castleId]['position']);
-                    if (!$armyId) {
-                        $armyId = $mArmy->createArmy($mapCastles[$castleId]['position'], $playerId);
+                    if ($castleProduction['relocationCastleId']) {
+                        $unitCastleId = $castleProduction['relocationCastleId'];
+                    } else {
+                        $unitCastleId = $castleId;
                     }
+
+                    $armyId = $mArmy->getArmyIdFromPosition($mapCastles[$unitCastleId]['position']);
+
+                    if (!$armyId) {
+                        $armyId = $mArmy->createArmy($mapCastles[$unitCastleId]['position'], $playerId);
+                    }
+
                     $mSoldier->add($armyId, $unitId);
                     $mSoldiersCreated->add($unitId, $playerId);
                 }

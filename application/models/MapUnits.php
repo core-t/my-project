@@ -23,11 +23,8 @@ class Application_Model_MapUnits extends Coret_Db_Table_Abstract
             ->from($this->_name, $this->_primary)
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->where('name = ?', $name);
-        try {
-            return $this->_db->fetchOne($select);
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
+
+        return $this->selectOne($select);
     }
 
     public function getUnits()

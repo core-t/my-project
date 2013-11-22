@@ -18,7 +18,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         }
     }
 
-    public function setProduction($castleId, $playerId, $unitId)
+    public function setProduction($playerId, $castleId, $unitId, $relocationCastleId = null)
     {
         $where = array(
             $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
@@ -28,7 +28,8 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
         $data = array(
             'productionId' => $unitId,
-            'productionTurn' => 0
+            'productionTurn' => 0,
+            'relocationCastleId' => $relocationCastleId
         );
 
         return $this->update($data, $where);
@@ -37,7 +38,7 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
     public function getProduction($castleId, $playerId)
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('productionId', 'productionTurn'))
+            ->from($this->_name, array('productionId', 'productionTurn', 'relocationCastleId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"castleId" = ?', $castleId)
             ->where('"playerId" = ?', $playerId);
@@ -86,14 +87,13 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         $playersCastles = array();
 
         $select = $this->_db->select()
-            ->from($this->_name, array('productionId', 'productionTurn', 'defenseMod', 'castleId'))
+            ->from($this->_name, array('productionId', 'productionTurn', 'defenseMod', 'castleId', 'relocationCastleId'))
             ->where('"playerId" = ?', $playerId)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('razed = false');
 
         foreach ($this->selectAll($select) as $val) {
             $playersCastles[$val['castleId']] = $val;
-//            unset($playersCastles[$val['castleId']]['castleId']);
         }
 
         return $playersCastles;

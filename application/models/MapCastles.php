@@ -20,7 +20,7 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
     public function getMapCastles()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
+            ->from($this->_name, array('mapCastleId', 'x', 'y', 'name', 'income', 'capital', 'defense'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
 
         $castles = $this->selectAll($select);

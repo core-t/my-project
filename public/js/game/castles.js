@@ -206,9 +206,9 @@ function castleOwner(castleId, color) {
 }
 
 function setMyCastleProduction(castleId) {
-    castles[castleId].currentProduction = players[my.color].castles[castleId].productionId;
+    castles[castleId].currentProductionId = players[my.color].castles[castleId].productionId;
     castles[castleId].currentProductionTurn = players[my.color].castles[castleId].productionTurn;
-    if (castles[castleId].currentProduction) {
+    if (castles[castleId].currentProductionId) {
         Castle.addHammer(castleId);
     }
 }
@@ -277,6 +277,6 @@ function updateProduction(unitId, castleId) {
         Castle.addHammer(castleId);
     }
     Message.remove();
-    castles[castleId].currentProduction = unitId;
+    castles[castleId].currentProductionId = unitId;
     castles[castleId].currentProductionTurn = 0;
 }

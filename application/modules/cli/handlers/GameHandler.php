@@ -210,46 +210,7 @@ class Cli_GameHandler extends Cli_WofHandler
                 break;
 
             case 'production':
-                $castleId = $dataIn['castleId'];
-                $unitId = $dataIn['unitId'];
-
-                if ($castleId === null) {
-                    $this->sendError($user, 'No "castleId"!');
-                    return;
-                }
-                if (empty($unitId)) {
-                    $this->sendError($user, 'No "unitId"!');
-                    return;
-                }
-
-
-                $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
-                if (!$mCastlesInGame->isPlayerCastle($castleId, $user->parameters['playerId'])) {
-                    $this->sendError($user, 'To nie jest Twój zamek!');
-                    return;
-                }
-
-                if ($unitId != -1) {
-                    $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
-                    $production = $mMapCastlesProduction->getCastleProduction($castleId);
-                    if (!isset($production[$unitId])) {
-                        $this->sendError($user, 'Can\'t produce this unit here!');
-                        return;
-                    }
-                } else {
-                    $unitId = null;
-                }
-
-
-                if ($mCastlesInGame->setProduction($castleId, $user->parameters['playerId'], $unitId)) {
-                    $token = array(
-                        'type' => $dataIn['type'],
-                        'unitId' => $unitId,
-                        'castleId' => $castleId
-                    );
-
-                    $this->sendToChannel($db, $token, $user->parameters['gameId']);
-                }
+                new Cli_Model_Production($dataIn, $user, $db, $this);
                 break;
 
             case 'raze':
