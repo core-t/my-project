@@ -389,7 +389,7 @@
 
 .message .production .unit p {
     clear: both;
-    height: 18px;
+    /*height: 18px;*/
 }
 
 .message label {
@@ -882,9 +882,32 @@ html {
     color: #444 !important;
 }
 
+.castle .name {
+    position: absolute;
+    top: 80px;
+    left: -4px;
+    width: 100px;
+    text-align: center;
+    color: #000;
+    text-shadow: 2px 2px 0 grey;
+    text-transform: uppercase;
+}
+
 .castle .crown {
     position: absolute;
     top: -10px;
+    left: 33px
+}
+
+.castle .shield {
+    position: absolute;
+    top: -10px;
+    left: -4px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    width: 17px;
+    height: 20px;
 }
 
 .castle .hammer {

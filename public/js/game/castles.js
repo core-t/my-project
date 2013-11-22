@@ -51,16 +51,16 @@ var Castle = {
 
         if (relocationCastleId) {
             $('.castle.' + my.color).each(function () {
-                var castleId = $(this).attr('id').substring(6);
+                var thisCastleId = $(this).attr('id').substring(6);
 
                 $(this)
                     .unbind('click')
                     .click(function () {
-                        Message.castle(castleId)
+                        Message.castle(thisCastleId)
                     });
 
-                if (isSet(castles[relocationCastleId].relocatedProduction[castleId])) {
-                    delete castles[relocationCastleId].relocatedProduction[castleId];
+                if (isSet(castles[thisCastleId].relocatedProduction) && isSet(castles[thisCastleId].relocatedProduction[castleId])) {
+                    delete castles[thisCastleId].relocatedProduction[castleId];
                 }
             })
 
@@ -93,8 +93,14 @@ var Castle = {
             Castle.addHammer(castleId);
         }
     },
+    addName: function (castleId) {
+        $('#castle' + castleId).append($('<div>').html(castles[castleId].name).addClass('name'));
+    },
     addCrown: function (castleId) {
         $('#castle' + castleId).append($('<img>').attr('src', '/img/game/crown.png').addClass('crown'));
+    },
+    addShield: function (castleId) {
+        $('#castle' + castleId).append($('<div>').css('background', 'url(/img/game/shield.png)').addClass('shield').html(castles[castleId].defense));
     },
     addHammer: function (castleId) {
         $('#castle' + castleId).append($('<img>').attr('src', '/img/game/hammer.png').addClass('hammer'));
@@ -157,13 +163,16 @@ var Castle = {
                     Castle.onMouse(this.id, 'e')
                 })
         );
+
+        Castle.addShield(castleId);
+        Castle.addName(castleId);
+
         Castle.changeFields(castleId, 'e');
-        mX = castles[castleId].x * 2;
-        mY = castles[castleId].y * 2;
+
         zoomPad.append(
             $('<div>').css({
-                'left': mX + 'px',
-                'top': mY + 'px'
+                'left': castles[castleId].x * 2 + 'px',
+                'top': castles[castleId].y * 2 + 'px'
             })
                 .attr('id', 'c' + castleId)
                 .addClass('c')
@@ -226,7 +235,6 @@ var Castle = {
         if (castles[castleId].capital && capitals[color] == castleId) {
             Castle.addCrown(castleId);
         }
-
 
         castles[castleId].color = color;
 
