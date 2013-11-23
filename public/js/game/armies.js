@@ -183,6 +183,9 @@ var Army = {
 
                     Army.getImg(Army.selected, Army.selected.heroKey, Army.selected.soldierKey);
                     Army.changeImg(Army.selected)
+                    Army.getMovementType(Army.selected);
+                    Army.updateInfo(Army.selected)
+                    $('#name').html('Army');
 
                     $('#army' + Army.selected.armyId).css('background', 'url(/img/game/units/' + Army.selected.color + '/border_army.gif)');
                     $('#army' + Army.selected.armyId + ' .unit').css('background', 'none');
@@ -422,7 +425,7 @@ var Army = {
         $('#name').html(a.name);
         $('#attack').html(a.attack);
         $('#defense').html(a.defense);
-
+        $('#moves').html(a.moves);
     },
     select: function (a, center) {
         castlesAddCursorWhenSelectedArmy();
@@ -437,7 +440,7 @@ var Army = {
             .css('background', 'url(/img/game/units/' + a.color + '/border_army.gif)');
 
         this.updateInfo(a);
-        $('#moves').html(a.moves);
+        $('#name').html('Army');
 
         $('#splitArmy').removeClass('buttonOff');
         $('#unselectArmy').removeClass('buttonOff');
