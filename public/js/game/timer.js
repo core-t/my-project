@@ -5,7 +5,7 @@ var timer = {
         this.setTimeStart();
         $('#timerRows')
             .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.shortName))))
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.color))))
                 .append($('<div class="left nr">').html(Turn.number))
                 .append(
                     $('<div class="left time" id="time">')
@@ -59,7 +59,7 @@ var timer = {
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
         $('#timerRows')
             .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.shortName))))
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.color))))
                 .append($('<div class="left nr">').html(Turn.number))
                 .append(
                     $('<div class="left time" id="time">')

@@ -112,13 +112,22 @@ var Castle = {
         if (Army.selected == null) {
             return;
         }
-        var castleId = this.isMyCastle(Army.selected.x, Army.selected.y);
+        var castleId = this.getMy(Army.selected.x, Army.selected.y);
         if (castleId) {
             Army.deselect();
             Message.castle(castleId);
         }
     },
-    isMyCastle: function (x, y) {
+    get: function (x, y) {
+        for (castleId in castles) {
+            var pos = castles[castleId].position;
+            if ((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
+                return castleId;
+            }
+        }
+        return false;
+    },
+    getMy: function (x, y) {
         for (castleId in castles) {
             if (castles[castleId].color != my.color) {
                 continue;
@@ -129,6 +138,18 @@ var Castle = {
             }
         }
         return false;
+    },
+    getEnemy: function (x, y) {
+        for (castleId in castles) {
+            if (castles[castleId].color == my.color) {
+                continue;
+            }
+            var pos = castles[castleId].position;
+            if ((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
+                return castleId;
+            }
+        }
+        return null;
     },
     changeFields: function (castleId, type) {
         x = castles[castleId].x;
@@ -288,19 +309,6 @@ function myCastlesAddCursor() {
 
 function myCastlesRemoveCursor() {
     $('.castle.' + my.color).css('cursor', 'url(/img/game/cursor.png), default');
-}
-
-function isEnemyCastle(x, y) {
-    for (castleId in castles) {
-        if (castles[castleId].color == my.color) {
-            continue;
-        }
-        var pos = castles[castleId].position;
-        if ((x >= pos.x) && (x < (pos.x + 2)) && (y >= pos.y) && (y < (pos.y + 2))) {
-            return castleId;
-        }
-    }
-    return null;
 }
 
 function getMyCastleDefenseFromPosition(x, y) {

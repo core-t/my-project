@@ -698,7 +698,7 @@ var Message = {
             return;
         }
 
-        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
+        var castleId = Castle.getMy(Army.selected.x, Army.selected.y);
 
         var costBuildDefense = 0;
         for (i = 1; i <= castles[castleId].defense; i++) {

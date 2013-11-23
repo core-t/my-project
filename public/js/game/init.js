@@ -112,7 +112,7 @@ function startGame() {
 
     if (my.turn && !players[my.color].turnActive) {
         Websocket.startMyTurn();
-    } else if (my.game && players[Turn.shortName].computer) {
+    } else if (my.game && players[Turn.color].computer) {
         setTimeout('Websocket.computer()', 1000);
     }
 //    }

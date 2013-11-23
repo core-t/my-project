@@ -2,14 +2,14 @@
 
 var Turn = {
     number: null,
-    shortName: null,
+    color: null,
     init: function () {
         for (i in turnHistory) {
 
         }
 
         this.number = turnHistory[i].number;
-        this.shortName = turnHistory[i].shortName;
+        this.color = turnHistory[i].shortName;
     },
     on: function () {
         makeMyCursorUnlock();
@@ -34,7 +34,7 @@ var Turn = {
             return;
         }
 
-        Turn.shortName = color;
+        Turn.color = color;
 
         if (isSet(nr)) {
             Turn.number = nr;
@@ -44,7 +44,7 @@ var Turn = {
 
         timer.update();
 
-        if (Turn.shortName == my.color) {
+        if (Turn.color == my.color) {
             Turn.on();
             Websocket.startMyTurn();
             return;

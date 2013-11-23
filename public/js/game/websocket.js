@@ -107,7 +107,7 @@ Websocket = {
 
                         Army.parent = players[r.color].armies[r.parentArmy.armyId];
 
-                        if (my.color == Turn.shortName) {
+                        if (my.color == Turn.color) {
                             Army.select(players[r.color].armies[r.childArmy.armyId], 0);
                         } else {
                             zoomer.lensSetCenter(r.parentArmy.x * 40, r.parentArmy.y * 40);
@@ -135,7 +135,7 @@ Websocket = {
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                         Army.init(r.data.army, r.color);
-                        if (my.color == Turn.shortName) {
+                        if (my.color == Turn.color) {
                             goldUpdate(r.data.gold);
                         }
                         break;
@@ -145,7 +145,7 @@ Websocket = {
                         if (loading) {
                             startGame();
                             loading = false;
-                        } else if (my.game && players[Turn.shortName].computer) {
+                        } else if (my.game && players[Turn.color].computer) {
                             setTimeout('Websocket.computer()', 1000);
                         }
                         break;
@@ -339,7 +339,7 @@ Websocket = {
             return
         }
 
-        if (!players[Turn.shortName].computer) {
+        if (!players[Turn.color].computer) {
             return;
         }
 
@@ -547,7 +547,7 @@ Websocket = {
             return;
         }
 
-        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
+        var castleId = Castle.getMy(Army.selected.x, Army.selected.y);
 
         if (!castleId) {
             Message.simple('No castle to destroy.');
@@ -567,7 +567,7 @@ Websocket = {
             return;
         }
 
-        var castleId = Castle.isMyCastle(Army.selected.x, Army.selected.y);
+        var castleId = Castle.getMy(Army.selected.x, Army.selected.y);
 
         if (!castleId) {
             Message.simple('No castle to build defense.');

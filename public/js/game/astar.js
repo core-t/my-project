@@ -9,8 +9,13 @@ var AStar = {
         var destX = Math.round(X / 40);
         var destY = Math.round(Y / 40);
 
-        coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
-//        coord.html(terrain[fields[destY][destX]].name);
+        var castleId = 0;
+        if (castleId = Castle.get(destX, destY)) {
+            coord.html(castles[castleId].name);
+        } else {
+//            coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
+            coord.html(terrain[fields[destY][destX]].name);
+        }
 
         if (Army.selected) {
             this.myCastleId = {};
@@ -29,8 +34,8 @@ var AStar = {
             var start = new node(startX, startY, destX, destY, 0);
             open[startX + '_' + startY] = start;
 
-            var castleId = Castle.isMyCastle(startX, startY);
             if (castleId) {
+                castleId = Castle.getMy(startX, startY);
                 this.myCastleId[castleId] = true;
             }
 
@@ -51,7 +56,7 @@ var AStar = {
 
         for (k in path) {
             if (path[k].tt == 'c') {
-                var castleId = Castle.isMyCastle(path[k].x, path[k].y);
+                var castleId = Castle.getMy(path[k].x, path[k].y);
                 if (this.myCastleId[castleId]) {
                     i++;
                 } else {
