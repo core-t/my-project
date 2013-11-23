@@ -21,7 +21,7 @@ class Cli_Model_DisbandArmy
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
-            'type' => 'disbandArmy',
+            'type' => 'disband',
             'armyId' => $armyId,
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );

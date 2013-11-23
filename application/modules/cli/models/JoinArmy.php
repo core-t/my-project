@@ -23,7 +23,7 @@ class Cli_Model_JoinArmy
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
-            'type' => 'joinArmy',
+            'type' => 'join',
             'army' => $mArmy2->getArmyByArmyId($armiesIds['armyId']),
             'deletedIds' => $armiesIds['deletedIds'],
             'color' => $playersInGameColors[$user->parameters['playerId']]
