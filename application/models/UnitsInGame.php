@@ -84,15 +84,6 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
-    public function getForArmyPosition($armyId)
-    {
-        $select = $this->_db->select()
-            ->from($this->_name, array('movesLeft', 'soldierId', 'unitId'))
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('"armyId" = ?', $armyId);
-        return $this->selectAll($select);
-    }
-
     public function getForWalk($armyId)
     {
         $select = $this->_db->select()
