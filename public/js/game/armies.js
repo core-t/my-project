@@ -99,29 +99,88 @@ var Army = {
             army.img = Unit.getImage(shipId, shortName);
             army.attack = units[shipId].attackPoints;
             army.defense = units[shipId].defensePoints;
-        } else if (heroKey) {
-            if (army.heroes[heroKey].name) {
-                army.name = army.heroes[heroKey].name;
+        } else if (army.heroKey) {
+            if (army.heroes[army.heroKey].name) {
+                army.name = army.heroes[army.heroKey].name;
             } else {
                 army.name = 'Anonymous hero';
             }
 
-            army.img = Hero.getImage(shortName);
-            army.attack = army.heroes[heroKey].attackPoints;
-            army.defense = army.heroes[heroKey].defensePoints;
-        } else if (soldierKey) {
-            if (units[army.soldiers[soldierKey].unitId].name_lang) {
-                army.name = units[army.soldiers[soldierKey].unitId].name_lang;
+            army.img = Hero.getImage(army.shortName);
+            army.attack = army.heroes[army.heroKey].attackPoints;
+            army.defense = army.heroes[army.heroKey].defensePoints;
+        } else if (army.soldierKey) {
+            if (units[army.soldiers[army.soldierKey].unitId].name_lang) {
+                army.name = units[army.soldiers[army.soldierKey].unitId].name_lang;
             } else {
-                army.name = units[army.soldiers[soldierKey].unitId].name;
+                army.name = units[army.soldiers[army.soldierKey].unitId].name;
             }
-            
-            army.img = Unit.getImage(army.soldiers[soldierKey].unitId, shortName);
-            army.attack = units[army.soldiers[soldierKey].unitId].attackPoints;
-            army.defense = units[army.soldiers[soldierKey].unitId].defensePoints;
+
+            army.img = Unit.getImage(army.soldiers[army.soldierKey].unitId, army.shortName);
+            army.attack = units[army.soldiers[army.soldierKey].unitId].attackPoints;
+            army.defense = units[army.soldiers[army.soldierKey].unitId].defensePoints;
         }
 
         return army;
+    },
+    myClick: function (army, e) {
+        if (e.which == 1) {
+            if (lock) {
+                return;
+            }
+
+            if (!my.turn) {
+                return;
+            }
+
+            if (Army.selected) {
+                if (Army.selected.armyId == army.armyId) {
+                    $('#army' + Army.selected.armyId).css('background', 'none');
+                    $('#army' + Army.selected.armyId + ' .unit').css('background', 'url(/img/game/units/' + Army.selected.color + '/border_unit.gif)');
+
+                    var newHeroKey = null;
+                    var newSoldierKey = null;
+
+                    for (heroId in Army.selected.heroes) {
+                        if (Army.selected.skippedHeroes[heroId]) {
+                            continue;
+                        }
+                        Army.selected.skippedHeroes[heroId] = true;
+                        newHeroKey = heroId;
+                        break;
+                    }
+
+                    if (newHeroKey) {
+                        $('#army' + Army.selected.armyId + ' .unit img').attr('src', Hero.getImage(Army.selected.color));
+                        return;
+                    }
+
+                    for (soldierId in Army.selected.soldiers) {
+                        if (Army.selected.skippedSoldiers[soldierId]) {
+                            continue;
+                        }
+                        Army.selected.skippedSoldiers[soldierId] = true;
+                        newSoldierKey = soldierId;
+                        break;
+                    }
+
+                    if (newSoldierKey) {
+                        $('#army' + Army.selected.armyId + ' .unit img').attr('src', Unit.getImage(Army.selected.soldiers[newSoldierKey].unitId, Army.selected.color));
+                        return;
+                    }
+
+                    $('#army' + Army.selected.armyId).css('background', 'url(/img/game/units/' + Army.selected.color + '/border_army.gif)');
+                    $('#army' + Army.selected.armyId + ' .unit').css('background', 'none');
+                } else {
+                    Army.deselect();
+                    Sound.play('slash');
+                    Army.select(players[my.color].armies[army.armyId], 0);
+                }
+            } else {
+                Sound.play('slash');
+                Army.select(players[my.color].armies[army.armyId], 0);
+            }
+        }
     },
     init: function (obj, shortName) {
 
@@ -145,7 +204,12 @@ var Army = {
             soldiers: obj.soldiers,
             fortified: obj.fortified,
             color: shortName,
-            moves: 0
+            shortName: shortName,
+            moves: 0,
+            heroKey: this.getHeroKey(obj.heroes),
+            soldierKey: this.getSoldierKey(obj.soldiers),
+            skippedHeroes: {},
+            skippedSoldiers: {}
         }
 
         if (army.fortified) {
@@ -153,11 +217,6 @@ var Army = {
         } else {
             this.unfortify(army.armyId);
         }
-
-        var numberOfHeroes = army.heroes.length,
-            numberOfSoldiers = army.soldiers.length,
-            heroKey = this.getHeroKey(army.heroes),
-            soldierKey = this.getSoldierKey(army.soldiers)
 
         army = this.getFlySwim(army);
         army = this.getMovementType(army);
@@ -176,7 +235,7 @@ var Army = {
 
         if (shortName == my.color) { // moja armia
             element.click(function (e) {
-                myArmyClick(army, e)
+                Army.myClick(army, e)
             });
             element.mouseover(function () {
                 myArmyMouse(army.armyId)
@@ -197,7 +256,7 @@ var Army = {
             enemyArmyMouse(element);
         }
 
-        var numberOfUnits = numberOfHeroes + numberOfSoldiers;
+        var numberOfUnits = army.heroes.length + army.soldiers.length;
         if (numberOfUnits > 8) {
             numberOfUnits = 8;
         }
@@ -480,32 +539,6 @@ function walking(path) {
         );
     }
     return set;
-}
-
-function myArmyClick(army, e) {
-    if (e.which == 1) {
-        if (lock) {
-            return;
-        }
-
-        if (!my.turn) {
-            return;
-        }
-
-        if (Army.selected) {
-            if (Army.selected.armyId == army.armyId) {
-                $('#army' + army.armyId).css('background', 'none');
-                $('#army' + army.armyId + ' .unit').css('background', 'url(/img/game/units/' + army.color + '/border_unit.gif)');
-            } else {
-                Army.deselect();
-                Sound.play('slash');
-                Army.select(players[my.color].armies[army.armyId], 0);
-            }
-        } else {
-            Sound.play('slash');
-            Army.select(players[my.color].armies[army.armyId], 0);
-        }
-    }
 }
 
 function myArmyMouse(armyId) {

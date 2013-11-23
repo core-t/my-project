@@ -46,7 +46,7 @@ class Cli_Model_HeroResurrection
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
-            'type' => 'heroResurrection',
+            'type' => 'resurrection',
             'data' => array(
                 'army' => $mArmy2->getArmyByArmyId($armyId),
                 'gold' => $gold
