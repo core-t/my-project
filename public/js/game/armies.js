@@ -14,13 +14,13 @@ var Army = {
         }
     },
     getSoldierKey: function (soldiers) {
-        for (soldierId in soldiers) {
-            return soldierId;
+        for (key in soldiers) {
+            return key;
         }
     },
     getFlySwim: function (army) {
-        for (soldierId in army.soldiers) {
-            if (units[army.soldiers[soldierId].unitId].canFly) {
+        for (key in army.soldiers) {
+            if (units[army.soldiers[key].unitId].canFly) {
                 army.canFly++;
                 if (!army.flyBonus) {
                     army.flyBonus = 1;
@@ -29,9 +29,9 @@ var Army = {
                 army.canFly -= 200;
             }
 
-            if (units[army.soldiers[soldierId].unitId].canSwim) {
+            if (units[army.soldiers[key].unitId].canSwim) {
                 army.canSwim++;
-                army.moves = army.soldiers[soldierId].movesLeft;
+                army.moves = army.soldiers[key].movesLeft;
             }
         }
 
@@ -39,47 +39,47 @@ var Army = {
     },
     getMovementType: function (army) {
         if (army.canSwim) {
-            for (soldierId in army.soldiers) {
-                if (army.soldiers[soldierId].unitId != shipId) {
+            for (key in army.soldiers) {
+                if (army.soldiers[key].unitId != shipId) {
                     continue;
                 }
 
                 if (notSet(shipMoves)) {
-                    var shipMoves = army.soldiers[soldierId].movesLeft;
+                    var shipMoves = army.soldiers[key].movesLeft;
                 }
 
-                if (army.soldiers[soldierId].movesLeft < shipMoves) {
-                    shipMoves = army.soldiers[soldierId].movesLeft
+                if (army.soldiers[key].movesLeft < shipMoves) {
+                    shipMoves = army.soldiers[key].movesLeft
                 }
             }
 
             army.moves = shipMoves;
             army.movementType = 'swimming';
         } else if (army.canFly > 0) {
-            for (soldierId in army.soldiers) {
-                if (!units[army.soldiers[soldierId].unitId].canFly) {
+            for (key in army.soldiers) {
+                if (!units[army.soldiers[key].unitId].canFly) {
                     continue;
                 }
 
                 if (notSet(flyMoves)) {
-                    var flyMoves = army.soldiers[soldierId].movesLeft;
+                    var flyMoves = army.soldiers[key].movesLeft;
                 }
 
-                if (army.soldiers[soldierId].movesLeft < flyMoves) {
-                    flyMoves = army.soldiers[soldierId].movesLeft
+                if (army.soldiers[key].movesLeft < flyMoves) {
+                    flyMoves = army.soldiers[key].movesLeft
                 }
             }
 
             army.moves = flyMoves;
             army.movementType = 'flying';
         } else {
-            for (soldierId in army.soldiers) {
+            for (key in army.soldiers) {
                 if (notSet(moves)) {
-                    var moves = army.soldiers[soldierId].movesLeft;
+                    var moves = army.soldiers[key].movesLeft;
                 }
 
-                if (army.soldiers[soldierId].movesLeft < moves) {
-                    moves = army.soldiers[soldierId].movesLeft
+                if (army.soldiers[key].movesLeft < moves) {
+                    moves = army.soldiers[key].movesLeft
                 }
             }
 
@@ -141,36 +141,39 @@ var Army = {
                     var newHeroKey = null;
                     var newSoldierKey = null;
 
-                    for (heroId in Army.selected.heroes) {
-                        if (Army.selected.skippedHeroes[heroId]) {
+                    for (key in Army.selected.heroes) {
+                        if (Army.selected.skippedHeroes[key]) {
                             continue;
                         }
-                        Army.selected.skippedHeroes[heroId] = true;
-                        newHeroKey = heroId;
+                        Army.selected.skippedHeroes[key] = true;
+                        newHeroKey = key;
                         break;
                     }
 
-                    if (newHeroKey) {
+                    if (newHeroKey !== null) {
                         $('#army' + Army.selected.armyId + ' .unit img').attr('src', Hero.getImage(Army.selected.color));
                         return;
                     }
 
-                    for (soldierId in Army.selected.soldiers) {
-                        if (Army.selected.skippedSoldiers[soldierId]) {
+                    for (key in Army.selected.soldiers) {
+                        if (Army.selected.skippedSoldiers[key]) {
                             continue;
                         }
-                        Army.selected.skippedSoldiers[soldierId] = true;
-                        newSoldierKey = soldierId;
+                        Army.selected.skippedSoldiers[key] = true;
+                        newSoldierKey = key;
                         break;
                     }
-
-                    if (newSoldierKey) {
+console.log(newSoldierKey)
+                    if (newSoldierKey !== null) {
                         $('#army' + Army.selected.armyId + ' .unit img').attr('src', Unit.getImage(Army.selected.soldiers[newSoldierKey].unitId, Army.selected.color));
                         return;
                     }
 
                     $('#army' + Army.selected.armyId).css('background', 'url(/img/game/units/' + Army.selected.color + '/border_army.gif)');
                     $('#army' + Army.selected.armyId + ' .unit').css('background', 'none');
+
+                    Army.selected.skippedHeroes = {};
+                    Army.selected.skippedSoldiers = {};
                 } else {
                     Army.deselect();
                     Sound.play('slash');
