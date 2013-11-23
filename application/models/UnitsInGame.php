@@ -100,7 +100,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
             ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId)
-            ->order(array('canFly', 'attackPoints', 'defensePoints', 'numberOfMoves', 'a.unitId'));
+            ->order(array('canFly  DESC', 'attackPoints  DESC', 'defensePoints  DESC', 'numberOfMoves  DESC', 'unitId  DESC'));
 
         return $this->selectAll($select);
     }
