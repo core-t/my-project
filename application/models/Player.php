@@ -116,7 +116,7 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
             ->from($this->_name, 'computer')
             ->where('"playerId" = ?', $playerId);
 
-        $this->selectOne($select);
+        return $this->selectOne($select);
     }
 
 

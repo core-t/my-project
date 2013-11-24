@@ -2,6 +2,8 @@
 
 var AStar = {
     myCastleId: {},
+    x:0,
+    y:0,
     cursorPosition: function (x, y, force) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
@@ -19,14 +21,12 @@ var AStar = {
 
         if (Army.selected) {
             this.myCastleId = {};
-            var tmpX = destX * 40;
-            var tmpY = destY * 40;
-            if (newX == tmpX && newY == tmpY && force != 1) {  //przerobić dla całego pola 40x40
+            if (AStar.x == destX && AStar.y == destY && force != 1) {
                 return null;
             }
             $('.path').remove();
-            newX = tmpX;
-            newY = tmpY;
+            AStar.x = destX;
+            AStar.y = destY;
             var startX = Army.selected.x;
             var startY = Army.selected.y;
             var open = {};
@@ -81,15 +81,15 @@ var AStar = {
         if (notSet(set)) {
             return;
         } else {
-            newX = set.x;
-            newY = set.y;
+            AStar.x = set.x;
+            AStar.y = set.y;
         }
     },
     aStar: function (close, open, destX, destY, nr) {
         nr++;
-        if (nr > 30000) {
+        if (nr > 7000) {
             nr--;
-            console.log('>' + nr);
+//            console.log('>' + nr);
             return;
         }
         var f = this.findSmallestF(open);

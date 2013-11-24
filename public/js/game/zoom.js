@@ -251,8 +251,8 @@ function zoom(gameWidth, gameHeight) {
                             case 1:
                                 if (Army.selected) {
                                     var movesLeft = AStar.cursorPosition(e.pageX, e.pageY, 1);
-                                    var x = newX / 40;
-                                    var y = newY / 40;
+                                    var x = AStar.x / 40;
+                                    var y = AStar.y / 40;
 
                                     if (Army.selected.x == x && Army.selected.y == y) {
                                         return;

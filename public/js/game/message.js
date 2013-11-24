@@ -669,15 +669,19 @@ var Message = {
 
         if (isSet(b[i].soldierId)) {
             $('#unit' + b[i].soldierId).append($('<div>').addClass('killed'));
-            $('#unit' + b[i].soldierId + ' .killed').fadeIn(1500, function () {
+            setTimeout(function () {
                 Sound.play('error');
+            }, 500);
+            $('#unit' + b[i].soldierId + ' .killed').fadeIn(1000, function () {
                 delete b[i];
                 Message.kill(b, data, computer);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
-            $('#hero' + b[i].heroId + ' .killed').fadeIn(1500, function () {
+            setTimeout(function () {
                 Sound.play('error');
+            }, 500);
+            $('#hero' + b[i].heroId + ' .killed').fadeIn(1000, function () {
                 delete b[i];
                 Message.kill(b, data, computer);
             });

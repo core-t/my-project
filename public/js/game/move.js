@@ -103,10 +103,10 @@ var Move = {
         }
     },
     end: function (r, computer) {
-        newX = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
-        newY = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
+        AStar.x = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
+        AStar.y = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 
-        searchTower(newX, newY);
+        searchTower(AStar.x, AStar.y);
 
         Army.init(r.attackerArmy, r.attackerColor);
 

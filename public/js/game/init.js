@@ -9,9 +9,6 @@ Image4.src = '/img/game/cursor.png';
 Image5 = new Image(20, 9);
 Image5.src = '/img/game/cursor_pointer.png';
 
-var newX = 0;
-var newY = 0;
-
 var fields = new Array();
 
 var lock = true;
