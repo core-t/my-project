@@ -11,7 +11,7 @@ class Cli_Model_JoinArmy
         }
 
         $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
-        $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+        $position = $mArmy2->getArmyPositionByArmyId($armyId, $user->parameters['playerId']);
         $armiesIds = $mArmy2->joinArmiesAtPosition($position, $user->parameters['playerId']);
 
         if (empty($armyId)) {

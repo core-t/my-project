@@ -18,7 +18,8 @@ class Cli_Model_SearchRuin
             return;
         }
 
-        $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $armyId, $user->parameters['playerId'], $db);
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+        $position = $mArmy2->getArmyPositionByArmyId($armyId, $user->parameters['playerId']);
         $ruinId = Application_Model_Board::confirmRuinPosition($position);
 
         if (!Zend_Validate::is($ruinId, 'Digits')) {
@@ -47,7 +48,6 @@ class Cli_Model_SearchRuin
             );
         }
 
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(

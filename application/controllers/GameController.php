@@ -108,7 +108,7 @@ class GameController extends Game_Controller_Game
                     $this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'][$k]['artifacts'] = $mInventory->getAll();
                 }
 
-                $this->view->players[$player['color']]['armies'][$army['armyId']]['soldiers'] = $mSoldier->getForWalk($army['armyId']);
+                $this->view->players[$player['color']]['armies'][$army['armyId']]['soldiers'] = $mSoldier->getForMove($army['armyId']);
                 if (empty($this->view->players[$player['color']]['armies'][$army['armyId']]['heroes']) AND empty($this->view->players[$player['color']]['armies'][$army['armyId']]['soldiers'])) {
                     $mArmy->destroyArmy($army['armyId'], $player['playerId']);
                     unset($this->view->players[$player['color']]['armies'][$army['armyId']]);

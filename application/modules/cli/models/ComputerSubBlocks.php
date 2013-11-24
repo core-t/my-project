@@ -302,9 +302,10 @@ class Cli_Model_ComputerSubBlocks
     static public function getMyEmptyCastleInMyRange($gameId, $myCastles, $mArmy, $fields, $db)
     {
         $army = $mArmy->getArmy();
+        $mArmy2 = new Application_Model_Army($gameId, $db);
         foreach ($myCastles as $castle) {
             $position = $castle['position'];
-            if (Cli_Model_Database::areUnitsAtCastlePosition($gameId, $position, $db)) {
+            if ($mArmy2->areUnitsAtCastlePosition($position)) {
                 continue;
             }
             $mHeuristics = new Cli_Model_Heuristics($army['x'], $army['y']);
@@ -451,7 +452,8 @@ class Cli_Model_ComputerSubBlocks
     static public function getMyArmyInRange($gameId, $playerId, $mArmy, $fields, $db)
     {
         $army = $mArmy->getArmy();
-        $myArmies = Cli_Model_Database::getAllPlayerArmiesExeptOne($gameId, $army['armyId'], $playerId, $db);
+        $mArmy2 = new Application_Model_Army($gameId, $db);
+        $myArmies = $mArmy2->getAllPlayerArmiesExceptOne($army['armyId'], $playerId);
         foreach ($myArmies as $a) {
             $mHeuristics = new Cli_Model_Heuristics($a['x'], $a['y']);
             $h = $mHeuristics->calculateH($army['x'], $army['y']);

@@ -42,15 +42,31 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-    public function resetMovesLeft($playerId)
+    public function getForBattle($ids)
     {
+        $select = $this->_db->select()
+            ->from(array('a' => 'hero'), array('attackPoints', 'defensePoints', 'name'))
+            ->join(array('b' => $this->_name), 'a."heroId" = b."heroId"', 'heroId')
+            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
+            ->where($this->_db->quoteIdentifier('armyId') . ' IN (?)', $ids)
+            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
+
+        return $this->selectAll($select);
+
+//        foreach ($result as $k => $row) {
+//            $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
+//            $result[$k]['artefacts'] = $mInventory->getAll();
+//            $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
+//        }
+
+//        return $result;
     }
 
     public function getArmyHeroes($armyId)
     {
         $select = $this->_db->select()
-            ->from(array('a' => 'hero'), array('heroId', 'numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
-            ->join(array('b' => $this->_name), 'a."heroId" = b."heroId"', array('movesLeft'))
+            ->from(array('a' => 'hero'), array('numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
+            ->join(array('b' => $this->_name), 'a."heroId" = b."heroId"', array('heroId', 'movesLeft'))
             ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
             ->where($this->_db->quoteIdentifier('armyId') . ' = ?', $armyId)
             ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
@@ -100,7 +116,7 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-    public function resetHeroesMovesLeft($playerId)
+    public function resetMovesLeftForAll($playerId)
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('movesLeft', 'heroId'))

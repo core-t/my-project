@@ -109,5 +109,16 @@ class Application_Model_Player extends Coret_Db_Table_Abstract
 
         return $paginator;
     }
+
+    public function isComputer($playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, 'computer')
+            ->where('"playerId" = ?', $playerId);
+
+        $this->selectOne($select);
+    }
+
+
 }
 

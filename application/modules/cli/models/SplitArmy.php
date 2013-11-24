@@ -30,7 +30,7 @@ class Cli_Model_SplitArmy
                 }
 
                 if (empty($childArmyId)) {
-                    $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
+                    $position = $mArmy->getArmyPositionByArmyId($parentArmyId, $user->parameters['playerId']);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
 
@@ -52,7 +52,7 @@ class Cli_Model_SplitArmy
                 }
 
                 if (empty($childArmyId)) {
-                    $position = Cli_Model_Database::getArmyPositionByArmyId($user->parameters['gameId'], $parentArmyId, $user->parameters['playerId'], $db);
+                    $position = $mArmy->getArmyPositionByArmyId($parentArmyId, $user->parameters['playerId']);
                     $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
                 }
 

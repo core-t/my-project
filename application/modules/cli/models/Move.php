@@ -109,7 +109,7 @@ class Cli_Model_Move
             if ($defenderId) { // enemy army
                 $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'E');
             } else { // idziemy nie walczymy
-                if (Cli_Model_Database::areMySwimmingUnitsAtPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db)) {
+                if ($mArmy2->areMySwimmingUnitsAtPosition(array('x' => $x, 'y' => $y), $user->parameters['playerId'])) {
                     $fields = Application_Model_Board::changeArmyField($fields, $x, $y, 'b');
                 }
             }
@@ -163,7 +163,7 @@ class Cli_Model_Move
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $defenderId) { // enemy army
             $fight = true;
             $defenderColor = $playersInGameColors[$defenderId];
-            $enemy = Cli_Model_Database::getAllEnemyUnitsFromPosition($user->parameters['gameId'], array('x' => $x, 'y' => $y), $user->parameters['playerId'], $db);
+            $enemy = $mArmy2->getAllEnemyUnitsFromPosition(array('x' => $x, 'y' => $y), $user->parameters['playerId']);
             $enemy['x'] = $x;
             $enemy['y'] = $y;
             $enemy = Cli_Model_Army::setCombatDefenseModifiers($enemy);

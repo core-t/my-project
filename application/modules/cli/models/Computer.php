@@ -13,7 +13,8 @@ class Cli_Model_Computer
 
         $playerId = $mGame->getTurnPlayerId();
 
-        if (!Cli_Model_Database::isComputer($playerId, $db)) {
+        $mPlayer = new Application_Model_Player($db);
+        if (!$mPlayer->isComputer($playerId)) {
             $gameHandler->sendError($user, 'To nie komputer!');
             return;
         }

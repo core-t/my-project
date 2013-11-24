@@ -104,7 +104,7 @@ class Cli_Model_Turn
             $type = 'startTurn';
         }
         $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
-        $mHeroesInGame->resetHeroesMovesLeft($playerId);
+        $mHeroesInGame->resetMovesLeftForAll($playerId);
 
         $income = 0;
         $color = null;

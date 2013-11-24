@@ -111,7 +111,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
             }
 
-            $result['soldiers'] = $mSoldier->getForWalk($armyId);
+            $result['soldiers'] = $mSoldier->getForMove($armyId);
             $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
         }
 
@@ -143,39 +143,12 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
                 $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
             }
-            $result['soldiers'] = $mSoldier->getForWalk($armyId);
+            $result['soldiers'] = $mSoldier->getForMove($armyId);
             $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
 
             return $result;
         }
 
-    }
-
-    static private function getArmyHeroesForBattle($gameId, $ids, $db)
-    {
-        $select = $db->select()
-            ->from(array('a' => 'hero'), array('attackPoints', 'defensePoints', 'name', 'heroId'))
-            ->join(array('b' => 'heroesingame'), 'a."heroId" = b."heroId"', '')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" IN (?)', $ids)
-            ->order('attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC');
-
-        try {
-            $result = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        foreach ($result as $k => $row) {
-            $mInventory = new Application_Model_Inventory($row['heroId'], $gameId, $db);
-            $result[$k]['artefacts'] = $mInventory->getAll();
-//            $result[$k]['artefacts'] = self::getArtefactsByHeroId($gameId, $row['heroId'], $db);
-        }
-
-        return $result;
     }
 
     static public function getAllEnemyUnitsFromCastlePosition($gameId, $position, $db)
@@ -195,6 +168,7 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
             ->where('destroyed = false')
             ->where('x IN (?)', $xs)
             ->where('y IN (?)', $ys);
+
         try {
             $result = $db->query($select)->fetchAll();
         } catch (Exception $e) {
@@ -207,8 +181,9 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
         }
         if ($ids) {
             $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
             return array(
-                'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
+                'heroes' => $mHeroesInGame->getForBattle($ids),
                 'soldiers' => $mSoldier->getForBattle($ids),
                 'ids' => $ids
             );
@@ -218,150 +193,6 @@ Został zaktualizowany więcej niż jeden rekord (' . $updateResult . ').
                 'soldiers' => array(),
                 'ids' => array()
             );
-        }
-    }
-
-    static public function getAllEnemyUnitsFromPosition($gameId, $position, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" != ?', $playerId)
-            ->where('destroyed = false')
-            ->where('x = (?)', $position['x'])
-            ->where('y = (?)', $position['y']);
-
-        try {
-            $result = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-
-            return;
-        }
-
-        $ids = array();
-
-        foreach ($result as $id) {
-            $ids[] = $id['armyId'];
-        }
-
-        if ($ids) {
-            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
-            return array(
-                'heroes' => self::getArmyHeroesForBattle($gameId, $ids, $db),
-                'soldiers' => $mSoldier->getForBattle($ids),
-                'ids' => $ids
-            );
-        } else {
-            return array(
-                'heroes' => null,
-                'soldiers' => null,
-                'ids' => null
-            );
-        }
-    }
-
-    static public function areMySwimmingUnitsAtPosition($gameId, $position, $playerId, $db)
-    {
-        $ids = '';
-        $select = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false')
-            ->where('x = (?)', $position['x'])
-            ->where('y = (?)', $position['y']);
-        try {
-            $result = $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-
-        foreach ($result as $id) {
-            if ($ids) {
-                $ids .= ',';
-            }
-            $ids .= $id['armyId'];
-        }
-
-        if (!$ids) {
-            return;
-        }
-
-        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
-
-        return $mSoldier->getSwimmingFromArmiesIds($ids);
-    }
-
-    static public function getArmyPositionByArmyId($gameId, $armyId, $playerId, $db)
-    {
-        $select = $db->select()
-            ->from('army', array('x', 'y'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false')
-            ->where('"armyId" = ?', $armyId);
-        try {
-            return $db->fetchRow($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function areUnitsAtCastlePosition($gameId, $position, $db)
-    {
-        $xs = array(
-            $position['x'],
-            $position['x'] + 1
-        );
-        $ys = array(
-            $position['y'],
-            $position['y'] + 1
-        );
-        $select = $db->select()
-            ->from('army', 'armyId')
-            ->where('"gameId" = ?', $gameId)
-            ->where('destroyed = false')
-            ->where('x IN (?)', $xs)
-            ->where('y IN (?)', $ys);
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function getAllPlayerArmiesExeptOne($gameId, $armyId, $playerId, $db)
-    {
-
-        $select = $db->select()
-            ->from('army', array('x', 'y'))
-            ->where('"gameId" = ?', $gameId)
-            ->where('"armyId" != ?', $armyId)
-            ->where('"playerId" = ?', $playerId)
-            ->where('destroyed = false');
-        try {
-            return $db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
-        }
-    }
-
-    static public function isComputer($playerId, $db)
-    {
-        $select = $db->select()
-            ->from('player', 'computer')
-            ->where('"playerId" = ?', $playerId);
-        try {
-            return $db->fetchOne($select);
-        } catch (Exception $e) {
-            echo($e);
-            echo($select->__toString());
         }
     }
 

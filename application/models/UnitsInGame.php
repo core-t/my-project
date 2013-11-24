@@ -79,12 +79,12 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
             ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
-            ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'numberOfMoves DESC', 'unitId DESC'));
+            ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'movesLeft DESC', 'numberOfMoves DESC', 'unitId DESC'));
 
         return $this->selectAll($select);
     }
 
-    public function getForWalk($armyId)
+    public function getForMove($armyId)
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('movesLeft', 'soldierId', 'unitId'))
