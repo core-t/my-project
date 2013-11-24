@@ -2,8 +2,8 @@
 
 var AStar = {
     myCastleId: {},
-    x:0,
-    y:0,
+    x: 0,
+    y: 0,
     cursorPosition: function (x, y, force) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
@@ -76,15 +76,68 @@ var AStar = {
 
         var path = this.getPath(close, key);
 
-        var set = walking(path);
+        var className = 'path1';
 
-        if (notSet(set)) {
-            return;
-        } else {
-            AStar.x = set.x;
-            AStar.y = set.y;
+        for (i in path) {
+            var pathX = path[i].x * 40;
+            var pathY = path[i].y * 40;
+
+            if (Army.selected.moves < path[i].G) {
+                if (className == 'path1') {
+                    className = 'path2';
+                }
+//                if (notSet(set)) {
+//                    var set = {'x': pathX, 'y': pathY};
+//                }
+            }
+
+            board.append(
+                $('<div>')
+                    .addClass('path ' + className)
+                    .css({
+                        left: pathX + 'px',
+                        top: pathY + 'px'
+                    })
+                    .html(path[i].G)
+            );
         }
+
+        return path;
+//        var set = this.walking(path);
+//
+//        if (notSet(set)) {
+//            return;
+//        } else {
+//            AStar.x = set.x;
+//            AStar.y = set.y;
+//        }
     },
+//    walking: function (path) {
+//        var className = 'path1';
+//
+//        for (i in path) {
+//            var pX = path[i].x * 40;
+//            var pY = path[i].y * 40;
+//
+//            if (Army.selected.moves < path[i].G) {
+//                className = 'path2';
+//                if (notSet(set)) {
+//                    var set = {'x': pX, 'y': pY};
+//                }
+//            }
+//
+//            board.append(
+//                $('<div>')
+//                    .addClass('path ' + className)
+//                    .css({
+//                        left: pX + 'px',
+//                        top: pY + 'px'
+//                    })
+//                    .html(path[i].G)
+//            );
+//        }
+//        return set;
+//    },
     aStar: function (close, open, destX, destY, nr) {
         nr++;
         if (nr > 7000) {
@@ -105,29 +158,6 @@ var AStar = {
             return;
         }
         this.aStar(close, open, destX, destY, nr);
-    },
-    isNotEmpty: function (obj) {
-        for (key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                return true;
-            }
-        }
-        return false;
-    },
-    findSmallestF: function (open) {
-        var i;
-        var f;
-        for (i in open) {
-            pX = open[i].x * 40;
-            pY = open[i].y * 40;
-            if (notSet(open[f])) {
-                f = i;
-            }
-            if (open[i].F < open[f].F) {
-                f = i;
-            }
-        }
-        return f;
     },
     addOpen: function (x, y, close, open, destX, destY) {
         var startX = x - 1;
@@ -160,7 +190,21 @@ var AStar = {
                     continue;
                 }
 
-                g = terrain[terrainType][Army.selected.movementType];
+                if (terrainType == 'f' || terrainType == 's' || terrainType == 'm') {
+                    g = terrain[terrainType][Army.selected.movementType];
+                    for (key in Army.selected.soldiers) {
+                        var tmpG = units[Army.selected.soldiers[key].unitId][terrainType];
+                        console.log(units[Army.selected.soldiers[key].unitId]);
+                        if (tmpG > g) {
+                            g = tmpG;
+                        }
+                    }
+
+                } else {
+                    g = terrain[terrainType][Army.selected.movementType];
+                }
+
+                g = Army.selected.terrain[terrainType];
 
                 if (g > 6) {
                     continue;
@@ -177,6 +221,29 @@ var AStar = {
                 }
             }
         }
+    },
+    isNotEmpty: function (obj) {
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                return true;
+            }
+        }
+        return false;
+    },
+    findSmallestF: function (open) {
+        var i;
+        var f;
+        for (i in open) {
+            pX = open[i].x * 40;
+            pY = open[i].y * 40;
+            if (notSet(open[f])) {
+                f = i;
+            }
+            if (open[i].F < open[f].F) {
+                f = i;
+            }
+        }
+        return f;
     },
     calculatePath: function (kA, open, close, g, key) {
         if (open[key].G > (g + close[kA].G)) {
