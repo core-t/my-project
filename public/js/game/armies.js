@@ -35,6 +35,8 @@ var Army = {
             }
         }
 
+        army.canFly -= army.heroes.length;
+
         return army;
     },
     getMovementType: function (army) {
@@ -222,7 +224,7 @@ var Army = {
             x: obj.x,
             y: obj.y,
             flyBonus: 0,
-            canFly: 1,
+            canFly: 0,
             canSwim: 0,
             heroes: obj.heroes,
             soldiers: obj.soldiers,
