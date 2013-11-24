@@ -190,20 +190,6 @@ var AStar = {
                     continue;
                 }
 
-//                if (terrainType == 'f' || terrainType == 's' || terrainType == 'm') {
-//                    g = terrain[terrainType][Army.selected.movementType];
-//                    for (key in Army.selected.soldiers) {
-//                        var tmpG = units[Army.selected.soldiers[key].unitId][terrainType];
-//                        console.log(units[Army.selected.soldiers[key].unitId]);
-//                        if (tmpG > g) {
-//                            g = tmpG;
-//                        }
-//                    }
-//
-//                } else {
-//                    g = terrain[terrainType][Army.selected.movementType];
-//                }
-
                 g = Army.selected.terrain[terrainType];
 
                 if (g > 6) {
