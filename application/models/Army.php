@@ -467,7 +467,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function isOtherArmyAtPosition($armyId, $x, $y)
     {
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" != ?', $armyId)
             ->where('destroyed = false')
@@ -493,7 +493,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function playerArmiesExists($playerId)
     {
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('destroyed = false')
             ->where('"playerId" = ?', $playerId);
@@ -507,7 +507,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function getArmyIdFromPosition($position)
     {
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('destroyed = false')
             ->where('x = ?', $position['x'])
@@ -519,7 +519,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function getPlayerIdFromPosition($playerId, $position)
     {
         $select = $this->_db->select()
-            ->from('army', 'playerId')
+            ->from($this->_name, 'playerId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" != ?', $playerId)
             ->where('destroyed = false')
@@ -532,7 +532,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function getAllEnemyUnitsFromPosition($position, $playerId)
     {
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" != ?', $playerId)
             ->where('destroyed = false')
@@ -569,7 +569,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         $ids = '';
 
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId)
             ->where('destroyed = false')
@@ -597,7 +597,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     public function getArmyPositionByArmyId($armyId, $playerId)
     {
         $select = $this->_db->select()
-            ->from('army', array('x', 'y'))
+            ->from($this->_name, array('x', 'y'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId)
             ->where('destroyed = false')
@@ -617,7 +617,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             $position['y'] + 1
         );
         $select = $this->_db->select()
-            ->from('army', 'armyId')
+            ->from($this->_name, 'armyId')
             ->where('"gameId" = ?', $this->_gameId)
             ->where('destroyed = false')
             ->where('x IN (?)', $xs)
@@ -630,7 +630,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
     {
 
         $select = $this->_db->select()
-            ->from('army', array('x', 'y'))
+            ->from($this->_name, array('x', 'y'))
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" != ?', $armyId)
             ->where('"playerId" = ?', $playerId)
@@ -639,4 +639,119 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         return $this->selectAll($select);
     }
 
+    public function getEnemyArmiesFieldsPositions($playerId)
+    {
+        $fields = Zend_Registry::get('fields');
+
+        $select = $this->_db->select()
+            ->from($this->_name, array('x', 'y'))
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" != ?', $playerId)
+            ->where('destroyed = false');
+
+        foreach ($this->selectAll($select) as $row) {
+            $fields[$row['y']][$row['x']] = 'e';
+        }
+
+        return $fields;
+    }
+
+    public function getArmyByArmyIdPlayerId($armyId, $playerId)
+    {
+        $select = $this->_db->select()
+            ->from($this->_name, Cli_Model_Army::armyArray())
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('"playerId" = ?', $playerId)
+            ->where('destroyed = false')
+            ->where('"armyId" = ?', $armyId);
+
+        $result = $this->selectRow($select);
+
+        if (isset($result['armyId'])) {
+            $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
+
+            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
+
+//            foreach ($result['heroes'] as $k => $row) {
+//                $mInventory = new Application_Model_Inventory($row['heroId'], $this->_gameId, $this->_db);
+//                $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
+//            }
+
+            $result['soldiers'] = $mSoldier->getForMove($armyId);
+            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
+        }
+
+        return $result;
+    }
+
+//    public function getArmyByArmyIdPlayerId( $armyId, $playerId)
+//    {
+//        $select = $this->_db->select()
+//            ->from($this->_name, Cli_Model_Army::armyArray())
+//            ->where('"gameId" = ?', $this->_gameId)
+//            ->where('"playerId" = ?', $playerId)
+//            ->where('destroyed = false')
+//            ->where('"armyId" = ?', $armyId);
+//
+//        $result = $this->selectRow($select);
+//
+//        if (isset($result['armyId'])) {
+//            $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+//            $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
+//            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
+////            foreach ($result['heroes'] as $k => $row) {
+////                $mInventory = new Application_Model_Inventory($row['heroId'], $this->_gameId, $this->_db);
+////                $result['heroes'][$k]['artifacts'] = $mInventory->getAll();
+////            }
+//            $result['soldiers'] = $mSoldier->getForMove($armyId);
+//            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
+//
+//            return $result;
+//        }
+//
+//    }
+
+    public function getAllEnemyUnitsFromCastlePosition($position)
+    {
+        $xs = array(
+            $position['x'],
+            $position['x'] + 1
+        );
+
+        $ys = array(
+            $position['y'],
+            $position['y'] + 1
+        );
+
+        $ids = array();
+
+        $select = $this->_db->select()
+            ->from($this->_name, 'armyId')
+            ->where('"gameId" = ?', $this->_gameId)
+            ->where('destroyed = false')
+            ->where('x IN (?)', $xs)
+            ->where('y IN (?)', $ys);
+
+
+        foreach ($this->selectAll($select) as $id) {
+            $ids[] = $id['armyId'];
+        }
+
+        if ($ids) {
+            $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
+            return array(
+                'heroes' => $mHeroesInGame->getForBattle($ids),
+                'soldiers' => $mSoldier->getForBattle($ids),
+                'ids' => $ids
+            );
+        } else {
+            return array(
+                'heroes' => array(),
+                'soldiers' => array(),
+                'ids' => array()
+            );
+        }
+    }
 }

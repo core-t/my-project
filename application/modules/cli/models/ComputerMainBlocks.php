@@ -169,11 +169,13 @@ class Cli_Model_ComputerMainBlocks
             $myCastles[$myCastleId]['position'] = $mapCastles[$myCastleId]['position'];
         }
         $myCastleId = Application_Model_Board::isCastleAtPosition($army['x'], $army['y'], $myCastles);
-        $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($gameId, $playerId, $db);
+
+        $mArmy2 = new Application_Model_Army($gameId, $db);
+
+        $fields = $mArmy2->getEnemyArmiesFieldsPositions($playerId);
         $razed = $mCastlesInGame->getRazedCastles();
         $castlesAndFields = Application_Model_Board::prepareCastlesAndFields($fields, $razed, $myCastles);
 
-        $mArmy2 = new Application_Model_Army($gameId, $db);
         $enemies = $mArmy2->getAllEnemiesArmies($playerId);
 
         if ($myCastleId !== null) {
@@ -317,7 +319,7 @@ class Cli_Model_ComputerMainBlocks
             $attackerArmy['y'] = $position['y'];
             $defenderArmy = $fightEnemy['defenderArmy'];
         } else {
-            $attackerArmy = Cli_Model_Database::getArmyByArmyIdPlayerId($gameId, $armyId, $playerId, $db);
+            $attackerArmy = $mArmy2->getArmyByArmyIdPlayerId($armyId, $playerId);
             $defenderArmy = null;
         }
 

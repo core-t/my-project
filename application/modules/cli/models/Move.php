@@ -20,7 +20,9 @@ class Cli_Model_Move
         $castleId = null;
         $rollbackPath = null;
 
-        $army = Cli_Model_Database::getArmy($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
+        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+
+        $army = $mArmy2->getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId']);
 
         if (empty($army)) {
             $gameHandler->sendError($user, 'Brak armii o podanym ID! Odświerz przeglądarkę.');
@@ -30,14 +32,13 @@ class Cli_Model_Move
             $army = $mArmy->getArmy();
         }
 
-        $fields = Cli_Model_Database::getEnemyArmiesFieldsPositions($user->parameters['gameId'], $user->parameters['playerId'], $db);
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
+        $fields = $mArmy2->getEnemyArmiesFieldsPositions($user->parameters['playerId']);
 
         if ($fields[$army['y']][$army['x']] == 'w') {
             if ($army['canSwim'] || $army['canFly']) {
                 $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
                 if ($otherArmyId) {
-                    $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
+                    $otherArmy = $mArmy2->getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId']);
                     $mOtherArmy = new Cli_Model_Army($otherArmy);
                     if (!$mOtherArmy->canSwim() && !$mOtherArmy->canFly()) {
                         new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
@@ -49,7 +50,7 @@ class Cli_Model_Move
         } elseif ($fields[$army['y']][$army['x']] == 'M') {
             $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
             if ($otherArmyId) {
-                $otherArmy = Cli_Model_Database::getArmy($user->parameters['gameId'], $otherArmyId, $user->parameters['playerId'], $db);
+                $otherArmy = $mArmy2->getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId']);
                 $mOtherArmy = new Cli_Model_Army($otherArmy);
                 if (!$mOtherArmy->canFly()) {
                     new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
@@ -157,7 +158,7 @@ class Cli_Model_Move
             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
                 $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
                 $defenderColor = $playersInGameColors[$defenderId];
-                $enemy = Cli_Model_Database::getAllEnemyUnitsFromCastlePosition($user->parameters['gameId'], $castlesSchema[$castleId]['position'], $db);
+                $enemy = $mArmy2->getAllEnemyUnitsFromCastlePosition($castlesSchema[$castleId]['position']);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $defenderId) { // enemy army
@@ -201,7 +202,7 @@ class Cli_Model_Move
                     }
                 }
                 $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
-                $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $attackerArmyId, $user->parameters['playerId'], $db);
+                $attacker = $mArmy2->getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId']);
                 $victory = true;
 //                foreach ($enemy['ids'] as $id) {
 //                    $defender[]['armyId'] = $id;
@@ -221,7 +222,7 @@ class Cli_Model_Move
             $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
             $armiesIds = $mArmy2->joinArmiesAtPosition($move['currentPosition'], $user->parameters['playerId']);
             $newArmyId = $armiesIds['armyId'];
-            $attacker = Cli_Model_Database::getArmyByArmyIdPlayerId($user->parameters['gameId'], $newArmyId, $user->parameters['playerId'], $db);
+            $attacker = $mArmy2->getArmyByArmyIdPlayerId($newArmyId, $user->parameters['playerId']);
             $deletedIds = $armiesIds['deletedIds'];
         }
 
