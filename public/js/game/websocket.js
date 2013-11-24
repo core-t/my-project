@@ -44,7 +44,7 @@ Websocket = {
                         break;
 
                     case 'startTurn':
-                        Army.quitedArmies = new Array();
+                        Army.quitedArmies = {};
 
                         if (r.color == my.color) {
                             Sound.play('startturn');
@@ -141,7 +141,7 @@ Websocket = {
                         break;
 
                     case 'open':
-                        lock = false;
+                        Gui.lock = false;
                         if (loading) {
                             startGame();
                             loading = false;

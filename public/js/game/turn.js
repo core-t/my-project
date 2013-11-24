@@ -13,7 +13,7 @@ var Turn = {
     },
     on: function () {
         makeMyCursorUnlock();
-        Army.skippedArmies = new Array();
+        Army.skippedArmies = {};
         my.turn = true;
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');

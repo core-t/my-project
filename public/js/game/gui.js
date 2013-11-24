@@ -1,4 +1,5 @@
 var Gui = {
+    lock: true,
     armyBox: {'close': 0},
     chatBox: {'close': 0},
     playerBox: {'close': 0},
@@ -87,28 +88,28 @@ var Gui = {
         });
 
         $('#nextTurn').click(function () {
-                Message.nextTurn();
-            });
+            Message.nextTurn();
+        });
 
         $('#nextArmy').click(function () {
-                Army.findNext();
-            })
+            Army.findNext();
+        })
         ;
         $('#skipArmy').click(function () {
-                Army.skip();
-            });
+            Army.skip();
+        });
 
         $('#quitArmy').click(function () {
-                Army.fortify();
-            });
+            Army.fortify();
+        });
 
         $('#splitArmy').click(function () {
-                if (!Army.selected) {
-                    return;
-                }
+            if (!Army.selected) {
+                return;
+            }
 
-                Message.split();
-            });
+            Message.split();
+        });
 
         $('#armyStatus').click(function () {
             if (!Army.selected) {
@@ -119,8 +120,8 @@ var Gui = {
         });
 
         $('#disbandArmy').click(function () {
-                Message.disband();
-            });
+            Message.disband();
+        });
 
         $('#deselectArmy').click(function () {
             if (!Army.selected) {

@@ -11,8 +11,6 @@ Image5.src = '/img/game/cursor_pointer.png';
 
 var fields = new Array();
 
-var lock = true;
-
 var costs = 0;
 var income = 0;
 

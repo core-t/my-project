@@ -175,7 +175,7 @@ var Message = {
         }
     },
     castle: function (castleId) {
-        if (lock) {
+        if (Gui.lock) {
             return;
         }
         if (!my.turn) {

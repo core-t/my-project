@@ -18,7 +18,7 @@ function incomeUpdate(gold) {
 }
 
 function setLock() {
-    lock = true;
+    Gui.lock = true;
     $('#nextTurn').addClass('buttonOff');
     $('#nextArmy').addClass('buttonOff');
     makeMyCursorLock();
@@ -26,7 +26,7 @@ function setLock() {
 
 function unlock() {
     if (my.turn) {
-        lock = false;
+        Gui.lock = false;
         $('#nextTurn').removeClass('buttonOff');
         $('#nextArmy').removeClass('buttonOff');
         makeMyCursorUnlock();

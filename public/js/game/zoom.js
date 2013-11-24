@@ -246,7 +246,7 @@ function zoom(gameWidth, gameHeight) {
 
             this.node
                 .mousedown(function (e) {
-                    if (!lock) {
+                    if (!Gui.lock) {
                         switch (e.which) {
                             case 1:
                                 if (Army.selected) {
@@ -288,7 +288,7 @@ function zoom(gameWidth, gameHeight) {
                     }
                 })
                 .mousemove(function (e) {
-                    if (!lock) {
+                    if (!Gui.lock) {
                         AStar.cursorPosition(e.pageX, e.pageY);
                     }
                 })
@@ -297,7 +297,7 @@ function zoom(gameWidth, gameHeight) {
                     $obj.node
                         .unbind('mousemove')
                         .mousemove(function (e) {
-                            if (!lock) {
+                            if (!Gui.lock) {
                                 AStar.cursorPosition(e.pageX, e.pageY);
                             }
                         });
@@ -306,7 +306,7 @@ function zoom(gameWidth, gameHeight) {
                     $obj.node
                         .unbind('mousemove')
                         .mousemove(function (e) {
-                            if (!lock) {
+                            if (!Gui.lock) {
                                 AStar.cursorPosition(e.pageX, e.pageY);
                             }
                         });

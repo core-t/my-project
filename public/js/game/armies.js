@@ -4,8 +4,8 @@ var Army = {
     selected: null,
     deselected: null,
     parent: null,
-    skippedArmies: new Array(),
-    quitedArmies: new Array(),
+    skippedArmies: {},
+    quitedArmies: {},
     nextArmyId: null,
     isNextSelected: null,
     getHeroKey: function (heroes) {
@@ -75,6 +75,16 @@ var Army = {
             army.moves = flyMoves;
             army.movementType = 'flying';
         } else {
+            for (key in army.heroes) {
+                if (notSet(moves)) {
+                    var moves = army.heroes[key].movesLeft;
+                }
+
+                if (army.heroes[key].movesLeft < moves) {
+                    moves = army.heroes[key].movesLeft
+                }
+            }
+
             for (key in army.soldiers) {
                 if (notSet(moves)) {
                     var moves = army.soldiers[key].movesLeft;
@@ -133,7 +143,7 @@ var Army = {
     },
     myClick: function (army, e) {
         if (e.which == 1) {
-            if (lock) {
+            if (Gui.lock) {
                 return;
             }
 
@@ -238,7 +248,7 @@ var Army = {
         }
 
         if (army.fortified) {
-            Army.quitedArmies.push(army.armyId);
+            Army.quitedArmies[army.armyId] = 1;
         } else {
             this.unfortify(army.armyId);
         }
@@ -325,9 +335,8 @@ var Army = {
         zoomer.lensSetCenter(30, 30);
     },
     removeFromSkipped: function (armyId) {
-        var index = $.inArray(armyId, Army.skippedArmies);
-        if (index != -1) {
-            Army.skippedArmies.splice(index, 1);
+        if (isTruthful(Army.skippedArmies[armyId])) {
+            delete Army.skippedArmies[armyId];
         }
     },
     skip: function () {
@@ -335,13 +344,13 @@ var Army = {
             return;
         }
 
-        if (lock) {
+        if (Gui.lock) {
             return;
         }
 
         if (Army.selected) {
             Sound.play('skip');
-            Army.skippedArmies.push(Army.selected.armyId);
+            Army.skippedArmies[Army.selected.armyId] = 1;
             Army.deselect();
             this.findNext();
         }
@@ -351,7 +360,7 @@ var Army = {
             return;
         }
 
-        if (lock) {
+        if (Gui.lock) {
             return;
         }
 
@@ -366,10 +375,12 @@ var Army = {
             if (players[my.color].armies[armyId].moves == 0) {
                 continue;
             }
-            if ($.inArray(armyId, Army.skippedArmies) != -1) {
+
+            if (isTruthful(Army.skippedArmies[armyId])) {
                 continue;
             }
-            if ($.inArray(armyId, Army.quitedArmies) != -1) {
+
+            if (isTruthful(Army.quitedArmies[armyId])) {
                 continue;
             }
 
@@ -527,12 +538,12 @@ var Army = {
         if (!my.turn) {
             return;
         }
-        if (lock) {
+        if (Gui.lock) {
             return;
         }
         if (Army.selected) {
             Websocket.fortify(Army.selected.armyId);
-            Army.quitedArmies.push(Army.selected.armyId);
+            Army.quitedArmies[Army.selected.armyId] = 1;
             Army.deselect();
             Army.findNext();
         }
@@ -541,14 +552,12 @@ var Army = {
         if (isComputer(Turn.color)) {
             return;
         }
-        var index = $.inArray(armyId, Army.quitedArmies);
-        if (index != -1) {
+
+        if (isTruthful(Army.quitedArmies[armyId])) {
             Websocket.unfortify(armyId, 0);
-            Army.quitedArmies.splice(index, 1);
+            delete Army.quitedArmies[armyId];
         }
     }
-
-
 
 
 }
@@ -581,7 +590,7 @@ function walking(path) {
 }
 
 function myArmyMouse(armyId) {
-    if (lock) {
+    if (Gui.lock) {
         return;
     }
 
@@ -607,7 +616,7 @@ function armiesAddCursorWhenUnselectedArmy() {
 function enemyArmyMouse(element, x, y) {
     element
         .mouseover(function () {
-            if (lock) {
+            if (Gui.lock) {
                 return;
             }
             if (my.turn && Army.selected) {
@@ -620,7 +629,7 @@ function enemyArmyMouse(element, x, y) {
             }
         })
         .mousemove(function () {
-            if (lock) {
+            if (Gui.lock) {
                 return;
             }
             if (my.turn && Army.selected) {
