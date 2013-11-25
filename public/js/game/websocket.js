@@ -452,22 +452,11 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    move: function (x, y, movesSpend) {
+    move: function (x, y) {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
         }
-
-//    if (Army.selected.moves == 0) {
-//        unselectArmy();
-//        Message.simple('Not enough moves left.');
-//        return;
-//    }
-//
-////    if (movesSpend === null) {
-////        unselectArmy();
-////        return;
-////    }
 
         if (!my.turn) {
             Message.simple('It is not your turn.');

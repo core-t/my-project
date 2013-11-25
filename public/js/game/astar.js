@@ -4,34 +4,39 @@ var AStar = {
     myCastleId: {},
     x: 0,
     y: 0,
-    cursorPosition: function (x, y, force) {
+    getDestinationXY: function (x, y) {
         var offset = $('.zoomWindow').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
-        var destX = Math.round(X / 40);
-        var destY = Math.round(Y / 40);
-
+        return {
+            x: Math.round(X / 40),
+            y: Math.round(Y / 40)
+        }
+    },
+    cursorPosition: function (x, y, force) {
+        var destination = this.getDestinationXY(x, y);
         var castleId = 0;
-        if (castleId = Castle.get(destX, destY)) {
+
+        if (castleId = Castle.get(destination.x, destination.y)) {
             coord.html(castles[castleId].name);
         } else {
-//            coord.html(destX + ' - ' + destY + ' ' + terrain[fields[destY][destX]].name);
-            coord.html(terrain[fields[destY][destX]].name);
+//            coord.html(destination.x + ' - ' + destination.y + ' ' + terrain[fields[destination.y][destination.x]].name);
+            coord.html(terrain[fields[destination.y][destination.x]].name);
         }
 
         if (Army.selected) {
             this.myCastleId = {};
-            if (AStar.x == destX && AStar.y == destY && force != 1) {
+            if (AStar.x == destination.x && AStar.y == destination.y && force != 1) {
                 return null;
             }
             $('.path').remove();
-            AStar.x = destX;
-            AStar.y = destY;
+            AStar.x = destination.x;
+            AStar.y = destination.y;
             var startX = Army.selected.x;
             var startY = Army.selected.y;
             var open = {};
             var close = {};
-            var start = new node(startX, startY, destX, destY, 0);
+            var start = new node(startX, startY, destination.x, destination.y, 0);
             open[startX + '_' + startY] = start;
 
             if (castleId) {
@@ -39,9 +44,9 @@ var AStar = {
                 this.myCastleId[castleId] = true;
             }
 
-            this.aStar(close, open, destX, destY, 1);
+            this.aStar(close, open, destination.x, destination.y, 1);
 
-            return this.showPath(close, destX + '_' + destY);
+            return this.showPath(close, destination.x + '_' + destination.y);
         }
         return null;
     },

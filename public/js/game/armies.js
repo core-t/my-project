@@ -113,12 +113,6 @@ var Army = {
                     f = units[army.soldiers[key].unitId].s;
                 }
 
-                army.terrain[f] = f;
-                army.terrain[m] = m;
-                army.terrain[s] = s;
-
-//        || terrainType == 's' || terrainType == 'm') {
-
                 if (notSet(moves)) {
                     var moves = army.soldiers[key].movesLeft;
                 }
@@ -127,6 +121,11 @@ var Army = {
                     moves = army.soldiers[key].movesLeft
                 }
             }
+
+            army.terrain[f] = f;
+            army.terrain[m] = m;
+            army.terrain[s] = s;
+
             army.moves = moves;
         }
         return army;
@@ -184,6 +183,10 @@ var Army = {
 
             if (Army.selected) {
                 if (Army.selected.armyId == army.armyId) {
+                    if (Army.selected.heroes.length + Army.selected.soldiers.length == 1) {
+                        return;
+                    }
+
                     $('#army' + Army.selected.armyId).css('background', 'none');
                     $('#army' + Army.selected.armyId + ' .unit').css('background', 'url(/img/game/units/' + Army.selected.color + '/border_unit.gif)');
 

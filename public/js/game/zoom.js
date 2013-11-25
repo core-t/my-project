@@ -251,16 +251,14 @@ function zoom(gameWidth, gameHeight) {
                             case 1:
                                 if (Army.selected) {
                                     var path = AStar.cursorPosition(e.pageX, e.pageY, 1);
-                                    var x = AStar.x / 40;
-                                    var y = AStar.y / 40;
 
-                                    if (Army.selected.x == x && Army.selected.y == y) {
+                                    if (Army.selected.x == AStar.x && Army.selected.y == AStar.y) {
                                         return;
                                     }
 
-//                                    Websocket.move(x, y, movesLeft);
-                                    console.log()
+                                    Websocket.move(x, y);
                                 } else {
+                                    // grabbing the map
                                     var pageX = e.pageX;
                                     var pageY = e.pageY;
 
@@ -280,6 +278,12 @@ function zoom(gameWidth, gameHeight) {
                                 break;
                             case 3:
                                 if (Army.selected) {
+                                    var destination = AStar.getDestinationXY(e.pageX, e.pageY);
+
+                                    if (Army.selected.x == destination.x && Army.selected.y == destination.y) {
+                                        return;
+                                    }
+
                                     Army.deselect();
                                 }
                                 break;
