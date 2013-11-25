@@ -34,8 +34,8 @@ class Cli_Model_Move
             $attackerArmyId = $mSplitArmy->split($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $gameHandler);
         }
 
-        $gameHandler->sendError($user, 'x=' . $x . ' y=' . $y);
-        return;
+//        $gameHandler->sendError($user, 'x=' . $x . ' y=' . $y);
+//        return;
 
         $defenderColor = null;
         $defender = null;
