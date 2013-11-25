@@ -193,6 +193,9 @@ var Army = {
                     var newHeroKey = null;
                     var newSoldierKey = null;
 
+                    Army.selected.heroSplitKey = null
+                    Army.selected.soldierSplitKey = null
+
                     for (key in Army.selected.heroes) {
                         if (Army.selected.skippedHeroes[key]) {
                             continue;
@@ -237,9 +240,6 @@ var Army = {
 
                     $('#army' + Army.selected.armyId).css('background', 'url(/img/game/units/' + Army.selected.color + '/border_army.gif)');
                     $('#army' + Army.selected.armyId + ' .unit').css('background', 'none');
-
-                    Army.selected.heroSplitKey = null
-                    Army.selected.soldierSplitKey = null
 
                     Army.selected.skippedHeroes = {};
                     Army.selected.skippedSoldiers = {};

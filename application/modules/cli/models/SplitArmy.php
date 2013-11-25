@@ -3,7 +3,7 @@
 class Cli_Model_SplitArmy
 {
 
-    function __construct($parentArmyId, $s, $h, $user, $db, $gameHandler)
+    function split($parentArmyId, $s, $h, $user, $db, $gameHandler)
     {
         if (empty($parentArmyId) || (empty($h) && empty($s))) {
             $gameHandler->sendError($user, 'Brak "armyId", "s" lub "h"!');
@@ -75,6 +75,8 @@ class Cli_Model_SplitArmy
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
+
+        return $childArmyId;
     }
 
 }

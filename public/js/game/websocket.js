@@ -463,6 +463,18 @@ Websocket = {
             return;
         }
 
+        var h = '';
+        var s = '';
+
+        if (Army.selected.soldierSplitKey !== null) {
+//            console.log(Army.selected.soldiers[Army.selected.soldierSplitKey])
+            s = Army.selected.soldiers[Army.selected.soldierSplitKey].soldierId
+        }
+        if (Army.selected.heroSplitKey !== null) {
+//            console.log(Army.selected.heroes[Army.selected.heroSplitKey])
+            h = Army.selected.heroes[Army.selected.heroSplitKey].heroId
+        }
+
         Army.halfDeselect();
 
         setLock();
@@ -471,8 +483,11 @@ Websocket = {
             type: 'move',
             x: x,
             y: y,
-            armyId: Army.deselected.armyId
+            armyId: Army.deselected.armyId,
+            s: s,
+            h: h
         };
+
 
         ws.send(JSON.stringify(token));
     },
@@ -483,6 +498,7 @@ Websocket = {
         }
 
         if (!my.turn) {
+            Message.simple('It is not your turn.');
             return;
         }
         var h = '';

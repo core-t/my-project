@@ -150,26 +150,12 @@ class Cli_GameHandler extends Cli_WofHandler
 
         switch ($dataIn['type']) {
             case 'move':
-                if (!isset($dataIn['armyId'])) {
-                    $this->sendError($user, 'No "armyId"!');
-                    return;
-                }
-
-                if (!isset($dataIn['x'])) {
-                    $this->sendError($user, 'No "x"!');
-                    return;
-                }
-
-                if (!isset($dataIn['y'])) {
-                    $this->sendError($user, 'No "y"!');
-                    return;
-                }
-
-                new Cli_Model_Move($dataIn['armyId'], $dataIn['x'], $dataIn['y'], $user, $db, $this);
+                new Cli_Model_Move($dataIn, $user, $db, $this);
                 break;
 
             case 'split':
-                new Cli_Model_SplitArmy($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $this);
+                $mSplitArmy = new Cli_Model_SplitArmy();
+                $mSplitArmy->split($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $this);
                 break;
 
             case 'join':

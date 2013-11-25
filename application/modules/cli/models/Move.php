@@ -3,11 +3,35 @@
 class Cli_Model_Move
 {
 
-    public function __construct($attackerArmyId, $x, $y, $user, $db, $gameHandler)
+    public function __construct($dataIn, $user, $db, $gameHandler)
     {
-        if (!Zend_Validate::is($attackerArmyId, 'Digits') || !Zend_Validate::is($x, 'Digits') || !Zend_Validate::is($y, 'Digits')) {
-            $gameHandler->sendError($user, 'Niepoprawny format danych ("armyId", "x", "y")!');
+        if (!isset($dataIn['armyId'])) {
+            $gameHandler->sendError($user, 'No "armyId"!');
             return;
+        }
+
+        if (!isset($dataIn['x'])) {
+            $gameHandler->sendError($user, 'No "x"!');
+            return;
+        }
+
+        if (!isset($dataIn['y'])) {
+            $gameHandler->sendError($user, 'No "y"!');
+            return;
+        }
+
+        $attackerArmyId = $dataIn['armyId'];
+        $x = $dataIn['x'];
+        $y = $dataIn['y'];
+
+        if (!Zend_Validate::is($attackerArmyId, 'Digits') || !Zend_Validate::is($x, 'Digits') || !Zend_Validate::is($y, 'Digits')) {
+            $gameHandler->sendError($user, 'Niepoprawny format danych!');
+            return;
+        }
+
+        if (Zend_Validate::is($dataIn['s'], 'Digits') || Zend_Validate::is($dataIn['h'], 'Digits')) {
+            $mSplitArmy = new Cli_Model_SplitArmy();
+            $attackerArmyId = $mSplitArmy->split($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $gameHandler);
         }
 
         $defenderColor = null;
