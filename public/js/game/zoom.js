@@ -256,7 +256,7 @@ function zoom(gameWidth, gameHeight) {
                                         return;
                                     }
 
-                                    Websocket.move(x, y);
+                                    Websocket.move(AStar.x, AStar.y);
                                 } else {
                                     // grabbing the map
                                     var pageX = e.pageX;
