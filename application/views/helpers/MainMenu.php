@@ -25,6 +25,9 @@ class zend_View_Helper_MainMenu extends Zend_View_Helper_Abstract
         <li>
             <a href="/' . $lang . '/profile" class="button">' . $this->view->translate('Profile') . '</a>
         </li>
+        <li>
+            <a href="/' . $lang . '/help" class="button">' . $this->view->translate('Help') . '</a>
+        </li>
         <!--<li>
             <a href="/' . $lang . '/stats" class="button">' . $this->view->translate('Stats') . '</a>
         </li>

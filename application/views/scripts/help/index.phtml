@@ -1,0 +1,21 @@
+<h1><?php echo $this->translate('Help') ?></h1>
+<h2><?php echo $this->translate('') ?></h2>
+<div class="table">
+    <table>
+        <?php if (count($this->list)): ?>
+            <?php foreach ($this->list as $row): ?>
+                <tr class="trlink">
+                    <td><?php echo $row['name'] ?></td>
+                    <td><?php echo $row['score'] ?></td>
+                </tr>
+            <?php endforeach ?>
+        <?php endif ?>
+    </table>
+</div>
+<br/>
+<div id="pagination"></div>
+<ul>
+    <li>
+        <a href="/" class="button">&laquo; <?php echo $this->translate('Back') ?></a>
+    </li>
+</ul>
