@@ -32,21 +32,22 @@ class Application_Model_MapUnits extends Coret_Db_Table_Abstract
         $units = array(null);
 
         $select = $this->_db->select()
-            ->from($this->_name, array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'cost', 'modMovesForest', 'modMovesHills', 'modMovesSwamp', 'numberOfMoves', $this->_primary))
+            ->from(array('a' => $this->_name), 'null')
+            ->join(array('b' => 'unit'), 'a."unitId"=b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'cost', 'modMovesForest', 'modMovesHills', 'modMovesSwamp', 'numberOfMoves', 'unitId'))
+            ->join(array('c' => 'unit_Lang'), 'b.' . $this->_db->quoteIdentifier('unitId') . ' = c.' . $this->_db->quoteIdentifier('unitId'), 'name')
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->where('id_lang = ?', Zend_Registry::get('config')->id_lang)
-            ->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), 'name')
-            ->order($this->_name . '.' . $this->_primary);
+            ->order('a.' . $this->_db->quoteIdentifier('unitId'));
 
         foreach ($this->selectAll($select) as $unit) {
             $select = $this->_db->select()
-                ->from($this->_name . '_Lang', 'name')
+                ->from('unit_Lang', 'name')
                 ->where('id_lang = ?', Zend_Registry::get('id_lang'))
-                ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $unit[$this->_primary]);
+                ->where($this->_db->quoteIdentifier('unitId') . ' = ?', $unit['unitId']);
 
             $unit['name_lang'] = $this->selectOne($select);
 
-            $units[$unit[$this->_primary]] = $unit;
+            $units[$unit['unitId']] = $unit;
         }
 
         return $units;

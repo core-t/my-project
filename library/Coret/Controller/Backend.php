@@ -71,6 +71,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         $model = new $className($this->params);
 
         $className = 'Admin_Form_' . ucfirst($this->view->controllerName);
+
         if (class_exists($className)) {
             $this->view->form = new $className();
         } else {
@@ -124,6 +125,7 @@ abstract class Coret_Controller_Backend extends Zend_Controller_Action
         }
 
         $className = 'Admin_Form_' . ucfirst($this->view->controllerName);
+
         if (class_exists($className)) {
             $this->view->form = new $className();
         }
