@@ -5,7 +5,7 @@ class Admin_Form_Mapcastles extends Zend_Form
 
     public function init()
     {
-        $mMap = new Application_Model_Map();
+        $mMap = new Admin_Model_Map();
         $maps = $mMap->getAllMapsList();
 
         $this->addElement('select', 'mapId',
@@ -20,7 +20,7 @@ class Admin_Form_Mapcastles extends Zend_Form
             )
         );
 
-        $mCastle = new Application_Model_Castle();
+        $mCastle = new Admin_Model_Castle();
         $castles = $mCastle->getCastles();
 
         $this->addElement('select', 'castleId',

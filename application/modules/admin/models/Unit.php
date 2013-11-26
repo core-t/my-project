@@ -22,5 +22,22 @@ class Admin_Model_Unit extends Coret_Model_ParentDb
         'name' => array('label' => 'Nazwa', 'type' => 'varchar')
     );
 
+    public function getUnits()
+    {
+        $units = array(null);
+
+        $select = $this->_db->select()
+            ->from($this->_name, $this->_primary, null)
+            ->where('id_lang = ?', Zend_Registry::get('config')->id_lang)
+            ->join($this->_name . '_Lang', $this->_name . ' . ' . $this->_db->quoteIdentifier($this->_primary) . ' = ' . $this->_db->quoteIdentifier($this->_name . '_Lang') . ' . ' . $this->_db->quoteIdentifier($this->_primary), 'name')
+            ->order(array('attackPoints', 'defensePoints', 'numberOfMoves')
+            );
+
+        foreach ($this->selectAll($select) as $unit) {
+            $units[$unit[$this->_primary]] = $unit['name'];
+        }
+
+        return $units;
+    }
 }
 

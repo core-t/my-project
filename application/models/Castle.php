@@ -15,19 +15,5 @@ class Application_Model_Castle extends Coret_Db_Table_Abstract
         }
     }
 
-    public function getCastles()
-    {
-        $select = $this->_db->select()
-            ->from($this->_name, array('castleId', 'name'));
-
-        $castles = array();
-
-        foreach ($this->selectAll($select) as $row) {
-            $castles[$row['castleId']] = $row['name'];
-        }
-
-        return $castles;
-    }
-
 }
 

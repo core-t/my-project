@@ -5,7 +5,7 @@ class Admin_Form_Castleproduction extends Zend_Form
 
     public function init()
     {
-        $mCastle = new Application_Model_Castle();
+        $mCastle = new Admin_Model_Castle();
         $castles = $mCastle->getCastles();
 
         $this->addElement('select', 'castleId',
@@ -20,7 +20,7 @@ class Admin_Form_Castleproduction extends Zend_Form
             )
         );
 
-        $mUnit = new Application_Model_Unit();
+        $mUnit = new Admin_Model_Unit();
         $units = $mUnit->getUnits();
 
         $this->addElement('select', 'unitId',

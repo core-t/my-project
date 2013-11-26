@@ -20,7 +20,7 @@ class Admin_Form_Mapunits extends Zend_Form
             )
         );
 
-        $mUnit = new Application_Model_Unit();
+        $mUnit = new Admin_Model_Unit();
         $units = $mUnit->getUnits();
 
         $this->addElement('select', 'unitId',
