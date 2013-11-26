@@ -4,13 +4,31 @@
     <?php if (count($this->list)): ?>
         <?php foreach ($this->list as $row): ?>
             <div style="border: 1px solid #c0c0c0;padding: 10px">
-                <img src="/img/game/units/white/<?php echo str_replace(' ', '_', strtolower($row['name'])) ?>.png"/>
+                <img style="margin: 10px;padding: 10px;border: 2px solid #c0c0c0"
+                     src="/img/game/units/white/<?php echo str_replace(' ', '_', strtolower($row['name'])) ?>.png"/>
 
-                <h3 style="display: inline"><?php echo $row['name'] ?></h3>
+                <h3 style="display: inline;vertical-align: top"><?php echo $row['name'] ?></h3>
 
                 <div><?php echo $this->translate('Attack') ?>: <?php echo $row['attackPoints'] ?></div>
                 <div><?php echo $this->translate('Defense') ?>: <?php echo $row['defensePoints'] ?></div>
                 <div><?php echo $this->translate('Moves') ?>: <?php echo $row['numberOfMoves'] ?></div>
+                <br/>
+
+                <div><?php echo $this->translate('Can fly') ?>:
+                    <?php if ($row['canFly']): $this->translate('Yes') ?>
+                        <?php echo $this->translate('Yes') ?>
+                    <?php else: ?>
+                        <?php echo $this->translate('No') ?>
+                    <?php endif ?>
+                </div>
+                <div>
+                    <?php echo $this->translate('Can swim') ?>:
+                    <?php if ($row['canSwim']): $this->translate('Yes') ?>
+                        <?php echo $this->translate('Yes') ?>
+                    <?php else: ?>
+                        <?php echo $this->translate('No') ?>
+                    <?php endif ?>
+                </div>
             </div>
             <br/>
         <?php endforeach ?>

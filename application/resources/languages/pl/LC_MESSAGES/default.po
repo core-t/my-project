@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-26 10:44+0100\n"
-"PO-Revision-Date: 2013-11-26 10:44+0100\n"
+"POT-Creation-Date: 2013-11-26 11:51+0100\n"
+"PO-Revision-Date: 2013-11-26 11:51+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -272,6 +272,31 @@ msgstr "Brak gry do załadowania"
 msgid "Score"
 msgstr "Punkty"
 
+#: application/views/scripts/help/index.phtml:11
+msgid "Attack"
+msgstr "Atak"
+
+#: application/views/scripts/help/index.phtml:12
+msgid "Defense"
+msgstr "Obrona"
+
+#: application/views/scripts/help/index.phtml:13
+msgid "Moves"
+msgstr "Ruchy"
+
+#: application/views/scripts/help/index.phtml:16
+msgid "Can fly"
+msgstr "Może latać"
+
+#: application/views/scripts/help/index.phtml:20
+#: application/views/scripts/help/index.phtml:28
+msgid "No"
+msgstr "Nie"
+
+#: application/views/scripts/help/index.phtml:24
+msgid "Can swim"
+msgstr "Pływa"
+
 #: application/layouts/scripts/game.phtml:24
 msgid "Terrain"
 msgstr "Teren"
@@ -319,18 +344,6 @@ msgstr "Statystyki"
 #: application/layouts/scripts/game.phtml:74
 msgid "Next turn"
 msgstr "Następna tura"
-
-#: application/layouts/scripts/game.phtml:83
-msgid "Moves"
-msgstr "Ruchy"
-
-#: application/layouts/scripts/game.phtml:86
-msgid "Attack"
-msgstr "Atak"
-
-#: application/layouts/scripts/game.phtml:89
-msgid "Defense"
-msgstr "Obrona"
 
 #: application/layouts/scripts/game.phtml:97
 msgid "Disband army"
