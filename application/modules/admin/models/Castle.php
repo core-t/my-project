@@ -2,11 +2,10 @@
 
 class Admin_Model_Castle extends Coret_Model_ParentDb
 {
-    protected $_name = 'mapcastles';
-    protected $_primary = 'mapCastleId';
+    protected $_name = 'castle';
+    protected $_primary = 'castleId';
     protected $_columns = array(
-        'mapCastleId' => array('label' => 'Castle ID', 'type' => 'number'),
-        'mapId' => array('label' => 'Map ID', 'type' => 'number'),
+        'castleId' => array('label' => 'ID', 'type' => 'number', 'active' => array('db' => false, 'form' => false)),
         'name' => array('label' => 'Nazwa', 'type' => 'varchar'),
         'income' => array('label' => 'Przychód', 'type' => 'number'),
         'defense' => array('label' => 'Obrona', 'type' => 'number'),
