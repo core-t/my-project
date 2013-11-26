@@ -32,12 +32,12 @@ class Application_Model_MapUnits extends Coret_Db_Table_Abstract
         $units = array(null);
 
         $select = $this->_db->select()
-            ->from(array('a' => $this->_name), 'null')
+            ->from(array('a' => $this->_name), null)
             ->join(array('b' => 'unit'), 'a."unitId"=b."unitId"', array('attackPoints', 'defensePoints', 'canFly', 'canSwim', 'cost', 'modMovesForest', 'modMovesHills', 'modMovesSwamp', 'numberOfMoves', 'unitId'))
             ->join(array('c' => 'unit_Lang'), 'b.' . $this->_db->quoteIdentifier('unitId') . ' = c.' . $this->_db->quoteIdentifier('unitId'), 'name')
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->where('id_lang = ?', Zend_Registry::get('config')->id_lang)
-            ->order('a.' . $this->_db->quoteIdentifier('unitId'));
+            ->order('a.unitId');
 
         foreach ($this->selectAll($select) as $unit) {
             $select = $this->_db->select()

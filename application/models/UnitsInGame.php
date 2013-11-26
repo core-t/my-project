@@ -5,7 +5,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     protected $_name = 'unitsingame';
     protected $_primary = 'soldierId';
     protected $gameId;
-    protected $_mapUnits = 'mapunits';
+    protected $_unit = 'unit';
 
     public function __construct($gameId, $db = null)
     {
@@ -76,7 +76,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('soldierId', 'unitId'))
-            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
+            ->join(array('b' => $this->_unit), 'a."unitId" = b."mapUnitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
             ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'movesLeft DESC', 'numberOfMoves DESC', 'unitId DESC'));
@@ -88,7 +88,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('movesLeft', 'soldierId', 'unitId'))
-            ->join(array('b' => $this->_mapUnits), 'a."unitId" = b."mapUnitId"', null)
+            ->join(array('b' => $this->_unit), 'a."unitId" = b."unitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" = ?', $armyId)
             ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'movesLeft DESC', 'numberOfMoves DESC', 'unitId DESC'));
