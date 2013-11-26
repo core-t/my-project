@@ -7,8 +7,8 @@ class Admin_Model_Mapcastlesproduction extends Coret_Model_ParentDb
     protected $_sequence = 'mapcastlesproduction_mapCastleProductionId_seq';
 
     protected $_columns = array(
-        'mapCastleId' => array('label' => 'Castle ID', 'type' => 'number'),
-        'unitId' => array('label' => 'Unit ID', 'type' => 'number'),
+        'castleId' => array('label' => 'Castle ID', 'type' => 'select'),
+        'unitId' => array('label' => 'Unit ID', 'type' => 'select'),
         'time' => array('label' => 'Czas', 'type' => 'number'),
     );
 

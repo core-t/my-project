@@ -1,6 +1,6 @@
 <?php
 
-class Admin_Model_MapCastles extends Coret_Model_ParentDb
+class Admin_Model_Mapcastles extends Coret_Model_ParentDb
 {
     protected $_name = 'mapcastles';
     protected $_primary = 'mapCastleId';
