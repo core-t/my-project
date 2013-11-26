@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-21 19:03+0100\n"
-"PO-Revision-Date: 2013-11-21 19:03+0100\n"
+"POT-Creation-Date: 2013-11-26 10:44+0100\n"
+"PO-Revision-Date: 2013-11-26 10:44+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -52,14 +52,18 @@ msgid "Profile"
 msgstr "Profil"
 
 #: application/views/helpers/MainMenu.php:29
+msgid "Help"
+msgstr "Pomoc"
+
+#: application/views/helpers/MainMenu.php:32
 msgid "Stats"
 msgstr "Statystyki"
 
-#: application/views/helpers/MainMenu.php:32
+#: application/views/helpers/MainMenu.php:35
 msgid "Map editor"
 msgstr "Edytor map"
 
-#: application/views/helpers/MainMenu.php:35
+#: application/views/helpers/MainMenu.php:38
 msgid "Market"
 msgstr "Market"
 
@@ -240,7 +244,6 @@ msgid "Player turn"
 msgstr "Tura gracza"
 
 #: application/views/scripts/load/index.phtml:11
-#: application/layouts/scripts/game.phtml:31
 msgid "Turn nr"
 msgstr "Numer tury"
 

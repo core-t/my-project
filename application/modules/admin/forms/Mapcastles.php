@@ -10,7 +10,7 @@ class Admin_Form_Mapcastles extends Zend_Form
 
         $this->addElement('select', 'mapId',
             array(
-                'label' => $this->getView()->translate('Map ID'),
+                'label' => 'Map ID',
                 'multiOptions' => $maps,
                 'required' => true,
                 'filters' => array('StringTrim'),
@@ -25,7 +25,7 @@ class Admin_Form_Mapcastles extends Zend_Form
 
         $this->addElement('select', 'castleId',
             array(
-                'label' => $this->getView()->translate('Castle ID'),
+                'label' => 'Castle ID',
                 'multiOptions' => $castles,
                 'required' => true,
                 'filters' => array('StringTrim'),

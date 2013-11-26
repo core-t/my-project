@@ -1,17 +1,17 @@
 <?php
 
-class Admin_Form_Mapunits extends Zend_Form
+class Admin_Form_Castleproduction extends Zend_Form
 {
 
     public function init()
     {
-        $mMap = new Application_Model_Map();
-        $maps = $mMap->getAllMapsList();
+        $mCastle = new Application_Model_Castle();
+        $castles = $mCastle->getCastles();
 
-        $this->addElement('select', 'mapId',
+        $this->addElement('select', 'castleId',
             array(
-                'label' => 'Map ID',
-                'multiOptions' => $maps,
+                'label' => 'Castle ID',
+                'multiOptions' => $castles,
                 'required' => true,
                 'filters' => array('StringTrim'),
                 'validators' => array(
@@ -30,6 +30,18 @@ class Admin_Form_Mapunits extends Zend_Form
                 'required' => true,
                 'filters' => array('StringTrim'),
                 'validators' => array(
+                    array('Alnum')
+                )
+            )
+        );
+
+        $this->addElement('text', 'time',
+            array(
+                'label' => 'Czas',
+                'required' => true,
+                'filters' => array('StringTrim'),
+                'validators' => array(
+                    array('StringLength', false, array(1, 32)),
                     array('Alnum')
                 )
             )

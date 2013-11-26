@@ -1,10 +1,10 @@
 <?php
 
-class Admin_Model_Mapcastlesproduction extends Coret_Model_ParentDb
+class Admin_Model_Castleproduction extends Coret_Model_ParentDb
 {
-    protected $_name = 'mapcastlesproduction';
-    protected $_primary = 'mapCastleProductionId';
-    protected $_sequence = 'mapcastlesproduction_mapCastleProductionId_seq';
+    protected $_name = 'castleproduction';
+    protected $_primary = 'castleProductionId';
+    protected $_sequence = 'castleproduction_castleProductionId_seq';
 
     protected $_columns = array(
         'castleId' => array('label' => 'Castle ID', 'type' => 'select'),

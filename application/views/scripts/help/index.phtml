@@ -1,16 +1,20 @@
 <h1><?php echo $this->translate('Help') ?></h1>
 <h2><?php echo $this->translate('') ?></h2>
 <div class="table">
-    <table>
-        <?php if (count($this->list)): ?>
-            <?php foreach ($this->list as $row): ?>
-                <tr class="trlink">
-                    <td><?php echo $row['name'] ?></td>
-                    <td><?php echo $row['score'] ?></td>
-                </tr>
-            <?php endforeach ?>
-        <?php endif ?>
-    </table>
+    <?php if (count($this->list)): ?>
+        <?php foreach ($this->list as $row): ?>
+            <div style="border: 1px solid #c0c0c0;padding: 10px">
+                <img src="/img/game/units/white/<?php echo str_replace(' ', '_', strtolower($row['name'])) ?>.png"/>
+
+                <h3 style="display: inline"><?php echo $row['name'] ?></h3>
+
+                <div><?php echo $this->translate('Attack') ?>: <?php echo $row['attackPoints'] ?></div>
+                <div><?php echo $this->translate('Defense') ?>: <?php echo $row['defensePoints'] ?></div>
+                <div><?php echo $this->translate('Moves') ?>: <?php echo $row['numberOfMoves'] ?></div>
+            </div>
+            <br/>
+        <?php endforeach ?>
+    <?php endif ?>
 </div>
 <br/>
 <div id="pagination"></div>
