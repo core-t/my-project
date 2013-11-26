@@ -1,6 +1,6 @@
 <?php
 
-class Admin_Form_Mapcastles extends Zend_Form
+class Admin_Form_Mapunits extends Zend_Form
 {
 
     public function init()

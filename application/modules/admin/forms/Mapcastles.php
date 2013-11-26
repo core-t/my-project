@@ -1,6 +1,6 @@
 <?php
 
-class Admin_Form_Mapunits extends Zend_Form
+class Admin_Form_Mapcastles extends Zend_Form
 {
 
     public function init()
@@ -20,13 +20,13 @@ class Admin_Form_Mapunits extends Zend_Form
             )
         );
 
-        $mUnit = new Application_Model_Unit();
-        $units = $mUnit->getUnits();
+        $mCastle = new Application_Model_Castle();
+        $castles = $mCastle->getCastles();
 
-        $this->addElement('select', 'unitId',
+        $this->addElement('select', 'castleId',
             array(
-                'label' => $this->getView()->translate('Unit ID'),
-                'multiOptions' => $units,
+                'label' => $this->getView()->translate('Castle ID'),
+                'multiOptions' => $castles,
                 'required' => true,
                 'filters' => array('StringTrim'),
                 'validators' => array(

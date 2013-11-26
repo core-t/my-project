@@ -5,6 +5,7 @@ class Application_Model_MapUnits extends Coret_Db_Table_Abstract
 
     protected $_name = 'mapunits';
     protected $_primary = 'mapUnitId';
+    protected $_sequence = 'mapunits_mapUnitId_seq';
     protected $mapId;
 
     public function __construct($mapId, $db = null)
