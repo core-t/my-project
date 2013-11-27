@@ -63,7 +63,7 @@ class Cli_GameHandler extends Cli_WofHandler
             Zend_Registry::set('colors', $mMapPlayers->getColors());
 
             reset($units);
-            next($units);
+//            next($units);
             Zend_Registry::set('fistUnitId', key($units));
 
             Zend_Registry::set('playersInGameColors', $mPlayersInGame->getAllColors());
