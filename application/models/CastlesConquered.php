@@ -20,7 +20,7 @@ class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
     public function getAll()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('winnerId', 'loserId', 'mapCastleId'))
+            ->from($this->_name, array('winnerId', 'loserId', 'castleId'))
             ->where('"gameId" = ?', $this->_gameId)
             ->order($this->_primary);
         return $this->selectAll($select);
@@ -62,7 +62,7 @@ class Application_Model_CastlesConquered extends Coret_Db_Table_Abstract
     public function add($castleId, $winnerId, $loserId)
     {
         $data = array(
-            'mapCastleId' => $castleId,
+            'castleId' => $castleId,
             'gameId' => $this->_gameId,
             'winnerId' => $winnerId,
             'loserId' => $loserId

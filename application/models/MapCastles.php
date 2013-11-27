@@ -20,20 +20,18 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
     public function getMapCastles()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('mapCastleId', 'x', 'y', 'name', 'income', 'capital', 'defense'))
+            ->from(array('a' => $this->_name), null)
+            ->join(array('b' => 'castle'), 'a."castleId"=b."castleId"', array('castleId', 'x', 'y', 'name', 'income', 'capital', 'defense'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
 
         $castles = $this->selectAll($select);
 
-        $mMapCastlesProduction = new Application_Model_MapCastlesProduction($this->_db);
         $mapCastles = array();
 
         foreach ($castles as $val) {
-            $mapCastles[$val['mapCastleId']] = $val;
-            $mapCastles[$val['mapCastleId']]['defensePoints'] = $val['defense'];
-            $mapCastles[$val['mapCastleId']]['production'] = $mMapCastlesProduction->getCastleProduction($val['mapCastleId']);
-            $mapCastles[$val['mapCastleId']]['position'] = array('x' => $val['x'], 'y' => $val['y']);
-            $mapCastles[$val['mapCastleId']]['castleId'] = $val['mapCastleId'];
+            $mapCastles[$val['castleId']] = $val;
+            $mapCastles[$val['castleId']]['defensePoints'] = $val['defense'];
+            $mapCastles[$val['castleId']]['position'] = array('x' => $val['x'], 'y' => $val['y']);
         }
 
         return $mapCastles;
@@ -42,7 +40,8 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
     public function getDefaultStartPositions()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('mapCastleId', 'x', 'y'))
+            ->from(array('a' => $this->_name), null)
+            ->join(array('b' => 'castle'), 'a."castleId"=b."castleId"', array('castleId', 'x', 'y'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->where('capital = true')
             ->order('mapCastleId');
@@ -50,7 +49,7 @@ class Application_Model_MapCastles extends Coret_Db_Table_Abstract
         $startPositions = array();
 
         foreach ($this->selectAll($select) as $position) {
-            $startPositions[$position['mapCastleId']] = $position;
+            $startPositions[$position['castleId']] = $position;
         }
 
         return $startPositions;

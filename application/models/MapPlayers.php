@@ -102,14 +102,14 @@ class Application_Model_MapPlayers extends Coret_Db_Table_Abstract
     public function getCapitals()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('mapCastleId', 'shortName'))
+            ->from($this->_name, array('castleId', 'shortName'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->order('startOrder');
 
         $array = array();
 
         foreach ($this->selectAll($select) as $row) {
-            $array[$row['shortName']] = $row['mapCastleId'];
+            $array[$row['shortName']] = $row['castleId'];
         }
 
         return $array;

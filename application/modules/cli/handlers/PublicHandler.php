@@ -87,13 +87,13 @@ class Cli_PublicHandler extends Cli_WofHandler
                     }
                     $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
 
-                    $armyId = $mArmy->createArmy($startPositions[$player['mapCastleId']], $player['playerId']);
+                    $armyId = $mArmy->createArmy($startPositions[$player['castleId']], $player['playerId']);
 
                     $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
                     $mHeroesInGame->add($armyId, $playerHeroes[0]['heroId']);
 
                     $mCastlesInGame = new Application_Model_CastlesInGame($user->parameters['gameId'], $db);
-                    $mCastlesInGame->addCastle($player['mapCastleId'], $player['playerId']);
+                    $mCastlesInGame->addCastle($player['castleId'], $player['playerId']);
                 }
 
                 $token = array('type' => 'start');

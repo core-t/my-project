@@ -158,9 +158,12 @@ class GameController extends Game_Controller_Game
         foreach (array_keys($emptyRuins) as $id) {
             $this->view->ruins[$id]['e'] = 1;
         }
+
+        $mCastleProduction = new Application_Model_CastleProduction();
         $this->view->fields = $mMapFields->getMapFields();
         foreach ($mMapCastles->getMapCastles() as $id => $castle) {
             if (!isset($razed[$id])) {
+                $castle['production'] = $mCastleProduction->getCastleProduction($id);
                 $this->view->castlesSchema[$id] = $castle;
             }
         }

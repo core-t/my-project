@@ -35,7 +35,7 @@ class Cli_Model_Production
         }
 
         if ($unitId != -1) {
-            $mMapCastlesProduction = new Application_Model_MapCastlesProduction($db);
+            $mMapCastlesProduction = new Application_Model_CastleProduction($db);
             $production = $mMapCastlesProduction->getCastleProduction($castleId);
 
             if (!isset($production[$unitId])) {

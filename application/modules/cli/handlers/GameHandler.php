@@ -52,7 +52,12 @@ class Cli_GameHandler extends Cli_WofHandler
             Zend_Registry::set('terrain', $mMapTerrain->getTerrain());
             Zend_Registry::set('units', $units);
             Zend_Registry::set('fields', $mMapFields->getMapFields());
-            Zend_Registry::set('castles', $mMapCastles->getMapCastles());
+            $castles = $mMapCastles->getMapCastles();
+            $mCastleProduction = new Application_Model_CastleProduction($db);
+            foreach (array_keys($castles) as $castleId) {
+                $castles[$castleId]['production'] = $mCastleProduction->getCastleProduction($castleId);
+            }
+            Zend_Registry::set('castles', $castles);
             Zend_Registry::set('ruins', $mMapRuins->getMapRuins());
             Zend_Registry::set('towers', $mMapTowers->getMapTowers());
             Zend_Registry::set('colors', $mMapPlayers->getColors());

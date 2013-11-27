@@ -22,7 +22,7 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), 'playerId')
             ->join(array('b' => 'player'), 'a."playerId" = b."playerId"', 'computer')
-            ->join(array('c' => 'mapplayers'), 'a . "mapPlayerId" = c . "mapPlayerId"', 'mapCastleId')
+            ->join(array('c' => 'mapplayers'), 'a . "mapPlayerId" = c . "mapPlayerId"', 'castleId')
             ->where('a . ' . $this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
             ->where('a . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL');
 
