@@ -260,6 +260,7 @@ var Army = {
     init: function (obj, color) {
 
         $('#army' + obj.armyId).remove();
+        $('#' + obj.armyId + '.a').remove();
 
         if (obj.destroyed) {
             armyFields(players[color].armies[obj.armyId]);
@@ -758,5 +759,12 @@ var Unit = {
 var Hero = {
     getImage: function (color) {
         return '/img/game/heroes/' + color + '.png';
+    },
+    findMy: function () {
+        for (armyId in players[my.color].armies) {
+            for (j in players[my.color].armies[armyId].heroes) {
+                return players[my.color].armies[armyId].heroes[j].heroId;
+            }
+        }
     }
 }

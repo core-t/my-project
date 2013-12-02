@@ -192,7 +192,8 @@ class Cli_Model_Turn
     public function getExpectedNextTurnPlayer($playerColor)
     {
         $find = false;
-        $playerColors = Zend_Registry::get('colors');
+        $playerColors = Zend_Registry::get('playersInGameColors');
+        reset($playerColors);
 
         /* szukam następnego koloru w dostępnych kolorach */
         foreach ($playerColors as $color) {
@@ -210,7 +211,7 @@ class Cli_Model_Turn
         }
 
         if (!isset($nextPlayerColor)) {
-            $nextPlayerColor = $playerColors[0];
+            $nextPlayerColor = current($playerColors);
         }
 
         $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
@@ -227,7 +228,7 @@ class Cli_Model_Turn
         /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
         if (!isset($nextPlayerId)) {
             foreach ($playersInGame as $k => $player) {
-                if ($player['color'] == $playerColors[0]) {
+                if ($player['color'] == current($playerColors)) {
                     if ($player['lost']) {
                         $nextPlayerId = $playersInGame[$k + 1]['playerId'];
                     } else {

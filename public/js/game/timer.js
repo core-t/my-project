@@ -3,19 +3,7 @@ var timer = {
     timestamp: 0,
     start: function () {
         this.setTimeStart();
-        $('#timerRows')
-            .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.color))))
-                .append($('<div class="left nr">').html(Turn.number))
-                .append(
-                    $('<div class="left time" id="time">')
-                        .append($('<div>').attr('id', 'second'))
-                        .append($('<div>').html(':'))
-                        .append($('<div>').attr('id', 'minute'))
-                        .append($('<div>').html(':'))
-                        .append($('<div>').attr('id', 'hour'))
-                )
-            );
+        this.append(Turn.color, Turn.number);
         $('#timerScroll').css('height', Players.length * 30 + 'px');
         timer.countdown();
     },
@@ -57,10 +45,17 @@ var timer = {
         $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
         $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
         $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
+        this.append(Turn.color, Turn.number);
+        $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
+    },
+    setTimeStart: function () {
+        this.timeStart = (new Date()).getTime() + 3600000;
+    },
+    append: function (color, number) {
         $('#timerRows')
             .append($('<div class="row">')
-                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(Turn.color))))
-                .append($('<div class="left nr">').html(Turn.number))
+                .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(color))))
+                .append($('<div class="left nr">').html(number))
                 .append(
                     $('<div class="left time" id="time">')
                         .append($('<div>').attr('id', 'second'))
@@ -70,9 +65,5 @@ var timer = {
                         .append($('<div>').attr('id', 'hour'))
                 )
             );
-        $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
-    },
-    setTimeStart: function () {
-        this.timeStart = (new Date()).getTime() + 3600000;
     }
 }

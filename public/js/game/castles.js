@@ -11,7 +11,7 @@ var Castle = {
         }
 
         if ($('input[name=resurrection]').is(':checked')) {
-            Websocket.resurrection(castleId);
+            Websocket.resurrection();
             return;
         }
 

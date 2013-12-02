@@ -136,7 +136,7 @@ var Gui = {
         });
 
         $('#heroResurrection').click(function () {
-
+            Websocket.resurrection()
         });
 
         $('#razeCastle').click(function () {

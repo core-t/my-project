@@ -137,6 +137,9 @@ Websocket = {
                         Army.init(r.data.army, r.color);
                         if (my.color == Turn.color) {
                             goldUpdate(r.data.gold);
+                            if(Hero.findMy()){
+                                $('#heroResurrection').addClass('buttonOff')
+                            }
                         }
                         break;
 
@@ -527,21 +530,24 @@ Websocket = {
 
         ws.send(JSON.stringify(token));
     },
-    resurrection: function (castleId) {
+    resurrection: function () {
         if (this.closed) {
             Message.simple('Sorry, server is disconnected.');
             return;
         }
 
-
         if (!my.turn) {
             return;
         }
+
+        if (Hero.findMy()) {
+            return;
+        }
+
         Army.deselect();
 
         var token = {
-            type: 'resurrection',
-            castleId: castleId
+            type: 'resurrection'
         };
 
         ws.send(JSON.stringify(token));

@@ -91,14 +91,6 @@ function startGame() {
 
     Castle.showFirst();
 
-//    if (!enemyArmies && !enemyCastles) {
-//        Turn.off();
-//        Message.win(my.color);
-//    } else if (!myArmies && !myCastles) {
-//        Turn.off();
-//        Message.lost(my.color);
-//    } else {
-
     if (my.turn) {
         Turn.on();
     } else {
@@ -110,7 +102,6 @@ function startGame() {
     } else if (my.game && players[Turn.color].computer) {
         setTimeout('Websocket.computer()', 1000);
     }
-//    }
 
     renderChatHistory();
     costsUpdate(costs);

@@ -20,6 +20,9 @@ var Turn = {
         Castle.showFirst();
         Message.turn();
         titleBlink('Your turn!');
+        if(!Hero.findMy()){
+            $('#heroResurrection').removeClass('buttonOff')
+        }
     },
     off: function () {
         my.turn = false;

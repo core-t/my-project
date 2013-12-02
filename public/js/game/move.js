@@ -132,6 +132,9 @@ var Move = {
             } else {
                 unlock();
             }
+            if (!Hero.findMy()) {
+                $('#heroResurrection').removeClass('buttonOff')
+            }
         }
 
         setTimeout('$(".war").remove()', 1000);

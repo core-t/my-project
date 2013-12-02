@@ -70,10 +70,8 @@ class Cli_GameHandler extends Cli_WofHandler
             Zend_Registry::set('castles', $castles);
             Zend_Registry::set('ruins', $mMapRuins->getMapRuins());
             Zend_Registry::set('towers', $mMapTowers->getMapTowers());
-            Zend_Registry::set('colors', $mMapPlayers->getColors());
-
-
             Zend_Registry::set('playersInGameColors', $mPlayersInGame->getAllColors());
+            Zend_Registry::set('capitals', $mMapPlayers->getCapitals());
 
             return;
         }
@@ -190,7 +188,7 @@ class Cli_GameHandler extends Cli_WofHandler
                 break;
 
             case 'resurrection':
-                new Cli_Model_HeroResurrection($dataIn['castleId'], $user, $db, $this);
+                new Cli_Model_HeroResurrection($user, $db, $this);
                 break;
 
             case 'ruin':

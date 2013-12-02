@@ -210,9 +210,10 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
 
     public function updateTurnNumber($nextPlayerId, $nextPlayerColor)
     {
-        $playerColors = Zend_Registry::get('colors');
+        $playerColors = Zend_Registry::get('playersInGameColors');
+        reset($playerColors);
 
-        if ($playerColors[0] == $nextPlayerColor) { //first color, turn number increment
+        if (current($playerColors) == $nextPlayerColor) { //first color, turn number increment
             $select = $this->_db->select()
                 ->from('game', array('turnNumber' => '("turnNumber" + 1)'))
                 ->where('"gameId" = ?', $this->_gameId);

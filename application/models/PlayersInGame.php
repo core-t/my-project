@@ -35,7 +35,8 @@ class Application_Model_PlayersInGame extends Coret_Db_Table_Abstract
             ->from(array('a' => $this->_name), 'playerId')
             ->join(array('b' => 'mapplayers'), 'a . "mapPlayerId" = b . "mapPlayerId"', array('color' => 'shortName'))
             ->where('a."gameId" = ?', $this->_gameId)
-            ->where('a . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL');
+            ->where('a . ' . $this->_db->quoteIdentifier('mapPlayerId') . ' IS NOT NULL')
+            ->order('startOrder');
 
         $colors = array();
 
