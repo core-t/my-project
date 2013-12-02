@@ -89,6 +89,9 @@ class Cli_Model_Turn
 
     public function start($playerId, $computer = null)
     {
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+        $color = $playersInGameColors[$playerId];
+
         $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
         $mPlayersInGame->turnActivate($playerId);
 
@@ -98,6 +101,9 @@ class Cli_Model_Turn
 
         $gold = $mPlayersInGame->getPlayerGold($playerId);
         if ($computer) {
+            $capitals = Zend_Registry::get('capitals');
+            $capitalId = $capitals[$color];
+
             $mArmy->unfortifyComputerArmies($playerId);
             $type = 'computerStart';
         } else {
@@ -107,7 +113,6 @@ class Cli_Model_Turn
         $mHeroesInGame->resetMovesLeftForAll($playerId);
 
         $income = 0;
-        $color = null;
 
         $mapCastles = Zend_Registry::get('castles');
         $units = Zend_Registry::get('units');
@@ -124,7 +129,7 @@ class Cli_Model_Turn
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
 
             if ($computer) {
-                if (isset($mapCastles[$castleId]['position'])) {
+                if ($capitalId == $castleId) {
                     $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($this->_gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $this->_db);
                 }
 
@@ -175,8 +180,6 @@ class Cli_Model_Turn
 
         $mPlayersInGame->updatePlayerGold($playerId, $gold);
 
-        $playersInGameColors = Zend_Registry::get('playersInGameColors');
-
         $token = array(
             'type' => $type,
             'gold' => $gold,
@@ -184,7 +187,7 @@ class Cli_Model_Turn
             'income' => $income,
             'armies' => $armies,
             'castles' => $castlesInGame,
-            'color' => $playersInGameColors[$playerId]
+            'color' => $color
         );
         $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
     }
@@ -194,6 +197,7 @@ class Cli_Model_Turn
         $find = false;
         $playerColors = Zend_Registry::get('playersInGameColors');
         reset($playerColors);
+        $firstColor = current($playerColors);
 
         /* szukam następnego koloru w dostępnych kolorach */
         foreach ($playerColors as $color) {
@@ -211,7 +215,7 @@ class Cli_Model_Turn
         }
 
         if (!isset($nextPlayerColor)) {
-            $nextPlayerColor = current($playerColors);
+            $nextPlayerColor = $firstColor;
         }
 
         $mPlayersInGame = new Application_Model_PlayersInGame($this->_gameId, $this->_db);
@@ -228,7 +232,7 @@ class Cli_Model_Turn
         /* jeśli nie znalazłem następnego gracza to następnym graczem jest gracz pierwszy */
         if (!isset($nextPlayerId)) {
             foreach ($playersInGame as $k => $player) {
-                if ($player['color'] == current($playerColors)) {
+                if ($player['color'] == $firstColor) {
                     if ($player['lost']) {
                         $nextPlayerId = $playersInGame[$k + 1]['playerId'];
                     } else {

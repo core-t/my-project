@@ -76,10 +76,10 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), array('soldierId', 'unitId'))
-            ->join(array('b' => $this->_unit), 'a."unitId" = b."mapUnitId"', null)
+            ->join(array('b' => $this->_unit), 'a."unitId" = b."unitId"', null)
             ->where('"gameId" = ?', $this->_gameId)
             ->where('"armyId" IN (?)', $ids)
-            ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'movesLeft DESC', 'numberOfMoves DESC', 'unitId DESC'));
+            ->order(array('canFly DESC', 'attackPoints DESC', 'defensePoints DESC', 'movesLeft DESC', 'numberOfMoves DESC', 'b.unitId DESC'));
 
         return $this->selectAll($select);
     }
@@ -136,7 +136,7 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
                 if ($canSwimIds) {
                     $canSwimIds .= ',';
                 }
-                $canSwimIds .= $unit['mapUnitId'];
+                $canSwimIds .= $unit['unitId'];
             }
         }
 

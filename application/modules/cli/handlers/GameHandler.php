@@ -59,7 +59,6 @@ class Cli_GameHandler extends Cli_WofHandler
             }
             Zend_Registry::set('specialUnits', $specialUnits);
             reset($units);
-//            next($units);
             Zend_Registry::set('firstUnitId', key($units));
             Zend_Registry::set('fields', $mMapFields->getMapFields());
             $castles = $mMapCastles->getMapCastles();
