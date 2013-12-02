@@ -110,6 +110,7 @@ class Cli_Model_Turn
         $color = null;
 
         $mapCastles = Zend_Registry::get('castles');
+        $units = Zend_Registry::get('units');
 
         $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
         $castlesInGame = $mCastlesInGame->getPlayerCastles($playerId);
@@ -145,7 +146,7 @@ class Cli_Model_Turn
 
             $castlesInGame[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
-            if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $mapCastles[$castleId]['production'][$unitId]['cost'] <= $gold) {
+            if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $units[$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
                     if ($castleProduction['relocationCastleId']) {
                         $unitCastleId = $castleProduction['relocationCastleId'];

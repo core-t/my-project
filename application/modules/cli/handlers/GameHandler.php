@@ -48,9 +48,19 @@ class Cli_GameHandler extends Cli_WofHandler
             $mMapTerrain = new Application_Model_MapTerrain($mapId, $db);
 
             Zend_Registry::set('id_lang', $user->parameters['langId']);
-            $units = $mMapUnits->getUnits();
             Zend_Registry::set('terrain', $mMapTerrain->getTerrain());
+            $units = $mMapUnits->getUnits();
             Zend_Registry::set('units', $units);
+            $specialUnits = array();
+            foreach ($units as $unit) {
+                if ($unit['special']) {
+                    $specialUnits[] = $unit;
+                }
+            }
+            Zend_Registry::set('specialUnits', $specialUnits);
+            reset($units);
+//            next($units);
+            Zend_Registry::set('firstUnitId', key($units));
             Zend_Registry::set('fields', $mMapFields->getMapFields());
             $castles = $mMapCastles->getMapCastles();
             $mCastleProduction = new Application_Model_CastleProduction($db);
@@ -62,9 +72,6 @@ class Cli_GameHandler extends Cli_WofHandler
             Zend_Registry::set('towers', $mMapTowers->getMapTowers());
             Zend_Registry::set('colors', $mMapPlayers->getColors());
 
-            reset($units);
-//            next($units);
-            Zend_Registry::set('fistUnitId', key($units));
 
             Zend_Registry::set('playersInGameColors', $mPlayersInGame->getAllColors());
 

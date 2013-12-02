@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-26 11:51+0100\n"
-"PO-Revision-Date: 2013-11-26 11:51+0100\n"
+"POT-Creation-Date: 2013-12-02 04:03+0100\n"
+"PO-Revision-Date: 2013-12-02 04:04+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -272,30 +272,50 @@ msgstr "Brak gry do załadowania"
 msgid "Score"
 msgstr "Punkty"
 
-#: application/views/scripts/help/index.phtml:11
+#: application/views/scripts/help/index.phtml:14
+msgid "Cost"
+msgstr "Koszt"
+
+#: application/views/scripts/help/index.phtml:19
+msgid "Special unit"
+msgstr "Jednostka specjalna"
+
+#: application/views/scripts/help/index.phtml:23
 msgid "Attack"
 msgstr "Atak"
 
-#: application/views/scripts/help/index.phtml:12
+#: application/views/scripts/help/index.phtml:25
 msgid "Defense"
 msgstr "Obrona"
 
-#: application/views/scripts/help/index.phtml:13
+#: application/views/scripts/help/index.phtml:27
 msgid "Moves"
 msgstr "Ruchy"
 
-#: application/views/scripts/help/index.phtml:16
+#: application/views/scripts/help/index.phtml:31
 msgid "Can fly"
 msgstr "Może latać"
 
-#: application/views/scripts/help/index.phtml:20
-#: application/views/scripts/help/index.phtml:28
+#: application/views/scripts/help/index.phtml:35
+#: application/views/scripts/help/index.phtml:42
 msgid "No"
 msgstr "Nie"
 
-#: application/views/scripts/help/index.phtml:24
+#: application/views/scripts/help/index.phtml:38
 msgid "Can swim"
 msgstr "Pływa"
+
+#: application/views/scripts/help/index.phtml:47
+msgid "Movement cost through the forest"
+msgstr "Koszt poruszania się po lesie"
+
+#: application/views/scripts/help/index.phtml:49
+msgid "Movement cost through the swamp"
+msgstr "Koszt poruszania się po bagnie"
+
+#: application/views/scripts/help/index.phtml:51
+msgid "Movement cost through the hills"
+msgstr "Koszt poruszania się po wzgórzach"
 
 #: application/layouts/scripts/game.phtml:24
 msgid "Terrain"
@@ -411,9 +431,6 @@ msgstr "Wyślij"
 
 #~ msgid "Quantity"
 #~ msgstr "Ilość"
-
-#~ msgid "Costs"
-#~ msgstr "Koszty"
 
 #~ msgid "Show artifacts"
 #~ msgstr "Pokaż artefakty"

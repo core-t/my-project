@@ -17,6 +17,7 @@ class Admin_Model_Unit extends Coret_Model_ParentDb
         'modMovesSwamp' => array('label' => 'Ruchy po bagnie', 'type' => 'number'),
         'modMovesHills' => array('label' => 'Ruchy po wzgórzach', 'type' => 'number'),
         'cost' => array('label' => 'Koszt utrzymania', 'type' => 'number'),
+        'special' => array('label' => 'Jednostka specjalna', 'type' => 'checkbox'),
     );
     protected $_columns_lang = array(
         'name' => array('label' => 'Nazwa', 'type' => 'varchar')

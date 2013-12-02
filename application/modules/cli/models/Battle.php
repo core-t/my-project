@@ -348,7 +348,7 @@ class Cli_Model_Battle
 
     static public function getNeutralCastleGarrison($gameId, $db)
     {
-        $fistUnitId = Zend_Registry::get('fistUnitId');
+        $firstUnitId = Zend_Registry::get('firstUnitId');
 
         $mGame = new Application_Model_Game($gameId, $db);
         $turnNumber = $mGame->getTurnNumber();
@@ -359,7 +359,7 @@ class Cli_Model_Battle
             $soldiers[] = array(
                 'defensePoints' => 3,
                 'soldierId' => 's' . $i,
-                'unitId' => $fistUnitId
+                'unitId' => $firstUnitId
             );
         }
         return array(

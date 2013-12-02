@@ -34,7 +34,7 @@ class Cli_Model_SearchRuin
             return;
         }
 
-        $find = self::search($user->parameters['gameId'], $ruinId, $heroId, $armyId, $user->parameters['playerId'], $db);
+        $found = self::search($user->parameters['gameId'], $ruinId, $heroId, $armyId, $user->parameters['playerId'], $db);
 
         if ($mRuinsInGame->ruinExists($ruinId)) {
             $ruin = array(
@@ -54,7 +54,7 @@ class Cli_Model_SearchRuin
             'type' => 'ruin',
             'army' => $mArmy2->getArmyByArmyId($armyId),
             'ruin' => $ruin,
-            'find' => $find,
+            'find' => $found,
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 
@@ -79,19 +79,19 @@ class Cli_Model_SearchRuin
         if ($random < 10) { //10%
 //śmierć
             if ($turnNumber <= 7) {
-                $find = array('null', 1);
+                $found = array('null', 1);
                 $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
                 $mRuinsInGame->add($ruinId);
                 $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             } else {
-                $find = array('death', 1);
+                $found = array('death', 1);
 
                 $mHeroesInGame->armyRemoveHero($heroId);
             }
         } elseif ($random < 55) { //45%
 //kasa
             $gold = rand(50, 150);
-            $find = array('gold', $gold);
+            $found = array('gold', $gold);
 
             $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
             $inGameGold = $mPlayersInGame->getPlayerGold($playerId);
@@ -103,56 +103,64 @@ class Cli_Model_SearchRuin
             $mRuinsInGame->add($ruinId);
         } elseif ($random < 85) { //30%
 //jednostki
-            $fistUnitId = Zend_Registry::get('fistUnitId');
-
             if ($turnNumber <= 7) {
-                $max1 = $fistUnitId + 10;
+                $max1 = 0;
+                $min2 = 1;
+                $max2 = 1;
+            } elseif ($turnNumber <= 9) {
+                $max1 = 1;
+                $min2 = 1;
+                $max2 = 1;
+            } elseif ($turnNumber <= 11) {
+                $max1 = 2;
                 $min2 = 1;
                 $max2 = 1;
             } elseif ($turnNumber <= 12) {
-                $max1 = $fistUnitId + 12;
+                $max1 = 3;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turnNumber <= 16) {
-                $max1 = $fistUnitId + 13;
+            } elseif ($turnNumber <= 14) {
+                $max1 = 4;
                 $min2 = 1;
                 $max2 = 1;
-            } elseif ($turnNumber <= 19) {
-                $max1 = $fistUnitId + 14;
-                $min2 = 1;
-                $max2 = 1;
-            } elseif ($turnNumber <= 21) {
-                $max1 = $fistUnitId + 14;
+            } elseif ($turnNumber <= 17) {
+                $max1 = 4;
                 $min2 = 1;
                 $max2 = 2;
-            } elseif ($turnNumber <= 23) {
-                $max1 = $fistUnitId + 14;
+            } elseif ($turnNumber <= 20) {
+                $max1 = 4;
                 $min2 = 1;
                 $max2 = 3;
             } elseif ($turnNumber <= 25) {
-                $max1 = $fistUnitId + 14;
+                $max1 = 4;
                 $min2 = 2;
                 $max2 = 3;
             } else {
-                $max1 = $fistUnitId + 14;
+                $max1 = 4;
                 $min2 = 3;
                 $max2 = 3;
             }
-            $unitId = rand($fistUnitId + 10, $max1);
+
+            $specialUnits = Zend_Registry::get('specialUnits');
+
+            $unitId = $specialUnits[rand(1, $max1)]['unitId'];
+
             $numberOfUnits = rand($min2, $max2);
-            $find = array('allies', $numberOfUnits);
+
             $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             for ($i = 0; $i < $numberOfUnits; $i++) {
                 $mSoldier->add($armyId, $unitId);
             }
+
             $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
 
+            $found = array('allies', $numberOfUnits);
 //        } elseif ($random < 95) { //10%
         } else {
 //nic
-            $find = array('null', 1);
+            $found = array('null', 1);
             $mHeroesInGame->zeroHeroMovesLeft($armyId, $heroId, $playerId);
             $mRuinsInGame = new Application_Model_RuinsInGame($gameId, $db);
             $mRuinsInGame->add($ruinId);
@@ -169,7 +177,7 @@ class Cli_Model_SearchRuin
 //                $mChest->add($artifactId);
 //            }
 //
-//            $find = array('artifact', $artifactId);
+//            $found = array('artifact', $artifactId);
 //
 //            Cli_Model_Database::zeroHeroMovesLeft($gameId, $armyId, $heroId, $playerId, $db);
 //
@@ -178,7 +186,7 @@ class Cli_Model_SearchRuin
 //
         }
 
-        return $find;
+        return $found;
     }
 
 }

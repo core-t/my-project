@@ -268,3 +268,7 @@ select {
 p#info {
     text-align: center;
 }
+
+.yellow {
+    color: yellow;
+}
