@@ -19,7 +19,7 @@ class Cli_Model_SearchRuin
         }
 
         $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
-        $position = $mArmy2->getArmyPositionByArmyId($armyId, $user->parameters['playerId']);
+        $position = $mArmy2->getArmyPositionByArmyIdPlayerId($armyId, $user->parameters['playerId']);
         $ruinId = Application_Model_Board::confirmRuinPosition($position);
 
         if (!Zend_Validate::is($ruinId, 'Digits')) {

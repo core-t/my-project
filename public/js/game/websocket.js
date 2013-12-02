@@ -127,6 +127,11 @@ Websocket = {
                         if (isSet(r.armyId) && isSet(r.color)) {
                             Message.remove();
                             Army.delete(r.armyId, r.color);
+                            if (my.turn) {
+                                if (!Hero.findMy()) {
+                                    $('#heroResurrection').removeClass('buttonOff')
+                                }
+                            }
                         }
                         break;
 
@@ -135,9 +140,9 @@ Websocket = {
                         Message.remove();
                         zoomer.lensSetCenter(r.data.army.x * 40, r.data.army.y * 40);
                         Army.init(r.data.army, r.color);
-                        if (my.color == Turn.color) {
+                        if (my.turn) {
                             goldUpdate(r.data.gold);
-                            if(Hero.findMy()){
+                            if (Hero.findMy()) {
                                 $('#heroResurrection').addClass('buttonOff')
                             }
                         }

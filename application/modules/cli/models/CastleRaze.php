@@ -11,7 +11,7 @@ class Cli_Model_CastleRaze
         }
 
         $mArmy = new Application_Model_Army($user->parameters['gameId'], $db);
-        $position = $mArmy->getArmyPosition($armyId);
+        $position = $mArmy->getArmyPositionByArmyIdPlayerId($armyId, $user->parameters['playerId']);
 
         $mapCastles = Zend_Registry::get('castles');
         $castleId = Application_Model_Board::isCastleAtPosition($position['x'], $position['y'], $mapCastles);

@@ -96,17 +96,6 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
             ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId);
     }
 
-    public function getArmyPosition($armyId)
-    {
-        $select = $this->_db->select()
-            ->from($this->_name, array('x', 'y'))
-            ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
-            ->where('destroyed = false')
-            ->where('"armyId" = ?', $armyId);
-
-        return $this->selectRow($select);
-    }
-
     public function fortify($armyId, $fortify, $playerId = null)
     {
         if ($fortify) {
@@ -594,7 +583,7 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         return $mSoldier->getSwimmingFromArmiesIds($ids);
     }
 
-    public function getArmyPositionByArmyId($armyId, $playerId)
+    public function getArmyPositionByArmyIdPlayerId($armyId, $playerId)
     {
         $select = $this->_db->select()
             ->from($this->_name, array('x', 'y'))
