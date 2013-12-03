@@ -4,9 +4,30 @@ var Turn = {
     number: null,
     color: null,
     init: function () {
+        timer.init();
+
+        var j = 0,
+            history = {}
+
         for (i in turnHistory) {
-            timer.append(turnHistory[i].shortName, turnHistory[i].number, turnHistory[i].date.substr(0, 19))
+            var date = turnHistory[i].date.substr(0, 19);
+            history[j] = {
+                shortName: turnHistory[i].shortName,
+                number: turnHistory[i].number,
+                start: date
+            }
+
+            if (isSet(history[j - 1])) {
+                history[j - 1]['end'] = date
+            }
+
+            j++;
         }
+
+        for(i in history){
+            timer.append(history[i].shortName, history[i].number,  history[i].start, history[i].end)
+        }
+
         timer.scroll()
         this.number = turnHistory[i].number;
         this.color = turnHistory[i].shortName;

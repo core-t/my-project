@@ -2,8 +2,10 @@ var timer = {
     height: 32,
     timestamp: 0,
     difference: 0,
-    start: function () {
+    init: function () {
         this.timestamp = Date.parse(gameStart).getTime()
+    },
+    start: function () {
         $('#timerScroll').css('height', Players.length * this.height + 'px');
         timer.countdown();
     },
@@ -41,23 +43,21 @@ var timer = {
         }, 10);
     },
     update: function () {
-        this.timestamp = (new Date()).getTime();
-//        $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
-//        $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
-//        $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
+        this.timestamp = (new Date()).getTime() - 3600000
         this.append(Turn.color, Turn.number)
         this.scroll()
     },
-    append: function (color, number, date) {
-        var difference = 0;
-        var hours = 0,
+    append: function (color, number, start, end) {
+        var difference = 0,
+            hours = 0,
             minutes = 0,
-            seconds = 0;
+            seconds = 0
 
-        if (isSet(date)) {
-            var timestamp = Date.parse(date).getTime()
-            difference = timestamp - this.timestamp - 3600000
-            this.timestamp = timestamp
+        if (isSet(start) && isSet(end)) {
+
+            var end = Date.parse(end).getTime();
+            difference = end - Date.parse(start).getTime() - 3600000
+            this.timestamp = end
 
             var time = new Date(difference),
                 hours = time.getHours(),

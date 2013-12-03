@@ -48,6 +48,7 @@ var Players = {
                 }
             }
         }
+        timer.start()
     },
     draw: function () {
         var r_length = 90;
