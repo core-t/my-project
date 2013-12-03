@@ -839,7 +839,11 @@ var Message = {
     end: function () {
         this.simple('GAME OVER');
     },
-    resurrection: function () {
-
+    treasury: function () {
+        var div = $('<div>')
+            .addClass('overflow')
+            .append(statistics);
+        this.show(div);
+        this.ok();
     }
 }

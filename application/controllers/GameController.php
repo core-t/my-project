@@ -11,6 +11,8 @@ class GameController extends Game_Controller_Game
 //        }
 
         $this->view->headLink()->appendStylesheet($this->view->baseUrl() . '/css/game.css?v=' . Zend_Registry::get('config')->version);
+        $this->view->headScript()->appendFile('/js/date.js');
+
         $this->view->headScript()->appendFile('/js/game/init.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/castles.js?v=' . Zend_Registry::get('config')->version);
         $this->view->headScript()->appendFile('/js/game/armies.js?v=' . Zend_Registry::get('config')->version);
@@ -44,6 +46,8 @@ class GameController extends Game_Controller_Game
         $playersInGameColors = $mPlayersInGame->getAllColors();
 
         $game = $mGame->getGame();
+
+        $this->view->gameStart = substr($game['begin'], 0, 19);
 
 //        $this->view->artifacts = $mArtifact->getArtifacts();
         $mMapPlayers = new Application_Model_MapPlayers($game['mapId']);

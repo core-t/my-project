@@ -1,9 +1,7 @@
 var timer = {
-    timeStart: 0,
     timestamp: 0,
     start: function () {
-        this.setTimeStart();
-        this.append(Turn.color, Turn.number);
+        this.timestamp = Date.parse(gameStart).getTime()
         $('#timerScroll').css('height', Players.length * 30 + 'px');
         timer.countdown();
     },
@@ -31,9 +29,9 @@ var timer = {
                 hours = '0' + hours;
             }
 
-            $('#timerBox #time #hour').html(hours);
-            $('#timerBox #time #minute').html(minutes);
-            $('#timerBox #time #second').html(seconds);
+            $('#timerBox #' + Turn.color + Turn.number + ' #hour').html(hours);
+            $('#timerBox #' + Turn.color + Turn.number + ' #minute').html(minutes);
+            $('#timerBox #' + Turn.color + Turn.number + ' #second').html(seconds);
         }
 
         setTimeout(function () {
@@ -48,21 +46,42 @@ var timer = {
         this.append(Turn.color, Turn.number);
         $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
     },
-    setTimeStart: function () {
-        this.timeStart = (new Date()).getTime() + 3600000;
-    },
-    append: function (color, number) {
+    append: function (color, number, date) {
+        var difference = 0;
+        if (isSet(date)) {
+            var timestamp = Date.parse(date).getTime()
+            difference = timestamp - this.timestamp - 3600000
+            this.timestamp = timestamp
+
+            var time = new Date(difference),
+                hours = time.getHours(),
+                minutes = time.getMinutes(),
+                seconds = time.getSeconds();
+
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+        }
+
         $('#timerRows')
             .append($('<div class="row">')
                 .append($('<div class="left color">').html($('<img>').attr('src', Hero.getImage(color))))
                 .append($('<div class="left nr">').html(number))
                 .append(
-                    $('<div class="left time" id="time">')
-                        .append($('<div>').attr('id', 'second'))
+                    $('<div class="left time" id="' + color + number + '">')
+                        .append($('<div>').attr('id', 'second').html(seconds))
                         .append($('<div>').html(':'))
-                        .append($('<div>').attr('id', 'minute'))
+                        .append($('<div>').attr('id', 'minute').html(minutes))
                         .append($('<div>').html(':'))
-                        .append($('<div>').attr('id', 'hour'))
+                        .append($('<div>').attr('id', 'hour').html(hours))
                 )
             );
     }

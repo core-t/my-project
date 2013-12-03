@@ -660,11 +660,11 @@
     width: 75px;
 }
 
-#timerBox #time {
+#timerBox .time {
     overflow: hidden;
 }
 
-#timerBox #time div {
+#timerBox .time div {
     float: right;
 }
 

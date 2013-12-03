@@ -45,6 +45,10 @@ var Gui = {
         board = $('#board');
         coord = $('#coord');
 
+        $('#goldBox').click(function(){
+            Message.treasury()
+        })
+
         $('#exit').click(function () {
             window.location = '/' + lang + '/index';
         });

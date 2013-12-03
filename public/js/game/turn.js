@@ -5,7 +5,7 @@ var Turn = {
     color: null,
     init: function () {
         for (i in turnHistory) {
-
+            timer.append(turnHistory[i].shortName, turnHistory[i].number, turnHistory[i].date.substr(0,19))
         }
 
         this.number = turnHistory[i].number;
