@@ -78,7 +78,7 @@
     z-index: 2202;
 }
 
-.c {
+.zoomPad .c {
     width: 4px;
     height: 4px;
     position: absolute;
@@ -994,4 +994,21 @@ table.statistics th.Players {
     line-height: 30px;
     background: #CECEb0;
     border: none;
+}
+
+table.treasury {
+    width: 200px;
+    margin: 0 auto;
+}
+
+table.treasury td {
+    border: none;
+}
+
+table.treasury td.r {
+    text-align: right;
+}
+
+table.treasury td.c {
+    text-align: center;
 }
