@@ -10,7 +10,7 @@ var timer = {
         timer.countdown();
     },
     countdown: function () {
-        var difference = (new Date()).getTime() - this.timestamp;
+        var difference = (new Date()).getTime() - this.timestamp - 3600000;
 
         if (this.difference != difference) {
             this.difference = difference;
@@ -43,7 +43,7 @@ var timer = {
         }, 10);
     },
     update: function () {
-        this.timestamp = (new Date()).getTime() + 3600000
+        this.timestamp = (new Date()).getTime()
         this.append(Turn.color, Turn.number)
         this.scroll()
     },

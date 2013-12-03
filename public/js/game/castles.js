@@ -204,6 +204,7 @@ var Castle = {
 
         if (isSet(castles[castleId]) && castles[castleId].razed) {
             this.raze(castleId)
+            alert('oho!')
             return;
         }
 
@@ -213,6 +214,7 @@ var Castle = {
                 castles[castleId].defense = 1;
             }
             castle.attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
+            $('#castle' + castleId + ' .shield').html(castles[castleId].defense);
         }
 
         if (color == my.color) {
