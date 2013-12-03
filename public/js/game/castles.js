@@ -216,6 +216,7 @@ var Castle = {
         }
 
         if (color == my.color) {
+            incomeIncrement(castles[castleId].income);
             Castle.changeFields(castleId, 'c');
             castle
                 .css({
@@ -262,6 +263,9 @@ var Castle = {
         $('#c' + castleId).css('background', mapPlayersColors[color].backgroundColor);
     },
     raze: function (castleId) {
+        if (castles[castleId].color == my.color) {
+            incomeIncrement(-castles[castleId].income)
+        }
         Castle.changeFields(castleId, 'g')
         $('#castle' + castleId).remove();
         $('#c' + castleId).remove();

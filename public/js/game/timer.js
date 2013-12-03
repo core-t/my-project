@@ -43,7 +43,7 @@ var timer = {
         }, 10);
     },
     update: function () {
-        this.timestamp = (new Date()).getTime() - 3600000
+        this.timestamp = (new Date()).getTime() + 3600000
         this.append(Turn.color, Turn.number)
         this.scroll()
     },

@@ -128,6 +128,13 @@ Websocket = {
                             Message.remove();
                             Army.delete(r.armyId, r.color);
                             if (my.turn) {
+                                var upkeep=0;
+                                for(i in players[my.color].armies[r.armyId].soldiers){
+                                    upkeep+=units[players[my.color].armies[r.armyId].soldiers[i].unitId].cost
+                                }
+
+                                upkeep
+
                                 if (!Hero.findMy()) {
                                     $('#heroResurrection').removeClass('buttonOff')
                                 }

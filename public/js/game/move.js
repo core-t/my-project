@@ -137,7 +137,7 @@ var Move = {
             }
         }
 
-        setTimeout('$(".war").remove()', 1000);
+        setTimeout('$(".war").remove()', 100);
     }
 }
 

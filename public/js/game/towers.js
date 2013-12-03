@@ -73,8 +73,13 @@ function searchTower(x, y) {
 function changeTower(x, y, towerId) {
     if (fields[y][x] != 'e') {
         if (towers[towerId].color != Turn.color) {
-            if (Turn.color == my.color || (my.game && players[Turn.color].computer)) {
+            if (my.turn || (my.game && players[Turn.color].computer)) {
                 Websocket.tower(towerId);
+            }
+            if (towers[towerId].color != my.color && my.turn) {
+                incomeIncrement(5);
+            } else if (towers[towerId].color == my.color && !my.turn) {
+                incomeIncrement(-5);
             }
             towers[towerId].color = Turn.color;
             $('#tower' + towerId).css('background', 'url(/img/game/towers/' + Turn.color + '.png) center center no-repeat');

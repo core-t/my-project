@@ -6,15 +6,35 @@ $(document)[0].oncontextmenu = function () {
 // *** OTHER ***
 
 function goldUpdate(gold) {
-    $('#gold').html(gold);
+    $('#gold').fadeOut(300, function () {
+        $('#gold').html(gold)
+        $('#gold').fadeIn()
+    })
+
 }
 
 function costsUpdate(gold) {
-    $('#costs').html(gold);
+    $('#costs').fadeOut(300, function () {
+        $('#costs').html(gold)
+        $('#costs').fadeIn(300)
+    })
+}
+
+function costIncrement(gold) {
+    gold += parseInt($('#costs').html())
+    costsUpdate(gold)
 }
 
 function incomeUpdate(gold) {
-    $('#income').html(gold);
+    $('#income').fadeOut(300, function () {
+        $('#income').html(gold)
+        $('#income').fadeIn(300)
+    })
+}
+
+function incomeIncrement(gold) {
+    gold += parseInt($('#income').html())
+    incomeUpdate(gold)
 }
 
 function setLock() {
