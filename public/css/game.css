@@ -657,7 +657,8 @@
 }
 
 #timerBox .time {
-    width: 75px;
+    width: 92px;
+    overflow: hidden;
 }
 
 #timerBox .time {
@@ -670,17 +671,20 @@
 
 #timerBox #second {
     width: 20px;
-    text-align: center;
+    text-align: left;
+    padding: 0 3px;
 }
 
 #timerBox #minute {
     width: 20px;
-    text-align: center;
+    text-align: left;
+    padding: 0 3px;
 }
 
 #timerBox #hour {
     min-width: 20px;
-    text-align: center;
+    text-align: left;
+    padding: 0 3px;
 }
 
 #goldBox {

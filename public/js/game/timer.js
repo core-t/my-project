@@ -1,17 +1,19 @@
 var timer = {
+    height: 32,
     timestamp: 0,
+    difference: 0,
     start: function () {
         this.timestamp = Date.parse(gameStart).getTime()
-        $('#timerScroll').css('height', Players.length * 30 + 'px');
+        $('#timerScroll').css('height', Players.length * this.height + 'px');
         timer.countdown();
     },
     countdown: function () {
-        var timestamp = (new Date()).getTime() - timer.timeStart;
+        var difference = (new Date()).getTime() - this.timestamp;
 
-        if (timer.timestamp != timestamp) {
-            timer.timestamp = timestamp;
+        if (this.difference != difference) {
+            this.difference = difference;
 
-            var time = new Date(timestamp),
+            var time = new Date(difference),
                 hours = time.getHours(),
                 minutes = time.getMinutes(),
                 seconds = time.getSeconds();
@@ -39,15 +41,19 @@ var timer = {
         }, 10);
     },
     update: function () {
-        this.setTimeStart();
-        $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
-        $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
-        $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
-        this.append(Turn.color, Turn.number);
-        $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * 30 }, 1000);
+        this.timestamp = (new Date()).getTime();
+//        $('#timerBox #second').attr('id', 'second' + $('#timerBox #second').html())
+//        $('#timerBox #minute').attr('id', 'minute' + $('#timerBox #minute').html())
+//        $('#timerBox #hour').attr('id', 'hour' + $('#timerBox #hour').html())
+        this.append(Turn.color, Turn.number)
+        this.scroll()
     },
     append: function (color, number, date) {
         var difference = 0;
+        var hours = 0,
+            minutes = 0,
+            seconds = 0;
+
         if (isSet(date)) {
             var timestamp = Date.parse(date).getTime()
             difference = timestamp - this.timestamp - 3600000
@@ -84,5 +90,8 @@ var timer = {
                         .append($('<div>').attr('id', 'hour').html(hours))
                 )
             );
+    },
+    scroll: function () {
+        $('#timerScroll').animate({ scrollTop: $('#timerRows .row').length * this.height }, 1000)
     }
 }

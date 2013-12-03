@@ -842,7 +842,7 @@ var Message = {
     treasury: function () {
         var div = $('<div>')
             .addClass('overflow')
-            .append(statistics);
+            .append();
         this.show(div);
         this.ok();
     }

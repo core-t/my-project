@@ -5,9 +5,9 @@ var Turn = {
     color: null,
     init: function () {
         for (i in turnHistory) {
-            timer.append(turnHistory[i].shortName, turnHistory[i].number, turnHistory[i].date.substr(0,19))
+            timer.append(turnHistory[i].shortName, turnHistory[i].number, turnHistory[i].date.substr(0, 19))
         }
-
+        timer.scroll()
         this.number = turnHistory[i].number;
         this.color = turnHistory[i].shortName;
     },
@@ -20,7 +20,7 @@ var Turn = {
         Castle.showFirst();
         Message.turn();
         titleBlink('Your turn!');
-        if(!Hero.findMy()){
+        if (!Hero.findMy()) {
             $('#heroResurrection').removeClass('buttonOff')
         }
     },
