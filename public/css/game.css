@@ -39,8 +39,8 @@
 }
 
 .zoomPup {
-    background-color: #FFF;
-    opacity: 0.25;
+    /*background-color: #FFF;*/
+    /*opacity: 0.25;*/
     border: 1px solid #fff;
     top: 0;
     left: 0;
@@ -81,8 +81,10 @@
 .zoomPad .c {
     width: 4px;
     height: 4px;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
     position: absolute;
-    background: #aaa;
+    background: #bbb;
     cursor: url('/img/game/lupa.png') 13 13, crosshair;
 }
 
@@ -121,9 +123,11 @@
     margin: 3px 3px 3px 4px;
 }
 
-.a {
-    width: 2px;
-    height: 2px;
+.zoomPad .a {
+    width: 1px;
+    height: 1px;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
     position: absolute;
     cursor: url('/img/game/lupa.png') 13 13, crosshair;
 }

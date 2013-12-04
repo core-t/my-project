@@ -48,9 +48,9 @@ Websocket = {
 
                         if (r.color == my.color) {
                             Sound.play('startturn');
-                            goldUpdate(r.gold);
-                            $('#costs').html(r.costs);
-                            $('#income').html(r.income);
+                            goldUpdate(r.gold)
+                            costsUpdate(r.costs)
+                            incomeUpdate(r.income)
                             unlock();
                         }
 

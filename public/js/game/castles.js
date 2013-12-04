@@ -209,10 +209,10 @@ var Castle = {
         }
 
         if (castles[castleId].color) {
-//            castles[castleId].defense -= 1;
-//            if (castles[castleId].defense < 1) {
-//                castles[castleId].defense = 1;
-//            }
+            castles[castleId].defense -= 1;
+            if (castles[castleId].defense < 1) {
+                castles[castleId].defense = 1;
+            }
             castle.attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
             $('#castle' + castleId + ' .shield').html(castles[castleId].defense);
         }
@@ -261,7 +261,7 @@ var Castle = {
 
         castles[castleId].color = color;
 
-        $('#c' + castleId).css('background', mapPlayersColors[color].backgroundColor);
+        $('#c' + castleId).css('background', mapPlayersColors[color].minimapColor);
     },
     raze: function (castleId) {
         if (castles[castleId].color == my.color) {

@@ -76,7 +76,7 @@ class Application_Model_MapPlayers extends Coret_Db_Table_Abstract
     public function getAllColors()
     {
         $select = $this->_db->select()
-            ->from($this->_name, array('backgroundColor', 'textColor', 'longName', 'shortName'))
+            ->from($this->_name, array('minimapColor', 'backgroundColor', 'textColor', 'longName', 'shortName'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->order('startOrder');
 

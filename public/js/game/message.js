@@ -639,20 +639,20 @@ var Message = {
             .append($('<p id="vs">').html('VS').addClass('center'))
             .append(defense)
             .append($('<div>').addClass('battle defense'))
-            .append($('<div id="battleOk">').addClass('button buttonColors go').html('OK'));
+            .append($('<div id="battleOk">').addClass('button buttonColors go').html('OK').css('display', 'none'));
 
         this.show(div);
 
         if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
             $('#battleOk').click(function () {
-                Move.end(data, computer)
+//                Move.end(data, computer)
                 Message.castle(data.castleId)
-            });
+            })
         } else {
             $('#battleOk').click(function () {
-                Move.end(data, computer)
+//                Move.end(data, computer)
                 Message.remove()
-            });
+            })
         }
         if (newBattle) {
             setTimeout(function () {
@@ -665,6 +665,7 @@ var Message = {
             break;
         }
         if (notSet(b[i])) {
+            $('#battleOk').fadeIn(200)
             Move.end(data, computer);
             return;
         }
@@ -907,7 +908,7 @@ var Message = {
                     )
             )
             .append($('<h3>').html('Summation'))
-            .append($('<div>').html(myTowers * 5 + myCastlesGold - myUnitsGold + 'gold per turn'))
+            .append($('<div>').html(myTowers * 5 + myCastlesGold - myUnitsGold + ' gold per turn'))
         this.show(div);
         this.ok();
     },
