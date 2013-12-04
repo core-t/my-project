@@ -3,10 +3,6 @@
 var lang = '<?php echo Zend_Registry::get('lang') ?>';
 var langId = <?php echo Zend_Registry::get('id_lang') ?>;
 
-$(document).ready(function() {
-    goldUpdate(<?php echo $this->gold ?>);
-});
-
 var gameId = <?php echo $this->gameId ?>;
 var accessKey = '<?php echo $this->accessKey ?>';
 
@@ -16,7 +12,8 @@ var my = {
     color: '<?php echo $this->color ?>',
     id: <?php echo $this->id ?>,
     turn: <?php echo $this->myTurn ?>,
-    game: <?php echo $this->myGame ?>
+    game: <?php echo $this->myGame ?>,
+    gold: <?php echo $this->gold ?>
 }
 
 var ruins = <?php echo Zend_Json::encode($this->ruins); ?>;

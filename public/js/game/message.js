@@ -990,12 +990,45 @@ var Message = {
         var table = $('<table>')
             .addClass('treasury')
 
+        var click = function (i) {
+            return function () {
+                zoomer.lensSetCenter(players[my.color].armies[i].x * 40, players[my.color].armies[i].y * 40)
+            }
+        }
+
         for (i in players[my.color].armies) {
             for (j in players[my.color].armies[i].soldiers) {
                 myUnits++
                 myUnitsGold += units[players[my.color].armies[i].soldiers[j].unitId].cost
+                table.append(
+                    $('<tr>')
+                        .append($('<td>').html($('<img>').attr('src', Unit.getImage(players[my.color].armies[i].soldiers[j].unitId, my.color))))
+                        .append($('<td>').html(units[players[my.color].armies[i].soldiers[j].unitId].name))
+                        .append($('<td>').html(units[players[my.color].armies[i].soldiers[j].unitId].cost + 'gold').addClass('r'))
+                        .click(click(i))
+                        .mouseover(function () {
+                            $(this).children().css({
+                                background: 'lime',
+                                color: '#000'
+                            })
+                        })
+                        .mouseout(function () {
+                            $(this).children().css({
+                                background: '#000',
+                                color: 'lime'
+                            })
+                        })
+                        .css('color', 'lime')
+                )
             }
         }
+
+        table.append(
+            $('<tr>')
+                .append($('<td>').html(myUnits).addClass('r'))
+                .append($('<td>').html('units').addClass('c'))
+                .append($('<td>').html(myUnitsGold + 'gold').addClass('r'))
+        )
 
         var div = $('<div>')
             .addClass('overflow')

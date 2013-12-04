@@ -20,7 +20,7 @@ var Players = {
                 Army.init(players[color].armies[i], color);
                 if (color == my.color) {
                     for (s in players[color].armies[i].soldiers) {
-                        costs += units[players[color].armies[i].soldiers[s].unitId].cost;
+                        my.costs += units[players[color].armies[i].soldiers[s].unitId].cost;
                     }
                     myArmies = true;
                 } else {
@@ -37,7 +37,7 @@ var Players = {
                 Castle.owner(i, color);
 
                 if (color == my.color) {
-                    income += castles[i].income;
+                    my.income += castles[i].income;
                     if (firstCastleId > i) {
                         firstCastleId = i;
                     }

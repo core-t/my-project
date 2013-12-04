@@ -11,9 +11,6 @@ Image5.src = '/img/game/cursor_pointer.png';
 
 var fields = new Array();
 
-var costs = 0;
-var income = 0;
-
 //var selectedEnemyArmy = null;
 
 var firstCastleId = 1000;
@@ -48,8 +45,10 @@ var heroesKilled = null;
 var soldiersKilled = null;
 var soldiersCreated = null;
 
-
 $(document).ready(function () {
+    my.income = 0
+    my.costs = 0
+
     $(window).resize(function () {
         Gui.adjust();
     });
@@ -104,8 +103,10 @@ function startGame() {
     }
 
     renderChatHistory();
-    costsUpdate(costs);
-    income += countPlayerTowers(my.color) * 5;
-    incomeUpdate(income);
+
+    goldUpdate(my.gold)
+    costsUpdate(my.costs)
+    my.income += countPlayerTowers(my.color) * 5
+    incomeUpdate(my.income)
 }
 
