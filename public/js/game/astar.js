@@ -20,8 +20,8 @@ var AStar = {
         if (castleId = Castle.get(destination.x, destination.y)) {
             coord.html(castles[castleId].name);
         } else {
-            coord.html(destination.x + ' - ' + destination.y + ' ' + terrain[fields[destination.y][destination.x]].name);
-//            coord.html(terrain[fields[destination.y][destination.x]].name);
+//            coord.html(destination.x + ' - ' + destination.y + ' ' + terrain[fields[destination.y][destination.x]].name);
+            coord.html(terrain[fields[destination.y][destination.x]].name);
         }
 
         if (Army.selected) {

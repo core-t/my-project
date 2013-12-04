@@ -692,10 +692,22 @@
     border-top: none;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    text-shadow: none;
+}
+
+#goldBox .left {
+    margin: 0 2px;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+#goldBox .left:hover {
+    cursor: pointer;
+    background: lime;
+    color: #000;
 }
 
 #goldBox div div {
-    /*width: 56px;*/
     height: 14px;
     padding: 2px;
     text-align: center;
@@ -997,13 +1009,37 @@ table.statistics th.Players {
 }
 
 table.treasury {
-    width: 200px;
+    width: 250px;
     margin: 0 auto;
+    text-shadow: none;
 }
 
 table.treasury td {
-    border: none;
+    border: 1px solid gray;
+    background: #000;
+    border-radius: 0;
+    padding: 0 5px;
 }
+
+table.treasury tr:first-of-type td:first-of-type {
+    border-top-left-radius: 5px;
+}
+
+table.treasury tr:first-of-type td:last-of-type {
+    border-top-right-radius: 5px;
+}
+
+table.treasury tr:last-of-type td:first-of-type {
+    border-bottom-left-radius: 5px;
+}
+
+table.treasury tr:last-of-type td:last-of-type {
+    border-bottom-right-radius: 5px;
+}
+
+/*table.treasury tr:hover td {*/
+/*background: grey;*/
+/*}*/
 
 table.treasury td.r {
     text-align: right;

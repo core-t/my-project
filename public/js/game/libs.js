@@ -6,34 +6,39 @@ $(document)[0].oncontextmenu = function () {
 // *** OTHER ***
 
 function goldUpdate(gold) {
-    $('#gold').fadeOut(300, function () {
-        $('#gold').html(gold)
-        $('#gold').fadeIn()
+    $('#gold #value').fadeOut(300, function () {
+        $('#gold #value').html(gold)
+        $('#gold #value').fadeIn()
     })
 
 }
 
+function goldIncrement(gold) {
+    gold += parseInt($('#gold #value').html())
+    goldUpdate(gold)
+}
+
 function costsUpdate(gold) {
-    $('#costs').fadeOut(300, function () {
-        $('#costs').html(gold)
-        $('#costs').fadeIn(300)
+    $('#costs #value').fadeOut(300, function () {
+        $('#costs #value').html(gold)
+        $('#costs #value').fadeIn(300)
     })
 }
 
 function costIncrement(gold) {
-    gold += parseInt($('#costs').html())
+    gold += parseInt($('#costs #value').html())
     costsUpdate(gold)
 }
 
 function incomeUpdate(gold) {
-    $('#income').fadeOut(300, function () {
-        $('#income').html(gold)
-        $('#income').fadeIn(300)
+    $('#income #value').fadeOut(300, function () {
+        $('#income #value').html(gold)
+        $('#income #value').fadeIn(300)
     })
 }
 
 function incomeIncrement(gold) {
-    gold += parseInt($('#income').html())
+    gold += parseInt($('#income #value').html())
     incomeUpdate(gold)
 }
 

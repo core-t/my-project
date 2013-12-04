@@ -676,6 +676,7 @@ var Message = {
             }, 500);
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1000, function () {
                 console.log(b[i])
+                console.log(data)
                 delete b[i];
                 Message.kill(b, data, computer);
             });
@@ -907,6 +908,99 @@ var Message = {
             )
             .append($('<h3>').html('Summation'))
             .append($('<div>').html(myTowers * 5 + myCastlesGold - myUnitsGold + 'gold per turn'))
+        this.show(div);
+        this.ok();
+    },
+    income: function () {
+        var myTowers = 0,
+            myCastles = 0,
+            myCastlesGold = 0
+
+        for (i in towers) {
+            if (towers[i].color == my.color) {
+                myTowers++
+            }
+        }
+
+
+        var table = $('<table>')
+            .addClass('treasury')
+
+        var click = function (i) {
+            return function () {
+                zoomer.lensSetCenter(castles[i].x * 40, castles[i].y * 40)
+            }
+        }
+
+        for (i in castles) {
+            if (castles[i].color == my.color) {
+                myCastles++
+                myCastlesGold += castles[i].income
+                table.append(
+                    $('<tr>')
+                        .append($('<td>'))
+                        .append($('<td>').html(castles[i].name))
+                        .append($('<td>').html(castles[i].income + 'gold').addClass('r'))
+                        .click(click(i))
+                        .mouseover(function () {
+                            $(this).children().css({
+                                background: 'lime',
+                                color: '#000'
+                            })
+                        })
+                        .mouseout(function () {
+                            $(this).children().css({
+                                background: '#000',
+                                color: 'lime'
+                            })
+                        })
+                        .css('color', 'lime')
+                )
+            }
+        }
+        table.append(
+                $('<tr>')
+                    .append($('<td>').html(myCastles).addClass('r'))
+                    .append($('<td>').html('castles').addClass('c'))
+                    .append($('<td>').html(myCastlesGold + 'gold').addClass('r'))
+            ).append(
+                $('<tr>')
+                    .append($('<td>').html(myTowers).addClass('r'))
+                    .append($('<td>').html('towers').addClass('c'))
+                    .append($('<td>').html(myTowers * 5 + 'gold').addClass('r'))
+            ).append(
+                $('<tr>')
+                    .append($('<td>'))
+                    .append($('<td>'))
+                    .append($('<td>').html(myTowers * 5 + myCastlesGold + 'gold').addClass('r'))
+            )
+
+
+        var div = $('<div>')
+            .addClass('overflow')
+            .append($('<h3>').html('Income'))
+            .append(table)
+        this.show(div);
+        this.ok();
+    },
+    upkeep: function () {
+        var myUnits = 0,
+            myUnitsGold = 0
+
+        var table = $('<table>')
+            .addClass('treasury')
+
+        for (i in players[my.color].armies) {
+            for (j in players[my.color].armies[i].soldiers) {
+                myUnits++
+                myUnitsGold += units[players[my.color].armies[i].soldiers[j].unitId].cost
+            }
+        }
+
+        var div = $('<div>')
+            .addClass('overflow')
+            .append($('<h3>').html('Upkeep'))
+            .append(table)
         this.show(div);
         this.ok();
     }

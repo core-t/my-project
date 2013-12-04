@@ -45,8 +45,16 @@ var Gui = {
         board = $('#board');
         coord = $('#coord');
 
-        $('#goldBox').click(function(){
+        $('#gold').click(function () {
             Message.treasury()
+        })
+
+        $('#income').click(function () {
+            Message.income()
+        })
+
+        $('#costs').click(function () {
+            Message.upkeep()
         })
 
         $('#exit').click(function () {
