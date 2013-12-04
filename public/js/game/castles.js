@@ -209,10 +209,10 @@ var Castle = {
         }
 
         if (castles[castleId].color) {
-            castles[castleId].defense -= 1;
-            if (castles[castleId].defense < 1) {
-                castles[castleId].defense = 1;
-            }
+//            castles[castleId].defense -= 1;
+//            if (castles[castleId].defense < 1) {
+//                castles[castleId].defense = 1;
+//            }
             castle.attr('title', castles[castleId].name + '(' + castles[castleId].defense + ')');
             $('#castle' + castleId + ' .shield').html(castles[castleId].defense);
         }
