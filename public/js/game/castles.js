@@ -218,7 +218,6 @@ var Castle = {
         }
 
         if (color == my.color) {
-            incomeIncrement(castles[castleId].income);
             Castle.changeFields(castleId, 'c');
             castle
                 .css({

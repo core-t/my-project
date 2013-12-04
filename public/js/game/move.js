@@ -87,10 +87,6 @@ var Move = {
                     }
                 }
 
-                if (isDigit(r.castleId) && isTruthful(r.victory)) {
-                    Castle.owner(r.castleId, r.attackerColor);
-                }
-
                 Message.battle(r, computer);
 //                setTimeout(function () {
 //                    Message.battle(r, computer);
@@ -103,6 +99,13 @@ var Move = {
         }
     },
     end: function (r, computer) {
+        if (isDigit(r.castleId) && isTruthful(r.victory)) {
+            Castle.owner(r.castleId, r.attackerColor);
+            if (r.attackerColor == my.color) {
+                incomeIncrement(castles[r.castleId].income);
+            }
+        }
+
         AStar.x = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
         AStar.y = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 

@@ -623,13 +623,11 @@ function myArmyMouse(armyId) {
 }
 
 function armiesAddCursorWhenSelectedArmy() {
-    $('.army:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
-    $('.army:not(.' + my.color + ') img').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
+    $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor_attack.png) 13 16, crosshair');
 }
 
 function armiesAddCursorWhenUnselectedArmy() {
-    $('.army:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor.png), default');
-    $('.army:not(.' + my.color + ') img').css('cursor', 'url(/img/game/cursor.png), default');
+    $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor.png), default');
 }
 
 function enemyArmyMouse(element, x, y) {

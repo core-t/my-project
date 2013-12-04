@@ -645,11 +645,13 @@ var Message = {
 
         if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
             $('#battleOk').click(function () {
-                Message.castle(data.castleId);
+                Move.end(data, computer)
+                Message.castle(data.castleId)
             });
         } else {
             $('#battleOk').click(function () {
-                Message.remove();
+                Move.end(data, computer)
+                Message.remove()
             });
         }
         if (newBattle) {
@@ -673,6 +675,7 @@ var Message = {
                 Sound.play('error');
             }, 500);
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1000, function () {
+                console.log(b[i])
                 delete b[i];
                 Message.kill(b, data, computer);
             });
