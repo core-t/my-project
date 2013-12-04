@@ -665,7 +665,9 @@ var Message = {
             break;
         }
         if (notSet(b[i])) {
-            $('#battleOk').fadeIn(200)
+            if (!computer) {
+                $('#battleOk').fadeIn(200)
+            }
             Move.end(data, computer);
             return;
         }
@@ -678,6 +680,23 @@ var Message = {
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1000, function () {
                 console.log(b[i])
                 console.log(data)
+                if (data.attackerColor == my.color) {
+                    for (k in players[my.color].armies[data.attackerArmy.armyId].soldiers) {
+                        if (players[my.color].armies[data.attackerArmy.armyId].soldiers[k].soldierId == b[i].soldierId) {
+                            costIncrement(-units[players[my.color].armies[data.attackerArmy.armyId].soldiers[k].unitId].cost)
+                        }
+                    }
+                }
+
+                if (data.defenderColor == my.color) {
+                    for (j in data.defenderArmy) {
+                        for (k in players[my.color].armies[data.defenderArmy[j].armyId].soldiers) {
+                            if (players[my.color].armies[data.defenderArmy[j].armyId].soldiers[k].soldierId == b[i].soldierId) {
+                                costIncrement(-units[players[my.color].armies[data.defenderArmy[j].armyId].soldiers[k].unitId].cost)
+                            }
+                        }
+                    }
+                }
                 delete b[i];
                 Message.kill(b, data, computer);
             });
