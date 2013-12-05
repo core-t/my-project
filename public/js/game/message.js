@@ -680,21 +680,18 @@ var Message = {
             .append($('<p id="vs">').html('VS').addClass('center'))
             .append(defense)
             .append($('<div>').addClass('battle defense'))
-            .append($('<div id="battleOk">').addClass('button buttonColors go').html('OK').css('display', 'none'));
+            .append(
+                $('<div id="battleOk">')
+                    .addClass('button buttonColors go')
+                    .html('OK')
+                    .css('display', 'none')
+                    .click(function () {
+                        Message.remove()
+                    })
+            )
 
         this.show(div);
 
-        if (my.color == data.attackerColor && isDigit(data.castleId) && isTruthful(data.victory)) {
-            $('#battleOk').click(function () {
-//                Move.end(data, computer)
-                Message.castle(data.castleId)
-            })
-        } else {
-            $('#battleOk').click(function () {
-//                Move.end(data, computer)
-                Message.remove()
-            })
-        }
         if (newBattle) {
             setTimeout(function () {
                 Message.kill(newBattle, data, computer);
@@ -707,7 +704,7 @@ var Message = {
         }
         if (notSet(b[i])) {
             if (!computer) {
-                $('#battleOk').fadeIn(200)
+                $('#battleOk').fadeIn(100)
             }
             Move.end(data, computer);
             return;

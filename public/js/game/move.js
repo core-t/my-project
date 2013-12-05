@@ -99,13 +99,6 @@ var Move = {
         }
     },
     end: function (r, computer) {
-        if (isDigit(r.castleId) && isTruthful(r.victory)) {
-            Castle.owner(r.castleId, r.attackerColor);
-            if (r.attackerColor == my.color) {
-                incomeIncrement(castles[r.castleId].income);
-            }
-        }
-
         AStar.x = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
         AStar.y = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 
@@ -135,6 +128,13 @@ var Move = {
             } else {
                 Army.deselect()
                 unlock()
+                if (isDigit(r.castleId) && isTruthful(r.victory)) {
+                    Castle.owner(r.castleId, r.attackerColor);
+                    if (r.attackerColor == my.color) {
+                        incomeIncrement(castles[r.castleId].income);
+                        Message.castle()
+                    }
+                }
             }
             if (!Hero.findMy()) {
                 $('#heroResurrection').removeClass('buttonOff')

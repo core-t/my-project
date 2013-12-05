@@ -2,28 +2,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-02 04:03+0100\n"
-"PO-Revision-Date: 2013-12-02 04:04+0100\n"
+"POT-Creation-Date: 2013-12-05 12:15+0100\n"
+"PO-Revision-Date: 2013-12-05 12:15+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
-"Language: \n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;translate\n"
 "X-Poedit-Basepath: /home/bartek/Documents/WWW/WOF\n"
-"X-Poedit-Language: Polish\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.5\n"
 "X-Poedit-SearchPath-0: application\n"
 "X-Poedit-SearchPath-1: library/Game\n"
 "X-Poedit-SearchPath-2: library/Coret\n"
 "X-Poedit-SearchPath-3: library/Cli\n"
 
 #: application/modules/admin/views/helpers/Delete.php:10
-msgid "Deleting an item needs to be confirmed. Are you sure you want to delete it?"
-msgstr "Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
+msgid ""
+"Deleting an item needs to be confirmed. Are you sure you want to delete it?"
+msgstr ""
+"Usunięcie elementu wymaga potwierdzenia. Czy na pewno chcesz go usunąć?"
 
 #: application/modules/admin/views/helpers/Delete.php:12
+#: application/views/scripts/help/index.phtml:35
+#: application/views/scripts/help/index.phtml:42
 msgid "Yes"
 msgstr "Tak"
 
@@ -32,26 +36,32 @@ msgid "Logout"
 msgstr "Wyloguj"
 
 #: application/views/helpers/MainMenu.php:14
+#: application/views/scripts/new/index.phtml:1
 msgid "Play"
 msgstr "Graj"
 
 #: application/views/helpers/MainMenu.php:17
+#: application/views/scripts/load/index.phtml:1
 msgid "Load game"
 msgstr "Wczytaj grę"
 
 #: application/views/helpers/MainMenu.php:20
+#: application/views/scripts/halloffame/index.phtml:1
 msgid "Hall of Fame"
 msgstr "Sala sław"
 
 #: application/views/helpers/MainMenu.php:23
+#: application/views/scripts/hero/index.phtml:1
 msgid "Hero"
 msgstr "Bohater"
 
 #: application/views/helpers/MainMenu.php:26
+#: application/views/scripts/profile/index.phtml:1
 msgid "Profile"
 msgstr "Profil"
 
 #: application/views/helpers/MainMenu.php:29
+#: application/views/scripts/help/index.phtml:1
 msgid "Help"
 msgstr "Pomoc"
 
@@ -75,8 +85,7 @@ msgstr "Wersja"
 msgid "Select number of players"
 msgstr "Wybierz ilość graczy"
 
-#: application/forms/Password.php:9
-#: application/forms/Auth.php:15
+#: application/forms/Password.php:9 application/forms/Auth.php:15
 msgid "Password"
 msgstr "Hasło"
 
@@ -92,16 +101,17 @@ msgstr "Wybierz mapę"
 msgid "Create game"
 msgstr "Utwórz grę"
 
-#: application/forms/Auth.php:10
-#: application/forms/Registration.php:14
+#: application/forms/Auth.php:10 application/forms/Registration.php:14
 msgid "Email"
 msgstr "E-mail"
 
 #: application/forms/Auth.php:19
+#: application/views/scripts/login/registration.phtml:4
 msgid "Sign in"
 msgstr "Zaloguj się"
 
 #: application/forms/Registration.php:32
+#: application/views/scripts/login/index.phtml:4
 msgid "Register"
 msgstr "Rejestracja"
 
@@ -131,6 +141,11 @@ msgid "First"
 msgstr "Pierwszy"
 
 #: application/modules/admin/views/scripts/pagination_control.phtml:7
+#: application/views/scripts/setup/index.phtml:28
+#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/load/index.phtml:55
+#: application/views/scripts/halloffame/index.phtml:23
+#: application/views/scripts/help/index.phtml:66
 msgid "Back"
 msgstr "Cofnij"
 
@@ -192,6 +207,7 @@ msgid "Map name"
 msgstr "Nazwa mapy"
 
 #: application/views/scripts/new/index.phtml:27
+#: application/views/scripts/load/index.phtml:7
 msgid "Game master"
 msgstr "Mistrz gry"
 
@@ -244,6 +260,7 @@ msgid "Player turn"
 msgstr "Tura gracza"
 
 #: application/views/scripts/load/index.phtml:11
+#: application/layouts/scripts/game.phtml:31
 msgid "Turn nr"
 msgstr "Numer tury"
 
@@ -272,48 +289,51 @@ msgstr "Brak gry do załadowania"
 msgid "Score"
 msgstr "Punkty"
 
-#: application/views/scripts/help/index.phtml:14
+#: application/views/scripts/help/index.phtml:16
 msgid "Cost"
 msgstr "Koszt"
 
-#: application/views/scripts/help/index.phtml:19
+#: application/views/scripts/help/index.phtml:21
 msgid "Special unit"
 msgstr "Jednostka specjalna"
 
-#: application/views/scripts/help/index.phtml:23
+#: application/views/scripts/help/index.phtml:25
+#: application/layouts/scripts/game.phtml:86
 msgid "Attack"
 msgstr "Atak"
 
-#: application/views/scripts/help/index.phtml:25
+#: application/views/scripts/help/index.phtml:27
+#: application/layouts/scripts/game.phtml:89
 msgid "Defense"
 msgstr "Obrona"
 
-#: application/views/scripts/help/index.phtml:27
+#: application/views/scripts/help/index.phtml:29
+#: application/layouts/scripts/game.phtml:83
 msgid "Moves"
 msgstr "Ruchy"
 
-#: application/views/scripts/help/index.phtml:31
+#: application/views/scripts/help/index.phtml:33
 msgid "Can fly"
 msgstr "Może latać"
 
-#: application/views/scripts/help/index.phtml:35
-#: application/views/scripts/help/index.phtml:42
+#: application/views/scripts/help/index.phtml:37
+#: application/views/scripts/help/index.phtml:44
 msgid "No"
 msgstr "Nie"
 
-#: application/views/scripts/help/index.phtml:38
+#: application/views/scripts/help/index.phtml:40
 msgid "Can swim"
 msgstr "Pływa"
 
-#: application/views/scripts/help/index.phtml:47
+#: application/views/scripts/help/index.phtml:49
 msgid "Movement cost through the forest"
 msgstr "Koszt poruszania się po lesie"
 
-#: application/views/scripts/help/index.phtml:49
+#: application/views/scripts/help/index.phtml:51
 msgid "Movement cost through the swamp"
 msgstr "Koszt poruszania się po bagnie"
 
-#: application/views/scripts/help/index.phtml:51
+#: application/views/scripts/help/index.phtml:53
 msgid "Movement cost through the hills"
 msgstr "Koszt poruszania się po wzgórzach"
 
@@ -382,38 +402,42 @@ msgid "Resurrect hero"
 msgstr "Wskrześ herosa"
 
 #: application/layouts/scripts/game.phtml:113
+msgid "Hire hero"
+msgstr "Wynajmij herosa"
+
+#: application/layouts/scripts/game.phtml:117
 msgid "Show castle"
 msgstr "Pokaż zamek"
 
-#: application/layouts/scripts/game.phtml:117
+#: application/layouts/scripts/game.phtml:121
 msgid "Build defense"
 msgstr "Podnieś obronę"
 
-#: application/layouts/scripts/game.phtml:121
+#: application/layouts/scripts/game.phtml:125
 msgid "Raze castle"
 msgstr "Zburz zamek"
 
-#: application/layouts/scripts/game.phtml:128
+#: application/layouts/scripts/game.phtml:132
 msgid "Split army"
 msgstr "Podziel amię"
 
-#: application/layouts/scripts/game.phtml:132
+#: application/layouts/scripts/game.phtml:136
 msgid "Army status"
 msgstr "Status armii"
 
-#: application/layouts/scripts/game.phtml:136
+#: application/layouts/scripts/game.phtml:140
 msgid "Fortify army"
 msgstr "Fortyfikuj armię"
 
-#: application/layouts/scripts/game.phtml:140
+#: application/layouts/scripts/game.phtml:144
 msgid "Skip in this turn"
 msgstr "Pomiń w tej turze"
 
-#: application/layouts/scripts/game.phtml:144
+#: application/layouts/scripts/game.phtml:148
 msgid "Find next army"
 msgstr "Znajdź następną"
 
-#: application/layouts/scripts/game.phtml:157
+#: application/layouts/scripts/game.phtml:161
 msgid "Send"
 msgstr "Wyślij"
 
