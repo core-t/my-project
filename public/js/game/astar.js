@@ -58,7 +58,7 @@ var AStar = {
             key = close[key].parent.x + '_' + close[key].parent.y;
         }
         path = path.reverse();
-console.log(path)
+
         for (k in path) {
             if (path[k].tt == 'c') {
                 var castleId = Castle.getMy(path[k].x, path[k].y);

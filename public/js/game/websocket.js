@@ -70,8 +70,7 @@ Websocket = {
                             switch (r.find[0]) {
                                 case 'gold':
                                     Sound.play('gold1');
-                                    var gold = r.find[1] + parseInt($('#gold').html());
-                                    goldUpdate(gold);
+                                    goldIncrement(r.find[1]);
                                     Message.simple('You have found ' + r.find[1] + ' gold.');
                                     break;
                                 case 'death':
