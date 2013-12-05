@@ -214,16 +214,6 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         return $this->selectOne($select);
     }
 
-    public function isHeroInGame($heroId)
-    {
-        $select = $this->_db->select()
-            ->from($this->_name, 'heroId')
-            ->where('"gameId" = ?', $this->_gameId)
-            ->where('"heroId" = ?', $heroId);
-
-        return $this->selectOne($select);
-    }
-
     public function connectHero($heroId)
     {
         $data = array(
@@ -237,22 +227,31 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 
     public function getDeadHeroId($playerId)
     {
+        $alive = 0;
+
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), 'armyId')
             ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"', 'heroId')
             ->where($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId)
             ->where('"playerId" = ?', $playerId);
 
-        $result = $this->selectRow($select);
+        foreach ($this->selectAll($select) as $row) {
+            if (!$row['armyId']) {
+                $heroId = $row['heroId'];
+                continue;
+            }
 
-        if (!$result['armyId']) {
-            return $result['heroId'];
+            $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
+
+            if (!$mArmy->getArmyPositionByArmyIdPlayerId($row['armyId'], $playerId)) {
+                $heroId = $row['heroId'];
+                continue;
+            }
+            $alive++;
         }
 
-        $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
-
-        if (!$mArmy->getArmyPositionByArmyIdPlayerId($result['armyId'], $playerId)) {
-            return $result['heroId'];
+        if (!$alive) {
+            return $heroId;
         }
     }
 

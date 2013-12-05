@@ -27,10 +27,7 @@ class Cli_Model_HeroHire
         $heroId = $mHero->createHero();
 
         $mHeroesInGame = new Application_Model_HeroesInGame($user->parameters['gameId'], $db);
-
-        if (!$mHeroesInGame->isHeroInGame($heroId)) {
-            $mHeroesInGame->connectHero($heroId);
-        }
+        $mHeroesInGame->connectHero($heroId);
 
         $mapCastles = Zend_Registry::get('castles');
         $armyId = Cli_Model_Army::heroResurrection($user->parameters['gameId'], $heroId, $mapCastles[$castleId]['position'], $user->parameters['playerId'], $db);

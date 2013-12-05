@@ -436,19 +436,13 @@ class Cli_Model_ComputerMainBlocks
 
     static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db)
     {
-        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        if ($gold >= 100) {
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+            $heroId = $mHeroesInGame->getDeadHeroId($playerId);
 
-        if (!$mHeroesInGame->isHeroInGame($heroId)) {
-            $mHeroesInGame->connectHero($heroId);
-        }
-
-        $heroId = $mHeroesInGame->getDeadHeroId($playerId);
-
-        if ($heroId) {
-            if ($gold >= 100) {
-                $armyId = Cli_Model_Army::heroResurrection($gameId, $heroId, $position, $playerId, $db);
-                if ($armyId) {
-                    return $gold - 100;
+            if ($heroId) {
+                if (Cli_Model_Army::heroResurrection($gameId, $heroId, $position, $playerId, $db)) {
+                    $gold -= 100;
                 }
             }
         }
