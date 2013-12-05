@@ -19,18 +19,16 @@ class Application_Model_MapTowers extends Coret_Db_Table_Abstract
     public function getMapTowers()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
+            ->from($this->_name, array('mapTowerId', 'x', 'y'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
-        try {
-            $all = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
 
         $mapTowers = array();
 
-        foreach ($all as $val) {
-            $mapTowers[$val['mapTowerId']] = $val;
+        foreach ($this->selectAll($select) as $val) {
+            $mapTowers[$val['mapTowerId']] = array(
+                'x' => $val['x'],
+                'y' => $val['y']
+            );
         }
 
         return $mapTowers;

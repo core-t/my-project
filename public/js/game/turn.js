@@ -4,8 +4,6 @@ var Turn = {
     number: null,
     color: null,
     init: function () {
-        timer.init();
-
         var j = 0,
             history = {}
 

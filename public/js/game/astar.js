@@ -58,7 +58,7 @@ var AStar = {
             key = close[key].parent.x + '_' + close[key].parent.y;
         }
         path = path.reverse();
-
+console.log(path)
         for (k in path) {
             if (path[k].tt == 'c') {
                 var castleId = Castle.getMy(path[k].x, path[k].y);
@@ -83,11 +83,20 @@ var AStar = {
 
         var className = 'path1';
 
+        var moves = 0;
+        if (Army.selected.soldierSplitKey !== null) {
+            moves = Army.selected.soldiers[Army.selected.soldierSplitKey].movesLeft
+        } else if (Army.selected.heroSplitKey !== null) {
+            moves = Army.selected.heroes[Army.selected.heroSplitKey].movesLeft
+        } else {
+            moves = Army.selected.moves
+        }
+
         for (i in path) {
             var pathX = path[i].x * 40;
             var pathY = path[i].y * 40;
 
-            if (Army.selected.moves < path[i].G) {
+            if (moves < path[i].G) {
                 if (className == 'path1') {
                     className = 'path2';
                 }

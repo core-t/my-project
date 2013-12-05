@@ -47,8 +47,6 @@ class GameController extends Game_Controller_Game
 
         $game = $mGame->getGame();
 
-        $this->view->gameStart = substr($game['begin'], 0, 19);
-
 //        $this->view->artifacts = $mArtifact->getArtifacts();
         $mMapPlayers = new Application_Model_MapPlayers($game['mapId']);
         $this->view->capitals = $mMapPlayers->getCapitals();

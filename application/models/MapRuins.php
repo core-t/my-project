@@ -21,18 +21,16 @@ class Application_Model_MapRuins extends Coret_Db_Table_Abstract
     public function getMapRuins()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
+            ->from($this->_name, array($this->_primary, 'x', 'y'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId);
-        try {
-            $all = $this->_db->query($select)->fetchAll();
-        } catch (Exception $e) {
-            throw new Exception($select->__toString());
-        }
 
         $ret = array();
 
-        foreach ($all as $val) {
-            $ret[$val[$this->_primary]] = $val;
+        foreach ($this->selectAll($select) as $val) {
+            $ret[$val[$this->_primary]] = array(
+                'x' => $val['x'],
+                'y' => $val['y']
+            );
         }
 
         return $ret;

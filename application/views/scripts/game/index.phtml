@@ -1,12 +1,12 @@
 <?php $this->headScript()->captureStart() ?>
 
-var lang = '<?php echo Zend_Registry::get('lang') ?>';
-var langId = <?php echo Zend_Registry::get('id_lang') ?>;
+var debug = '<?php echo Zend_Registry::get('config')->debug ?>'
+
+var lang = '<?php echo Zend_Registry::get('lang') ?>'
+var langId = <?php echo Zend_Registry::get('id_lang') ?>
 
 var gameId = <?php echo $this->gameId ?>;
 var accessKey = '<?php echo $this->accessKey ?>';
-
-var gameStart = '<?php echo $this->gameStart ?>';
 
 var my = {
     color: '<?php echo $this->color ?>',

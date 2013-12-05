@@ -130,10 +130,11 @@ var Move = {
             Websocket.computer();
         } else if (r.attackerColor == my.color) {
             if (!r.castleId && isSet(players[r.attackerColor].armies[r.attackerArmy.armyId]) && players[r.attackerColor].armies[r.attackerArmy.armyId].moves) {
-                unlock();
-                Army.select(players[r.attackerColor].armies[r.attackerArmy.armyId]);
+                unlock()
+                Army.select(players[r.attackerColor].armies[r.attackerArmy.armyId])
             } else {
-                unlock();
+                Army.deselect()
+                unlock()
             }
             if (!Hero.findMy()) {
                 $('#heroResurrection').removeClass('buttonOff')

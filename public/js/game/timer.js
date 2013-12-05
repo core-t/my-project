@@ -2,9 +2,6 @@ var timer = {
     height: 32,
     timestamp: 0,
     difference: 0,
-    init: function () {
-        this.timestamp = Date.parse(gameStart).getTime()
-    },
     start: function () {
         $('#timerScroll').css('height', Players.length * this.height + 'px');
         timer.countdown();
