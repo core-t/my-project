@@ -190,6 +190,10 @@ class Cli_GameHandler extends Cli_WofHandler
                 new Cli_Model_HeroResurrection($user, $db, $this);
                 break;
 
+            case 'hire':
+                new Cli_Model_HeroHire($user, $db, $this);
+                break;
+
             case 'ruin':
                 new Cli_Model_SearchRuin($dataIn['armyId'], $user, $db, $this);
                 break;

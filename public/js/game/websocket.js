@@ -127,9 +127,9 @@ Websocket = {
                             Message.remove();
                             Army.delete(r.armyId, r.color);
                             if (my.turn) {
-                                var upkeep=0;
-                                for(i in players[my.color].armies[r.armyId].soldiers){
-                                    upkeep+=units[players[my.color].armies[r.armyId].soldiers[i].unitId].cost
+                                var upkeep = 0;
+                                for (i in players[my.color].armies[r.armyId].soldiers) {
+                                    upkeep += units[players[my.color].armies[r.armyId].soldiers[i].unitId].cost
                                 }
 
                                 upkeep
@@ -559,6 +559,24 @@ Websocket = {
 
         var token = {
             type: 'resurrection'
+        };
+
+        ws.send(JSON.stringify(token));
+    },
+    hire: function () {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
+        if (!my.turn) {
+            return;
+        }
+
+        Army.deselect();
+
+        var token = {
+            type: 'hire'
         };
 
         ws.send(JSON.stringify(token));
