@@ -20,15 +20,13 @@ class Application_Model_MapFields extends Coret_Db_Table_Abstract
     public function getMapFields()
     {
         $select = $this->_db->select()
-            ->from($this->_name)
+            ->from($this->_name, array('x', 'y', 'type'))
             ->where($this->_db->quoteIdentifier('mapId') . ' = ?', $this->mapId)
             ->order(array('y', 'x'));
 
-        $all = $this->selectAll($select);
-
         $mapFields = array();
 
-        foreach ($all as $val) {
+        foreach ($this->selectAll($select) as $val) {
             $mapFields[$val['y']][$val['x']] = $val['type'];
         }
 

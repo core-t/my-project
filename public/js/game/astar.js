@@ -39,10 +39,10 @@ var AStar = {
             var start = new node(startX, startY, destination.x, destination.y, 0);
             open[startX + '_' + startY] = start;
 
-            if (castleId) {
-                castleId = Castle.getMy(startX, startY);
-                this.myCastleId[castleId] = true;
-            }
+//            if (castleId) {
+//                castleId = Castle.getMy(startX, startY);
+//                this.myCastleId[castleId] = true;
+//            }
 
             this.aStar(close, open, destination.x, destination.y, 1);
 
@@ -59,7 +59,15 @@ var AStar = {
         }
         path = path.reverse();
 
+        if(isSet(path[0])){
+            if (path[0].tt == 'c') {
+                var castleId = Castle.getMy(path[0].x, path[0].y)
+                this.myCastleId[castleId] = true;
+            }
+        }
+
         for (k in path) {
+
             if (path[k].tt == 'c') {
                 var castleId = Castle.getMy(path[k].x, path[k].y);
                 if (this.myCastleId[castleId]) {
