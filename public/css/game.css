@@ -482,23 +482,36 @@
 
 .message .status div.row {
     clear: both;
-    height: 60px;
+    height: 75px;
     margin: 1px;
     padding: 3px;
-    border: 1px solid #222;
+    border: 1px solid grey;
     border-radius: 3px;
 }
 
-.message .status div.row div {
-    /*    width:180px;*/
-    height: 55px;
-    position: relative;
-    top: 0px;
-    left: 0px;
+.message .status table {
+    width: auto;
 }
 
-.message .status div.row div p {
+.message .status td {
+    border: none;
+    text-align: right;
     height: 14px;
+    padding: 0;
+    margin: 0;
+}
+
+.message .status .value {
+    color: yellow;
+}
+
+.message .status .value div {
+    float: left;
+    width: 20px;
+}
+
+.message .status .plus {
+    color: lime;
 }
 
 .message .status div.row div.nr {

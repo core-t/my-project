@@ -487,21 +487,19 @@ var Message = {
         for (i in Army.selected.soldiers) {
             numberOfUnits++;
             var img = units[Army.selected.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
-            attackPoints = $('<p>').html(units[Army.selected.soldiers[i].unitId].attackPoints).css('color', '#da8');
-            defensePoints = $('<p>').html(units[Army.selected.soldiers[i].unitId].defensePoints).css('color', '#da8');
             if (Army.selected.flyBonus && !Army.selected.soldiers[i].canFly) {
-                attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
-                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
+                var attackFlyBonus = $('<div>').html(' +1').addClass('value plus')
+                var defenseFlyBonus = $('<div>').html(' +1').addClass('value plus')
             }
             if (Army.selected.heroKey) {
-                attackPoints.append($('<span>').html(' +1').css('color', '#00ff00'));
-                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
+                var attackHeroBonus = $('<div>').html(' +1').addClass('value plus')
+                var defenseHeroBonus = $('<div>').html(' +1').addClass('value plus')
             }
             if (bonusTower) {
-                defensePoints.append($('<span>').html(' +1').css('color', '#00ff00'));
+                var defenseTowerBonus = $('<div>').html(' +1').addClass('value plus')
             }
             if (castleDefense) {
-                defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#00ff00'));
+                var defenseCastleBonus = $('<div>').html(' +' + castleDefense).addClass('value plus')
             }
             army.append(
                 $('<div>')
@@ -514,21 +512,64 @@ var Message = {
                         })
                     ))
                     .append(
-                        $('<div>').addClass('left')
-                            .append($('<p>').html('Current moves: '))
-                            .append($('<p>').html('Default moves: '))
-                            .append($('<p>').html('Attack points: '))
-                            .append($('<p>').html('Defense points: '))
+                        $('<table>')
+                            .addClass('left')
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Moves left: '))
+                                    .append($('<td>').html(Army.selected.soldiers[i].movesLeft).addClass('value'))
+                            )
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Default moves: '))
+                                    .append($('<td>').html(units[Army.selected.soldiers[i].unitId].numberOfMoves).addClass('value'))
+                            )
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Attack points: '))
+                                    .append(
+                                        $('<td>')
+                                            .append($('<div>').html(units[Army.selected.soldiers[i].unitId].attackPoints))
+                                            .append(attackFlyBonus)
+                                            .append(attackHeroBonus)
+                                            .addClass('value')
+                                    )
+                            )
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Defense points: '))
+                                    .append(
+                                        $('<td>')
+                                            .append($('<div>').html(units[Army.selected.soldiers[i].unitId].defensePoints))
+                                            .append(defenseFlyBonus)
+                                            .append(defenseHeroBonus)
+                                            .append(defenseTowerBonus)
+                                            .append(defenseCastleBonus)
+                                            .addClass('value')
+                                    )
+                            )
                     )
                     .append(
-                        $('<div>').addClass('left')
-                            .append($('<p>').html(Army.selected.soldiers[i].movesLeft).css('color', '#da8'))
-                            .append($('<p>').html(units[Army.selected.soldiers[i].unitId].numberOfMoves).css('color', '#da8'))
-                            .append(attackPoints)
-                            .append(defensePoints)
+                        $('<table>')
+                            .addClass('left')
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Movement cost through the forest: '))
+                                    .append($('<td>').html(units[Army.selected.soldiers[i].unitId].f).addClass('value'))
+                            )
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Movement cost through the swamp: '))
+                                    .append($('<p>').html(units[Army.selected.soldiers[i].unitId].s).addClass('value')))
+                            .append(
+                                $('<tr>')
+                                    .append($('<td>').html('Movement cost through the hills: '))
+                                    .append($('<p>').html(units[Army.selected.soldiers[i].unitId].m).addClass('value'))
+                            )
                     )
             );
         }
+
         for (i in Army.selected.heroes) {
             numberOfUnits++;
             attackPoints = $('<p>').html(Army.selected.heroes[i].attackPoints).css('color', '#da8');
@@ -1056,5 +1097,13 @@ var Message = {
             .append(table)
         this.show(div);
         this.ok();
+    },
+    hire: function () {
+        var div = $('<div>')
+            .append($('<h3>').html('Hire hero'))
+            .append('Do you want to hire new hero for 1000 gold?')
+        this.show(div)
+        this.ok(Websocket.hire)
+        this.cancel()
     }
 }

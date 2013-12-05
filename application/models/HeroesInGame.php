@@ -250,11 +250,11 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 
         $result = $this->selectRow($select);
 
-        $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
-
         if (!$result['armyId']) {
             return $result['heroId'];
         }
+
+        $mArmy = new Application_Model_Army($this->_gameId, $this->_db);
 
         if (!$mArmy->getArmyPositionByArmyIdPlayerId($result['armyId'], $playerId)) {
             return $result['heroId'];

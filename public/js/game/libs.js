@@ -10,6 +10,11 @@ function goldUpdate(gold) {
     $('#gold #value').fadeOut(300, function () {
         $('#gold #value').html(gold)
         $('#gold #value').fadeIn()
+        if (gold > 1000) {
+            $('#heroHire').removeClass('buttonOff')
+        } else {
+            $('#heroHire').addClass('buttonOff')
+        }
     })
 
 }

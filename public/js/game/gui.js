@@ -5,6 +5,7 @@ var Gui = {
     playerBox: {'close': 0},
     timerBox: {'close': 0},
     zoomPadLayout: {'close': 0},
+    speed: 200,
     doKey: function (event) {
         if ($(event.target).attr('id') == 'msg') {
             return;
@@ -151,6 +152,10 @@ var Gui = {
             Websocket.resurrection()
         });
 
+        $('#heroHire').click(function () {
+            Message.hire()
+        });
+
         $('#razeCastle').click(function () {
             Message.raze();
         });
@@ -178,7 +183,7 @@ var Gui = {
 
             Gui.zoomPadLayout['move'] = move;
 
-            $('.zoomPadLayout').animate({'left': left + move + 'px'}, 1000, function () {
+            $('.zoomPadLayout').animate({'left': left + move + 'px'}, Gui.speed, function () {
                 Gui.zoomPadLayout['close'] = !Gui.zoomPadLayout['close'];
                 Gui.changeCloseArrowLR(Gui.zoomPadLayout['move'], Gui.zoomPadLayout['el']);
             });
@@ -194,7 +199,7 @@ var Gui = {
 
             Gui.timerBox['move'] = move;
 
-            $('#timerBox').animate({'left': left + move + 'px'}, 1000, function () {
+            $('#timerBox').animate({'left': left + move + 'px'}, Gui.speed, function () {
                 Gui.timerBox['close'] = !Gui.timerBox['close'];
                 Gui.changeCloseArrowLR(Gui.timerBox['move'], Gui.timerBox['el']);
             });
@@ -210,7 +215,7 @@ var Gui = {
 
             Gui.playerBox['move'] = move;
 
-            $('#playersBox').animate({'left': left + move + 'px'}, 1000, function () {
+            $('#playersBox').animate({'left': left + move + 'px'}, Gui.speed, function () {
                 Gui.playerBox['close'] = !Gui.playerBox['close'];
                 Gui.changeCloseArrowLR(Gui.playerBox['move'], Gui.playerBox['el']);
             });
@@ -226,7 +231,7 @@ var Gui = {
 
             Gui.chatBox['move'] = move;
 
-            $('#chatBox').animate({'left': left + move + 'px'}, 1000, function () {
+            $('#chatBox').animate({'left': left + move + 'px'}, Gui.speed, function () {
                 Gui.chatBox['close'] = !Gui.chatBox['close'];
                 Gui.changeCloseArrowLR(Gui.chatBox['move'], Gui.chatBox['el']);
             });
@@ -242,7 +247,7 @@ var Gui = {
 
             Gui.armyBox['move'] = move;
 
-            $('#armyBox').animate({'left': left + Gui.armyBox['move'] + 'px'}, 1000, function () {
+            $('#armyBox').animate({'left': left + Gui.armyBox['move'] + 'px'}, Gui.speed, function () {
                 Gui.armyBox['close'] = !Gui.armyBox['close'];
                 Gui.changeCloseArrowLR(Gui.armyBox['move'], Gui.armyBox['el']);
             });
