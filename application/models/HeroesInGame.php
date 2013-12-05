@@ -3,6 +3,8 @@
 class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 {
     protected $_name = 'heroesingame';
+    protected $_primary = '';
+    protected $_sequence = '';
     protected $_gameId;
 
     public function __construct($gameId, $db = null)
@@ -212,25 +214,18 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
         return $this->selectOne($select);
     }
 
-    public function isHeroInGame($playerId)
+    public function isHeroInGame($heroId)
     {
         $select = $this->_db->select()
-            ->from(array('a' => $this->_name), 'heroId')
-            ->join(array('b' => 'hero'), 'a."heroId" = b."heroId"')
+            ->from($this->_name, 'heroId')
             ->where('"gameId" = ?', $this->_gameId)
-            ->where('"playerId" = ?', $playerId);
+            ->where('"heroId" = ?', $heroId);
 
         return $this->selectOne($select);
     }
 
-    public function connectHero($playerId)
+    public function connectHero($heroId)
     {
-        $select = $this->_db->select()
-            ->from('hero', 'heroId')
-            ->where('"playerId" = ?', $playerId);
-
-        $heroId = $this->selectOne($select);
-
         $data = array(
             'armyId' => null,
             'gameId' => $this->_gameId,

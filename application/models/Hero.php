@@ -4,6 +4,7 @@ class Application_Model_Hero extends Coret_Db_Table_Abstract
 {
     protected $_name = 'hero';
     protected $_primary = 'heroId';
+    protected $_sequence = 'hero_heroId_seq';
     protected $_playerId;
 
     public function __construct($playerId, $db = null)
@@ -21,7 +22,10 @@ class Application_Model_Hero extends Coret_Db_Table_Abstract
         $data = array(
             'playerId' => $this->_playerId
         );
+
         $this->insert($data);
+
+        return $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
     }
 
     public function getHeroes()

@@ -438,8 +438,8 @@ class Cli_Model_ComputerMainBlocks
     {
         $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
-        if (!$mHeroesInGame->isHeroInGame($playerId)) {
-            $mHeroesInGame->connectHero($playerId);
+        if (!$mHeroesInGame->isHeroInGame($heroId)) {
+            $mHeroesInGame->connectHero($heroId);
         }
 
         $heroId = $mHeroesInGame->getDeadHeroId($playerId);
