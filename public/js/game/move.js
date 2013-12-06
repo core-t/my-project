@@ -1,6 +1,6 @@
 var Move = {
     start: function (r, computer) {
-        console.log('move start')
+        console.log('move start 0')
         switch (players[r.attackerColor].armies[r.attackerArmy.armyId].movementType) {
             case 'flying':
                 Sound.play('fly');
@@ -25,20 +25,16 @@ var Move = {
         Army.unfortify(r.attackerArmy.armyId);
 
         this.loop(r, null, computer);
+        console.log('move start 1')
     },
     loop: function (r, xy, computer) {
+        console.log('move loop 0')
         for (step in r.path) {
             break;
         }
 
         if (isSet(r.path[step])) {
             zoomer.setCenterIfOutOfScreen(r.path[step].x * 40, r.path[step].y * 40);
-
-            var next = function (step) {
-                return function () {
-
-                }
-            }
 
             $('#army' + r.oldArmyId)
                 .animate({
@@ -51,9 +47,9 @@ var Move = {
                     Move.loop(r, xy, computer);
                 });
         } else {
-            if (xy) {
-                zoomer.lensSetCenter(xy.x * 40, xy.y * 40);
-            }
+//            if (xy) {
+//                zoomer.lensSetCenter(xy.x * 40, xy.y * 40);
+//            }
 
             if (isTruthful(r.battle)) {
                 Sound.play('fight');
@@ -66,13 +62,6 @@ var Move = {
                             left: 40 * castles[r.castleId].x - 11 + 'px'
                         }));
                 } else {
-//                    if (isSet(r.attackerArmy.x)) {
-//                        var x = r.attackerArmy.x;
-//                        var y = r.attackerArmy.y;
-//                    } else if (isSet(r.defenderArmy.x)) {
-//                        var x = r.defenderArmy.x;
-//                        var y = r.defenderArmy.y;
-//                    }
                     board.append($('<div>')
                         .addClass('war')
                         .css({
@@ -85,11 +74,12 @@ var Move = {
             } else {
                 Move.end(r, computer);
             }
-
-            return;
         }
+        console.log('move loop 1')
     },
     end: function (r, computer) {
+        console.log('move end 0')
+
         AStar.x = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
         AStar.y = players[r.attackerColor].armies[r.attackerArmy.armyId].y;
 
@@ -140,10 +130,6 @@ var Move = {
         }
 
         setTimeout('$(".war").remove()', 100);
-        console.log('move end')
+        console.log('move end 1')
     }
 }
-
-
-
-

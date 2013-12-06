@@ -747,8 +747,6 @@ var Message = {
                 delete b[i];
                 Message.kill(b, data, computer);
             });
-        } else {
-            console.log('zonk');
         }
     },
     raze: function () {
