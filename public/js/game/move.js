@@ -1,6 +1,6 @@
 var Move = {
     start: function (r, computer) {
-
+        console.log('move start')
         switch (players[r.attackerColor].armies[r.attackerArmy.armyId].movementType) {
             case 'flying':
                 Sound.play('fly');
@@ -27,21 +27,27 @@ var Move = {
         this.loop(r, null, computer);
     },
     loop: function (r, xy, computer) {
-        for (i in r.path) {
+        for (step in r.path) {
             break;
         }
 
-        if (isSet(r.path[i])) {
-            zoomer.setCenterIfOutOfScreen(r.path[i].x * 40, r.path[i].y * 40);
+        if (isSet(r.path[step])) {
+            zoomer.setCenterIfOutOfScreen(r.path[step].x * 40, r.path[step].y * 40);
+
+            var next = function (step) {
+                return function () {
+
+                }
+            }
 
             $('#army' + r.oldArmyId)
                 .animate({
-                    left: (r.path[i].x * 40) + 'px',
-                    top: (r.path[i].y * 40) + 'px'
+                    left: (r.path[step].x * 40) + 'px',
+                    top: (r.path[step].y * 40) + 'px'
                 }, 200, function () {
-                    searchTower(r.path[i].x, r.path[i].y);
-                    xy = r.path[i];
-                    delete r.path[i];
+                    searchTower(r.path[step].x, r.path[step].y);
+                    xy = r.path[step];
+                    delete r.path[step];
                     Move.loop(r, xy, computer);
                 });
         } else {
@@ -60,37 +66,22 @@ var Move = {
                             left: 40 * castles[r.castleId].x - 11 + 'px'
                         }));
                 } else {
-                    if (isSet(r.attackerArmy.x)) {
-                        var x = r.attackerArmy.x;
-                        var y = r.attackerArmy.y;
-                    } else if (isSet(r.defenderArmy.x)) {
-                        var x = r.attackerArmy.x;
-                        var y = r.defenderArmy.y;
-                    }
+//                    if (isSet(r.attackerArmy.x)) {
+//                        var x = r.attackerArmy.x;
+//                        var y = r.attackerArmy.y;
+//                    } else if (isSet(r.defenderArmy.x)) {
+//                        var x = r.defenderArmy.x;
+//                        var y = r.defenderArmy.y;
+//                    }
                     board.append($('<div>')
                         .addClass('war')
                         .css({
-                            top: 40 * y - 42 + 'px',
-                            left: 40 * x - 41 + 'px'
+                            top: 40 * r.attackerArmy.y - 42 + 'px',
+                            left: 40 * r.attackerArmy.x - 41 + 'px'
                         }));
                 }
 
-                if (isTruthful(r.defenderArmy) && isTruthful(r.defenderColor)) {
-                    if (isTruthful(r.victory)) {
-                        for (i in r.defenderArmy) {
-                            Army.delete(r.defenderArmy[i].armyId, r.defenderColor, 1);
-                        }
-                    } else {
-                        for (i in r.defenderArmy) {
-                            Army.init(r.defenderArmy[i], r.defenderColor);
-                        }
-                    }
-                }
-
                 Message.battle(r, computer);
-//                setTimeout(function () {
-//                    Message.battle(r, computer);
-//                }, 2500);
             } else {
                 Move.end(r, computer);
             }
@@ -110,10 +101,17 @@ var Move = {
             Ruin.update(r.ruinId, 1);
         }
 
-//        if (typeof r.deletedIds == 'undefined') {
-//            console.log('?');
-//            return;
-//        }
+        if (isTruthful(r.defenderArmy) && isTruthful(r.defenderColor)) {
+            if (isTruthful(r.victory)) {
+                for (i in r.defenderArmy) {
+                    Army.delete(r.defenderArmy[i].armyId, r.defenderColor, 1);
+                }
+            } else {
+                for (i in r.defenderArmy) {
+                    Army.init(r.defenderArmy[i], r.defenderColor);
+                }
+            }
+        }
 
         for (i in r.deletedIds) {
             Army.delete(r.deletedIds[i].armyId, r.attackerColor, 1);
@@ -142,6 +140,7 @@ var Move = {
         }
 
         setTimeout('$(".war").remove()', 100);
+        console.log('move end')
     }
 }
 

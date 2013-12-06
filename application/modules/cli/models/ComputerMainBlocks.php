@@ -343,110 +343,55 @@ class Cli_Model_ComputerMainBlocks
         );
     }
 
-//    static public function startTurn($gameId, $playerId, $db)
-//    {
-//        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
-//        $mPlayersInGame->turnActivate($playerId);
-//
-//        Cli_Model_Database::unfortifyComputerArmies($gameId, $playerId, $db);
-//        Cli_Model_Database::resetHeroesMovesLeft($gameId, $playerId, $db);
-//
-//        $mArmy = new Application_Model_Army($gameId, $db);
-//        $mSoldier = new Application_Model_Soldier($gameId, $db);
-//        $mSoldier->resetMovesLeft($mArmy->getSelectForPlayerAll($playerId));
-//
-//        $gold = $mPlayersInGame->getPlayerInGameGold($playerId);
-//
-//        $income = 0;
-//        $color = null;
-//        $turnNumber = Cli_Model_Database::getTurnNumber($gameId, $db);
-//
-//        $mapCastles = Zend_Registry::get('castles');
-//
-//        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
-//
-//        $castlesId = Cli_Model_Database::getPlayerCastlesIds($gameId, $playerId, $db);
-//        foreach ($castlesId as $id) {
-//            $castleId = $id['castleId'];
-//            $castles[$castleId] = $mapCastles[$castleId];
-//            $castle = $castles[$castleId];
-//            $income += $castle['income'];
-//
-//            if ($turnNumber < 10) {
-//                $unitId = Application_Model_Board::getMinProductionTimeUnit($castle['production']);
-//            } else {
-//                $unitId = Application_Model_Board::getCastleOptimalProduction($castle['production']);
-//            }
-//
-//            $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
-//
-//            if ($unitId != $castleProduction['production']) {
-//                $mCastlesInGame->setProduction($castleId, $playerId, $unitId);
-//                $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
-//                $unitId = $castleProduction['production'];
-//            }
-//            $castles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-//
-//            if ($castle['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $castle['production'][$unitId]['cost'] <= $gold) {
-//                if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
-//                    $armyId = Cli_Model_Database::getArmyIdFromPosition($gameId, $castle['position'], $db);
-//                    if (!$armyId) {
-//                        $mArmy = new Application_Model_Army($gameId, $db);
-//                        $armyId = $mArmy->createArmy($castle['position'], $playerId);
-//                    }
-//                    $mSoldier = new Application_Model_Soldier($gameId, $db);
-//                    $mSoldier->add($armyId, $castleProduction['production']);
-//                }
-//            }
-//        }
-//        if (isset($castle['position'])) {
-//            $gold = self::handleHeroResurrection($gameId, $gold, $castle['position'], $playerId, $db);
-//        }
-//
-//        $armies = Cli_Model_Database::getPlayerArmies($gameId, $playerId, $db);
-//
-//        if (empty($castles) && empty($armies)) {
-//            $action = 'gameover';
-//        } else {
-//            $mTowersInGame = new Application_Model_TowersInGame($gameId, $db);
-//            $income += $mTowersInGame->calculateIncomeFromTowers($playerId);
-////            $income += Cli_Model_Database::calculateIncomeFromTowers($gameId, $playerId, $db);
-//            if (!isset($mSoldier)) {
-//                $mSoldier = new Application_Model_Soldier($gameId, $db);
-//            }
-//            if (!isset($mArmy)) {
-//                $mArmy = new Application_Model_Army($gameId, $db);
-//            }
-//            $gold = $gold + $income - $mSoldier->calculateCostsOfSoldiers($mArmy->getSelectForPlayerAll($playerId));
-//            $mPlayersInGame->updatePlayerInGameGold($playerId, $gold);
-//
-//            $action = 'start';
-//
-//            $playersInGameColors = Zend_Registry::get('playersInGameColors');
-//
-//            $color = $playersInGameColors[$playerId];
-//        }
-//
-//        return array(
-//            'action' => $action,
-//            'armies' => $armies,
-//            'color' => $color
-//        );
-//    }
-
-    static public function handleHeroResurrection($gameId, $gold, $position, $playerId, $db)
+    static public function handleHeroResurrection($gameId, $playerId, $db, $gameHandler)
     {
-        if ($gold >= 100) {
-            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
-            $heroId = $mHeroesInGame->getDeadHeroId($playerId);
+        $mPlayersInGame = new Application_Model_PlayersInGame($gameId, $db);
+        $gold = $mPlayersInGame->getPlayerGold($playerId);
 
-            if ($heroId) {
-                if (Cli_Model_Army::heroResurrection($gameId, $heroId, $position, $playerId, $db)) {
-                    $gold -= 100;
-                }
-            }
+        if ($gold < 100) {
+            return;
         }
-        return $gold;
+
+        $capitals = Zend_Registry::get('capitals');
+        $playersInGameColors = Zend_Registry::get('playersInGameColors');
+        $color = $playersInGameColors[$playerId];
+        $castleId = $capitals[$color];
+
+        $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
+        if (!$mCastlesInGame->isPlayerCastle($castleId, $playerId)) {
+            return;
+        }
+
+        $mapCastles = Zend_Registry::get('castles');
+
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $heroId = $mHeroesInGame->getDeadHeroId($playerId);
+
+        if (!$heroId) {
+            return;
+        }
+
+        $armyId = Cli_Model_Army::heroResurrection($gameId, $heroId, $mapCastles[$castleId]['position'], $playerId, $db);
+
+        if (!$armyId) {
+            return;
+        }
+
+        $gold -= 100;
+        $mPlayersInGame->updatePlayerGold($playerId, $gold);
+
+        $mArmy2 = new Application_Model_Army($gameId, $db);
+
+        $token = array(
+            'type' => 'resurrection',
+            'data' => array(
+                'army' => $mArmy2->getArmyByArmyId($armyId),
+                'gold' => $gold
+            ),
+            'color' => $color
+        );
+
+        $gameHandler->sendToChannel($db, $token, $gameId);
     }
 
 }

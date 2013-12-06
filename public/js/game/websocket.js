@@ -151,6 +151,8 @@ Websocket = {
                             if (Hero.findMy()) {
                                 $('#heroResurrection').addClass('buttonOff')
                             }
+                        } else if (players[r.color].computer) {
+                            Websocket.computer()
                         }
                         break;
 

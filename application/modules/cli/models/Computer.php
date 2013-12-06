@@ -24,6 +24,10 @@ class Cli_Model_Computer
             $mTurn = new Cli_Model_Turn($user->parameters['gameId'], $db, $gameHandler);
             $mTurn->start($playerId, true);
         } else {
+            if (Cli_Model_ComputerMainBlocks::handleHeroResurrection($user->parameters['gameId'], $playerId, $db, $gameHandler)) {
+                return;
+            }
+
             $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
             $army = $mArmy2->getComputerArmyToMove($playerId);
             if (!empty($army['armyId'])) {

@@ -129,10 +129,6 @@ class Cli_Model_Turn
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
 
             if ($computer) {
-                if ($capitalId == $castleId) {
-                    $gold = Cli_Model_ComputerMainBlocks::handleHeroResurrection($this->_gameId, $gold, $mapCastles[$castleId]['position'], $playerId, $this->_db);
-                }
-
                 $mGame = new Application_Model_Game($this->_gameId, $this->_db);
                 $turnNumber = $mGame->getTurnNumber();
 
