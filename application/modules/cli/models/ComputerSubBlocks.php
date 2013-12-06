@@ -208,6 +208,7 @@ class Cli_Model_ComputerSubBlocks
         } else {
             $move['in'] = false;
         }
+        $move['castleId'] = $castleId;
         return $move;
     }
 
