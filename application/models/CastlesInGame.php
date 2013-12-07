@@ -18,6 +18,21 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
         }
     }
 
+    public function cancelProductionRelocation($playerId, $castleId)
+    {
+        $where = array(
+            $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
+            $this->_db->quoteInto('"castleId" = ?', $castleId),
+            $this->_db->quoteInto('"playerId" = ?', $playerId)
+        );
+
+        $data = array(
+            'relocationCastleId' => null
+        );
+
+        return $this->update($data, $where);
+    }
+
     public function setProduction($playerId, $castleId, $unitId, $relocationCastleId = null)
     {
         $where = array(
@@ -101,24 +116,12 @@ class Application_Model_CastlesInGame extends Coret_Db_Table_Abstract
 
     public function buildDefense($castleId, $playerId, $defenseMod)
     {
-//        $select = $db->select()
-//            ->from('castlesingame', 'defenseMod')
-//            ->where('"gameId" = ?', $gameId)
-//            ->where('"playerId" = ?', $playerId)
-//            ->where('"castleId" = ?', $castleId);
-//        $defenseMod = $db->fetchOne($select);
-//        $defensePoints = Application_Model_Board::getCastleDefense($castleId);
-//
-//        if ($defensePoints + $defenseMod < 1) {
-//            $defenseMod = 1 - $defensePoints;
-//        }
-//        $defenseMod++;
-
         $where = array(
             $this->_db->quoteInto('"gameId" = ?', $this->_gameId),
             $this->_db->quoteInto('"playerId" = ?', $playerId),
             $this->_db->quoteInto('"castleId" = ?', $castleId)
         );
+
         $data = array(
             'defenseMod' => $defenseMod
         );

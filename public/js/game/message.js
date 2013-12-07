@@ -699,15 +699,16 @@ var Message = {
         }
     },
     kill: function (b, data, computer) {
+        console.log('kill 0')
         for (i in b) {
-            break;
+            break
         }
         if (notSet(b[i])) {
             if (!computer) {
                 $('#battleOk').fadeIn(100)
             }
-            Move.end(data, computer);
-            return;
+            Move.end(data, computer)
+            return
         }
 
         if (isSet(b[i].soldierId)) {
@@ -748,6 +749,7 @@ var Message = {
                 Message.kill(b, data, computer);
             });
         }
+        console.log('kill 1')
     },
     raze: function () {
         if (Army.selected == null) {

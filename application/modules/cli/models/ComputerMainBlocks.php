@@ -258,21 +258,6 @@ class Cli_Model_ComputerMainBlocks
                                 $mArmy2->fortify($army['armyId'], 1);
                                 return self::endMove($playerId, $db, $gameId, $army['armyId'], array('x' => $army['x'], 'y' => $army['y']));
                             }
-//                            //atakuj
-//                            $l->log('ATAKUJĘ WRÓGA Z ZASIĘGIEM - ATAKUJ!'); //atakuję wrogów którzy mają zasięg na zamek, brak enemy armyId, armia nie zmienia pozycji
-//                            $aStar = $enemy['aStar'];
-//                            $path = $aStar->getReturnPath($enemy['key']);
-////                            $path = $aStar->getPath($enemy['key']);
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-//                            var_dump($path);
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-//                            echo '*** TEST RETURN PATH ***' . "\n";
-////                            exit;
-//                            $fightEnemy = Cli_Model_ComputerSubBlocks::fightEnemy($gameId, $army, $path, $castlesAndFields['fields'], $enemy, $playerId, $enemy['castleId'], $db);
-//                            return self::endMove($playerId, $db, $gameId, $army['armyId'], $enemy['currentPosition'], $path, $fightEnemy, $enemy['castleId']);
                         }
                     }
                 }

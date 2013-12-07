@@ -118,12 +118,12 @@ class Cli_Model_Turn
         $units = Zend_Registry::get('units');
 
         $mCastlesInGame = new Application_Model_CastlesInGame($this->_gameId, $this->_db);
-        $castlesInGame = $mCastlesInGame->getPlayerCastles($playerId);
+        $playerCastles = $mCastlesInGame->getPlayerCastles($playerId);
 
         $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
         $mSoldiersCreated = new Application_Model_SoldiersCreated($this->_gameId, $this->_db);
 
-        foreach ($castlesInGame as $castleId => $castleInGame) {
+        foreach ($playerCastles as $castleId => $castleInGame) {
             $income += $mapCastles[$castleId]['income'];
 
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
@@ -145,13 +145,24 @@ class Cli_Model_Turn
                 $unitId = $castleProduction['productionId'];
             }
 
-            $castlesInGame[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
+            $playerCastles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
             if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $units[$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
                     if ($castleProduction['relocationCastleId']) {
-                        $unitCastleId = $castleProduction['relocationCastleId'];
-                    } else {
+                        foreach ($playerCastles as $castle) {
+                            if ($castleProduction['relocationCastleId'] == $castle['castleId']) {
+                                $unitCastleId = $castleProduction['relocationCastleId'];
+                                break;
+                            }
+                        }
+
+                        if (!isset($unitCastleId)) {
+                            $mCastlesInGame->cancelProductionRelocation($playerId, $castleId);
+                        }
+                    }
+
+                    if (!isset($unitCastleId)) {
                         $unitCastleId = $castleId;
                     }
 
@@ -182,7 +193,7 @@ class Cli_Model_Turn
             'costs' => $costs,
             'income' => $income,
             'armies' => $armies,
-            'castles' => $castlesInGame,
+            'castles' => $playerCastles,
             'color' => $color
         );
         $this->_gameHandler->sendToChannel($this->_db, $token, $this->_gameId);
