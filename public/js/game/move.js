@@ -107,6 +107,10 @@ var Move = {
             Army.delete(r.deletedIds[i].armyId, r.attackerColor, 1);
         }
 
+        if (isDigit(r.castleId) && isTruthful(r.victory)) {
+            Castle.owner(r.castleId, r.attackerColor);
+        }
+
         if (isSet(computer)) {
             Websocket.computer();
         } else if (r.attackerColor == my.color) {
@@ -117,11 +121,8 @@ var Move = {
                 Army.deselect()
                 unlock()
                 if (isDigit(r.castleId) && isTruthful(r.victory)) {
-                    Castle.owner(r.castleId, r.attackerColor);
-                    if (r.attackerColor == my.color) {
-                        incomeIncrement(castles[r.castleId].income);
-                        Message.castle()
-                    }
+                    incomeIncrement(castles[r.castleId].income);
+                    Message.castle()
                 }
             }
             if (!Hero.findMy()) {

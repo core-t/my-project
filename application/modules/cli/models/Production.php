@@ -7,6 +7,10 @@ class Cli_Model_Production
         $castleId = $dataIn['castleId'];
         $unitId = $dataIn['unitId'];
         if (isset($dataIn['relocationCastleId'])) {
+            if ($dataIn['relocationCastleId'] == $castleId) {
+                $gameHandler->sendError($user, 'Can\'t relocate production to the same castle!');
+                return;
+            }
             $relocationCastleId = $dataIn['relocationCastleId'];
         } else {
             $relocationCastleId = null;
