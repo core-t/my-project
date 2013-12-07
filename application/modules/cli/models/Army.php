@@ -479,4 +479,45 @@ class Cli_Model_Army
 
         return $bestUnitId;
     }
+
+    static public function getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db)
+    {
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $ids = $mArmy->getCastleGarrisonFromCastlePosition($castlePosition);
+
+        if ($ids) {
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+            return array(
+                'heroes' => $mHeroesInGame->getForBattle($ids),
+                'soldiers' => $mSoldier->getForBattle($ids),
+                'ids' => $ids
+            );
+        } else {
+            return array(
+                'heroes' => array(),
+                'soldiers' => array(),
+                'ids' => array()
+            );
+        }
+
+    }
+
+    static public function getArmyByArmyIdPlayerId($armyId, $playerId, $gameId, $db)
+    {
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $result = $mArmy->getArmyByArmyIdPlayerId($armyId, $playerId);
+
+        if (isset($result['armyId'])) {
+            $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+            $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
+            $result['soldiers'] = $mSoldier->getForMove($armyId);
+            $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
+        }
+
+        return $result;
+    }
 }

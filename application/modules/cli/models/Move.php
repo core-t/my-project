@@ -46,7 +46,7 @@ class Cli_Model_Move
 
         $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
 
-        $army = $mArmy2->getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId']);
+        $army = Cli_Model_Army::getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
 
         if (empty($army)) {
             $gameHandler->sendError($user, 'Brak armii o podanym ID! Odświerz przeglądarkę.');
@@ -62,7 +62,7 @@ class Cli_Model_Move
             if ($army['canSwim'] || $army['canFly']) {
                 $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
                 if ($otherArmyId) {
-                    $otherArmy = $mArmy2->getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId']);
+                    $otherArmy = Cli_Model_Army::getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
                     $mOtherArmy = new Cli_Model_Army($otherArmy);
                     if (!$mOtherArmy->canSwim() && !$mOtherArmy->canFly()) {
                         new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
@@ -74,7 +74,7 @@ class Cli_Model_Move
         } elseif ($fields[$army['y']][$army['x']] == 'M') {
             $otherArmyId = $mArmy2->isOtherArmyAtPosition($attackerArmyId, $army['x'], $army['y']);
             if ($otherArmyId) {
-                $otherArmy = $mArmy2->getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId']);
+                $otherArmy = Cli_Model_Army::getArmyByArmyIdPlayerId($otherArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
                 $mOtherArmy = new Cli_Model_Army($otherArmy);
                 if (!$mOtherArmy->canFly()) {
                     new Cli_Model_JoinArmy($otherArmyId, $user, $db, $gameHandler);
@@ -182,7 +182,7 @@ class Cli_Model_Move
             } else { // kolor wrogiego zamku sprawdzam dopiero wtedy gdy wiem, że armia ma na niego zasięg
                 $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
                 $defenderColor = $playersInGameColors[$defenderId];
-                $enemy = $mArmy2->getAllEnemyUnitsFromCastlePosition($castlesSchema[$castleId]['position']);
+                $enemy = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlesSchema[$castleId]['position'], $user->parameters['gameId'], $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $user->parameters['gameId'], $castleId, $db);
             }
         } elseif ($move['currentPosition']['x'] == $x && $move['currentPosition']['y'] == $y && $defenderId) { // enemy army
@@ -226,7 +226,7 @@ class Cli_Model_Move
                     }
                 }
                 $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
-                $attacker = $mArmy2->getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId']);
+                $attacker = Cli_Model_Army::getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
                 $victory = true;
 //                foreach ($enemy['ids'] as $id) {
 //                    $defender[]['armyId'] = $id;
@@ -246,7 +246,7 @@ class Cli_Model_Move
             $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
             $armiesIds = $mArmy2->joinArmiesAtPosition($move['currentPosition'], $user->parameters['playerId']);
             $newArmyId = $armiesIds['armyId'];
-            $attacker = $mArmy2->getArmyByArmyIdPlayerId($newArmyId, $user->parameters['playerId']);
+            $attacker = Cli_Model_Army::getArmyByArmyIdPlayerId($newArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
             $deletedIds = $armiesIds['deletedIds'];
         }
 

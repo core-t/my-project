@@ -21,7 +21,7 @@ class Cli_Model_ComputerSubBlocks
                 $playersInGameColors = Zend_Registry::get('playersInGameColors');
                 $defenderId = $mCastlesInGame->getPlayerIdByCastleId($castleId);
                 $result['defenderColor'] = $playersInGameColors[$defenderId];
-                $enemy = $mArmy2->getAllEnemyUnitsFromCastlePosition($mapCastles[$castleId]['position']);
+                $enemy = Cli_Model_Army::getCastleGarrisonFromCastlePosition($mapCastles[$castleId]['position'], $gameId, $db);
                 $enemy = Cli_Model_Army::addCastleDefenseModifier($enemy, $gameId, $castleId, $db);
                 $battle = new Cli_Model_Battle($army, $enemy);
                 $battle->fight();
@@ -30,7 +30,7 @@ class Cli_Model_ComputerSubBlocks
 
                 if (!$battle->getDefender()) {
                     $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
-                    $result['attackerArmy'] = $mArmy2->getArmyByArmyIdPlayerId($army['armyId'], $playerId);
+                    $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
                     $result['victory'] = true;
 //                    foreach ($enemy['ids'] as $id) {
 //                        $defender[]['armyId'] = $id;
@@ -59,7 +59,7 @@ class Cli_Model_ComputerSubBlocks
 
                 if (!$battle->getDefender()) {
                     $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
-                    $result['attackerArmy'] = $mArmy2->getArmyByArmyIdPlayerId($army['armyId'], $playerId);
+                    $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
 
                     $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
                     $mCastlesInGame->addCastle($castleId, $playerId);
@@ -86,7 +86,7 @@ class Cli_Model_ComputerSubBlocks
 
             if (!$battle->getDefender()) {
                 $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
-                $result['attackerArmy'] = $mArmy2->getArmyByArmyIdPlayerId($army['armyId'], $playerId);
+                $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
                 $result['victory'] = true;
                 $defender[0]['armyId'] = $enemy['armyId'];
             } else {
@@ -151,7 +151,7 @@ class Cli_Model_ComputerSubBlocks
             $position = $castles[$castleId]['position'];
             $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
             if ($mCastlesInGame->isEnemyCastle($castleId, $playerId)) {
-                $enemy = $mArmy2->getAllEnemyUnitsFromCastlePosition($position);
+                $enemy = Cli_Model_Army::getCastleGarrisonFromCastlePosition($position, $gameId, $db);
             } else {
                 $enemy = Cli_Model_Battle::getNeutralCastleGarrison($gameId, $db);
             }

@@ -182,6 +182,10 @@ class Cli_Model_ComputerMainBlocks
             $l->log('W ZAMKU');
 
             $castlePosition = $myCastles[$myCastleId]['position'];
+
+            $garrison = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db);
+            
+
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);
             if (!$enemiesHaveRange) {
@@ -304,7 +308,7 @@ class Cli_Model_ComputerMainBlocks
             $attackerArmy['y'] = $position['y'];
             $defenderArmy = $fightEnemy['defenderArmy'];
         } else {
-            $attackerArmy = $mArmy2->getArmyByArmyIdPlayerId($armyId, $playerId);
+            $attackerArmy = Cli_Model_Army::getArmyByArmyIdPlayerId($armyId, $playerId, $gameId, $db);
             $defenderArmy = null;
         }
 
