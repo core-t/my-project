@@ -184,7 +184,10 @@ class Cli_Model_ComputerMainBlocks
             $castlePosition = $myCastles[$myCastleId]['position'];
 
             $garrison = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db);
-
+            $mGame = new Application_Model_Game($gameId, $db);
+            $turnNumber = $mGame->getTurnNumber();
+            $numberOfUnits = floor($turnNumber / 7);
+            var_dump($numberOfUnits);
 
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);
