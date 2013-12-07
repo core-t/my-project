@@ -129,14 +129,19 @@ class Cli_Model_Turn
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
 
             if ($computer) {
-                $mGame = new Application_Model_Game($this->_gameId, $this->_db);
-                $turnNumber = $mGame->getTurnNumber();
-
-                if ($turnNumber < 10) {
-                    $unitId = Application_Model_Board::getMinProductionTimeUnit($mapCastles[$castleId]['production']);
-                } else {
-                    $unitId = Application_Model_Board::getCastleOptimalProduction($mapCastles[$castleId]['production']);
+                if (!isset($turnNumber)) {
+                    $mGame = new Application_Model_Game($this->_gameId, $this->_db);
+                    $turnNumber = $mGame->getTurnNumber();
                 }
+
+                if ($turnNumber < 7) {
+                    $unitId = Application_Model_Board::getUnitIdWithMinimalProductionTime($mapCastles[$castleId]['production']);
+                } else {
+                    $unitId = Cli_Model_Army::findBestCastleProduction($units, $mapCastles[$castleId]['production']);
+                }
+
+
+
                 if ($unitId != $castleProduction['productionId']) {
                     $mCastlesInGame->setProduction($playerId, $castleId, $unitId);
                     $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);

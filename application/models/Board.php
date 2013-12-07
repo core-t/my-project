@@ -14,49 +14,7 @@ class Application_Model_Board
         return self::$_instance;
     }
 
-    static public function getCastleOptimalProduction($production)
-    {
-        $units = Zend_Registry::get('units');
-        $arr = array();
-        foreach ($production as $unitId => $unit) {
-            switch ($units[$unitId]['name']) {
-                case 'Griffins':
-                    $arr[1] = $unitId;
-                    break;
-                case 'Heavy Infantry':
-                    $arr[2] = $unitId;
-                    break;
-                case 'Archers':
-                    $arr[3] = $unitId;
-                    break;
-                case 'Light Infantry':
-                    $arr[4] = $unitId;
-                    break;
-                case 'Wolves':
-                    $arr[5] = $unitId;
-                    break;
-                case 'Giants':
-                    $arr[6] = $unitId;
-                    break;
-                case 'Cavalry':
-                    $arr[7] = $unitId;
-                    break;
-                case 'Pegasi':
-                    $arr[8] = $unitId;
-                    break;
-                case 'Dwarves':
-                    $arr[9] = $unitId;
-                    break;
-            }
-        }
-//        asort($arr, SORT_NUMERIC);
-//        throw new Exception(Zend_Debug::dump($arr));
-        foreach ($arr as $unitId) {
-            return $unitId;
-        }
-    }
-
-    static public function getMinProductionTimeUnit(array $production)
+    static public function getUnitIdWithMinimalProductionTime(array $production)
     {
         $min = 100;
         foreach ($production as $key => $val) {

@@ -456,4 +456,27 @@ class Cli_Model_Army
 
         return $armyId;
     }
+
+    static public function countUnitValue($unit, $productionTime)
+    {
+        return ($unit['attackPoints'] + $unit['defensePoints'] + $unit['canFly']) / $productionTime;
+    }
+
+    static public function findBestCastleProduction(array $units, array $production)
+    {
+        $value = 0;
+        $bestUnitId = null;
+
+        foreach ($production as $unitId => $row) {
+
+            $tmpValue = self::countUnitValue($units[$unitId], $row['time']);
+
+            if ($tmpValue > $value) {
+                $value = $tmpValue;
+                $bestUnitId = $unitId;
+            }
+        }
+
+        return $bestUnitId;
+    }
 }
