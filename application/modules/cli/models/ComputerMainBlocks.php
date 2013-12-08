@@ -182,12 +182,28 @@ class Cli_Model_ComputerMainBlocks
             $l->log('W ZAMKU');
 
             $castlePosition = $myCastles[$myCastleId]['position'];
-
-            $garrison = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db);
             $mGame = new Application_Model_Game($gameId, $db);
             $turnNumber = $mGame->getTurnNumber();
             $numberOfUnits = floor($turnNumber / 7);
-            var_dump($numberOfUnits);
+
+            $garrison = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db);
+            if ((count($army['heroes']) + count($army['soldiers'])) > $numberOfUnits) {
+                $l->log('ARMIA W ZAMKU MA WIĘCEJ JEDNOSTEK NIŻ JEST TO WYMAGANE');
+
+                
+            } else {
+                if ((count($garrison['heroes']) + count($garrison['soldiers'])) > $numberOfUnits) {
+
+                } else {
+                    $l->log('OBSADA ZAMKU - ZOSTAŃ!');
+
+                    foreach ($garrison['ids'] as $armyId) {
+                        $mArmy2->fortify($armyId, 1);
+                    }
+                    return self::endMove($playerId, $db, $gameId, $armyId, $castlePosition);
+                }
+            }
+
 
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);

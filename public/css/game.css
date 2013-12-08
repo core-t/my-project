@@ -477,7 +477,7 @@
 
 .message .status {
     overflow: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .message .status div.row {
