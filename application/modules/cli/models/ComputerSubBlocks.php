@@ -183,6 +183,9 @@ class Cli_Model_ComputerSubBlocks
         } else {
             $move['in'] = false;
         }
+
+
+
         return $move;
     }
 

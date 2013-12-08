@@ -38,8 +38,10 @@ var Castle = {
             return;
         }
 
-        if (isSet(relocationCastleId)) {
+        if (isTruthful(relocationCastleId)) {
             Message.simple('Production relocated')
+        } else {
+            Message.simple('Production set')
         }
 
         if (unitId === null) {

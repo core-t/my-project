@@ -14,11 +14,6 @@ class Cli_Model_JoinArmy
         $position = $mArmy2->getArmyPositionByArmyIdPlayerId($armyId, $user->parameters['playerId']);
         $armiesIds = Cli_Model_Army::joinArmiesAtPosition($position, $user->parameters['playerId'], $user->parameters['gameId'], $db);
 
-        if (empty($armyId)) {
-            $gameHandler->sendError($user, 'Brak "armyId"!');
-            return;
-        }
-
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(

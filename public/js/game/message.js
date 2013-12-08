@@ -68,19 +68,6 @@ var Message = {
         this.ok(Websocket.surrender);
         this.cancel();
     },
-//    lost: function (color) {
-////        $('.nr.' + color).html('<img src="/img/game/skull_and_crossbones.png" />');
-//        var msg;
-//
-//        if (color == my.color) {
-//            msg = '<br/>GAME OVER<br/><br/>You lose!';
-//        } else {
-//            msg = color.charAt(0).toUpperCase() + color.slice(1) + ' no longer fights!';
-//        }
-//
-//        this.show($('<div>').html(msg));
-//        this.ok();
-//    },
     showArtifacts: function () {
         Message.remove();
 
@@ -365,24 +352,9 @@ var Message = {
         this.ok(Websocket.nextTurn);
         this.cancel();
     },
-//    win: function (color) {
-//        setLock();
-//
-//        var msg;
-//
-//        if (color == my.color) {
-//            msg = '<br/>GAME OVER<br/><br/>You won!';
-//
-//        } else {
-//            msg = '<br/>GAME OVER<br/><br/>' + color.charAt(0).toUpperCase() + color.slice(1) + ' won!';
-//        }
-//
-//        this.show($('<div>').html(msg));
-//        this.ok(Message.remove);
-//    },
     simple: function (message) {
         this.show($('<div>').html(message));
-        this.ok(Message.remove);
+        this.ok();
     },
     disband: function () {
         if (typeof Army.selected == 'undefined') {
@@ -402,10 +374,10 @@ var Message = {
         this.cancel();
     },
     split: function (a) {
-        if (typeof Army.selected == 'undefined') {
+        if (notSet(Army.selected)) {
             return;
         }
-        Message.remove();
+
         var army = $('<div>').addClass('split').css('max-height', documentHeight - 200 + 'px');
         var numberOfUnits = 0;
 
@@ -457,7 +429,7 @@ var Message = {
 
     },
     armyStatus: function () {
-        if (typeof Army.selected == 'undefined') {
+        if (notSet(Army.selected)) {
             return;
         }
 
@@ -598,7 +570,7 @@ var Message = {
         this.show(army);
         this.ok();
     },
-    battle: function (data, computer) {
+    battle: function (data) {
         var battle = data.battle;
         var attackerColor = data.attackerColor;
         var defenderColor = data.defenderColor;
@@ -681,20 +653,21 @@ var Message = {
 
         if (newBattle) {
             setTimeout(function () {
-                Message.kill(newBattle, data, computer);
+                Message.kill(newBattle, data);
             }, 2500);
         }
     },
-    kill: function (b, data, computer) {
+    kill: function (b, data) {
         console.log('kill 0')
         for (i in b) {
             break
         }
+
         if (notSet(b[i])) {
-            if (!computer) {
+            if (!players[data.attackerColor].computer) {
                 $('#battleOk').fadeIn(100)
             }
-            Move.end(data, computer)
+            Move.end(data)
             return
         }
 
@@ -704,8 +677,6 @@ var Message = {
                 Sound.play('error');
             }, 500);
             $('#unit' + b[i].soldierId + ' .killed').fadeIn(1000, function () {
-                console.log(b[i])
-                console.log(data)
                 if (data.attackerColor == my.color) {
                     for (k in players[my.color].armies[data.attackerArmy.armyId].soldiers) {
                         if (players[my.color].armies[data.attackerArmy.armyId].soldiers[k].soldierId == b[i].soldierId) {
@@ -724,7 +695,7 @@ var Message = {
                     }
                 }
                 delete b[i];
-                Message.kill(b, data, computer);
+                Message.kill(b, data);
             });
         } else if (isSet(b[i].heroId)) {
             $('#hero' + b[i].heroId).append($('<div>').addClass('killed'));
@@ -733,7 +704,7 @@ var Message = {
             }, 500);
             $('#hero' + b[i].heroId + ' .killed').fadeIn(1000, function () {
                 delete b[i];
-                Message.kill(b, data, computer);
+                Message.kill(b, data);
             });
         }
         console.log('kill 1')

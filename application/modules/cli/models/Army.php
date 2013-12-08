@@ -550,7 +550,6 @@ class Cli_Model_Army
     {
         if (!isset($position['x'])) {
             throw new Exception('(joinArmiesAtPosition) No x position - exiting');
-
         }
 
         if (!isset($position['y'])) {

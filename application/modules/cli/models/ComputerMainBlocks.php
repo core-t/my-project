@@ -393,11 +393,12 @@ class Cli_Model_ComputerMainBlocks
 
     static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null)
     {
-//        $mArmy2 = new Application_Model_Army($gameId, $db);
-        $armiesIds = Cli_Model_Army::joinArmiesAtPosition($position, $playerId, $gameId, $db);
-        $armyId = $armiesIds['armyId'];
+        if ($position) {
+            $armiesIds = Cli_Model_Army::joinArmiesAtPosition($position, $playerId, $gameId, $db);
+            $armyId = $armiesIds['armyId'];
+        }
 
-        if (!$armyId) {
+        if (!isset($armyId)) {
             $armyId = $oldArmyId;
         }
 

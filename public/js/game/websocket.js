@@ -27,7 +27,7 @@ Websocket = {
 
                     case 'computer':
                         if (isTruthful(r.path)) {
-                            Move.start(r, 1);
+                            Move.start(r);
                         } else {
                             Websocket.computer();
                         }

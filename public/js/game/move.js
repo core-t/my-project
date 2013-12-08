@@ -1,5 +1,5 @@
 var Move = {
-    start: function (r, computer) {
+    start: function (r) {
         console.log('move start 0')
         switch (players[r.attackerColor].armies[r.attackerArmy.armyId].movementType) {
             case 'flying':
@@ -24,10 +24,10 @@ var Move = {
 
         Army.unfortify(r.attackerArmy.armyId);
 
-        this.loop(r, null, computer);
+        this.loop(r, null);
         console.log('move start 1')
     },
-    loop: function (r, xy, computer) {
+    loop: function (r, xy) {
         console.log('move loop 0')
         for (step in r.path) {
             break;
@@ -44,13 +44,9 @@ var Move = {
                     searchTower(r.path[step].x, r.path[step].y);
                     xy = r.path[step];
                     delete r.path[step];
-                    Move.loop(r, xy, computer);
+                    Move.loop(r, xy);
                 });
         } else {
-//            if (xy) {
-//                zoomer.lensSetCenter(xy.x * 40, xy.y * 40);
-//            }
-
             if (isTruthful(r.battle)) {
                 Sound.play('fight');
 
@@ -70,14 +66,14 @@ var Move = {
                         }));
                 }
 
-                Message.battle(r, computer);
+                Message.battle(r);
             } else {
-                Move.end(r, computer);
+                Move.end(r);
             }
         }
         console.log('move loop 1')
     },
-    end: function (r, computer) {
+    end: function (r) {
         console.log('move end 0')
 
         AStar.x = players[r.attackerColor].armies[r.attackerArmy.armyId].x;
@@ -111,7 +107,7 @@ var Move = {
             Castle.owner(r.castleId, r.attackerColor);
         }
 
-        if (isSet(computer)) {
+        if (players[r.attackerColor].computer) {
             Websocket.computer();
         } else if (r.attackerColor == my.color) {
             if (!r.castleId && isSet(players[r.attackerColor].armies[r.attackerArmy.armyId]) && players[r.attackerColor].armies[r.attackerArmy.armyId].moves) {
