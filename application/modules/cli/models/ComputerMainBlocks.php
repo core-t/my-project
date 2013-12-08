@@ -154,7 +154,7 @@ class Cli_Model_ComputerMainBlocks
         }
     }
 
-    static public function moveArmy($gameId, $playerId, $mArmy, $db)
+    static public function moveArmy($gameId, $playerId, $mArmy, $db, $user, $gameHandler)
     {
         $l = new Coret_Model_Logger();
         $army = $mArmy->getArmy();
@@ -186,34 +186,104 @@ class Cli_Model_ComputerMainBlocks
             $turnNumber = $mGame->getTurnNumber();
             $numberOfUnits = floor($turnNumber / 7);
 
-            $garrison = Cli_Model_Army::getArmiesFromCastlePosition($castlePosition, $gameId, $db);
-            $armyId = Cli_Model_Army::isCastleGarrisonSufficient($numberOfUnits, $garrison);
+            if ($numberOfUnits) {
+                $garrison = Cli_Model_Army::getArmiesFromCastlePosition($castlePosition, $gameId, $db);
+                $armyId = Cli_Model_Army::isCastleGarrisonSufficient($numberOfUnits, $garrison);
 
-            if ($armyId) {
-                $mArmy2->fortify($armyId, 1);
-                if (count($garrison) > 1) {
-                    
-                }
-            }
+                if ($armyId) {
+                    $mArmy2->fortify($armyId, 1);
+                    if (count($garrison) > 1) {
+                        $notGarrison = array();
+                        foreach ($garrison as $army) {
+                            if ($armyId == $army['armyId']) {
+                                continue;
+                            }
+                            $notGarrison[] = $army;
+                        }
 
+                        if (count($notGarrison) > 1) {
+                            $l->log('ŁĄCZĘ ARMIE, KTÓRE PÓJDĄ DALEJ');
 
-            if ((count($army['heroes']) + count($army['soldiers'])) > $numberOfUnits) {
-                $l->log('ARMIA W ZAMKU MA WIĘCEJ JEDNOSTEK NIŻ JEST TO WYMAGANE');
+                            $firstArmy = current($notGarrison);
+                            $path = array(
+                                'x' => $firstArmy['x'],
+                                'y' => $firstArmy['y'],
+                                'tt' => 'c'
+                            );
+                            $secondArmy = next($notGarrison);
 
+                            return self::endMove($playerId, $db, $gameId, $secondArmy['armyId'], $firstArmy, $path);
+                        } elseif (count($notGarrison) == 1) {
+                            $l->log('TA ARMIA IDZIE DALEJ');
 
-            } else {
-                if ((count($garrison['heroes']) + count($garrison['soldiers'])) > $numberOfUnits) {
+                            $army = current($notGarrison);
+                        }
+                    } else {
+                        $l->log('OBSADA ZAMKU - ZOSTAŃ!');
 
-                } else {
-                    $l->log('OBSADA ZAMKU - ZOSTAŃ!');
+                        $army = current($garrison);
 
-                    foreach ($garrison['ids'] as $armyId) {
-                        $mArmy2->fortify($armyId, 1);
+                        return self::endMove($playerId, $db, $gameId, $armyId, $army);
                     }
-                    return self::endMove($playerId, $db, $gameId, $armyId, $castlePosition);
+                } elseif (count($garrison) > 1) {
+                    $firstArmy = current($garrison);
+                    $path = array(
+                        'x' => $firstArmy['x'],
+                        'y' => $firstArmy['y'],
+                        'tt' => 'c'
+                    );
+                    $secondArmy = next($garrison);
+
+                    return self::endMove($playerId, $db, $gameId, $secondArmy['armyId'], $firstArmy, $path);
+                } else {
+                    $army = current($garrison);
+                    if (count($army['soldiers']) > $numberOfUnits) {
+                        $l->log('ARMIA W ZAMKU MA WIĘCEJ JEDNOSTEK NIŻ JEST TO WYMAGANE');
+
+                        $h = '';
+                        $s = '';
+
+                        foreach ($army['heroes'] as $hero) {
+                            if ($h) {
+                                $h .= ',' . $hero['heroId'];
+                            } else {
+                                $h = $hero['heroId'];
+                            }
+                        }
+
+                        foreach ($army['soldiers'] as $soldier) {
+                            if ($s) {
+                                $s .= ',' . $soldier['soldierId'];
+                            } else {
+                                $s = $soldier['soldierId'];
+                            }
+                        }
+
+                        $mSplitArmy = new Cli_Model_SplitArmy();
+                        $newArmyId = $mSplitArmy->split($army['armyId'], $s, $h, $user, $db, $gameHandler);
+
+                        if ($army['x'] == $castlePosition['x'] && $army['y'] == $castlePosition['y']) {
+                            $path = array(
+                                'x' => $castlePosition['x'] + 1,
+                                'y' => $castlePosition['y'] + 1,
+                                'tt' => 'c'
+                            );
+                        } else {
+                            $path = array(
+                                'x' => $castlePosition['x'],
+                                'y' => $castlePosition['y'],
+                                'tt' => 'c'
+                            );
+                        }
+
+                        return self::endMove($playerId, $db, $gameId, $newArmyId, $path, $path);
+                    } else {
+                        $l->log('ZA MAŁA OBSADA ZAMKU - ZOSTAŃ!');
+
+                        return self::endMove($playerId, $db, $gameId, $army['armyId'], $army);
+                    }
                 }
             }
-
 
             $enemiesHaveRange = Cli_Model_ComputerSubBlocks::getEnemiesHaveRangeAtThisCastle($castlePosition, $castlesAndFields, $enemies);
             $enemiesInRange = Cli_Model_ComputerSubBlocks::getEnemiesInRange($enemies, $mArmy, $castlesAndFields['fields']);

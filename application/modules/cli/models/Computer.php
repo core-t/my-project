@@ -31,7 +31,7 @@ class Cli_Model_Computer
             $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
             $army = $mArmy2->getComputerArmyToMove($playerId);
             if (!empty($army['armyId'])) {
-                $token = Cli_Model_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, new Cli_Model_Army($army), $db);
+                $token = Cli_Model_ComputerMainBlocks::moveArmy($user->parameters['gameId'], $playerId, new Cli_Model_Army($army), $db, $user, $gameHandler);
                 $token['type'] = 'computer';
                 $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);
             } else {
