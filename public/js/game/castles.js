@@ -38,7 +38,9 @@ var Castle = {
             return;
         }
 
-        Message.remove();
+        if (isSet(relocationCastleId)) {
+            Message.simple('Production relocated')
+        }
 
         if (unitId === null) {
             Castle.removeHammer(castleId);

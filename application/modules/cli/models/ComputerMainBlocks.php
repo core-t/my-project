@@ -159,7 +159,7 @@ class Cli_Model_ComputerMainBlocks
         $l = new Coret_Model_Logger();
         $army = $mArmy->getArmy();
         $l->log('');
-        $l->log($army['armyId'], 'armyId:');
+        $l->log($army['armyId'], 'armyId: ');
 
         $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
         $myCastles = $mCastlesInGame->getPlayerCastles($playerId);
@@ -186,11 +186,21 @@ class Cli_Model_ComputerMainBlocks
             $turnNumber = $mGame->getTurnNumber();
             $numberOfUnits = floor($turnNumber / 7);
 
-            $garrison = Cli_Model_Army::getCastleGarrisonFromCastlePosition($castlePosition, $gameId, $db);
+            $garrison = Cli_Model_Army::getArmiesFromCastlePosition($castlePosition, $gameId, $db);
+            $armyId = Cli_Model_Army::isCastleGarrisonSufficient($numberOfUnits, $garrison);
+
+            if ($armyId) {
+                $mArmy2->fortify($armyId, 1);
+                if (count($garrison) > 1) {
+                    
+                }
+            }
+
+
             if ((count($army['heroes']) + count($army['soldiers'])) > $numberOfUnits) {
                 $l->log('ARMIA W ZAMKU MA WIĘCEJ JEDNOSTEK NIŻ JEST TO WYMAGANE');
 
-                
+
             } else {
                 if ((count($garrison['heroes']) + count($garrison['soldiers'])) > $numberOfUnits) {
 
@@ -313,8 +323,8 @@ class Cli_Model_ComputerMainBlocks
 
     static private function endMove($playerId, $db, $gameId, $oldArmyId, $position, $path = null, $fightEnemy = null, $castleId = null, $ruinId = null)
     {
-        $mArmy2 = new Application_Model_Army($gameId, $db);
-        $armiesIds = $mArmy2->joinArmiesAtPosition($position, $playerId);
+//        $mArmy2 = new Application_Model_Army($gameId, $db);
+        $armiesIds = Cli_Model_Army::joinArmiesAtPosition($position, $playerId, $gameId, $db);
         $armyId = $armiesIds['armyId'];
 
         if (!$armyId) {
@@ -388,12 +398,10 @@ class Cli_Model_ComputerMainBlocks
         $gold -= 100;
         $mPlayersInGame->updatePlayerGold($playerId, $gold);
 
-        $mArmy2 = new Application_Model_Army($gameId, $db);
-
         $token = array(
             'type' => 'resurrection',
             'data' => array(
-                'army' => $mArmy2->getArmyByArmyId($armyId),
+                'army' => Cli_Model_Army::getArmyByArmyId($armyId, $gameId, $db),
                 'gold' => $gold
             ),
             'color' => $color

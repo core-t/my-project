@@ -69,8 +69,8 @@ class Cli_Model_SplitArmy
 
         $token = array(
             'type' => 'split',
-            'parentArmy' => $mArmy->getArmyByArmyId($parentArmyId),
-            'childArmy' => $mArmy->getArmyByArmyId($childArmyId),
+            'parentArmy' => Cli_Model_Army::getArmyByArmyId($parentArmyId, $user->parameters['gameId'], $db),
+            'childArmy' => Cli_Model_Army::getArmyByArmyId($childArmyId, $user->parameters['gameId'], $db),
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );
 

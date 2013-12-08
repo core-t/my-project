@@ -504,6 +504,31 @@ class Cli_Model_Army
 
     }
 
+    static public function getArmiesFromCastlePosition($castlePosition, $gameId, $db)
+    {
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $armies = $mArmy->getArmiesFromCastlePosition($castlePosition);
+
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+        foreach ($armies as $k => $army) {
+            $armies[$k]['heroes'] = $mHeroesInGame->getForBattle($army['armyId']);
+            $armies[$k]['soldiers'] = $mSoldier->getForBattle($army['armyId']);
+        }
+
+        return $armies;
+    }
+
+    static public function isCastleGarrisonSufficient($expectedNumberOfUnits, $armiesInCastle)
+    {
+        foreach ($armiesInCastle as $army) {
+            if (count($army['soldiers']) == $expectedNumberOfUnits && count($army['heroes']) == 0) {
+                return $army['armyId'];
+            }
+        }
+    }
+
     static public function getArmyByArmyIdPlayerId($armyId, $playerId, $gameId, $db)
     {
         $mArmy = new Application_Model_Army($gameId, $db);
@@ -513,11 +538,90 @@ class Cli_Model_Army
             $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
             $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
 
-            $result['heroes'] = $mHeroesInGame->getArmyHeroes($armyId);
+            $result['heroes'] = $mHeroesInGame->getForMove($armyId);
             $result['soldiers'] = $mSoldier->getForMove($armyId);
             $result['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($result);
         }
 
         return $result;
+    }
+
+    static public function joinArmiesAtPosition($position, $playerId, $gameId, $db)
+    {
+        if (!isset($position['x'])) {
+            throw new Exception('(joinArmiesAtPosition) No x position - exiting');
+
+        }
+
+        if (!isset($position['y'])) {
+            throw new Exception('(joinArmiesAtPosition) No y position - exiting');
+        }
+
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $result = $mArmy->getArmyIdsByPositionPlayerId($position, $playerId);
+
+        if (!isset($result[0]['armyId'])) {
+//            echo '
+//(joinArmiesAtPosition) Brak armii na pozycji: ';
+//            Coret_Model_Logger::debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
+//            print_r($position);
+
+            return array(
+                'armyId' => null,
+                'deletedIds' => null,
+            );
+        }
+
+        $firstArmyId = $result[0]['armyId'];
+        unset($result[0]);
+        $count = count($result);
+
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+
+        for ($i = 1; $i <= $count; $i++) {
+            if ($result[$i]['armyId'] == $firstArmyId) {
+                continue;
+            }
+            $mHeroesInGame->heroesUpdateArmyId($result[$i]['armyId'], $firstArmyId);
+            $mSoldier->soldiersUpdateArmyId($result[$i]['armyId'], $firstArmyId);
+            $mArmy->destroyArmy($result[$i]['armyId'], $playerId);
+        }
+
+        return array(
+            'armyId' => $firstArmyId,
+            'deletedIds' => $result
+        );
+    }
+
+    static public function getArmyByArmyId($armyId, $gameId, $db)
+    {
+        $mArmy = new Application_Model_Army($gameId, $db);
+        $army = $mArmy->getArmyByArmyId($armyId);
+
+        if ($army['destroyed']) {
+            $army['heroes'] = array();
+            $army['soldiers'] = array();
+
+            return $army;
+        }
+
+        $mHeroesInGame = new Application_Model_HeroesInGame($gameId, $db);
+        $army['heroes'] = $mHeroesInGame->getForMove($army['armyId']);
+
+        $mSoldier = new Application_Model_UnitsInGame($gameId, $db);
+        $army['soldiers'] = $mSoldier->getForMove($army['armyId']);
+
+        if (empty($army['heroes']) && empty($army['soldiers'])) {
+            $army['destroyed'] = true;
+            $mArmy->destroyArmy($army['armyId'], $army['playerId']);
+            unset($army['playerId']);
+
+            return $army;
+        } else {
+            unset($army['playerId']);
+            $army['movesLeft'] = Cli_Model_Army::calculateMaxArmyMoves($army);
+            return $army;
+        }
     }
 }

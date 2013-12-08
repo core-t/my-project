@@ -102,7 +102,7 @@ class GameController extends Game_Controller_Game
 
             foreach ($mArmy->getPlayerArmies($player['playerId']) as $army) {
                 $this->view->players[$player['color']]['armies'][$army['armyId']] = $army;
-                $this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'] = $mHeroesInGame->getArmyHeroes($army['armyId']);
+                $this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'] = $mHeroesInGame->getForMove($army['armyId']);
 
 
                 foreach ($this->view->players[$player['color']]['armies'][$army['armyId']]['heroes'] as $k => $row) {

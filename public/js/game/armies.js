@@ -499,7 +499,7 @@ var Army = {
         $('#name').html('Army');
 
         $('#splitArmy').removeClass('buttonOff');
-        $('#unselectArmy').removeClass('buttonOff');
+        $('#deselectArmy').removeClass('buttonOff');
         $('#armyStatus').removeClass('buttonOff');
         $('#disbandArmy').removeClass('buttonOff');
         $('#skipArmy').removeClass('buttonOff');
@@ -568,7 +568,7 @@ var Army = {
         Army.selected = null;
         $('.path').remove();
         $('#splitArmy').addClass('buttonOff');
-        $('#unselectArmy').addClass('buttonOff');
+        $('#deselectArmy').addClass('buttonOff');
         $('#armyStatus').addClass('buttonOff');
         $('#skipArmy').addClass('buttonOff');
         $('#quitArmy').addClass('buttonOff');

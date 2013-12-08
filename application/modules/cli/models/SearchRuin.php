@@ -52,7 +52,7 @@ class Cli_Model_SearchRuin
 
         $token = array(
             'type' => 'ruin',
-            'army' => $mArmy2->getArmyByArmyId($armyId),
+            'army' => Cli_Model_Army::getArmyByArmyId($armyId, $user->parameters['gameId'], $db),
             'ruin' => $ruin,
             'find' => $found,
             'color' => $playersInGameColors[$user->parameters['playerId']]

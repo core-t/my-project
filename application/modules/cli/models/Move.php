@@ -244,7 +244,7 @@ class Cli_Model_Move
             $battleResult = $battle->getResult($army, $enemy);
         } else {
             $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
-            $armiesIds = $mArmy2->joinArmiesAtPosition($move['currentPosition'], $user->parameters['playerId']);
+            $armiesIds = Cli_Model_Army::joinArmiesAtPosition($move['currentPosition'], $user->parameters['playerId'], $user->parameters['gameId'], $db);
             $newArmyId = $armiesIds['armyId'];
             $attacker = Cli_Model_Army::getArmyByArmyIdPlayerId($newArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
             $deletedIds = $armiesIds['deletedIds'];

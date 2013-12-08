@@ -12,19 +12,18 @@ class Cli_Model_JoinArmy
 
         $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $position = $mArmy2->getArmyPositionByArmyIdPlayerId($armyId, $user->parameters['playerId']);
-        $armiesIds = $mArmy2->joinArmiesAtPosition($position, $user->parameters['playerId']);
+        $armiesIds = Cli_Model_Army::joinArmiesAtPosition($position, $user->parameters['playerId'], $user->parameters['gameId'], $db);
 
         if (empty($armyId)) {
             $gameHandler->sendError($user, 'Brak "armyId"!');
             return;
         }
 
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
         $playersInGameColors = Zend_Registry::get('playersInGameColors');
 
         $token = array(
             'type' => 'join',
-            'army' => $mArmy2->getArmyByArmyId($armiesIds['armyId']),
+            'army' => Cli_Model_Army::getArmyByArmyId($armiesIds['armyId'], $user->parameters['gameId'], $db),
             'deletedIds' => $armiesIds['deletedIds'],
             'color' => $playersInGameColors[$user->parameters['playerId']]
         );

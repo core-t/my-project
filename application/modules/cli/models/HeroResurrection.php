@@ -37,12 +37,10 @@ class Cli_Model_HeroResurrection
         $gold -= 100;
         $mPlayersInGame->updatePlayerGold($user->parameters['playerId'], $gold);
 
-        $mArmy2 = new Application_Model_Army($user->parameters['gameId'], $db);
-
         $token = array(
             'type' => 'resurrection',
             'data' => array(
-                'army' => $mArmy2->getArmyByArmyId($armyId),
+                'army' => Cli_Model_Army::getArmyByArmyId($armyId, $user->parameters['gameId'], $db),
                 'gold' => $gold
             ),
             'color' => $color

@@ -358,7 +358,7 @@
 }
 
 .message .production .unit:hover {
-    background: #B5B59B;
+    background: lime;
 }
 
 .message .production .empty {

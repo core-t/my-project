@@ -64,7 +64,7 @@ class Application_Model_HeroesInGame extends Coret_Db_Table_Abstract
 //        return $result;
     }
 
-    public function getArmyHeroes($armyId)
+    public function getForMove($armyId)
     {
         $select = $this->_db->select()
             ->from(array('a' => 'hero'), array('numberOfMoves', 'attackPoints', 'defensePoints', 'name'))
