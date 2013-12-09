@@ -280,6 +280,8 @@ class Cli_Model_ComputerMainBlocks
                     } else {
                         $l->log('ZA MAŁA OBSADA ZAMKU - ZOSTAŃ!');
 
+                        $mArmy2->fortify($army['armyId'], 1);
+
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $army);
                     }
                 }
