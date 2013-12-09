@@ -88,9 +88,15 @@ var Army = {
                 army.terrain[key] = terrain[key][army.movementType];
             }
 
-            var f = 0,
-                m = 0,
-                s = 0;
+            if (army.heroes.length) {
+                var f = army.terrain.f,
+                    m = army.terrain.m,
+                    s = army.terrain.s;
+            } else {
+                var f = 0,
+                    m = 0,
+                    s = 0;
+            }
 
             for (key in army.heroes) {
                 if (notSet(moves)) {

@@ -11,10 +11,7 @@ var Message = {
             if (notSet($('.message'))) {
                 return;
             }
-//        $('.message').fadeOut(200, function () {
-//            this.remove();
-//        })
-
+            $('.message').remove();
         }
     },
     show: function (txt) {
@@ -51,6 +48,9 @@ var Message = {
                     Message.remove(id);
                 })
         );
+
+        var divHeight = parseInt($('#' + id).css('height')) - 60;
+        $('#' + id + ' div.overflow').css('height', divHeight + 'px')
     },
     cancel: function (id, func) {
         $('#' + id).append(
@@ -164,19 +164,18 @@ var Message = {
         }
     },
     castle: function (castleId) {
-        console.log('castle')
         if (Gui.lock) {
             return;
         }
-        console.log('castle +1')
+
         if (!my.turn) {
             return;
         }
-        console.log('castle +2')
+
         if (notSet(castles[castleId])) {
             return;
         }
-        console.log('castle +3')
+
         var time = '';
         var attr;
         var capital = '';
@@ -836,9 +835,6 @@ var Message = {
 
         var id = this.show(statistics);
         this.ok(id)
-
-        var divHeight = parseInt($('#' + id).css('height')) - 60;
-        $('#' + id + ' div.overflow').css('height', divHeight + 'px')
     },
     end: function () {
         this.simple('GAME OVER');

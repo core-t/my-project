@@ -118,7 +118,7 @@ var Move = {
                 unlock()
                 if (isDigit(r.castleId) && isTruthful(r.victory)) {
                     incomeIncrement(castles[r.castleId].income);
-                    Message.castle()
+                    Message.castle(r.castleId)
                 }
             }
             if (!Hero.findMy()) {
