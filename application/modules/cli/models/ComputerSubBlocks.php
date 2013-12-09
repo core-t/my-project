@@ -29,18 +29,9 @@ class Cli_Model_ComputerSubBlocks
                 $defender = $mArmy2->getDefender($enemy['ids']);
 
                 if (!$battle->getDefender()) {
-                    $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
+                    Cli_Model_Army::updateArmyPosition($playerId, $path, $fields, $army, $gameId, $db);
                     $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
                     $result['victory'] = true;
-//                    foreach ($enemy['ids'] as $id) {
-//                        $defender[]['armyId'] = $id;
-//                    }
-//                    echo('
-//Castle defender: ');
-//                    print_r($defender);
-//                    echo('
-//castleId: ' . $castleId . '
-//');
                     $mCastlesInGame->changeOwner($mapCastles[$castleId], $playerId);
                 } else {
                     $result['attackerArmy'] = array(
@@ -58,7 +49,7 @@ class Cli_Model_ComputerSubBlocks
                 $defender = $battle->getDefender();
 
                 if (!$battle->getDefender()) {
-                    $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
+                    Cli_Model_Army::updateArmyPosition($playerId, $path, $fields, $army, $gameId, $db);
                     $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
 
                     $mCastlesInGame = new Application_Model_CastlesInGame($gameId, $db);
@@ -85,7 +76,7 @@ class Cli_Model_ComputerSubBlocks
             $defender = $mArmy2->getDefender($enemy['ids']);
 
             if (!$battle->getDefender()) {
-                $mArmy2->updateArmyPosition($playerId, $path, $fields, $army);
+                Cli_Model_Army::updateArmyPosition($playerId, $path, $fields, $army, $gameId, $db);
                 $result['attackerArmy'] = Cli_Model_Army::getArmyByArmyIdPlayerId($army['armyId'], $playerId, $gameId, $db);
                 $result['victory'] = true;
                 $defender[0]['armyId'] = $enemy['armyId'];

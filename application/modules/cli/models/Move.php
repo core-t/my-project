@@ -225,7 +225,7 @@ class Cli_Model_Move
                         $mCastlesInGame->changeOwner($castlesSchema[$castleId], $user->parameters['playerId']);
                     }
                 }
-                $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
+                Cli_Model_Army::updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army, $user->parameters['gameId'], $db);
                 $attacker = Cli_Model_Army::getArmyByArmyIdPlayerId($attackerArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);
                 $victory = true;
 //                foreach ($enemy['ids'] as $id) {
@@ -243,7 +243,7 @@ class Cli_Model_Move
             }
             $battleResult = $battle->getResult($army, $enemy);
         } else {
-            $mArmy2->updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army);
+            Cli_Model_Army::updateArmyPosition($user->parameters['playerId'], $move['path'], $fields, $army, $user->parameters['gameId'], $db);
             $armiesIds = Cli_Model_Army::joinArmiesAtPosition($move['currentPosition'], $user->parameters['playerId'], $user->parameters['gameId'], $db);
             $newArmyId = $armiesIds['armyId'];
             $attacker = Cli_Model_Army::getArmyByArmyIdPlayerId($newArmyId, $user->parameters['playerId'], $user->parameters['gameId'], $db);

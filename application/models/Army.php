@@ -120,95 +120,15 @@ class Application_Model_Army extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-    public function updateArmyPosition($playerId, $path, $fields, $army)
+    public function updateArmyPosition($playerId, $end, $armyId)
     {
-        if (empty($path)) {
-            return;
-        }
-
-        $units = Zend_Registry::get('units');
-        $terrain = Zend_Registry::get('terrain');
-
-        if ($army['canFly'] > 0) {
-            $type = 'flying';
-        } elseif ($army['canSwim']) {
-            $type = 'swimming';
-        } else {
-            $type = 'walking';
-        }
-
-        $mHeroesInGame = new Application_Model_HeroesInGame($this->_gameId, $this->_db);
-
-        $heroes = $army['heroes'];
-
-        foreach ($heroes as $hero) {
-            $movesSpend = 0;
-
-            foreach ($path as $step) {
-                if (!isset($step['myCastleCosts'])) {
-                    $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
-                }
-            }
-
-            $movesLeft = $hero['movesLeft'] - $movesSpend;
-            if ($movesLeft < 0) {
-                $movesLeft = 0;
-            }
-
-            $mHeroesInGame->updateMovesLeft($movesLeft, $hero['heroId']);
-        }
-
-        $soldiers = $army['soldiers'];
-        $mSoldier = new Application_Model_UnitsInGame($this->_gameId, $this->_db);
-
-        if ($army['canFly'] > 0 || $army['canSwim']) {
-            foreach ($soldiers as $soldier) {
-                $movesSpend = 0;
-
-                foreach ($path as $step) {
-                    if (!isset($step['myCastleCosts'])) {
-                        $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
-                    }
-                }
-
-                $movesLeft = $soldier['movesLeft'] - $movesSpend;
-                if ($movesLeft < 0) {
-                    $movesLeft = 0;
-                }
-
-                $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
-            }
-        } else {
-            foreach ($soldiers as $soldier) {
-                $movesSpend = 0;
-
-                $terrain['f'][$type] = $units[$soldier['unitId']]['modMovesForest'];
-                $terrain['m'][$type] = $units[$soldier['unitId']]['modMovesHills'];
-                $terrain['s'][$type] = $units[$soldier['unitId']]['modMovesSwamp'];
-
-                foreach ($path as $step) {
-                    if (!isset($step['myCastleCosts'])) {
-                        $movesSpend += $terrain[$fields[$step['y']][$step['x']]][$type];
-                    }
-                }
-
-                $movesLeft = $soldier['movesLeft'] - $movesSpend;
-                if ($movesLeft < 0) {
-                    $movesLeft = 0;
-                }
-
-                $mSoldier->updateMovesLeft($movesLeft, $soldier['soldierId']);
-            }
-        }
-
-        $end = end($path);
         $data = array(
             'x' => $end['x'],
             'y' => $end['y'],
             'fortified' => 'false'
         );
         $where = array(
-            $this->_db->quoteInto($this->_db->quoteIdentifier('armyId') . ' = ?', $army['armyId']),
+            $this->_db->quoteInto($this->_db->quoteIdentifier('armyId') . ' = ?', $armyId),
             $this->_db->quoteInto($this->_db->quoteIdentifier('gameId') . ' = ?', $this->_gameId),
             $this->_db->quoteInto($this->_db->quoteIdentifier('playerId') . ' = ?', $playerId)
         );

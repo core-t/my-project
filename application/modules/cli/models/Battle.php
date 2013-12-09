@@ -39,6 +39,9 @@ class Cli_Model_Battle
             }
         }
         $this->attacker = $attacker;
+        if (!isset($this->attacker['attackModifier'])) {
+            throw new Exception('aaa');
+        }
     }
 
     public function updateArmies($gameId, $db, $attackerId = null, $defenderId = null)
