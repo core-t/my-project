@@ -34,7 +34,7 @@ Websocket = {
                         break;
 
                     case 'computerStart':
-                        computerArmiesUpdate(r.armies, r.color);
+                        Army.computerLoop(r.armies, r.color);
                         break;
 
                     case 'nextTurn':

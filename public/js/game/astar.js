@@ -39,11 +39,6 @@ var AStar = {
             var start = new node(startX, startY, destination.x, destination.y, 0);
             open[startX + '_' + startY] = start;
 
-//            if (castleId) {
-//                castleId = Castle.getMy(startX, startY);
-//                this.myCastleId[castleId] = true;
-//            }
-
             this.aStar(close, open, destination.x, destination.y, 1);
 
             return this.showPath(close, destination.x + '_' + destination.y);

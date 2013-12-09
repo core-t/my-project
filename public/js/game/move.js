@@ -18,7 +18,7 @@ var Move = {
         if (notSet(r.path[1])) {
             zoomer.lensSetCenter(r.attackerArmy.x * 40, r.attackerArmy.y * 40);
         } else {
-            armyFields(players[r.attackerColor].armies[r.attackerArmy.armyId]);
+            Army.fields(players[r.attackerColor].armies[r.attackerArmy.armyId]);
             zoomer.lensSetCenter(r.path[1].x * 40, r.path[1].y * 40);
         }
 

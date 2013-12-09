@@ -107,10 +107,10 @@ var Army = {
                     f = units[army.soldiers[key].unitId].f;
                 }
                 if (units[army.soldiers[key].unitId].m > m) {
-                    f = units[army.soldiers[key].unitId].m;
+                    m = units[army.soldiers[key].unitId].m;
                 }
                 if (units[army.soldiers[key].unitId].s > s) {
-                    f = units[army.soldiers[key].unitId].s;
+                    s = units[army.soldiers[key].unitId].s;
                 }
 
                 if (notSet(moves)) {
@@ -122,9 +122,9 @@ var Army = {
                 }
             }
 
-            army.terrain[f] = f;
-            army.terrain[m] = m;
-            army.terrain[s] = s;
+            army.terrain.f = f;
+            army.terrain.m = m;
+            army.terrain.s = s;
 
             army.moves = moves;
         }
@@ -263,7 +263,7 @@ var Army = {
         $('#' + obj.armyId + '.a').remove();
 
         if (obj.destroyed) {
-            armyFields(players[color].armies[obj.armyId]);
+            Army.fields(players[color].armies[obj.armyId]);
             delete players[color].armies[obj.armyId];
 
             return;
@@ -462,7 +462,7 @@ var Army = {
             return;
         }
 
-        armyFields(players[color].armies[armyId]);
+        this.fields(players[color].armies[armyId]);
 
         if (quiet) {
             $('#army' + armyId).remove();
@@ -603,9 +603,37 @@ var Army = {
             Websocket.unfortify(armyId, 0);
             delete Army.quitedArmies[armyId];
         }
+    },
+    computerLoop: function (armies, color) {
+        for (armyId in armies) {
+            break;
+        }
+
+        if (notSet(armies[armyId])) {
+            Websocket.computer();
+            return;
+        }
+
+        Army.init(armies[armyId], color);
+
+        delete armies[armyId]; // potrzebne do pętli
+
+        this.computerLoop(armies, color);
+    },
+    fields: function (a) {
+        if (a.color == my.color) {
+            if (fields[a.y][a.x] == 'S') {
+                fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
+            }
+            return;
+        }
+
+        if (Castle.getEnemy(a.x, a.y) !== null) {
+            fields[a.y][a.x] = 'e';
+        } else {
+            fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
+        }
     }
-
-
 }
 
 function myArmyMouse(armyId) {
@@ -665,52 +693,6 @@ function enemyArmyMouse(element, x, y) {
             }
             fields[y][x] = 'e';
         });
-}
-
-function armyFields(a) {
-    if (a.color == my.color) {
-        if (fields[a.y][a.x] == 'S') {
-            fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
-        }
-        return;
-    }
-    if (notSet(fields[a.y])) {
-        console.log('Y error');
-        return;
-    }
-    if (notSet(fields[a.y][a.x])) {
-        console.log('X error');
-        return;
-    }
-
-    //    console.log(a);
-    //    console.log(fields[a.y][a.x]);
-
-    if (Castle.getEnemy(a.x, a.y) !== null) {
-        fields[a.y][a.x] = 'e';
-    } else {
-        fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
-    }
-
-//    console.log(fields[a.y][a.x]);
-
-}
-
-function computerArmiesUpdate(armies, color) {
-    for (armyId in armies) {
-        break;
-    }
-
-    if (notSet(armies[armyId])) {
-        Websocket.computer();
-        return;
-    }
-
-    Army.init(armies[armyId], color);
-
-    delete armies[armyId]; // potrzebne do pętli
-
-    computerArmiesUpdate(armies, color);
 }
 
 // *** UNITS ***
