@@ -218,7 +218,8 @@ class Cli_Model_ComputerMainBlocks
                         } elseif (count($notGarrison) == 1) {
                             $l->log('TA ARMIA IDZIE DALEJ');
 
-                            $army = current($notGarrison);
+                            $cliModelArmy = new Cli_Model_Army(current($notGarrison));
+                            $army = $cliModelArmy->getArmy();
                         }
                     } else {
                         $l->log('OBSADA ZAMKU - ZOSTAŃ!');
@@ -228,6 +229,8 @@ class Cli_Model_ComputerMainBlocks
                         return self::endMove($playerId, $db, $gameId, $armyId, $army);
                     }
                 } elseif (count($garrison) > 1) {
+                    $l->log('ŁĄCZĘ ARMIE W JEDNĄ');
+
                     $firstArmy = current($garrison);
                     $path = array(0 => array(
                         'x' => $firstArmy['x'],
@@ -292,8 +295,7 @@ class Cli_Model_ComputerMainBlocks
                     } else {
                         $l->log('ZA MAŁA OBSADA ZAMKU - ZOSTAŃ!');
 
-                        $mArmy2->fortify($armyId, 1);
-
+                        $mArmy2->fortify($army['armyId'], 1);
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $army);
                     }
                 }

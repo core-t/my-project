@@ -223,16 +223,25 @@ var Message = {
                 .addClass('unit')
                 .attr('id', unitId)
                 .append(
-                    $('<p>')
+                    $('<div>')
                         .append($('<input>').attr(attr))
-                        .append(' ' + name + ' (' + travelBy + ')')
+                        .append(
+                            $('<div>')
+                                .html(name + '<br/> (' + travelBy + ')')
+                                .addClass('name')
+                        )
+                        .addClass('top')
                 )
-                .append($('<div>').append($('<img>').attr('src', Unit.getImageByName(img, my.color))))
+                .append(
+                    $('<div>')
+                        .append($('<img>').attr('src', Unit.getImageByName(img, my.color)))
+                        .addClass('img')
+                )
                 .append(
                     $('<div>')
                         .addClass('attributes')
                         .append($('<p>').html('Time:&nbsp;' + time + castles[castleId].production[unitId].time + 't'))
-                        .append($('<p>').html('Cost:&nbsp;' + castles[castleId].production[unitId].cost + 'g'))
+                        .append($('<p>').html('Cost:&nbsp;' + units[unitId].cost + 'g'))
                         .append($('<p>').html('M ' + units[unitId].numberOfMoves + ' . A ' + units[unitId].attackPoints + ' . D ' + units[unitId].defensePoints))
                 );
             j++;
@@ -317,7 +326,7 @@ var Message = {
                 .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement))
         }
 
-        var id = this.show(div.html());
+        var id = this.show(div);
         this.ok(id, Castle.handle);
         this.cancel(id)
 
@@ -509,7 +518,7 @@ var Message = {
                     )
                     .append(
                         $('<table>')
-                            .addClass('left')
+                            .addClass('right')
                             .append(
                                 $('<tr>')
                                     .append($('<td>').html('Movement cost through the forest: '))

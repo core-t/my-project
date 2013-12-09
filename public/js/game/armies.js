@@ -491,6 +491,8 @@ var Army = {
         $('#moves').html(a.moves);
     },
     select: function (a, center) {
+        Message.remove()
+
         castlesAddCursorWhenSelectedArmy();
         armiesAddCursorWhenSelectedArmy();
         myCastlesRemoveCursor();
