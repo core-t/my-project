@@ -190,6 +190,16 @@ function fieldsCopy() {
     }
 }
 
+function makeId(lenght) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (var i = 0; i < lenght; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
 function artifactsReformat() {
 //    for (i in artifacts) {
 //        for (j in artifacts[i]) {

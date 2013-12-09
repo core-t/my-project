@@ -35,20 +35,23 @@
                     <div id="timerRows"></div>
                 </div>
             </div>
-            <div class="message"></div>
             <div id="goldBox" class="box">
-                <div class="left" id="income">
-                    <div><?php echo $this->translate('Income') ?></div>
-                    <div class="text-right font-yellow" id="value">0</div>
-                </div>
-                <div class="left" id="costs">
-                    <div><?php echo $this->translate('Upkeep') ?></div>
-                    <div class="text-right font-yellow" id="value">0</div>
-                </div>
-                <div class="left" id="gold">
-                    <div><?php echo $this->translate('Treasure') ?></div>
-                    <div class="text-right font-yellow" id="value">0</div>
-                </div>
+                <table>
+                    <tr>
+                        <td id="income" class="button buttonColors">
+                            <div><?php echo $this->translate('Income') ?></div>
+                            <div class="text-right font-yellow" id="value">0</div>
+                        </td>
+                        <td id="costs" class="button buttonColors">
+                            <div><?php echo $this->translate('Upkeep') ?></div>
+                            <div class="text-right font-yellow" id="value">0</div>
+                        </td>
+                        <td id="gold" class="button buttonColors">
+                            <div><?php echo $this->translate('Treasure') ?></div>
+                            <div class="text-right font-yellow" id="value">0</div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div id="playersBox" class="box">
                 <!--                <img id="aaawhite" src="/img/game/heroes/white.png">-->

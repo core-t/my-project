@@ -578,7 +578,6 @@ var Army = {
         $('#showCastle').addClass('buttonOff');
         $('#showArtifacts').addClass('buttonOff');
         $('#disbandArmy').addClass('buttonOff');
-        Message.remove();
     },
     fortify: function () {
         if (!my.turn) {

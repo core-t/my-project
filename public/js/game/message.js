@@ -2,71 +2,73 @@ var Message = {
     element: function () {
         return $('#goldBox');
     },
-    remove: function () {
-        if (typeof $('.message') != 'undefined') {
-            $('.message').remove();
+    remove: function (id) {
+        if (isSet(id)) {
+            $('#' + id).fadeOut(200, function () {
+                this.remove();
+            })
+        } else {
+            if (notSet($('.message'))) {
+                return;
+            }
+//        $('.message').fadeOut(200, function () {
+//            this.remove();
+//        })
+
         }
     },
     show: function (txt) {
         this.remove();
+        var id = makeId(10)
         this.element().after(
             $('<div>')
-                .addClass('message center')
-                .append(txt)
-        );
+                .addClass('message box')
+                .append($(txt).addClass('overflow')
+                )
+                .attr('id', id)
+        )
         var left = documentWidth / 2 - $('.message').outerWidth() / 2;
         var maxHeight = documentHeight - 120;
         var maxWidth = documentWidth - 500;
-        $('.message').css({
-            'max-width': +'px',
-            'max-height': maxHeight + 'px',
-            'left': left + 'px',
-            'display': 'block'
-        })
+        $('#' + id)
+            .css({
+                'max-width': maxWidth + 'px',
+                'max-height': maxHeight + 'px',
+                left: left + 'px'
+            })
+            .fadeIn(200)
+        return id
     },
-    ok: function (func) {
-        $('.message').append(
+    ok: function (id, func) {
+        $('#' + id).append(
             $('<div>')
                 .addClass('button buttonColors go')
                 .html('Ok')
                 .click(function () {
-                    if (typeof func != 'undefined') {
+                    if (isSet(func)) {
                         func();
-                    } else {
-                        Message.remove();
                     }
+                    Message.remove(id);
                 })
         );
-//        $('<body>').keypress(function (event) {
-//            console.log(event);
-//            var key = event.keyCode || event.charCode;
-//            if (key == 13) {
-//                if (typeof func != 'undefined') {
-//                    func();
-//                } else {
-//                    Message.remove();
-//                }
-//            }
-//        });
     },
-    cancel: function (func) {
-        $('.message').append(
+    cancel: function (id, func) {
+        $('#' + id).append(
             $('<div>')
                 .addClass('button buttonColors cancel')
                 .html('Cancel')
                 .click(function () {
-                    if (typeof func != 'undefined') {
+                    if (isSet(func)) {
                         func();
-                    } else {
-                        Message.remove();
                     }
+                    Message.remove(id);
                 })
         )
     },
     surrender: function () {
-        this.show($('<div>').html('Surrender. Are you sure?'));
-        this.ok(Websocket.surrender);
-        this.cancel();
+        var id = this.show($('<div>').append($('<h3>').html('Surrender')).append($('<div>').html('Are you sure?')))
+        this.ok(id, Websocket.surrender);
+        this.cancel(id)
     },
     showArtifacts: function () {
         Message.remove();
@@ -157,8 +159,8 @@ var Message = {
         if (my.turn && Turn.number == 1 && castles[firstCastleId].currentProductionId === null) {
             Message.castle(firstCastleId);
         } else {
-            this.show($('<div>').html('Your turn.'));
-            this.ok();
+            var id = this.show($('<div>').html('Your turn.'));
+            this.ok(id)
         }
     },
     castle: function (castleId) {
@@ -318,9 +320,9 @@ var Message = {
                 .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement))
         }
 
-        this.show(div.html());
-        this.ok(Castle.handle);
-        this.cancel();
+        var id = this.show(div.html());
+        this.ok(id, Castle.handle);
+        this.cancel(id)
 
 
         $('.production .unit').click(function (e) {
@@ -348,13 +350,13 @@ var Message = {
         });
     },
     nextTurn: function () {
-        this.show($('<div>').html('Next turn. Are you sure?'));
-        this.ok(Websocket.nextTurn);
-        this.cancel();
+        var id = this.show($('<div>').append($('<h3>').html('Next turn')).append($('<div>').html('Are you sure?')))
+        this.ok(id, Websocket.nextTurn);
+        this.cancel(id)
     },
     simple: function (message) {
-        this.show($('<div>').html(message));
-        this.ok();
+        var id = this.show($('<div>').html(message));
+        this.ok(id)
     },
     disband: function () {
         if (typeof Army.selected == 'undefined') {
@@ -369,9 +371,9 @@ var Message = {
             return;
         }
 
-        this.show($('<div>').html('Are you sure?'));
-        this.ok(Websocket.disband);
-        this.cancel();
+        var id = this.show($('<div>').html('Are you sure?'));
+        this.ok(id, Websocket.disband);
+        this.cancel(id)
     },
     split: function (a) {
         if (notSet(Army.selected)) {
@@ -423,9 +425,9 @@ var Message = {
             );
         }
 
-        this.show(army);
-        this.ok(Websocket.split);
-        this.cancel();
+        var id = this.show(army);
+        this.ok(id, Websocket.split);
+        this.cancel(id)
 
     },
     armyStatus: function () {
@@ -567,8 +569,8 @@ var Message = {
             );
         }
 
-        this.show(army);
-        this.ok();
+        var id = this.show(army);
+        this.ok(id)
     },
     battle: function (data) {
         var battle = data.battle;
@@ -639,17 +641,11 @@ var Message = {
             .append($('<p id="vs">').html('VS').addClass('center'))
             .append(defense)
             .append($('<div>').addClass('battle defense'))
-            .append(
-                $('<div id="battleOk">')
-                    .addClass('button buttonColors go')
-                    .html('OK')
-                    .css('display', 'none')
-                    .click(function () {
-                        Message.remove()
-                    })
-            )
 
-        this.show(div);
+        var id = this.show(div);
+        this.ok(id)
+
+        $('.go').css('display', 'none')
 
         if (newBattle) {
             setTimeout(function () {
@@ -665,7 +661,7 @@ var Message = {
 
         if (notSet(b[i])) {
             if (!players[data.attackerColor].computer) {
-                $('#battleOk').fadeIn(100)
+                $('.go').fadeIn(100)
             }
             Move.end(data)
             return
@@ -713,9 +709,9 @@ var Message = {
         if (Army.selected == null) {
             return;
         }
-        this.show($('<div>').html('Destroy castle. Are you sure?'));
-        this.ok(Websocket.raze);
-        this.cancel();
+        var id = this.show($('<div>').append($('<h3>>').html('Destroy castle')).append($('<div>>').html('Are you sure?')))
+        this.ok(id, Websocket.raze);
+        this.cancel(id)
     },
     build: function () {
         if (Army.selected == null) {
@@ -736,9 +732,9 @@ var Message = {
             .append($('<div>').html('New defense: ' + newDefense))
             .append($('<div>').html('Cost: ' + costBuildDefense + 'gold'))
 
-        this.show(div);
-        this.ok(Websocket.defense);
-        this.cancel();
+        var id = this.show(div);
+        this.ok(id, Websocket.defense);
+        this.cancel(id)
     },
     statistics: function () {
         var statistics = $('<div>')
@@ -746,7 +742,6 @@ var Message = {
         var table = $('<table>')
             .addClass('statistics')
             .append($('<tr>')
-//                .append($('<th>').html('Players'))
                 .append($('<th>').addClass('Players'))
                 .append($('<th>').html('Castles conquered'))
                 .append($('<th>').html('Castles lost'))
@@ -847,14 +842,11 @@ var Message = {
         }
         statistics.append(table);
 
-        var div = $('<div>')
-            .addClass('overflow')
-            .append(statistics);
-        this.show(div);
-        this.ok();
+        var id = this.show(statistics);
+        this.ok(id)
 
-        var divHeight = parseInt($('.message').css('height')) - 60;
-        $('.message div.overflow').css('height', divHeight + 'px')
+        var divHeight = parseInt($('#' + id).css('height'))-60;
+        $('#' + id + ' div.overflow').css('height', divHeight + 'px')
     },
     end: function () {
         this.simple('GAME OVER');
@@ -924,8 +916,8 @@ var Message = {
             )
             .append($('<h3>').html('Summation'))
             .append($('<div>').html(myTowers * 5 + myCastlesGold - myUnitsGold + ' gold per turn'))
-        this.show(div);
-        this.ok();
+        var id = this.show(div);
+        this.ok(id)
     },
     income: function () {
         var myTowers = 0,
@@ -996,8 +988,8 @@ var Message = {
             .addClass('overflow')
             .append($('<h3>').html('Income'))
             .append(table)
-        this.show(div);
-        this.ok();
+        var id = this.show(div);
+        this.ok(id)
     },
     upkeep: function () {
         var myUnits = 0,
@@ -1050,15 +1042,15 @@ var Message = {
             .addClass('overflow')
             .append($('<h3>').html('Upkeep'))
             .append(table)
-        this.show(div);
-        this.ok();
+        var id = this.show(div);
+        this.ok(id)
     },
     hire: function () {
         var div = $('<div>')
             .append($('<h3>').html('Hire hero'))
             .append('Do you want to hire new hero for 1000 gold?')
-        this.show(div)
-        this.ok(Websocket.hire)
-        this.cancel()
+        var id = this.show(div)
+        this.ok(id, Websocket.hire)
+        this.cancel(id)
     }
 }

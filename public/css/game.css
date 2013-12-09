@@ -148,9 +148,11 @@
     margin: 1px;
     padding: 2px;
     border: none;
-    border-radius: 3px;
+    border-radius: 20px;
     z-index: 2200;
     color: white;
+    text-align: center;
+    line-height: 36px;
     text-shadow: none;
     background: #000;
     opacity: 0.66;
@@ -174,8 +176,6 @@
     z-index: 1700;
     color: #000;
     text-shadow: none;
-    /*background: yellow;*/
-    /*opacity: 0.33;*/
 }
 
 #playersBox {
@@ -202,48 +202,40 @@
     border: none;
 }
 
-.whitebg {
-    background: url('/img/game/white.png') 1px 1px no-repeat;
-}
+/*.whitebg {*/
+    /*background: url('/img/game/white.png') 1px 1px no-repeat;*/
+/*}*/
 
-#first {
-    left: 20px;
-    top: 35px;
-}
+/*#first {*/
+    /*left: 20px;*/
+    /*top: 35px;*/
+/*}*/
 
-.yellowbg {
-    background: url('/img/game/yellow.png') 1px 1px no-repeat;
-}
+/*.yellowbg {*/
+    /*background: url('/img/game/yellow.png') 1px 1px no-repeat;*/
+/*}*/
 
-#second {
-    left: 215px;
-    top: 35px;
-}
+/*#second {*/
+    /*left: 215px;*/
+    /*top: 35px;*/
+/*}*/
 
-.greenbg {
-    background: url('/img/game/green.png') 1px 1px no-repeat;
-}
+/*.greenbg {*/
+    /*background: url('/img/game/green.png') 1px 1px no-repeat;*/
+/*}*/
 
-#third {
-    left: 215px;
-    top: 225px;
-}
+/*#third {*/
+    /*left: 215px;*/
+    /*top: 225px;*/
+/*}*/
 
-.redbg {
-    background: url('/img/game/red.png') 1px 1px no-repeat;
-}
+/*.redbg {*/
+    /*background: url('/img/game/red.png') 1px 1px no-repeat;*/
+/*}*/
 
-#fourth {
-    left: 20px;
-    top: 225px;
-}
-
-/*.nr {*/
-/*position: absolute;*/
-/*text-shadow: 2px 2px 0 #000;*/
-/*color: white;*/
-/*line-height: 30px;*/
-/*font-size: 20px;*/
+/*#fourth {*/
+    /*left: 20px;*/
+    /*top: 225px;*/
 /*}*/
 
 #exit.iconButton {
@@ -285,33 +277,19 @@
     display: block;
 }
 
-#armyButtonsBox {
-    /*    height:69px;*/
-}
-
 #armyButtonsBox div.armyButtons {
     clear: both;
     text-align: center;
 }
 
-#armyButtonsBox div div.armyButton {
-    /*height: 26px;*/
-}
-
 .message {
     min-width: 321px;
     min-height: 70px;
-    border: 1px solid #555;
-    z-index: 27001;
-    background: transparent url('/img/game/message_bg.png');
-    position: absolute;
     top: 60px;
     display: none;
     border-radius: 10px;
-    box-shadow: 5px 5px 20px #000;
     text-shadow: 2px 2px 0 #000;
-    color: #fff;
-    padding: 10px;
+    text-align: center;
 }
 
 .message h3 {
@@ -335,6 +313,15 @@
 .message fieldset {
     border: 1px solid #CECEb0;
     border-radius: 5px;
+}
+
+.message div.overflow {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.message div.overflow {
+    padding-right: 17px;
 }
 
 .message .production {
@@ -712,22 +699,21 @@
     text-shadow: none;
 }
 
-#goldBox .left {
-    margin: 0 2px;
-    padding: 2px;
-    border-radius: 5px;
+#goldBox table {
+    width: auto;
+    border-spacing: 0;
 }
 
-#goldBox .left:hover {
-    cursor: pointer;
-    background: lime;
-    color: #000;
-}
-
-#goldBox div div {
-    height: 14px;
-    padding: 2px;
+#goldBox td {
+    height: 25px;
+    padding: 0 5px;
+    width: 116px;
     text-align: center;
+    border: none !important;
+}
+
+#goldBox td div{
+    line-height: 14px;
 }
 
 #armyBox {
@@ -766,15 +752,11 @@
     left: 13px;
 }
 
-#nextTurn {
-    /*margin-top: 10px;*/
-}
-
-.message #income {
-    position: absolute;
-    top: 10px;
-    left: 255px;
-}
+/*.message #income {*/
+    /*position: absolute;*/
+    /*top: 10px;*/
+    /*left: 255px;*/
+/*}*/
 
 .box {
     position: absolute;
@@ -983,15 +965,6 @@ html {
     z-index: 99999;
 }
 
-.message div.overflow {
-    overflow: hidden;
-    overflow-y: auto;
-}
-
-.message div.overflow div {
-    margin-right: 15px;
-}
-
 table.statistics td {
     border: none;
     text-shadow: none;
@@ -1053,10 +1026,6 @@ table.treasury tr:last-of-type td:first-of-type {
 table.treasury tr:last-of-type td:last-of-type {
     border-bottom-right-radius: 5px;
 }
-
-/*table.treasury tr:hover td {*/
-/*background: grey;*/
-/*}*/
 
 table.treasury td.r {
     text-align: right;
