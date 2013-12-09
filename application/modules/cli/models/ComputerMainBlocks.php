@@ -242,6 +242,7 @@ class Cli_Model_ComputerMainBlocks
 
                         $h = '';
                         $s = '';
+                        $counter = count($army['soldiers']) - $numberOfUnits;
 
                         foreach ($army['heroes'] as $hero) {
                             if ($h) {
@@ -252,6 +253,10 @@ class Cli_Model_ComputerMainBlocks
                         }
 
                         foreach ($army['soldiers'] as $soldier) {
+                            $counter--;
+                            if ($counter < 0) {
+                                break;
+                            }
                             if ($s) {
                                 $s .= ',' . $soldier['soldierId'];
                             } else {
@@ -260,27 +265,30 @@ class Cli_Model_ComputerMainBlocks
                         }
 
                         $mSplitArmy = new Cli_Model_SplitArmy();
-                        $newArmyId = $mSplitArmy->split($army['armyId'], $s, $h, $user, $db, $gameHandler);
+                        $newArmyId = $mSplitArmy->split($army['armyId'], $s, $h, $user, $playerId, $db, $gameHandler);
 
                         if ($army['x'] == $castlePosition['x'] && $army['y'] == $castlePosition['y']) {
-                            $path = array(
+                            $path = array(0 => array(
                                 'x' => $castlePosition['x'] + 1,
                                 'y' => $castlePosition['y'] + 1,
-                                'tt' => 'c'
+                                'tt' => 'c')
                             );
                         } else {
-                            $path = array(
+                            $path = array(0 => array(
                                 'x' => $castlePosition['x'],
                                 'y' => $castlePosition['y'],
-                                'tt' => 'c'
+                                'tt' => 'c')
                             );
                         }
 
-                        return self::endMove($playerId, $db, $gameId, $newArmyId, $path, $path);
+                        $army = Cli_Model_Army::getArmyByArmyId($newArmyId, $gameId, $db);
+                        $cliModelArmy = new Cli_Model_Army($army);
+                        $mArmy2->updateArmyPosition($playerId, $path, $castlesAndFields['fields'], $cliModelArmy->getArmy());
+                        return self::endMove($playerId, $db, $gameId, $newArmyId, $path[0], $path);
                     } else {
                         $l->log('ZA MAŁA OBSADA ZAMKU - ZOSTAŃ!');
 
-                        $mArmy2->fortify($army['armyId'], 1);
+                        $mArmy2->fortify($armyId, 1);
 
                         return self::endMove($playerId, $db, $gameId, $army['armyId'], $army);
                     }
@@ -402,6 +410,7 @@ class Cli_Model_ComputerMainBlocks
 
         if (!isset($armyId)) {
             $armyId = $oldArmyId;
+            $armiesIds = array('deletedIds' => null);
         }
 
         if ($fightEnemy) {

@@ -27,6 +27,9 @@ class Application_Model_HeroesKilled extends Coret_Db_Table_Abstract
         $array = array();
 
         foreach ($this->selectAll($select) as $v) {
+            if ($v['winnerId'] == 0) {
+                continue;
+            }
             $array[$playersInGameColors[$v['winnerId']]] = $v['count'];
         }
 

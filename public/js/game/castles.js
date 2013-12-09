@@ -265,7 +265,10 @@ var Castle = {
 
         castles[castleId].color = color;
 
-        $('#c' + castleId).css('background', mapPlayersColors[color].minimapColor);
+        $('#c' + castleId).css({
+            'background': mapPlayersColors[color].minimapColor,
+            'border-color': mapPlayersColors[color].textColor
+        })
     },
     raze: function (castleId) {
         if (castles[castleId].color == my.color) {

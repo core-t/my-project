@@ -209,13 +209,12 @@ class Application_Model_UnitsInGame extends Coret_Db_Table_Abstract
         return $this->update($data, $where);
     }
 
-    public function isSoldierInArmy($armyId, $playerId, $soldierId)
+    public function isSoldierInArmy($armyId, $soldierId)
     {
         $select = $this->_db->select()
             ->from(array('a' => $this->_name), 'soldierId')
             ->join(array('b' => 'army'), 'a."armyId"=b."armyId"', '')
             ->where('a."gameId" = ?', $this->_gameId)
-            ->where('"playerId" = ?', $playerId)
             ->where('a."armyId" = ?', $armyId)
             ->where('"soldierId" = ?', $soldierId)
             ->where('destroyed = false');

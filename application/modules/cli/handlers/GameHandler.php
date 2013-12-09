@@ -164,7 +164,7 @@ class Cli_GameHandler extends Cli_WofHandler
 
             case 'split':
                 $mSplitArmy = new Cli_Model_SplitArmy();
-                $mSplitArmy->split($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $db, $this);
+                $mSplitArmy->split($dataIn['armyId'], $dataIn['s'], $dataIn['h'], $user, $user->parameters['playerId'], $db, $this);
                 break;
 
             case 'join':

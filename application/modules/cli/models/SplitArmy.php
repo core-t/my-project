@@ -3,7 +3,7 @@
 class Cli_Model_SplitArmy
 {
 
-    function split($parentArmyId, $s, $h, $user, $db, $gameHandler)
+    function split($parentArmyId, $s, $h, $user, $playerId, $db, $gameHandler)
     {
         if (empty($parentArmyId) || (empty($h) && empty($s))) {
             $gameHandler->sendError($user, 'Brak "armyId", "s" lub "h"!');
@@ -25,13 +25,13 @@ class Cli_Model_SplitArmy
                 if (!Zend_Validate::is($heroId, 'Digits')) {
                     continue;
                 }
-                if (!$mHeroesInGame->isHeroInArmy($parentArmyId, $user->parameters['playerId'], $heroId)) {
+                if (!$mHeroesInGame->isHeroInArmy($parentArmyId, $heroId)) {
                     continue;
                 }
 
                 if (empty($childArmyId)) {
-                    $position = $mArmy->getArmyPositionByArmyIdPlayerId($parentArmyId, $user->parameters['playerId']);
-                    $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
+                    $position = $mArmy->getArmyPositionByArmyIdPlayerId($parentArmyId, $playerId);
+                    $childArmyId = $mArmy->createArmy($position, $playerId);
                 }
 
                 $mHeroesInGame->heroUpdateArmyId($heroId, $childArmyId);
@@ -47,13 +47,13 @@ class Cli_Model_SplitArmy
                     continue;
                 }
 
-                if (!$mSoldier->isSoldierInArmy($parentArmyId, $user->parameters['playerId'], $soldierId)) {
+                if (!$mSoldier->isSoldierInArmy($parentArmyId, $soldierId)) {
                     continue;
                 }
 
                 if (empty($childArmyId)) {
-                    $position = $mArmy->getArmyPositionByArmyIdPlayerId($parentArmyId, $user->parameters['playerId']);
-                    $childArmyId = $mArmy->createArmy($position, $user->parameters['playerId']);
+                    $position = $mArmy->getArmyPositionByArmyIdPlayerId($parentArmyId, $playerId);
+                    $childArmyId = $mArmy->createArmy($position, $playerId);
                 }
 
                 $mSoldier->soldierUpdateArmyId($soldierId, $childArmyId);
@@ -71,7 +71,7 @@ class Cli_Model_SplitArmy
             'type' => 'split',
             'parentArmy' => Cli_Model_Army::getArmyByArmyId($parentArmyId, $user->parameters['gameId'], $db),
             'childArmy' => Cli_Model_Army::getArmyByArmyId($childArmyId, $user->parameters['gameId'], $db),
-            'color' => $playersInGameColors[$user->parameters['playerId']]
+            'color' => $playersInGameColors[$playerId]
         );
 
         $gameHandler->sendToChannel($db, $token, $user->parameters['gameId']);

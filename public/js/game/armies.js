@@ -362,6 +362,7 @@ var Army = {
                     'left': army.x * 2 + 'px',
                     'top': army.y * 2 + 'px',
                     'background': mapPlayersColors[color].minimapColor,
+                    'border-color': mapPlayersColors[color].textColor,
                     'z-index': 10
                 })
                 .attr('id', army.armyId)

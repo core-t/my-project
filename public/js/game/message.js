@@ -168,17 +168,15 @@ var Message = {
         if (Gui.lock) {
             return;
         }
+        console.log('castle +1')
         if (!my.turn) {
             return;
         }
-        if (Army.selected) {
-            return;
-        }
-
+        console.log('castle +2')
         if (notSet(castles[castleId])) {
             return;
         }
-
+        console.log('castle +3')
         var time = '';
         var attr;
         var capital = '';
@@ -742,6 +740,7 @@ var Message = {
             .addClass('statistics')
             .append($('<tr>')
                 .append($('<th>').addClass('Players'))
+                .append($('<th>').addClass('Players'))
                 .append($('<th>').html('Castles conquered'))
                 .append($('<th>').html('Castles lost'))
                 .append($('<th>').html('Castles razed'))
@@ -754,13 +753,14 @@ var Message = {
         for (i in players) {
             var tr = $('<tr>');
 
+            tr.append($('<td>').addClass('shortName').html($('<img>').attr('src', Hero.getImage(mapPlayersColors[i].shortName))))
+
             var td = $('<td>').addClass('shortName');
             tr.append(td.html(mapPlayersColors[i].longName))
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(castlesConquered.winners[i])) {
                 tr.append(td.html(castlesConquered.winners[i]))
             } else {
@@ -768,9 +768,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(castlesConquered.losers[i])) {
                 tr.append(td.html(castlesConquered.losers[i]))
             } else {
@@ -778,9 +777,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(castlesDestroyed[i])) {
                 tr.append(td.html(castlesConquered[i]))
             } else {
@@ -788,9 +786,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(soldiersCreated[i])) {
                 tr.append(td.html(soldiersCreated[i]))
             } else {
@@ -798,9 +795,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(soldiersKilled.winners[i])) {
                 tr.append(td.html(soldiersKilled.winners[i]))
             } else {
@@ -808,9 +804,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(soldiersKilled.losers[i])) {
                 tr.append(td.html(soldiersKilled.losers[i]))
             } else {
@@ -818,9 +813,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(heroesKilled.winners[i])) {
                 tr.append(td.html(heroesKilled.winners[i]))
             } else {
@@ -828,9 +822,8 @@ var Message = {
             }
 
             var td = $('<td>').css({
-                'background': mapPlayersColors[i].backgroundColor,
-                'color': mapPlayersColors[i].textColor
-            });
+                border: '1px solid ' + mapPlayersColors[i].backgroundColor
+            })
             if (isSet(heroesKilled.losers[i])) {
                 tr.append(td.html(heroesKilled.losers[i]))
             } else {
@@ -844,7 +837,7 @@ var Message = {
         var id = this.show(statistics);
         this.ok(id)
 
-        var divHeight = parseInt($('#' + id).css('height'))-60;
+        var divHeight = parseInt($('#' + id).css('height')) - 60;
         $('#' + id + ' div.overflow').css('height', divHeight + 'px')
     },
     end: function () {
