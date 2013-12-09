@@ -101,9 +101,6 @@ class Cli_Model_Turn
 
         $gold = $mPlayersInGame->getPlayerGold($playerId);
         if ($computer) {
-            $capitals = Zend_Registry::get('capitals');
-            $capitalId = $capitals[$color];
-
             $mArmy->unfortifyComputerArmies($playerId);
             $type = 'computerStart';
         } else {
@@ -127,6 +124,7 @@ class Cli_Model_Turn
             $income += $mapCastles[$castleId]['income'];
 
             $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
+            $playerCastles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
 
             if ($computer) {
                 if (!isset($turnNumber)) {
@@ -140,8 +138,6 @@ class Cli_Model_Turn
                     $unitId = Cli_Model_Army::findBestCastleProduction($units, $mapCastles[$castleId]['production']);
                 }
 
-
-
                 if ($unitId != $castleProduction['productionId']) {
                     $mCastlesInGame->setProduction($playerId, $castleId, $unitId);
                     $castleProduction = $mCastlesInGame->getProduction($castleId, $playerId);
@@ -150,10 +146,9 @@ class Cli_Model_Turn
                 $unitId = $castleProduction['productionId'];
             }
 
-            $playerCastles[$castleId]['productionTurn'] = $castleProduction['productionTurn'];
-
-            if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] AND $units[$unitId]['cost'] <= $gold) {
+            if ($unitId && $mapCastles[$castleId]['production'][$unitId]['time'] <= $castleProduction['productionTurn'] && $units[$unitId]['cost'] <= $gold) {
                 if ($mCastlesInGame->resetProductionTurn($castleId, $playerId) == 1) {
+                    $unitCastleId = null;
                     if ($castleProduction['relocationCastleId']) {
                         foreach ($playerCastles as $castle) {
                             if ($castleProduction['relocationCastleId'] == $castle['castleId']) {
@@ -162,12 +157,12 @@ class Cli_Model_Turn
                             }
                         }
 
-                        if (!isset($unitCastleId)) {
+                        if (!$unitCastleId) {
                             $mCastlesInGame->cancelProductionRelocation($playerId, $castleId);
                         }
                     }
 
-                    if (!isset($unitCastleId)) {
+                    if (!$unitCastleId) {
                         $unitCastleId = $castleId;
                     }
 
