@@ -35,7 +35,7 @@ var Army = {
             }
         }
 
-        army.canFly -= army.heroes.length;
+        army.canFly -= army.heroes.length - 1
 
         return army;
     },
