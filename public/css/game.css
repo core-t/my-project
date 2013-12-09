@@ -203,39 +203,39 @@
 }
 
 /*.whitebg {*/
-    /*background: url('/img/game/white.png') 1px 1px no-repeat;*/
+/*background: url('/img/game/white.png') 1px 1px no-repeat;*/
 /*}*/
 
 /*#first {*/
-    /*left: 20px;*/
-    /*top: 35px;*/
+/*left: 20px;*/
+/*top: 35px;*/
 /*}*/
 
 /*.yellowbg {*/
-    /*background: url('/img/game/yellow.png') 1px 1px no-repeat;*/
+/*background: url('/img/game/yellow.png') 1px 1px no-repeat;*/
 /*}*/
 
 /*#second {*/
-    /*left: 215px;*/
-    /*top: 35px;*/
+/*left: 215px;*/
+/*top: 35px;*/
 /*}*/
 
 /*.greenbg {*/
-    /*background: url('/img/game/green.png') 1px 1px no-repeat;*/
+/*background: url('/img/game/green.png') 1px 1px no-repeat;*/
 /*}*/
 
 /*#third {*/
-    /*left: 215px;*/
-    /*top: 225px;*/
+/*left: 215px;*/
+/*top: 225px;*/
 /*}*/
 
 /*.redbg {*/
-    /*background: url('/img/game/red.png') 1px 1px no-repeat;*/
+/*background: url('/img/game/red.png') 1px 1px no-repeat;*/
 /*}*/
 
 /*#fourth {*/
-    /*left: 20px;*/
-    /*top: 225px;*/
+/*left: 20px;*/
+/*top: 225px;*/
 /*}*/
 
 #exit.iconButton {
@@ -712,7 +712,7 @@
     border: none !important;
 }
 
-#goldBox td div{
+#goldBox td div {
     line-height: 14px;
 }
 
@@ -753,9 +753,9 @@
 }
 
 /*.message #income {*/
-    /*position: absolute;*/
-    /*top: 10px;*/
-    /*left: 255px;*/
+/*position: absolute;*/
+/*top: 10px;*/
+/*left: 255px;*/
 /*}*/
 
 .box {
@@ -1033,4 +1033,8 @@ table.treasury td.r {
 
 table.treasury td.c {
     text-align: center;
+}
+
+#vs {
+    margin-top: 10px;
 }

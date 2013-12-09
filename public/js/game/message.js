@@ -640,7 +640,6 @@ var Message = {
             .append(attack)
             .append($('<p id="vs">').html('VS').addClass('center'))
             .append(defense)
-            .append($('<div>').addClass('battle defense'))
 
         var id = this.show(div);
         this.ok(id)
@@ -730,7 +729,7 @@ var Message = {
             .html('Do you want to build castle defense?')
             .append($('<div>').html('Current defense: ' + castles[castleId].defense))
             .append($('<div>').html('New defense: ' + newDefense))
-            .append($('<div>').html('Cost: ' + costBuildDefense + 'gold'))
+            .append($('<div>').html('Cost: ' + costBuildDefense + ' gold'))
 
         var id = this.show(div);
         this.ok(id, Websocket.defense);
@@ -888,19 +887,19 @@ var Message = {
                         $('<tr>')
                             .append($('<td>').html(myTowers).addClass('r'))
                             .append($('<td>').html('towers').addClass('c'))
-                            .append($('<td>').html(myTowers * 5 + 'gold').addClass('r'))
+                            .append($('<td>').html(myTowers * 5 + ' gold').addClass('r'))
                     )
                     .append(
                         $('<tr>')
                             .append($('<td>').html(myCastles).addClass('r'))
                             .append($('<td>').html('castles').addClass('c'))
-                            .append($('<td>').html(myCastlesGold + 'gold').addClass('r'))
+                            .append($('<td>').html(myCastlesGold + ' gold').addClass('r'))
                     )
                     .append(
                         $('<tr>')
                             .append($('<td>'))
                             .append($('<td>'))
-                            .append($('<td>').html(myTowers * 5 + myCastlesGold + 'gold').addClass('r'))
+                            .append($('<td>').html(myTowers * 5 + myCastlesGold + ' gold').addClass('r'))
                     )
             )
             .append($('<h3>').html('Upkeep'))
@@ -911,7 +910,7 @@ var Message = {
                         $('<tr>')
                             .append($('<td>').html(myUnits).addClass('r'))
                             .append($('<td>').html('units').addClass('c'))
-                            .append($('<td>').html(myUnitsGold + 'gold').addClass('r'))
+                            .append($('<td>').html(myUnitsGold + ' gold').addClass('r'))
                     )
             )
             .append($('<h3>').html('Summation'))
@@ -948,7 +947,7 @@ var Message = {
                     $('<tr>')
                         .append($('<td>'))
                         .append($('<td>').html(castles[i].name))
-                        .append($('<td>').html(castles[i].income + 'gold').addClass('r'))
+                        .append($('<td>').html(castles[i].income + ' gold').addClass('r'))
                         .click(click(i))
                         .mouseover(function () {
                             $(this).children().css({
@@ -970,17 +969,17 @@ var Message = {
                 $('<tr>')
                     .append($('<td>').html(myCastles).addClass('r'))
                     .append($('<td>').html('castles').addClass('c'))
-                    .append($('<td>').html(myCastlesGold + 'gold').addClass('r'))
+                    .append($('<td>').html(myCastlesGold + ' gold').addClass('r'))
             ).append(
                 $('<tr>')
                     .append($('<td>').html(myTowers).addClass('r'))
                     .append($('<td>').html('towers').addClass('c'))
-                    .append($('<td>').html(myTowers * 5 + 'gold').addClass('r'))
+                    .append($('<td>').html(myTowers * 5 + ' gold').addClass('r'))
             ).append(
                 $('<tr>')
                     .append($('<td>'))
                     .append($('<td>'))
-                    .append($('<td>').html(myTowers * 5 + myCastlesGold + 'gold').addClass('r'))
+                    .append($('<td>').html(myTowers * 5 + myCastlesGold + ' gold').addClass('r'))
             )
 
 
@@ -1012,7 +1011,7 @@ var Message = {
                     $('<tr>')
                         .append($('<td>').html($('<img>').attr('src', Unit.getImage(players[my.color].armies[i].soldiers[j].unitId, my.color))))
                         .append($('<td>').html(units[players[my.color].armies[i].soldiers[j].unitId].name))
-                        .append($('<td>').html(units[players[my.color].armies[i].soldiers[j].unitId].cost + 'gold').addClass('r'))
+                        .append($('<td>').html(units[players[my.color].armies[i].soldiers[j].unitId].cost + ' gold').addClass('r'))
                         .click(click(i))
                         .mouseover(function () {
                             $(this).children().css({
@@ -1035,7 +1034,7 @@ var Message = {
             $('<tr>')
                 .append($('<td>').html(myUnits).addClass('r'))
                 .append($('<td>').html('units').addClass('c'))
-                .append($('<td>').html(myUnitsGold + 'gold').addClass('r'))
+                .append($('<td>').html(myUnitsGold + ' gold').addClass('r'))
         )
 
         var div = $('<div>')
