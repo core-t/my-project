@@ -291,7 +291,7 @@ var Message = {
         );
 
         if (isSet(castles[castleId].relocatedProduction)) {
-            var relocatedProductionElement = $('<table>')
+            var relocatingProductionElement = $('<table>')
             var click = function (i) {
                 return function () {
                     Message.castle(i)
@@ -299,7 +299,7 @@ var Message = {
             }
 
             for (relocatedCastleId in castles[castleId].relocatedProduction) {
-                relocatedProductionElement.append(
+                relocatingProductionElement.append(
                     $('<tr>')
                         .append(
                             $('<td>').append(
@@ -323,10 +323,33 @@ var Message = {
             .append($('<br>'))
             .append($('<fieldset>').addClass('production').append($('<label>').html('Production')).append(table).attr('id', castleId))
 
+        if (isSet(players[my.color].castles[castleId]) && players[my.color].castles[castleId].relocationCastleId) {
+            div
+                .append($('<br>'))
+                .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocating to')).append(
+                    $('<table>').append(
+                        $('<tr>')
+                            .append(
+                                $('<td>').append(
+                                    $('<img>').attr('src', Unit.getImage(castles[players[my.color].castles[castleId].relocationCastleId].relocatedProduction[castleId].currentProductionId, my.color))
+                                )
+                            )
+                            .append(
+                                $('<td>')
+                                    .html(castles[players[my.color].castles[castleId].relocationCastleId].name)
+                                    .addClass('button buttonColors')
+                                    .click(function () {
+                                        Message.castle(players[my.color].castles[castleId].relocationCastleId)
+                                    })
+                            )
+                    )
+                ))
+        }
+
         if (isSet(castles[castleId].relocatedProduction)) {
             div
                 .append($('<br>'))
-                .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocating from')).append(relocatedProductionElement))
+                .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocating from')).append(relocatingProductionElement))
         }
 
         var id = this.show(div);

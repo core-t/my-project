@@ -322,11 +322,8 @@ var Army = {
                 Army.myClick(army, e)
             });
             element.mouseover(function () {
-                myArmyMouse(army.armyId)
-            });
-            element.mousemove(function () {
-                myArmyMouse(army.armyId)
-            });
+                Army.myMouseOver(army.armyId)
+            })
             if (army.canSwim) {
                 //            if(fields[army.y][army.x] != 'S'){
                 //                army.fieldType = fields[army.y][army.x];
@@ -494,7 +491,7 @@ var Army = {
         Message.remove()
 
         castlesAddCursorWhenSelectedArmy();
-        armiesAddCursorWhenSelectedArmy();
+        this.enemyCursorWhenSelected();
         myCastlesRemoveCursor();
 
         this.removeFromSkipped(a.armyId);
@@ -641,26 +638,24 @@ var Army = {
         } else {
             fields[a.y][a.x] = fieldsOryginal[a.y][a.x];
         }
+    },
+    myMouseOver: function (armyId) {
+        if (Gui.lock) {
+            return;
+        }
+
+        if (my.turn) {
+            $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor_select.png) 12 13, default')
+        } else {
+            $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor.png), default')
+        }
+    },
+    enemyCursorWhenSelected: function () {
+        $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor_attack.png) 13 16, crosshair')
     }
+
 }
 
-function myArmyMouse(armyId) {
-    if (Gui.lock) {
-        return;
-    }
-
-    if (my.turn && !Army.selected) {
-        $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor_select.png), default');
-        $('#army' + armyId).css('cursor', 'url(/img/game/cursor_select.png), default');
-    } else {
-        $('#army' + armyId + ' *').css('cursor', 'url(/img/game/cursor.png), default');
-        $('#army' + armyId).css('cursor', 'url(/img/game/cursor.png), default');
-    }
-}
-
-function armiesAddCursorWhenSelectedArmy() {
-    $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor_attack.png) 13 16, crosshair');
-}
 
 function armiesAddCursorWhenUnselectedArmy() {
     $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor.png), default');

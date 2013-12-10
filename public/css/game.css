@@ -32,6 +32,10 @@
     left: 10px;
 }
 
+.zoomPad * {
+    cursor: url(/img/game/lupa.png) 13 13, crosshair
+}
+
 .zoomPadLayout {
     border-bottom-right-radius: 10px;
     top: -10px;
@@ -39,8 +43,6 @@
 }
 
 .zoomPup {
-    /*background-color: #FFF;*/
-    /*opacity: 0.25;*/
     border: 1px solid #fff;
     top: 0;
     left: 0;
@@ -186,7 +188,7 @@
     clear: both;
 }
 
-#playersBox #buttons{
+#playersBox #buttons {
     position: absolute;
     top: 190px;
 }
@@ -476,14 +478,6 @@
     top: 0px;
     left: 0px;
 }
-
-.message p {
-    /*height: 24px;*/
-}
-
-/*#gameMenu .message .button {*/
-/*height: 13px;*/
-/*}*/
 
 .message .go {
     margin: 20px auto;
@@ -803,6 +797,7 @@ html {
     border: 1px solid lime !important;
     background: #000 !important;
     color: lime !important;
+    cursor: url(/img/game/cursor_pointer.png), pointer;
 }
 
 .buttonColors:hover {

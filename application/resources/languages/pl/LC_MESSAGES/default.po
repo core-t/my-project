@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-05 12:15+0100\n"
-"PO-Revision-Date: 2013-12-05 12:15+0100\n"
+"POT-Creation-Date: 2013-12-10 15:41+0100\n"
+"PO-Revision-Date: 2013-12-10 15:41+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -298,17 +298,17 @@ msgid "Special unit"
 msgstr "Jednostka specjalna"
 
 #: application/views/scripts/help/index.phtml:25
-#: application/layouts/scripts/game.phtml:86
+#: application/layouts/scripts/game.phtml:95
 msgid "Attack"
 msgstr "Atak"
 
 #: application/views/scripts/help/index.phtml:27
-#: application/layouts/scripts/game.phtml:89
+#: application/layouts/scripts/game.phtml:98
 msgid "Defense"
 msgstr "Obrona"
 
 #: application/views/scripts/help/index.phtml:29
-#: application/layouts/scripts/game.phtml:83
+#: application/layouts/scripts/game.phtml:92
 msgid "Moves"
 msgstr "Ruchy"
 
@@ -349,95 +349,95 @@ msgstr "Kolor"
 msgid "Time spend"
 msgstr "Czas"
 
-#: application/layouts/scripts/game.phtml:41
+#: application/layouts/scripts/game.phtml:42
 msgid "Income"
 msgstr "Przychód"
 
-#: application/layouts/scripts/game.phtml:45
+#: application/layouts/scripts/game.phtml:46
 msgid "Upkeep"
 msgstr "Utrzymanie"
 
-#: application/layouts/scripts/game.phtml:49
+#: application/layouts/scripts/game.phtml:50
 msgid "Treasure"
 msgstr "Skarbiec"
 
-#: application/layouts/scripts/game.phtml:58
+#: application/layouts/scripts/game.phtml:61
 msgid "Exit game"
 msgstr "Opuść grę"
 
-#: application/layouts/scripts/game.phtml:61
+#: application/layouts/scripts/game.phtml:64
 msgid "Show others"
 msgstr "Pokaż innych"
 
-#: application/layouts/scripts/game.phtml:64
+#: application/layouts/scripts/game.phtml:67
 msgid "Sound"
 msgstr "Dźwięk"
 
-#: application/layouts/scripts/game.phtml:67
+#: application/layouts/scripts/game.phtml:70
 msgid "Surrender"
 msgstr "Poddaj się"
 
-#: application/layouts/scripts/game.phtml:70
+#: application/layouts/scripts/game.phtml:73
 msgid "Statistics"
 msgstr "Statystyki"
 
-#: application/layouts/scripts/game.phtml:74
+#: application/layouts/scripts/game.phtml:77
 msgid "Next turn"
 msgstr "Następna tura"
 
-#: application/layouts/scripts/game.phtml:97
-msgid "Disband army"
-msgstr "Rozwiąż armię"
-
-#: application/layouts/scripts/game.phtml:101
-msgid "Deselect army"
-msgstr "Odznacz armię"
-
-#: application/layouts/scripts/game.phtml:105
-msgid "Search ruins"
-msgstr "Przeszukaj ruiny"
-
-#: application/layouts/scripts/game.phtml:109
+#: application/layouts/scripts/game.phtml:79
 msgid "Resurrect hero"
 msgstr "Wskrześ herosa"
 
-#: application/layouts/scripts/game.phtml:113
+#: application/layouts/scripts/game.phtml:81
 msgid "Hire hero"
 msgstr "Wynajmij herosa"
 
-#: application/layouts/scripts/game.phtml:117
+#: application/layouts/scripts/game.phtml:83
+msgid "Next army"
+msgstr "Następna armia"
+
+#: application/layouts/scripts/game.phtml:105
+msgid "Disband army"
+msgstr "Rozwiąż armię"
+
+#: application/layouts/scripts/game.phtml:107
+msgid "Deselect army"
+msgstr "Odznacz armię"
+
+#: application/layouts/scripts/game.phtml:109
+msgid "Search ruins"
+msgstr "Przeszukaj ruiny"
+
+#: application/layouts/scripts/game.phtml:111
 msgid "Show castle"
 msgstr "Pokaż zamek"
 
-#: application/layouts/scripts/game.phtml:121
+#: application/layouts/scripts/game.phtml:113
 msgid "Build defense"
 msgstr "Podnieś obronę"
 
-#: application/layouts/scripts/game.phtml:125
+#: application/layouts/scripts/game.phtml:115
 msgid "Raze castle"
 msgstr "Zburz zamek"
 
-#: application/layouts/scripts/game.phtml:132
+#: application/layouts/scripts/game.phtml:118
 msgid "Split army"
 msgstr "Podziel amię"
 
-#: application/layouts/scripts/game.phtml:136
+#: application/layouts/scripts/game.phtml:120
 msgid "Army status"
 msgstr "Status armii"
 
-#: application/layouts/scripts/game.phtml:140
+#: application/layouts/scripts/game.phtml:122
 msgid "Fortify army"
 msgstr "Fortyfikuj armię"
 
-#: application/layouts/scripts/game.phtml:144
+#: application/layouts/scripts/game.phtml:124
 msgid "Skip in this turn"
 msgstr "Pomiń w tej turze"
 
-#: application/layouts/scripts/game.phtml:148
-msgid "Find next army"
-msgstr "Znajdź następną"
-
-#: application/layouts/scripts/game.phtml:161
+#: application/layouts/scripts/game.phtml:136
 msgid "Send"
 msgstr "Wyślij"
 

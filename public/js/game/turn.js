@@ -42,12 +42,17 @@ var Turn = {
         if (!Hero.findMy()) {
             $('#heroResurrection').removeClass('buttonOff')
         }
+        if(my.gold > 1000){
+            $('#heroHire').removeClass('buttonOff')
+        }
     },
     off: function () {
         my.turn = false;
         Army.deselect();
-        $('#nextTurn').addClass('buttonOff');
-        $('#nextArmy').addClass('buttonOff');
+        $('#nextTurn').addClass('buttonOff')
+        $('#nextArmy').addClass('buttonOff')
+        $('#heroResurrection').addClass('buttonOff')
+        $('#heroHire').addClass('buttonOff')
         makeMyCursorLock();
     },
     change: function (color, nr) {
