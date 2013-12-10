@@ -279,13 +279,25 @@ var Gui = {
         $('.zoomWindow').css('height', documentHeight + 'px');
 
         var left = documentWidth - 237;
-        var chatLeft = documentWidth - 507;
-        var chatTop = documentHeight - 169;
 
-        $('#chatBox').css({
-            'left': chatLeft + 'px',
-            'top': chatTop + 'px'
-        });
+        var numberOfHumanPlayers = 0
+        for (sn in players) {
+            if (!players[sn].computer) {
+                numberOfHumanPlayers++
+            }
+        }
+
+        if (numberOfHumanPlayers > 1) {
+            var chatLeft = documentWidth - 507;
+            var chatTop = documentHeight - 169;
+
+            $('#chatBox').css({
+                'left': chatLeft + 'px',
+                'top': chatTop + 'px'
+            });
+        } else {
+            $('#chatBox').css({display: 'none'});
+        }
 
         $('#goldBox').css({
             'left': documentWidth / 2 - $('#goldBox').outerWidth() / 2 + 'px'
@@ -294,6 +306,7 @@ var Gui = {
             'left': left + 'px'
         });
         $('#armyBox').css({
+            top: parseInt($('#playersBox').css('height')) + 19 + 'px',
             'left': left + 'px'
         });
 
@@ -318,7 +331,6 @@ var Gui = {
                 'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
             }
         )
-        ;
 
         if (!zoomer) {
             zoomer = new zoom(documentWidth, documentHeight);

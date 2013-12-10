@@ -73,8 +73,14 @@
                     <img src="/img/game/statistics.png" alt="<?php echo $this->translate('Statistics') ?>"/>
                 </div>
                 <canvas id="playersCanvas" width="180px" height="180px"></canvas>
-                <div id="turnBox">
-                    <a id="nextTurn" class="button buttonColors"><?php echo $this->translate('Next turn') ?> &raquo;</a>
+                <div id="buttons">
+                    <a id="nextTurn" class="button buttonColors">(t) <?php echo $this->translate('Next turn') ?> &raquo;</a>
+                    <a id="heroResurrection"
+                       class="button buttonColors buttonOff"><?php echo $this->translate('Resurrect hero') ?></a>
+                    <a id="heroHire"
+                       class="button buttonColors buttonOff"><?php echo $this->translate('Hire hero') ?></a>
+                    <a id="nextArmy"
+                       class="button buttonColors buttonOff">(n) <?php echo $this->translate('Find next army') ?> &raquo;</a>
                 </div>
                 <div class="close buttonColors">&#x25B6</div>
             </div>
@@ -95,61 +101,27 @@
                 <div id="bonusBox"><span id="name" class="font-yellow"></span></div>
                 <div id="armyButtonsBox">
                     <div class="armyButtons">
-                        <div class="left armyButton">
-                            <a id="disbandArmy"
-                               class="button buttonColors buttonOff">(d) <?php echo $this->translate('Disband army') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="deselectArmy"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Deselect army') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="searchRuins"
-                               class="button buttonColors buttonOff">(r) <?php echo $this->translate('Search ruins') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="heroResurrection"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Resurrect hero') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="heroHire"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Hire hero') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="showCastle"
-                               class="button buttonColors buttonOff">(c) <?php echo $this->translate('Show castle') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="buildCastleDefense"
-                               class="button buttonColors buttonOff">(b) <?php echo $this->translate('Build defense') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="razeCastle"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Raze castle') ?></a>
-                        </div>
-                        <!--                        <div class="left armyButton">-->
+                        <a id="disbandArmy"
+                           class="button buttonColors buttonOff">(d) <?php echo $this->translate('Disband army') ?></a>
+                        <a id="deselectArmy"
+                           class="button buttonColors buttonOff"><?php echo $this->translate('Deselect army') ?></a>
+                        <a id="searchRuins"
+                           class="button buttonColors buttonOff">(r) <?php echo $this->translate('Search ruins') ?></a>
+                        <a id="showCastle"
+                           class="button buttonColors buttonOff">(c) <?php echo $this->translate('Show castle') ?></a>
+                        <a id="buildCastleDefense"
+                           class="button buttonColors buttonOff">(b) <?php echo $this->translate('Build defense') ?></a>
+                        <a id="razeCastle"
+                           class="button buttonColors buttonOff"><?php echo $this->translate('Raze castle') ?></a>
                         <!--                            <a id="showArtifacts" class="button buttonColors buttonOff"><?php //echo $this->translate('Show artifacts') ?></a>-->
-                        <!--                        </div>-->
-                        <div class="left armyButton">
-                            <a id="splitArmy"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Split army') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="armyStatus"
-                               class="button buttonColors buttonOff"><?php echo $this->translate('Army status') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="quitArmy"
-                               class="button buttonColors buttonOff">(f) <?php echo $this->translate('Fortify army') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="skipArmy"
-                               class="button buttonColors buttonOff">(s) <?php echo $this->translate('Skip in this turn') ?></a>
-                        </div>
-                        <div class="left armyButton">
-                            <a id="nextArmy"
-                               class="button buttonColors buttonOff">(n) <?php echo $this->translate('Find next army') ?> &raquo;</a>
-                        </div>
+                        <a id="splitArmy"
+                           class="button buttonColors buttonOff"><?php echo $this->translate('Split army') ?></a>
+                        <a id="armyStatus"
+                           class="button buttonColors buttonOff"><?php echo $this->translate('Army status') ?></a>
+                        <a id="quitArmy"
+                           class="button buttonColors buttonOff">(f) <?php echo $this->translate('Fortify army') ?></a>
+                        <a id="skipArmy"
+                           class="button buttonColors buttonOff">(s) <?php echo $this->translate('Skip in this turn') ?></a>
                     </div>
                 </div>
             </div>

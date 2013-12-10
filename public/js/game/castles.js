@@ -54,6 +54,11 @@ var Castle = {
         castles[castleId].currentProductionTurn = 0;
 
         if (relocationCastleId) {
+
+            for(i in castles){
+                Castle.removeRelocationIn(i, relocationCastleId)
+            }
+
             Castle.addRelocationOut(castleId)
             Castle.addRelocationIn(relocationCastleId, castleId)
 
