@@ -291,7 +291,13 @@ var Message = {
         );
 
         if (isSet(castles[castleId].relocatedProduction)) {
-            var relocatedProductionElement = $('<table>');
+            var relocatedProductionElement = $('<table>')
+            var click = function (i) {
+                return function () {
+                    Message.castle(i)
+                }
+            }
+
             for (relocatedCastleId in castles[castleId].relocatedProduction) {
                 relocatedProductionElement.append(
                     $('<tr>')
@@ -304,10 +310,7 @@ var Message = {
                             $('<td>')
                                 .html(castles[relocatedCastleId].name)
                                 .addClass('button buttonColors')
-                                .click(function () {
-                                    console.log(relocatedCastleId);
-                                    Message.castle(relocatedCastleId);
-                                })
+                                .click(click(relocatedCastleId))
                         )
                 )
             }
@@ -323,7 +326,7 @@ var Message = {
         if (isSet(castles[castleId].relocatedProduction)) {
             div
                 .append($('<br>'))
-                .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocation')).append(relocatedProductionElement))
+                .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocating from')).append(relocatedProductionElement))
         }
 
         var id = this.show(div);

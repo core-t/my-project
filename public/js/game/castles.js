@@ -54,6 +54,9 @@ var Castle = {
         castles[castleId].currentProductionTurn = 0;
 
         if (relocationCastleId) {
+            Castle.addRelocationOut(castleId)
+            Castle.addRelocationIn(relocationCastleId, castleId)
+
             $('.castle.' + my.color).each(function () {
                 var thisCastleId = $(this).attr('id').substring(6);
 
@@ -75,6 +78,9 @@ var Castle = {
                 'currentProductionId': castles[castleId].currentProductionId,
                 'currentProductionTurn': castles[castleId].currentProductionTurn
             }
+        } else {
+            Castle.removeRelocationOut(castleId)
+            Castle.removeRelocationIn(relocationCastleId)
         }
     },
     initMyProduction: function (castleId) {
@@ -87,10 +93,14 @@ var Castle = {
             if (notSet(castles[relocationCastleId].relocatedProduction)) {
                 castles[relocationCastleId].relocatedProduction = {};
             }
+
             castles[relocationCastleId].relocatedProduction[castleId] = {
                 'currentProductionId': castles[castleId].currentProductionId,
                 'currentProductionTurn': castles[castleId].currentProductionTurn
             }
+
+            Castle.addRelocationOut(castleId)
+            Castle.addRelocationIn(relocationCastleId, castleId)
         }
 
         if (castles[castleId].currentProductionId) {
@@ -103,6 +113,9 @@ var Castle = {
     addCrown: function (castleId) {
         $('#castle' + castleId).append($('<img>').attr('src', '/img/game/crown.png').addClass('crown'));
     },
+    removeCrown: function (castleId) {
+        $('#castle' + castleId + ' .crown').remove();
+    },
     addShield: function (castleId) {
         $('#castle' + castleId).append($('<div>').css('background', 'url(/img/game/shield.png)').addClass('shield').html(castles[castleId].defense));
     },
@@ -111,6 +124,29 @@ var Castle = {
     },
     removeHammer: function (castleId) {
         $('#castle' + castleId + ' .hammer').remove();
+    },
+    addRelocationOut: function (castleId) {
+        $('#castle' + castleId).append($('<img>').attr('src', '/img/game/relocation_out.png').addClass('relocation_out'))
+    },
+    removeRelocationOut: function (castleId) {
+        $('#castle' + castleId + ' .relocation_out').remove();
+    },
+    addRelocationIn: function (castleId, fromCastleId) {
+        $('#castle' + castleId).append(
+            $('<img>')
+                .attr({
+                    src: '/img/game/relocation_in.png',
+                    id: fromCastleId
+                })
+                .addClass('relocation_in')
+        )
+    },
+    removeRelocationIn: function (castleId, fromCastleId) {
+        if (isSet(fromCastleId)) {
+            $('#castle' + castleId + ' .relocation_in').remove();
+        } else {
+            $('#castle' + castleId + ' #' + fromCastleId + '.relocation_in').remove();
+        }
     },
     show: function () {
         if (Army.selected == null) {
@@ -227,20 +263,14 @@ var Castle = {
                 .css({
                     'cursor': 'url(/img/game/cursor_castle.png), default'
                 })
-                .unbind('mouseover')
-                .unbind('mousemove')
-                .unbind('mouseout')
-                .unbind('click')
+                .unbind()
                 .click(function () {
                     Message.castle(castleId)
                 });
         } else {
             Castle.changeFields(castleId, 'e');
             castle
-                .unbind('mouseover')
-                .unbind('mousemove')
-                .unbind('mouseout')
-                .unbind('click')
+                .unbind()
                 .mouseover(function () {
                     Castle.onMouse(this.id, 'g');
                 })
@@ -256,8 +286,10 @@ var Castle = {
             .addClass('castle ' + color)
             .css('background', 'url(/img/game/castles/' + color + '.png) center center no-repeat');
 
-        $('#castle' + castleId + ' .crown').remove();
-        $('#castle' + castleId + ' .hammer').remove();
+        Castle.removeCrown(castleId)
+        Castle.removeHammer(castleId)
+        Castle.removeRelocationIn(castleId)
+        Castle.removeRelocationOut(castleId)
 
         if (castles[castleId].capital && capitals[color] == castleId) {
             Castle.addCrown(castleId);

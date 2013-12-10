@@ -932,7 +932,19 @@ html {
 .castle .hammer {
     position: absolute;
     top: -10px;
-    left: 76px;
+    left: 70px;
+}
+
+.castle .relocation_out {
+    position: absolute;
+    top: 13px;
+    left: 77px;
+}
+
+.castle .relocation_in {
+    position: absolute;
+    top: 13px;
+    left: 84px;
 }
 
 .battleUnit {
