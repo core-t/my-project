@@ -6,6 +6,7 @@ var Army = {
     parent: null,
     skippedArmies: {},
     quitedArmies: {},
+    nextArmies: {},
     nextArmyId: null,
     isNextSelected: null,
     getHeroKey: function (heroes) {
@@ -411,14 +412,13 @@ var Army = {
             return;
         }
 
-        Army.deselect();
+        if (Army.selected) {
+            Army.nextArmies[Army.selected.armyId] = true
+        }
 
-        var reset = true;
+        Army.deselect()
 
         for (armyId in players[my.color].armies) {
-//            if (notSet(players[my.color].armies[armyId].armyId)) {
-//                continue;
-//            }
             if (players[my.color].armies[armyId].moves == 0) {
                 continue;
             }
@@ -431,33 +431,22 @@ var Army = {
                 continue;
             }
 
-            if (Army.isNextSelected) {
-                Army.nextArmyId = armyId;
-                reset = false;
-                break;
+            if (isTruthful(Army.nextArmies[armyId])) {
+                continue;
             }
 
-            if (!Army.nextArmyId) {
-                Army.nextArmyId = armyId;
-            }
-
-            if (Army.nextArmyId == armyId) {
-                if (!Army.isNextSelected) {
-                    Army.isNextSelected = true;
-                    this.deselect();
-                    Sound.play('slash');
-                    Army.select(players[my.color].armies[Army.nextArmyId]);
-                }
-            }
+            reset = false
+            Army.nextArmies[armyId] = true
+            Army.select(players[my.color].armies[armyId])
+            return
         }
 
-        Army.isNextSelected = false;
-
-        if (reset) {
-            if (!Army.selected) {
-                Sound.play('error');
-            }
-            Army.nextArmyId = null;
+        if (jQuery.isEmptyObject(Army.nextArmies)) {
+            Sound.play('error');
+        } else {
+            Army.deselect()
+            Army.nextArmies = {}
+            Army.findNext()
         }
     },
     delete: function (armyId, color, quiet) {

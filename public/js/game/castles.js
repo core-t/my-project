@@ -41,13 +41,17 @@ var Castle = {
         if (isTruthful(relocationCastleId)) {
             Message.simple('Production relocated')
         } else {
-            Message.simple('Production set')
+            if (unitId === null) {
+                Message.simple('Production stopped')
+            } else {
+                Message.simple('Production set')
+            }
         }
 
         if (unitId === null) {
             for (i in castles) {
                 Castle.removeRelocationIn(i, castleId)
-                if(isSet(castles[i].relocatedProduction) && isSet(castles[i].relocatedProduction[castleId])){
+                if (isSet(castles[i].relocatedProduction) && isSet(castles[i].relocatedProduction[castleId])) {
                     delete castles[i].relocatedProduction[castleId]
                 }
             }
