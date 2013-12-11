@@ -441,7 +441,7 @@ var Army = {
             return
         }
 
-        if (jQuery.isEmptyObject(Army.nextArmies)) {
+        if ($.isEmptyObject(Army.nextArmies)) {
             Sound.play('error');
         } else {
             Army.deselect()

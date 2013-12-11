@@ -54,7 +54,7 @@ var AStar = {
         }
         path = path.reverse();
 
-        if(isSet(path[0])){
+        if (isSet(path[0])) {
             if (path[0].tt == 'c') {
                 var castleId = Castle.getMy(path[0].x, path[0].y)
                 this.myCastleId[castleId] = true;
@@ -207,7 +207,21 @@ var AStar = {
                     continue;
                 }
 
-                g = Army.selected.terrain[terrainType];
+                if (Army.selected.soldierSplitKey !== null) {
+                    if (units[Army.selected.soldiers[Army.selected.soldierSplitKey].unitId].canFly) {
+                        g = terrain[terrainType]['flying']
+                    } else if (units[Army.selected.soldiers[Army.selected.soldierSplitKey].unitId].canSwim) {
+                        g = terrain[terrainType]['swimming']
+                    } else {
+                        if (terrainType == 'f' || terrainType == 's' || terrainType == 'm') {
+                            g = units[Army.selected.soldiers[Army.selected.soldierSplitKey].unitId][terrainType]
+                        } else {
+                            g = Army.selected.terrain[terrainType]
+                        }
+                    }
+                } else {
+                    g = Army.selected.terrain[terrainType]
+                }
 
                 if (g > 6) {
                     continue;

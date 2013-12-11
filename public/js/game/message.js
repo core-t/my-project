@@ -346,7 +346,7 @@ var Message = {
                 ))
         }
 
-        if (isSet(castles[castleId].relocatedProduction)) {
+        if (isSet(castles[castleId].relocatedProduction) && !$.isEmptyObject(castles[castleId].relocatedProduction)) {
             div
                 .append($('<br>'))
                 .append($('<fieldset>').addClass('relocatedProduction').append($('<label>').html('Relocating from')).append(relocatingProductionElement))
