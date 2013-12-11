@@ -45,9 +45,13 @@ var Castle = {
         }
 
         if (unitId === null) {
-            Castle.removeHammer(castleId);
+            for(i in castles){
+                Castle.removeRelocationIn(i, castleId)
+            }
+
+            Castle.removeHammer(castleId)
         } else {
-            Castle.addHammer(castleId);
+            Castle.addHammer(castleId)
         }
 
         castles[castleId].currentProductionId = unitId;

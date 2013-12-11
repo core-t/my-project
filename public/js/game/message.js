@@ -159,7 +159,7 @@ var Message = {
         if (my.turn && Turn.number == 1 && castles[firstCastleId].currentProductionId === null) {
             Message.castle(firstCastleId);
         } else {
-            var id = this.show($('<div>').html('Your turn.'));
+            var id = this.show($('<div>').append($('<h3>').html('Your turn')))
             this.ok(id)
         }
     },

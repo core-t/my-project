@@ -76,12 +76,16 @@ Websocket = {
                                 case 'death':
                                     Sound.play('death');
                                     Message.simple('You have found death.');
+                                    if (!Hero.findMy()) {
+                                        $('#heroResurrection').removeClass('buttonOff')
+                                    }
                                     break
                                 case 'allies':
                                     Sound.play('allies');
                                     Message.simple(r.find[1] + ' alies joined your army.');
                                     break
                                 case 'null':
+                                    Sound.play('click');
                                     Message.simple('You have found nothing.');
                                     break
                                 case 'artifact':
@@ -89,6 +93,7 @@ Websocket = {
                                     Chest.update(r.color, r.find[1]);
                                     break
                                 case 'empty':
+                                    Sound.play('error');
                                     Message.simple('Ruins are empty.');
                                     break;
 
@@ -132,7 +137,7 @@ Websocket = {
                                     upkeep += units[players[my.color].armies[r.armyId].soldiers[i].unitId].cost
                                 }
 
-                                upkeep
+                                costsUpdate(-upkeep)
 
                                 if (!Hero.findMy()) {
                                     $('#heroResurrection').removeClass('buttonOff')
