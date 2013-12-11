@@ -45,8 +45,11 @@ var Castle = {
         }
 
         if (unitId === null) {
-            for(i in castles){
+            for (i in castles) {
                 Castle.removeRelocationIn(i, castleId)
+                if(isSet(castles[i].relocatedProduction) && isSet(castles[i].relocatedProduction[castleId])){
+                    delete castles[i].relocatedProduction[castleId]
+                }
             }
 
             Castle.removeHammer(castleId)
@@ -59,7 +62,7 @@ var Castle = {
 
         if (relocationCastleId) {
 
-            for(i in castles){
+            for (i in castles) {
                 Castle.removeRelocationIn(i, relocationCastleId)
             }
 
@@ -76,7 +79,7 @@ var Castle = {
                     });
 
                 if (isSet(castles[thisCastleId].relocatedProduction) && isSet(castles[thisCastleId].relocatedProduction[castleId])) {
-                    delete castles[thisCastleId].relocatedProduction[castleId];
+                    delete castles[thisCastleId].relocatedProduction[castleId]
                 }
             })
 
@@ -152,9 +155,9 @@ var Castle = {
     },
     removeRelocationIn: function (castleId, fromCastleId) {
         if (isSet(fromCastleId)) {
-            $('#castle' + castleId + ' .relocation_in').remove();
-        } else {
             $('#castle' + castleId + ' #' + fromCastleId + '.relocation_in').remove();
+        } else {
+            $('#castle' + castleId + ' .relocation_in').remove();
         }
     },
     show: function () {
@@ -251,12 +254,6 @@ var Castle = {
     owner: function (castleId, color) {
         var castle = $('#castle' + castleId);
 
-        if (isSet(castles[castleId]) && castles[castleId].razed) {
-            this.raze(castleId)
-            alert('oho!')
-            return;
-        }
-
         if (castles[castleId].color) {
             castles[castleId].defense -= 1;
             if (castles[castleId].defense < 1) {
@@ -297,7 +294,6 @@ var Castle = {
 
         Castle.removeCrown(castleId)
         Castle.removeHammer(castleId)
-        Castle.removeRelocationIn(castleId)
         Castle.removeRelocationOut(castleId)
 
         if (castles[castleId].capital && capitals[color] == castleId) {

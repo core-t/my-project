@@ -104,7 +104,8 @@ var Move = {
         }
 
         if (isDigit(r.castleId) && isTruthful(r.victory)) {
-            Castle.owner(r.castleId, r.attackerColor);
+            Castle.removeRelocationIn(r.castleId)
+            Castle.owner(r.castleId, r.attackerColor)
         }
 
         if (players[r.attackerColor].computer) {
