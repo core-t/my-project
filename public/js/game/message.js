@@ -15,7 +15,7 @@ var Message = {
         }
     },
     show: function (txt) {
-        this.remove();
+        this.remove()
         var id = makeId(10)
         this.element().after(
             $('<div>')
@@ -23,18 +23,47 @@ var Message = {
                 .append($(txt).addClass('overflow')
                 )
                 .attr('id', id)
+                .fadeIn(200)
         )
-        var left = documentWidth / 2 - $('.message').outerWidth() / 2;
-        var maxHeight = documentHeight - 120
-        var maxWidth = documentWidth - 550
-        $('#' + id)
-            .css({
-                'max-width': maxWidth + 'px',
-                'max-height': maxHeight + 'px',
-                left: left + 'px'
-            })
-            .fadeIn(200)
+        this.adjust(id)
         return id
+    },
+    adjust: function (id) {
+        if (id) {
+            var left = gameWidth / 2 - $('#' + id).outerWidth() / 2;
+            var maxHeight = gameHeight - 120
+            if (maxHeight < parseInt($('#' + id).css('min-height'))) {
+                maxHeight = parseInt($('#' + id).css('min-height'))
+            }
+            var maxWidth = gameWidth - 600
+            if (maxWidth < parseInt($('#' + id).css('min-width'))) {
+                maxWidth = parseInt($('#' + id).css('min-width'))
+            }
+            $('#' + id)
+                .css({
+                    'max-width': maxWidth + 'px',
+                    'max-height': maxHeight + 'px',
+                    left: left + 'px'
+                })
+
+        } else {
+            var left = gameWidth / 2 - $('.message').outerWidth() / 2;
+            var maxHeight = gameHeight - 120
+            if (maxHeight < parseInt($('.message').css('min-height'))) {
+                maxHeight = parseInt($('.message').css('min-height'))
+            }
+            var maxWidth = gameWidth - 600
+            if (maxWidth < parseInt($('.message').css('min-width'))) {
+                maxWidth = parseInt($('.message').css('min-width'))
+            }
+            $('.message')
+                .css({
+                    'max-width': maxWidth + 'px',
+                    'max-height': maxHeight + 'px',
+                    left: left + 'px'
+                })
+
+        }
     },
     ok: function (id, func) {
         $('#' + id).append(
@@ -391,19 +420,7 @@ var Message = {
         this.ok(id)
     },
     disband: function () {
-        if (typeof Army.selected == 'undefined') {
-            return;
-        }
-
-        if (!my.turn) {
-            return;
-        }
-
-        if (!Army.selected) {
-            return;
-        }
-
-        var id = this.show($('<div>').html('Are you sure?'));
+        var id = this.show($('<div>').append($('<h3>').html('Disband army')).append($('<div>').html('Are you sure?')))
         this.ok(id, Websocket.disband);
         this.cancel(id)
     },
@@ -412,13 +429,13 @@ var Message = {
             return;
         }
 
-        var army = $('<div>').addClass('split').css('max-height', documentHeight - 200 + 'px');
+        var div = $('<div>').addClass('split')
         var numberOfUnits = 0;
 
         for (i in Army.selected.soldiers) {
             var img = units[Army.selected.soldiers[i].unitId].name.replace(' ', '_').toLowerCase();
             numberOfUnits++;
-            army.append(
+            div.append(
                 $('<div>')
                     .addClass('row')
                     .append($('<div>').addClass('nr').html(numberOfUnits))
@@ -438,7 +455,7 @@ var Message = {
         }
         for (i in Army.selected.heroes) {
             numberOfUnits++;
-            army.append(
+            div.append(
                 $('<div>')
                     .addClass('row')
                     .append($('<div>').addClass('nr').html(numberOfUnits))
@@ -457,7 +474,7 @@ var Message = {
             );
         }
 
-        var id = this.show(army);
+        var id = this.show(div);
         this.ok(id, Websocket.split);
         this.cancel(id)
 
@@ -467,7 +484,7 @@ var Message = {
             return;
         }
 
-        var army = $('<div>').addClass('status').css('max-height', documentHeight - 200 + 'px');
+        var div = $('<div>').addClass('status')
         var numberOfUnits = 0;
         var bonusTower = 0;
         var castleDefense = getMyCastleDefenseFromPosition(Army.selected.x, Army.selected.y);
@@ -494,7 +511,7 @@ var Message = {
             if (castleDefense) {
                 var defenseCastleBonus = $('<div>').html(' +' + castleDefense).addClass('value plus')
             }
-            army.append(
+            div.append(
                 $('<div>')
                     .addClass('row')
                     .append($('<div>').addClass('nr').html(numberOfUnits))
@@ -573,7 +590,7 @@ var Message = {
             if (castleDefense) {
                 defensePoints.append($('<span>').html(' +' + castleDefense).css('color', '#d00000'));
             }
-            army.append(
+            div.append(
                 $('<div>')
                     .addClass('row')
                     .append($('<div>').addClass('nr').html(numberOfUnits))
@@ -601,7 +618,7 @@ var Message = {
             );
         }
 
-        var id = this.show(army);
+        var id = this.show(div);
         this.ok(id)
     },
     battle: function (data) {
@@ -674,7 +691,11 @@ var Message = {
             .append(defense)
 
         var id = this.show(div);
-        this.ok(id)
+        if (!players[data.attackerColor].computer) {
+            this.ok(id)// add Move.end(data)
+        } else {
+            this.ok(id)
+        }
 
         $('.go').css('display', 'none')
 
@@ -1074,6 +1095,14 @@ var Message = {
             .append('Do you want to hire new hero for 1000 gold?')
         var id = this.show(div)
         this.ok(id, Websocket.hire)
+        this.cancel(id)
+    },
+    resurrection: function () {
+        var div = $('<div>')
+            .append($('<h3>').html('Resurrect hero'))
+            .append('Do you want to resurrect hero for 100 gold?')
+        var id = this.show(div)
+        this.ok(id, Websocket.resurrection)
         this.cancel(id)
     }
 }

@@ -1,5 +1,5 @@
 function zoom(gameWidth, gameHeight) {
-    var el = $('#game');
+    var el = $('body');
     var obj = this;
     var settings = {
         gameWidth: gameWidth,
@@ -18,19 +18,19 @@ function zoom(gameWidth, gameHeight) {
     $.extend(obj, {
         init: function () {
             //drag option
-            $(".zoomPad", el).mousedown(function () {
+            $("#map", el).mousedown(function () {
                 el.mouseDown = true;
             });
-            $(".zoomPad", el).mouseup(function () {
+            $("#map", el).mouseup(function () {
                 el.mouseDown = false;
             });
             document.body.ondragstart = function () {
                 return false;
             };
-            $(".zoomPad", el).bind('mouseenter mouseover', function (event) {
+            $("#map", el).bind('mouseenter mouseover', function (event) {
                 smallimage.fetchdata();
             });
-            $(".zoomPad", el).bind('mousedown', function (e) {
+            $("#map", el).bind('mousedown', function (e) {
                 if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
                     return false;
                 }
@@ -38,14 +38,14 @@ function zoom(gameWidth, gameHeight) {
                     lens.setposition(e);
                 }
             });
-            $(".zoomPad", el).bind('mousemove', function (e) {
+            $("#map", el).bind('mousemove', function (e) {
 
                 //prevent fast mouse mevements not to fire the mouseout event
 //                if (e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b) {
 //                    return false;
 //                }
 
-                if (!$('.zoomWindow', el).is(':visible')) {
+                if (!$('#game', el).is(':visible')) {
                     obj.activate(e);
                 }
                 if (el.mouseDown) {
@@ -70,7 +70,7 @@ function zoom(gameWidth, gameHeight) {
 
     function Smallimage() {
         var $obj = this;
-        var image = $('#map');
+        var image = $('#mapImage');
         this.node = image[0];
         this.findborder = function () {
             var bordertop = 0;

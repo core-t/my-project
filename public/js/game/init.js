@@ -16,7 +16,7 @@ var fields = new Array();
 var firstCastleId = 1000;
 
 var zoomer;
-var zoomPad;
+var map;
 var board;
 var coord;
 
@@ -30,8 +30,8 @@ var myCastles = false;
 var enemyArmies = false;
 var enemyCastles = false;
 
-var documentWidth;
-var documentHeight;
+var gameWidth;
+var gameHeight;
 
 var show = true;
 

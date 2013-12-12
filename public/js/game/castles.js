@@ -246,7 +246,7 @@ var Castle = {
 
         Castle.changeFields(castleId, 'e');
 
-        zoomPad.append(
+        map.append(
             $('<div>').css({
                 'left': castles[castleId].x * 2 + 'px',
                 'top': castles[castleId].y * 2 + 'px'
@@ -349,7 +349,8 @@ var Castle = {
 
 
 function castlesAddCursorWhenSelectedArmy() {
-    $('.castle:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair');
+    $('.castle:not(.' + my.color + ')').css('cursor', 'url(/img/game/cursor_attack.png), crosshair')
+    $('.castle:not(.' + my.color + ') .name').css('cursor', 'url(/img/game/cursor.png), crosshair')
 }
 
 function castlesAddCursorWhenUnselectedArmy() {

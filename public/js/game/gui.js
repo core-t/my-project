@@ -4,7 +4,7 @@ var Gui = {
     chatBox: {'close': 0},
     playerBox: {'close': 0},
     timerBox: {'close': 0},
-    zoomPadLayout: {'close': 0},
+    mapBox: {'close': 0},
     speed: 200,
     doKey: function (event) {
         if ($(event.target).attr('id') == 'msg') {
@@ -22,7 +22,7 @@ var Gui = {
             case 68: //d
                 Message.disband();
                 break;
-            case 69: //t
+            case 69: //e
                 Message.nextTurn();
                 break;
             case 70: //f
@@ -31,6 +31,9 @@ var Gui = {
             case 78: //n
                 Army.findNext();
                 break;
+            case 79: //o
+                $('.message .go').click()
+                break;
             case 82: //r
                 Websocket.ruin()
                 break;
@@ -38,11 +41,11 @@ var Gui = {
                 Army.skip();
                 break;
 //            default:
-//                console.log(key);
+//                console.log(key)
         }
     },
     prepareButtons: function () {
-        zoomPad = $('.zoomPad');
+        map = $('#map');
         board = $('#board');
         coord = $('#coord');
 
@@ -149,8 +152,8 @@ var Gui = {
         });
 
         $('#heroResurrection').click(function () {
-            Websocket.resurrection()
-        });
+            Message.resurrection()
+        })
 
         $('#heroHire').click(function () {
             Message.hire()
@@ -172,20 +175,20 @@ var Gui = {
             Message.showArtifacts();
         });
 
-        $('.zoomPadLayout .close').click(function () {
-            var left = parseInt($('.zoomPadLayout').css('left'));
+        $('#mapBox .close').click(function () {
+            var left = parseInt($('#mapBox').css('left'));
             var move = -220;
-            Gui.zoomPadLayout['el'] = this;
+            Gui.mapBox['el'] = this;
 
-            if (Gui.zoomPadLayout['close']) {
+            if (Gui.mapBox['close']) {
                 move = -move;
             }
 
-            Gui.zoomPadLayout['move'] = move;
+            Gui.mapBox['move'] = move;
 
-            $('.zoomPadLayout').animate({'left': left + move + 'px'}, Gui.speed, function () {
-                Gui.zoomPadLayout['close'] = !Gui.zoomPadLayout['close'];
-                Gui.changeCloseArrowLR(Gui.zoomPadLayout['move'], Gui.zoomPadLayout['el']);
+            $('#mapBox').animate({'left': left + move + 'px'}, Gui.speed, function () {
+                Gui.mapBox['close'] = !Gui.mapBox['close'];
+                Gui.changeCloseArrowLR(Gui.mapBox['move'], Gui.mapBox['el']);
             });
         });
         $('#timerBox .close').click(function () {
@@ -272,13 +275,21 @@ var Gui = {
         this.chatBox.close = 0;
         this.playerBox.close = 0;
         this.timerBox.close = 0;
-        this.zoomPadLayout.close = 0;
-        documentWidth = $(document).width();
-        documentHeight = $(window).height();//$(document).height();
+        this.mapBox.close = 0;
+        gameWidth = $(document).width()
+        gameHeight = $(window).height()
 
-        $('.zoomWindow').css('height', documentHeight + 'px');
+        var minWidth = parseInt($('#mapBox').css('width')) + parseInt($('#playersBox').css('width')) + 321
+        var minHeight = parseInt($('#playersBox').css('height')) + parseInt($('#armyBox').css('height'))
 
-        var left = documentWidth - 237;
+        if (gameWidth < minWidth) {
+            gameWidth = parseInt($('#game').css('min-width'))
+        }
+        if (gameHeight < minHeight) {
+            gameHeight = parseInt($('#game').css('min-height'))
+        }
+
+        $('#game').css('height', gameHeight + 'px');
 
         var numberOfHumanPlayers = 0
         for (sn in players) {
@@ -288,8 +299,8 @@ var Gui = {
         }
 
         if (numberOfHumanPlayers > 1) {
-            var chatLeft = documentWidth - 507;
-            var chatTop = documentHeight - 169;
+            var chatLeft = gameWidth - 507;
+            var chatTop = gameHeight - 169;
 
             $('#chatBox').css({
                 'left': chatLeft + 'px',
@@ -300,8 +311,11 @@ var Gui = {
         }
 
         $('#goldBox').css({
-            'left': documentWidth / 2 - $('#goldBox').outerWidth() / 2 + 'px'
+            'left': gameWidth / 2 - $('#goldBox').outerWidth() / 2 + 'px'
         });
+
+        var left = gameWidth - 237;
+
         $('#playersBox').css({
             'left': left + 'px'
         });
@@ -310,32 +324,29 @@ var Gui = {
             'left': left + 'px'
         });
 
-        var zoomPadLayoutHeight = parseInt($('#map').css('height'));
+        var mapBoxHeight = parseInt($('#mapImage').css('height'));
 
-        $('.zoomPadLayout').css({
-            width: parseInt($('#map').css('width')) + 20 + 'px',
-            height: zoomPadLayoutHeight + 40 + 'px'
+        $('#mapBox').css({
+            width: parseInt($('#mapImage').css('width')) + 20 + 'px',
+            height: mapBoxHeight + 40 + 'px'
         });
 
-        $('#terrain').css('top', zoomPadLayoutHeight + 19 + 'px');
+        $('#terrain').css('top', mapBoxHeight + 19 + 'px');
 
-        $('.zoomPadLayout .close').css({
-            left: parseInt($('#map').css('width')) + 16 + 'px'
+        $('#mapBox .close').css({
+            left: parseInt($('#mapImage').css('width')) + 16 + 'px'
         });
 
         $('#timerBox').css({
-            top: zoomPadLayoutHeight + 52 + 'px'
+            top: mapBoxHeight + 52 + 'px'
         });
 
-        $('.message').css({
-                'left': documentWidth / 2 - $('.message').outerWidth() / 2 + 'px'
-            }
-        )
+        Message.adjust()
 
         if (!zoomer) {
-            zoomer = new zoom(documentWidth, documentHeight);
+            zoomer = new zoom(gameWidth, gameHeight)
         } else {
-            zoomer.setSettings(parseInt($('.zoomWindow').css('width')), parseInt($('.zoomWindow').css('height')));
+            zoomer.setSettings(gameWidth, gameHeight)
             zoomer.lens.setdimensions();
         }
     }

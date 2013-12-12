@@ -335,7 +335,7 @@ var Army = {
             }
         } else { // nie moja armia
             fields[army.y][army.x] = 'e';
-            enemyArmyMouse(element, army.x, army.y);
+            this.enemyMouse(element, army.x, army.y);
         }
 
         var numberOfUnits = army.heroes.length + army.soldiers.length;
@@ -360,7 +360,7 @@ var Army = {
                 )
         );
 
-        zoomPad.append(
+        map.append(
             $('<div>')
                 .css({
                     'left': army.x * 2 + 'px',
@@ -527,7 +527,7 @@ var Army = {
         }
 
         castlesAddCursorWhenUnselectedArmy();
-        armiesAddCursorWhenUnselectedArmy();
+        this.enemyCursorWhenUnselected()
         myCastlesAddCursor();
 
         $('#name').html('');
@@ -641,51 +641,34 @@ var Army = {
     },
     enemyCursorWhenSelected: function () {
         $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor_attack.png) 13 16, crosshair')
+    },
+    enemyCursorWhenUnselected: function () {
+        $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor.png), default');
+    },
+    enemyMouse: function (element, x, y) {
+        element
+            .mouseover(function () {
+                if (Gui.lock) {
+                    return;
+                }
+                if (my.turn && Army.selected) {
+                    var castleId = Castle.getEnemy(x, y);
+                    if (castleId !== null) {
+                        Castle.changeFields(castleId, 'g');
+                    }
+                    fields[y][x] = 'g';
+                }
+            })
+            .mouseout(function () {
+                var castleId = Castle.getEnemy(x, y);
+                if (castleId !== null) {
+                    Castle.changeFields(castleId, 'e');
+                }
+                fields[y][x] = 'e';
+            })
     }
-
 }
 
-
-function armiesAddCursorWhenUnselectedArmy() {
-    $('.army:not(.' + my.color + ') *').css('cursor', 'url(/img/game/cursor.png), default');
-}
-
-function enemyArmyMouse(element, x, y) {
-    element
-        .mouseover(function () {
-            if (Gui.lock) {
-                return;
-            }
-            if (my.turn && Army.selected) {
-//                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-                var castleId = Castle.getEnemy(x, y);
-                if (castleId !== null) {
-                    Castle.changeFields(castleId, 'g');
-                }
-                fields[y][x] = 'g';
-            }
-        })
-        .mousemove(function () {
-            if (Gui.lock) {
-                return;
-            }
-            if (my.turn && Army.selected) {
-//                selectedEnemyArmy = players[$(this).attr("class").split(' ')[1]].armies[this.id];
-                var castleId = Castle.getEnemy(x, y);
-                if (castleId !== null) {
-                    Castle.changeFields(castleId, 'g');
-                }
-                fields[y][x] = 'g';
-            }
-        })
-        .mouseout(function () {
-            var castleId = Castle.getEnemy(x, y);
-            if (castleId !== null) {
-                Castle.changeFields(castleId, 'e');
-            }
-            fields[y][x] = 'e';
-        });
-}
 
 // *** UNITS ***
 

@@ -7,17 +7,15 @@
     user-select: none;
 }
 
-#page {
-    background: none;
-    margin: 0;
-    width: auto;
-    min-height: 100%;
-}
-
 #game {
-    /*height:800px;*/
-    /*background: transparent url('../img/bg_1.jpg') repeat scroll top left;*/
+    position: relative;
+    left: 0;
+    top: 0;
+    background: #000;
     font-size: 14px;
+    display: block;
+    overflow: hidden;
+    clear: both;
 }
 
 #board {
@@ -26,17 +24,17 @@
     left: 0px;
 }
 
-.zoomPad {
+#map {
     position: absolute;
     top: 10px;
     left: 10px;
 }
 
-.zoomPad * {
+#map * {
     cursor: url(/img/game/lupa.png) 13 13, crosshair
 }
 
-.zoomPadLayout {
+#mapBox {
     border-bottom-right-radius: 10px;
     top: -10px;
     left: -10px;
@@ -47,27 +45,14 @@
     top: 0;
     left: 0;
     position: absolute;
-    cursor: url('../img/game/lupa.png') 13 13, crosshair;
     z-index: 21001;
 }
 
-#map {
+#mapImage {
     position: absolute;
     top: 0px;
     left: 0px;
-    cursor: url('/img/game/lupa.png') 13 13, crosshair;
     border-bottom-right-radius: 3px;
-}
-
-.zoomWindow {
-    position: relative;
-    left: 0;
-    top: 0;
-    background: #000;
-    display: block;
-    overflow: hidden;
-    height: 660px;
-    clear: both;
 }
 
 .castle {
@@ -80,14 +65,13 @@
     z-index: 2202;
 }
 
-.zoomPad .c {
+#map .c {
     width: 4px;
     height: 4px;
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
     position: absolute;
     background: #9F9F9F;
-    cursor: url('/img/game/lupa.png') 13 13, crosshair;
 }
 
 .ruin {
@@ -125,13 +109,12 @@
     margin: 3px 3px 3px 4px;
 }
 
-.zoomPad .a {
+#map .a {
     width: 1px;
     height: 1px;
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
     position: absolute;
-    cursor: url('/img/game/lupa.png') 13 13, crosshair;
 }
 
 .army .unit {
@@ -765,7 +748,7 @@ html {
     text-shadow: none;
 }
 
-.zoomPadLayout .close {
+#mapBox .close {
     top: 12px;
 }
 

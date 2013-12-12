@@ -5,7 +5,7 @@ var AStar = {
     x: 0,
     y: 0,
     getDestinationXY: function (x, y) {
-        var offset = $('.zoomWindow').offset();
+        var offset = $('#game').offset();
         var X = x - 20 - parseInt(board.css('left')) - offset.left;
         var Y = y - 20 - parseInt(board.css('top')) - offset.top;
         return {
