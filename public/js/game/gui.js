@@ -276,20 +276,31 @@ var Gui = {
         this.playerBox.close = 0;
         this.timerBox.close = 0;
         this.mapBox.close = 0;
-        gameWidth = $(document).width()
+        gameWidth = $(window).width()
         gameHeight = $(window).height()
 
-        var minWidth = parseInt($('#mapBox').css('width')) + parseInt($('#playersBox').css('width')) + 321
-        var minHeight = parseInt($('#playersBox').css('height')) + parseInt($('#armyBox').css('height'))
+        var mapBoxHeight = parseInt($('#mapImage').css('height'));
+
+        $('#mapBox').css({
+            width: parseInt($('#mapImage').css('width')) + 20 + 'px',
+            height: mapBoxHeight + 40 + 'px'
+        });
+
+        var minWidth = parseInt($('#mapBox').css('width')) + parseInt($('#playersBox').css('width')) + 450
+        var minHeight = parseInt($('#playersBox').css('height')) + parseInt($('#armyBox').css('height')) + 50
 
         if (gameWidth < minWidth) {
-            gameWidth = parseInt($('#game').css('min-width'))
+            gameWidth = minWidth
         }
         if (gameHeight < minHeight) {
-            gameHeight = parseInt($('#game').css('min-height'))
+            gameHeight = minHeight
         }
 
-        $('#game').css('height', gameHeight + 'px');
+        $('#game').css({
+                width: gameWidth + 'px',
+                height: gameHeight + 'px'
+            }
+        )
 
         var numberOfHumanPlayers = 0
         for (sn in players) {
@@ -322,13 +333,6 @@ var Gui = {
         $('#armyBox').css({
             top: parseInt($('#playersBox').css('height')) + 19 + 'px',
             'left': left + 'px'
-        });
-
-        var mapBoxHeight = parseInt($('#mapImage').css('height'));
-
-        $('#mapBox').css({
-            width: parseInt($('#mapImage').css('width')) + 20 + 'px',
-            height: mapBoxHeight + 40 + 'px'
         });
 
         $('#terrain').css('top', mapBoxHeight + 19 + 'px');
