@@ -62,7 +62,7 @@ var Gui = {
         })
 
         $('#exit').click(function () {
-            window.location = '/' + lang + '/index';
+            Gui.exit()
         });
 
         $('#show').click(function () {
@@ -346,6 +346,7 @@ var Gui = {
         });
 
         Message.adjust()
+        Message.setOverflowHeight()
 
         if (!zoomer) {
             zoomer = new zoom(gameWidth, gameHeight)
@@ -353,6 +354,9 @@ var Gui = {
             zoomer.setSettings(gameWidth, gameHeight)
             zoomer.lens.setdimensions();
         }
+    },
+    exit: function () {
+        window.location = '/' + lang + '/index'
     }
 
 }

@@ -29,7 +29,7 @@ var Message = {
         return id
     },
     adjust: function (id) {
-        if (id) {
+        if (isSet(id)) {
             var left = gameWidth / 2 - $('#' + id).outerWidth() / 2;
             var maxHeight = gameHeight - 120
             if (maxHeight < parseInt($('#' + id).css('min-height'))) {
@@ -45,7 +45,6 @@ var Message = {
                     'max-height': maxHeight + 'px',
                     left: left + 'px'
                 })
-
         } else {
             var left = gameWidth / 2 - $('.message').outerWidth() / 2;
             var maxHeight = gameHeight - 120
@@ -62,7 +61,15 @@ var Message = {
                     'max-height': maxHeight + 'px',
                     left: left + 'px'
                 })
-
+        }
+    },
+    setOverflowHeight: function (id) {
+        if (isSet(id)) {
+            var height = parseInt($('#' + id).css('height')) - 60;
+            $('#' + id + ' div.overflow').css('height', height + 'px')
+        } else {
+            var height = parseInt($('.message').css('height')) - 60;
+            $('.message' + ' div.overflow').css('height', height + 'px')
         }
     },
     ok: function (id, func) {
@@ -78,8 +85,7 @@ var Message = {
                 })
         );
 
-        var divHeight = parseInt($('#' + id).css('height')) - 60;
-        $('#' + id + ' div.overflow').css('height', divHeight + 'px')
+        this.setOverflowHeight(id)
     },
     cancel: function (id, func) {
         $('#' + id).append(
@@ -100,8 +106,6 @@ var Message = {
         this.cancel(id)
     },
     showArtifacts: function () {
-        Message.remove();
-
         var htmlChest = $('<div>').attr('id', 'chest');
         for (i in players[my.color].chest) {
             htmlChest.append(
@@ -162,26 +166,17 @@ var Message = {
             );
         }
 
-        this.element().after(
-            $('<div>')
-                .addClass('message')
-                .addClass('center')
-                .append($('<h3>').html('Chest'))
-                .append(htmlChest)
-                .append($('<h3>').html('Inventory'))
-                .append(htmlInventory)
-                .append($('<div>')
-                    .addClass('button buttonColors go')
-                    .html('Ok')
-                    .click(function () {
-                        Message.remove();
-                    })
-                )
-                .css({
-                    'left': this.left + 'px'
-                })
-        );
 
+        var div = $('<div>')
+            .addClass('message')
+            .addClass('center')
+            .append($('<h3>').html('Chest'))
+            .append(htmlChest)
+            .append($('<h3>').html('Inventory'))
+            .append(htmlInventory)
+
+        var id = this.show(div)
+        this.ok(id)
     },
     turn: function () {
         this.remove();
@@ -893,7 +888,8 @@ var Message = {
         this.ok(id)
     },
     end: function () {
-        this.simple('GAME OVER');
+        var id = this.show($('<div>').append($('<h3>').html('GAME OVER')).append($('<div>').html('This is THE END')))
+        this.ok(id, Gui.exit)
     },
     treasury: function () {
         var myTowers = 0,
