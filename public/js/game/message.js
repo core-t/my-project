@@ -25,8 +25,8 @@ var Message = {
                 .attr('id', id)
         )
         var left = documentWidth / 2 - $('.message').outerWidth() / 2;
-        var maxHeight = documentHeight - 120;
-        var maxWidth = documentWidth - 500;
+        var maxHeight = documentHeight - 120
+        var maxWidth = documentWidth - 550
         $('#' + id)
             .css({
                 'max-width': maxWidth + 'px',

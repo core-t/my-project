@@ -218,8 +218,8 @@ class Cli_Model_ComputerMainBlocks
                         } elseif (count($notGarrison) == 1) {
                             $l->log('TA ARMIA IDZIE DALEJ');
 
-                            $cliModelArmy = new Cli_Model_Army(current($notGarrison));
-                            $army = $cliModelArmy->getArmy();
+                            $mArmy = new Cli_Model_Army(current($notGarrison));
+                            $army = $mArmy->getArmy();
                         }
                     } else {
                         $l->log('OBSADA ZAMKU - ZOSTAŃ!');

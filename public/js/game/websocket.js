@@ -259,6 +259,11 @@ Websocket = {
 
     },
     open: function () {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
         var token = {
             type: 'open',
             gameId: gameId,
@@ -270,6 +275,11 @@ Websocket = {
         ws.send(JSON.stringify(token));
     },
     inventoryAdd: function (heroId, artifactId) {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
         var token = {
             type: 'inventoryAdd',
             heroId: heroId,
@@ -279,6 +289,11 @@ Websocket = {
         ws.send(JSON.stringify(token));
     },
     inventoryDel: function (heroId) {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
         var token = {
             type: 'inventoryDel',
             heroId: heroId
@@ -287,6 +302,11 @@ Websocket = {
         ws.send(JSON.stringify(token));
     },
     production: function (castleId, unitId, relocationCastleId) {
+        if (this.closed) {
+            Message.simple('Sorry, server is disconnected.');
+            return;
+        }
+
         if (unitId == 'stop') {
             unitId = -1;
         }
