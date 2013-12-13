@@ -865,6 +865,7 @@ html {
     text-align: center;
     width: 17px;
     height: 20px;
+    font-family: "alpine", Verdana, Tahoma;
 }
 
 .castle .hammer {

@@ -188,6 +188,7 @@ h2 {
     margin-top: 10px;
     color: greenyellow;
     text-transform: none;
+    letter-spacing: 5px;
 }
 
 h3 {
@@ -252,10 +253,7 @@ td {
 }
 
 .errors {
-    color: orange;
-}
-
-#login .errors {
+    padding: 5px;
     color: orchid;
     text-shadow: 1px 1px 0 #000;
 }
