@@ -4,27 +4,39 @@
 }
 
 @font-face {
-    font-family: "Alpine";
-    src: url('../Alpine.ttf') format("truetype");
+    font-family: "xenippa";
+    src: url('/xenippa1.ttf') format("truetype");
 }
 
+@font-face {
+    font-family: "cretino";
+    src: url('/cretino.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "alpine";
+    src: url('/Alpine.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "aeiou2U";
+    src: url('/_aeiou2U.ttf') format("truetype");
+}
 html {
     background: #000 url('../img/bg_0.jpg');
 }
 
 body {
     font-size: 18px;
-    font-family: "Alpine", Verdana, Tahoma;
-    letter-spacing: 1px;
+    font-family: "xenippa", Verdana, Tahoma;
+    letter-spacing: 2px;
     color: #878967;
     text-shadow: 2px 2px 0 #000;
-    /*text-transform:uppercase;*/
 }
 
 #page {
-    /*background: url('../img/bg_1.jpg');*/
     margin: 0 auto;
-    width: 760px;
+    width: 900px;
     min-height: 800px;
 }
 
@@ -75,8 +87,22 @@ a:hover {
 }
 
 input {
-    border-radius: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
     padding: 3px 6px 3px 6px;
+    box-shadow: 1px 1px 5px #000;
+}
+
+select {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 6px;
+    box-shadow: 1px 1px 5px #000;
+    background: #fff;
+}
+
+input[type="radio"],input[type="checkbox"] {
+    box-shadow: none;
 }
 
 .button, #submit {
@@ -85,28 +111,25 @@ input {
     text-align: center;
     cursor: pointer;
     line-height: 29px;
-    /*font-weight: bold;*/
-    font-family: "Alpine", Verdana, Tahoma;
+    font-family: "xenippa", Verdana, Tahoma;
     font-size: 16px;
-    color: #000;
+    color: #fff;
     text-shadow: none;
-    background: #ddd;
-    border: 1px solid #111;
-    border-radius: 12px;
+    background: #000;
+    border: 1px solid grey;
+    border-radius: 5px;
     display: inline-block;
-    /*box-shadow: 0 0 1px #fff;*/
+    box-shadow: 1px 1px 5px #000;
 }
 
 .button:hover, #submit:hover {
     background: #fff;
-    /*color: #600;*/
-    /*border: 1px solid #600;*/
+    color: #000;
 }
 
 .button:active, #submit:active {
     color: #000;
     text-shadow: none;
-    /*background:#500;*/
     background: #fff;
     border-top: 1px solid #111;
     border-left: 1px solid #111;
@@ -152,10 +175,13 @@ h1 {
 
 h1#title {
     line-height: 192px;
-    font-size: 101px;
+    font-size: 66px;
+    font-family: "Alpine", Verdana, Tahoma;
     color: yellow;
     text-align: center;
-    background: url("/img/sword.png");
+    background: url("/img/sword.png") no-repeat;
+    width: 760px;
+    margin: 0 auto;
 }
 
 h2 {
@@ -190,8 +216,7 @@ h3 {
 
 table {
     border-spacing: 1px;
-    /*min-height:400px;*/
-    width: 720px;
+    min-width: 900px;
 }
 
 th {
@@ -236,13 +261,14 @@ td {
 }
 
 #login form {
-    background: url('../img/login_bg.jpg') no-repeat;
-    border-radius: 20px;
-    border: 2px solid #c0c0c0;
-    padding: 100px;
+    background: url('../img/login_bg.jpg') -407px -214px no-repeat;
+    border-radius: 5px;
+    border: 2px solid grey;
+    padding: 10px;
     margin-top: 10px;
     margin-bottom: 20px;
     text-align: center;
+    box-shadow: 1px 1px 5px #000;
 }
 
 #login label {
@@ -252,17 +278,11 @@ td {
 
 label {
     color: #000;
-    text-shadow: 0 0 5px grey;
+    text-shadow: none;
 }
 
 dt {
     margin-top: 20px;
-}
-
-select {
-    border-radius: 10px;
-    padding: 6px;
-
 }
 
 p#info {

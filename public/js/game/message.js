@@ -1,4 +1,7 @@
 var Message = {
+    drag: 0,
+    x: 0,
+    y: 0,
     element: function () {
         return $('#goldBox');
     },
@@ -24,6 +27,31 @@ var Message = {
                 )
                 .attr('id', id)
                 .fadeIn(200)
+                .mousedown(function (e) {
+                    Message.drag = 1
+                    Message.x = e.pageX - parseInt($(this).css('left'))
+                    Message.y = e.pageY - parseInt($(this).css('top'))
+                    $(this).css('cursor', 'url(/img/game/cursor_hand_drag.png) 15 15, default')
+                })
+                .mouseup(function () {
+                    Message.drag = 0
+                    $(this).css('cursor', 'url(/img/game/cursor_hand.png) 15 15, default')
+                })
+                .mouseout(function () {
+                    Message.drag = 0
+                    $(this).css('cursor', 'url(/img/game/cursor_hand.png) 15 15, default')
+                })
+                .mousemove(function (e) {
+                    if (Message.drag == 0) {
+                        return
+                    }
+                    var top = e.pageY - Message.y
+                    var left = e.pageX - Message.x
+                    $(this).css({
+                        top: top,
+                        left: left
+                    })
+                })
         )
         this.adjust(id)
         return id
@@ -200,16 +228,16 @@ var Message = {
             return;
         }
 
-        var time = '';
-        var attr;
-        var capital = '';
+        var time = '',
+            attr,
+            capital = '',
+            table = $('<table>'),
+            j = 0,
+            td = new Array()
 
         if (castles[castleId].capital) {
-            capital = ' - Capital city';
+            capital = ' - capital city';
         }
-        var table = $('<table>');
-        var j = 0;
-        var td = new Array();
 
         for (unitId in castles[castleId].production) {
             var img = units[unitId].name.replace(' ', '_').toLowerCase();
@@ -341,7 +369,8 @@ var Message = {
         }
 
         var div = $('<div>')
-            .append($('<h3>').append(castles[castleId].name).append(capital))
+            .addClass('showCastle')
+            .append($('<h3>').append(castles[castleId].name).append(capital).addClass('name'))
             .append($('<h5>').append('Castle defense: ' + castles[castleId].defense))
             .append($('<h5>').append('Income: ' + castles[castleId].income + ' gold/turn'))
             .append($('<br>'))

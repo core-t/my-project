@@ -12,10 +12,14 @@
     left: 0;
     top: 0;
     background: #000;
-    font-size: 14px;
+    font-size: 12px;
     display: block;
     overflow: hidden;
     clear: both;
+}
+
+#game table {
+    min-width: 0;
 }
 
 #board {
@@ -227,12 +231,18 @@
     display: none;
     border-radius: 10px;
     text-align: center;
+    cursor: url(/img/game/cursor_hand.png) 15 15, default;
+    z-index: 26999 !important;
 }
 
 .message h3 {
     text-align: left;
     color: orange;
     margin: 4px;
+}
+
+.message .showCastle. h3.name {
+    font-family: "alpine", Verdana, Tahoma;
 }
 
 .message h4 {
@@ -248,8 +258,16 @@
 }
 
 .message fieldset {
-    border: none;
+    border: 1px solid yellow;
     border-radius: 5px;
+    padding: 5px;
+}
+
+.message label {
+    font-size: 20px;
+    color: yellow;
+    text-shadow: none;
+    margin: 10px 0 5px 0;
 }
 
 .message div.overflow {
@@ -266,6 +284,7 @@
 .message .production table {
     padding: 2px;
     width: auto;
+    min-width: 0;
 
 }
 
@@ -275,7 +294,7 @@
     margin: 0;
     text-align: center;
     width: 158px;
-    cursor: pointer;
+    cursor: url(/img/game/cursor_pointer.png), pointer;
 }
 
 .message .production .unit:hover {
@@ -320,13 +339,6 @@
 
 .message .production .unit div input {
     margin-top: 7px;
-}
-
-.message label {
-    line-height: 20px;
-    color: #fff;
-    text-transform: uppercase;
-    text-shadow: none;
 }
 
 .message .cancel {
@@ -631,6 +643,7 @@
 
 #goldBox table {
     width: auto;
+    min-width: 0;
     border-spacing: 0;
 }
 
@@ -680,12 +693,6 @@
     z-index: 27000;
     left: 13px;
 }
-
-/*.message #income {*/
-/*position: absolute;*/
-/*top: 10px;*/
-/*left: 255px;*/
-/*}*/
 
 .box {
     position: absolute;
@@ -800,7 +807,7 @@ html {
 
 .iconButton, .button, #submit {
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 27px;
     height: 27px;
 }
@@ -809,7 +816,7 @@ html {
     width: 32px;
     line-height: 32px;
     height: 32px;
-    cursor: pointer;
+    cursor: url(/img/game/cursor_pointer.png), pointer;
     position: absolute;
     left: 198px;
     text-align: center;
@@ -840,6 +847,7 @@ html {
     color: #000;
     text-shadow: 1px 1px 1px #fff;
     text-transform: uppercase;
+    font-family: "alpine", Verdana, Tahoma;
 }
 
 .castle .crown {
@@ -937,6 +945,10 @@ table.statistics th.Players {
     line-height: 30px;
     background: #CECEb0;
     border: none;
+}
+
+.relocatedProduction .button {
+    font-family: "alpine", Verdana, Tahoma;
 }
 
 table.treasury {
