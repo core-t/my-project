@@ -32,9 +32,9 @@ function refresh() {
                 $('<tr>')
                     .addClass('gid' + result[i].gameId)
                     .append($('<td>').append($('<a>').html(result[i].name)).css('cursor', 'pointer'))
-                    .append($('<td>').append($('<a>').html(result[i].gameMaster)).css('cursor', 'pointer'))
-                    .append($('<td>').append($('<a>').html(result[i].playersingame)).css('cursor', 'pointer'))
-                    .append($('<td>').append($('<a>').html(result[i].numberOfPlayers)).css('cursor', 'pointer'))
+//                    .append($('<td>').append($('<a>').html(result[i].gameMaster)).css('cursor', 'pointer'))
+//                    .append($('<td>').append($('<a>').html(result[i].playersingame)).css('cursor', 'pointer'))
+                    .append($('<td>').append($('<a>').html(result[i].playersingame + '/' + result[i].numberOfPlayers)).css('cursor', 'pointer'))
                     .append($('<td>').append($('<a>').html(result[i].begin.split('.')[0])).css('cursor', 'pointer'))
                     .bind('click', { gameId: result[i].gameId }, makeUrl)
                     .mouseover(function () {

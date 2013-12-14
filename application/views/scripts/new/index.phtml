@@ -1,5 +1,5 @@
 <h1><?php echo $this->translate('Play') ?></h1>
-<h2><?php echo $this->translate('Create new game') ?>:</h2>
+<h2><?php echo $this->translate('Create new game') ?></h2>
 <table id="new">
     <tr>
         <td id="form">
@@ -10,9 +10,9 @@
         </td>
     </tr>
 </table>
-
-<h2><?php echo $this->translate('Join one of the games listed below') ?>:</h2>
-<div class="table">
+<br/>
+<h2><?php echo $this->translate('Join one of the games listed below') ?></h2>
+<div id="join" class="table">
     <table></table>
     <p id="info"></p>
 </div>
@@ -26,7 +26,7 @@
     </li>
 </ul>
 <?php $this->headScript()->captureStart() ?>
-var th = '<th><?php echo $this->translate('Map name') ?></th><th><?php echo $this->translate('Game master') ?></th><th><?php echo $this->translate('Current number of players') ?></th><th><?php echo $this->translate('Max number of players') ?></th><th><?php echo $this->translate('Date') ?></th>';
+var th = '<th><?php echo $this->translate('Map name') ?></th><th><?php echo $this->translate('Number of players') ?></th><th><?php echo $this->translate('Date') ?></th>';
 var lang = '<?php echo Zend_Registry::get('lang') ?>';
-var info = '<?php echo $this->translate('There are no open games') ?>';
+var info = '<br/><?php echo $this->translate('There are no open games') ?>';
 <?php $this->headScript()->captureEnd() ?>

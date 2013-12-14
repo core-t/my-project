@@ -3,25 +3,17 @@
     line-height:26px;
     min-width: 100px;
     height: 62px;
-    padding:2px;
-    text-align: center;
 }
 
-.whitebg a{
-    color:#333;
-}
-.greenbg a{
-    color:#333;
-}
 #playersingame tr td div.left {
     width: 300px;
     overflow: hidden;
+    padding: 5px;
 }
 #playersingame tr td div.right {
     text-shadow:none;
     min-width:117px;
     margin-right:1px;
-    /*line-height:24px;*/
     border-radius: 5px;
     padding: 5px;
 }

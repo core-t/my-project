@@ -1,6 +1,10 @@
 <h1><?php echo $this->translate('New game') ?></h1>
-<p><?php echo $this->translate('Maximum number of players') ?>: <?php echo $this->numberOfPlayers ?></p>
-<h2><?php echo $this->translate('Players') ?>:</h2>
+<p><?php echo $this->translate('Map') ?>: <?php echo $this->map ?></p>
+<p><?php echo $this->translate('Required number of players') ?>: <?php echo $this->numberOfPlayers ?></p>
+<p><?php echo $this->translate('Time limit') ?>: <?php echo '' ?></p>
+<p><?php echo $this->translate('Limit tur') ?>: <?php echo '' ?></p>
+<p><?php echo $this->translate('Time limit per turn') ?>: <?php echo '' ?></p>
+<h2><?php echo $this->translate('Select your color and team') ?></h2>
 <table id="playersingame">
     <th><?php echo $this->translate('Player name & color') ?></th>
     <th><?php echo $this->translate('Select your color') ?></th>
@@ -21,20 +25,23 @@
     <li id="start"></li>
 </ul>
 
-<h2><?php echo $this->translate('The list of people who have not chosen their color') ?>:</h2>
-<table id="playersout"></table>
 <ul>
     <li><a class="button"
            href="/<?php echo Zend_Registry::get('lang') ?>/new">&laquo; <?php echo $this->translate('Back') ?></a></li>
 </ul>
 
-<script type="text/javascript">
-    var numberOfPlayers = <?php echo (int)$this->numberOfPlayers ?>;
-    var mapPlayers = <?php echo Zend_Json::encode($this->mapPlayers) ?>;
+<?php $this->headScript()->captureStart() ?>
+var numberOfPlayers = <?php echo (int)$this->numberOfPlayers ?>;
+var mapPlayers = <?php echo Zend_Json::encode($this->mapPlayers) ?>;
 
-    var gameId = <?php echo (int)$this->gameId ?>;
-    var playerId = <?php echo (int)$this->player['playerId'] ?>;
-    var accessKey = '<?php echo  $this->accessKey ?>';
+var gameId = <?php echo (int)$this->gameId ?>;
+var playerId = <?php echo (int)$this->player['playerId'] ?>;
+var accessKey = '<?php echo  $this->accessKey ?>';
 
-    var urlGemesetupStart = '/<?php echo  Zend_Registry::get('lang') ?>/setup/start';
-</script>
+var urlGemesetupStart = '/<?php echo  Zend_Registry::get('lang') ?>/setup/start';
+var select = '<?php echo $this->translate('Select') ?>';
+var deselect = '<?php echo $this->translate('Deselect') ?>';
+var kick = '<?php echo $this->translate('Kick') ?>';
+var human = '<?php echo $this->translate('Human') ?>';
+var computer = '<?php echo $this->translate('computer') ?>';
+<?php $this->headScript()->captureEnd() ?>

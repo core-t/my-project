@@ -1,5 +1,5 @@
 #new {
-    background: url('../img/login_bg.jpg') no-repeat;
+    /*background: url('../img/login_bg.jpg') no-repeat;*/
     border: 2px solid grey;
     border-radius: 5px;
     margin-top: 10px;
@@ -15,18 +15,29 @@
     margin: 20px;
 }
 
-#new form {
-    background: none;
-    margin: 5px;
-    padding: 5px;
-}
-
 #new img {
     max-height: 400px;
     max-width: 500px;
-    border: 1px solid #000;
+    border: 10px solid grey;
+    box-shadow: 1px 1px 5px #000;
 }
 
-#turnsLimit {
-    width: 40px;
+#new form {
+    border: none;
+    background: none;
+    margin: 5px;
+    padding: 5px;
+    box-shadow: none;
+}
+
+#new #form {
+    width: 260px;
+}
+
+#new input[type="text"] {
+    width: 20px;
+}
+
+#join{
+    margin-top: 10px;
 }

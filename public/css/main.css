@@ -31,7 +31,7 @@ body {
     font-family: "xenippa", Verdana, Tahoma;
     letter-spacing: 2px;
     color: #878967;
-    text-shadow: 2px 2px 0 #000;
+    text-shadow: 1px 1px 0 #000;
 }
 
 #page {
@@ -89,8 +89,9 @@ a:hover {
 input {
     border: 1px solid grey;
     border-radius: 5px;
-    padding: 3px 6px 3px 6px;
+    padding: 7px 6px;
     box-shadow: 1px 1px 5px #000;
+    text-align: center;
 }
 
 select {
@@ -185,10 +186,10 @@ h1#title {
 }
 
 h2 {
-    margin-top: 10px;
-    color: greenyellow;
-    text-transform: none;
+    padding: 0 0 0 15px;
+    color: #fff;
     letter-spacing: 5px;
+    /*border-bottom: 4px solid #fff;*/
 }
 
 h3 {
@@ -216,36 +217,38 @@ h3 {
 }
 
 table {
-    border-spacing: 1px;
+    border-spacing: 0px;
     min-width: 900px;
 }
 
+tr:nth-child(odd) {
+    background: url(/img/bg_1.jpg);
+    color: #D7DAA4;
+}
+
+tr:last-of-type td{
+    border-bottom: 1px solid #000;
+}
+
 th {
-    line-height: 20px;
+    /*line-height: 20px;*/
     text-align: center;
     background: url('../img/bg_0.jpg');
     padding: 4px;
     color: #fff;
+    background: #000;
 }
 
 td {
-    border: 1px solid #878967;
-    border-radius: 5px;
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
     height: 20px;
     text-align: center;
     padding: 2px;
 }
 
-#content form {
-    background: url('../img/login_bg.jpg') no-repeat;
-    border-radius: 20px;
-    /*padding: 40px;*/
-    padding: 100px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    /*color: #000;*/
-    /*text-shadow: none;*/
-    text-align: center;
+td:first-of-type {
+    border-left: 1px solid #000;
 }
 
 #logout {
@@ -258,8 +261,19 @@ td {
     text-shadow: 1px 1px 0 #000;
 }
 
+#content form {
+    background: url('/img/bg_1.jpg') -407px -214px no-repeat;
+    border-radius: 5px;
+    border: 2px solid grey;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 1px 1px 5px #000;
+}
+
 #login form {
-    background: url('../img/login_bg.jpg') -407px -214px no-repeat;
+    background: url('/img/login_bg.jpg') -407px -214px no-repeat;
     border-radius: 5px;
     border: 2px solid grey;
     padding: 10px;
@@ -274,9 +288,9 @@ td {
     text-shadow: 0 0 5px #fff;
 }
 
-label {
-    color: #000;
-    text-shadow: none;
+#content form label {
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
 }
 
 dt {

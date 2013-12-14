@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-13 16:22+0100\n"
-"PO-Revision-Date: 2013-12-13 16:23+0100\n"
+"POT-Creation-Date: 2013-12-14 02:25+0100\n"
+"PO-Revision-Date: 2013-12-14 02:27+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -81,9 +81,10 @@ msgstr "Market"
 msgid "Version"
 msgstr "Wersja"
 
-#: application/forms/NumberOfPlayers.php:25
-msgid "Select number of players"
-msgstr "Wybierz ilość graczy"
+#: application/forms/NumberOfPlayers.php:26
+#: application/views/scripts/new/index.phtml:29
+msgid "Number of players"
+msgstr "Ilość graczy"
 
 #: application/forms/Password.php:9 application/forms/Auth.php:14
 msgid "Password"
@@ -97,7 +98,19 @@ msgstr "Powtórz hasło"
 msgid "Select map"
 msgstr "Wybierz mapę"
 
-#: application/forms/Creategame.php:18
+#: application/forms/Creategame.php:35
+msgid "Select time limit"
+msgstr "Ustaw limit czasu"
+
+#: application/forms/Creategame.php:41
+msgid "Turns limit"
+msgstr "Limit tur"
+
+#: application/forms/Creategame.php:62
+msgid "Select time limit per turn"
+msgstr "Ustaw czas trwania tury"
+
+#: application/forms/Creategame.php:65
 msgid "Create game"
 msgstr "Utwórz grę"
 
@@ -141,8 +154,8 @@ msgid "First"
 msgstr "Pierwszy"
 
 #: application/modules/admin/views/scripts/pagination_control.phtml:7
-#: application/views/scripts/setup/index.phtml:28
-#: application/views/scripts/new/index.phtml:20
+#: application/views/scripts/setup/index.phtml:26
+#: application/views/scripts/new/index.phtml:22
 #: application/views/scripts/load/index.phtml:55
 #: application/views/scripts/halloffame/index.phtml:23
 #: application/views/scripts/help/index.phtml:66
@@ -167,8 +180,8 @@ msgid "Waiting for other players"
 msgstr "Czekam na innych graczy"
 
 #: application/views/scripts/setup/index.phtml:2
-msgid "Maximum number of players"
-msgstr "Maksymalna ilość graczy"
+msgid "Required number of players"
+msgstr "Wymagana ilość graczy"
 
 #: application/views/scripts/setup/index.phtml:3
 msgid "Players"
@@ -186,44 +199,47 @@ msgstr "Wybierz swój kolor"
 msgid "Human/AI"
 msgstr "Człowiek/SI"
 
-#: application/views/scripts/setup/index.phtml:24
-msgid "The list of people who have not chosen their color"
-msgstr "Lista osób, które nie wybrały koloru"
+#: application/views/scripts/setup/index.phtml:38
+msgid "Select"
+msgstr "Wybierz"
+
+#: application/views/scripts/setup/index.phtml:39
+msgid "Deselect"
+msgstr "Odznacz"
+
+#: application/views/scripts/setup/index.phtml:40
+msgid "Kick"
+msgstr "Wykop"
+
+#: application/views/scripts/setup/index.phtml:41
+msgid "Human"
+msgstr "Człowiek"
+
+#: application/views/scripts/setup/index.phtml:42
+msgid "computer"
+msgstr "Komputer"
 
 #: application/views/scripts/new/index.phtml:2
 msgid "Create new game"
 msgstr "Utwórz nową grę"
 
-#: application/views/scripts/new/index.phtml:12
+#: application/views/scripts/new/index.phtml:14
 msgid "Join one of the games listed below"
 msgstr "Dołącz do jednej z gier z listy poniżej"
 
-#: application/views/scripts/new/index.phtml:23
+#: application/views/scripts/new/index.phtml:25
 msgid "Refresh"
 msgstr "Odśwież"
 
-#: application/views/scripts/new/index.phtml:27
+#: application/views/scripts/new/index.phtml:29
 msgid "Map name"
 msgstr "Nazwa mapy"
 
-#: application/views/scripts/new/index.phtml:27
-#: application/views/scripts/load/index.phtml:7
-msgid "Game master"
-msgstr "Mistrz gry"
-
-#: application/views/scripts/new/index.phtml:27
-msgid "Current number of players"
-msgstr "Aktualna ilość graczy"
-
-#: application/views/scripts/new/index.phtml:27
-msgid "Max number of players"
-msgstr "Max ilość graczy"
-
-#: application/views/scripts/new/index.phtml:27
+#: application/views/scripts/new/index.phtml:29
 msgid "Date"
 msgstr "Data"
 
-#: application/views/scripts/new/index.phtml:29
+#: application/views/scripts/new/index.phtml:31
 msgid "There are no open games"
 msgstr "Brak otwartych gier"
 
@@ -254,6 +270,10 @@ msgstr "Ilość ruchów"
 #: application/views/scripts/load/index.phtml:2
 msgid "Select which game you want to load"
 msgstr "Wybierz, którą grę chcesz wczytać"
+
+#: application/views/scripts/load/index.phtml:7
+msgid "Game master"
+msgstr "Mistrz gry"
 
 #: application/views/scripts/load/index.phtml:9
 msgid "Player turn"
@@ -443,6 +463,18 @@ msgstr "Pomiń w tej turze"
 #: application/layouts/scripts/game.phtml:133
 msgid "Send"
 msgstr "Wyślij"
+
+#~ msgid "Select number of players"
+#~ msgstr "Wybierz ilość graczy"
+
+#~ msgid "Maximum number of players"
+#~ msgstr "Maksymalna ilość graczy"
+
+#~ msgid "The list of people who have not chosen their color"
+#~ msgstr "Lista osób, które nie wybrały koloru"
+
+#~ msgid "Max number of players"
+#~ msgstr "Max ilość graczy"
 
 #~ msgid "Home"
 #~ msgstr "Start"

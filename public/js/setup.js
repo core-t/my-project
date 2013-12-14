@@ -51,13 +51,13 @@ function initWebSocket() {
 
 
                         if (r[i].playerId == playerId) {
-                            $('#' + r[i].mapPlayerId + ' .td2 a').html('Unselect');
+                            $('#' + r[i].mapPlayerId + ' .td2 a').html(deselect);
                         } else {
                             if (r.gameMasterId == playerId) {
-                                $('#' + r[i].mapPlayerId + ' .td2 a').html('Kick');
+                                $('#' + r[i].mapPlayerId + ' .td2 a').html(kick);
                             } else {
                                 if (r[i].computer) {
-                                    $('#' + r[i].mapPlayerId + ' .td2 a').html('Select');
+                                    $('#' + r[i].mapPlayerId + ' .td2 a').html(select);
                                 } else {
                                     $('#' + r[i].mapPlayerId + ' .td2 a').remove();
                                 }
@@ -65,9 +65,9 @@ function initWebSocket() {
                         }
 
                         if (r[i].computer) {
-                            $('#' + r[i].mapPlayerId + ' .td3').html('Computer');
+                            $('#' + r[i].mapPlayerId + ' .td3').html(computer);
                         } else {
-                            $('#' + r[i].mapPlayerId + ' .td3').html('Human');
+                            $('#' + r[i].mapPlayerId + ' .td3').html(human);
                         }
                     } else {
                         if (r[i].computer) {
@@ -125,7 +125,7 @@ function prepareButtons(gameMasterId) {
         $('#' + mapPlayers[i].mapPlayerId + ' .td2').html(
             $('<a>')
                 .addClass('button')
-                .html('Select')
+                .html(select)
                 .attr('id', mapPlayers[i].mapPlayerId)
                 .click(function () {
                     wsChange(this.id)

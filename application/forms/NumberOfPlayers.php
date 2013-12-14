@@ -15,23 +15,34 @@ class Application_Form_NumberOfPlayers extends Zend_Form
         $mMapPlayers = new Application_Model_MapPlayers($mapId);
         $numberOfPlayers = $mMapPlayers->getNumberOfPlayersForNewGame();
 
-        $multiOptions = array();
-        for ($i = 2; $i <= $numberOfPlayers; $i++) {
-            $multiOptions[$i] = $i;
-        }
+//        $multiOptions = array();
+//        for ($i = 2; $i <= $numberOfPlayers; $i++) {
+//            $multiOptions[$i] = $i;
+//        }
 
-        $this->addElement('select', 'numberOfPlayers',
+        $f = new Coret_Form_Varchar(
             array(
-                'label' => $this->getView()->translate('Select number of players'),
-                'multiOptions' => $multiOptions,
-                'required' => true,
-                'filters' => array('StringTrim'),
-                'validators' => array(
-                    array('Alnum'),
-                    new Zend_Validate_Between(array('min' => 2, 'max' => $numberOfPlayers))
-                )
+                'name' => 'numberOfPlayers',
+                'label' => $this->getView()->translate('Number of players'),
+                'value' => $numberOfPlayers,
+                'validators' => array(array('Alnum'), array('identical', false, array(array('token' => $numberOfPlayers, 'strict' => FALSE))))
             )
         );
+        $this->addElements($f->getElements());
+
+//        $this->addElement('select', 'numberOfPlayers',
+//            array(
+//                'label' => $this->getView()->translate('Select number of players'),
+//                'multiOptions' => $multiOptions,
+//                'required' => true,
+//                'filters' => array('StringTrim'),
+//                'validators' => array(
+//                    array('Alnum'),
+//                    array('identical', false, array(array('token' => $numberOfPlayers, 'strict' => FALSE))
+//                    new Zend_Validate_Between(array('min' => 2, 'max' => $numberOfPlayers))
+//                    )
+//                )
+//            );
     }
 
 }
