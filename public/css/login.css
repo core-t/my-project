@@ -4,6 +4,7 @@ html {
 
 #page {
     height: 500px !important;
+    min-height: 500px !important;
     vertical-align: middle;
     position: relative;
 }

@@ -2,44 +2,39 @@
 
 class zend_View_Helper_MainMenu extends Zend_View_Helper_Abstract
 {
-
     public function mainMenu()
     {
         $lang = Zend_Registry::get('lang');
 
-        $this->view->placeholder('mainMenu')->append('
-<div>
-    <ul>
-        <li>
-            <a href=" /' . $lang . '/new" class="button">' . $this->view->translate('Play') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/load" class="button">' . $this->view->translate('Load game') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/halloffame" class="button">' . $this->view->translate('Hall of Fame') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/hero" class="button">' . $this->view->translate('Hero') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/profile" class="button">' . $this->view->translate('Profile') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/help" class="button">' . $this->view->translate('Help') . '</a>
-        </li>
-        <!--<li>
-            <a href="/' . $lang . '/stats" class="button">' . $this->view->translate('Stats') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/editor" class="button">' . $this->view->translate('Map editor') . '</a>
-        </li>
-        <li>
-            <a href="/' . $lang . '/market" class="button">' . $this->view->translate('Market') . '</a>
-        </li>-->
-    </ul>
-</div>
-        ');
+        $controllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+
+        $this->view->placeholder('mainMenu')
+            ->setPrefix('<div><ul><li>')
+            ->setSeparator('</li><li>')
+            ->setPostfix('</li></ul></div>');
+
+        $menu = array(
+            'new' => $this->view->translate('Play'),
+            'load' => $this->view->translate('Load game'),
+            'halloffame' => $this->view->translate('Hall of Fame'),
+            'hero' => $this->view->translate('Hero'),
+            'profile' => $this->view->translate('Profile'),
+            'help' => $this->view->translate('Help'),
+//            'stats' => $this->view->translate('Stats'),
+//            'editor' => $this->view->translate('Map editor'),
+//            'market' => $this->view->translate('Market'),
+        );
+
+        foreach ($menu as $key => $val) {
+
+            if ($key == $controllerName) {
+                $active = ' id="active"';
+            } else {
+                $active = '';
+            }
+
+            $this->view->placeholder('mainMenu')->append('<a' . $active . ' href="/' . $lang . '/' . $key . '" class="button">' . $val . '</a>');
+        }
     }
 
 }
