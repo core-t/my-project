@@ -20,6 +20,7 @@
 
 #game table {
     min-width: 0;
+    border-spacing: 1px;
 }
 
 #board {
@@ -288,13 +289,31 @@
 
 }
 
-.message .production .unit {
-    background: #CECEb0;
+.message .production td.unit {
+    background: #fff;
+    color: #000;
     border: none;
     margin: 0;
+    padding: 5px;
     text-align: center;
     width: 158px;
     cursor: url(/img/game/cursor_pointer.png), pointer;
+}
+
+.message .production tr:first-of-type td.unit:first-of-type {
+    border-top-left-radius: 5px;
+}
+
+.message .production tr:first-of-type td.unit:last-of-type {
+    border-top-right-radius: 5px;
+}
+
+.message .production tr:last-of-type td.unit:first-of-type {
+    border-bottom-left-radius: 5px;
+}
+
+.message .production tr:last-of-type td.unit:last-of-type {
+    border-bottom-right-radius: 5px;
 }
 
 .message .production .unit:hover {
@@ -329,7 +348,7 @@
 .message .production .unit div.attributes {
     float: right;
     padding: 1px;
-    width: 124px;
+    width: 156px;
 }
 
 .message .production .unit div p {
@@ -645,6 +664,10 @@
     width: auto;
     min-width: 0;
     border-spacing: 0;
+}
+
+#goldBox table tr:nth-child(odd) {
+    background: none;
 }
 
 #goldBox td {

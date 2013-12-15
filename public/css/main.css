@@ -40,9 +40,6 @@ body {
     min-height: 800px;
 }
 
-#content {
-    /*padding: 10px 20px;*/
-}
 
 hr {
     margin-bottom: 10px;
@@ -176,7 +173,7 @@ h1 {
 
 h1#title {
     line-height: 192px;
-    font-size: 66px;
+    font-size: 60px;
     font-family: "Alpine", Verdana, Tahoma;
     color: yellow;
     text-align: center;
@@ -231,7 +228,6 @@ tr:last-of-type td{
 }
 
 th {
-    /*line-height: 20px;*/
     text-align: center;
     background: url('../img/bg_0.jpg');
     padding: 4px;
@@ -270,22 +266,6 @@ td:first-of-type {
     margin-bottom: 20px;
     text-align: center;
     box-shadow: 1px 1px 5px #000;
-}
-
-#login form {
-    background: url('/img/login_bg.jpg') -407px -214px no-repeat;
-    border-radius: 5px;
-    border: 2px solid grey;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    text-align: center;
-    box-shadow: 1px 1px 5px #000;
-}
-
-#login label {
-    color: #000000;
-    text-shadow: 0 0 5px #fff;
 }
 
 #content form label {

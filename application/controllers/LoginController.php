@@ -5,9 +5,13 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->_namespace = Game_Namespace::getNamespace(); // default namespace
+        $this->_namespace = Game_Namespace::getNamespace();
         $this->_helper->layout->setLayout('login');
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/main.css');
+        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/login.css');
+
+        $this->view->jquery();
+        $this->view->headScript()->appendFile('/js/login.js?v=' . Zend_Registry::get('config')->version);
     }
 
     public function indexAction()
