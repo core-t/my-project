@@ -1,19 +1,22 @@
 <?php echo $this->doctype() ?>
 <html>
-    <head>
-        <?php
-        echo $this->headMeta() . "\n";
-        echo $this->headTitle() . "\n";
-        echo $this->headLink() . "\n";
-        echo $this->headScript() . "\n";
-        ?>
-    </head>
-    <body>
-        <div id="page">
-            <h1 id="title">WARS of FATE</h1>
-            <div id="login">
-                <?php echo $this->layout()->content; ?>
-            </div>
-        </div>
-    </body>
+<head>
+    <?php
+    echo $this->headMeta() . "\n";
+    echo $this->headTitle() . "\n";
+    echo $this->headLink() . "\n";
+    echo $this->headScript() . "\n";
+    ?>
+</head>
+<body>
+<div id="page">
+    <?php echo $this->placeholder('title') ?>
+    <div id="login">
+        <?php echo $this->layout()->content; ?>
+    </div>
+    <div>
+        <?php echo $this->placeholder('version') ?>
+    </div>
+</div>
+</body>
 </html>

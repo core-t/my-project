@@ -22,6 +22,7 @@
     font-family: "aeiou2U";
     src: url('/_aeiou2U.ttf') format("truetype");
 }
+
 html {
     background: #000 url('../img/bg_0.jpg');
 }
@@ -40,18 +41,19 @@ body {
     min-height: 800px;
 }
 
-
 hr {
     margin-bottom: 10px;
 }
 
 #versionNumber {
-    line-height: 35px;
     padding-left: 5px;
+    padding-top: 15px;
+    color: orange;
+    float: left;
 }
 
 #menuTop {
-    height: 35px;
+    height: 38px;
     border-bottom: 1px solid #878967;
 }
 
@@ -98,12 +100,12 @@ select {
     background: #fff;
 }
 
-input[type="radio"],input[type="checkbox"] {
+input[type="radio"], input[type="checkbox"] {
     box-shadow: none;
 }
 
 .button, #submit {
-    padding: 0 32px;
+    padding: 3px 32px 0 32px;
     margin: 2px;
     text-align: center;
     cursor: pointer;
@@ -152,22 +154,48 @@ h1 {
     text-align: right;
 }
 
-h1#title {
-    line-height: 192px;
+#content #title {
+    margin-top: 30px;
+}
+
+#title {
+    margin: 0 auto;
+    width: 760px;
+    height: 192px;
+    background: url('/img/logo_bg.png') 0px 15px no-repeat !important;
+}
+
+#title div {
+    position: relative;
+    width: 760px;
+    height: 192px;
+    text-shadow: 2px 1px 1px #000;
+    background: url("/img/sword.png") no-repeat;
+}
+
+#title h1 {
     font-size: 60px;
     font-family: "Alpine", Verdana, Tahoma;
-    color: yellow;
-    text-align: center;
-    background: url("/img/sword.png") no-repeat;
-    width: 760px;
-    margin: 0 auto;
+    color: red;
+    position: absolute;
+    top: 5px;
+    left: 20px;
+}
+
+#title p {
+    font-size: 20px;
+    font-family: "Alpine", Verdana, Tahoma;
+    position: absolute;
+    top: 113px;
+    left: 277px;
+    color: #fff;
 }
 
 h2 {
-    padding: 0 0 0 15px;
+    padding: 15px 0 0 15px;
     color: #fff;
     letter-spacing: 5px;
-    /*border-bottom: 4px solid #fff;*/
+    text-shadow: 2px 1px 1px #000;
 }
 
 h3 {
@@ -204,7 +232,7 @@ tr:nth-child(odd) {
     color: #D7DAA4;
 }
 
-tr:last-of-type td{
+tr:last-of-type td {
     border-bottom: 1px solid #000;
 }
 
@@ -243,7 +271,6 @@ td:first-of-type {
     border-radius: 5px;
     border: 2px solid grey;
     padding: 10px;
-    margin-top: 10px;
     margin-bottom: 20px;
     text-align: center;
     box-shadow: 1px 1px 5px #000;

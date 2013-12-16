@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-14 02:25+0100\n"
-"PO-Revision-Date: 2013-12-14 02:27+0100\n"
+"POT-Creation-Date: 2013-12-16 15:29+0100\n"
+"PO-Revision-Date: 2013-12-16 15:30+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -35,51 +35,38 @@ msgstr "Tak"
 msgid "Logout"
 msgstr "Wyloguj"
 
-#: application/views/helpers/MainMenu.php:14
-#: application/views/scripts/new/index.phtml:1
+#: application/views/helpers/MainMenu.php:17
 msgid "Play"
 msgstr "Graj"
 
-#: application/views/helpers/MainMenu.php:17
+#: application/views/helpers/MainMenu.php:18
 #: application/views/scripts/load/index.phtml:1
 msgid "Load game"
 msgstr "Wczytaj grę"
 
-#: application/views/helpers/MainMenu.php:20
+#: application/views/helpers/MainMenu.php:19
 #: application/views/scripts/halloffame/index.phtml:1
 msgid "Hall of Fame"
 msgstr "Sala sław"
 
-#: application/views/helpers/MainMenu.php:23
+#: application/views/helpers/MainMenu.php:20
 #: application/views/scripts/hero/index.phtml:1
 msgid "Hero"
 msgstr "Bohater"
 
-#: application/views/helpers/MainMenu.php:26
+#: application/views/helpers/MainMenu.php:21
 #: application/views/scripts/profile/index.phtml:1
 msgid "Profile"
 msgstr "Profil"
 
-#: application/views/helpers/MainMenu.php:29
+#: application/views/helpers/MainMenu.php:22
 #: application/views/scripts/help/index.phtml:1
 msgid "Help"
 msgstr "Pomoc"
 
-#: application/views/helpers/MainMenu.php:32
-msgid "Stats"
-msgstr "Statystyki"
-
-#: application/views/helpers/MainMenu.php:35
-msgid "Map editor"
-msgstr "Edytor map"
-
-#: application/views/helpers/MainMenu.php:38
-msgid "Market"
-msgstr "Market"
-
 #: application/views/helpers/Version.php:6
-msgid "Version"
-msgstr "Wersja"
+msgid "Version number"
+msgstr "Numer wersji"
 
 #: application/forms/NumberOfPlayers.php:26
 #: application/views/scripts/new/index.phtml:29
@@ -136,7 +123,7 @@ msgstr "Imię"
 msgid "Last name"
 msgstr "Nazwisko"
 
-#: application/controllers/LoginController.php:24
+#: application/controllers/LoginController.php:31
 msgid "Incorrect login or password!"
 msgstr "Nieprawidłowy e-mail lub hasło!"
 
@@ -154,7 +141,7 @@ msgid "First"
 msgstr "Pierwszy"
 
 #: application/modules/admin/views/scripts/pagination_control.phtml:7
-#: application/views/scripts/setup/index.phtml:26
+#: application/views/scripts/setup/index.phtml:30
 #: application/views/scripts/new/index.phtml:22
 #: application/views/scripts/load/index.phtml:55
 #: application/views/scripts/halloffame/index.phtml:23
@@ -180,42 +167,59 @@ msgid "Waiting for other players"
 msgstr "Czekam na innych graczy"
 
 #: application/views/scripts/setup/index.phtml:2
+msgid "Map"
+msgstr ""
+
+#: application/views/scripts/setup/index.phtml:3
 msgid "Required number of players"
 msgstr "Wymagana ilość graczy"
 
-#: application/views/scripts/setup/index.phtml:3
-msgid "Players"
-msgstr "Gracze"
+#: application/views/scripts/setup/index.phtml:4
+msgid "Time limit"
+msgstr "Limit czasu"
 
 #: application/views/scripts/setup/index.phtml:5
+msgid "Limit tur"
+msgstr ""
+
+#: application/views/scripts/setup/index.phtml:6
+#, fuzzy
+msgid "Time limit per turn"
+msgstr "Ustaw czas trwania tury"
+
+#: application/views/scripts/setup/index.phtml:7
+msgid "Select your color and team"
+msgstr "Wybierz swój kolor i  drużynę"
+
+#: application/views/scripts/setup/index.phtml:9
 msgid "Player name & color"
 msgstr "Nazwa i kolor gracza"
 
-#: application/views/scripts/setup/index.phtml:6
+#: application/views/scripts/setup/index.phtml:10
 msgid "Select your color"
 msgstr "Wybierz swój kolor"
 
-#: application/views/scripts/setup/index.phtml:7
+#: application/views/scripts/setup/index.phtml:11
 msgid "Human/AI"
 msgstr "Człowiek/SI"
 
-#: application/views/scripts/setup/index.phtml:38
+#: application/views/scripts/setup/index.phtml:42
 msgid "Select"
 msgstr "Wybierz"
 
-#: application/views/scripts/setup/index.phtml:39
+#: application/views/scripts/setup/index.phtml:43
 msgid "Deselect"
 msgstr "Odznacz"
 
-#: application/views/scripts/setup/index.phtml:40
+#: application/views/scripts/setup/index.phtml:44
 msgid "Kick"
 msgstr "Wykop"
 
-#: application/views/scripts/setup/index.phtml:41
+#: application/views/scripts/setup/index.phtml:45
 msgid "Human"
 msgstr "Człowiek"
 
-#: application/views/scripts/setup/index.phtml:42
+#: application/views/scripts/setup/index.phtml:46
 msgid "computer"
 msgstr "Komputer"
 
@@ -463,6 +467,18 @@ msgstr "Pomiń w tej turze"
 #: application/layouts/scripts/game.phtml:133
 msgid "Send"
 msgstr "Wyślij"
+
+#~ msgid "Stats"
+#~ msgstr "Statystyki"
+
+#~ msgid "Map editor"
+#~ msgstr "Edytor map"
+
+#~ msgid "Market"
+#~ msgstr "Market"
+
+#~ msgid "Players"
+#~ msgstr "Gracze"
 
 #~ msgid "Select number of players"
 #~ msgstr "Wybierz ilość graczy"

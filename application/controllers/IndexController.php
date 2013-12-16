@@ -1,12 +1,15 @@
 <?php
 
-class IndexController extends Game_Controller_Gui {
+class IndexController extends Game_Controller_Gui
+{
 
-    public function indexAction() {
-
+    public function indexAction()
+    {
+        $this->view->title();
     }
 
-    public function unsupportedAction() {
+    public function unsupportedAction()
+    {
         // action body
     }
 

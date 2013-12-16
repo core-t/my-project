@@ -12,6 +12,9 @@ class LoginController extends Zend_Controller_Action
 
         $this->view->jquery();
         $this->view->headScript()->appendFile('/js/login.js?v=' . Zend_Registry::get('config')->version);
+
+        $this->view->title();
+        $this->view->Version();
     }
 
     public function indexAction()

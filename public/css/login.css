@@ -13,9 +13,8 @@ html {
     background: url('/img/bg_0.jpg');
     border-radius: 5px;
     border: 2px solid grey;
-    padding: 10px;
+    padding: 10px 0 20px 0;
     margin-top: 10px;
-    margin-bottom: 20px;
     text-align: center;
     box-shadow: 1px 1px 5px #000;
 }
@@ -25,3 +24,7 @@ html {
     text-shadow: 0 0 5px #000;
 }
 
+#versionNumber {
+    padding: 5px !important;
+    float: right !important;
+}

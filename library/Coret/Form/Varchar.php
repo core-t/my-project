@@ -43,6 +43,12 @@ class Coret_Form_Varchar extends Zend_Form
             $validators = array(array('StringLength', false, array(1, 256)));
         }
 
+        if (isset($this->_attribs['attr']) && $this->_attribs['attr']) {
+            $attribs = $this->_attribs['attr'];
+        } else {
+            $attribs = array();
+        }
+
         $this->addElement('text', $this->_attribs['name'], array(
                 'label' => $label,
                 'value' => $value,
@@ -50,7 +56,8 @@ class Coret_Form_Varchar extends Zend_Form
                 'id' => $id,
                 'required' => $required,
                 'filters' => array('StringTrim'),
-                'validators' => $validators
+                'validators' => $validators,
+                'attribs' => $attribs
             )
         );
     }

@@ -25,7 +25,8 @@ class Application_Form_NumberOfPlayers extends Zend_Form
                 'name' => 'numberOfPlayers',
                 'label' => $this->getView()->translate('Number of players'),
                 'value' => $numberOfPlayers,
-                'validators' => array(array('Alnum'), array('identical', false, array(array('token' => $numberOfPlayers, 'strict' => FALSE))))
+                'validators' => array(array('Alnum'), array('identical', false, array(array('token' => $numberOfPlayers, 'strict' => FALSE)))),
+                'attr' => array('disabled' => 'disabled')
             )
         );
         $this->addElements($f->getElements());
