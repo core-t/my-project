@@ -213,7 +213,7 @@ class EditorController extends Game_Controller_Gui
 
     function drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2)
     {
-        $colors = $this->initGrass($im, $imX1, $imX2, $imY1, $imY2, $colors);
+        $colors = $this->initGrass($imX1, $imX2, $imY1, $imY2, $colors);
         return $colors;
     }
 
@@ -225,7 +225,7 @@ class EditorController extends Game_Controller_Gui
         return $colors;
     }
 
-    function initGrass($im, $imX1, $imX2, $imY1, $imY2, $colors)
+    function initGrass($imX1, $imX2, $imY1, $imY2, $colors)
     {
         for ($x = $imX1; $x < $imX2; $x++) {
             for ($y = $imY1; $y < $imY2; $y++) {

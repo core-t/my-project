@@ -82,7 +82,7 @@ class Application_Model_Mapper
         $this->normalize();
     }
 
-    function normalize()
+    private function normalize()
     {
         for ($y = 0; $y < $this->_height; $y++) {
             for ($x = 0; $x < $this->_width; $x++) {
@@ -96,7 +96,7 @@ class Application_Model_Mapper
         }
     }
 
-    function getAverageColor($component, $x, $y)
+    private function getAverageColor($component, $x, $y)
     {
         $number = 0;
         $average = 0;
@@ -142,6 +142,22 @@ class Application_Model_Mapper
             return $average / $number;
         } else {
             return $component[$x][$y];
+        }
+    }
+
+    function drawGrassCd($x, $y)
+    {
+        $this->_colors['r'][$x][$y] = rand(40, 72);
+        $this->_colors['g'][$x][$y] = rand(134, 148);
+        $this->_colors['b'][$x][$y] = rand(40, 100);
+    }
+
+    function initGrass($imX1, $imX2, $imY1, $imY2)
+    {
+        for ($x = $imX1; $x < $imX2; $x++) {
+            for ($y = $imY1; $y < $imY2; $y++) {
+                $this->drawGrassCd($x, $y);
+            }
         }
     }
 
