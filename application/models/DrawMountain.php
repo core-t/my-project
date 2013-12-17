@@ -16,5 +16,10 @@ class Application_Model_DrawMountain extends Application_Model_Draw
 
     protected function setBorderColors($x, $y)
     {
+        $rand = rand($this->_min, $this->_max);
+
+        $this->_colors['r'][$x][$y] = $rand;
+        $this->_colors['g'][$x][$y] = $rand;
+        $this->_colors['b'][$x][$y] = $rand;
     }
 }

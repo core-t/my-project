@@ -62,9 +62,9 @@ class Application_Model_Draw
 
                 $this->setInnerColors($x, $y);
 
-//                if (rand(0, 2) < 1) {
-//                    continue;
-//                }
+                if (rand(0, 2) < 1) {
+                    continue;
+                }
 
                 $val = pow($x - $centerX, 2) + pow($y - $centerY, 2);
 
