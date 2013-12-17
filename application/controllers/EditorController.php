@@ -129,10 +129,10 @@ class EditorController extends Game_Controller_Gui
                         $colors = $this->drawWater($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
                         break;
                     case 'M':
-                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 200, 255, 200, 255, 200, 255);
+                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 200, 255);
                         break;
                     case 'm':
-                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 60, 70, 60, 70, 60, 70);
+                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 60, 90);
                         break;
                     case 'r':
                         $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
@@ -153,12 +153,13 @@ class EditorController extends Game_Controller_Gui
             $imX1 = 0;
 
             for ($fieldsX = $startX; $fieldsX < $endX; $fieldsX++) {
-                $type = $fields[$fieldsY][$fieldsX];
-                if ($type == 'r' || $type == 'b' || $type == 'w' || $type == 'g') {
-                    $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-//                    $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-//                    $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                }
+                $imX2 = $imX1 + 40;
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
+                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
                 $imX1 += 40;
             }
             $imY1 += 40;
@@ -168,6 +169,70 @@ class EditorController extends Game_Controller_Gui
 
         imagepng($im);
         imagedestroy($im);
+    }
+
+    function normalize($im, $imX1, $imX2, $imY1, $imY2, $colors)
+    {
+        for ($x = $imX1; $x < $imX2; $x++) {
+            for ($y = $imY1; $y < $imY2; $y++) {
+                $colors['r'][$x][$y] = $this->getAverageColor($colors['r'], $x, $y);
+                $colors['g'][$x][$y] = $this->getAverageColor($colors['g'], $x, $y);
+                $colors['b'][$x][$y] = $this->getAverageColor($colors['b'], $x, $y);
+
+                $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
+                imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
+            }
+        }
+        return $colors;
+    }
+
+    function getAverageColor($component, $x, $y)
+    {
+        $number = 0;
+        $average = 0;
+
+        if (!isset($component[$x][$y])) {
+            return 0;
+        }
+
+        if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] > $component[$x - 1][$y - 1]) {
+            $number++;
+            $average += $component[$x - 1][$y - 1];
+        }
+        if (isset($component[$x - 1][$y]) && $component[$x][$y] > $component[$x - 1][$y]) {
+            $number++;
+            $average += $component[$x - 1][$y];
+        }
+        if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] > $component[$x - 1][$y + 1]) {
+            $number++;
+            $average += $component[$x - 1][$y + 1];
+        }
+        if (isset($component[$x][$y - 1]) && $component[$x][$y] > $component[$x][$y - 1]) {
+            $number++;
+            $average += $component[$x][$y - 1];
+        }
+        if (isset($component[$x][$y + 1]) && $component[$x][$y] > $component[$x][$y + 1]) {
+            $number++;
+            $average += $component[$x][$y + 1];
+        }
+        if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] > $component[$x + 1][$y - 1]) {
+            $number++;
+            $average += $component[$x + 1][$y - 1];
+        }
+        if (isset($component[$x + 1][$y]) && $component[$x][$y] > $component[$x + 1][$y]) {
+            $number++;
+            $average += $component[$x + 1][$y];
+        }
+        if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] > $component[$x + 1][$y + 1]) {
+            $number++;
+            $average += $component[$x + 1][$y + 1];
+        }
+
+        if ($number > 4) {
+            return $average / $number;
+        } else {
+            return $component[$x][$y];
+        }
     }
 
     function drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2)
@@ -253,7 +318,7 @@ class EditorController extends Game_Controller_Gui
         return $colors;
     }
 
-    function draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, $rMin, $rMax, $gMin, $gMax, $bMin, $bMax)
+    function draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, $min, $max)
     {
         for ($x = $imX1; $x < $imX2; $x++) {
             for ($y = $imY1; $y < $imY2; $y++) {
@@ -299,9 +364,11 @@ class EditorController extends Game_Controller_Gui
                     }
                 }
 
-                $colors['r'][$x][$y] = rand($rMin, $rMax);
-                $colors['g'][$x][$y] = rand($gMin, $gMax);
-                $colors['b'][$x][$y] = rand($bMin, $bMax);
+                $rand = rand($min, $max);
+
+                $colors['r'][$x][$y] = $rand;
+                $colors['g'][$x][$y] = $rand;
+                $colors['b'][$x][$y] = $rand;
 
                 $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
                 imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
@@ -424,68 +491,5 @@ class EditorController extends Game_Controller_Gui
         return $colors;
     }
 
-    function getAverageColor($component, $x, $y)
-    {
-        $number = 0;
-        $average = 0;
-
-        if (!isset($component[$x][$y])) {
-            return 0;
-        }
-
-        if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] != $component[$x - 1][$y - 1]) {
-            $number++;
-            $average += $component[$x - 1][$y - 1];
-        }
-        if (isset($component[$x - 1][$y]) && $component[$x][$y] != $component[$x - 1][$y]) {
-            $number++;
-            $average += $component[$x - 1][$y];
-        }
-        if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] != $component[$x - 1][$y + 1]) {
-            $number++;
-            $average += $component[$x - 1][$y + 1];
-        }
-        if (isset($component[$x][$y - 1]) && $component[$x][$y] != $component[$x][$y - 1]) {
-            $number++;
-            $average += $component[$x][$y - 1];
-        }
-        if (isset($component[$x][$y + 1]) && $component[$x][$y] != $component[$x][$y + 1]) {
-            $number++;
-            $average += $component[$x][$y + 1];
-        }
-        if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] != $component[$x + 1][$y - 1]) {
-            $number++;
-            $average += $component[$x + 1][$y - 1];
-        }
-        if (isset($component[$x + 1][$y]) && $component[$x][$y] != $component[$x + 1][$y]) {
-            $number++;
-            $average += $component[$x + 1][$y];
-        }
-        if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] != $component[$x + 1][$y + 1]) {
-            $number++;
-            $average += $component[$x + 1][$y + 1];
-        }
-
-        if ($number > 4) {
-            return $average / $number;
-        } else {
-            return $component[$x][$y];
-        }
-    }
-
-    function normalize($im, $imX1, $imX2, $imY1, $imY2, $colors)
-    {
-        for ($x = $imX1; $x < $imX2; $x++) {
-            for ($y = $imY1; $y < $imY2; $y++) {
-                $colors['r'][$x][$y] = $this->getAverageColor($colors['r'], $x, $y);
-                $colors['g'][$x][$y] = $this->getAverageColor($colors['g'], $x, $y);
-                $colors['b'][$x][$y] = $this->getAverageColor($colors['b'], $x, $y);
-
-                $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
-                imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
-            }
-        }
-        return $colors;
-    }
 }
 
