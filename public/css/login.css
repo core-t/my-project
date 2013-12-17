@@ -27,4 +27,5 @@ html {
 #versionNumber {
     padding: 5px !important;
     float: right !important;
+    color: #fff !important;
 }
