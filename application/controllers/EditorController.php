@@ -129,7 +129,7 @@ class EditorController extends Game_Controller_Gui
                         $colors = $this->drawWater($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
                         break;
                     case 'M':
-                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 200, 255);
+                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 220, 255);
                         break;
                     case 'm':
                         $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 60, 90);
@@ -147,42 +147,43 @@ class EditorController extends Game_Controller_Gui
             $imY1 += 40;
         }
 
-        $imY1 = 0;
-        for ($fieldsY = $startY; $fieldsY < $endY; $fieldsY++) {
-            $imY2 = $imY1 + 40;
-            $imX1 = 0;
-
-            for ($fieldsX = $startX; $fieldsX < $endX; $fieldsX++) {
-                $imX2 = $imX1 + 40;
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $colors = $this->normalize($im, $imX1, $imX2, $imY1, $imY2, $colors);
-                $imX1 += 40;
+        for ($y = 0; $y < $width; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
+//                $colors = $this->normalize($im, $x, $y, $colors);
             }
-            $imY1 += 40;
         }
 
         header('Content-Type: image/png');
-
         imagepng($im);
         imagedestroy($im);
     }
 
-    function normalize($im, $imX1, $imX2, $imY1, $imY2, $colors)
+    function normalize($im, $x, $y, $colors)
     {
-        for ($x = $imX1; $x < $imX2; $x++) {
-            for ($y = $imY1; $y < $imY2; $y++) {
-                $colors['r'][$x][$y] = $this->getAverageColor($colors['r'], $x, $y);
-                $colors['g'][$x][$y] = $this->getAverageColor($colors['g'], $x, $y);
-                $colors['b'][$x][$y] = $this->getAverageColor($colors['b'], $x, $y);
+        $colors['r'][$x][$y] = $this->getAverageColor($colors['r'], $x, $y);
+        $colors['g'][$x][$y] = $this->getAverageColor($colors['g'], $x, $y);
+        $colors['b'][$x][$y] = $this->getAverageColor($colors['b'], $x, $y);
 
-                $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
-                imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
-            }
-        }
+        $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
+        imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
+
         return $colors;
     }
 
