@@ -26,7 +26,7 @@ class Application_Model_Mapper
         $this->_width = $this->_numberOfFields * 40;
         $this->_height = $this->_width;
 
-        $this->_startX = 40;
+        $this->_startX = 39;
         $this->_endX = $this->_startX + $this->_numberOfFields;
         $this->_startY = 80;
         $this->_endY = $this->_startY + $this->_numberOfFields;
@@ -47,6 +47,7 @@ class Application_Model_Mapper
         $mDrawMountain = new Application_Model_DrawMountain($this->_fields);
         $mDrawHill = new Application_Model_DrawHill($this->_fields);
         $mDrawRoad = new Application_Model_DrawRoad($this->_fields);
+        $mDrawBridge = new Application_Model_DrawBridge($this->_fields);
         $imY1 = 0;
 
         for ($fieldsY = $this->_startY; $fieldsY < $this->_endY; $fieldsY++) {
@@ -64,7 +65,6 @@ class Application_Model_Mapper
 
                 switch ($type) {
                     case 'g':
-//                        $colors = $this->drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
                         break;
                     case 'f':
                         $mDrawForest->setColors($this->_colors);
@@ -92,7 +92,9 @@ class Application_Model_Mapper
                         $this->_colors = $mDrawRoad->getColors();
                         break;
                     case 'b':
-//                        $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
+                        $mDrawBridge->setColors($this->_colors);
+                        $mDrawBridge->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawBridge->getColors();
                         break;
                 }
 

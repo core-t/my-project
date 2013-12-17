@@ -2,6 +2,8 @@
 
 class Application_Model_DrawForest extends Application_Model_Draw
 {
+    protected $_maxRadius = 30;
+
     protected function setInnerColors($x, $y)
     {
         $this->_colors['r'][$x][$y] = 0;

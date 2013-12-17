@@ -8,6 +8,11 @@ class Application_Model_Draw
         'b' => array()
     );
     private $_fields;
+    protected $_minRadius = 13;
+    protected $_maxRadius = 20;
+    protected $_borderWidth = 17;
+    protected $_borderHeight = 7;
+    protected $_random = 3;
 
     public function __construct($fields)
     {
@@ -50,84 +55,83 @@ class Application_Model_Draw
 
     function draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type)
     {
-        $minRadiusSquared = pow(13, 2);
-        $maxRadiusSquared = pow(20, 2);
+        $minRadiusSquared = pow($this->_minRadius, 2);
+        $maxRadiusSquared = pow($this->_maxRadius, 2);
+
         $centerX = $imX1 + 20;
         $centerY = $imY1 + 20;
-        $borderWidth = 17;
-        $borderHeight = 7;
 
         for ($x = $imX1; $x < $imX2; $x++) {
             for ($y = $imY1; $y < $imY2; $y++) {
-
                 $this->setInnerColors($x, $y);
 
-                if (rand(0, 3) < 1) {
-                    continue;
+                $notSkip = 1;
+                if (rand(0, $this->_random) < 1) {
+                    $notSkip = 0;
                 }
 
                 $val = pow($x - $centerX, 2) + pow($y - $centerY, 2);
 
                 if ($this->checkField($fieldsY, $fieldsX, 'left', $type)) { // brak takiego samego pola po lewej
-                    if ($x < $imX1 + $borderHeight && $y >= $imY1 + $borderWidth && $y <= $imY2 - $borderWidth) {
+                    if ($notSkip && $x < $imX1 + $this->_borderHeight && $y >= $imY1 + $this->_borderWidth && $y <= $imY2 - $this->_borderWidth) {
                         $this->setBorderColors($x, $y);
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'top', $type)) { // brak takiego samego pola nad
-                        if ($x >= $imX1 + $borderWidth && $x <= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
+                        if ($notSkip && $x >= $imX1 + $this->_borderWidth && $x <= $imX2 - $this->_borderWidth && $y < $imY1 + $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
 
-                        if ($x <= $imX1 + $borderWidth && $y <= $imY1 + $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
+                        if ($x <= $imX1 + $this->_borderWidth && $y <= $imY1 + $this->_borderWidth) {
+                            if ($notSkip && $val < $maxRadiusSquared && $val > $minRadiusSquared) {
                                 $this->setBorderColors($x, $y);
                             } elseif ($val > $maxRadiusSquared) {
                                 $this->setOuterColors($x, $y);
                             }
                         }
                     } else { //jest woda nad
-                        if ($x < $imX1 + $borderHeight && $y <= $imY1 + $borderWidth) {
+                        if ($notSkip && $x < $imX1 + $this->_borderHeight && $y <= $imY1 + $this->_borderWidth) {
                             $this->setBorderColors($x, $y);
                         }
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'bottom', $type)) { // brak takiego samego pola pod
-                        if ($x >= $imX1 + $borderWidth && $x <= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
+                        if ($notSkip && $x >= $imX1 + $this->_borderWidth && $x <= $imX2 - $this->_borderWidth && $y > $imY2 - $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
 
-                        if ($x <= $imX1 + $borderWidth && $y >= $imY2 - $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
+                        if ($x <= $imX1 + $this->_borderWidth && $y >= $imY2 - $this->_borderWidth) {
+                            if ($notSkip && $val < $maxRadiusSquared && $val > $minRadiusSquared) {
                                 $this->setBorderColors($x, $y);
                             } elseif ($val > $maxRadiusSquared) {
                                 $this->setOuterColors($x, $y);
                             }
                         }
                     } else { //jest woda pod
-                        if ($x < $imX1 + $borderHeight && $y >= $imY2 - $borderWidth) {
+                        if ($notSkip && $x < $imX1 + $this->_borderHeight && $y >= $imY2 - $this->_borderWidth) {
                             $this->setBorderColors($x, $y);
                         }
                     }
-                } else { // jest woda po lewej
+                } elseif ($notSkip) { // jest woda po lewej
                     if ($this->checkField($fieldsY, $fieldsX, 'top', $type)) { // brak takiego samego pola nad
-                        if ($x <= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
+                        if ($x <= $imX2 - $this->_borderWidth && $y < $imY1 + $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
                     } else {
                         if ($this->checkField($fieldsY, $fieldsX, 'top-left', $type)) { // brak takiego samego pola po lewej nad
-                            if ($x < $imX1 + $borderHeight && $y < $imY1 + $borderHeight) {
+                            if ($x < $imX1 + $this->_borderHeight && $y < $imY1 + $this->_borderHeight) {
                                 $this->setBorderColors($x, $y);
                             }
                         }
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'bottom', $type)) { // brak takiego samego pola pod
-                        if ($x <= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
+                        if ($x <= $imX2 - $this->_borderWidth && $y > $imY2 - $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
                     } else {
                         if ($this->checkField($fieldsY, $fieldsX, 'bottom-left', $type)) { // brak takiego samego pola po lewej pod
-                            if ($x < $imX1 + $borderHeight && $y > $imY2 - $borderHeight) {
+                            if ($x < $imX1 + $this->_borderHeight && $y > $imY2 - $this->_borderHeight) {
                                 $this->setBorderColors($x, $y);
                             }
                         }
@@ -135,57 +139,57 @@ class Application_Model_Draw
                 }
 
                 if ($this->checkField($fieldsY, $fieldsX, 'right', $type)) { // brak takiego samego pola po prawej
-                    if ($x > $imX2 - $borderHeight && $y >= $imY1 + $borderWidth && $y <= $imY2 - $borderWidth) {
+                    if ($notSkip && $x > $imX2 - $this->_borderHeight && $y >= $imY1 + $this->_borderWidth && $y <= $imY2 - $this->_borderWidth) {
                         $this->setBorderColors($x, $y);
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'top', $type)) { // brak takiego samego pola nad
-                        if ($x >= $imX2 - $borderWidth && $y <= $imY1 + $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
+                        if ($x >= $imX2 - $this->_borderWidth && $y <= $imY1 + $this->_borderWidth) {
+                            if ($notSkip && $val < $maxRadiusSquared && $val > $minRadiusSquared) {
                                 $this->setBorderColors($x, $y);
                             } elseif ($val > $maxRadiusSquared) {
                                 $this->setOuterColors($x, $y);
                             }
                         }
                     } else { //jest woda nad
-                        if ($x > $imX2 - $borderHeight && $y <= $imY1 + $borderWidth) {
+                        if ($notSkip && $x > $imX2 - $this->_borderHeight && $y <= $imY1 + $this->_borderWidth) {
                             $this->setBorderColors($x, $y);
                         }
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'bottom', $type)) { // brak takiego samego pola pod
-                        if ($x >= $imX2 - $borderWidth && $y >= $imY2 - $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
+                        if ($x >= $imX2 - $this->_borderWidth && $y >= $imY2 - $this->_borderWidth) {
+                            if ($notSkip && $val < $maxRadiusSquared && $val > $minRadiusSquared) {
                                 $this->setBorderColors($x, $y);
                             } elseif ($val > $maxRadiusSquared) {
                                 $this->setOuterColors($x, $y);
                             }
                         }
                     } else {
-                        if ($x > $imX2 - $borderHeight && $y >= $imY2 - $borderWidth) {
+                        if ($notSkip && $x > $imX2 - $this->_borderHeight && $y >= $imY2 - $this->_borderWidth) {
                             $this->setBorderColors($x, $y);
                         }
                     }
-                } else { // jest woda po prawej
+                } elseif ($notSkip) { // jest woda po prawej
                     if ($this->checkField($fieldsY, $fieldsX, 'top', $type)) { // brak takiego samego pola nad
-                        if ($x >= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
+                        if ($x >= $imX2 - $this->_borderWidth && $y < $imY1 + $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
                     } else {
                         if ($this->checkField($fieldsY, $fieldsX, 'top-right', $type)) { // brak takiego samego pola po prawej nad
-                            if ($x > $imX2 - $borderHeight && $y < $imY1 + $borderHeight) {
+                            if ($x > $imX2 - $this->_borderHeight && $y < $imY1 + $this->_borderHeight) {
                                 $this->setBorderColors($x, $y);
                             }
                         }
                     }
 
                     if ($this->checkField($fieldsY, $fieldsX, 'bottom', $type)) { // brak takiego samego pola pod
-                        if ($x >= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
+                        if ($x >= $imX2 - $this->_borderWidth && $y > $imY2 - $this->_borderHeight) {
                             $this->setBorderColors($x, $y);
                         }
                     } else {
                         if ($this->checkField($fieldsY, $fieldsX, 'bottom-right', $type)) { // brak takiego samego pola po prawej pod
-                            if ($x > $imX2 - $borderHeight && $y > $imY2 - $borderHeight) {
+                            if ($x > $imX2 - $this->_borderHeight && $y > $imY2 - $this->_borderHeight) {
                                 $this->setBorderColors($x, $y);
                             }
                         }
@@ -240,6 +244,20 @@ class Application_Model_Draw
                 }
                 break;
         }
+    }
+
+    protected function grass($x, $y)
+    {
+        $this->_colors['r'][$x][$y] = rand(40, 72);
+        $this->_colors['g'][$x][$y] = rand(134, 148);
+        $this->_colors['b'][$x][$y] = rand(40, 100);
+    }
+
+    protected function water($x, $y)
+    {
+        $this->_colors['r'][$x][$y] = 0;
+        $this->_colors['g'][$x][$y] = rand(85, 134);
+        $this->_colors['b'][$x][$y] = 199;
     }
 
 }
