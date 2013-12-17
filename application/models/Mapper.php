@@ -46,6 +46,7 @@ class Application_Model_Mapper
         $mDrawWater = new Application_Model_DrawWater($this->_fields);
         $mDrawMountain = new Application_Model_DrawMountain($this->_fields);
         $mDrawHill = new Application_Model_DrawHill($this->_fields);
+        $mDrawRoad = new Application_Model_DrawRoad($this->_fields);
         $imY1 = 0;
 
         for ($fieldsY = $this->_startY; $fieldsY < $this->_endY; $fieldsY++) {
@@ -86,7 +87,9 @@ class Application_Model_Mapper
                         $this->_colors = $mDrawHill->getColors();
                         break;
                     case 'r':
-//                        $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
+                        $mDrawRoad->setColors($this->_colors);
+                        $mDrawRoad->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawRoad->getColors();
                         break;
                     case 'b':
 //                        $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);

@@ -62,7 +62,7 @@ class Application_Model_Draw
 
                 $this->setInnerColors($x, $y);
 
-                if (rand(0, 2) < 1) {
+                if (rand(0, 3) < 1) {
                     continue;
                 }
 
