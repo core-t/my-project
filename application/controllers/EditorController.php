@@ -2,15 +2,8 @@
 
 class EditorController extends Game_Controller_Gui
 {
-
-    public function _init()
-    {
-
-    }
-
     public function indexAction()
     {
-        // action body
         if ($this->_namespace->mapId) {
             unset($this->_namespace->mapId);
         }
@@ -76,163 +69,15 @@ class EditorController extends Game_Controller_Gui
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $numberOfFields = 15;
-
-        $width = $numberOfFields * 40;
-        $height = $width;
-
-        $startX = 40;
-        $endX = $startX + $numberOfFields;
-        $startY = 80;
-        $endY = $startY + $numberOfFields;
-
-        $im = imagecreatetruecolor($width, $height);
-
-        $colors = array(
-            'r' => array(),
-            'g' => array(),
-            'b' => array()
-        );
-
         $mMapFields = new Application_Model_MapFields(1);
-        $fields = $mMapFields->getMapFields();
 
-        $imY1 = 0;
-
-        for ($fieldsY = $startY; $fieldsY < $endY; $fieldsY++) {
-            $imY2 = $imY1 + 40;
-            $imX1 = 0;
-
-            for ($fieldsX = $startX; $fieldsX < $endX; $fieldsX++) {
-                $type = $fields[$fieldsY][$fieldsX];
-
-                $imX2 = $imX1 + 40;
-
-                $colors = $this->initGrass($im, $imX1, $imX2, $imY1, $imY2, $colors);
-
-                switch ($type) {
-                    case 'g':
-//                        $colors = $this->drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
-                        break;
-                    case 'f':
-//                        $colors = $this->drawForest($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
-                        break;
-                    case 'w':
-                        $colors = $this->drawWater($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
-                        break;
-                    case 'M':
-//                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 220, 255);
-                        break;
-                    case 'm':
-//                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 60, 90);
-                        break;
-                    case 'r':
-//                        $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
-                        break;
-                    case 'b':
-//                        $colors = $this->drawRoad($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
-                        break;
-                }
-
-                $imX1 += 40;
-            }
-            $imY1 += 40;
-        }
-
-        $this->normalize($im, $width, $colors);
+        $mMapper = new Application_Model_Mapper($mMapFields->getMapFields());
+        $mMapper->generate();
+        $im = $mMapper->getIm();
 
         header('Content-Type: image/png');
         imagepng($im);
         imagedestroy($im);
-    }
-
-    function normalize($im, $width, $colors)
-    {
-        for ($y = 0; $y < $width; $y++) {
-            for ($x = 0; $x < $width; $x++) {
-                $colors['r'][$x][$y] = $this->getAverageColor($colors['r'], $x, $y);
-                $colors['g'][$x][$y] = $this->getAverageColor($colors['g'], $x, $y);
-                $colors['b'][$x][$y] = $this->getAverageColor($colors['b'], $x, $y);
-
-                $color = imagecolorallocate($im, $colors['r'][$x][$y], $colors['g'][$x][$y], $colors['b'][$x][$y]);
-                imagefilledrectangle($im, $x, $y, $x + 1, $y + 1, $color);
-            }
-        }
-
-        return $colors;
-    }
-
-    function getAverageColor($component, $x, $y)
-    {
-        $number = 0;
-        $average = 0;
-
-        if (!isset($component[$x][$y])) {
-            return 0;
-        }
-
-        if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] > $component[$x - 1][$y - 1]) {
-            $number++;
-            $average += $component[$x - 1][$y - 1];
-        }
-        if (isset($component[$x - 1][$y]) && $component[$x][$y] > $component[$x - 1][$y]) {
-            $number++;
-            $average += $component[$x - 1][$y];
-        }
-        if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] > $component[$x - 1][$y + 1]) {
-            $number++;
-            $average += $component[$x - 1][$y + 1];
-        }
-        if (isset($component[$x][$y - 1]) && $component[$x][$y] > $component[$x][$y - 1]) {
-            $number++;
-            $average += $component[$x][$y - 1];
-        }
-        if (isset($component[$x][$y + 1]) && $component[$x][$y] > $component[$x][$y + 1]) {
-            $number++;
-            $average += $component[$x][$y + 1];
-        }
-        if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] > $component[$x + 1][$y - 1]) {
-            $number++;
-            $average += $component[$x + 1][$y - 1];
-        }
-        if (isset($component[$x + 1][$y]) && $component[$x][$y] > $component[$x + 1][$y]) {
-            $number++;
-            $average += $component[$x + 1][$y];
-        }
-        if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] > $component[$x + 1][$y + 1]) {
-            $number++;
-            $average += $component[$x + 1][$y + 1];
-        }
-
-        if ($number > 4) {
-            return $average / $number;
-        } else {
-            return $component[$x][$y];
-        }
-    }
-
-    function drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2)
-    {
-        $colors = $this->initGrass($imX1, $imX2, $imY1, $imY2, $colors);
-        return $colors;
-    }
-
-    function drawGrassCd($colors, $x, $y)
-    {
-        $colors['r'][$x][$y] = rand(40, 72);
-        $colors['g'][$x][$y] = rand(134, 148);
-        $colors['b'][$x][$y] = rand(40, 100);
-        return $colors;
-    }
-
-    function initGrass($imX1, $imX2, $imY1, $imY2, $colors)
-    {
-        for ($x = $imX1; $x < $imX2; $x++) {
-            for ($y = $imY1; $y < $imY2; $y++) {
-                $colors = $this->drawGrassCd($colors, $x, $y);
-            }
-        }
-        return $colors;
     }
 
     function drawForest($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2)

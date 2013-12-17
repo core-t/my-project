@@ -17,8 +17,7 @@ class Application_Model_Mapper
     private $_startY;
     private $_endY;
 
-    static private $_numberOfFields = 15;
-
+    private $_numberOfFields = 15;
 
     public function __construct($fields)
     {
@@ -28,15 +27,24 @@ class Application_Model_Mapper
         $this->_height = $this->_width;
 
         $this->_startX = 40;
-        $this->_endX = $this->_startX + $this->numberOfFields;
+        $this->_endX = $this->_startX + $this->_numberOfFields;
         $this->_startY = 80;
-        $this->_endY = $this->_startY + $this->numberOfFields;
+        $this->_endY = $this->_startY + $this->_numberOfFields;
 
         $this->_im = imagecreatetruecolor($this->_width, $this->_height);
     }
 
+    public function getIm()
+    {
+        return $this->_im;
+    }
+
     public function generate()
     {
+        $mDraw = new Application_Model_Draw($this->_fields);
+        $mDrawForest = new Application_Model_DrawForest($this->_fields);
+        $mDrawWater = new Application_Model_DrawWater($this->_fields);
+        $mDrawMountain = new Application_Model_DrawMountain($this->_fields);
         $imY1 = 0;
 
         for ($fieldsY = $this->_startY; $fieldsY < $this->_endY; $fieldsY++) {
@@ -48,20 +56,28 @@ class Application_Model_Mapper
 
                 $imX2 = $imX1 + 40;
 
-                $this->initGrass($imX1, $imX2, $imY1, $imY2);
+                $mDraw->setColors($this->_colors);
+                $mDraw->initGrass($imX1, $imX2, $imY1, $imY2);
+                $this->_colors = $mDraw->getColors();
 
                 switch ($type) {
                     case 'g':
 //                        $colors = $this->drawGrass($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
                         break;
                     case 'f':
-//                        $colors = $this->drawForest($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2);
+                        $mDrawForest->setColors($this->_colors);
+                        $mDrawForest->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawForest->getColors();
                         break;
                     case 'w':
-                        $colors = $this->drawWater($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2);
+                        $mDrawWater->setColors($this->_colors);
+                        $mDrawWater->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawWater->getColors();
                         break;
                     case 'M':
-//                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 220, 255);
+                        $mDrawMountain->setColors($this->_colors);
+                        $mDrawMountain->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawMountain->getColors();
                         break;
                     case 'm':
 //                        $colors = $this->draw($fields, $fieldsY, $fieldsX, $colors, $im, $imX1, $imY1, $imX2, $imY2, $type, 60, 90);
@@ -145,167 +161,4 @@ class Application_Model_Mapper
         }
     }
 
-    function drawGrassCd($x, $y)
-    {
-        $this->_colors['r'][$x][$y] = rand(40, 72);
-        $this->_colors['g'][$x][$y] = rand(134, 148);
-        $this->_colors['b'][$x][$y] = rand(40, 100);
-    }
-
-    function initGrass($imX1, $imX2, $imY1, $imY2)
-    {
-        for ($x = $imX1; $x < $imX2; $x++) {
-            for ($y = $imY1; $y < $imY2; $y++) {
-                $this->drawGrassCd($x, $y);
-            }
-        }
-    }
-
-    function drawWater($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2)
-    {
-        $minRadiusSquared = pow(13, 2);
-        $maxRadiusSquared = pow(20, 2);
-        $centerX = $imX1 + 20;
-        $centerY = $imY1 + 20;
-        $borderWidth = 17;
-        $borderHeight = 7;
-
-        for ($x = $imX1; $x < $imX2; $x++) {
-            for ($y = $imY1; $y < $imY2; $y++) {
-
-                $this->drawWaterCd($x, $y);
-
-//                if (rand(0, 2) < 1) {
-//                    continue;
-//                }
-
-                $val = pow($x - $centerX, 2) + pow($y - $centerY, 2);
-
-                if ($this->checkField($fieldsY, $fieldsX, 'left', 'w')) { // brak wody po lewej
-                    if ($x < $imX1 + $borderHeight && $y >= $imY1 + $borderWidth && $y <= $imY2 - $borderWidth) {
-                        $this->drawSandCd($x, $y);
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'top', 'w')) { // brak wody nad
-                        if ($x >= $imX1 + $borderWidth && $x <= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-
-                        if ($x <= $imX1 + $borderWidth && $y <= $imY1 + $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
-                                $this->drawSandCd($x, $y);
-                            } elseif ($val > $maxRadiusSquared) {
-                                $this->drawGrassCd($x, $y);
-                            }
-                        }
-                    } else { //jest woda nad
-                        if ($x < $imX1 + $borderHeight && $y <= $imY1 + $borderWidth) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'bottom', 'w')) { // brak wody pod
-                        if ($x >= $imX1 + $borderWidth && $x <= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-
-                        if ($x <= $imX1 + $borderWidth && $y >= $imY2 - $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
-                                $this->drawSandCd($x, $y);
-                            } elseif ($val > $maxRadiusSquared) {
-                                $this->drawGrassCd($x, $y);
-                            }
-                        }
-                    } else { //jest woda pod
-                        if ($x < $imX1 + $borderHeight && $y >= $imY2 - $borderWidth) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    }
-                } else { // jest woda po lewej
-                    if ($this->checkField($fieldsY, $fieldsX, 'top', 'w')) { // brak wody nad
-                        if ($x <= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    } else {
-                        if ($this->checkField($fieldsY, $fieldsX, 'top-left', 'w')) { // brak wody po lewej nad
-                            if ($x < $imX1 + $borderHeight && $y < $imY1 + $borderHeight) {
-                                $this->drawSandCd($x, $y);
-                            }
-                        }
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'bottom', 'w')) { // brak wody pod
-                        if ($x <= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    } else {
-                        if ($this->checkField($fieldsY, $fieldsX, 'bottom-left', 'w')) { // brak wody po lewej pod
-                            if ($x < $imX1 + $borderHeight && $y > $imY2 - $borderHeight) {
-                                $this->drawSandCd($x, $y);
-                            }
-                        }
-                    }
-                }
-
-                if ($this->checkField($fieldsY, $fieldsX, 'right', 'w')) { // brak wody po prawej
-                    if ($x > $imX2 - $borderHeight && $y >= $imY1 + $borderWidth && $y <= $imY2 - $borderWidth) {
-                        $this->drawSandCd($x, $y);
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'top', 'w')) { // brak wody nad
-                        if ($x >= $imX2 - $borderWidth && $y <= $imY1 + $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
-                                $this->drawSandCd($x, $y);
-                            } elseif ($val > $maxRadiusSquared) {
-                                $this->drawGrassCd($x, $y);
-                            }
-                        }
-                    } else { //jest woda nad
-                        if ($x > $imX2 - $borderHeight && $y <= $imY1 + $borderWidth) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'bottom', 'w')) { // brak wody pod
-                        if ($x >= $imX2 - $borderWidth && $y >= $imY2 - $borderWidth) {
-                            if ($val < $maxRadiusSquared && $val > $minRadiusSquared) {
-                                $this->drawSandCd($x, $y);
-                            } elseif ($val > $maxRadiusSquared) {
-                                $this->drawGrassCd($x, $y);
-                            }
-                        }
-                    } else {
-                        if ($x > $imX2 - $borderHeight && $y >= $imY2 - $borderWidth) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    }
-                } else { // jest woda po prawej
-                    if ($this->checkField($fieldsY, $fieldsX, 'top', 'w')) { // brak wody nad
-                        if ($x >= $imX2 - $borderWidth && $y < $imY1 + $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    } else {
-                        if ($this->checkField($fieldsY, $fieldsX, 'top-right', 'w')) { // brak wody po prawej nad
-                            if ($x > $imX2 - $borderHeight && $y < $imY1 + $borderHeight) {
-                                $this->drawSandCd($x, $y);
-                            }
-                        }
-                    }
-
-                    if ($this->checkField($fieldsY, $fieldsX, 'bottom', 'w')) { // brak wody pod
-                        if ($x >= $imX2 - $borderWidth && $y > $imY2 - $borderHeight) {
-                            $this->drawSandCd($x, $y);
-                        }
-                    } else {
-                        if ($this->checkField($fieldsY, $fieldsX, 'bottom-right', 'w')) { // brak wody po prawej pod
-                            if ($x > $imX2 - $borderHeight && $y > $imY2 - $borderHeight) {
-                                $this->drawSandCd($x, $y);
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-    }
 }
