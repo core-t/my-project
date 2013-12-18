@@ -117,12 +117,20 @@ class Application_Model_Mapper
             $imY1 += 40;
         }
 
-        $this->normalize(0);
+//        $this->normalize(0);
+//        $this->normalize(1);
+//        $this->normalize(1);
+//        $this->normalize(1);
+        $this->test();
+        $this->test();
         $this->normalize(1);
         $this->normalize(1);
         $this->normalize(1);
         $this->normalize(1);
-//        $this->test();
+        $this->normalize(1);
+        $this->normalize(1);
+        $this->normalize(1);
+        $this->normalize(1);
 
         $this->drawColors();
     }
@@ -152,9 +160,9 @@ class Application_Model_Mapper
     {
         for ($y = 0; $y < $this->_height; $y++) {
             for ($x = 0; $x < $this->_width; $x++) {
-                $this->_colors['r'][$x][$y] = $this->getDominantColor($this->_colors['r'], $x, $y);
-                $this->_colors['g'][$x][$y] = $this->getDominantColor($this->_colors['g'], $x, $y);
-                $this->_colors['b'][$x][$y] = $this->getDominantColor($this->_colors['b'], $x, $y);
+                $this->_colors['r'][$x][$y] = $this->getRandomColor($this->_colors['r'], $x, $y);
+                $this->_colors['g'][$x][$y] = $this->getRandomColor($this->_colors['g'], $x, $y);
+                $this->_colors['b'][$x][$y] = $this->getRandomColor($this->_colors['b'], $x, $y);
             }
         }
     }
@@ -319,6 +327,35 @@ class Application_Model_Mapper
         asort($colors);
 
         return key($colors);
+    }
+
+    private function getRandomColor($component, $x, $y)
+    {
+        $average = 0;
+
+        if (!isset($component[$x][$y])) {
+            return 255;
+        }
+
+        $randX = rand(-5, 5);
+        $randY = rand(-5, 5);
+        if (isset($component[$x + $randX][$y + $randY])) {
+            $average += $component[$x + $randX][$y + $randY];
+        }
+
+        if (isset($component[$x + $randX][$y + $randY])) {
+            $average += $component[$x + $randX][$y + $randY];
+        }
+
+        if (isset($component[$x + $randX][$y + $randY])) {
+            $average += $component[$x + $randX][$y + $randY];
+        }
+
+        if (isset($component[$x + $randX][$y + $randY])) {
+            $average += $component[$x + $randX][$y + $randY];
+        }
+
+        return $average / 4;
     }
 
 }
