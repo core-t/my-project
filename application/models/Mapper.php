@@ -17,7 +17,7 @@ class Application_Model_Mapper
     private $_startY;
     private $_endY;
 
-    private $_numberOfFields = 15;
+    private $_numberOfFields = 20;
 
     public function __construct($fields)
     {
@@ -73,6 +73,7 @@ class Application_Model_Mapper
                         break;
                     case 'w':
                         $mDrawWater->setColors($this->_colors);
+                        $mDrawWater->setBorderHeight();
                         $mDrawWater->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
                         $this->_colors = $mDrawWater->getColors();
                         break;
@@ -103,7 +104,22 @@ class Application_Model_Mapper
             $imY1 += 40;
         }
 
-        $this->normalize();
+//        $this->normalize();
+//        $this->normalize();
+//        $this->normalize();
+        $this->test();
+
+        $this->drawColors();
+    }
+
+    private function drawColors()
+    {
+        for ($y = 0; $y < $this->_height; $y++) {
+            for ($x = 0; $x < $this->_width; $x++) {
+                $color = imagecolorallocate($this->_im, $this->_colors['r'][$x][$y], $this->_colors['g'][$x][$y], $this->_colors['b'][$x][$y]);
+                imagefilledrectangle($this->_im, $x, $y, $x + 1, $y + 1, $color);
+            }
+        }
     }
 
     private function normalize()
@@ -113,9 +129,17 @@ class Application_Model_Mapper
                 $this->_colors['r'][$x][$y] = $this->getAverageColor($this->_colors['r'], $x, $y);
                 $this->_colors['g'][$x][$y] = $this->getAverageColor($this->_colors['g'], $x, $y);
                 $this->_colors['b'][$x][$y] = $this->getAverageColor($this->_colors['b'], $x, $y);
+            }
+        }
+    }
 
-                $color = imagecolorallocate($this->_im, $this->_colors['r'][$x][$y], $this->_colors['g'][$x][$y], $this->_colors['b'][$x][$y]);
-                imagefilledrectangle($this->_im, $x, $y, $x + 1, $y + 1, $color);
+    private function test()
+    {
+        for ($y = 0; $y < $this->_height; $y++) {
+            for ($x = 0; $x < $this->_width; $x++) {
+                $this->_colors['r'][$x][$y] = $this->getDominantColor($this->_colors['r'], $x, $y);
+                $this->_colors['g'][$x][$y] = $this->getDominantColor($this->_colors['g'], $x, $y);
+                $this->_colors['b'][$x][$y] = $this->getDominantColor($this->_colors['b'], $x, $y);
             }
         }
     }
@@ -167,6 +191,84 @@ class Application_Model_Mapper
         } else {
             return $component[$x][$y];
         }
+    }
+
+    private function getDominantColor($component, $x, $y)
+    {
+        $colors = array();
+
+        if (!isset($component[$x][$y])) {
+            return 0;
+        }
+
+        if (isset($component[$x - 1][$y - 1])) {
+            if (isset($colors[$component[$x - 1][$y - 1]])) {
+                $colors[$component[$x - 1][$y - 1]]++;
+            } else {
+                $colors[$component[$x - 1][$y - 1]] = 1;
+            }
+        }
+        if (isset($component[$x - 1][$y])) {
+            if (isset($colors[$component[$x - 1][$y]])) {
+                $colors[$component[$x - 1][$y]]++;
+            } else {
+                $colors[$component[$x - 1][$y]] = 1;
+            }
+        }
+        if (isset($component[$x - 1][$y + 1])) {
+            if (isset($colors[$component[$x - 1][$y + 1]])) {
+                $colors[$component[$x - 1][$y + 1]]++;
+            } else {
+                $colors[$component[$x - 1][$y + 1]] = 1;
+            }
+        }
+        if (isset($component[$x][$y - 1])) {
+            if (isset($colors[$component[$x][$y - 1]])) {
+                $colors[$component[$x][$y - 1]]++;
+            } else {
+                $colors[$component[$x][$y - 1]] = 1;
+            }
+        }
+        if (isset($component[$x][$y + 1])) {
+            if (isset($colors[$component[$x][$y + 1]])) {
+                $colors[$component[$x][$y + 1]]++;
+            } else {
+                $colors[$component[$x][$y + 1]] = 1;
+            }
+        }
+        if (isset($component[$x + 1][$y - 1])) {
+            if (isset($colors[$component[$x + 1][$y - 1]])) {
+                $colors[$component[$x + 1][$y - 1]]++;
+            } else {
+                $colors[$component[$x + 1][$y - 1]] = 1;
+            }
+        }
+        if (isset($component[$x + 1][$y])) {
+            if (isset($colors[$component[$x + 1][$y]])) {
+                $colors[$component[$x + 1][$y]]++;
+            } else {
+                $colors[$component[$x + 1][$y]] = 1;
+            }
+        }
+        if (isset($component[$x + 1][$y + 1])) {
+            if (isset($colors[$component[$x + 1][$y + 1]])) {
+                $colors[$component[$x + 1][$y + 1]]++;
+            } else {
+                $colors[$component[$x + 1][$y + 1]] = 1;
+            }
+        }
+
+        $tmpVal = 0;
+        foreach ($colors as $val) {
+            if ($val > $tmpVal) {
+                $tmpVal = $val;
+            }
+        }
+
+        end($colors);
+        asort($colors);
+
+        return key($colors);
     }
 
 }

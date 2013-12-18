@@ -21,10 +21,26 @@ class Application_Model_DrawMountain extends Application_Model_Draw
 
     protected function setBorderColors($x, $y)
     {
-        $rand = rand(60, 120);
+        if (rand(0, 3) > 0) {
+            $rand = rand(60, 120);
 
-        $this->_colors['r'][$x][$y] = $rand;
-        $this->_colors['g'][$x][$y] = $rand;
-        $this->_colors['b'][$x][$y] = $rand;
+            $this->_colors['r'][$x][$y] = $rand;
+            $this->_colors['g'][$x][$y] = $rand;
+            $this->_colors['b'][$x][$y] = $rand;
+        }
     }
+
+    protected function setOuterColors($x, $y)
+    {
+        if (rand(0, 10) > 1) {
+            $rand = rand(60, 90);
+
+            $this->_colors['r'][$x][$y] = $rand;
+            $this->_colors['g'][$x][$y] = $rand;
+            $this->_colors['b'][$x][$y] = $rand;
+        } else {
+            $this->forest($x, $y);
+        }
+    }
+
 }

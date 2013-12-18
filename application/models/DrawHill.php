@@ -7,11 +7,15 @@ class Application_Model_DrawHill extends Application_Model_Draw
 
     protected function setInnerColors($x, $y)
     {
-        $rand = rand($this->_min, $this->_max);
+        if (rand(0, 10) > 1) {
+            $rand = rand($this->_min, $this->_max);
 
-        $this->_colors['r'][$x][$y] = $rand;
-        $this->_colors['g'][$x][$y] = $rand;
-        $this->_colors['b'][$x][$y] = $rand;
+            $this->_colors['r'][$x][$y] = $rand;
+            $this->_colors['g'][$x][$y] = $rand;
+            $this->_colors['b'][$x][$y] = $rand;
+        } else {
+            $this->forest($x, $y);
+        }
     }
 
     protected function setBorderColors($x, $y)

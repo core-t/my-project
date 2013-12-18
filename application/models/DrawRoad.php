@@ -27,6 +27,8 @@ class Application_Model_DrawRoad extends Application_Model_Draw
 
     protected function setBorderColors($x, $y)
     {
-        $this->grass($x, $y);
+        if (rand(0, 3) > 1) {
+            $this->grass($x, $y);
+        }
     }
 }

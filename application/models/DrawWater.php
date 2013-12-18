@@ -9,8 +9,10 @@ class Application_Model_DrawWater extends Application_Model_Draw
 
     protected function setBorderColors($x, $y)
     {
-        $this->_colors['r'][$x][$y] = 199;
-        $this->_colors['g'][$x][$y] = 199;
-        $this->_colors['b'][$x][$y] = 0;
+        if (rand(0, 6) > 1) {
+            $this->_colors['r'][$x][$y] = 199;
+            $this->_colors['g'][$x][$y] = 199;
+            $this->_colors['b'][$x][$y] = 0;
+        }
     }
 }
