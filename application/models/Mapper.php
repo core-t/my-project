@@ -48,15 +48,14 @@ class Application_Model_Mapper
         $mDrawHill = new Application_Model_DrawHill($this->_fields);
         $mDrawRoad = new Application_Model_DrawRoad($this->_fields);
         $mDrawBridge = new Application_Model_DrawBridge($this->_fields);
-        $imY1 = 0;
 
+        $imY1 = 0;
         for ($fieldsY = $this->_startY; $fieldsY < $this->_endY; $fieldsY++) {
             $imY2 = $imY1 + 40;
             $imX1 = 0;
 
             for ($fieldsX = $this->_startX; $fieldsX < $this->_endX; $fieldsX++) {
                 $type = $this->_fields[$fieldsY][$fieldsX];
-
                 $imX2 = $imX1 + 40;
 
                 $mDraw->setColors($this->_colors);
@@ -64,18 +63,33 @@ class Application_Model_Mapper
                 $this->_colors = $mDraw->getColors();
 
                 switch ($type) {
+                    case 'w':
+                        $mDrawWater->setColors($this->_colors);
+                        $mDrawWater->setBorderHeight();
+                        $mDrawWater->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
+                        $this->_colors = $mDrawWater->getColors();
+                        break;
+                }
+                $imX1 += 40;
+            }
+            $imY1 += 40;
+        }
+
+        $imY1 = 0;
+        for ($fieldsY = $this->_startY; $fieldsY < $this->_endY; $fieldsY++) {
+            $imY2 = $imY1 + 40;
+            $imX1 = 0;
+
+            for ($fieldsX = $this->_startX; $fieldsX < $this->_endX; $fieldsX++) {
+                $type = $this->_fields[$fieldsY][$fieldsX];
+                $imX2 = $imX1 + 40;
+                switch ($type) {
                     case 'g':
                         break;
                     case 'f':
                         $mDrawForest->setColors($this->_colors);
                         $mDrawForest->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
                         $this->_colors = $mDrawForest->getColors();
-                        break;
-                    case 'w':
-                        $mDrawWater->setColors($this->_colors);
-                        $mDrawWater->setBorderHeight();
-                        $mDrawWater->draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type);
-                        $this->_colors = $mDrawWater->getColors();
                         break;
                     case 'M':
                         $mDrawMountain->setColors($this->_colors);
@@ -98,16 +112,17 @@ class Application_Model_Mapper
                         $this->_colors = $mDrawBridge->getColors();
                         break;
                 }
-
                 $imX1 += 40;
             }
             $imY1 += 40;
         }
 
-//        $this->normalize();
-//        $this->normalize();
-//        $this->normalize();
-        $this->test();
+        $this->normalize(0);
+        $this->normalize(1);
+        $this->normalize(1);
+        $this->normalize(1);
+        $this->normalize(1);
+//        $this->test();
 
         $this->drawColors();
     }
@@ -122,13 +137,13 @@ class Application_Model_Mapper
         }
     }
 
-    private function normalize()
+    private function normalize($more)
     {
         for ($y = 0; $y < $this->_height; $y++) {
             for ($x = 0; $x < $this->_width; $x++) {
-                $this->_colors['r'][$x][$y] = $this->getAverageColor($this->_colors['r'], $x, $y);
-                $this->_colors['g'][$x][$y] = $this->getAverageColor($this->_colors['g'], $x, $y);
-                $this->_colors['b'][$x][$y] = $this->getAverageColor($this->_colors['b'], $x, $y);
+                $this->_colors['r'][$x][$y] = $this->getAverageColor($this->_colors['r'], $x, $y, $more);
+                $this->_colors['g'][$x][$y] = $this->getAverageColor($this->_colors['g'], $x, $y, $more);
+                $this->_colors['b'][$x][$y] = $this->getAverageColor($this->_colors['b'], $x, $y, $more);
             }
         }
     }
@@ -144,7 +159,7 @@ class Application_Model_Mapper
         }
     }
 
-    private function getAverageColor($component, $x, $y)
+    private function getAverageColor($component, $x, $y, $more)
     {
         $number = 0;
         $average = 0;
@@ -153,37 +168,72 @@ class Application_Model_Mapper
             return 0;
         }
 
-        if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] > $component[$x - 1][$y - 1]) {
-            $number++;
-            $average += $component[$x - 1][$y - 1];
-        }
-        if (isset($component[$x - 1][$y]) && $component[$x][$y] > $component[$x - 1][$y]) {
-            $number++;
-            $average += $component[$x - 1][$y];
-        }
-        if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] > $component[$x - 1][$y + 1]) {
-            $number++;
-            $average += $component[$x - 1][$y + 1];
-        }
-        if (isset($component[$x][$y - 1]) && $component[$x][$y] > $component[$x][$y - 1]) {
-            $number++;
-            $average += $component[$x][$y - 1];
-        }
-        if (isset($component[$x][$y + 1]) && $component[$x][$y] > $component[$x][$y + 1]) {
-            $number++;
-            $average += $component[$x][$y + 1];
-        }
-        if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] > $component[$x + 1][$y - 1]) {
-            $number++;
-            $average += $component[$x + 1][$y - 1];
-        }
-        if (isset($component[$x + 1][$y]) && $component[$x][$y] > $component[$x + 1][$y]) {
-            $number++;
-            $average += $component[$x + 1][$y];
-        }
-        if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] > $component[$x + 1][$y + 1]) {
-            $number++;
-            $average += $component[$x + 1][$y + 1];
+        if ($more) {
+            if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] > $component[$x - 1][$y - 1]) {
+                $number++;
+                $average += $component[$x - 1][$y - 1];
+            }
+            if (isset($component[$x - 1][$y]) && $component[$x][$y] > $component[$x - 1][$y]) {
+                $number++;
+                $average += $component[$x - 1][$y];
+            }
+            if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] > $component[$x - 1][$y + 1]) {
+                $number++;
+                $average += $component[$x - 1][$y + 1];
+            }
+            if (isset($component[$x][$y - 1]) && $component[$x][$y] > $component[$x][$y - 1]) {
+                $number++;
+                $average += $component[$x][$y - 1];
+            }
+            if (isset($component[$x][$y + 1]) && $component[$x][$y] > $component[$x][$y + 1]) {
+                $number++;
+                $average += $component[$x][$y + 1];
+            }
+            if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] > $component[$x + 1][$y - 1]) {
+                $number++;
+                $average += $component[$x + 1][$y - 1];
+            }
+            if (isset($component[$x + 1][$y]) && $component[$x][$y] > $component[$x + 1][$y]) {
+                $number++;
+                $average += $component[$x + 1][$y];
+            }
+            if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] > $component[$x + 1][$y + 1]) {
+                $number++;
+                $average += $component[$x + 1][$y + 1];
+            }
+        } else {
+            if (isset($component[$x - 1][$y - 1]) && $component[$x][$y] < $component[$x - 1][$y - 1]) {
+                $number++;
+                $average += $component[$x - 1][$y - 1];
+            }
+            if (isset($component[$x - 1][$y]) && $component[$x][$y] < $component[$x - 1][$y]) {
+                $number++;
+                $average += $component[$x - 1][$y];
+            }
+            if (isset($component[$x - 1][$y + 1]) && $component[$x][$y] < $component[$x - 1][$y + 1]) {
+                $number++;
+                $average += $component[$x - 1][$y + 1];
+            }
+            if (isset($component[$x][$y - 1]) && $component[$x][$y] < $component[$x][$y - 1]) {
+                $number++;
+                $average += $component[$x][$y - 1];
+            }
+            if (isset($component[$x][$y + 1]) && $component[$x][$y] < $component[$x][$y + 1]) {
+                $number++;
+                $average += $component[$x][$y + 1];
+            }
+            if (isset($component[$x + 1][$y - 1]) && $component[$x][$y] < $component[$x + 1][$y - 1]) {
+                $number++;
+                $average += $component[$x + 1][$y - 1];
+            }
+            if (isset($component[$x + 1][$y]) && $component[$x][$y] < $component[$x + 1][$y]) {
+                $number++;
+                $average += $component[$x + 1][$y];
+            }
+            if (isset($component[$x + 1][$y + 1]) && $component[$x][$y] < $component[$x + 1][$y + 1]) {
+                $number++;
+                $average += $component[$x + 1][$y + 1];
+            }
         }
 
         if ($number > 4) {

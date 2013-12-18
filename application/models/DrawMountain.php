@@ -22,7 +22,7 @@ class Application_Model_DrawMountain extends Application_Model_Draw
     protected function setBorderColors($x, $y)
     {
         if (rand(0, 3) > 0) {
-            $rand = rand(60, 120);
+            $rand = rand(60, 110);
 
             $this->_colors['r'][$x][$y] = $rand;
             $this->_colors['g'][$x][$y] = $rand;

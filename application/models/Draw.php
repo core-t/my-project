@@ -52,15 +52,23 @@ class Application_Model_Draw
 
     public function setBorderHeight()
     {
-        $this->_borderHeight = 7;
-        $this->_borderHeight = rand($this->_borderHeight / 2, $this->_borderHeight + $this->_borderHeight);
-        $this->_minRadius = 13;
-        $this->_minRadius = rand($this->_minRadius / 2, $this->_minRadius + $this->_minRadius);
+        $this->_borderHeight += rand(-2, 2);
+        if ($this->_borderHeight < 4) {
+            $this->_borderHeight = 4;
+        } elseif ($this->_borderHeight > 14) {
+            $this->_borderHeight = 14;
+        }
+
+        $this->_minRadius = 20 - $this->_borderHeight;
+        $this->_maxRadius = $this->_minRadius + $this->_borderHeight;
+
+        if ($this->_maxRadius > 25) {
+            $this->_maxRadius = 25;
+        }
     }
 
     function draw($fieldsY, $fieldsX, $imX1, $imY1, $imX2, $imY2, $type)
     {
-//        $this->_minRadius = rand(0,$this->_minRadius);
         $minRadiusSquared = pow($this->_minRadius, 2);
         $maxRadiusSquared = pow($this->_maxRadius, 2);
 

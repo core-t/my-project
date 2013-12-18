@@ -7,7 +7,7 @@ class Application_Model_DrawHill extends Application_Model_Draw
 
     protected function setInnerColors($x, $y)
     {
-        if (rand(0, 10) > 1) {
+        if (rand(0, 20) > 1) {
             $rand = rand($this->_min, $this->_max);
 
             $this->_colors['r'][$x][$y] = $rand;
