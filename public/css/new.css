@@ -39,3 +39,7 @@
 #join{
     margin-top: 3px;
 }
+
+#numberOfPlayers-label {
+    display: none;
+}

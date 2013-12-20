@@ -43,29 +43,13 @@ class Application_Model_Map extends Coret_Db_Table_Abstract
         }
     }
 
-//    public function getMapByPlayerId($playerId)
-//    {
-//        $select = $this->_db->select()
-//            ->from($this->_name)
-//            ->where('"' . $this->_primary . '" = ?', $this->mapId)
-//            ->where('"playerId" = ?', $playerId);
-//        try {
-//            return $this->_db->fetchOne($select);
-//        } catch (PDOException $e) {
-//            throw new Exception($select->__toString());
-//        }
-//    }
-
     public function getMap()
     {
         $select = $this->_db->select()
             ->from($this->_name)
             ->where($this->_db->quoteIdentifier($this->_primary) . ' = ?', $this->mapId);
-        try {
-            return $this->_db->fetchRow($select);
-        } catch (PDOException $e) {
-            throw new Exception($select->__toString());
-        }
+
+        return $this->selectRow($select);
     }
 
     public function getMapName()

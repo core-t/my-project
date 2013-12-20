@@ -18,33 +18,19 @@ class Application_Model_Game extends Coret_Db_Table_Abstract
         }
     }
 
-    private function generateKey()
-    {
-        return md5(rand(0, time()));
-    }
-
-    public function createGame($numberOfPlayers, $playerId, $mapId)
+    public function createGame($params, $playerId)
     {
         $data = array(
-            'numberOfPlayers' => $numberOfPlayers,
+            'numberOfPlayers' => $params['numberOfPlayers'],
             'gameMasterId' => $playerId,
-            'mapId' => $mapId
+            'mapId' => $params['mapId'],
+            'turnsLimit' => $params['turnsLimit'],
+            'turnTimeLimit' => $params['turnTimeLimit'],
+            'timeLimit' => $params['timeLimit'],
         );
 
         $this->_db->insert($this->_name, $data);
-        $this->_gameId = $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
-        return $this->_gameId;
-    }
-
-    public function isActive()
-    {
-        $select = $this->_db->select()
-            ->from($this->_name, $this->_primary)
-            ->where('"isActive" = true')
-            ->where('"' . $this->_primary . '" = ?', $this->_gameId);
-        $result = $this->_db->query($select)->fetchAll();
-        if (!empty($result[0][$this->_primary]))
-            return true;
+        return $this->_db->lastSequenceId($this->_db->quoteIdentifier($this->_sequence));
     }
 
     public function getOpen()

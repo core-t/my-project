@@ -25,8 +25,10 @@ class SetupController extends Game_Controller_Gui
         $mGame = new Application_Model_Game($gameId);
         $mGame->updateGameMaster($this->_namespace->player['playerId']);
 
+        $game = $mGame->getGame();
+
         $mPlayersInGame = new Application_Model_PlayersInGame($gameId);
-        if ($mGame->getGameMasterId() != $this->_namespace->player['playerId']) {
+        if ($game['gameMasterId'] != $this->_namespace->player['playerId']) {
             if ($mPlayersInGame->isPlayerInGame($this->_namespace->player['playerId'])) {
                 $mPlayersInGame->disconnectFromGame($this->_namespace->player['playerId']);
             }
@@ -35,13 +37,21 @@ class SetupController extends Game_Controller_Gui
             $mPlayersInGame->joinGame($this->_namespace->player['playerId']);
         }
 
-        $mMapPlayers = new Application_Model_MapPlayers($mGame->getMapId());
+        $mMapPlayers = new Application_Model_MapPlayers($game['mapId']);
 
         $this->view->mapPlayers = $mMapPlayers->getAll();
-        $this->view->numberOfPlayers = $mGame->getNumberOfPlayers();
+        $this->view->numberOfPlayers = $game['numberOfPlayers'];
+        $this->view->timeLimit = $game['timeLimit'];
+        $this->view->turnsLimit = $game['turnsLimit'];
+        $this->view->turnTimeLimit = $game['turnTimeLimit'];
         $this->view->accessKey = $mPlayersInGame->getAccessKey($this->_namespace->player['playerId']);
         $this->view->gameId = $gameId;
         $this->view->player = $this->_namespace->player;
+
+        $mMap = new Application_Model_Map($game['mapId']);
+        $map = $mMap->getMap();
+
+        $this->view->map = $map['name'];
     }
 
     public function startAction()

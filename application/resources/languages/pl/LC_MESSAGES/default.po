@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WOF\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-16 15:29+0100\n"
-"PO-Revision-Date: 2013-12-16 15:30+0100\n"
+"POT-Creation-Date: 2013-12-20 04:06+0100\n"
+"PO-Revision-Date: 2013-12-20 04:07+0100\n"
 "Last-Translator: Bartosz Krzeszewski <bartek@core-t.pl>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -168,7 +168,7 @@ msgstr "Czekam na innych graczy"
 
 #: application/views/scripts/setup/index.phtml:2
 msgid "Map"
-msgstr ""
+msgstr "Mapa"
 
 #: application/views/scripts/setup/index.phtml:3
 msgid "Required number of players"
@@ -179,13 +179,12 @@ msgid "Time limit"
 msgstr "Limit czasu"
 
 #: application/views/scripts/setup/index.phtml:5
-msgid "Limit tur"
-msgstr ""
+msgid "Limit of the number of turns"
+msgstr "Limit ilości tur"
 
 #: application/views/scripts/setup/index.phtml:6
-#, fuzzy
 msgid "Time limit per turn"
-msgstr "Ustaw czas trwania tury"
+msgstr "Czas trwania tury"
 
 #: application/views/scripts/setup/index.phtml:7
 msgid "Select your color and team"
