@@ -618,11 +618,11 @@
 }
 
 #timerBox .nr {
-    width: 86px;
+    width: 50px;
 }
 
 #timerBox .time {
-    width: 92px;
+    width: 122px;
     overflow: hidden;
 }
 

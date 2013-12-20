@@ -134,6 +134,12 @@ input[type="radio"], input[type="checkbox"] {
     color: #000;
 }
 
+.buttonOff {
+    background: gray;
+    border-color: darkgray;
+    color: darkgray;
+}
+
 .block {
     display: block;
     width: 50px;

@@ -13,7 +13,8 @@
         <tr id="<?php echo $this->mapPlayers[$i]['mapPlayerId'] ?>">
             <td class="td1">
                 <div class="left"></div>
-                <div class="right" style="background: <?php echo $this->mapPlayers[$i]['backgroundColor'] ?>;color: <?php echo $this->mapPlayers[$i]['textColor'] ?>"><?php echo $this->mapPlayers[$i]['longName'] ?></div>
+                <div class="right"
+                     style="background: <?php echo $this->mapPlayers[$i]['backgroundColor'] ?>;color: <?php echo $this->mapPlayers[$i]['textColor'] ?>"><?php echo $this->mapPlayers[$i]['longName'] ?></div>
             </td>
             <td class="td2"></td>
             <td class="td3"></td>
@@ -21,7 +22,7 @@
     <?php endfor; ?>
 </table>
 
-<ul>
+<ul style="float: right">
     <li id="start"></li>
 </ul>
 
@@ -36,9 +37,9 @@ var mapPlayers = <?php echo Zend_Json::encode($this->mapPlayers) ?>;
 
 var gameId = <?php echo (int)$this->gameId ?>;
 var playerId = <?php echo (int)$this->player['playerId'] ?>;
-var accessKey = '<?php echo  $this->accessKey ?>';
+var accessKey = '<?php echo $this->accessKey ?>';
 
-var urlGemesetupStart = '/<?php echo  Zend_Registry::get('lang') ?>/setup/start';
+var urlGemesetupStart = '/<?php echo Zend_Registry::get('lang') ?>/setup/start';
 var select = '<?php echo $this->translate('Select') ?>';
 var deselect = '<?php echo $this->translate('Deselect') ?>';
 var kick = '<?php echo $this->translate('Kick') ?>';
