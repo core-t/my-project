@@ -21,6 +21,7 @@
 #game table {
     min-width: 0;
     border-spacing: 1px;
+    font-size: 12px;
 }
 
 #board {
